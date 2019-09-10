@@ -8,8 +8,8 @@
     <version>1.6.1</version>
 
     <name>smart-doc</name>
-    <url>https://github.com/shalousun/ApplicationPower.git</url>
-    <description>ApplicationPower smart-doc</description>
+    <url>https://github.com/shalousun/smart-doc.git</url>
+    <description>smart-doc</description>
 
     <licenses>
         <license>
@@ -19,9 +19,9 @@
         </license>
     </licenses>
     <scm>
-        <url>https://github.com/shalousun/ApplicationPower.git</url>
-        <connection>scm:https://github.com/shalousun/ApplicationPower.git</connection>
-        <developerConnection>scm:https://github.com/shalousun/ApplicationPower.git</developerConnection>
+        <url>https://github.com/shalousun/smart-doc.git</url>
+        <connection>scm:https://github.com/shalousun/smart-doc.git</connection>
+        <developerConnection>scm:https://github.com/shalousun/smart-doc.git</developerConnection>
     </scm>
     <developers>
         <developer>
