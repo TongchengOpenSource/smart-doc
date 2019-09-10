@@ -1,0 +1,75 @@
+<%if(isNotEmpty(revisionLogList)){%>
+版本 |  时间  | 状态 | 作者 |  备注
+------|--------|-----|------| -------
+<%
+for(revisionLog in revisionLogList){
+%>
+${revisionLog.version}|${revisionLog.revisionTime}|${revisionLog.status}|${revisionLog.author}|${revisionLog.remarks}
+<%}%>
+
+<%}%>
+
+
+<%
+for(api in apiDocList){
+%>
+# ${api.desc}
+<%
+for(doc in api.list){
+%>
+## ${doc.desc}
+**URL:** ${doc.url}
+
+**Type:** ${doc.type}
+
+**Content-Type:** ${doc.contentType}
+
+<%if(isNotEmpty(doc.headers)){%>
+**Request-headers:**
+
+Name | Type|Description
+---|---|---
+${doc.headers}
+<%}%>
+
+<%if(isNotEmpty(doc.requestParams)){%>
+**Request-parameters:**
+
+Parameter | Type|Description|Required
+---|---|---|---
+${doc.requestParams}
+<%}%>
+
+<%if(isNotEmpty(doc.requestUsage)){%>
+**Request-example:**
+```
+${doc.requestUsage}
+```
+<%}%>
+<%if(isNotEmpty(doc.responseParams)){%>
+**Response-fields:**
+
+Field | Type|Description
+---|---|---
+${doc.responseParams}
+<%}%>
+
+<%if(isNotEmpty(doc.responseUsage)){%>
+**Response-example:**
+```
+${doc.responseUsage}
+```
+<%}%>
+
+<% } %>
+<% } %>
+<%if(isNotEmpty(errorCodeList)){%>
+# Error code list
+Error code |Description
+---|---
+<%
+for(error in errorCodeList){
+%>
+${error.value}|${error.desc}
+<%}%>
+<%}%>
