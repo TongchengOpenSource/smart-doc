@@ -416,6 +416,7 @@ public class SourceBuilder {
 
         String[] globGicName = DocClassUtil.getSimpleGicName(className);
         JavaClass cls = builder.getClassByName(simpleName);
+        //clsss.isEnum()
         List<JavaField> fields = getFields(cls, 0);
         int n = 0;
         if (DocClassUtil.isPrimitive(simpleName)) {
@@ -510,7 +511,9 @@ public class SourceBuilder {
                     } else {
                         comment = field.getComment();
                     }
-                    comment = comment.replace("\n","<br>");
+                    if(StringUtil.isNotEmpty(comment)){
+                        comment = comment.replace("\n","<br>");
+                    }
                     if (DocClassUtil.isPrimitive(subTypeName)) {
                         params0.append(pre);
                         params0.append(fieldName).append("|")
