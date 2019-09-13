@@ -106,7 +106,7 @@ public class ApiDocTest {
 #### 响应参数示例效果图
 ![响应参数示例](https://images.gitee.com/uploads/images/2018/0905/172538_1918820c_144669.png "3.png")
 
-## Release
+## Releases
 [发布记录](https://github.com/shalousun/smart-doc/blob/master/RELEASE.md/)
 ## Other reference
 - [smart-doc功能使用介绍](https://my.oschina.net/u/1760791/blog/2250962)
