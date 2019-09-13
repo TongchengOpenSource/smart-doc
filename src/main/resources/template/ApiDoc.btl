@@ -21,8 +21,8 @@ ${doc.headers}
 <%if(isNotEmpty(doc.requestParams)){%>
 **Request-parameters:**
 
-Parameter | Type|Description|Required
----|---|---|---
+Parameter | Type|Description|Required|Since
+---|---|---|---|---
 ${doc.requestParams}
 <%}%>
 
@@ -35,8 +35,8 @@ ${doc.requestUsage}
 <%if(isNotEmpty(doc.responseParams)){%>
 **Response-fields:**
 
-Field | Type|Description
----|---|---
+Field | Type|Description|Since
+---|---|---|---
 ${doc.responseParams}
 <%}%>
 
