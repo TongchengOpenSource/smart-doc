@@ -500,6 +500,7 @@ public class SourceBuilder {
                     } else {
                         comment = field.getComment();
                     }
+                    comment = comment.replace("\n","<br>");
                     if (DocClassUtil.isPrimitive(subTypeName)) {
                         params0.append(pre);
                         params0.append(fieldName).append("|")
