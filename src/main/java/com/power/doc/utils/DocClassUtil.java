@@ -381,6 +381,8 @@ public class DocClassUtil {
                 return true;
             case "javax.servlet.http.HttpServletRequest":
                 return true;
+            case "org.springframework.web.context.request.WebRequest":
+                return true;
             case "javax.servlet.http.HttpServletResponse":
                 return true;
             default:
