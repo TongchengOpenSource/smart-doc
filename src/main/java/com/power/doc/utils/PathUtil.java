@@ -8,7 +8,8 @@ import java.io.File;
 public class PathUtil {
 
     /**
-     *  获取java类名
+     * 获取java类名
+     *
      * @param parentDir parent dir
      * @param className 类名
      * @return string
@@ -21,6 +22,6 @@ public class PathUtil {
             parentDir += File.separator;
         }
         className = className.replaceAll("\\.", "\\" + File.separator);
-        return parentDir + className+".java";
+        return parentDir + className + ".java";
     }
 }

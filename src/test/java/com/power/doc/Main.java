@@ -20,11 +20,8 @@ public class Main {
             System.out.println(sb.toString());
         } catch (Exception e) {
             e.printStackTrace();
-        }
-        finally
-        {
-            if (br != null)
-            {
+        } finally {
+            if (br != null) {
                 try {
                     br.close();
                 } catch (Exception e) {
@@ -36,9 +33,9 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
         Class cls = CommonResult.class;
-        System.out.println("path:"+cls.getResource(""));
+        System.out.println("path:" + cls.getResource(""));
         String path = cls.getResource("").getPath();
-        String commandStr = String.format("javap  -classpath %s -private CommonResult",path);
+        String commandStr = String.format("javap  -classpath %s -private CommonResult", path);
         String cmd = "java -jar d:/procyon-decompiler-0.5.30.jar D:/ProgramFiles/mvnrepository/repository/com/boco/sp/Common-util/1.0-SNAPSHOT/Common-util-1.0-20180105.062727-5.jar -o out";
         //String commandStr = "ipconfig";
         Main.exeCmd(cmd);

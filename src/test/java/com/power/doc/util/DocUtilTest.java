@@ -9,8 +9,8 @@ import org.junit.Test;
 public class DocUtilTest {
 
     @Test
-    public void test(){
-       String str =  DocUtil.getValByTypeAndFieldName("LocalDateTime","createTime");
+    public void test() {
+        String str = DocUtil.getValByTypeAndFieldName("LocalDateTime", "createTime");
         System.out.println(str);
     }
 }

@@ -50,6 +50,7 @@ public class ApiConfig {
 
     /**
      * 错误码code列表
+     *
      * @return
      */
 
@@ -138,12 +139,12 @@ public class ApiConfig {
         this.packageFilters = packageFilters;
     }
 
-    public void setRevisionLogs(RevisionLog... revisionLogs){
-        this.revisionLogs = CollectionUtil.asList(revisionLogs);
-    }
-
     public List<RevisionLog> getRevisionLogs() {
         return revisionLogs;
+    }
+
+    public void setRevisionLogs(RevisionLog... revisionLogs) {
+        this.revisionLogs = CollectionUtil.asList(revisionLogs);
     }
 
 }

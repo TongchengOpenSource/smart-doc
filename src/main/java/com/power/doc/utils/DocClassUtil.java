@@ -162,14 +162,14 @@ public class DocClassUtil {
      * @return array of string
      */
     public static String[] getMapKeyValueType(String gName) {
-        if(gName.contains("<")){
+        if (gName.contains("<")) {
             String[] arr = new String[2];
             String key = gName.substring(gName.indexOf("<") + 1, gName.indexOf(","));
             String value = gName.substring(gName.indexOf(",") + 1, gName.lastIndexOf(">"));
             arr[0] = key;
             arr[1] = value;
             return arr;
-        }else {
+        } else {
             return new String[0];
         }
 
@@ -185,7 +185,7 @@ public class DocClassUtil {
         if (javaTypeName.length() == 1) {
             return "object";
         }
-        if(javaTypeName.contains("[]")){
+        if (javaTypeName.contains("[]")) {
             return "array";
         }
         switch (javaTypeName) {
@@ -309,15 +309,17 @@ public class DocClassUtil {
 
     /**
      * check array
+     *
      * @param type type name
      * @return boolean
      */
-    public static boolean isArray(String type){
+    public static boolean isArray(String type) {
         return type.contains("[]");
     }
 
     /**
      * check JSR303
+     *
      * @param annotationSimpleName annotation name
      * @return boolean
      */
@@ -338,10 +340,11 @@ public class DocClassUtil {
 
     /**
      * custom tag
+     *
      * @param tagName custom field tag
      * @return boolean
      */
-    public static boolean isRequiredTag(String tagName){
+    public static boolean isRequiredTag(String tagName) {
         switch (tagName) {
             case "required":
                 return true;
@@ -352,10 +355,11 @@ public class DocClassUtil {
 
     /**
      * ignore tag request field
+     *
      * @param tagName custom field tag
      * @return boolean
      */
-    public static boolean isIgnoreTag(String tagName){
+    public static boolean isIgnoreTag(String tagName) {
         switch (tagName) {
             case "ignore":
                 return true;
@@ -366,18 +370,19 @@ public class DocClassUtil {
 
     /**
      * ignore param of spring mvc
+     *
      * @param paramType param type name
      * @return boolean
      */
-    public static boolean isMvcIgnoreParams(String paramType){
-        switch (paramType){
+    public static boolean isMvcIgnoreParams(String paramType) {
+        switch (paramType) {
             case "org.springframework.ui.Model":
                 return true;
             case "org.springframework.ui.ModelMap":
                 return true;
             case "org.springframework.web.servlet.ModelAndView":
                 return true;
-            case "org.springframework.validation.BindingResult" :
+            case "org.springframework.validation.BindingResult":
                 return true;
             case "javax.servlet.http.HttpServletRequest":
                 return true;

@@ -2,7 +2,9 @@ package com.power.doc;
 
 import com.power.common.util.DateTimeUtil;
 import com.power.doc.builder.ApiDocBuilder;
-import com.power.doc.model.*;
+import com.power.doc.model.ApiConfig;
+import com.power.doc.model.RevisionLog;
+import com.power.doc.model.SourcePath;
 import org.junit.Test;
 
 /**

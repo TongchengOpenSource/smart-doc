@@ -51,21 +51,13 @@ public class SourceBuilder {
 
 
     public Map<String, JavaClass> javaFilesMap = new HashMap<>();
-
-    private JavaProjectBuilder builder;
-
-    private Collection<JavaClass> javaClasses;
-
-    private boolean isStrict;//严格模式
-
-    private String packageMatch;
-
-    private List<ApiReqHeader> headers;
-
-    private String appUrl;
-
-
     public Map<String, CustomRespField> fieldMap = new HashMap<>();
+    private JavaProjectBuilder builder;
+    private Collection<JavaClass> javaClasses;
+    private boolean isStrict;//严格模式
+    private String packageMatch;
+    private List<ApiReqHeader> headers;
+    private String appUrl;
 
     /**
      * if isStrict value is true,it while check all method
@@ -458,13 +450,13 @@ public class SourceBuilder {
                         for (DocletTag docletTag : paramTags) {
                             if (DocClassUtil.isIgnoreTag(docletTag.getName())) {
                                 continue out;
-                            } else if(DocTags.SINCE.equals(docletTag.getName())) {
+                            } else if (DocTags.SINCE.equals(docletTag.getName())) {
                                 since = docletTag.getValue();
                             }
                         }
                     } else {
                         for (DocletTag docletTag : paramTags) {
-                            if(DocTags.SINCE.equals(docletTag.getName())) {
+                            if (DocTags.SINCE.equals(docletTag.getName())) {
                                 since = docletTag.getValue();
                             }
                         }
@@ -511,8 +503,8 @@ public class SourceBuilder {
                     } else {
                         comment = field.getComment();
                     }
-                    if(StringUtil.isNotEmpty(comment)){
-                        comment = comment.replace("\n","<br>");
+                    if (StringUtil.isNotEmpty(comment)) {
+                        comment = comment.replace("\n", "<br>");
                     }
                     if (DocClassUtil.isPrimitive(subTypeName)) {
                         params0.append(pre);

@@ -28,7 +28,7 @@ public class CustomRespField {
      */
     private Object value;
 
-    public static CustomRespField field(){
+    public static CustomRespField field() {
         return new CustomRespField();
     }
 

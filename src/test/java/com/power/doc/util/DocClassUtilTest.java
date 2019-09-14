@@ -12,7 +12,7 @@ import org.junit.Test;
 public class DocClassUtilTest {
 
     @Test
-    public void testGetSimpleGicName(){
+    public void testGetSimpleGicName() {
         char me = 'k';
         String className = "com.power.doc.controller.Teacher<com.power.doc.controller.Teacher<com.power.doc.controller.User,com.power.doc.controller.User,com.power.doc.controller.User>,com.power.doc.controller.Teacher<com.power.doc.controller.User,com.power.doc.controller.User,com.power.doc.controller.User>,com.power.doc.controller.Teacher<com.power.doc.controller.User,com.power.doc.controller.User,com.power.doc.controller.User>>";
         String[] arr = DocClassUtil.getSimpleGicName(className);
@@ -20,7 +20,7 @@ public class DocClassUtilTest {
     }
 
     @Test
-    public void testIsPrimitive(){
+    public void testIsPrimitive() {
         String typeName = "java.time.LocalDateTime";
         System.out.println(DocClassUtil.isPrimitive(typeName));
     }

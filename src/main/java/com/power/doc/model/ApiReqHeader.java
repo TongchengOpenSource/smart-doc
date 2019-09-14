@@ -22,7 +22,7 @@ public class ApiReqHeader {
      */
     private String desc;
 
-    public static ApiReqHeader header(){
+    public static ApiReqHeader header() {
         return new ApiReqHeader();
     }
 

@@ -2,6 +2,7 @@ package com.power.doc.model;
 
 /**
  * 接口文档修订日志
+ *
  * @author yolanda0608 2018/12/15
  */
 public class RevisionLog {
@@ -31,7 +32,9 @@ public class RevisionLog {
      */
     private String remarks;
 
-
+    public static RevisionLog getLog() {
+        return new RevisionLog();
+    }
 
     public String getVersion() {
         return version;
@@ -76,9 +79,5 @@ public class RevisionLog {
     public RevisionLog setRemarks(String remarks) {
         this.remarks = remarks;
         return this;
-    }
-
-    public static RevisionLog getLog(){
-        return new RevisionLog();
     }
 }
