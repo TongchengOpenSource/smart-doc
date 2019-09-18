@@ -725,7 +725,7 @@ public class SourceBuilder {
                 throw new RuntimeException("Map's key can only use String for json,but you use " + getKeyValType[0]);
             }
             String gicName = gNameTemp.substring(gNameTemp.indexOf(",") + 1, gNameTemp.lastIndexOf(">"));
-            if ("java.lang.Object".equals(gicName)) {
+            if (GlobalConstants.JAVA_OBJECT.equals(gicName)) {
                 data.append("{").append("\"mapKey\":").append("{\"waring\":\"You may use java.util.Object for Map value; smart-doc can't be handle.\"}").append("}");
             } else if (DocClassUtil.isPrimitive(gicName)) {
                 data.append("{").append("\"mapKey1\":").append(DocUtil.jsonValueByType(gicName)).append(",");
@@ -738,8 +738,8 @@ public class SourceBuilder {
                 data.append("{").append("\"mapKey\":").append(buildJson(gicName, gNameTemp, responseFieldMap, isResp)).append("}");
             }
             return data.toString();
-        } else if ("java.lang.Object".equals(typeName)) {
-            if ("java.lang.Object".equals(typeName)) {
+        } else if (GlobalConstants.JAVA_OBJECT.equals(typeName)) {
+            if (GlobalConstants.JAVA_OBJECT.equals(typeName)) {
                 data.append("{\"object\":\" any object\"},");
                 // throw new RuntimeException("Please do not return java.lang.Object directly in api interface.");
             }
@@ -911,6 +911,11 @@ public class SourceBuilder {
 
     private String buildReqJson(JavaMethod method, ApiMethodDoc apiMethodDoc) {
         List<JavaParameter> parameterList = method.getParameters();
+        if (parameterList.size() < 1) {
+            return "No request parameters are required.";
+        }
+        boolean containsBrace = apiMethodDoc.getUrl().contains("{");
+        Map<String, String> paramsMap = new LinkedHashMap<>();
         for (JavaParameter parameter : parameterList) {
             JavaType javaType = parameter.getType();
             String simpleTypeName = javaType.getValue();
@@ -941,14 +946,20 @@ public class SourceBuilder {
 
                 }
                 if (requestBodyCounter < 1) {
-                    //not json
-                    return "smart-doc currently cannot provide examples of parameters for the RequestParam request mode.";
-
+                    paramsMap.put(paraName, DocUtil.getValByTypeAndFieldName(simpleTypeName, paraName,
+                            true));
                 }
 
             }
         }
-        return "No request parameters are required.";
+        String url;
+        if (containsBrace) {
+            url = DocUtil.formatAndRemove(apiMethodDoc.getUrl(), paramsMap);
+            url = DocUtil.urlJoin(url, paramsMap);
+        } else {
+            url = DocUtil.urlJoin(apiMethodDoc.getUrl(), paramsMap);
+        }
+        return url;
     }
 
     /**

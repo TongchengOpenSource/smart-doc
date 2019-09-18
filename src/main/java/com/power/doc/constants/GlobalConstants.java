@@ -14,4 +14,9 @@ public class GlobalConstants {
      * rest controller注解全名称
      */
     public static final String REST_CONTROLLER_FULLY = "org.springframework.web.bind.annotation.RestController";
+
+    /**
+     * java object类名
+     */
+    public static final String JAVA_OBJECT = "java.lang.Object";
 }

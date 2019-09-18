@@ -29,6 +29,8 @@ public class DocUtil {
         fieldValue.put("name-string", faker.name().username());
         fieldValue.put("url-string", faker.internet().url());
         fieldValue.put("username-string", faker.name().username());
+        fieldValue.put("page-int", "1");
+        fieldValue.put("page-integer", "1");
         fieldValue.put("age-int", String.valueOf(RandomUtil.randomInt(0, 70)));
         fieldValue.put("age-integer", String.valueOf(RandomUtil.randomInt(0, 70)));
         fieldValue.put("email-string", faker.internet().emailAddress());
@@ -58,10 +60,19 @@ public class DocUtil {
         fieldValue.put("flag-boolean", "true");
         fieldValue.put("flag-Boolean", "false");
         fieldValue.put("idcard-string", IDCardUtil.getIdCard());
-        fieldValue.put("sex-int", String.valueOf(RandomUtil.randomInt(0, 1)));
-        fieldValue.put("sex-integer", String.valueOf(RandomUtil.randomInt(0, 1)));
-        fieldValue.put("gender-int", String.valueOf(RandomUtil.randomInt(0, 1)));
-        fieldValue.put("gender-integer", String.valueOf(RandomUtil.randomInt(0, 1)));
+        fieldValue.put("sex-int", String.valueOf(RandomUtil.randomInt(0, 2)));
+        fieldValue.put("sex-integer", String.valueOf(RandomUtil.randomInt(0, 2)));
+        fieldValue.put("gender-int", String.valueOf(RandomUtil.randomInt(0, 2)));
+        fieldValue.put("gender-integer", String.valueOf(RandomUtil.randomInt(0, 2)));
+        fieldValue.put("limit-int", "10");
+        fieldValue.put("limit-integer", "10");
+        fieldValue.put("size-int", "10");
+        fieldValue.put("size-integer", "10");
+
+        fieldValue.put("offset-int", "1");
+        fieldValue.put("offset-integer", "1");
+        fieldValue.put("offset-long", "1");
+
 
     }
 
@@ -117,6 +128,22 @@ public class DocUtil {
     }
 
     /**
+     * 移除字符串的双引号
+     *
+     * @param type0                 类型
+     * @param filedName             字段名称
+     * @param removeDoubleQuotation 移除标志
+     * @return
+     */
+    public static String getValByTypeAndFieldName(String type0, String filedName, boolean removeDoubleQuotation) {
+        if (removeDoubleQuotation) {
+            return getValByTypeAndFieldName(type0, filedName).replace("\"", "");
+        } else {
+            return getValByTypeAndFieldName(type0, filedName);
+        }
+    }
+
+    /**
      * 是否是合法的java类名称
      *
      * @param className class nem
@@ -159,5 +186,55 @@ public class DocUtil {
             }
         }
         return false;
+    }
+
+
+    /**
+     * An interpreter for strings with named placeholders.
+     *
+     * @param str    string to format
+     * @param values to replace
+     * @return formatted string
+     */
+    public static String formatAndRemove(String str, Map<String, String> values) {
+        StringBuilder builder = new StringBuilder(str);
+        Set<Map.Entry<String, String>> entries = values.entrySet();
+        Iterator<Map.Entry<String, String>> iteratorMap = entries.iterator();
+        while (iteratorMap.hasNext()) {
+            Map.Entry<String, String> next = iteratorMap.next();
+            int start;
+            String pattern = "{" + next.getKey() + "}";
+            String value = next.getValue().toString();
+            // values.remove(next.getKey());
+            // Replace every occurence of {key} with value
+            while ((start = builder.indexOf(pattern)) != -1) {
+                builder.replace(start, start + pattern.length(), value);
+                iteratorMap.remove();
+                values.remove(next.getKey());
+            }
+
+        }
+        return builder.toString();
+    }
+
+    public static String urlJoin(String url, Map<String, String> params) {
+        StringBuilder endUrl = new StringBuilder(url);
+        if (null == params) {
+            return url;
+        }
+        boolean isFirst = true;
+        Set<Map.Entry<String, String>> entrySet = params.entrySet();
+        for (Map.Entry<String, String> entry : entrySet) {
+            if (isFirst && !url.contains("?")) {
+                isFirst = false;
+                endUrl.append("?");
+            } else {
+                endUrl.append("&");
+            }
+            endUrl.append(entry.getKey());
+            endUrl.append("=");
+            endUrl.append(entry.getValue());
+        }
+        return endUrl.toString();
     }
 }
