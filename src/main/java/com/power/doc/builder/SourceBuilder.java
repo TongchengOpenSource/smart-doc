@@ -3,6 +3,7 @@ package com.power.doc.builder;
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.JsonFormatUtil;
 import com.power.common.util.StringUtil;
+import com.power.doc.constants.AnnotationConstants;
 import com.power.doc.constants.DocTags;
 import com.power.doc.constants.GlobalConstants;
 import com.power.doc.model.*;
@@ -21,27 +22,15 @@ public class SourceBuilder {
 
     private static final String GET_MAPPING = "GetMapping";
 
-    private static final String GET_MAPPING_FULLY = "org.springframework.web.bind.annotation.GetMapping";
-
     private static final String POST_MAPPING = "PostMapping";
-
-    private static final String POST_MAPPING_FULLY = "org.springframework.web.bind.annotation.PostMapping";
 
     private static final String PUT_MAPPING = "PutMapping";
 
-    private static final String PUT_MAPPING_FULLY = "org.springframework.web.bind.annotation.PutMapping";
-
     private static final String DELETE_MAPPING = "DeleteMapping";
-
-    private static final String DELETE_MAPPING_FULLY = "org.springframework.web.bind.annotation.DeleteMapping";
 
     private static final String REQUEST_MAPPING = "RequestMapping";
 
-    private static final String REQUEST_MAPPING_FULLY = "org.springframework.web.bind.annotation.RequestMapping";
-
     private static final String REQUEST_BODY = "RequestBody";
-
-    private static final String REQUEST_BODY_FULLY = "org.springframework.web.bind.annotation.RequestBody";
 
     private static final String REQUEST_PARAM = "RequestParam";
 
@@ -134,7 +123,8 @@ public class SourceBuilder {
         List<JavaAnnotation> classAnnotations = cls.getAnnotations();
         for (JavaAnnotation annotation : classAnnotations) {
             String annotationName = annotation.getType().getName();
-            if ("Controller".equals(annotationName) || "RestController".equals(annotationName)
+            if (AnnotationConstants.SHORT_CONTROLLER.equals(annotationName)
+                    || AnnotationConstants.SHORT_REST_CONTROLLER.equals(annotationName)
                     || GlobalConstants.REST_CONTROLLER_FULLY.equals(annotationName)
                     || GlobalConstants.CONTROLLER_FULLY.equals(annotationName)
                     ) {
@@ -154,7 +144,7 @@ public class SourceBuilder {
         List<JavaAnnotation> classAnnotations = cls.getAnnotations();
         for (JavaAnnotation annotation : classAnnotations) {
             String annotationName = annotation.getType().getName();
-            if ("RestController".equals(annotationName)) {
+            if (AnnotationConstants.SHORT_REST_CONTROLLER.equals(annotationName)) {
                 return true;
             }
         }
@@ -217,7 +207,7 @@ public class SourceBuilder {
         String baseUrl = null;
         for (JavaAnnotation annotation : classAnnotations) {
             String annotationName = annotation.getType().getName();
-            if (REQUEST_MAPPING.equals(annotationName) || REQUEST_MAPPING_FULLY.equals(annotationName)) {
+            if (REQUEST_MAPPING.equals(annotationName) || GlobalConstants.REQUEST_MAPPING_FULLY.equals(annotationName)) {
                 baseUrl = annotation.getNamedParameter("value").toString();
                 baseUrl = baseUrl.replaceAll("\"", "");
             }
@@ -236,7 +226,7 @@ public class SourceBuilder {
             int methodCounter = 0;
             for (JavaAnnotation annotation : annotations) {
                 String annotationName = annotation.getType().getName();
-                if (REQUEST_MAPPING.equals(annotationName) || REQUEST_MAPPING_FULLY.equals(annotationName)) {
+                if (REQUEST_MAPPING.equals(annotationName) || GlobalConstants.REQUEST_MAPPING_FULLY.equals(annotationName)) {
                     if (null == annotation.getNamedParameter("value")) {
                         url = "/";
                     } else {
@@ -259,7 +249,7 @@ public class SourceBuilder {
                         methodType = "GET";
                     }
                     methodCounter++;
-                } else if (GET_MAPPING.equals(annotationName) || GET_MAPPING_FULLY.equals(annotationName)) {
+                } else if (GET_MAPPING.equals(annotationName) || GlobalConstants.GET_MAPPING_FULLY.equals(annotationName)) {
                     if (null == annotation.getNamedParameter("value")) {
                         url = "/";
                     } else {
@@ -267,7 +257,7 @@ public class SourceBuilder {
                     }
                     methodType = "GET";
                     methodCounter++;
-                } else if (POST_MAPPING.equals(annotationName) || POST_MAPPING_FULLY.equals(annotationName)) {
+                } else if (POST_MAPPING.equals(annotationName) || GlobalConstants.POST_MAPPING_FULLY.equals(annotationName)) {
                     if (null == annotation.getNamedParameter("value")) {
                         url = "/";
                     } else {
@@ -275,7 +265,7 @@ public class SourceBuilder {
                     }
                     methodType = "POST";
                     methodCounter++;
-                } else if (PUT_MAPPING.equals(annotationName) || PUT_MAPPING_FULLY.equals(annotationName)) {
+                } else if (PUT_MAPPING.equals(annotationName) || GlobalConstants.PUT_MAPPING_FULLY.equals(annotationName)) {
                     if (null == annotation.getNamedParameter("value")) {
                         url = "/";
                     } else {
@@ -283,7 +273,7 @@ public class SourceBuilder {
                     }
                     methodType = "PUT";
                     methodCounter++;
-                } else if (DELETE_MAPPING.equals(annotationName) || DELETE_MAPPING_FULLY.equals(annotationName)) {
+                } else if (DELETE_MAPPING.equals(annotationName) || GlobalConstants.DELETE_MAPPING_FULLY.equals(annotationName)) {
                     if (null == annotation.getNamedParameter("value")) {
                         url = "/";
                     } else {
@@ -349,7 +339,7 @@ public class SourceBuilder {
         String returnType = method.getReturnType().getGenericCanonicalName();
         String typeName = method.getReturnType().getFullyQualifiedName();
         if (DocClassUtil.isMvcIgnoreParams(typeName)) {
-            if ("org.springframework.web.servlet.ModelAndView".equals(typeName)) {
+            if (GlobalConstants.MODE_AND_VIEW_FULLY.equals(typeName)) {
                 return null;
             } else {
                 throw new RuntimeException("smart-doc can't support " + typeName + " as method return in " + controllerName);
@@ -425,7 +415,7 @@ public class SourceBuilder {
             if (globGicName.length == 2) {
                 params0.append(buildParams(globGicName[1], pre, i + 1, isRequired, responseFieldMap, isResp));
             }
-        } else if ("java.lang.Object".equals(className)) {
+        } else if (GlobalConstants.JAVA_OBJECT_FULLY.equals(className)) {
             params0.append(pre + "any object|object|");
             if (StringUtil.isEmpty(isRequired)) {
                 params0.append("any object.").append("\n");
@@ -465,10 +455,10 @@ public class SourceBuilder {
                     int annotationCounter = 0;
                     an:
                     for (JavaAnnotation annotation : javaAnnotations) {
-                        String annotionName = annotation.getType().getSimpleName();
-                        if ("JsonIgnore".equals(annotionName) && isResp) {
+                        String annotationName = annotation.getType().getSimpleName();
+                        if ("JsonIgnore".equals(annotationName) && isResp) {
                             continue out;
-                        } else if ("JSONField".equals(annotionName) && isResp) {
+                        } else if ("JSONField".equals(annotationName) && isResp) {
                             if (null != annotation.getProperty("serialize")) {
                                 if ("false".equals(annotation.getProperty("serialize").toString())) {
                                     continue out;
@@ -476,11 +466,11 @@ public class SourceBuilder {
                             } else if (null != annotation.getProperty("name")) {
                                 fieldName = annotation.getProperty("name").toString().replace("\"", "");
                             }
-                        } else if ("JsonProperty".equals(annotionName) && isResp) {
+                        } else if ("JsonProperty".equals(annotationName) && isResp) {
                             if (null != annotation.getProperty("value")) {
                                 fieldName = annotation.getProperty("value").toString().replace("\"", "");
                             }
-                        } else if (DocClassUtil.isJSR303Required(annotionName)) {
+                        } else if (DocClassUtil.isJSR303Required(annotationName)) {
                             strRequired = "true";
                             annotationCounter++;
                             break an;
@@ -674,7 +664,7 @@ public class SourceBuilder {
      */
     private String buildJson(String typeName, String genericCanonicalName, Map<String, CustomRespField> responseFieldMap, boolean isResp) {
         if (DocClassUtil.isMvcIgnoreParams(typeName)) {
-            if ("org.springframework.web.servlet.ModelAndView".equals(typeName)) {
+            if (GlobalConstants.MODE_AND_VIEW_FULLY.equals(typeName)) {
                 return "forward or redirect to a page view.";
             } else {
                 return "error restful return.";
@@ -697,7 +687,7 @@ public class SourceBuilder {
             }
             String gNameTemp = globGicName[0];
             String gName = DocClassUtil.isArray(typeName) ? gNameTemp.substring(0, gNameTemp.indexOf("[")) : globGicName[0];
-            if ("java.lang.Object".equals(gName)) {
+            if (GlobalConstants.JAVA_OBJECT_FULLY.equals(gName)) {
                 data.append("{\"waring\":\"You may use java.util.Object instead of display generics in the List\"}");
             } else if (DocClassUtil.isPrimitive(gName)) {
                 data.append(DocUtil.jsonValueByType(gName)).append(",");
@@ -725,7 +715,7 @@ public class SourceBuilder {
                 throw new RuntimeException("Map's key can only use String for json,but you use " + getKeyValType[0]);
             }
             String gicName = gNameTemp.substring(gNameTemp.indexOf(",") + 1, gNameTemp.lastIndexOf(">"));
-            if (GlobalConstants.JAVA_OBJECT.equals(gicName)) {
+            if (GlobalConstants.JAVA_OBJECT_FULLY.equals(gicName)) {
                 data.append("{").append("\"mapKey\":").append("{\"waring\":\"You may use java.util.Object for Map value; smart-doc can't be handle.\"}").append("}");
             } else if (DocClassUtil.isPrimitive(gicName)) {
                 data.append("{").append("\"mapKey1\":").append(DocUtil.jsonValueByType(gicName)).append(",");
@@ -738,8 +728,8 @@ public class SourceBuilder {
                 data.append("{").append("\"mapKey\":").append(buildJson(gicName, gNameTemp, responseFieldMap, isResp)).append("}");
             }
             return data.toString();
-        } else if (GlobalConstants.JAVA_OBJECT.equals(typeName)) {
-            if (GlobalConstants.JAVA_OBJECT.equals(typeName)) {
+        } else if (GlobalConstants.JAVA_OBJECT_FULLY.equals(typeName)) {
+            if (GlobalConstants.JAVA_OBJECT_FULLY.equals(typeName)) {
                 data.append("{\"object\":\" any object\"},");
                 // throw new RuntimeException("Please do not return java.lang.Object directly in api interface.");
             }
@@ -876,7 +866,7 @@ public class SourceBuilder {
                                 data0.append("{\"waring\":\"You may have used non-display generics.\"},");
                             }
                             i++;
-                        } else if ("java.lang.Object".equals(subTypeName)) {
+                        } else if (GlobalConstants.JAVA_OBJECT_FULLY.equals(subTypeName)) {
                             if (i < globGicName.length) {
                                 String gicName = globGicName[i];
                                 if (!typeName.equals(genericCanonicalName)) {
@@ -927,7 +917,7 @@ public class SourceBuilder {
                 int requestBodyCounter = 0;
                 for (JavaAnnotation annotation : annotations) {
                     String annotationName = annotation.getType().getSimpleName();
-                    if (REQUEST_BODY.equals(annotationName) || REQUEST_BODY_FULLY.equals(annotationName)) {
+                    if (REQUEST_BODY.equals(annotationName) || GlobalConstants.REQUEST_BODY_FULLY.equals(annotationName)) {
                         requestBodyCounter++;
                         apiMethodDoc.setContentType(JSON_CONTENT_TYPE);
                         if (DocClassUtil.isPrimitive(simpleTypeName)) {
