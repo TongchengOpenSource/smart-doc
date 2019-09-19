@@ -10,7 +10,7 @@ public class AnnotationConstants {
 
     public static final String SHORT_REST_CONTROLLER = "RestController";
 
-    public static final String SHORT_JSON_IGNORE= "Ignore";
+    public static final String SHORT_JSON_IGNORE= "JsonIgnore";
 
     public static final String SHORT_JSON_PROPERTY = "JsonProperty";
 

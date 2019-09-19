@@ -33,6 +33,12 @@ public class GlobalConstants {
      */
     public static final String JAVA_OBJECT_FULLY = "java.lang.Object";
 
+    public static final String JAVA_STRING_FULLY = "java.lang.String";
+
+    public static final String JAVA_MAP_FULLY = "java.util.Map";
+
+    public static final String JAVA_LIST_FULLY = "java.util.List";
+
 
 
 }

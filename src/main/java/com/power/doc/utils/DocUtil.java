@@ -5,6 +5,7 @@ import com.power.common.util.DateTimeUtil;
 import com.power.common.util.IDCardUtil;
 import com.power.common.util.RandomUtil;
 import com.power.common.util.StringUtil;
+import com.thoughtworks.qdox.model.JavaAnnotation;
 
 import java.util.*;
 
@@ -217,24 +218,36 @@ public class DocUtil {
         return builder.toString();
     }
 
-    public static String urlJoin(String url, Map<String, String> params) {
-        StringBuilder endUrl = new StringBuilder(url);
-        if (null == params) {
-            return url;
+    /**
+     * handle spring mvc method
+     * @param method
+     * @return
+     */
+    public static String handleHttpMethod(String method) {
+        switch (method) {
+            case "RequestMethod.POST":
+                return "POST";
+            case "RequestMethod.GET":
+                return "GET";
+            case "RequestMethod.PUT":
+                return "PUT";
+            case "RequestMethod.DELETE":
+                return "DELETE";
+             default:
+                 return "GET";
         }
-        boolean isFirst = true;
-        Set<Map.Entry<String, String>> entrySet = params.entrySet();
-        for (Map.Entry<String, String> entry : entrySet) {
-            if (isFirst && !url.contains("?")) {
-                isFirst = false;
-                endUrl.append("?");
-            } else {
-                endUrl.append("&");
-            }
-            endUrl.append(entry.getKey());
-            endUrl.append("=");
-            endUrl.append(entry.getValue());
+    }
+
+    /**
+     * handle spring mvc mapping value
+     * @param annotation
+     * @return
+     */
+    public static String handleMappingValue(JavaAnnotation annotation){
+        if (null == annotation.getNamedParameter("value")) {
+            return  "/";
+        } else {
+            return annotation.getNamedParameter("value").toString();
         }
-        return endUrl.toString();
     }
 }
