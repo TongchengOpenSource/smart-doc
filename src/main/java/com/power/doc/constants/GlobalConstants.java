@@ -15,8 +15,24 @@ public class GlobalConstants {
      */
     public static final String REST_CONTROLLER_FULLY = "org.springframework.web.bind.annotation.RestController";
 
+    public static final String GET_MAPPING_FULLY = "org.springframework.web.bind.annotation.GetMapping";
+
+    public static final String POST_MAPPING_FULLY = "org.springframework.web.bind.annotation.PostMapping";
+
+    public static final String PUT_MAPPING_FULLY = "org.springframework.web.bind.annotation.PutMapping";
+
+    public static final String DELETE_MAPPING_FULLY = "org.springframework.web.bind.annotation.DeleteMapping";
+
+    public static final String REQUEST_MAPPING_FULLY = "org.springframework.web.bind.annotation.RequestMapping";
+
+    public static final String REQUEST_BODY_FULLY = "org.springframework.web.bind.annotation.RequestBody";
+
+    public static final String MODE_AND_VIEW_FULLY = "org.springframework.web.servlet.ModelAndView";
     /**
      * java object类名
      */
-    public static final String JAVA_OBJECT = "java.lang.Object";
+    public static final String JAVA_OBJECT_FULLY = "java.lang.Object";
+
+
+
 }
