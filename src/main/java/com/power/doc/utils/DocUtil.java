@@ -134,7 +134,7 @@ public class DocUtil {
      * @param type0                 类型
      * @param filedName             字段名称
      * @param removeDoubleQuotation 移除标志
-     * @return
+     * @return String
      */
     public static String getValByTypeAndFieldName(String type0, String filedName, boolean removeDoubleQuotation) {
         if (removeDoubleQuotation) {
@@ -220,7 +220,7 @@ public class DocUtil {
 
     /**
      * handle spring mvc method
-     * @param method
+     * @param method method name
      * @return String
      */
     public static String handleHttpMethod(String method) {
@@ -240,7 +240,7 @@ public class DocUtil {
 
     /**
      * handle spring mvc mapping value
-     * @param annotation
+     * @param annotation JavaAnnotation
      * @return String
      */
     public static String handleMappingValue(JavaAnnotation annotation){
