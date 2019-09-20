@@ -12,10 +12,13 @@ import org.beetl.core.Template;
 
 import java.util.List;
 
+import static com.power.doc.constants.GlobalConstants.FILE_SEPARATOR;
+
+/**
+ * use to create markdown doc
+ * @author yu 2019/09/20
+ */
 public class ApiDocBuilder {
-
-
-    public static final String FILE_SEPARATOR = System.getProperty("file.separator");
 
     /**
      * 生成所有controller的api文档

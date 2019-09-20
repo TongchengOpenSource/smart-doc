@@ -5,6 +5,7 @@ package com.power.doc.constants;
  */
 public class GlobalConstants {
 
+    public static final String FILE_SEPARATOR = System.getProperty("file.separator");
     /**
      * controller注解全名称
      */
