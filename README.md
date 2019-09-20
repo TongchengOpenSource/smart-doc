@@ -14,7 +14,7 @@ smart-doc完全基于接口源码分析来生成接口文档，完全做到零�
 - 对一些常用字段定义能够生成有效的模拟值。
 - 支持生成json返回值示例。
 - 支持从项目外部加载源代码来生成字段注释。
-- 一款代码注解检测工具，明眼leader都知道接口文档直接反馈出注释情况。
+- 一款代码注释检测工具，明眼leader都知道接口文档直接反馈出注释情况。
 ## Getting started
 smart-doc使用和测试可参考[smart-doc demo](https://github.com/shalousun/api-doc-test)。
 ```
