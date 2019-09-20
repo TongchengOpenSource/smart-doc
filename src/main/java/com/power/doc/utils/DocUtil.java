@@ -221,7 +221,7 @@ public class DocUtil {
     /**
      * handle spring mvc method
      * @param method
-     * @return
+     * @return String
      */
     public static String handleHttpMethod(String method) {
         switch (method) {
@@ -241,7 +241,7 @@ public class DocUtil {
     /**
      * handle spring mvc mapping value
      * @param annotation
-     * @return
+     * @return String
      */
     public static String handleMappingValue(JavaAnnotation annotation){
         if (null == annotation.getNamedParameter("value")) {
