@@ -301,7 +301,9 @@ public class SourceBuilder {
         for (ApiReqHeader header : headers) {
             builder.append(header.getName()).append("|")
                     .append(header.getType()).append("|")
-                    .append(header.getDesc()).append("\n");
+                    .append(header.getDesc()).append("|")
+                    .append(header.isRequired()).append("|")
+                    .append(header.getSince()).append("\n");
         }
         return builder.toString();
     }
@@ -389,9 +391,9 @@ public class SourceBuilder {
         } else if (GlobalConstants.JAVA_OBJECT_FULLY.equals(className)) {
             params0.append(pre + "any object|object|");
             if (StringUtil.isEmpty(isRequired)) {
-                params0.append("any object.").append("\n");
+                params0.append("any object.").append("|-\n");
             } else {
-                params0.append("any object.").append("|").append(false).append("\n");
+                params0.append("any object.").append("|").append(false).append("|-\n");
             }
         } else {
             out:
@@ -405,7 +407,7 @@ public class SourceBuilder {
                     List<JavaAnnotation> javaAnnotations = field.getAnnotations();
 
                     List<DocletTag> paramTags = field.getTags();
-                    String since = "";//since tag value
+                    String since = "-";//since tag value
                     if (!isResp) {
                         pre:
                         for (DocletTag docletTag : paramTags) {
@@ -515,7 +517,7 @@ public class SourceBuilder {
                         if (DocClassUtil.isMap(subTypeName)) {
                             String gNameTemp = field.getType().getGenericCanonicalName();
                             if (GlobalConstants.JAVA_MAP_FULLY.equals(gNameTemp)) {
-                                params0.append(preBuilder + "any object|object|any object\n");
+                                params0.append(preBuilder + "any object|object|any object|-\n");
                                 continue;
                             }
                             String valType = DocClassUtil.getMapKeyValueType(gNameTemp)[1];
@@ -607,7 +609,7 @@ public class SourceBuilder {
         comments.append("no param name|")
                 .append(typeName).append("|")
                 .append("The interface directly returns the ")
-                .append(typeName).append(" type value.\n");
+                .append(typeName).append(" type value.").append("|-\n");
         return comments.toString();
     }
 
@@ -991,7 +993,7 @@ public class SourceBuilder {
                                 typeTemp = " of " + DocClassUtil.processTypeNameForParams(gicName);
                                 reqParam.append(paramName).append("|")
                                         .append(DocClassUtil.processTypeNameForParams(simpleName)).append(typeTemp).append("|")
-                                        .append(comment).append("|true\n");
+                                        .append(comment).append("|true|-\n");
                             } else {
                                 reqParam.append(paramName).append("|")
                                         .append(DocClassUtil.processTypeNameForParams(simpleName)).append(typeTemp).append("|")
@@ -1003,11 +1005,11 @@ public class SourceBuilder {
                         } else if (DocClassUtil.isPrimitive(simpleName)) {
                             reqParam.append(paramName).append("|")
                                     .append(DocClassUtil.processTypeNameForParams(simpleName)).append("|")
-                                    .append(comment).append("|true\n");
+                                    .append(comment).append("|true|-\n");
                         } else if (GlobalConstants.JAVA_MAP_FULLY.equals(typeName)) {
                             reqParam.append(paramName).append("|")
                                     .append("map").append("|")
-                                    .append(comment).append("|true\n");
+                                    .append(comment).append("|true|-\n");
                         } else {
                             reqParam.append(buildParams(fullTypeName, "", 0, "true", responseFieldMap, false));
                         }
