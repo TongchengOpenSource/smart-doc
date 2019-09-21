@@ -4,11 +4,22 @@ import java.util.List;
 
 public class ApiDoc {
 
+    /**
+     * @since 1.7+
+     * 文档顺序
+     */
+    public int order;
 
     /**
      * 类名
      */
     private String name;
+
+    /**
+     * @since 1.7+
+     * md5加密后的文件名(用于处理html)
+     */
+    private String alias;
 
     /**
      * 方法文档列表
@@ -44,5 +55,19 @@ public class ApiDoc {
         this.desc = desc;
     }
 
+    public int getOrder() {
+        return order;
+    }
 
+    public void setOrder(int order) {
+        this.order = order;
+    }
+
+    public String getAlias() {
+        return alias;
+    }
+
+    public void setAlias(String alias) {
+        this.alias = alias;
+    }
 }

@@ -7,6 +7,11 @@ import java.io.Serializable;
  */
 public class ApiMethodDoc implements Serializable {
 
+    /**
+     * @since 1.7+
+     */
+    private int order;
+
     private String desc;
 
     private String url;
@@ -96,5 +101,13 @@ public class ApiMethodDoc implements Serializable {
 
     public void setHeaders(String headers) {
         this.headers = headers;
+    }
+
+    public int getOrder() {
+        return order;
+    }
+
+    public void setOrder(int order) {
+        this.order = order;
     }
 }

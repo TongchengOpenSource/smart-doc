@@ -3,38 +3,45 @@
 <head>
     <meta charset='UTF-8'>
     <meta name='viewport' content='width=device-width initial-scale=1'>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
     <link rel="stylesheet" href="index.css"/>
+    <title>api doc</title>
 </head>
 <div class="book without-animation with-summary font-size-2 font-family-1">
     <div class="book-summary">
         <div id="book-search-input"><input type="text" placeholder="Type to search"></div>
         <nav role="navigation">
             <ul class="summary">
-                <li><a href="${home}.html" target="_blank" class="custom-link">Home</a></li>
+                <li><ul id="reference">API Reference</ul></li>
                 <li class="divider"></li>
                <%
                for(api in apiDocList){
                %>
-                <li class="chapter " data-level="${api.name}" data-path="${api.name}.html">
-                   <a href="${api.name}.html" target="book_iframe">${api.desc}</a>
+                <li class="chapter " data-level="${api.alias}" data-path="${api.alias}.html">
+                   <a href="${api.alias}.html" target="book_iframe">${api.order}. ${api.desc}</a>
                     <ul class="articles">
                         <%
                         for(doc in api.list){
                         %>
-                        <li class="chapter " data-level="${api.name}" data-path="${api.name}.html">
-                        <a href="${api.name}.html" target="book_frame">${doc.desc}</a></li>
+                        <li class="chapter " data-level="${api.alias}" data-path="${api.alias}.html">
+                        <a href="${api.alias}.html" target="book_iframe">${api.order}.${doc.order} ${doc.desc}</a></li>
                         <%}%>
                     </ul>
                 </li>
                 <%}%>
+                <li class="chapter " data-level="error_code" data-path="error_code.html">
+                   <a href="error_code.html" target="book_iframe">${errorListTitle}</a>
+                </li>
                 <li class="divider"></li>
-                <li><a href="https://www.gitbook.com" target="blank" class="gitbook-link">Published with GitBook</a>
+                <li class="footer_link"><a href="https://github.com/shalousun/smart-doc" target="blank" class="gitbook-link">Created by smart-doc</a>
                 </li>
             </ul>
         </nav>
     </div>
     <div id="book-body" class="book-body" height="100%">
-        <iframe src="TestControllerApi.html" frameborder="0" id="book_iframe" name="book_frame" width="100%"></iframe>
+        <iframe src="${homePage}.html" frameborder="0" id="book_iframe" name="book_iframe" width="100%"></iframe>
     </div>
 </div>
 <script type="text/javascript">
@@ -43,6 +50,7 @@
         ifm.height = document.documentElement.clientHeight
     }
     changeFrameHeight();
+    setInterval(function(){changeFrameHeight(); }, 500);
 </script>
 </body>
 </html>

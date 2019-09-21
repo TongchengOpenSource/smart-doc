@@ -4,6 +4,9 @@ import com.power.common.util.CollectionUtil;
 import com.power.common.util.DateTimeUtil;
 import com.power.common.util.FileUtil;
 import com.power.common.util.StringUtil;
+import com.power.doc.constants.GlobalConstants;
+import com.power.doc.constants.Language;
+import com.power.doc.constants.TemplateVariable;
 import com.power.doc.model.ApiConfig;
 import com.power.doc.model.ApiDoc;
 import com.power.doc.model.ApiErrorCode;
@@ -12,10 +15,11 @@ import org.beetl.core.Template;
 
 import java.util.List;
 
-import static com.power.doc.constants.GlobalConstants.FILE_SEPARATOR;
+import static com.power.doc.constants.GlobalConstants.*;
 
 /**
  * use to create markdown doc
+ *
  * @author yu 2019/09/20
  */
 public class ApiDocBuilder {
@@ -42,6 +46,12 @@ public class ApiDocBuilder {
         if (StringUtil.isEmpty(config.getOutPath())) {
             throw new RuntimeException("doc output path can't be null or empty");
         }
+        if (null != config.getLanguage()) {
+            System.setProperty(GlobalConstants.DOC_LANGUAGE, config.getLanguage().getCode());
+        } else {
+            //default is chinese
+            System.setProperty(GlobalConstants.DOC_LANGUAGE, Language.CHINESE.getCode());
+        }
         SourceBuilder sourceBuilder = new SourceBuilder(config);
         List<ApiDoc> apiDocList = sourceBuilder.getControllerApiData();
         if (config.isAllInOne()) {
@@ -62,10 +72,10 @@ public class ApiDocBuilder {
         FileUtil.mkdirs(outPath);
         SourceBuilder sourceBuilder = new SourceBuilder(true);
         ApiDoc doc = sourceBuilder.getSingleControllerApiData(controllerName);
-        Template mapper = BeetlTemplateUtil.getByName("ApiDoc.btl");
-        mapper.binding("desc", doc.getDesc());
-        mapper.binding("name", doc.getName());
-        mapper.binding("list", doc.getList());//类名
+        Template mapper = BeetlTemplateUtil.getByName(API_DOC_TPL);
+        mapper.binding(TemplateVariable.DESC.getVariable(), doc.getDesc());
+        mapper.binding(TemplateVariable.NAME.getVariable(), doc.getName());
+        mapper.binding(TemplateVariable.LIST.getVariable(), doc.getList());//类名
         FileUtil.writeFileNotAppend(mapper.render(), outPath + FILE_SEPARATOR + doc.getName() + "Api.md");
     }
 
@@ -78,10 +88,10 @@ public class ApiDocBuilder {
     private static void buildApiDoc(List<ApiDoc> apiDocList, String outPath) {
         FileUtil.mkdirs(outPath);
         for (ApiDoc doc : apiDocList) {
-            Template mapper = BeetlTemplateUtil.getByName("ApiDoc.btl");
-            mapper.binding("desc", doc.getDesc());
-            mapper.binding("name", doc.getName());
-            mapper.binding("list", doc.getList());//类名
+            Template mapper = BeetlTemplateUtil.getByName(API_DOC_TPL);
+            mapper.binding(TemplateVariable.DESC.getVariable(), doc.getDesc());
+            mapper.binding(TemplateVariable.NAME.getVariable(), doc.getName());
+            mapper.binding(TemplateVariable.LIST.getVariable(), doc.getList());//类名
             FileUtil.nioWriteFile(mapper.render(), outPath + FILE_SEPARATOR + doc.getName() + "Api.md");
         }
     }
@@ -95,9 +105,9 @@ public class ApiDocBuilder {
         String outPath = config.getOutPath();
         FileUtil.mkdirs(outPath);
         Template tpl = BeetlTemplateUtil.getByName("AllInOne.btl");
-        tpl.binding("apiDocList", apiDocList);
-        tpl.binding("errorCodeList", config.getErrorCodes());
-        tpl.binding("revisionLogList", config.getRevisionLogs());
+        tpl.binding(TemplateVariable.API_DOC_LIST.getVariable(), apiDocList);
+        tpl.binding(TemplateVariable.ERROR_CODE_LIST.getVariable(), config.getErrorCodes());
+        tpl.binding(TemplateVariable.VERSION_LIST.getVariable(), config.getRevisionLogs());
         String version = DateTimeUtil.long2Str(System.currentTimeMillis(), "yyyyMMddHHmm");
         FileUtil.nioWriteFile(tpl.render(), outPath + FILE_SEPARATOR + "AllInOne-V" + version + ".md");
     }
@@ -110,9 +120,9 @@ public class ApiDocBuilder {
      */
     private static void buildErrorCodeDoc(List<ApiErrorCode> errorCodeList, String outPath) {
         if (CollectionUtil.isNotEmpty(errorCodeList)) {
-            Template mapper = BeetlTemplateUtil.getByName("ErrorCodeList.btl");
-            mapper.binding("list", errorCodeList);//类名
-            FileUtil.nioWriteFile(mapper.render(), outPath + FILE_SEPARATOR + "ErrorCodeList.md");
+            Template mapper = BeetlTemplateUtil.getByName(ERROR_CODE_LIST_TPL);
+            mapper.binding(TemplateVariable.LIST.getVariable(), errorCodeList);//类名
+            FileUtil.nioWriteFile(mapper.render(), outPath + FILE_SEPARATOR + ERROR_CODE_LIST_MD);
         }
     }
 }

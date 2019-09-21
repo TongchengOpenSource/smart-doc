@@ -1,9 +1,6 @@
 package com.power.doc.builder;
 
-import com.power.common.util.CollectionUtil;
-import com.power.common.util.JsonFormatUtil;
-import com.power.common.util.StringUtil;
-import com.power.common.util.UrlUtil;
+import com.power.common.util.*;
 import com.power.doc.constants.AnnotationConstants;
 import com.power.doc.constants.DocTags;
 import com.power.doc.constants.GlobalConstants;
@@ -48,6 +45,7 @@ public class SourceBuilder {
     private String packageMatch;
     private List<ApiReqHeader> headers;
     private String appUrl;
+    private AesInfo aesInfo;
 
     /**
      * if isStrict value is true,it while check all method
@@ -75,6 +73,7 @@ public class SourceBuilder {
             this.appUrl = config.getServerUrl();
         }
 
+        aesInfo = config.getAesInfo();
         this.packageMatch = config.getPackageFilters();
         this.isStrict = config.isStrict();
         loadJavaFiles(config.getSourcePaths());
@@ -154,22 +153,32 @@ public class SourceBuilder {
 
     public List<ApiDoc> getControllerApiData() {
         List<ApiDoc> apiDocList = new ArrayList<>();
+        int order = 0;
         for (JavaClass cls : javaClasses) {
             if (checkController(cls)) {
                 String controllerName = cls.getName();
                 if (StringUtil.isNotEmpty(packageMatch)) {
                     if (DocUtil.isMatch(packageMatch, cls.getCanonicalName())) {
+                        order++;
                         List<ApiMethodDoc> apiMethodDocs = buildControllerMethod(cls);
                         ApiDoc apiDoc = new ApiDoc();
-                        apiDoc.setDesc(cls.getComment());
+                        apiDoc.setOrder(order);
                         apiDoc.setName(controllerName);
+                        apiDoc.setAlias(controllerName);
+                        this.handControllerAlias(apiDoc);
+                        apiDoc.setDesc(cls.getComment());
                         apiDoc.setList(apiMethodDocs);
                         apiDocList.add(apiDoc);
                     }
                 } else {
+                    order++;
                     List<ApiMethodDoc> apiMethodDocs = buildControllerMethod(cls);
                     ApiDoc apiDoc = new ApiDoc();
+                    apiDoc.setOrder(order);
+                    apiDoc.setAlias(MD6Util.md6(controllerName));
                     apiDoc.setName(controllerName);
+                    apiDoc.setAlias(controllerName);
+                    this.handControllerAlias(apiDoc);
                     apiDoc.setDesc(cls.getComment());
                     apiDoc.setList(apiMethodDocs);
                     apiDocList.add(apiDoc);
@@ -215,11 +224,14 @@ public class SourceBuilder {
         }
         List<JavaMethod> methods = cls.getMethods();
         List<ApiMethodDoc> methodDocList = new ArrayList<>(methods.size());
+        int methodOrder = 0;
         for (JavaMethod method : methods) {
             if (StringUtil.isEmpty(method.getComment()) && isStrict) {
                 throw new RuntimeException("Unable to find comment for method " + method.getName() + " in " + cls.getCanonicalName());
             }
+            methodOrder++;
             ApiMethodDoc apiMethodDoc = new ApiMethodDoc();
+            apiMethodDoc.setOrder(methodOrder);
             apiMethodDoc.setDesc(method.getComment());
             List<JavaAnnotation> annotations = method.getAnnotations();
             String url = null;
@@ -644,7 +656,7 @@ public class SourceBuilder {
             }
         }
         if (DocClassUtil.isPrimitive(typeName)) {
-            return DocUtil.jsonValueByType(typeName);
+            return DocUtil.jsonValueByType(typeName).replace("\"", "");
         }
         StringBuilder data0 = new StringBuilder();
         JavaClass cls = builder.getClassByName(typeName);
@@ -1101,5 +1113,23 @@ public class SourceBuilder {
             fieldList.addAll(cls1.getFields());
         }
         return fieldList;
+    }
+
+    /**
+     * handle controller name
+     *
+     * @param apiDoc ApiDoc
+     */
+    private void handControllerAlias(ApiDoc apiDoc) {
+        if (null != aesInfo && StringUtil.isNotEmpty(aesInfo.getKey())
+                && StringUtil.isNotEmpty(aesInfo.getVector())) {
+            String name = AESUtil.encodeByCBC(apiDoc.getName(), aesInfo.getKey(), aesInfo.getVector());
+            int length = name.length();
+            if (name.length() < 32) {
+                apiDoc.setAlias(name);
+            } else {
+                apiDoc.setAlias(name.substring(length - 32, length));
+            }
+        }
     }
 }

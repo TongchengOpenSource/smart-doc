@@ -6,6 +6,22 @@ package com.power.doc.constants;
 public class GlobalConstants {
 
     public static final String FILE_SEPARATOR = System.getProperty("file.separator");
+
+    public static final String DOC_LANGUAGE = "smart-doc_language";
+
+    public static final String API_DOC_TPL = "ApiDoc.btl";
+
+    public static final String HTML_API_DOC_TPL = "HtmlApiDoc.btl";
+
+    public static final String ERROR_CODE_LIST_TPL = "ErrorCodeList.btl";
+
+    public static final String ERROR_CODE_LIST_MD = "ErrorCodeList.md";
+
+    public static final String INDEX_TPL = "Index.btl";
+
+    public static final String INDEX_CSS_TPL = "index.css";
+
+    public static final String MARKDOWN_CSS_TPL = "markdown.css";
     /**
      * controller注解全名称
      */

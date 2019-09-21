@@ -1,6 +1,7 @@
 package com.power.doc.model;
 
 import com.power.common.util.CollectionUtil;
+import com.power.doc.constants.Language;
 
 import java.util.List;
 
@@ -65,6 +66,19 @@ public class ApiConfig {
      * 接口变更日志
      */
     private List<RevisionLog> revisionLogs;
+
+    /**
+     * @since 1.7+
+     * aes加密信息
+     */
+    private AesInfo aesInfo;
+
+    /**
+     * 语言
+     * @since 1.7+
+     */
+    private Language language;
+
 
     public String getServerUrl() {
         return serverUrl;
@@ -147,4 +161,19 @@ public class ApiConfig {
         this.revisionLogs = CollectionUtil.asList(revisionLogs);
     }
 
+    public AesInfo getAesInfo() {
+        return aesInfo;
+    }
+
+    public void setAesInfo(AesInfo aesInfo) {
+        this.aesInfo = aesInfo;
+    }
+
+    public Language getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(Language language) {
+        this.language = language;
+    }
 }

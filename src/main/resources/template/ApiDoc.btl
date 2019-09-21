@@ -4,17 +4,17 @@
 for(doc in list){
 %>
 ## ${doc.desc}
-**URL:** ${doc.url}
+**URL:** `${doc.url}`
 
-**Type:** ${doc.type}
+**Type:** `${doc.type}`
 
-**Content-Type:** ${doc.contentType}
+**Content-Type:** `${doc.contentType}`
 
 <%if(isNotEmpty(doc.headers)){%>
 **Request-headers:**
 
-Name | Type|Description
----|---|---
+Header | Type|Description|Required|Since
+---|---|---|---|----
 ${doc.headers}
 <%}%>
 

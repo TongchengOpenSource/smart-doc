@@ -5,6 +5,7 @@ import com.power.common.util.DateTimeUtil;
 import com.power.common.util.IDCardUtil;
 import com.power.common.util.RandomUtil;
 import com.power.common.util.StringUtil;
+import com.power.doc.constants.GlobalConstants;
 import com.thoughtworks.qdox.model.JavaAnnotation;
 
 import java.util.*;
@@ -17,7 +18,7 @@ import java.util.*;
  */
 public class DocUtil {
 
-    private static Faker faker = new Faker(new Locale("zh-CN"));
+    private static Faker faker = new Faker(new Locale(System.getProperty(GlobalConstants.DOC_LANGUAGE)));
 
     private static Faker enFaker = new Faker(new Locale("en-US"));
 
