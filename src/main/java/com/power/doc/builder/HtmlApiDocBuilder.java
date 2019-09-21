@@ -93,7 +93,7 @@ public class HtmlApiDocBuilder {
             String html = MarkDownUtil.toHtml(apiTemplate.render());
             htmlApiDoc = BeetlTemplateUtil.getByName(HTML_API_DOC_TPL);
             htmlApiDoc.binding(TemplateVariable.HTML.getVariable(), html);
-            htmlApiDoc.binding(TemplateVariable.TITLE.getVariable(),doc.getName());
+            htmlApiDoc.binding(TemplateVariable.TITLE.getVariable(),doc.getDesc());
             htmlApiDoc.binding(TemplateVariable.CREATE_TIME.getVariable(), DateTimeUtil.long2Str(System.currentTimeMillis()
                     , DateTimeUtil.DATE_FORMAT_SECOND));
             FileUtil.nioWriteFile(htmlApiDoc.render(), outPath + FILE_SEPARATOR + doc.getAlias() + ".html");
