@@ -4,7 +4,7 @@ package com.power.doc.constants;
  * java注解
  * @author yu 2019/9/19.
  */
-public class AnnotationConstants {
+public class DocAnnotationConstants {
 
     public static final String SHORT_CONTROLLER = "Controller";
 

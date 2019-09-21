@@ -1,9 +1,9 @@
 package com.power.doc.builder;
 
 import com.power.common.util.*;
-import com.power.doc.constants.AnnotationConstants;
+import com.power.doc.constants.DocAnnotationConstants;
 import com.power.doc.constants.DocTags;
-import com.power.doc.constants.GlobalConstants;
+import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.model.*;
 import com.power.doc.utils.DocClassUtil;
 import com.power.doc.utils.DocUtil;
@@ -45,7 +45,7 @@ public class SourceBuilder {
     private String packageMatch;
     private List<ApiReqHeader> headers;
     private String appUrl;
-    private AesInfo aesInfo;
+    private ApiAesInfo aesInfo;
 
     /**
      * if isStrict value is true,it while check all method
@@ -123,10 +123,10 @@ public class SourceBuilder {
         List<JavaAnnotation> classAnnotations = cls.getAnnotations();
         for (JavaAnnotation annotation : classAnnotations) {
             String annotationName = annotation.getType().getName();
-            if (AnnotationConstants.SHORT_CONTROLLER.equals(annotationName)
-                    || AnnotationConstants.SHORT_REST_CONTROLLER.equals(annotationName)
-                    || GlobalConstants.REST_CONTROLLER_FULLY.equals(annotationName)
-                    || GlobalConstants.CONTROLLER_FULLY.equals(annotationName)
+            if (DocAnnotationConstants.SHORT_CONTROLLER.equals(annotationName)
+                    || DocAnnotationConstants.SHORT_REST_CONTROLLER.equals(annotationName)
+                    || DocGlobalConstants.REST_CONTROLLER_FULLY.equals(annotationName)
+                    || DocGlobalConstants.CONTROLLER_FULLY.equals(annotationName)
                     ) {
                 return true;
             }
@@ -144,7 +144,7 @@ public class SourceBuilder {
         List<JavaAnnotation> classAnnotations = cls.getAnnotations();
         for (JavaAnnotation annotation : classAnnotations) {
             String annotationName = annotation.getType().getName();
-            if (AnnotationConstants.SHORT_REST_CONTROLLER.equals(annotationName)) {
+            if (DocAnnotationConstants.SHORT_REST_CONTROLLER.equals(annotationName)) {
                 return true;
             }
         }
@@ -216,7 +216,7 @@ public class SourceBuilder {
         String baseUrl = null;
         for (JavaAnnotation annotation : classAnnotations) {
             String annotationName = annotation.getType().getName();
-            if (REQUEST_MAPPING.equals(annotationName) || GlobalConstants.REQUEST_MAPPING_FULLY.equals(annotationName)) {
+            if (REQUEST_MAPPING.equals(annotationName) || DocGlobalConstants.REQUEST_MAPPING_FULLY.equals(annotationName)) {
                 baseUrl = annotation.getNamedParameter("value").toString();
                 baseUrl = baseUrl.replaceAll("\"", "");
             }
@@ -238,7 +238,7 @@ public class SourceBuilder {
             int methodCounter = 0;
             for (JavaAnnotation annotation : annotations) {
                 String annotationName = annotation.getType().getName();
-                if (REQUEST_MAPPING.equals(annotationName) || GlobalConstants.REQUEST_MAPPING_FULLY.equals(annotationName)) {
+                if (REQUEST_MAPPING.equals(annotationName) || DocGlobalConstants.REQUEST_MAPPING_FULLY.equals(annotationName)) {
                     url = DocUtil.handleMappingValue(annotation);
                     if (null != annotation.getNamedParameter("method")) {
                         methodType = annotation.getNamedParameter("method").toString();
@@ -247,19 +247,19 @@ public class SourceBuilder {
                         methodType = "GET";
                     }
                     methodCounter++;
-                } else if (GET_MAPPING.equals(annotationName) || GlobalConstants.GET_MAPPING_FULLY.equals(annotationName)) {
+                } else if (GET_MAPPING.equals(annotationName) || DocGlobalConstants.GET_MAPPING_FULLY.equals(annotationName)) {
                     url = DocUtil.handleMappingValue(annotation);
                     methodType = "GET";
                     methodCounter++;
-                } else if (POST_MAPPING.equals(annotationName) || GlobalConstants.POST_MAPPING_FULLY.equals(annotationName)) {
+                } else if (POST_MAPPING.equals(annotationName) || DocGlobalConstants.POST_MAPPING_FULLY.equals(annotationName)) {
                     url = DocUtil.handleMappingValue(annotation);
                     methodType = "POST";
                     methodCounter++;
-                } else if (PUT_MAPPING.equals(annotationName) || GlobalConstants.PUT_MAPPING_FULLY.equals(annotationName)) {
+                } else if (PUT_MAPPING.equals(annotationName) || DocGlobalConstants.PUT_MAPPING_FULLY.equals(annotationName)) {
                     url = DocUtil.handleMappingValue(annotation);
                     methodType = "PUT";
                     methodCounter++;
-                } else if (DELETE_MAPPING.equals(annotationName) || GlobalConstants.DELETE_MAPPING_FULLY.equals(annotationName)) {
+                } else if (DELETE_MAPPING.equals(annotationName) || DocGlobalConstants.DELETE_MAPPING_FULLY.equals(annotationName)) {
                     url = DocUtil.handleMappingValue(annotation);
                     methodType = "DELETE";
                     methodCounter++;
@@ -323,7 +323,7 @@ public class SourceBuilder {
         String returnType = method.getReturnType().getGenericCanonicalName();
         String typeName = method.getReturnType().getFullyQualifiedName();
         if (DocClassUtil.isMvcIgnoreParams(typeName)) {
-            if (GlobalConstants.MODE_AND_VIEW_FULLY.equals(typeName)) {
+            if (DocGlobalConstants.MODE_AND_VIEW_FULLY.equals(typeName)) {
                 return null;
             } else {
                 throw new RuntimeException("smart-doc can't support " + typeName + " as method return in " + controllerName);
@@ -399,7 +399,7 @@ public class SourceBuilder {
             if (globGicName.length == 2) {
                 params0.append(buildParams(globGicName[1], pre, i + 1, isRequired, responseFieldMap, isResp));
             }
-        } else if (GlobalConstants.JAVA_OBJECT_FULLY.equals(className)) {
+        } else if (DocGlobalConstants.JAVA_OBJECT_FULLY.equals(className)) {
             params0.append(pre + "any object|object|");
             if (StringUtil.isEmpty(isRequired)) {
                 params0.append("any object.").append("|-\n");
@@ -440,9 +440,9 @@ public class SourceBuilder {
                     an:
                     for (JavaAnnotation annotation : javaAnnotations) {
                         String annotationName = annotation.getType().getSimpleName();
-                        if (AnnotationConstants.SHORT_JSON_IGNORE.equals(annotationName) && isResp) {
+                        if (DocAnnotationConstants.SHORT_JSON_IGNORE.equals(annotationName) && isResp) {
                             continue out;
-                        } else if (AnnotationConstants.SHORT_JSON_FIELD.equals(annotationName) && isResp) {
+                        } else if (DocAnnotationConstants.SHORT_JSON_FIELD.equals(annotationName) && isResp) {
                             if (null != annotation.getProperty("serialize")) {
                                 if ("false".equals(annotation.getProperty("serialize").toString())) {
                                     continue out;
@@ -450,7 +450,7 @@ public class SourceBuilder {
                             } else if (null != annotation.getProperty("name")) {
                                 fieldName = annotation.getProperty("name").toString().replace("\"", "");
                             }
-                        } else if (AnnotationConstants.SHORT_JSON_PROPERTY.equals(annotationName) && isResp) {
+                        } else if (DocAnnotationConstants.SHORT_JSON_PROPERTY.equals(annotationName) && isResp) {
                             if (null != annotation.getProperty("value")) {
                                 fieldName = annotation.getProperty("value").toString().replace("\"", "");
                             }
@@ -527,7 +527,7 @@ public class SourceBuilder {
                         preBuilder.append("└─");
                         if (DocClassUtil.isMap(subTypeName)) {
                             String gNameTemp = field.getType().getGenericCanonicalName();
-                            if (GlobalConstants.JAVA_MAP_FULLY.equals(gNameTemp)) {
+                            if (DocGlobalConstants.JAVA_MAP_FULLY.equals(gNameTemp)) {
                                 params0.append(preBuilder + "any object|object|any object|-\n");
                                 continue;
                             }
@@ -564,7 +564,7 @@ public class SourceBuilder {
                                     }
                                 }
                             }
-                        } else if (subTypeName.length() == 1 || GlobalConstants.JAVA_OBJECT_FULLY.equals(subTypeName)) {
+                        } else if (subTypeName.length() == 1 || DocGlobalConstants.JAVA_OBJECT_FULLY.equals(subTypeName)) {
                             if (!simpleName.equals(className)) {
                                 if (n < globGicName.length) {
                                     String gicName = globGicName[n];
@@ -648,7 +648,7 @@ public class SourceBuilder {
      */
     private String buildJson(String typeName, String genericCanonicalName, Map<String, CustomRespField> responseFieldMap, boolean isResp) {
         if (DocClassUtil.isMvcIgnoreParams(typeName)) {
-            if (GlobalConstants.MODE_AND_VIEW_FULLY.equals(typeName)) {
+            if (DocGlobalConstants.MODE_AND_VIEW_FULLY.equals(typeName)) {
                 return "forward or redirect to a page view.";
             } else {
                 return "error restful return.";
@@ -671,7 +671,7 @@ public class SourceBuilder {
             }
             String gNameTemp = globGicName[0];
             String gName = DocClassUtil.isArray(typeName) ? gNameTemp.substring(0, gNameTemp.indexOf("[")) : globGicName[0];
-            if (GlobalConstants.JAVA_OBJECT_FULLY.equals(gName)) {
+            if (DocGlobalConstants.JAVA_OBJECT_FULLY.equals(gName)) {
                 data.append("{\"waring\":\"You may use java.util.Object instead of display generics in the List\"}");
             } else if (DocClassUtil.isPrimitive(gName)) {
                 data.append(DocUtil.jsonValueByType(gName)).append(",");
@@ -695,11 +695,11 @@ public class SourceBuilder {
                 data.append("{\"mapKey\":{}}");
                 return data.toString();
             }
-            if (!GlobalConstants.JAVA_STRING_FULLY.equals(getKeyValType[0])) {
+            if (!DocGlobalConstants.JAVA_STRING_FULLY.equals(getKeyValType[0])) {
                 throw new RuntimeException("Map's key can only use String for json,but you use " + getKeyValType[0]);
             }
             String gicName = gNameTemp.substring(gNameTemp.indexOf(",") + 1, gNameTemp.lastIndexOf(">"));
-            if (GlobalConstants.JAVA_OBJECT_FULLY.equals(gicName)) {
+            if (DocGlobalConstants.JAVA_OBJECT_FULLY.equals(gicName)) {
                 data.append("{").append("\"mapKey\":").append("{\"waring\":\"You may use java.util.Object for Map value; smart-doc can't be handle.\"}").append("}");
             } else if (DocClassUtil.isPrimitive(gicName)) {
                 data.append("{").append("\"mapKey1\":").append(DocUtil.jsonValueByType(gicName)).append(",");
@@ -712,8 +712,8 @@ public class SourceBuilder {
                 data.append("{").append("\"mapKey\":").append(buildJson(gicName, gNameTemp, responseFieldMap, isResp)).append("}");
             }
             return data.toString();
-        } else if (GlobalConstants.JAVA_OBJECT_FULLY.equals(typeName)) {
-            if (GlobalConstants.JAVA_OBJECT_FULLY.equals(typeName)) {
+        } else if (DocGlobalConstants.JAVA_OBJECT_FULLY.equals(typeName)) {
+            if (DocGlobalConstants.JAVA_OBJECT_FULLY.equals(typeName)) {
                 data.append("{\"object\":\" any object\"},");
                 // throw new RuntimeException("Please do not return java.lang.Object directly in api interface.");
             }
@@ -736,9 +736,9 @@ public class SourceBuilder {
                     List<JavaAnnotation> annotations = field.getAnnotations();
                     for (JavaAnnotation annotation : annotations) {
                         String annotationName = annotation.getType().getSimpleName();
-                        if (AnnotationConstants.SHORT_JSON_IGNORE.equals(annotationName) && isResp) {
+                        if (DocAnnotationConstants.SHORT_JSON_IGNORE.equals(annotationName) && isResp) {
                             continue out;
-                        } else if (AnnotationConstants.SHORT_JSON_FIELD.equals(annotationName) && isResp) {
+                        } else if (DocAnnotationConstants.SHORT_JSON_FIELD.equals(annotationName) && isResp) {
                             if (null != annotation.getProperty("serialize")) {
                                 if ("false".equals(annotation.getProperty("serialize").toString())) {
                                     continue out;
@@ -746,7 +746,7 @@ public class SourceBuilder {
                             } else if (null != annotation.getProperty("name")) {
                                 fieldName = annotation.getProperty("name").toString().replace("\"", "");
                             }
-                        } else if (AnnotationConstants.SHORT_JSON_PROPERTY.equals(annotationName) && isResp) {
+                        } else if (DocAnnotationConstants.SHORT_JSON_PROPERTY.equals(annotationName) && isResp) {
                             if (null != annotation.getProperty("value")) {
                                 fieldName = annotation.getProperty("value").toString().replace("\"", "");
                             }
@@ -781,9 +781,9 @@ public class SourceBuilder {
                             }
                             String gicName = DocClassUtil.getSimpleGicName(fieldGicName)[0];
 
-                            if (GlobalConstants.JAVA_STRING_FULLY.equals(gicName)) {
+                            if (DocGlobalConstants.JAVA_STRING_FULLY.equals(gicName)) {
                                 data0.append("[").append("\"").append(buildJson(gicName, fieldGicName, responseFieldMap, isResp)).append("\"]").append(",");
-                            } else if (GlobalConstants.JAVA_LIST_FULLY.equals(gicName)) {
+                            } else if (DocGlobalConstants.JAVA_LIST_FULLY.equals(gicName)) {
                                 data0.append("{\"object\":\"any object\"},");
                             } else if (gicName.length() == 1) {
                                 if (globGicName.length == 0) {
@@ -791,7 +791,7 @@ public class SourceBuilder {
                                     continue out;
                                 }
                                 String gicName1 = (i < globGicName.length) ? globGicName[i] : globGicName[globGicName.length - 1];
-                                if (GlobalConstants.JAVA_STRING_FULLY.equals(gicName1)) {
+                                if (DocGlobalConstants.JAVA_STRING_FULLY.equals(gicName1)) {
                                     data0.append("[").append("\"").append(buildJson(gicName1, gicName1, responseFieldMap, isResp)).append("\"]").append(",");
                                 } else {
                                     if (!typeName.equals(gicName1)) {
@@ -813,14 +813,14 @@ public class SourceBuilder {
                                 }
                             }
                         } else if (DocClassUtil.isMap(subTypeName)) {
-                            if (GlobalConstants.JAVA_MAP_FULLY.equals(subTypeName)) {
+                            if (DocGlobalConstants.JAVA_MAP_FULLY.equals(subTypeName)) {
                                 data0.append("{").append("\"mapKey\":{}},");
                                 continue out;
                             }
                             String gicName = fieldGicName.substring(fieldGicName.indexOf(",") + 1, fieldGicName.indexOf(">"));
                             if (gicName.length() == 1) {
                                 String gicName1 = (i < globGicName.length) ? globGicName[i] : globGicName[globGicName.length - 1];
-                                if (GlobalConstants.JAVA_STRING_FULLY.equals(gicName1)) {
+                                if (DocGlobalConstants.JAVA_STRING_FULLY.equals(gicName1)) {
                                     data0.append("{").append("\"mapKey\":\"").append(buildJson(gicName1, gicName1, responseFieldMap, isResp)).append("\"},");
                                 } else {
                                     if (!typeName.equals(gicName1)) {
@@ -850,7 +850,7 @@ public class SourceBuilder {
                                 data0.append("{\"waring\":\"You may have used non-display generics.\"},");
                             }
                             i++;
-                        } else if (GlobalConstants.JAVA_OBJECT_FULLY.equals(subTypeName)) {
+                        } else if (DocGlobalConstants.JAVA_OBJECT_FULLY.equals(subTypeName)) {
                             if (i < globGicName.length) {
                                 String gicName = globGicName[i];
                                 if (!typeName.equals(genericCanonicalName)) {
@@ -901,7 +901,7 @@ public class SourceBuilder {
                 int requestBodyCounter = 0;
                 for (JavaAnnotation annotation : annotations) {
                     String annotationName = annotation.getType().getSimpleName();
-                    if (REQUEST_BODY.equals(annotationName) || GlobalConstants.REQUEST_BODY_FULLY.equals(annotationName)) {
+                    if (REQUEST_BODY.equals(annotationName) || DocGlobalConstants.REQUEST_BODY_FULLY.equals(annotationName)) {
                         requestBodyCounter++;
                         apiMethodDoc.setContentType(JSON_CONTENT_TYPE);
                         if (DocClassUtil.isPrimitive(simpleTypeName)) {
@@ -1017,7 +1017,7 @@ public class SourceBuilder {
                             reqParam.append(paramName).append("|")
                                     .append(DocClassUtil.processTypeNameForParams(simpleName)).append("|")
                                     .append(comment).append("|true|-\n");
-                        } else if (GlobalConstants.JAVA_MAP_FULLY.equals(typeName)) {
+                        } else if (DocGlobalConstants.JAVA_MAP_FULLY.equals(typeName)) {
                             reqParam.append(paramName).append("|")
                                     .append("map").append("|")
                                     .append(comment).append("|true|-\n");
@@ -1058,7 +1058,7 @@ public class SourceBuilder {
                                     }
 
                                 } else if (DocClassUtil.isMap(fullTypeName)) {
-                                    if (GlobalConstants.JAVA_MAP_FULLY.equals(typeName)) {
+                                    if (DocGlobalConstants.JAVA_MAP_FULLY.equals(typeName)) {
                                         reqParam.append(paramName).append("|")
                                                 .append("map").append("|")
                                                 .append(comment).append("|").append(required).append("\n");

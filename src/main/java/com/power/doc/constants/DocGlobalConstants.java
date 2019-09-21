@@ -3,9 +3,14 @@ package com.power.doc.constants;
 /**
  * @author yu 2018/12/15.
  */
-public class GlobalConstants {
+public class DocGlobalConstants {
 
     public static final String FILE_SEPARATOR = System.getProperty("file.separator");
+
+    /**
+     * html doc在spring mvc的输出路径
+     */
+    public static final String HTML_DOC_OUT_PATH = "src/main/resources/static/doc";
 
     public static final String DOC_LANGUAGE = "smart-doc_language";
 

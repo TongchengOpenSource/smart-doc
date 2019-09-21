@@ -4,8 +4,8 @@ import com.power.common.util.CollectionUtil;
 import com.power.common.util.DateTimeUtil;
 import com.power.common.util.FileUtil;
 import com.power.common.util.StringUtil;
-import com.power.doc.constants.GlobalConstants;
-import com.power.doc.constants.Language;
+import com.power.doc.constants.DocGlobalConstants;
+import com.power.doc.constants.DocLanguage;
 import com.power.doc.constants.TemplateVariable;
 import com.power.doc.model.ApiConfig;
 import com.power.doc.model.ApiDoc;
@@ -16,7 +16,7 @@ import org.beetl.core.Template;
 
 import java.util.List;
 
-import static com.power.doc.constants.GlobalConstants.*;
+import static com.power.doc.constants.DocGlobalConstants.*;
 
 /**
  * @author yu 2019/9/20.
@@ -35,10 +35,10 @@ public class HtmlApiDocBuilder {
             throw new RuntimeException("doc output path can't be null or empty");
         }
         if (null != config.getLanguage()) {
-            System.setProperty(GlobalConstants.DOC_LANGUAGE, config.getLanguage().getCode());
+            System.setProperty(DocGlobalConstants.DOC_LANGUAGE, config.getLanguage().getCode());
         } else {
             //default is chinese
-            System.setProperty(GlobalConstants.DOC_LANGUAGE, Language.CHINESE.getCode());
+            System.setProperty(DocGlobalConstants.DOC_LANGUAGE, DocLanguage.CHINESE.getCode());
         }
         SourceBuilder sourceBuilder = new SourceBuilder(config);
         List<ApiDoc> apiDocList = sourceBuilder.getControllerApiData();
@@ -63,7 +63,7 @@ public class HtmlApiDocBuilder {
         indexTemplate.binding(TemplateVariable.HOME_PAGE.getVariable(), homePage);
         indexTemplate.binding(TemplateVariable.API_DOC_LIST.getVariable(), apiDocList);
         if (null != config.getLanguage()) {
-            if (Language.CHINESE.code.equals(config.getLanguage().getCode())) {
+            if (DocLanguage.CHINESE.code.equals(config.getLanguage().getCode())) {
                 indexTemplate.binding(TemplateVariable.ERROR_LIST_TITLE.getVariable(), "A. 错误码列表");
             } else {
                 indexTemplate.binding(TemplateVariable.ERROR_LIST_TITLE.getVariable(), "A. Error Code List");

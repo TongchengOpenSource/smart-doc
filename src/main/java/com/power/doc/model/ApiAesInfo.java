@@ -5,7 +5,7 @@ package com.power.doc.model;
  * @since 1.7+
  * @author yu 2019/9/21.
  */
-public class AesInfo {
+public class ApiAesInfo {
 
     /**
      * aes加密key
@@ -17,15 +17,15 @@ public class AesInfo {
      */
     private String vector;
 
-    public static AesInfo create() {
-        return new AesInfo();
+    public static ApiAesInfo create() {
+        return new ApiAesInfo();
     }
 
     public String getKey() {
         return key;
     }
 
-    public AesInfo setKey(String key) {
+    public ApiAesInfo setKey(String key) {
         this.key = key;
         return this;
     }
@@ -34,7 +34,7 @@ public class AesInfo {
         return vector;
     }
 
-    public AesInfo setVector(String vector) {
+    public ApiAesInfo setVector(String vector) {
         this.vector = vector;
         return this;
     }
