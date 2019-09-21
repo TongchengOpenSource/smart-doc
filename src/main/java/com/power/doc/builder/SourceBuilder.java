@@ -162,9 +162,9 @@ public class SourceBuilder {
                         order++;
                         List<ApiMethodDoc> apiMethodDocs = buildControllerMethod(cls);
                         ApiDoc apiDoc = new ApiDoc();
-                        apiDoc.setOrder(order);
                         apiDoc.setName(controllerName);
                         apiDoc.setAlias(controllerName);
+                        apiDoc.setOrder(order);
                         this.handControllerAlias(apiDoc);
                         apiDoc.setDesc(cls.getComment());
                         apiDoc.setList(apiMethodDocs);
@@ -175,7 +175,6 @@ public class SourceBuilder {
                     List<ApiMethodDoc> apiMethodDocs = buildControllerMethod(cls);
                     ApiDoc apiDoc = new ApiDoc();
                     apiDoc.setOrder(order);
-                    apiDoc.setAlias(MD6Util.md6(controllerName));
                     apiDoc.setName(controllerName);
                     apiDoc.setAlias(controllerName);
                     this.handControllerAlias(apiDoc);
