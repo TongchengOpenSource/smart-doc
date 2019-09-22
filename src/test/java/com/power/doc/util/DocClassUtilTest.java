@@ -1,5 +1,6 @@
 package com.power.doc.util;
 
+import com.power.doc.model.ApiReturn;
 import com.power.doc.utils.DocClassUtil;
 import org.junit.Test;
 
@@ -23,5 +24,13 @@ public class DocClassUtilTest {
     public void testIsPrimitive() {
         String typeName = "java.time.LocalDateTime";
         System.out.println(DocClassUtil.isPrimitive(typeName));
+    }
+
+    @Test
+    public void testProcessReturnType() {
+        String typeName = "org.springframework.web.context.request.async.WebAsyncTask";
+        ApiReturn apiReturn = DocClassUtil.processReturnType(typeName);
+        System.out.println(apiReturn.getGenericCanonicalName());
+        System.out.println(apiReturn.getSimpleName());
     }
 }
