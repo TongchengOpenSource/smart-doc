@@ -888,7 +888,7 @@ public class SourceBuilder {
     private String buildReqJson(JavaMethod method, ApiMethodDoc apiMethodDoc) {
         List<JavaParameter> parameterList = method.getParameters();
         if (parameterList.size() < 1) {
-            return "No request parameters are required.";
+            return apiMethodDoc.getUrl();
         }
         boolean containsBrace = apiMethodDoc.getUrl().contains("{");
         Map<String, String> paramsMap = new LinkedHashMap<>();
