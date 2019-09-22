@@ -6,7 +6,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
-    <link rel="stylesheet" href="index.css"/>
+    <link rel="stylesheet" href="index.css?v=${version}"/>
     <title>api doc</title>
 </head>
 <div class="book without-animation with-summary font-size-2 font-family-1">
@@ -20,19 +20,19 @@
                for(api in apiDocList){
                %>
                 <li class="chapter " data-level="${api.alias}" data-path="${api.alias}.html">
-                   <a href="${api.alias}.html" target="book_iframe">${api.order}. ${api.desc}</a>
+                   <a href="${api.alias}.html?v=${version}" target="book_iframe">${api.order}. ${api.desc}</a>
                     <ul class="articles">
                         <%
                         for(doc in api.list){
                         %>
                         <li class="chapter " data-level="${api.alias}" data-path="${api.alias}.html">
-                        <a href="${api.alias}.html" target="book_iframe">${api.order}.${doc.order} ${doc.desc}</a></li>
+                        <a href="${api.alias}.html?v=${version}" target="book_iframe">${api.order}.${doc.order} ${doc.desc}</a></li>
                         <%}%>
                     </ul>
                 </li>
                 <%}%>
                 <li class="chapter " data-level="error_code" data-path="error_code.html">
-                   <a href="error_code.html" target="book_iframe">${errorListTitle}</a>
+                   <a href="error_code.html?v=${version}" target="book_iframe">${errorListTitle}</a>
                 </li>
                 <li class="divider"></li>
                 <li class="footer_link"><a href="https://github.com/shalousun/smart-doc" target="_blank" class="gitbook-link">Created by smart-doc</a>
@@ -41,7 +41,7 @@
         </nav>
     </div>
     <div id="book-body" class="book-body" height="100%">
-        <iframe src="${homePage}.html" frameborder="0" id="book_iframe" name="book_iframe" width="100%"></iframe>
+        <iframe src="${homePage}.html?v=${version}" frameborder="0" id="book_iframe" name="book_iframe" width="100%"></iframe>
     </div>
 </div>
 <script type="text/javascript">

@@ -2,14 +2,14 @@ package com.power.doc.builder;
 
 import com.power.common.util.*;
 import com.power.doc.constants.DocAnnotationConstants;
-import com.power.doc.constants.DocTags;
 import com.power.doc.constants.DocGlobalConstants;
+import com.power.doc.constants.DocTags;
 import com.power.doc.model.*;
 import com.power.doc.utils.DocClassUtil;
 import com.power.doc.utils.DocUtil;
+import com.power.doc.utils.PathUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import com.thoughtworks.qdox.model.*;
-import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.util.*;
@@ -274,13 +274,8 @@ public class SourceBuilder {
                 }
                 url = url.replaceAll("\"", "").trim();
                 apiMethodDoc.setType(methodType);
-                if (StringUtil.isNotEmpty(baseUrl)) {
-                    baseUrl = StringUtils.equals("/", baseUrl.subSequence(0, 1)) ? baseUrl : "/" + baseUrl;
-                    apiMethodDoc.setUrl(this.appUrl + (baseUrl + "/" + url).replace("//", "/"));
-                } else {
-                    url = StringUtils.equals("/", url.subSequence(0, 1)) ? url : "/" + url;
-                    apiMethodDoc.setUrl(this.appUrl + (url).replace("//", "/"));
-                }
+                url = this.appUrl + "/" + baseUrl + "/" + url;
+                apiMethodDoc.setUrl(PathUtil.processHttpUrl(url));
                 String comment = getCommentTag(method, "param", cls.getCanonicalName());
                 apiMethodDoc.setRequestParams(comment);
                 String requestJson = buildReqJson(method, apiMethodDoc);
@@ -320,7 +315,7 @@ public class SourceBuilder {
     }
 
     private String buildMethodReturn(JavaMethod method, String controllerName) {
-        ApiReturn apiReturn = DocClassUtil.processReturnType( method.getReturnType().getGenericCanonicalName());
+        ApiReturn apiReturn = DocClassUtil.processReturnType(method.getReturnType().getGenericCanonicalName());
         String returnType = apiReturn.getGenericCanonicalName();
         String typeName = apiReturn.getSimpleName();
         if (DocClassUtil.isMvcIgnoreParams(typeName)) {

@@ -24,4 +24,16 @@ public class PathUtil {
         className = className.replaceAll("\\.", "\\" + File.separator);
         return parentDir + className + ".java";
     }
+
+    /**
+     * process http url
+     * @param url url
+     * @return String
+     */
+    public static String processHttpUrl(String url) {
+        int index = url.indexOf("//");
+        String urlHead = url.substring(0, index + 2);
+        String urlTail = url.substring(index + 2, url.length()).replaceAll("/+", "/");
+        return new StringBuilder().append(urlHead).append(urlTail).toString();
+    }
 }

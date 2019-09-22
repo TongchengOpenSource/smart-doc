@@ -14,7 +14,8 @@ public enum  TemplateVariable {
     HTML("html"),
     TITLE("title"),
     ERROR_LIST_TITLE("errorListTitle"),
-    CREATE_TIME("createTime");
+    CREATE_TIME("createTime"),
+    VERSION("version");
 
 
 

@@ -24,6 +24,7 @@ import static com.power.doc.constants.DocGlobalConstants.*;
  */
 public class HtmlApiDocBuilder {
 
+    private static long now = System.currentTimeMillis();
     /**
      * @param config 配置
      */
@@ -62,6 +63,7 @@ public class HtmlApiDocBuilder {
         String homePage = doc.getAlias();
         indexTemplate.binding(TemplateVariable.HOME_PAGE.getVariable(), homePage);
         indexTemplate.binding(TemplateVariable.API_DOC_LIST.getVariable(), apiDocList);
+        indexTemplate.binding(TemplateVariable.VERSION.getVariable(), now);
         if (null != config.getLanguage()) {
             if (DocLanguage.CHINESE.code.equals(config.getLanguage().getCode())) {
                 indexTemplate.binding(TemplateVariable.ERROR_LIST_TITLE.getVariable(), "A. 错误码列表");
@@ -84,6 +86,7 @@ public class HtmlApiDocBuilder {
     private static void buildApiDoc(List<ApiDoc> apiDocList, String outPath) {
         FileUtil.mkdirs(outPath);
         Template htmlApiDoc;
+        String strTime = DateTimeUtil.long2Str(now, DateTimeUtil.DATE_FORMAT_SECOND);
         for (ApiDoc doc : apiDocList) {
             Template apiTemplate = BeetlTemplateUtil.getByName(API_DOC_TPL);
             apiTemplate.binding(TemplateVariable.DESC.getVariable(), doc.getDesc());
@@ -93,9 +96,9 @@ public class HtmlApiDocBuilder {
             String html = MarkDownUtil.toHtml(apiTemplate.render());
             htmlApiDoc = BeetlTemplateUtil.getByName(HTML_API_DOC_TPL);
             htmlApiDoc.binding(TemplateVariable.HTML.getVariable(), html);
-            htmlApiDoc.binding(TemplateVariable.TITLE.getVariable(),doc.getDesc());
-            htmlApiDoc.binding(TemplateVariable.CREATE_TIME.getVariable(), DateTimeUtil.long2Str(System.currentTimeMillis()
-                    , DateTimeUtil.DATE_FORMAT_SECOND));
+            htmlApiDoc.binding(TemplateVariable.TITLE.getVariable(), doc.getDesc());
+            htmlApiDoc.binding(TemplateVariable.CREATE_TIME.getVariable(), strTime);
+            htmlApiDoc.binding(TemplateVariable.VERSION.getVariable(), now);
             FileUtil.nioWriteFile(htmlApiDoc.render(), outPath + FILE_SEPARATOR + doc.getAlias() + ".html");
         }
     }
@@ -112,10 +115,10 @@ public class HtmlApiDocBuilder {
             error.binding(TemplateVariable.LIST.getVariable(), errorCodeList);//类名
             String errorHtml = MarkDownUtil.toHtml(error.render());
             Template errorCodeDoc = BeetlTemplateUtil.getByName(HTML_API_DOC_TPL);
-            errorCodeDoc.binding(TemplateVariable.TITLE.getVariable(),"error code");
+            errorCodeDoc.binding(TemplateVariable.VERSION.getVariable(), now);
+            errorCodeDoc.binding(TemplateVariable.TITLE.getVariable(), "error code");
             errorCodeDoc.binding(TemplateVariable.HTML.getVariable(), errorHtml);
-            errorCodeDoc.binding(TemplateVariable.CREATE_TIME.getVariable(), DateTimeUtil.long2Str(System.currentTimeMillis()
-                    , DateTimeUtil.DATE_FORMAT_SECOND));
+            errorCodeDoc.binding(TemplateVariable.CREATE_TIME.getVariable(), DateTimeUtil.long2Str(now, DateTimeUtil.DATE_FORMAT_SECOND));
             FileUtil.nioWriteFile(errorCodeDoc.render(), outPath + FILE_SEPARATOR + "error_code.html");
 
         }
