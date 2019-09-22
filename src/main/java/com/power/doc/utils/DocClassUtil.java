@@ -1,5 +1,8 @@
 package com.power.doc.utils;
 
+import com.power.doc.constants.DocGlobalConstants;
+import com.power.doc.model.ApiReturn;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -393,5 +396,55 @@ public class DocClassUtil {
             default:
                 return false;
         }
+    }
+
+    /**
+     * process return type
+     *
+     * @param fullyName fully name
+     * @return ApiReturn
+     */
+    public static ApiReturn processReturnType(String fullyName) {
+        ApiReturn apiReturn = new ApiReturn();
+
+        //support web flux
+        if (fullyName.startsWith("reactor.core.publisher.Flux")) {
+            fullyName = fullyName.replace("reactor.core.publisher.Flux", DocGlobalConstants.JAVA_LIST_FULLY);
+            apiReturn.setGenericCanonicalName(fullyName);
+            apiReturn.setSimpleName(DocGlobalConstants.JAVA_LIST_FULLY);
+            return apiReturn;
+        }
+        if (fullyName.startsWith("java.util.concurrent.Callable") ||
+                fullyName.startsWith("java.util.concurrent.Future") ||
+                fullyName.startsWith("java.util.concurrent.CompletableFuture") ||
+                fullyName.startsWith("org.springframework.web.context.request.async.DeferredResult") ||
+                fullyName.startsWith("org.springframework.web.context.request.async.WebAsyncTask") ||
+                fullyName.startsWith("reactor.core.publisher.Mono")) {
+            if (fullyName.contains("<")) {
+                String[] strings = getSimpleGicName(fullyName);
+                String newFullName = strings[0];
+                if (newFullName.contains("<")) {
+                    apiReturn.setGenericCanonicalName(newFullName);
+                    apiReturn.setSimpleName(newFullName.substring(0, newFullName.indexOf("<")));
+                } else {
+                    apiReturn.setGenericCanonicalName(newFullName);
+                    apiReturn.setSimpleName(newFullName);
+                }
+            } else {
+                //directly return Java Object
+                apiReturn.setGenericCanonicalName(DocGlobalConstants.JAVA_OBJECT_FULLY);
+                apiReturn.setSimpleName(DocGlobalConstants.JAVA_OBJECT_FULLY);
+                return apiReturn;
+            }
+
+        } else {
+            apiReturn.setGenericCanonicalName(fullyName);
+            if (fullyName.contains("<")) {
+                apiReturn.setSimpleName(fullyName.substring(0, fullyName.indexOf("<")));
+            } else {
+                apiReturn.setSimpleName(fullyName);
+            }
+        }
+        return apiReturn;
     }
 }

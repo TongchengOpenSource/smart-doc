@@ -213,7 +213,7 @@ public class SourceBuilder {
 
     public List<ApiMethodDoc> buildControllerMethod(final JavaClass cls) {
         List<JavaAnnotation> classAnnotations = cls.getAnnotations();
-        String baseUrl = null;
+        String baseUrl = "";
         for (JavaAnnotation annotation : classAnnotations) {
             String annotationName = annotation.getType().getName();
             if (REQUEST_MAPPING.equals(annotationName) || DocGlobalConstants.REQUEST_MAPPING_FULLY.equals(annotationName)) {
@@ -320,8 +320,9 @@ public class SourceBuilder {
     }
 
     private String buildMethodReturn(JavaMethod method, String controllerName) {
-        String returnType = method.getReturnType().getGenericCanonicalName();
-        String typeName = method.getReturnType().getFullyQualifiedName();
+        ApiReturn apiReturn = DocClassUtil.processReturnType( method.getReturnType().getGenericCanonicalName());
+        String returnType = apiReturn.getGenericCanonicalName();
+        String typeName = apiReturn.getSimpleName();
         if (DocClassUtil.isMvcIgnoreParams(typeName)) {
             if (DocGlobalConstants.MODE_AND_VIEW_FULLY.equals(typeName)) {
                 return null;
@@ -634,8 +635,9 @@ public class SourceBuilder {
         if ("void".equals(method.getReturnType().getFullyQualifiedName())) {
             return "this api return nothing.";
         }
-        String returnType = method.getReturnType().getGenericCanonicalName();
-        String typeName = method.getReturnType().getFullyQualifiedName();
+        ApiReturn apiReturn = DocClassUtil.processReturnType(method.getReturnType().getGenericCanonicalName());
+        String returnType = apiReturn.getGenericCanonicalName();
+        String typeName = apiReturn.getSimpleName();
         return JsonFormatUtil.formatJson(buildJson(typeName, returnType, responseFieldMap, true));
     }
 
