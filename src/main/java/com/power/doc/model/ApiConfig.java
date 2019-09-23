@@ -132,7 +132,7 @@ public class ApiConfig {
         return sourceCodePaths;
     }
 
-    public void setSourcePaths(SourceCodePath... sourcePaths) {
+    public void setSourceCodePaths(SourceCodePath... sourcePaths) {
         this.sourceCodePaths = CollectionUtil.asList(sourcePaths);
     }
 
