@@ -3,31 +3,61 @@ package com.power.doc.model;
 import java.io.Serializable;
 
 /**
- * api文档
+ * java api method info model.
  */
 public class ApiMethodDoc implements Serializable {
 
+
+    private static final long serialVersionUID = 7211922919532562867L;
     /**
      * @since 1.7+
+     * method order
      */
     private int order;
 
+    /**
+     * method description
+     */
     private String desc;
 
+    /**
+     * controller method url
+     */
     private String url;
 
+    /**
+     * http request type
+     */
     private String type;
 
+    /**
+     * http readers
+     */
     private String headers;
 
+    /**
+     * http contentType
+     */
     private String contentType = "application/x-www-form-urlencoded";
 
+    /**
+     * http request params
+     */
     private String requestParams;
 
+    /**
+     * http request usage
+     */
     private String requestUsage;
 
+    /**
+     * http response usage
+     */
     private String responseUsage;
 
+    /**
+     * http response params
+     */
     private String responseParams;
 
 

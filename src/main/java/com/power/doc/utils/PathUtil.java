@@ -8,11 +8,11 @@ import java.io.File;
 public class PathUtil {
 
     /**
-     * 获取java类名
+     * Get the java class name
      *
      * @param parentDir parent dir
-     * @param className 类名
-     * @return string
+     * @param className class name
+     * @return java file name
      */
     public static String javaFilePath(String parentDir, String className) {
         if (StringUtil.isEmpty(parentDir)) {
@@ -26,9 +26,9 @@ public class PathUtil {
     }
 
     /**
-     * process http url
+     * Replace '//' with '/' in the url.
      * @param url url
-     * @return String
+     * @return processed url
      */
     public static String processHttpUrl(String url) {
         int index = url.indexOf("//");

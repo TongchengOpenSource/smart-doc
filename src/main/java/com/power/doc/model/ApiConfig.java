@@ -37,7 +37,7 @@ public class ApiConfig {
     /**
      * source path
      */
-    private List<SourcePath> sourcePaths;
+    private List<SourceCodePath> sourceCodePaths;
 
     /**
      * 请求头
@@ -69,9 +69,8 @@ public class ApiConfig {
 
     /**
      * @since 1.7+
-     * aes加密信息
      */
-    private ApiAesInfo aesInfo;
+    private boolean md5EncryptedHtmlName;
 
     /**
      * 语言
@@ -129,12 +128,12 @@ public class ApiConfig {
         this.errorCodes = errorCodes;
     }
 
-    public List<SourcePath> getSourcePaths() {
-        return sourcePaths;
+    public List<SourceCodePath> getSourceCodePaths() {
+        return sourceCodePaths;
     }
 
-    public void setSourcePaths(SourcePath... sourcePaths) {
-        this.sourcePaths = CollectionUtil.asList(sourcePaths);
+    public void setSourcePaths(SourceCodePath... sourcePaths) {
+        this.sourceCodePaths = CollectionUtil.asList(sourcePaths);
     }
 
     public boolean isAllInOne() {
@@ -161,12 +160,12 @@ public class ApiConfig {
         this.revisionLogs = CollectionUtil.asList(revisionLogs);
     }
 
-    public ApiAesInfo getAesInfo() {
-        return aesInfo;
+    public boolean isMd5EncryptedHtmlName() {
+        return md5EncryptedHtmlName;
     }
 
-    public void setAesInfo(ApiAesInfo aesInfo) {
-        this.aesInfo = aesInfo;
+    public void setMd5EncryptedHtmlName(boolean md5EncryptedHtmlName) {
+        this.md5EncryptedHtmlName = md5EncryptedHtmlName;
     }
 
     public DocLanguage getLanguage() {
@@ -176,4 +175,6 @@ public class ApiConfig {
     public void setLanguage(DocLanguage language) {
         this.language = language;
     }
+
+
 }

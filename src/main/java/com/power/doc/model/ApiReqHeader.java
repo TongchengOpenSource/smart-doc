@@ -2,35 +2,35 @@ package com.power.doc.model;
 
 /**
  * Description:
- * 请求头
+ * http request header info model
  *
  * @author yu 2018/06/18.
  */
 public class ApiReqHeader {
 
     /**
-     * 请求头的名称
+     * Request header name
      */
     private String name;
 
     /**
-     * 请求头类型
+     * Request header type
      */
     private String type;
     /**
-     * 请求头描述
+     * Request header description
      */
     private String desc;
 
     /**
      * @since 1.7.0
-     * 请求有是否必须
+     * required flag
      */
     private boolean required;
 
     /**
      * @since 1.7.0
-     * 起始版本
+     * Starting version number
      */
     private String since = "-";
 

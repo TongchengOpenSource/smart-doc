@@ -1,6 +1,9 @@
 package com.power.doc.builder;
 
-import com.power.common.util.*;
+import com.power.common.util.CollectionUtil;
+import com.power.common.util.JsonFormatUtil;
+import com.power.common.util.StringUtil;
+import com.power.common.util.UrlUtil;
 import com.power.doc.constants.DocAnnotationConstants;
 import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.constants.DocTags;
@@ -10,6 +13,7 @@ import com.power.doc.utils.DocUtil;
 import com.power.doc.utils.PathUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import com.thoughtworks.qdox.model.*;
+import org.apache.commons.codec.digest.DigestUtils;
 
 import java.io.File;
 import java.util.*;
@@ -36,16 +40,18 @@ public class SourceBuilder {
 
     private static final String MAP_CLASS = "java.util.Map";
 
+    private static final String NO_COMMENTS_FOUND = "No comments found.";
 
-    public Map<String, JavaClass> javaFilesMap = new HashMap<>();
-    public Map<String, CustomRespField> fieldMap = new HashMap<>();
+
+    private Map<String, JavaClass> javaFilesMap = new HashMap<>();
+    private Map<String, CustomRespField> fieldMap = new HashMap<>();
     private JavaProjectBuilder builder;
     private Collection<JavaClass> javaClasses;
-    private boolean isStrict;//严格模式
+    private boolean isStrict;//Strict mode
     private String packageMatch;
     private List<ApiReqHeader> headers;
     private String appUrl;
-    private ApiAesInfo aesInfo;
+    private boolean isUseMD5;
 
     /**
      * if isStrict value is true,it while check all method
@@ -73,10 +79,10 @@ public class SourceBuilder {
             this.appUrl = config.getServerUrl();
         }
 
-        aesInfo = config.getAesInfo();
+        isUseMD5 = config.isMd5EncryptedHtmlName();
         this.packageMatch = config.getPackageFilters();
         this.isStrict = config.isStrict();
-        loadJavaFiles(config.getSourcePaths());
+        loadJavaFiles(config.getSourceCodePaths());
         this.headers = config.getRequestHeaders();
         if (CollectionUtil.isNotEmpty(config.getCustomResponseFields())) {
             for (CustomRespField field : config.getCustomResponseFields()) {
@@ -86,71 +92,9 @@ public class SourceBuilder {
     }
 
     /**
-     * 加载项目的源代码
-     *
-     * @param paths list of SourcePath
+     * Get api data
+     * @return List of api data
      */
-    private void loadJavaFiles(List<SourcePath> paths) {
-        JavaProjectBuilder builder = new JavaProjectBuilder();
-        if (CollectionUtil.isEmpty(paths)) {
-            builder.addSourceTree(new File("src/main/java"));
-        } else {
-            for (SourcePath path : paths) {
-                if (null == path) {
-                    continue;
-                }
-                String strPath = path.getPath();
-                if (StringUtil.isNotEmpty(strPath)) {
-                    strPath = strPath.replace("\\", "/");
-                    builder.addSourceTree(new File(strPath));
-                }
-            }
-        }
-        this.builder = builder;
-        this.javaClasses = builder.getClasses();
-        for (JavaClass cls : javaClasses) {
-            javaFilesMap.put(cls.getFullyQualifiedName(), cls);
-        }
-    }
-
-    /**
-     * 检测controller上的注解
-     *
-     * @param cls
-     * @return
-     */
-    private boolean checkController(JavaClass cls) {
-        List<JavaAnnotation> classAnnotations = cls.getAnnotations();
-        for (JavaAnnotation annotation : classAnnotations) {
-            String annotationName = annotation.getType().getName();
-            if (DocAnnotationConstants.SHORT_CONTROLLER.equals(annotationName)
-                    || DocAnnotationConstants.SHORT_REST_CONTROLLER.equals(annotationName)
-                    || DocGlobalConstants.REST_CONTROLLER_FULLY.equals(annotationName)
-                    || DocGlobalConstants.CONTROLLER_FULLY.equals(annotationName)
-                    ) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * 检查是否是rest controller
-     *
-     * @param cls The JavaClass object
-     * @return boolean
-     */
-    private boolean isRestController(JavaClass cls) {
-        List<JavaAnnotation> classAnnotations = cls.getAnnotations();
-        for (JavaAnnotation annotation : classAnnotations) {
-            String annotationName = annotation.getType().getName();
-            if (DocAnnotationConstants.SHORT_REST_CONTROLLER.equals(annotationName)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public List<ApiDoc> getControllerApiData() {
         List<ApiDoc> apiDocList = new ArrayList<>();
         int order = 0;
@@ -189,9 +133,9 @@ public class SourceBuilder {
 
 
     /**
-     * 包括包名
+     * Get single controller api data by controller fully name.
      *
-     * @param controller controller的名称
+     * @param controller controller fully name
      * @return ApiDoc
      */
     public ApiDoc getSingleControllerApiData(String controller) {
@@ -211,7 +155,7 @@ public class SourceBuilder {
         }
     }
 
-    public List<ApiMethodDoc> buildControllerMethod(final JavaClass cls) {
+    private List<ApiMethodDoc> buildControllerMethod(final JavaClass cls) {
         List<JavaAnnotation> classAnnotations = cls.getAnnotations();
         String baseUrl = "";
         for (JavaAnnotation annotation : classAnnotations) {
@@ -294,6 +238,33 @@ public class SourceBuilder {
     }
 
     /**
+     * load source code
+     *
+     * @param paths list of SourcePath
+     */
+    private void loadJavaFiles(List<SourceCodePath> paths) {
+        JavaProjectBuilder builder = new JavaProjectBuilder();
+        if (CollectionUtil.isEmpty(paths)) {
+            builder.addSourceTree(new File("src/main/java"));
+        } else {
+            for (SourceCodePath path : paths) {
+                if (null == path) {
+                    continue;
+                }
+                String strPath = path.getPath();
+                if (StringUtil.isNotEmpty(strPath)) {
+                    strPath = strPath.replace("\\", "/");
+                    builder.addSourceTree(new File(strPath));
+                }
+            }
+        }
+        this.builder = builder;
+        this.javaClasses = builder.getClasses();
+        for (JavaClass cls : javaClasses) {
+            javaFilesMap.put(cls.getFullyQualifiedName(), cls);
+        }
+    }
+    /**
      * create request headers
      *
      * @param headers Api request headers
@@ -359,6 +330,8 @@ public class SourceBuilder {
     }
 
     /**
+     * build request params list or response fields list
+     *
      * @param className        class name
      * @param pre              pre
      * @param i                counter
@@ -490,9 +463,9 @@ public class SourceBuilder {
                             }
                         } else {
                             if (StringUtil.isEmpty(isRequired)) {
-                                params0.append("No comments found.").append("|").append(since).append("\n");
+                                params0.append(NO_COMMENTS_FOUND).append("|").append(since).append("\n");
                             } else {
-                                params0.append("No comments found.").append("|").append(strRequired)
+                                params0.append(NO_COMMENTS_FOUND).append("|").append(strRequired)
                                         .append("|").append(since).append("\n");
                             }
                         }
@@ -509,7 +482,7 @@ public class SourceBuilder {
                             }
                         } else {
                             if (StringUtil.isEmpty(isRequired)) {
-                                params0.append("No comments found.").append("|").append(since).append("\n");
+                                params0.append(NO_COMMENTS_FOUND).append("|").append(since).append("\n");
                             } else {
                                 params0.append("No comments found|").append(strRequired)
                                         .append("|").append(since).append("\n");
@@ -615,20 +588,20 @@ public class SourceBuilder {
         StringBuilder comments = new StringBuilder();
         comments.append("no param name|")
                 .append(typeName).append("|")
-                .append("The interface directly returns the ")
+                .append("The api directly returns the ")
                 .append(typeName).append(" type value.").append("|-\n");
         return comments.toString();
     }
 
     /**
-     * 构建返回的json
+     * build return json
      *
      * @param method The JavaMethod object
      * @return String
      */
     private String buildReturnJson(JavaMethod method, Map<String, CustomRespField> responseFieldMap) {
         if ("void".equals(method.getReturnType().getFullyQualifiedName())) {
-            return "this api return nothing.";
+            return "This api return nothing.";
         }
         ApiReturn apiReturn = DocClassUtil.processReturnType(method.getReturnType().getGenericCanonicalName());
         String returnType = apiReturn.getGenericCanonicalName();
@@ -646,9 +619,9 @@ public class SourceBuilder {
     private String buildJson(String typeName, String genericCanonicalName, Map<String, CustomRespField> responseFieldMap, boolean isResp) {
         if (DocClassUtil.isMvcIgnoreParams(typeName)) {
             if (DocGlobalConstants.MODE_AND_VIEW_FULLY.equals(typeName)) {
-                return "forward or redirect to a page view.";
+                return "Forward or redirect to a page view.";
             } else {
-                return "error restful return.";
+                return "Error restful return.";
             }
         }
         if (DocClassUtil.isPrimitive(typeName)) {
@@ -955,13 +928,13 @@ public class SourceBuilder {
             String pName;
             String pValue;
             int idx = value.indexOf("\n");
-            //如果存在换行
+            //existed \n
             if (idx > -1) {
                 pName = value.substring(0, idx);
                 pValue = value.substring(idx + 1);
             } else {
                 pName = (value.indexOf(" ") > -1) ? value.substring(0, value.indexOf(" ")) : value;
-                pValue = value.indexOf(" ") > -1 ? value.substring(value.indexOf(' ') + 1) : "No comments found.";
+                pValue = value.indexOf(" ") > -1 ? value.substring(value.indexOf(' ') + 1) : NO_COMMENTS_FOUND;
             }
             paramTagMap.put(pName, pValue);
         }
@@ -985,7 +958,7 @@ public class SourceBuilder {
                     }
                     String comment = paramTagMap.get(paramName);
                     if (StringUtil.isEmpty(comment)) {
-                        comment = "No comments found.";
+                        comment = NO_COMMENTS_FOUND;
                     }
                     List<JavaAnnotation> annotations = parameter.getAnnotations();
                     if (annotations.size() == 0) {
@@ -1112,14 +1085,51 @@ public class SourceBuilder {
     }
 
     /**
+     * check controller
+     *
+     * @param cls
+     * @return
+     */
+    private boolean checkController(JavaClass cls) {
+        List<JavaAnnotation> classAnnotations = cls.getAnnotations();
+        for (JavaAnnotation annotation : classAnnotations) {
+            String annotationName = annotation.getType().getName();
+            if (DocAnnotationConstants.SHORT_CONTROLLER.equals(annotationName)
+                    || DocAnnotationConstants.SHORT_REST_CONTROLLER.equals(annotationName)
+                    || DocGlobalConstants.REST_CONTROLLER_FULLY.equals(annotationName)
+                    || DocGlobalConstants.CONTROLLER_FULLY.equals(annotationName)
+                    ) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * is rest controller
+     *
+     * @param cls The JavaClass object
+     * @return boolean
+     */
+    private boolean isRestController(JavaClass cls) {
+        List<JavaAnnotation> classAnnotations = cls.getAnnotations();
+        for (JavaAnnotation annotation : classAnnotations) {
+            String annotationName = annotation.getType().getName();
+            if (DocAnnotationConstants.SHORT_REST_CONTROLLER.equals(annotationName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * handle controller name
      *
      * @param apiDoc ApiDoc
      */
     private void handControllerAlias(ApiDoc apiDoc) {
-        if (null != aesInfo && StringUtil.isNotEmpty(aesInfo.getKey())
-                && StringUtil.isNotEmpty(aesInfo.getVector())) {
-            String name = AESUtil.encodeByCBC(apiDoc.getName(), aesInfo.getKey(), aesInfo.getVector());
+        if (isUseMD5) {
+            String name = DigestUtils.md5Hex(apiDoc.getName());
             int length = name.length();
             if (name.length() < 32) {
                 apiDoc.setAlias(name);

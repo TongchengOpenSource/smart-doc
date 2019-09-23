@@ -25,8 +25,10 @@ import static com.power.doc.constants.DocGlobalConstants.*;
 public class HtmlApiDocBuilder {
 
     private static long now = System.currentTimeMillis();
+
     /**
-     * @param config 配置
+     * build controller api
+     * @param config config
      */
     public static void builderControllersApi(ApiConfig config) {
         if (null == config) {
@@ -56,6 +58,11 @@ public class HtmlApiDocBuilder {
         FileUtil.nioWriteFile(mdCssTemplate.render(), outPath + FILE_SEPARATOR + MARKDOWN_CSS_TPL);
     }
 
+    /**
+     * build api.html
+     * @param apiDocList list of api doc
+     * @param config ApiConfig
+     */
     private static void buildIndex(List<ApiDoc> apiDocList, ApiConfig config) {
         FileUtil.mkdirs(config.getOutPath());
         Template indexTemplate = BeetlTemplateUtil.getByName(INDEX_TPL);
@@ -78,10 +85,10 @@ public class HtmlApiDocBuilder {
 
 
     /**
-     * 公共生成controller api 文档
+     * build ever controller api
      *
-     * @param apiDocList
-     * @param outPath
+     * @param apiDocList list of api doc
+     * @param outPath output path
      */
     private static void buildApiDoc(List<ApiDoc> apiDocList, String outPath) {
         FileUtil.mkdirs(outPath);
@@ -104,15 +111,15 @@ public class HtmlApiDocBuilder {
     }
 
     /**
-     * 构建错误码列表
+     * build error_code html
      *
-     * @param errorCodeList 错误列表
+     * @param errorCodeList list of error code
      * @param outPath
      */
     private static void buildErrorCodeDoc(List<ApiErrorCode> errorCodeList, String outPath) {
         if (CollectionUtil.isNotEmpty(errorCodeList)) {
             Template error = BeetlTemplateUtil.getByName(ERROR_CODE_LIST_TPL);
-            error.binding(TemplateVariable.LIST.getVariable(), errorCodeList);//类名
+            error.binding(TemplateVariable.LIST.getVariable(), errorCodeList);
             String errorHtml = MarkDownUtil.toHtml(error.render());
             Template errorCodeDoc = BeetlTemplateUtil.getByName(HTML_API_DOC_TPL);
             errorCodeDoc.binding(TemplateVariable.VERSION.getVariable(), now);
@@ -120,7 +127,6 @@ public class HtmlApiDocBuilder {
             errorCodeDoc.binding(TemplateVariable.HTML.getVariable(), errorHtml);
             errorCodeDoc.binding(TemplateVariable.CREATE_TIME.getVariable(), DateTimeUtil.long2Str(now, DateTimeUtil.DATE_FORMAT_SECOND));
             FileUtil.nioWriteFile(errorCodeDoc.render(), outPath + FILE_SEPARATOR + "error_code.html");
-
         }
     }
 }

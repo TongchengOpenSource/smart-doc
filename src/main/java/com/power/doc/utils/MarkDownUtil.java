@@ -16,10 +16,10 @@ import java.util.Arrays;
 public class MarkDownUtil {
 
     /**
-     * markdown to html
+     * Convert markdown to html.
      *
      * @param content markdown contents
-     * @return parse html contents
+     * @return html contents
      */
     public static String toHtml(String content) {
         MutableDataSet options = new MutableDataSet();

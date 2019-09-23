@@ -25,10 +25,10 @@ import static com.power.doc.constants.DocGlobalConstants.*;
 public class ApiDocBuilder {
 
     /**
-     * 生成所有controller的api文档
-     *
-     * @param outPath  代码输出路径
-     * @param isStrict 是否启用严格模式
+     * Generate api documentation for all controllers.
+     * If set to strict mode, smart-doc will check the method comments on each controller.
+     * @param outPath  output path
+     * @param isStrict is use strict mode
      */
     public static void builderControllersApi(String outPath, boolean isStrict) {
         SourceBuilder sourceBuilder = new SourceBuilder(isStrict);
@@ -37,7 +37,7 @@ public class ApiDocBuilder {
     }
 
     /**
-     * @param config 配置
+     * @param config ApiConfig
      */
     public static void builderControllersApi(ApiConfig config) {
         if (null == config) {
@@ -63,10 +63,10 @@ public class ApiDocBuilder {
     }
 
     /**
-     * 生成单个controller的api文档
+     * Generate a single controller api document
      *
-     * @param outPath        代码输出路径
-     * @param controllerName controller 名称
+     * @param outPath        output path
+     * @param controllerName controller name
      */
     public static void buildSingleControllerApi(String outPath, String controllerName) {
         FileUtil.mkdirs(outPath);
@@ -75,15 +75,15 @@ public class ApiDocBuilder {
         Template mapper = BeetlTemplateUtil.getByName(API_DOC_TPL);
         mapper.binding(TemplateVariable.DESC.getVariable(), doc.getDesc());
         mapper.binding(TemplateVariable.NAME.getVariable(), doc.getName());
-        mapper.binding(TemplateVariable.LIST.getVariable(), doc.getList());//类名
+        mapper.binding(TemplateVariable.LIST.getVariable(), doc.getList());
         FileUtil.writeFileNotAppend(mapper.render(), outPath + FILE_SEPARATOR + doc.getName() + "Api.md");
     }
 
     /**
-     * 公共生成controller api 文档
+     * Generate api documentation for all controllers.
      *
-     * @param apiDocList
-     * @param outPath
+     * @param apiDocList list of api doc
+     * @param outPath output path
      */
     private static void buildApiDoc(List<ApiDoc> apiDocList, String outPath) {
         FileUtil.mkdirs(outPath);
@@ -91,13 +91,13 @@ public class ApiDocBuilder {
             Template mapper = BeetlTemplateUtil.getByName(API_DOC_TPL);
             mapper.binding(TemplateVariable.DESC.getVariable(), doc.getDesc());
             mapper.binding(TemplateVariable.NAME.getVariable(), doc.getName());
-            mapper.binding(TemplateVariable.LIST.getVariable(), doc.getList());//类名
+            mapper.binding(TemplateVariable.LIST.getVariable(), doc.getList());
             FileUtil.nioWriteFile(mapper.render(), outPath + FILE_SEPARATOR + doc.getName() + "Api.md");
         }
     }
 
     /**
-     * 合并所有接口文档到一个文档中
+     * Merge all api doc into one document
      *
      * @param apiDocList
      */
@@ -113,15 +113,15 @@ public class ApiDocBuilder {
     }
 
     /**
-     * 构建错误码列表
+     * build error_code html
      *
-     * @param errorCodeList 错误列表
+     * @param errorCodeList list of error code
      * @param outPath
      */
     private static void buildErrorCodeDoc(List<ApiErrorCode> errorCodeList, String outPath) {
         if (CollectionUtil.isNotEmpty(errorCodeList)) {
             Template mapper = BeetlTemplateUtil.getByName(ERROR_CODE_LIST_TPL);
-            mapper.binding(TemplateVariable.LIST.getVariable(), errorCodeList);//类名
+            mapper.binding(TemplateVariable.LIST.getVariable(), errorCodeList);
             FileUtil.nioWriteFile(mapper.render(), outPath + FILE_SEPARATOR + ERROR_CODE_LIST_MD);
         }
     }

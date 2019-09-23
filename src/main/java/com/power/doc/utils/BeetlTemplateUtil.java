@@ -12,11 +12,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 获取模板
+ * Beetl template handle util
  *
  * @author sunyu on 2016/12/6.
  */
 public class BeetlTemplateUtil {
+
+
+    /**
+     * Get Beetl template by file name
+     * @param templateName
+     * @return Beetl Template Object
+     */
     public static Template getByName(String templateName) {
         try {
             ClasspathResourceLoader resourceLoader = new ClasspathResourceLoader("/template/");
@@ -24,11 +31,13 @@ public class BeetlTemplateUtil {
             GroupTemplate gt = new GroupTemplate(resourceLoader, cfg);
             return gt.getTemplate(templateName);
         } catch (IOException e) {
-            throw new RuntimeException("获取模板异常");
+            throw new RuntimeException("Can't get Beetl template.");
         }
     }
 
     /**
+     * Batch bind binding value to Beetl templates and return all file rendered,
+     * Map key is file name,value is file content
      * @param path   path
      * @param params params
      * @return map
@@ -61,7 +70,7 @@ public class BeetlTemplateUtil {
             GroupTemplate gt = new GroupTemplate(resourceLoader, cfg);
             return gt;
         } catch (IOException e) {
-            throw new RuntimeException("获取模板异常");
+            throw new RuntimeException("Can't get Beetl template.");
         }
     }
 }

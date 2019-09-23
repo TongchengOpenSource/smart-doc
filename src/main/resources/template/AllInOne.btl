@@ -1,5 +1,5 @@
 <%if(isNotEmpty(revisionLogList)){%>
-版本 |  时间  | 状态 | 作者 |  备注
+Version |  Update Time  | Status | Author |  Description
 ------|--------|-----|------| -------
 <%
 for(revisionLog in revisionLogList){

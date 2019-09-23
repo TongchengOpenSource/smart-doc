@@ -1,7 +1,8 @@
 package com.power.doc.constants;
 
 /**
- * 语言支持
+ *
+ * language support
  * @author yu 2019/9/21.
  */
 public enum DocLanguage {

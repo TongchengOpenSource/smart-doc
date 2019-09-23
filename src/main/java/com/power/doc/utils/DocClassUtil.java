@@ -8,7 +8,7 @@ import java.util.List;
 
 /**
  * Description:
- * class的工具
+ * Doc class handle util
  *
  * @author yu 2018//14.
  */

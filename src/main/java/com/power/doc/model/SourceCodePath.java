@@ -1,12 +1,13 @@
 package com.power.doc.model;
 
 /**
+ * Source code path
  * @author yu 2018/7/14.
  */
-public class SourcePath {
+public class SourceCodePath {
 
     /**
-     * Source path
+     * Source code path
      */
     private String path;
 
@@ -15,15 +16,15 @@ public class SourcePath {
      */
     private String desc;
 
-    public static SourcePath path() {
-        return new SourcePath();
+    public static SourceCodePath path() {
+        return new SourceCodePath();
     }
 
     public String getPath() {
         return path;
     }
 
-    public SourcePath setPath(String path) {
+    public SourceCodePath setPath(String path) {
         this.path = path;
         return this;
     }
@@ -32,7 +33,7 @@ public class SourcePath {
         return desc;
     }
 
-    public SourcePath setDesc(String desc) {
+    public SourceCodePath setDesc(String desc) {
         this.desc = desc;
         return this;
     }

@@ -2,29 +2,29 @@ package com.power.doc.model;
 
 /**
  * Description:
- * Api 自动义字段修正
- *
+ * This can be used to customize the comments for setting java fields.
+ * You can reference README.md
  * @author yu 2018/06/18.
  */
 public class CustomRespField {
 
     /**
-     * 字段名
+     * field name
      */
     private String name;
 
     /**
-     * 字段描述
+     * field description
      */
     private String desc;
 
     /**
-     * 字段隶属类
+     * owner class
      */
     private String ownerClassName;
 
     /**
-     * 默认值
+     * default value
      */
     private Object value;
 

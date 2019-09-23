@@ -79,13 +79,13 @@ public class DocUtil {
     }
 
     /**
-     * 随机生成json值
+     * Generate a random value based on java type name.
      *
-     * @param type0 type name
-     * @return string
+     * @param typeName field type name
+     * @return random value
      */
-    public static String jsonValueByType(String type0) {
-        String type = type0.contains(".") ? type0.substring(type0.lastIndexOf(".") + 1, type0.length()) : type0;
+    public static String jsonValueByType(String typeName) {
+        String type = typeName.contains(".") ? typeName.substring(typeName.lastIndexOf(".") + 1, typeName.length()) : typeName;
         String value = RandomUtil.randomValueByType(type);
         if ("Integer".equals(type) || "int".equals(type) || "Long".equals(type) || "long".equals(type)
                 || "Double".equals(type) || "double".equals(type) || "Float".equals(type) || "float".equals(type) ||
@@ -100,14 +100,14 @@ public class DocUtil {
     }
 
     /**
-     * 根据字段字段名和type生成字段值
+     * Generate random field values based on field field names and type.
      *
-     * @param type0     类型
-     * @param filedName 字段名称
-     * @return string
+     * @param typeName field type name
+     * @param filedName field name
+     * @return random value
      */
-    public static String getValByTypeAndFieldName(String type0, String filedName) {
-        String type = type0.contains("java.lang") ? type0.substring(type0.lastIndexOf(".") + 1, type0.length()) : type0;
+    public static String getValByTypeAndFieldName(String typeName, String filedName) {
+        String type = typeName.contains("java.lang") ? typeName.substring(typeName.lastIndexOf(".") + 1, typeName.length()) : typeName;
         String key = filedName.toLowerCase() + "-" + type.toLowerCase();
         String value = null;
         for (Map.Entry<String, String> entry : fieldValue.entrySet()) {
@@ -117,7 +117,7 @@ public class DocUtil {
             }
         }
         if (null == value) {
-            return jsonValueByType(type0);
+            return jsonValueByType(typeName);
         } else {
             if ("string".equals(type.toLowerCase())) {
                 StringBuilder builder = new StringBuilder();

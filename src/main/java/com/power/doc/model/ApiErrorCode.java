@@ -2,19 +2,19 @@ package com.power.doc.model;
 
 /**
  * Description:
- * restful api错误码
+ * restful api error code
  *
  * @author yu 2018/06/25.
  */
 public class ApiErrorCode {
 
     /**
-     * 错误码
+     * error code
      */
     private String value;
 
     /**
-     * 错误描述
+     * error description
      */
     private String desc;
 
