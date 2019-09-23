@@ -2,19 +2,19 @@
 
 ## Introduce
 smart-doc是一个java restful api文档生成工具，smart-doc颠覆了传统类似swagger这种大量采用注解侵入来生成文档的实现方法。
-smart-doc完全基于接口源码分析来生成接口文档，完全做到零注解侵入，你只需要按照java标准注释的写就能得到一个标准的markdown接口文档。
-如果你已经厌倦了swagger等文档工具的注解和强侵入污染，那请拥抱smart-doc吧！
+smart-doc完全基于接口源码分析来生成接口文档，完全做到零注解侵入，你只需要按照java标准注释的写，smart-doc就能帮你生成一个简易明了的markdown
+或是一个像GitBook样式的静态html文档。如果你已经厌倦了swagger等文档工具的无数注解和强侵入污染，那请拥抱smart-doc吧！
 ## Features
 - 零注解、零学习成本、只需要写标准java注释。
-- 基于源代码接口定义自动推导。
-- 支持springmvc、springboot。
-- 支持javabean上定义的部分fastjson和jackson注解。
-- 支持javabean上基于jsr303参数检验判断参数是否为必须。
+- 基于源代码接口定义自动推导，强大的返回结构推导。
+- 支持Spring MVC,Spring Boot,Spring Boot Web Flux(controller书写方式)。
+- 支持Callable,Future,CompletableFuture等异步接口返回的推导。
+- 支持JavaBean上的JSR303参数校验规范。
 - 对json请求参数的接口能够自动生成模拟json参数。
 - 对一些常用字段定义能够生成有效的模拟值。
 - 支持生成json返回值示例。
 - 支持从项目外部加载源代码来生成字段注释。
-- 一款代码注释检测工具，明眼leader都知道接口文档直接反馈出注释情况。
+- 支持生成静态的html格式api，轻易实现在Spring Boot服务上在线查看api文档。
 ## Getting started
 smart-doc使用和测试可参考[smart-doc demo](https://github.com/shalousun/api-doc-test)。
 ```
@@ -25,7 +25,7 @@ smart-doc使用和测试可参考[smart-doc demo](https://github.com/shalousun/a
 <dependency>
     <groupId>com.github.shalousun</groupId>
     <artifactId>smart-doc</artifactId>
-    <version>1.6.3</version>
+    <version>1.6.4</version>
     <scope>test</scope>
 </dependency>
 ```
