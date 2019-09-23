@@ -1,7 +1,7 @@
 package com.power.doc.constants;
 
 /**
- * java注解
+ * java annotations
  * @author yu 2019/9/19.
  */
 public class DocAnnotationConstants {

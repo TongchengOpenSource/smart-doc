@@ -7,7 +7,7 @@ import java.util.List;
 
 /**
  * Description:
- * Api配置
+ * api config info
  *
  * @author yu 2018/06/18.
  */
