@@ -6,28 +6,28 @@ public class ApiDoc {
 
     /**
      * @since 1.7+
-     * 文档顺序
+     * Order of controller
      */
     public int order;
 
     /**
-     * 类名
+     * controller name
      */
     private String name;
 
     /**
      * @since 1.7+
-     * md5加密后的文件名(用于处理html)
+     * controller alias handled by md5
      */
     private String alias;
 
     /**
-     * 方法文档列表
+     *  List of method doc
      */
     private List<ApiMethodDoc> list;
 
     /**
-     * 类注解描述
+     * method description
      */
     private String desc;
 

@@ -8,27 +8,27 @@ package com.power.doc.model;
 public class RevisionLog {
 
     /**
-     * 修订版本
+     * version
      */
     private String version;
 
     /**
-     * 状态
+     * status
      */
     private String status;
 
     /**
-     * 作者
+     * author
      */
     private String author;
 
     /**
-     * 修订时间
+     * update time
      */
     private String revisionTime;
 
     /**
-     * 备注
+     * description
      */
     private String remarks;
 
