@@ -20,6 +20,7 @@ smart-doc使用和测试可参考[smart-doc demo](https://github.com/shalousun/a
 ```
 # git clone https://github.com/shalousun/api-doc-test.git
 ```
+你可以启动这个Spring Boot的项目，然后访问`http://localhost:8080/doc/api.html`来smart-doc生成的接口文档。
 ### Maven dependency
 ```
 <dependency>
@@ -30,59 +31,60 @@ smart-doc使用和测试可参考[smart-doc demo](https://github.com/shalousun/a
 </dependency>
 ```
 ### Create a unit test
-在项目test下创建一个单元测试类
+通过运行一个单元测试来让Smart-doc为你生成一个简洁明了的api文档
 ```
 /**
- * Description:
- * ApiDoc测试
  *
  * @author yu 2018/06/11.
  */
 public class ApiDocTest {
 
     /**
-     * 简单型接口，不需要指定请求头，并且项目是maven的.
-     *
+     * 
+     * Smart-doc快速生成文档用例
      */
     @Test
     public void testBuilderControllersApiSimple(){
-        //将生成的文档输出到d:\md目录下，严格模式下api-doc会检测Controller的接口注释
+        //将生成的文档输出到d:\md目录下，设置为严格模式Smart-doc会检测Controller的接口注释
         ApiDocBuilder.builderControllersApi("d:\\md",true);
     }
 
     /**
-     * 包括设置请求头，缺失注释的字段批量在文档生成期使用定义好的注释
+     * Smart-doc生成产品级api文档用例
      */
     @Test
     public void testBuilderControllersApi() {
         ApiConfig config = new ApiConfig();
+        //如果将严格模式设置true，Smart-doc强制要求代码中每个共有接口有注释。
         config.setStrict(true);
-        config.setAllInOne(true);//true则将所有接口合并到一个AllInOne中markdown中，错误码合并到最后
+        //此项设置为true，则将所有接口合并到一个markdown中，错误码列表会输出到文档底部
+        config.setAllInOne(true);
+        //设置api文档输出路径
         config.setOutPath("d:\\md");
-        // @since 1.2,如果不配置该选项，则默认匹配全部的controller,
-        // 如果需要配置有多个controller可以使用逗号隔开
+        // @since 1.2,如果不配置该选项，则默认匹配全部的Controller,
+        // 如果需要配置有多个Controller可以使用逗号隔开
         config.setPackageFilters("com.power.doc.controller.app");
         //默认是src/main/java,maven项目可以不写
         config.setSourcePaths(
-                SourcePath.path().setDesc("本项目代码").setPath("src/test/java"),
-                SourcePath.path().setPath("E:\\Test\\Mybatis-PageHelper-master\\src\\main\\java"),
-                SourcePath.path().setDesc("加载项目外代码").setPath("E:\\ApplicationPower\\ApplicationPower\\Common-util\\src\\main\\java")
+                SourcePath.path().setDesc("Current Project").setPath("src/test/java"),
+                 //java编译后注释会被消除，因此如果生成文档需要使用外部代码的注释，就可以从外部将源代码载入。
+                SourcePath.path().setDesc("Load other project source code").setPath("E:\\Test\\Mybatis-PageHelper-master\\src\\main\\java")
          );
-
-        //设置请求头，如果没有请求头，可以不用设置
-        config.setRequestHeaders(
-                ApiReqHeader.header().setName("access_token").setType("string").setDesc("Basic auth credentials"),
-                ApiReqHeader.header().setName("user_uuid").setType("string").setDesc("User Uuid key")
-        );
-        //对于外部jar的类，api-doc目前无法自动获取注释，
-        //如果有这种场景，则自己添加字段和注释，api-doc后期遇到同名字段则直接给相应字段加注释
+       
+        //除了使用setSourcePaths载入代码外，如果你需要生成文档只有极少数的字段来自外部源代码，
+         那么你可以直接为这些字段设置注释
+        //当然Smart-doc一直探索解决该问题，但是很不幸目前没有最佳的方式。
         config.setCustomResponseFields(
                 CustomRespField.field().setName("success").setDesc("成功返回true,失败返回false"),
                 CustomRespField.field().setName("message").setDesc("接口响应信息"),
                 CustomRespField.field().setName("data").setDesc("接口响应数据"),
                 CustomRespField.field().setName("code").setValue("00000").setDesc("响应代码")
         );
-        
+        //设置请求头，如果不需要请求头，可以不用设置。
+        config.setRequestHeaders(
+                ApiReqHeader.header().setName("access_token").setType("string").setDesc("Basic auth credentials"),
+                ApiReqHeader.header().setName("user_uuid").setType("string").setDesc("User Uuid key")
+        );
         //设置项目错误码列表，设置自动生成错误列表
         List<ApiErrorCode> errorCodeList = new ArrayList<>();
         for(ErrorCodeEnum codeEnum:ErrorCodeEnum.values()){
@@ -90,15 +92,16 @@ public class ApiDocTest {
             errorCode.setValue(codeEnum.getValue()).setDesc(codeEnum.getDesc());
             errorCodeList.add(errorCode);
         }
-        //不是必须
+        //如果你不需要输出错误码文档，可以不设置。
         config.setErrorCodes(errorCodeList);
-
+        //你可以使用ApiDocBuilder来生成markdown格式的api文档。
         ApiDocBuilder.builderControllersApi(config);
+        //当然你也可以选择使用HtmlApiDocBuilder来生成静态的html文档。
+        HtmlApiDocBuilder.builderControllersApi(config);
     }
 
 }
 ```
-通过运行改单元测试类即可分析源代码生成`markdown`格式的接口文档。
 ### Generated document example
 #### 接口头部效果图
 ![输入图片说明](https://images.gitee.com/uploads/images/2018/0905/173104_abcf4345_144669.png "1.png")
@@ -112,6 +115,6 @@ public class ApiDocTest {
 ## Other reference
 - [smart-doc功能使用介绍](https://my.oschina.net/u/1760791/blog/2250962)
 ## License
-smart-doc is under the Apache 2.0 license.
+Smart-doc is under the Apache 2.0 license.  See the [LICENSE](https://github.com/shalousun/smart-doc/blob/master/license.txt) file for details.
 ## Contact
-QQ群： 170651381
+Email： 836575280@qq.com
