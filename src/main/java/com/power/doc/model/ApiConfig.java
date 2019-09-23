@@ -14,22 +14,22 @@ import java.util.List;
 public class ApiConfig {
 
     /**
-     * 应用请求base路径
+     * Web server base url
      */
     private String serverUrl;
 
     /**
-     * 是否采用严格模式
+     * Set comments check mode
      */
     private boolean isStrict;
 
     /**
-     * 是否将markdown全输出合并到一个文件
+     * Merge all api doc into one document
      */
     private boolean allInOne;
 
     /**
-     * 输出路径
+     * output path
      */
     private String outPath;
 
@@ -40,17 +40,17 @@ public class ApiConfig {
     private List<SourceCodePath> sourceCodePaths;
 
     /**
-     * 请求头
+     * list of Request headers
      */
     private List<ApiReqHeader> requestHeaders;
 
     /**
-     * 自定义字段
+     * list of custom response filed
      */
     private List<CustomRespField> customResponseFields;
 
     /**
-     * 错误码code列表
+     * List of error code
      *
      * @return
      */
@@ -58,12 +58,12 @@ public class ApiConfig {
     private List<ApiErrorCode> errorCodes;
 
     /**
-     * controller包过滤
+     * controller package filters
      */
     private String packageFilters;
 
     /**
-     * 接口变更日志
+     * List of change log
      */
     private List<RevisionLog> revisionLogs;
 
@@ -73,7 +73,7 @@ public class ApiConfig {
     private boolean md5EncryptedHtmlName;
 
     /**
-     * 语言
+     * language support
      * @since 1.7+
      */
     private DocLanguage language;
