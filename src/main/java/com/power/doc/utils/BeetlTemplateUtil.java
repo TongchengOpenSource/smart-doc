@@ -21,7 +21,7 @@ public class BeetlTemplateUtil {
 
     /**
      * Get Beetl template by file name
-     * @param templateName
+     * @param templateName template name
      * @return Beetl Template Object
      */
     public static Template getByName(String templateName) {

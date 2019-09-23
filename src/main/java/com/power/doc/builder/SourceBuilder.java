@@ -1046,7 +1046,7 @@ public class SourceBuilder {
                             reqParam.append(paramName).append("|")
                                     .append(DocClassUtil.processTypeNameForParams(simpleName)).append("|")
                                     .append(comment).append("|")
-                                    .append(required).append("\n");
+                                    .append(required).append("|-\n");
                         }
                     }
 
