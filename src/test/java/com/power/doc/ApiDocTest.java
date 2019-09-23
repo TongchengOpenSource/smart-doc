@@ -4,13 +4,8 @@ import com.power.common.util.DateTimeUtil;
 import com.power.doc.builder.ApiDocBuilder;
 import com.power.doc.model.ApiConfig;
 import com.power.doc.model.RevisionLog;
-import com.power.doc.model.SourcePath;
-import com.power.doc.utils.DocUtil;
+import com.power.doc.model.SourceCodePath;
 import org.junit.Test;
-
-import java.text.MessageFormat;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 /**
  * Description:
@@ -45,7 +40,7 @@ public class ApiDocTest {
         config.setOutPath("d:\\md2");
         //不指定SourcePaths默认加载代码为项目src/main/java下的
         config.setSourcePaths(
-                SourcePath.path().setDesc("本项目代码").setPath("src/test/java")
+                SourceCodePath.path().setDesc("本项目代码").setPath("src/test/java")
                 //SourcePath.path().setPath("F:\\Personal\\project\\smart\\src\\main\\java")
                 //SourcePath.path().setDesc("加载项目外代码").setPath("E:\\ApplicationPower\\ApplicationPower\\Common-util\\src\\main\\java")
         );

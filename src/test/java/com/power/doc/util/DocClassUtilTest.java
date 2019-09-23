@@ -6,7 +6,7 @@ import org.junit.Test;
 
 /**
  * Description:
- * DocUtil单元测试
+ * DocUtil junit test
  *
  * @author yu 2018/06/16.
  */

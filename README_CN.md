@@ -20,7 +20,7 @@ smart-doc使用和测试可参考[smart-doc demo](https://github.com/shalousun/a
 ```
 # git clone https://github.com/shalousun/api-doc-test.git
 ```
-你可以启动这个Spring Boot的项目，然后访问`http://localhost:8080/doc/api.html`来smart-doc生成的接口文档。
+你可以启动这个Spring Boot的项目，然后访问`http://localhost:8080/doc/api.html`来浏览smart-doc生成的接口文档。
 ### Maven dependency
 ```
 <dependency>
@@ -115,6 +115,6 @@ public class ApiDocTest {
 ## Other reference
 - [smart-doc功能使用介绍](https://my.oschina.net/u/1760791/blog/2250962)
 ## License
-smart-doc is under the Apache 2.0 license.
+Smart-doc is under the Apache 2.0 license.  See the [LICENSE](https://github.com/shalousun/smart-doc/blob/master/license.txt) file for details.
 ## Contact
 QQ群： 170651381
