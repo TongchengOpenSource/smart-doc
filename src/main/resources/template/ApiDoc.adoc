@@ -1,0 +1,49 @@
+= 用户信息查询
+
+== 根据用户编号获取用户信息
+
+*URL:* `http://localhost:8080/benchmark/user/{id}`
+
+*Type:* `GET`
+
+*Content-Type:* `application/x-www-form-urlencoded`
+
+*Request-parameters:*
+
+[width="100%",options="header,footer"]
+[stripes=even]
+|====================
+|Parameter | Type|Description|Required|Since
+|id|string|用户id|true|-
+|id|string|用户id|false|-
+|id|string|用户id|true|-
+|id|string|用户id|false|-
+|====================
+
+*Request-example:*
+
+----
+http://localhost:8080/benchmark/user/agmiub
+----
+
+*Response-fields:*
+
+[width="100%",options="header,footer"]
+[stripes=even]
+|====================
+|Parameter | Type|Description|Required|Since
+|id|string|用户id|true|-
+|id|string|用户id|false|-
+|id|string|用户id|true|-
+|id|string|用户id|false|-
+|====================
+
+
+*Response-example:*
+----
+{
+	"uid":"e85bd8aa-777a-4809-85f0-02acf2000dcf",
+	"name":"正豪.沈",
+	"address":"曾侬357号， 上海， 甘 555265"
+}
+----
