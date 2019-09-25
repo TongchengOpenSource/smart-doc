@@ -114,20 +114,20 @@ public class DocClassUtil {
         List<String> classes = new ArrayList<>();
         List<Integer> indexList = new ArrayList<>();
         int globIndex = 0;
-        for (int i = 0; i < arr.length; i++) {
+        int length = arr.length;
+        for (int i = 0; i < length; i++) {
             if (classes.size() > 0) {
                 int index = classes.size() - 1;
                 if (!DocUtil.isClassName(classes.get(index))) {
                     globIndex = globIndex + 1;
-                    if (globIndex < arr.length) {
+                    if (globIndex < length) {
                         indexList.add(globIndex);
                         String className = classes.get(index) + "," + arr[globIndex];
                         classes.set(index, className);
                     }
-
                 } else {
                     globIndex = globIndex + 1;
-                    if (globIndex < arr.length) {
+                    if (globIndex < length) {
                         if (DocUtil.isClassName(arr[globIndex])) {
                             indexList.add(globIndex);
                             classes.add(arr[globIndex]);

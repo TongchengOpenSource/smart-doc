@@ -9,6 +9,8 @@ public class DocGlobalConstants {
 
     public static final String HTML_DOC_OUT_PATH = "src/main/resources/static/doc";
 
+    public static final String PROJECT_CODE_PATH = "src/main/java";
+
     public static final String DOC_LANGUAGE = "smart-doc_language";
 
     public static final String API_DOC_TPL = "ApiDoc.btl";

@@ -10,7 +10,6 @@ import com.power.doc.constants.DocTags;
 import com.power.doc.model.*;
 import com.power.doc.utils.DocClassUtil;
 import com.power.doc.utils.DocUtil;
-import com.power.doc.utils.PathUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import com.thoughtworks.qdox.model.*;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -93,6 +92,7 @@ public class SourceBuilder {
 
     /**
      * Get api data
+     *
      * @return List of api data
      */
     public List<ApiDoc> getControllerApiData() {
@@ -219,7 +219,7 @@ public class SourceBuilder {
                 url = url.replaceAll("\"", "").trim();
                 apiMethodDoc.setType(methodType);
                 url = this.appUrl + "/" + baseUrl + "/" + url;
-                apiMethodDoc.setUrl(PathUtil.processHttpUrl(url));
+                apiMethodDoc.setUrl(UrlUtil.simplifyUrl(url));
                 String comment = getCommentTag(method, "param", cls.getCanonicalName());
                 apiMethodDoc.setRequestParams(comment);
                 String requestJson = buildReqJson(method, apiMethodDoc);
@@ -245,8 +245,11 @@ public class SourceBuilder {
     private void loadJavaFiles(List<SourceCodePath> paths) {
         JavaProjectBuilder builder = new JavaProjectBuilder();
         if (CollectionUtil.isEmpty(paths)) {
-            builder.addSourceTree(new File("src/main/java"));
+            builder.addSourceTree(new File(DocGlobalConstants.PROJECT_CODE_PATH));
         } else {
+            if (!paths.contains(DocGlobalConstants.PROJECT_CODE_PATH)) {
+                builder.addSourceTree(new File(DocGlobalConstants.PROJECT_CODE_PATH));
+            }
             for (SourceCodePath path : paths) {
                 if (null == path) {
                     continue;
@@ -264,6 +267,7 @@ public class SourceBuilder {
             javaFilesMap.put(cls.getFullyQualifiedName(), cls);
         }
     }
+
     /**
      * create request headers
      *
