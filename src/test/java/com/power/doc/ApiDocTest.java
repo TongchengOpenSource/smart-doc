@@ -38,8 +38,9 @@ public class ApiDocTest {
 
         config.setAllInOne(false);
         config.setOutPath("d:\\md2");
+        config.setMd5EncryptedHtmlName(true);
         //不指定SourcePaths默认加载代码为项目src/main/java下的
-        config.setSourcePaths(
+        config.setSourceCodePaths(
                 SourceCodePath.path().setDesc("本项目代码").setPath("src/test/java")
                 //SourcePath.path().setPath("F:\\Personal\\project\\smart\\src\\main\\java")
                 //SourcePath.path().setDesc("加载项目外代码").setPath("E:\\ApplicationPower\\ApplicationPower\\Common-util\\src\\main\\java")
