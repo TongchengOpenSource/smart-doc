@@ -34,7 +34,7 @@ for(doc in api.list){
 [stripes=even]
 |====================
 |Header | Type|Description|Required|Since
-|${doc.headers}
+${doc.headers}
 |====================
 <%}%>
 
