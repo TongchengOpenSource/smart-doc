@@ -13,13 +13,23 @@ public class DocGlobalConstants {
 
     public static final String DOC_LANGUAGE = "smart-doc_language";
 
-    public static final String API_DOC_TPL = "ApiDoc.btl";
+    public static final String API_DOC_MD_TPL = "ApiDoc.btl";
+
+    public static final String API_DOC_ADOC_TPL = "ApiDoc.adoc";
+
+    public static final String ALL_IN_ONE_MD_TPL = "AllInOne.btl";
+
+    public static final String ALL_IN_ONE_ADOC_TPL = "AllInOne.adoc";
 
     public static final String HTML_API_DOC_TPL = "HtmlApiDoc.btl";
 
-    public static final String ERROR_CODE_LIST_TPL = "ErrorCodeList.btl";
+    public static final String ERROR_CODE_LIST_MD_TPL = "ErrorCodeList.btl";
+
+    public static final String ERROR_CODE_LIST_ADOC_TPL = "ErrorCodeList.btl";
 
     public static final String ERROR_CODE_LIST_MD = "ErrorCodeList.md";
+
+    public static final String ERROR_CODE_LIST_ADOC = "ErrorCodeList.md";
 
     public static final String INDEX_TPL = "Index.btl";
 

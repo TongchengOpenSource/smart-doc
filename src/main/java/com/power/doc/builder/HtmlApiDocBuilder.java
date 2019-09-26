@@ -95,7 +95,7 @@ public class HtmlApiDocBuilder {
         Template htmlApiDoc;
         String strTime = DateTimeUtil.long2Str(now, DateTimeUtil.DATE_FORMAT_SECOND);
         for (ApiDoc doc : apiDocList) {
-            Template apiTemplate = BeetlTemplateUtil.getByName(API_DOC_TPL);
+            Template apiTemplate = BeetlTemplateUtil.getByName(API_DOC_MD_TPL);
             apiTemplate.binding(TemplateVariable.DESC.getVariable(), doc.getDesc());
             apiTemplate.binding(TemplateVariable.NAME.getVariable(), doc.getName());
             apiTemplate.binding(TemplateVariable.LIST.getVariable(), doc.getList());//类名
@@ -118,7 +118,7 @@ public class HtmlApiDocBuilder {
      */
     private static void buildErrorCodeDoc(List<ApiErrorCode> errorCodeList, String outPath) {
         if (CollectionUtil.isNotEmpty(errorCodeList)) {
-            Template error = BeetlTemplateUtil.getByName(ERROR_CODE_LIST_TPL);
+            Template error = BeetlTemplateUtil.getByName(ERROR_CODE_LIST_MD_TPL);
             error.binding(TemplateVariable.LIST.getVariable(), errorCodeList);
             String errorHtml = MarkDownUtil.toHtml(error.render());
             Template errorCodeDoc = BeetlTemplateUtil.getByName(HTML_API_DOC_TPL);
