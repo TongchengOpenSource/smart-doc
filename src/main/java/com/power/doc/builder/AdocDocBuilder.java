@@ -21,7 +21,7 @@ public class AdocDocBuilder {
      * @param config ApiConfig
      */
     public static void builderControllersApi(ApiConfig config) {
-        BuilderTemplate builderTemplate = new BuilderTemplate();
+        DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
         builderTemplate.checkAndInit(config);
         SourceBuilder sourceBuilder = new SourceBuilder(config);
         List<ApiDoc> apiDocList = sourceBuilder.getControllerApiData();

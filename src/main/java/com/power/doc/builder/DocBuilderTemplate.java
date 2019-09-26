@@ -19,13 +19,13 @@ import static com.power.doc.constants.DocGlobalConstants.FILE_SEPARATOR;
 /**
  * @author yu 2019/9/26.
  */
-public class BuilderTemplate {
+public class DocBuilderTemplate {
 
 
     /**
      * check condition and init
      *
-     * @param config
+     * @param config Api config
      */
     public void checkAndInit(ApiConfig config) {
         if (null == config) {
@@ -64,7 +64,15 @@ public class BuilderTemplate {
     /**
      * Merge all api doc into one document
      *
-     * @param apiDocList
+     * @param apiDocList list  data of Api doc
+     */
+
+    /**
+     * Merge all api doc into one document
+     * @param apiDocList list  data of Api doc
+     * @param config api config
+     * @param template template
+     * @param outPutFileName output file
      */
     public void buildAllInOne(List<ApiDoc> apiDocList, ApiConfig config, String template, String outPutFileName) {
         String outPath = config.getOutPath();
@@ -76,11 +84,13 @@ public class BuilderTemplate {
         FileUtil.nioWriteFile(tpl.render(), outPath + FILE_SEPARATOR + outPutFileName);
     }
 
+
     /**
-     * build error_code html
-     *
-     * @param errorCodeList list of error code
-     * @param outPath
+     * build error_code adoc
+     * @param errorCodeList list  data of Api doc
+     * @param config api config
+     * @param template template
+     * @param outPutFileName output file
      */
     public void buildErrorCodeDoc(List<ApiErrorCode> errorCodeList, ApiConfig config, String template, String outPutFileName) {
         if (CollectionUtil.isNotEmpty(errorCodeList)) {
