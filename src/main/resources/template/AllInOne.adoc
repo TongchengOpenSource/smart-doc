@@ -45,7 +45,7 @@ ${doc.headers}
 [stripes=even]
 |====================
 |Parameter | Type|Description|Required|Since
-|${doc.requestParams}
+${doc.requestParams}
 |====================
 <%}%>
 
@@ -62,7 +62,7 @@ ${doc.requestUsage}
 [stripes=even]
 |====================
 |Field | Type|Description|Since
-|${doc.responseParams}
+${doc.responseParams}
 |====================
 <%}%>
 
