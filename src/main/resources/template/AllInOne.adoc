@@ -1,0 +1,91 @@
+<%if(isNotEmpty(revisionLogList)){%>
+
+[width="100%",options="header,footer"]
+[stripes=even]
+|====================
+|Version |  Update Time  | Status | Author |  Description
+<%
+for(revisionLog in revisionLogList){
+%>
+${revisionLog.version}|${revisionLog.revisionTime}|${revisionLog.status}|${revisionLog.author}|${revisionLog.remarks}
+<%}%>
+|====================
+<%}%>
+
+
+<%
+for(api in apiDocList){
+%>
+= ${api.desc}
+<%
+for(doc in api.list){
+%>
+== ${doc.desc}
+*URL:* ${doc.url}
+
+*Type:* ${doc.type}
+
+*Content-Type:* ${doc.contentType}
+
+<%if(isNotEmpty(doc.headers)){%>
+*Request-headers:*
+
+[width="100%",options="header,footer"]
+[stripes=even]
+|====================
+|Header | Type|Description|Required|Since
+|${doc.headers}
+|====================
+<%}%>
+
+<%if(isNotEmpty(doc.requestParams)){%>
+*Request-parameters:*
+
+[width="100%",options="header,footer"]
+[stripes=even]
+|====================
+|Parameter | Type|Description|Required|Since
+|${doc.requestParams}
+|====================
+<%}%>
+
+<%if(isNotEmpty(doc.requestUsage)){%>
+*Request-example:*
+----
+${doc.requestUsage}
+----
+<%}%>
+<%if(isNotEmpty(doc.responseParams)){%>
+*Response-fields:*
+
+[width="100%",options="header,footer"]
+[stripes=even]
+|====================
+|Field | Type|Description|Since
+|${doc.responseParams}
+|====================
+<%}%>
+
+<%if(isNotEmpty(doc.responseUsage)){%>
+*Response-example:*
+----
+${doc.responseUsage}
+----
+<%}%>
+
+<% } %>
+<% } %>
+<%if(isNotEmpty(errorCodeList)){%>
+# Error code list
+
+[width="100%",options="header,footer"]
+[stripes=even]
+|====================
+|Error code |Description
+<%
+for(error in errorCodeList){
+%>
+|${error.value}|${error.desc}
+<%}%>
+|====================
+<%}%>
