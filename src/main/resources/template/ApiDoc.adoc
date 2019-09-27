@@ -1,9 +1,9 @@
 
-= ${desc}
+== ${desc}
 <%
 for(doc in list){
 %>
-== ${doc.desc}
+=== ${doc.desc}
 *URL:* `${doc.url}`
 
 *Type:* `${doc.type}`
@@ -31,7 +31,7 @@ ${doc.headers}
 <%
 for(param in doc.requestParams){
 %>
-|{param.field}|${param.type}|${param.desc}|${param.required}|${param.version}
+|${param.field}|${param.type}|${param.desc}|${param.required}|${param.version}
 <%}%>
 <%}%>
 |====================

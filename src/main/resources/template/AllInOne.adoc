@@ -7,7 +7,7 @@
 <%
 for(revisionLog in revisionLogList){
 %>
-${revisionLog.version}|${revisionLog.revisionTime}|${revisionLog.status}|${revisionLog.author}|${revisionLog.remarks}
+|${revisionLog.version}|${revisionLog.revisionTime}|${revisionLog.status}|${revisionLog.author}|${revisionLog.remarks}
 <%}%>
 |====================
 <%}%>
@@ -16,11 +16,11 @@ ${revisionLog.version}|${revisionLog.revisionTime}|${revisionLog.status}|${revis
 <%
 for(api in apiDocList){
 %>
-= ${api.desc}
+== ${api.desc}
 <%
 for(doc in api.list){
 %>
-== ${doc.desc}
+=== ${doc.desc}
 *URL:* ${doc.url}
 
 *Type:* ${doc.type}
@@ -48,7 +48,7 @@ ${doc.headers}
 <%
 for(param in doc.requestParams){
 %>
-|{param.field}|${param.type}|${param.desc}|${param.required}|${param.version}
+|${param.field}|${param.type}|${param.desc}|${param.required}|${param.version}
 <%}%>
 |====================
 <%}%>
@@ -84,7 +84,7 @@ ${doc.responseUsage}
 <% } %>
 <% } %>
 <%if(isNotEmpty(errorCodeList)){%>
-# Error code list
+== Error code list
 
 [width="100%",options="header,footer"]
 [stripes=even]

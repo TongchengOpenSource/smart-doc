@@ -44,6 +44,7 @@ public class AdocDocBuilder {
      * @param controllerName controller name
      */
     public static void buildSingleControllerApi(ApiConfig config, String controllerName) {
+        config.setAdoc(true);
         DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
         builderTemplate.checkAndInit(config);
         builderTemplate.buildSingleControllerApi(config.getOutPath(), controllerName, API_DOC_ADOC_TPL, API_EXTENSION);
