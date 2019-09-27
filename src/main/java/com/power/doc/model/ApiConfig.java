@@ -74,9 +74,15 @@ public class ApiConfig {
 
     /**
      * language support
+     *
      * @since 1.7+
      */
     private DocLanguage language;
+
+    /**
+     * adoc flag
+     */
+    private boolean adoc;
 
 
     public String getServerUrl() {
@@ -176,5 +182,11 @@ public class ApiConfig {
         this.language = language;
     }
 
+    public boolean isAdoc() {
+        return adoc;
+    }
 
+    public void setAdoc(boolean adoc) {
+        this.adoc = adoc;
+    }
 }

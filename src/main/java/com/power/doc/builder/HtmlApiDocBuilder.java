@@ -28,6 +28,7 @@ public class HtmlApiDocBuilder {
 
     /**
      * build controller api
+     *
      * @param config config
      */
     public static void builderControllersApi(ApiConfig config) {
@@ -60,8 +61,9 @@ public class HtmlApiDocBuilder {
 
     /**
      * build api.html
+     *
      * @param apiDocList list of api doc
-     * @param config ApiConfig
+     * @param config     ApiConfig
      */
     private static void buildIndex(List<ApiDoc> apiDocList, ApiConfig config) {
         FileUtil.mkdirs(config.getOutPath());
@@ -88,7 +90,7 @@ public class HtmlApiDocBuilder {
      * build ever controller api
      *
      * @param apiDocList list of api doc
-     * @param outPath output path
+     * @param outPath    output path
      */
     private static void buildApiDoc(List<ApiDoc> apiDocList, String outPath) {
         FileUtil.mkdirs(outPath);

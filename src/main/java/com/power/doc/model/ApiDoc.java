@@ -22,7 +22,7 @@ public class ApiDoc {
     private String alias;
 
     /**
-     *  List of method doc
+     * List of method doc
      */
     private List<ApiMethodDoc> list;
 

@@ -4,6 +4,7 @@ package com.power.doc.model;
  * Description:
  * This can be used to customize the comments for setting java fields.
  * You can reference README.md
+ *
  * @author yu 2018/06/18.
  */
 public class CustomRespField {

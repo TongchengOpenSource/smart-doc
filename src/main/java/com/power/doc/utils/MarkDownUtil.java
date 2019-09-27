@@ -10,8 +10,8 @@ import com.vladsch.flexmark.util.data.MutableDataSet;
 import java.util.Arrays;
 
 /**
- * @since 1.7+
  * @author yu 2019/9/21.
+ * @since 1.7+
  */
 public class MarkDownUtil {
 

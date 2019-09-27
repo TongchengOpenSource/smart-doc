@@ -3,7 +3,7 @@ package com.power.doc.constants;
 /**
  * @author yu 2019/9/21.
  */
-public enum  TemplateVariable {
+public enum TemplateVariable {
     DESC("desc"),
     NAME("name"),
     LIST("list"),
@@ -18,14 +18,13 @@ public enum  TemplateVariable {
     VERSION("version");
 
 
-
     private String variable;
 
     TemplateVariable(String variable) {
         this.variable = variable;
     }
 
-    public String getVariable(){
+    public String getVariable() {
         return this.variable;
     }
 }

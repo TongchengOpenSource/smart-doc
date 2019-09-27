@@ -102,7 +102,7 @@ public class DocUtil {
     /**
      * Generate random field values based on field field names and type.
      *
-     * @param typeName field type name
+     * @param typeName  field type name
      * @param filedName field name
      * @return random value
      */
@@ -221,6 +221,7 @@ public class DocUtil {
 
     /**
      * handle spring mvc method
+     *
      * @param method method name
      * @return String
      */
@@ -234,19 +235,20 @@ public class DocUtil {
                 return "PUT";
             case "RequestMethod.DELETE":
                 return "DELETE";
-             default:
-                 return "GET";
+            default:
+                return "GET";
         }
     }
 
     /**
      * handle spring mvc mapping value
+     *
      * @param annotation JavaAnnotation
      * @return String
      */
-    public static String handleMappingValue(JavaAnnotation annotation){
+    public static String handleMappingValue(JavaAnnotation annotation) {
         if (null == annotation.getNamedParameter("value")) {
-            return  "/";
+            return "/";
         } else {
             return annotation.getNamedParameter("value").toString();
         }

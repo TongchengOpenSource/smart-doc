@@ -28,7 +28,11 @@ ${doc.headers}
 [stripes=even]
 |====================
 |Parameter | Type|Description|Required|Since
-${doc.requestParams}
+<%
+for(param in doc.requestParams){
+%>
+|{param.field}|${param.type}|${param.desc}|${param.required}|${param.version}
+<%}%>
 <%}%>
 |====================
 
@@ -45,7 +49,11 @@ ${doc.requestUsage}
 [stripes=even]
 |====================
 |Field | Type|Description|Since
-${doc.responseParams}
+<%
+for(param in doc.responseParams){
+%>
+|${param.field}|${param.type}|${param.desc}|${param.version}
+<%}%>
 <%}%>
 |====================
 

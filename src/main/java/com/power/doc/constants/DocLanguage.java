@@ -1,8 +1,8 @@
 package com.power.doc.constants;
 
 /**
- *
  * language support
+ *
  * @author yu 2019/9/21.
  */
 public enum DocLanguage {
@@ -15,7 +15,7 @@ public enum DocLanguage {
         this.code = code;
     }
 
-    public String getCode(){
+    public String getCode() {
         return this.code;
     }
 }

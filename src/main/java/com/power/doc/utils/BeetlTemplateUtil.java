@@ -21,6 +21,7 @@ public class BeetlTemplateUtil {
 
     /**
      * Get Beetl template by file name
+     *
      * @param templateName template name
      * @return Beetl Template Object
      */
@@ -38,6 +39,7 @@ public class BeetlTemplateUtil {
     /**
      * Batch bind binding value to Beetl templates and return all file rendered,
      * Map key is file name,value is file content
+     *
      * @param path   path
      * @param params params
      * @return map

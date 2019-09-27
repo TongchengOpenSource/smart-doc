@@ -1,8 +1,8 @@
 package com.power.doc.model;
 
 /**
- * @since 1.7 +
  * @author yu 2019/9/22.
+ * @since 1.7 +
  */
 public class ApiReturn {
 

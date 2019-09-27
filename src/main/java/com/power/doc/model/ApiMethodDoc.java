@@ -1,6 +1,7 @@
 package com.power.doc.model;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * java api method info model.
@@ -31,6 +32,7 @@ public class ApiMethodDoc implements Serializable {
     private String type;
 
     /**
+     * only used for generate markdown and adoc
      * http readers
      */
     private String headers;
@@ -41,9 +43,15 @@ public class ApiMethodDoc implements Serializable {
     private String contentType = "application/x-www-form-urlencoded";
 
     /**
+     * http request headers
+     */
+    private List<ApiReqHeader> requestHeaders;
+
+    /**
      * http request params
      */
-    private String requestParams;
+    private List<ApiParam> requestParams;
+
 
     /**
      * http request usage
@@ -58,7 +66,7 @@ public class ApiMethodDoc implements Serializable {
     /**
      * http response params
      */
-    private String responseParams;
+    private List<ApiParam> responseParams;
 
 
     public String getDesc() {
@@ -85,28 +93,12 @@ public class ApiMethodDoc implements Serializable {
         this.type = type;
     }
 
-    public String getRequestParams() {
-        return requestParams;
-    }
-
-    public void setRequestParams(String requestParams) {
-        this.requestParams = requestParams;
-    }
-
     public String getResponseUsage() {
         return responseUsage;
     }
 
     public void setResponseUsage(String responseUsage) {
         this.responseUsage = responseUsage;
-    }
-
-    public String getResponseParams() {
-        return responseParams;
-    }
-
-    public void setResponseParams(String responseParams) {
-        this.responseParams = responseParams;
     }
 
     public String getRequestUsage() {
@@ -139,5 +131,29 @@ public class ApiMethodDoc implements Serializable {
 
     public void setOrder(int order) {
         this.order = order;
+    }
+
+    public List<ApiParam> getRequestParams() {
+        return requestParams;
+    }
+
+    public void setRequestParams(List<ApiParam> requestParams) {
+        this.requestParams = requestParams;
+    }
+
+    public List<ApiParam> getResponseParams() {
+        return responseParams;
+    }
+
+    public void setResponseParams(List<ApiParam> responseParams) {
+        this.responseParams = responseParams;
+    }
+
+    public List<ApiReqHeader> getRequestHeaders() {
+        return requestHeaders;
+    }
+
+    public void setRequestHeaders(List<ApiReqHeader> requestHeaders) {
+        this.requestHeaders = requestHeaders;
     }
 }

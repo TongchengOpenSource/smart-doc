@@ -43,6 +43,23 @@ public class DocBuilderTemplate {
     }
 
     /**
+     * check condition and init for get Data
+     *
+     * @param config Api config
+     */
+    public void checkAndInitForGetApiData(ApiConfig config) {
+        if (null == config) {
+            throw new NullPointerException("ApiConfig can't be null");
+        }
+        if (null != config.getLanguage()) {
+            System.setProperty(DocGlobalConstants.DOC_LANGUAGE, config.getLanguage().getCode());
+        } else {
+            //default is chinese
+            System.setProperty(DocGlobalConstants.DOC_LANGUAGE, DocLanguage.CHINESE.getCode());
+        }
+    }
+
+    /**
      * Generate api documentation for all controllers.
      *
      * @param apiDocList    list of api doc
@@ -69,9 +86,10 @@ public class DocBuilderTemplate {
 
     /**
      * Merge all api doc into one document
-     * @param apiDocList list  data of Api doc
-     * @param config api config
-     * @param template template
+     *
+     * @param apiDocList     list  data of Api doc
+     * @param config         api config
+     * @param template       template
      * @param outPutFileName output file
      */
     public void buildAllInOne(List<ApiDoc> apiDocList, ApiConfig config, String template, String outPutFileName) {
@@ -87,9 +105,10 @@ public class DocBuilderTemplate {
 
     /**
      * build error_code adoc
-     * @param errorCodeList list  data of Api doc
-     * @param config api config
-     * @param template template
+     *
+     * @param errorCodeList  list  data of Api doc
+     * @param config         api config
+     * @param template       template
      * @param outPutFileName output file
      */
     public void buildErrorCodeDoc(List<ApiErrorCode> errorCodeList, ApiConfig config, String template, String outPutFileName) {
@@ -98,5 +117,24 @@ public class DocBuilderTemplate {
             mapper.binding(TemplateVariable.LIST.getVariable(), errorCodeList);
             FileUtil.nioWriteFile(mapper.render(), config.getOutPath() + FILE_SEPARATOR + outPutFileName);
         }
+    }
+
+    /**
+     * Generate a single controller api document
+     *
+     * @param outPath        output path
+     * @param controllerName controller name
+     * @param template       template
+     * @param fileExtension  file extension
+     */
+    public void buildSingleControllerApi(String outPath, String controllerName, String template, String fileExtension) {
+        FileUtil.mkdirs(outPath);
+        SourceBuilder sourceBuilder = new SourceBuilder(true);
+        ApiDoc doc = sourceBuilder.getSingleControllerApiData(controllerName);
+        Template mapper = BeetlTemplateUtil.getByName(template);
+        mapper.binding(TemplateVariable.DESC.getVariable(), doc.getDesc());
+        mapper.binding(TemplateVariable.NAME.getVariable(), doc.getName());
+        mapper.binding(TemplateVariable.LIST.getVariable(), doc.getList());
+        FileUtil.writeFileNotAppend(mapper.render(), outPath + FILE_SEPARATOR + doc.getName() + fileExtension);
     }
 }

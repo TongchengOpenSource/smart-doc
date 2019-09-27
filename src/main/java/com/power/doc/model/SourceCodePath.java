@@ -2,6 +2,7 @@ package com.power.doc.model;
 
 /**
  * Source code path
+ *
  * @author yu 2018/7/14.
  */
 public class SourceCodePath {
