@@ -223,7 +223,7 @@ public class SourceBuilder {
                 apiMethodDoc.setType(methodType);
                 url = this.appUrl + "/" + baseUrl + "/" + url;
                 apiMethodDoc.setUrl(UrlUtil.simplifyUrl(url));
-                List<ApiParam> requestParams = getCommentTag(method, "param", cls.getCanonicalName());
+                List<ApiParam> requestParams = requestParams(method, DocTags.PARAM, cls.getCanonicalName());
                 apiMethodDoc.setRequestParams(requestParams);
                 String requestJson = buildReqJson(method, apiMethodDoc);
                 apiMethodDoc.setRequestUsage(JsonFormatUtil.formatJson(requestJson));
@@ -380,9 +380,9 @@ public class SourceBuilder {
         } else if (DocGlobalConstants.JAVA_OBJECT_FULLY.equals(className)) {
             ApiParam param = ApiParam.of().setField(pre + "any object").setType("object");
             if (StringUtil.isEmpty(isRequired)) {
-                param.setDesc("any object.").setVersion("-");
+                param.setDesc("any object.").setVersion(DocGlobalConstants.DEFAULT_VERSION);
             } else {
-                param.setDesc("any object.").setRequired(false).setVersion("-");
+                param.setDesc("any object.").setRequired(false).setVersion(DocGlobalConstants.DEFAULT_VERSION);
 
             }
             paramList.add(param);
@@ -398,7 +398,7 @@ public class SourceBuilder {
                     List<JavaAnnotation> javaAnnotations = field.getAnnotations();
 
                     List<DocletTag> paramTags = field.getTags();
-                    String since = "-";//since tag value
+                    String since = DocGlobalConstants.DEFAULT_VERSION;//since tag value
                     if (!isResp) {
                         pre:
                         for (DocletTag docletTag : paramTags) {
@@ -488,7 +488,7 @@ public class SourceBuilder {
                             String gNameTemp = field.getType().getGenericCanonicalName();
                             if (DocGlobalConstants.JAVA_MAP_FULLY.equals(gNameTemp)) {
                                 ApiParam param1 = ApiParam.of().setField(preBuilder.toString() + "any object")
-                                        .setType("object").setDesc("any object").setVersion("-");
+                                        .setType("object").setDesc("any object").setVersion(DocGlobalConstants.DEFAULT_VERSION);
                                 paramList.add(param1);
                                 continue;
                             }
@@ -581,7 +581,7 @@ public class SourceBuilder {
         comments.append("The api directly returns the ")
                 .append(typeName).append(" type value.");
         ApiParam apiParam = ApiParam.of().setField("no param name")
-                .setType(typeName).setDesc(comments.toString()).setVersion("-");
+                .setType(typeName).setDesc(comments.toString()).setVersion(DocGlobalConstants.DEFAULT_VERSION);
         List<ApiParam> paramList = new ArrayList<>();
         paramList.add(apiParam);
         return paramList;
@@ -908,7 +908,7 @@ public class SourceBuilder {
      * @param className  The class name
      * @return String
      */
-    private List<ApiParam> getCommentTag(final JavaMethod javaMethod, final String tagName, final String className) {
+    private List<ApiParam> requestParams(final JavaMethod javaMethod, final String tagName, final String className) {
         //
         Map<String, CustomRespField> responseFieldMap = new HashMap<>();
         List<DocletTag> paramTags = javaMethod.getTagsByName(tagName);
@@ -967,12 +967,12 @@ public class SourceBuilder {
                                 typeTemp = " of " + DocClassUtil.processTypeNameForParams(gicName);
                                 ApiParam param = ApiParam.of().setField(paramName)
                                         .setType(DocClassUtil.processTypeNameForParams(simpleName) + typeTemp)
-                                        .setDesc(comment).setRequired(true).setVersion("-");
+                                        .setDesc(comment).setRequired(true).setVersion(DocGlobalConstants.DEFAULT_VERSION);
                                 paramList.add(param);
                             } else {
                                 ApiParam param = ApiParam.of().setField(paramName)
                                         .setType(DocClassUtil.processTypeNameForParams(simpleName) + typeTemp)
-                                        .setDesc(comment).setRequired(true).setVersion("-");
+                                        .setDesc(comment).setRequired(true).setVersion(DocGlobalConstants.DEFAULT_VERSION);
                                 paramList.add(param);
                                 paramList.addAll(buildParams(gicNameArr[0], "└─", 1, "true", responseFieldMap, false));
                             }
@@ -980,11 +980,11 @@ public class SourceBuilder {
                         } else if (DocClassUtil.isPrimitive(simpleName)) {
                             ApiParam param = ApiParam.of().setField(paramName)
                                     .setType(DocClassUtil.processTypeNameForParams(simpleName))
-                                    .setDesc(comment).setRequired(true).setVersion("-");
+                                    .setDesc(comment).setRequired(true).setVersion(DocGlobalConstants.DEFAULT_VERSION);
                             paramList.add(param);
                         } else if (DocGlobalConstants.JAVA_MAP_FULLY.equals(typeName)) {
                             ApiParam param = ApiParam.of().setField(paramName)
-                                    .setType("map").setDesc(comment).setRequired(true).setVersion("-");
+                                    .setType("map").setDesc(comment).setRequired(true).setVersion(DocGlobalConstants.DEFAULT_VERSION);
                             paramList.add(param);
                         } else {
                             paramList.addAll(buildParams(fullTypeName, "", 0, "true", responseFieldMap, false));
@@ -1017,7 +1017,7 @@ public class SourceBuilder {
                                     if (DocClassUtil.isPrimitive(gicName)) {
                                         ApiParam bodyParam = ApiParam.of()
                                                 .setField(paramName).setType(DocClassUtil.processTypeNameForParams(simpleName))
-                                                .setDesc(comment).setRequired(Boolean.valueOf(required));
+                                                .setDesc(comment).setRequired(Boolean.valueOf(required)).setVersion(DocGlobalConstants.DEFAULT_VERSION);
                                         reqBodyParamsList.add(bodyParam);
                                     } else {
                                         reqBodyParamsList.addAll(buildParams(gicNameArr[0], "", 0, "true", responseFieldMap, false));
@@ -1026,7 +1026,7 @@ public class SourceBuilder {
                                 } else if (DocClassUtil.isMap(fullTypeName)) {
                                     if (DocGlobalConstants.JAVA_MAP_FULLY.equals(typeName)) {
                                         ApiParam apiParam = ApiParam.of().setField(paramName).setType("map")
-                                                .setDesc(comment).setRequired(Boolean.valueOf(required));
+                                                .setDesc(comment).setRequired(Boolean.valueOf(required)).setVersion(DocGlobalConstants.DEFAULT_VERSION);
                                         paramList.add(apiParam);
                                         continue out;
                                     }
@@ -1040,7 +1040,7 @@ public class SourceBuilder {
                         } else {
                             ApiParam param = ApiParam.of().setField(paramName)
                                     .setType(DocClassUtil.processTypeNameForParams(simpleName))
-                                    .setDesc(comment).setRequired(true).setVersion("-");
+                                    .setDesc(comment).setRequired(true).setVersion(DocGlobalConstants.DEFAULT_VERSION);
                             paramList.add(param);
                         }
                     }

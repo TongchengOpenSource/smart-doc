@@ -14,4 +14,9 @@ public class DocTags {
      * java required tag
      */
     public static final String REQUIRED = "required";
+
+    /**
+     * java param tag
+     */
+    public static final String PARAM = "param";
 }

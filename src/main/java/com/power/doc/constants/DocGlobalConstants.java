@@ -9,6 +9,8 @@ public class DocGlobalConstants {
 
     public static final String HTML_DOC_OUT_PATH = "src/main/resources/static/doc";
 
+    public static final String ADOC_OUT_PATH = "src/main/docs/asciidoc";
+
     public static final String PROJECT_CODE_PATH = "src/main/java";
 
     public static final String DOC_LANGUAGE = "smart-doc_language";
@@ -64,6 +66,8 @@ public class DocGlobalConstants {
     public static final String JAVA_MAP_FULLY = "java.util.Map";
 
     public static final String JAVA_LIST_FULLY = "java.util.List";
+
+    public static final String DEFAULT_VERSION = "-";
 
 
 }
