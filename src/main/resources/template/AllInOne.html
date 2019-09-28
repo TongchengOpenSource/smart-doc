@@ -15,7 +15,6 @@
 <div id="header">
     <div id="toc" class="toc2">
         <div id="toctitle">API Reference</div>
-
         <ul class="sectlevel1">
             <%
             for(api in apiDocList){
@@ -24,9 +23,7 @@
                 <%
                 for(doc in api.list){
                 %>
-                <ul class="sectlevel2">
-                    <li><a href="#_${doc.desc}">${api.order}.${doc.order} ${doc.desc}</a></li>
-                </ul>
+                <ul class="sectlevel2"><li><a href="#_${doc.desc}">${api.order}.${doc.order} ${doc.desc}</a></li></ul>
                 <%}%>
             </li>
         <%}%>
@@ -34,7 +31,6 @@
             <li><a href="#_error_code_list"> ${apiDocList.~size+1}. Error code list</a></li>
         <%}%>
         </ul>
-
     </div>
 </div>
 <div id="content">
@@ -42,33 +38,15 @@
     <div id="preamble">
         <div class="sectionbody">
             <table class="tableblock frame-all grid-all spread">
-                <colgroup>
-                    <col style="width: 20%;">
-                    <col style="width: 20%;">
-                    <col style="width: 20%;">
-                    <col style="width: 20%;">
-                    <col style="width: 20%;">
-                </colgroup>
+                <colgroup><col style="width: 20%;"><col style="width: 20%;"><col style="width: 20%;"><col style="width: 20%;"><col style="width: 20%;"></colgroup>
                 <thead>
-                <tr>
-                    <th class="tableblock halign-left valign-top">Version</th>
-                    <th class="tableblock halign-left valign-top">Update Time</th>
-                    <th class="tableblock halign-left valign-top">Status</th>
-                    <th class="tableblock halign-left valign-top">Author</th>
-                    <th class="tableblock halign-left valign-top">Description</th>
-                </tr>
+                <tr><th class="tableblock halign-left valign-top">Version</th><th class="tableblock halign-left valign-top">Update Time</th><th class="tableblock halign-left valign-top">Status</th><th class="tableblock halign-left valign-top">Author</th><th class="tableblock halign-left valign-top">Description</th></tr>
                 </thead>
                 <tbody>
                 <%
                 for(revisionLog in revisionLogList){
                 %>
-                <tr>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock">${revisionLog.version}</p></td>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock">${revisionLog.revisionTime}</p></td>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock">${revisionLog.status}</p></td>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock">${revisionLog.author}</p></td>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock">${revisionLog.remarks}</p></td>
-                </tr>
+                <tr><td class="tableblock halign-left valign-top"><p class="tableblock">${revisionLog.version}</p></td><td class="tableblock halign-left valign-top"><p class="tableblock">${revisionLog.revisionTime}</p></td><td class="tableblock halign-left valign-top"><p class="tableblock">${revisionLog.status}</p></td><td class="tableblock halign-left valign-top"><p class="tableblock">${revisionLog.author}</p></td><td class="tableblock halign-left valign-top"><p class="tableblock">${revisionLog.remarks}</p></td></tr>
                 <%}%>
                 </tbody>
             </table>
@@ -89,145 +67,72 @@
                 <h3 id="_${doc.desc}">
                     <a class="anchor" href="#_${doc.desc}"></a><a class="link" href="#_${doc.desc}">${api.order}.${doc.order} ${doc.desc}</a>
                 </h3>
-                <div class="paragraph">
-                    <p><strong>URL:</strong> <a href="${doc.url}" class="bare">${doc.url}</a>
-                    </p>
-                </div>
-                <div class="paragraph">
-                    <p><strong>Type:</strong> ${doc.type}</p>
-                </div>
-                <div class="paragraph">
-                    <p><strong>Content-Type:</strong> ${doc.contentType}</p>
-                </div>
+                <div class="paragraph"><p><strong>URL:</strong> <a href="${doc.url}" class="bare">${doc.url}</a></p></div>
+                <div class="paragraph"><p><strong>Type:</strong> ${doc.type}</p></div>
+                <div class="paragraph"><p><strong>Content-Type:</strong> ${doc.contentType}</p></div>
                 <%if(isNotEmpty(doc.requestHeaders)){%>
-                <div class="paragraph">
-                    <p><strong>Request-headers:</strong></p>
-                </div>
+                <div class="paragraph"><p><strong>Request-headers:</strong></p></div>
                 <table class="tableblock frame-all grid-all spread">
-                    <colgroup>
-                        <col style="width: 20%;">
-                        <col style="width: 20%;">
-                        <col style="width: 20%;">
-                        <col style="width: 20%;">
-                        <col style="width: 20%;">
-                    </colgroup>
+                    <colgroup><col style="width: 20%;"><col style="width: 20%;"><col style="width: 20%;"><col style="width: 20%;"><col style="width: 20%;"></colgroup>
                     <thead>
-                    <tr>
-                        <th class="tableblock halign-left valign-top">Header</th>
-                        <th class="tableblock halign-left valign-top">Type</th>
-                        <th class="tableblock halign-left valign-top">Description</th>
-                        <th class="tableblock halign-left valign-top">Required</th>
-                        <th class="tableblock halign-left valign-top">Since</th>
-                    </tr>
+                    <tr><th class="tableblock halign-left valign-top">Header</th><th class="tableblock halign-left valign-top">Type</th><th class="tableblock halign-left valign-top">Description</th><th class="tableblock halign-left valign-top">Required</th><th class="tableblock halign-left valign-top">Since</th></tr>
                     </thead>
                     <tbody>
                     <%
                     for(header in doc.requestHeaders){
                     %>
-                    <tr>
-                        <td class="tableblock halign-left valign-top"><p class="tableblock">${header.name}</p></td>
-                        <td class="tableblock halign-left valign-top"><p class="tableblock">${header.type}</p></td>
-                        <td class="tableblock halign-left valign-top"><p class="tableblock">${header.desc}</p></td>
-                        <td class="tableblock halign-left valign-top"><p class="tableblock">${header.required}</p></td>
-                        <td class="tableblock halign-left valign-top"><p class="tableblock">${header.since}</p></td>
+                    <tr><td class="tableblock halign-left valign-top"><p class="tableblock">${header.name}</p></td><td class="tableblock halign-left valign-top"><p class="tableblock">${header.type}</p></td><td class="tableblock halign-left valign-top"><p class="tableblock">${header.desc}</p></td><td class="tableblock halign-left valign-top"><p class="tableblock">${header.required}</p></td><td class="tableblock halign-left valign-top"><p class="tableblock">${header.since}</p></td>
                     </tr>
                     <%}%>
                     </tbody>
                 </table>
                 <%}%>
                 <%if(isNotEmpty(doc.requestParams)){%>
-                <div class="paragraph">
-                    <p><strong>Request-parameters:</strong></p>
-                </div>
+                <div class="paragraph"><p><strong>Request-parameters:</strong></p></div>
                 <table class="tableblock frame-all grid-all spread">
-                    <colgroup>
-                        <col style="width: 20%;">
-                        <col style="width: 20%;">
-                        <col style="width: 20%;">
-                        <col style="width: 20%;">
-                        <col style="width: 20%;">
+                    <colgroup><col style="width: 20%;"><col style="width: 20%;"><col style="width: 20%;"><col style="width: 20%;"><col style="width: 20%;">
                     </colgroup>
                     <thead>
-                    <tr>
-                        <th class="tableblock halign-left valign-top">Parameter</th>
-                        <th class="tableblock halign-left valign-top">Type</th>
-                        <th class="tableblock halign-left valign-top">Description</th>
-                        <th class="tableblock halign-left valign-top">Required</th>
-                        <th class="tableblock halign-left valign-top">Since</th>
+                    <tr><th class="tableblock halign-left valign-top">Parameter</th><th class="tableblock halign-left valign-top">Type</th><th class="tableblock halign-left valign-top">Description</th><th class="tableblock halign-left valign-top">Required</th><th class="tableblock halign-left valign-top">Since</th>
                     </tr>
                     </thead>
                     <tbody>
                     <%
                     for(param in doc.requestParams){
                     %>
-                    <tr>
-                        <td class="tableblock halign-left valign-top"><p class="tableblock">${param.field}</p></td>
-                        <td class="tableblock halign-left valign-top"><p class="tableblock">${param.type}</p></td>
-                        <td class="tableblock halign-left valign-top"><p class="tableblock">${param.desc}</p></td>
-                        <td class="tableblock halign-left valign-top"><p class="tableblock">${param.required}</p></td>
-                        <td class="tableblock halign-left valign-top"><p class="tableblock">${param.version}</p></td>
-                    </tr>
+                    <tr><td class="tableblock halign-left valign-top"><p class="tableblock">${param.field}</p></td><td class="tableblock halign-left valign-top"><p class="tableblock">${param.type}</p></td><td class="tableblock halign-left valign-top"><p class="tableblock">${param.desc}</p></td><td class="tableblock halign-left valign-top"><p class="tableblock">${param.required}</p></td><td class="tableblock halign-left valign-top"><p class="tableblock">${param.version}</p></td></tr>
                     <%}%>
                     </tbody>
                 </table>
                 <%}%>
                 <%if(isNotEmpty(doc.requestUsage)){%>
-                <div class="paragraph">
-                    <p><strong>Request-example:</strong></p>
-                </div>
-                <div class="listingblock">
-                    <div class="content">
-                        <pre>${doc.requestUsage}</pre>
-                    </div>
-                </div>
+                <div class="paragraph"><p><strong>Request-example:</strong></p></div>
+                <div class="listingblock"><div class="content"><pre>${doc.requestUsage}</pre></div></div>
                 <%}%>
                 <%if(isNotEmpty(doc.responseParams)){%>
-                <div class="paragraph">
-                    <p><strong>Response-fields:</strong></p>
-                </div>
+                <div class="paragraph"><p><strong>Response-fields:</strong></p></div>
                 <table class="tableblock frame-all grid-all spread">
-                    <colgroup>
-                        <col style="width: 25%;">
-                        <col style="width: 25%;">
-                        <col style="width: 25%;">
-                        <col style="width: 25%;">
-                    </colgroup>
+                    <colgroup><col style="width: 25%;"><col style="width: 25%;"><col style="width: 25%;"><col style="width: 25%;"></colgroup>
                     <thead>
-                    <tr>
-                        <th class="tableblock halign-left valign-top">Field</th>
-                        <th class="tableblock halign-left valign-top">Type</th>
-                        <th class="tableblock halign-left valign-top">Description</th>
-                        <th class="tableblock halign-left valign-top">Since</th>
+                    <tr><th class="tableblock halign-left valign-top">Field</th><th class="tableblock halign-left valign-top">Type</th><th class="tableblock halign-left valign-top">Description</th><th class="tableblock halign-left valign-top">Since</th>
                     </tr>
                     </thead>
                     <tbody>
                     <%
                     for(param in doc.responseParams){
                     %>
-                    <tr>
-                        <td class="tableblock halign-left valign-top"><p class="tableblock">${param.field}</p></td>
-                        <td class="tableblock halign-left valign-top"><p class="tableblock">${param.type}</p></td>
-                        <td class="tableblock halign-left valign-top"><p class="tableblock">${param.desc}</p></td>
-                        <td class="tableblock halign-left valign-top"><p class="tableblock">${param.version}</p></td>
-                    </tr>
+                    <tr><td class="tableblock halign-left valign-top"><p class="tableblock">${param.field}</p></td><td class="tableblock halign-left valign-top"><p class="tableblock">${param.type}</p></td><td class="tableblock halign-left valign-top"><p class="tableblock">${param.desc}</p></td><td class="tableblock halign-left valign-top"><p class="tableblock">${param.version}</p></td></tr>
                     <%}%>
                     </tbody>
                 </table>
                 <%}%>
                 <%if(isNotEmpty(doc.responseUsage)){%>
-                <div class="paragraph">
-                    <p><strong>Response-example:</strong></p>
-                </div>
-                <div class="listingblock">
-                    <div class="content">
-                        <pre>${doc.responseUsage}</pre>
-                    </div>
-                </div>
+                <div class="paragraph"><p><strong>Response-example:</strong></p></div>
+                <div class="listingblock"><div class="content"><pre>${doc.responseUsage}</pre></div></div>
                 <%}%>
             </div>
             <%}%>
         </div>
-
     </div>
     <%}%>
     <%if(isNotEmpty(errorCodeList)){%>
@@ -235,24 +140,15 @@
         <h2 id="_error_code_list"><a class="anchor" href="#_error_code_list"></a><a class="link" href="#_error_code_list">${apiDocList.~size+1}. Error code list</a></h2>
         <div class="sectionbody">
             <table class="tableblock frame-all grid-all spread">
-                <colgroup>
-                    <col style="width: 50%;">
-                    <col style="width: 50%;">
-                </colgroup>
+                <colgroup><col style="width: 50%;"><col style="width: 50%;"></colgroup>
                 <thead>
-                <tr>
-                    <th class="tableblock halign-left valign-top">Error code</th>
-                    <th class="tableblock halign-left valign-top">Description</th>
-                </tr>
+                <tr><th class="tableblock halign-left valign-top">Error code</th><th class="tableblock halign-left valign-top">Description</th></tr>
                 </thead>
                 <tbody>
                 <%
                 for(error in errorCodeList){
                 %>
-                <tr>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock">${error.value}</p></td>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock">${error.desc}</p></td>
-                </tr>
+                <tr><td class="tableblock halign-left valign-top"><p class="tableblock">${error.value}</p></td><td class="tableblock halign-left valign-top"><p class="tableblock">${error.desc}</p></td></tr>
                 <%}%>
                 </tbody>
             </table>
