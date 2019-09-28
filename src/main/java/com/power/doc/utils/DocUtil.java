@@ -29,6 +29,7 @@ public class DocUtil {
         fieldValue.put("uid", UUID.randomUUID().toString());
         fieldValue.put("nickname-string", enFaker.name().username());
         fieldValue.put("name-string", faker.name().username());
+        fieldValue.put("author-string",faker.book().author());
         fieldValue.put("url-string", faker.internet().url());
         fieldValue.put("username-string", faker.name().username());
         fieldValue.put("page-int", "1");
