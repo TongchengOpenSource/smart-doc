@@ -51,8 +51,9 @@ public class ApiDocBuilder {
     }
 
     /**
-     * @param config
-     * @return
+     * Get list of ApiDoc
+     * @param config ApiConfig
+     * @return List of ApiDoc
      */
     public static List<ApiDoc> listOfApiData(ApiConfig config) {
         DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
