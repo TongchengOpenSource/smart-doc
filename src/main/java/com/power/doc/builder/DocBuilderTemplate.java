@@ -1,6 +1,7 @@
 package com.power.doc.builder;
 
 import com.power.common.util.CollectionUtil;
+import com.power.common.util.DateTimeUtil;
 import com.power.common.util.FileUtil;
 import com.power.common.util.StringUtil;
 import com.power.doc.constants.DocGlobalConstants;
@@ -21,7 +22,7 @@ import static com.power.doc.constants.DocGlobalConstants.FILE_SEPARATOR;
  */
 public class DocBuilderTemplate {
 
-
+    private static long now = System.currentTimeMillis();
     /**
      * check condition and init
      *
@@ -94,11 +95,14 @@ public class DocBuilderTemplate {
      */
     public void buildAllInOne(List<ApiDoc> apiDocList, ApiConfig config, String template, String outPutFileName) {
         String outPath = config.getOutPath();
+        String strTime = DateTimeUtil.long2Str(now, DateTimeUtil.DATE_FORMAT_SECOND);
         FileUtil.mkdirs(outPath);
         Template tpl = BeetlTemplateUtil.getByName(template);
         tpl.binding(TemplateVariable.API_DOC_LIST.getVariable(), apiDocList);
         tpl.binding(TemplateVariable.ERROR_CODE_LIST.getVariable(), config.getErrorCodes());
         tpl.binding(TemplateVariable.VERSION_LIST.getVariable(), config.getRevisionLogs());
+        tpl.binding(TemplateVariable.VERSION.getVariable(),now);
+        tpl.binding(TemplateVariable.CREATE_TIME.getVariable(), strTime);
         FileUtil.nioWriteFile(tpl.render(), outPath + FILE_SEPARATOR + outPutFileName);
     }
 

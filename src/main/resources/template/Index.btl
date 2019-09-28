@@ -32,7 +32,7 @@
                 </li>
                 <%}%>
                 <li class="chapter " data-level="error_code" data-path="error_code.html">
-                   <a href="error_code.html?v=${version}" target="book_iframe">${errorListTitle}</a>
+                   <a href="error_code.html?v=${version}" target="book_iframe">${apiDocList.~size+1}. ${errorListTitle}</a>
                 </li>
                 <li class="divider"></li>
                 <li class="footer_link"><a href="https://github.com/shalousun/smart-doc" target="_blank" class="gitbook-link">Created by smart-doc</a>

@@ -14,9 +14,9 @@ public class MarkDownUtilTest {
 
     @Test
     public void testToHtml() {
-        System.out.println(Md5Crypt.md5Crypt("XssController".getBytes()));
-//        String file = FileUtil.getFileContent("D:\\md\\XssControllerApi.md");
-//        String html = MarkDownUtil.toHtml(file);
-//        System.out.println(html);
+
+        String file = FileUtil.getFileContent("D:\\md\\AllInOne-V201909272232.md");
+        String html = MarkDownUtil.toHtml(file);
+        System.out.println(html);
     }
 }

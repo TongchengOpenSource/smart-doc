@@ -3,8 +3,6 @@ package com.power.doc.builder;
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.DateTimeUtil;
 import com.power.common.util.FileUtil;
-import com.power.common.util.StringUtil;
-import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.constants.DocLanguage;
 import com.power.doc.constants.TemplateVariable;
 import com.power.doc.model.ApiConfig;
@@ -26,30 +24,30 @@ public class HtmlApiDocBuilder {
 
     private static long now = System.currentTimeMillis();
 
+    private static String INDEX_HTML = "index.html";
+
+
     /**
      * build controller api
      *
      * @param config config
      */
     public static void builderControllersApi(ApiConfig config) {
-        if (null == config) {
-            throw new NullPointerException("ApiConfig can't be null");
-        }
-        if (StringUtil.isEmpty(config.getOutPath())) {
-            throw new RuntimeException("doc output path can't be null or empty");
-        }
-        if (null != config.getLanguage()) {
-            System.setProperty(DocGlobalConstants.DOC_LANGUAGE, config.getLanguage().getCode());
-        } else {
-            //default is chinese
-            System.setProperty(DocGlobalConstants.DOC_LANGUAGE, DocLanguage.CHINESE.getCode());
-        }
+        DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
+        builderTemplate.checkAndInit(config);
         SourceBuilder sourceBuilder = new SourceBuilder(config);
         List<ApiDoc> apiDocList = sourceBuilder.getControllerApiData();
-        buildIndex(apiDocList, config);
-        copyCss(config.getOutPath());
-        buildApiDoc(apiDocList, config.getOutPath());
-        buildErrorCodeDoc(config.getErrorCodes(), config.getOutPath());
+        if (config.isAllInOne()) {
+            Template indexCssTemplate = BeetlTemplateUtil.getByName(ALL_IN_ONE_CSS);
+            FileUtil.nioWriteFile(indexCssTemplate.render(), config.getOutPath() + FILE_SEPARATOR + ALL_IN_ONE_CSS);
+            builderTemplate.buildAllInOne(apiDocList, config, ALL_IN_ONE_HTML_TPL, INDEX_HTML);
+        } else {
+            buildIndex(apiDocList, config);
+            copyCss(config.getOutPath());
+            buildApiDoc(apiDocList, config.getOutPath());
+            buildErrorCodeDoc(config.getErrorCodes(), config.getOutPath());
+        }
+
     }
 
     private static void copyCss(String outPath) {
@@ -75,16 +73,15 @@ public class HtmlApiDocBuilder {
         indexTemplate.binding(TemplateVariable.VERSION.getVariable(), now);
         if (null != config.getLanguage()) {
             if (DocLanguage.CHINESE.code.equals(config.getLanguage().getCode())) {
-                indexTemplate.binding(TemplateVariable.ERROR_LIST_TITLE.getVariable(), "A. 错误码列表");
+                indexTemplate.binding(TemplateVariable.ERROR_LIST_TITLE.getVariable(), "错误码列表");
             } else {
-                indexTemplate.binding(TemplateVariable.ERROR_LIST_TITLE.getVariable(), "A. Error Code List");
+                indexTemplate.binding(TemplateVariable.ERROR_LIST_TITLE.getVariable(), "Error Code List");
             }
         } else {
-            indexTemplate.binding(TemplateVariable.ERROR_LIST_TITLE.getVariable(), "A. 错误码列表");
+            indexTemplate.binding(TemplateVariable.ERROR_LIST_TITLE.getVariable(), "错误码列表");
         }
         FileUtil.nioWriteFile(indexTemplate.render(), config.getOutPath() + FILE_SEPARATOR + "api.html");
     }
-
 
     /**
      * build ever controller api

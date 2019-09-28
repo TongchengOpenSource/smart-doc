@@ -23,6 +23,8 @@ public class DocGlobalConstants {
 
     public static final String ALL_IN_ONE_ADOC_TPL = "AllInOne.adoc";
 
+    public static final String ALL_IN_ONE_HTML_TPL = "AllInOne.html";
+
     public static final String HTML_API_DOC_TPL = "HtmlApiDoc.btl";
 
     public static final String ERROR_CODE_LIST_MD_TPL = "ErrorCodeList.btl";
@@ -38,6 +40,8 @@ public class DocGlobalConstants {
     public static final String INDEX_CSS_TPL = "index.css";
 
     public static final String MARKDOWN_CSS_TPL = "markdown.css";
+
+    public static final String ALL_IN_ONE_CSS = "AllInOne.css";
 
     public static final String CONTROLLER_FULLY = "org.springframework.stereotype.Controller";
 
