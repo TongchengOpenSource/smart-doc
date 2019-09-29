@@ -12,6 +12,7 @@ import com.power.doc.utils.DocClassUtil;
 import com.power.doc.utils.DocUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import com.thoughtworks.qdox.model.*;
+import com.thoughtworks.qdox.model.expression.AnnotationValue;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import java.io.File;
@@ -424,16 +425,16 @@ public class SourceBuilder {
                         if (DocAnnotationConstants.SHORT_JSON_IGNORE.equals(annotationName) && isResp) {
                             continue out;
                         } else if (DocAnnotationConstants.SHORT_JSON_FIELD.equals(annotationName) && isResp) {
-                            if (null != annotation.getProperty("serialize")) {
-                                if ("false".equals(annotation.getProperty("serialize").toString())) {
+                            if (null != annotation.getProperty(DocAnnotationConstants.SERIALIZE_PROP)) {
+                                if ("false".equals(annotation.getProperty(DocAnnotationConstants.SERIALIZE_PROP).toString())) {
                                     continue out;
                                 }
-                            } else if (null != annotation.getProperty("name")) {
-                                fieldName = annotation.getProperty("name").toString().replace("\"", "");
+                            } else if (null != annotation.getProperty(DocAnnotationConstants.NAME_PROP)) {
+                                fieldName = annotation.getProperty(DocAnnotationConstants.NAME_PROP).toString().replace("\"", "");
                             }
                         } else if (DocAnnotationConstants.SHORT_JSON_PROPERTY.equals(annotationName) && isResp) {
-                            if (null != annotation.getProperty("value")) {
-                                fieldName = annotation.getProperty("value").toString().replace("\"", "");
+                            if (null != annotation.getProperty(DocAnnotationConstants.VALUE_PROP)) {
+                                fieldName = annotation.getProperty(DocAnnotationConstants.VALUE_PROP).toString().replace("\"", "");
                             }
                         } else if (DocClassUtil.isJSR303Required(annotationName)) {
                             strRequired = true;
@@ -481,7 +482,7 @@ public class SourceBuilder {
                         }
                         StringBuilder preBuilder = new StringBuilder();
                         for (int j = 0; j < i; j++) {
-                            preBuilder.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+                            preBuilder.append(DocGlobalConstants.FIELD_SPACE);
                         }
                         preBuilder.append("└─");
                         if (DocClassUtil.isMap(subTypeName)) {
@@ -703,16 +704,16 @@ public class SourceBuilder {
                         if (DocAnnotationConstants.SHORT_JSON_IGNORE.equals(annotationName) && isResp) {
                             continue out;
                         } else if (DocAnnotationConstants.SHORT_JSON_FIELD.equals(annotationName) && isResp) {
-                            if (null != annotation.getProperty("serialize")) {
-                                if ("false".equals(annotation.getProperty("serialize").toString())) {
+                            if (null != annotation.getProperty(DocAnnotationConstants.SERIALIZE_PROP)) {
+                                if ("false".equals(annotation.getProperty(DocAnnotationConstants.SERIALIZE_PROP).toString())) {
                                     continue out;
                                 }
-                            } else if (null != annotation.getProperty("name")) {
-                                fieldName = annotation.getProperty("name").toString().replace("\"", "");
+                            } else if (null != annotation.getProperty(DocAnnotationConstants.NAME_PROP)) {
+                                fieldName = annotation.getProperty(DocAnnotationConstants.NAME_PROP).toString().replace("\"", "");
                             }
                         } else if (DocAnnotationConstants.SHORT_JSON_PROPERTY.equals(annotationName) && isResp) {
-                            if (null != annotation.getProperty("value")) {
-                                fieldName = annotation.getProperty("value").toString().replace("\"", "");
+                            if (null != annotation.getProperty(DocAnnotationConstants.VALUE_PROP)) {
+                                fieldName = annotation.getProperty(DocAnnotationConstants.VALUE_PROP).toString().replace("\"", "");
                             }
                         }
                     }
@@ -993,8 +994,9 @@ public class SourceBuilder {
                     }
                     for (JavaAnnotation annotation : annotations) {
                         String required = "true";
-                        if (null != annotation.getProperty("required")) {
-                            required = annotation.getProperty("required").toString();
+                        AnnotationValue annotationValue = annotation.getProperty(DocAnnotationConstants.REQUIRED_PROP);
+                        if (null != annotationValue) {
+                            required = annotationValue.toString();
                         }
                         String annotationName = annotation.getType().getName();
                         if (REQUEST_BODY.equals(annotationName)) {
@@ -1088,7 +1090,7 @@ public class SourceBuilder {
         List<JavaAnnotation> classAnnotations = cls.getAnnotations();
         for (JavaAnnotation annotation : classAnnotations) {
             String annotationName = annotation.getType().getName();
-            if (DocAnnotationConstants.SHORT_CONTROLLER.equals(annotationName)
+            if (annotationName.contains(DocAnnotationConstants.SHORT_CONTROLLER)
                     || DocAnnotationConstants.SHORT_REST_CONTROLLER.equals(annotationName)
                     || DocGlobalConstants.REST_CONTROLLER_FULLY.equals(annotationName)
                     || DocGlobalConstants.CONTROLLER_FULLY.equals(annotationName)

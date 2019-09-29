@@ -73,12 +73,12 @@ public class HtmlApiDocBuilder {
         indexTemplate.binding(TemplateVariable.VERSION.getVariable(), now);
         if (null != config.getLanguage()) {
             if (DocLanguage.CHINESE.code.equals(config.getLanguage().getCode())) {
-                indexTemplate.binding(TemplateVariable.ERROR_LIST_TITLE.getVariable(), "错误码列表");
+                indexTemplate.binding(TemplateVariable.ERROR_LIST_TITLE.getVariable(),ERROR_CODE_LIST_CN_TITLE);
             } else {
-                indexTemplate.binding(TemplateVariable.ERROR_LIST_TITLE.getVariable(), "Error Code List");
+                indexTemplate.binding(TemplateVariable.ERROR_LIST_TITLE.getVariable(), ERROR_CODE_LIST_EN_TITLE);
             }
         } else {
-            indexTemplate.binding(TemplateVariable.ERROR_LIST_TITLE.getVariable(), "错误码列表");
+            indexTemplate.binding(TemplateVariable.ERROR_LIST_TITLE.getVariable(), ERROR_CODE_LIST_CN_TITLE);
         }
         FileUtil.nioWriteFile(indexTemplate.render(), config.getOutPath() + FILE_SEPARATOR + "api.html");
     }
@@ -122,7 +122,7 @@ public class HtmlApiDocBuilder {
             String errorHtml = MarkDownUtil.toHtml(error.render());
             Template errorCodeDoc = BeetlTemplateUtil.getByName(HTML_API_DOC_TPL);
             errorCodeDoc.binding(TemplateVariable.VERSION.getVariable(), now);
-            errorCodeDoc.binding(TemplateVariable.TITLE.getVariable(), "error code");
+            errorCodeDoc.binding(TemplateVariable.TITLE.getVariable(), ERROR_CODE_LIST_EN_TITLE);
             errorCodeDoc.binding(TemplateVariable.HTML.getVariable(), errorHtml);
             errorCodeDoc.binding(TemplateVariable.CREATE_TIME.getVariable(), DateTimeUtil.long2Str(now, DateTimeUtil.DATE_FORMAT_SECOND));
             FileUtil.nioWriteFile(errorCodeDoc.render(), outPath + FILE_SEPARATOR + "error_code.html");
