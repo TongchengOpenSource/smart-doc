@@ -73,5 +73,9 @@ public class DocGlobalConstants {
 
     public static final String DEFAULT_VERSION = "-";
 
+    public static final String ERROR_CODE_LIST_CN_TITLE = "错误码列表";
 
+    public static final String ERROR_CODE_LIST_EN_TITLE = "Error Code List";
+
+    public static final String FIELD_SPACE = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 }
