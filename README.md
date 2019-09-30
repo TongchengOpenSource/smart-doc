@@ -13,8 +13,10 @@ smart-doc完全基于接口源码分析来生成接口文档，完全做到零�
 - 对json请求参数的接口能够自动生成模拟json参数。
 - 对一些常用字段定义能够生成有效的模拟值。
 - 支持生成json返回值示例。
-- 支持从项目外部加载源代码来生成字段注释。
-- 支持生成静态的html格式api，轻易实现在Spring Boot服务上在线查看api文档。
+- 支持从项目外部加载源代码来生成字段注释(包括标准规范发布的jar包)。
+- 支持生成多种格式文档：Markdown、HTML5、Asciidoctor。
+- 轻易实现在Spring Boot服务上在线查看静态HTML5 api文档。
+- 开放文档数据，可自由实现接入文档管理系统。
 ## Getting started
 smart-doc使用和测试可参考[smart-doc demo](https://github.com/shalousun/api-doc-test)。
 ```
@@ -26,7 +28,7 @@ smart-doc使用和测试可参考[smart-doc demo](https://github.com/shalousun/a
 <dependency>
     <groupId>com.github.shalousun</groupId>
     <artifactId>smart-doc</artifactId>
-    <version>1.6.4</version>
+    <version>1.7.0</version>
     <scope>test</scope>
 </dependency>
 ```
@@ -34,72 +36,83 @@ smart-doc使用和测试可参考[smart-doc demo](https://github.com/shalousun/a
 通过运行一个单元测试来让Smart-doc为你生成一个简洁明了的api文档
 ```
 /**
+ * Description:
+ * ApiDoc测试
  *
  * @author yu 2018/06/11.
  */
 public class ApiDocTest {
 
     /**
-     * 
-     * Smart-doc快速生成文档用例
-     */
-    @Test
-    public void testBuilderControllersApiSimple(){
-        //将生成的文档输出到d:\md目录下，设置为严格模式Smart-doc会检测Controller的接口注释
-        ApiDocBuilder.builderControllersApi("d:\\md",true);
-    }
-
-    /**
-     * Smart-doc生成产品级api文档用例
+     * 包括设置请求头，缺失注释的字段批量在文档生成期使用定义好的注释
      */
     @Test
     public void testBuilderControllersApi() {
         ApiConfig config = new ApiConfig();
-        //如果将严格模式设置true，Smart-doc强制要求代码中每个共有接口有注释。
+        config.setServerUrl("http://localhost:8080");
+        //true会严格要求注释，推荐设置true
         config.setStrict(true);
-        //此项设置为true，则将所有接口合并到一个markdown中，错误码列表会输出到文档底部
-        config.setAllInOne(true);
-        //设置api文档输出路径
-        config.setOutPath("d:\\md");
-        // @since 1.2,如果不配置该选项，则默认匹配全部的Controller,
-        // 如果需要配置有多个Controller可以使用逗号隔开
-        config.setPackageFilters("com.power.doc.controller.app");
-        //默认是src/main/java,maven项目可以不写
-        config.setSourcePaths(
-                SourcePath.path().setDesc("Current Project").setPath("src/test/java"),
-                 //java编译后注释会被消除，因此如果生成文档需要使用外部代码的注释，就可以从外部将源代码载入。
-                SourcePath.path().setDesc("Load other project source code").setPath("E:\\Test\\Mybatis-PageHelper-master\\src\\main\\java")
-         );
-       
-        //除了使用setSourcePaths载入代码外，如果你需要生成文档只有极少数的字段来自外部源代码，
-         那么你可以直接为这些字段设置注释
-        //当然Smart-doc一直探索解决该问题，但是很不幸目前没有最佳的方式。
+        //true会将文档合并导出到一个markdown
+        config.setAllInOne(false);
+        //生成html时加密文档名不暴露controller的名称
+        config.setMd5EncryptedHtmlName(true);
+
+        //指定文档输出路径
+        //@since 1.7 版本开始，选择生成静态html doc文档可使用该路径：DocGlobalConstants.HTML_DOC_OUT_PATH;
+        config.setOutPath(DocGlobalConstants.HTML_DOC_OUT_PATH);
+        // @since 1.2,如果不配置该选项，则默认匹配全部的controller,
+        // 如果需要配置有多个controller可以使用逗号隔开
+        config.setPackageFilters("com.power.doc.controller");
+        //不指定SourcePaths默认加载代码为项目src/main/java下的,如果项目的某一些实体来自外部代码可以一起加载
+        config.setSourceCodePaths(
+                //自1.7.0版本开始，在此处可以不设置本地代码路径，单独添加外部代码路径即可
+//            SourceCodePath.path().setDesc("本项目代码").setPath("src/main/java"),
+            SourceCodePath.path().setDesc("加载项目外代码").setPath("E:\\ApplicationPower\\ApplicationPower\\Common-util\\src\\main\\java")
+        );
+
+        //设置请求头，如果没有请求头，可以不用设置
+        config.setRequestHeaders(
+                ApiReqHeader.header().setName("access_token").setType("string").setDesc("Basic auth credentials"),
+                ApiReqHeader.header().setName("user_uuid").setType("string").setDesc("User Uuid key")
+        );
+        //对于外部jar的类，编译后注释会被擦除，无法获取注释，但是如果量比较多请使用setSourcePaths来加载外部代码
+        //如果有这种场景，则自己添加字段和注释，api-doc后期遇到同名字段则直接给相应字段加注释
         config.setCustomResponseFields(
                 CustomRespField.field().setName("success").setDesc("成功返回true,失败返回false"),
                 CustomRespField.field().setName("message").setDesc("接口响应信息"),
                 CustomRespField.field().setName("data").setDesc("接口响应数据"),
                 CustomRespField.field().setName("code").setValue("00000").setDesc("响应代码")
         );
-        //设置请求头，如果不需要请求头，可以不用设置。
-        config.setRequestHeaders(
-                ApiReqHeader.header().setName("access_token").setType("string").setDesc("Basic auth credentials"),
-                ApiReqHeader.header().setName("user_uuid").setType("string").setDesc("User Uuid key")
-        );
-        //设置项目错误码列表，设置自动生成错误列表
+
+        //设置项目错误码列表，设置自动生成错误列表,
         List<ApiErrorCode> errorCodeList = new ArrayList<>();
-        for(ErrorCodeEnum codeEnum:ErrorCodeEnum.values()){
+        for (ErrorCodeEnum codeEnum : ErrorCodeEnum.values()) {
             ApiErrorCode errorCode = new ApiErrorCode();
-            errorCode.setValue(codeEnum.getValue()).setDesc(codeEnum.getDesc());
+            errorCode.setValue(codeEnum.getCode()).setDesc(codeEnum.getDesc());
             errorCodeList.add(errorCode);
         }
-        //如果你不需要输出错误码文档，可以不设置。
+        //如果没需要可以不设置
         config.setErrorCodes(errorCodeList);
-        //你可以使用ApiDocBuilder来生成markdown格式的api文档。
-        ApiDocBuilder.builderControllersApi(config);
-        //当然你也可以选择使用HtmlApiDocBuilder来生成静态的html文档。
-        HtmlApiDocBuilder.builderControllersApi(config);
-    }
 
+        //非必须只有当setAllInOne设置为true时文档变更记录才生效，https://gitee.com/sunyurepository/ApplicationPower/issues/IPS4O
+        config.setRevisionLogs(
+                RevisionLog.getLog().setRevisionTime("2018/12/15").setAuthor("chen").setRemarks("测试").setStatus("创建").setVersion("V1.0"),
+                RevisionLog.getLog().setRevisionTime("2018/12/16").setAuthor("chen2").setRemarks("测试2").setStatus("修改").setVersion("V2.0")
+        );
+
+
+        long start = System.currentTimeMillis();
+        ApiDocBuilder.builderControllersApi(config);
+
+        //@since 1.7+版本开始，smart-doc支持生成带书签的html文档，html文档可选择下面额方式
+        //HtmlApiDocBuilder.builderControllersApi(config);
+        //@since 1.7+版本开始，smart-doc支撑生成AsciiDoc文档，你可以把AsciiDoc转成HTML5的格式。
+        //@see https://gitee.com/sunyurepository/api-doc-test
+        //AdocDocBuilder.builderControllersApi(config);
+                
+        long end = System.currentTimeMillis();
+        DateTimeUtil.printRunTime(end, start);
+    }
 }
 ```
 ### Generated document example
