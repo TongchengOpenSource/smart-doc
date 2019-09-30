@@ -188,8 +188,9 @@ public class SourceBuilder {
                 String annotationName = annotation.getType().getName();
                 if (REQUEST_MAPPING.equals(annotationName) || DocGlobalConstants.REQUEST_MAPPING_FULLY.equals(annotationName)) {
                     url = DocUtil.handleMappingValue(annotation);
-                    if (null != annotation.getNamedParameter("method")) {
-                        methodType = annotation.getNamedParameter("method").toString();
+                    Object nameParam = annotation.getNamedParameter("method");
+                    if (null != nameParam) {
+                        methodType = nameParam.toString();
                         methodType = DocUtil.handleHttpMethod(methodType);
                     } else {
                         methodType = "GET";
@@ -381,9 +382,9 @@ public class SourceBuilder {
         } else if (DocGlobalConstants.JAVA_OBJECT_FULLY.equals(className)) {
             ApiParam param = ApiParam.of().setField(pre + "any object").setType("object");
             if (StringUtil.isEmpty(isRequired)) {
-                param.setDesc("any object.").setVersion(DocGlobalConstants.DEFAULT_VERSION);
+                param.setDesc(DocGlobalConstants.ANY_OBJECT_MSG).setVersion(DocGlobalConstants.DEFAULT_VERSION);
             } else {
-                param.setDesc("any object.").setRequired(false).setVersion(DocGlobalConstants.DEFAULT_VERSION);
+                param.setDesc(DocGlobalConstants.ANY_OBJECT_MSG).setRequired(false).setVersion(DocGlobalConstants.DEFAULT_VERSION);
 
             }
             paramList.add(param);
@@ -489,7 +490,7 @@ public class SourceBuilder {
                             String gNameTemp = field.getType().getGenericCanonicalName();
                             if (DocGlobalConstants.JAVA_MAP_FULLY.equals(gNameTemp)) {
                                 ApiParam param1 = ApiParam.of().setField(preBuilder.toString() + "any object")
-                                        .setType("object").setDesc("any object").setVersion(DocGlobalConstants.DEFAULT_VERSION);
+                                        .setType("object").setDesc(DocGlobalConstants.ANY_OBJECT_MSG).setVersion(DocGlobalConstants.DEFAULT_VERSION);
                                 paramList.add(param1);
                                 continue;
                             }

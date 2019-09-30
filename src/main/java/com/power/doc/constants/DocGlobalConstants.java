@@ -9,7 +9,7 @@ public class DocGlobalConstants {
 
     public static final String HTML_DOC_OUT_PATH = "src/main/resources/static/doc";
 
-    public static final String ADOC_OUT_PATH = "src/main/docs/asciidoc";
+    public static final String ADOC_OUT_PATH = "src/docs/asciidoc";
 
     public static final String PROJECT_CODE_PATH = "src/main/java";
 
@@ -62,7 +62,6 @@ public class DocGlobalConstants {
 
     public static final String MODE_AND_VIEW_FULLY = "org.springframework.web.servlet.ModelAndView";
 
-
     public static final String JAVA_OBJECT_FULLY = "java.lang.Object";
 
     public static final String JAVA_STRING_FULLY = "java.lang.String";
@@ -78,4 +77,6 @@ public class DocGlobalConstants {
     public static final String ERROR_CODE_LIST_EN_TITLE = "Error Code List";
 
     public static final String FIELD_SPACE = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+
+    public static final String ANY_OBJECT_MSG = "any object.";
 }

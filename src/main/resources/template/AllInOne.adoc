@@ -1,6 +1,6 @@
 <%if(isNotEmpty(revisionLogList)){%>
 
-[width="100%",options="header,footer"]
+[width="100%",options="header"]
 [stripes=even]
 |====================
 |Version |  Update Time  | Status | Author |  Description
@@ -30,7 +30,7 @@ for(doc in api.list){
 <%if(isNotEmpty(doc.headers)){%>
 *Request-headers:*
 
-[width="100%",options="header,footer"]
+[width="100%",options="header"]
 [stripes=even]
 |====================
 |Header | Type|Description|Required|Since
@@ -41,7 +41,7 @@ ${doc.headers}
 <%if(isNotEmpty(doc.requestParams)){%>
 *Request-parameters:*
 
-[width="100%",options="header,footer"]
+[width="100%",options="header"]
 [stripes=even]
 |====================
 |Parameter | Type|Description|Required|Since
@@ -62,7 +62,7 @@ ${doc.requestUsage}
 <%if(isNotEmpty(doc.responseParams)){%>
 *Response-fields:*
 
-[width="100%",options="header,footer"]
+[width="100%",options="header"]
 [stripes=even]
 |====================
 |Field | Type|Description|Since
@@ -86,7 +86,7 @@ ${doc.responseUsage}
 <%if(isNotEmpty(errorCodeList)){%>
 == Error code list
 
-[width="100%",options="header,footer"]
+[width="100%",options="header"]
 [stripes=even]
 |====================
 |Error code |Description

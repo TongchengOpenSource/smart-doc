@@ -1,6 +1,6 @@
 # Error code list
 
-[width="100%",options="header,footer"]
+[width="100%",options="header"]
 [stripes=even]
 |====================
 |Error code |Description
