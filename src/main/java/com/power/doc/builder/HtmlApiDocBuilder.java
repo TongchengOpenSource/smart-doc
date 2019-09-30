@@ -66,6 +66,9 @@ public class HtmlApiDocBuilder {
     private static void buildIndex(List<ApiDoc> apiDocList, ApiConfig config) {
         FileUtil.mkdirs(config.getOutPath());
         Template indexTemplate = BeetlTemplateUtil.getByName(INDEX_TPL);
+        if (CollectionUtil.isEmpty(apiDocList)) {
+            return;
+        }
         ApiDoc doc = apiDocList.get(0);
         String homePage = doc.getAlias();
         indexTemplate.binding(TemplateVariable.HOME_PAGE.getVariable(), homePage);
@@ -73,7 +76,7 @@ public class HtmlApiDocBuilder {
         indexTemplate.binding(TemplateVariable.VERSION.getVariable(), now);
         if (null != config.getLanguage()) {
             if (DocLanguage.CHINESE.code.equals(config.getLanguage().getCode())) {
-                indexTemplate.binding(TemplateVariable.ERROR_LIST_TITLE.getVariable(),ERROR_CODE_LIST_CN_TITLE);
+                indexTemplate.binding(TemplateVariable.ERROR_LIST_TITLE.getVariable(), ERROR_CODE_LIST_CN_TITLE);
             } else {
                 indexTemplate.binding(TemplateVariable.ERROR_LIST_TITLE.getVariable(), ERROR_CODE_LIST_EN_TITLE);
             }
