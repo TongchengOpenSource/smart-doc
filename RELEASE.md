@@ -57,4 +57,18 @@
 	1. 优化代码
 	2. 增加对普通的get请求参数拼装示例的生成
 	3. 增加spring mvc占位符restful url请求示例生成
+#### 版本号：1.7.0
+- 更新日期：2019-09-30
+- 更新内容：
+	1. 优化代码。
+	2. 添加生成HTML5和Asciidoctor文档的功能。
+	3. 增加开放API数据接口功能。
+	4. 支持Callable,Future,CompletableFuture等异步接口返回的推导。
+	5. 支持Spring Boot Web Flux(Controller方式书写)。
+	
+#### 版本号：1.7.1
+- 更新日期：待定
+- 更新内容：
+	1. 优化注释换行\n\r问题。
+	
 	
