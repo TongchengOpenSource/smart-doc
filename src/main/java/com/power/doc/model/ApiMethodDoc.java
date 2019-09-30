@@ -11,8 +11,9 @@ public class ApiMethodDoc implements Serializable {
 
     private static final long serialVersionUID = 7211922919532562867L;
     /**
-     * @since 1.7+
      * method order
+     *
+     * @since 1.7+
      */
     private int order;
 

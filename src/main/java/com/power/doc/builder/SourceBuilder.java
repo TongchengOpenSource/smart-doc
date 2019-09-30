@@ -461,6 +461,7 @@ public class SourceBuilder {
                         comment = field.getComment();
                     }
                     if (StringUtil.isNotEmpty(comment)) {
+                        comment = comment.replace("\r\n","<br>");
                         comment = comment.replace("\n", "<br>");
                     }
                     if (DocClassUtil.isPrimitive(subTypeName)) {

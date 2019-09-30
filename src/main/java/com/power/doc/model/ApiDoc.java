@@ -5,8 +5,9 @@ import java.util.List;
 public class ApiDoc {
 
     /**
-     * @since 1.7+
      * Order of controller
+     *
+     * @since 1.7+
      */
     public int order;
 
@@ -16,8 +17,9 @@ public class ApiDoc {
     private String name;
 
     /**
-     * @since 1.7+
      * controller alias handled by md5
+     *
+     * @since 1.7+
      */
     private String alias;
 

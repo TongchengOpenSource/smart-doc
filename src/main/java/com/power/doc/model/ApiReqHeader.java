@@ -23,14 +23,16 @@ public class ApiReqHeader {
     private String desc;
 
     /**
-     * @since 1.7.0
      * required flag
+     *
+     * @since 1.7.0
      */
     private boolean required;
 
     /**
-     * @since 1.7.0
      * Starting version number
+     *
+     * @since 1.7.0
      */
     private String since = "-";
 
