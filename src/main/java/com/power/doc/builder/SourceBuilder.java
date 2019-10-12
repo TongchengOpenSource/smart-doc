@@ -16,7 +16,6 @@ import com.thoughtworks.qdox.model.expression.AnnotationValue;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import java.io.File;
-import java.rmi.UnexpectedException;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -37,7 +36,7 @@ public class SourceBuilder {
 
     private static final String REQUEST_BODY = "RequestBody";
 
-    private static final String REQUEST_HERDER="RequestHeader";
+    private static final String REQUEST_HERDER = "RequestHeader";
 
     private static final String REQUEST_PARAM = "RequestParam";
 
@@ -178,7 +177,7 @@ public class SourceBuilder {
         List<ApiMethodDoc> methodDocList = new ArrayList<>(methods.size());
         int methodOrder = 0;
         for (JavaMethod method : methods) {
-            List<ApiReqHeader> apiReqHeaders  = new ArrayList<>();
+            List<ApiReqHeader> apiReqHeaders = new ArrayList<>();
             if (StringUtil.isEmpty(method.getComment()) && isStrict) {
                 throw new RuntimeException("Unable to find comment for method " + method.getName() + " in " + cls.getCanonicalName());
             }
@@ -221,27 +220,27 @@ public class SourceBuilder {
                 }
 
             }
-            for(JavaParameter javaParameter : method.getParameters()){
-                List<JavaAnnotation> javaAnnotations  = javaParameter.getAnnotations();
-                    for(JavaAnnotation annotation : javaAnnotations){
-                        String annotationName = annotation.getType().getName();
-                        if (REQUEST_HERDER.equals(annotationName)) {
-                            ApiReqHeader apiReqHeader = new ApiReqHeader();
-                            Map<String,Object> requestHeaderMap = annotation.getNamedParameterMap();
-                           if( requestHeaderMap.get("value")!=null){
-                               apiReqHeader.setName((String) requestHeaderMap.get("value"));
-                           }
-                            if( requestHeaderMap.get("defaultValue")!=null){
-                                apiReqHeader.setDesc((String) requestHeaderMap.get("defaultValue"));
-                            }
-                            if( requestHeaderMap.get("required")!=null){
-                                apiReqHeader.setRequired(!"false".equals(requestHeaderMap.get("required")));
-                            }
-                            apiReqHeader.setType(javaParameter.getType().getValue());
-                            apiReqHeaders.add(apiReqHeader);
-                            break;
+            for (JavaParameter javaParameter : method.getParameters()) {
+                List<JavaAnnotation> javaAnnotations = javaParameter.getAnnotations();
+                for (JavaAnnotation annotation : javaAnnotations) {
+                    String annotationName = annotation.getType().getName();
+                    if (REQUEST_HERDER.equals(annotationName)) {
+                        ApiReqHeader apiReqHeader = new ApiReqHeader();
+                        Map<String, Object> requestHeaderMap = annotation.getNamedParameterMap();
+                        if (requestHeaderMap.get("value") != null) {
+                            apiReqHeader.setName((String) requestHeaderMap.get("value"));
                         }
+                        if (requestHeaderMap.get("defaultValue") != null) {
+                            apiReqHeader.setDesc((String) requestHeaderMap.get("defaultValue"));
+                        }
+                        if (requestHeaderMap.get("required") != null) {
+                            apiReqHeader.setRequired(!"false".equals(requestHeaderMap.get("required")));
+                        }
+                        apiReqHeader.setType(javaParameter.getType().getValue());
+                        apiReqHeaders.add(apiReqHeader);
+                        break;
                     }
+                }
             }
             apiMethodDoc.setRequestHeaders(apiReqHeaders);
             if (methodCounter > 0) {
@@ -267,13 +266,11 @@ public class SourceBuilder {
                 //reduce create in template
                 apiMethodDoc.setHeaders(createHeaders(this.headers, this.isAdoc));
                 List<ApiReqHeader> allApiReqHeaders;
-                if(this.headers!=null){
-                    allApiReqHeaders = Stream.of(this.headers,apiReqHeaders)
+                if (this.headers != null) {
+                    allApiReqHeaders = Stream.of(this.headers, apiReqHeaders)
                             .flatMap(Collection::stream)
                             .collect(Collectors.toList());
-                }
-                else
-                {
+                } else {
                     allApiReqHeaders = apiReqHeaders;
                 }
 
@@ -503,7 +500,7 @@ public class SourceBuilder {
                         comment = field.getComment();
                     }
                     if (StringUtil.isNotEmpty(comment)) {
-                        comment = comment.replace("\r\n","<br>");
+                        comment = comment.replace("\r\n", "<br>");
                         comment = comment.replace("\n", "<br>");
                     }
                     if (DocClassUtil.isPrimitive(subTypeName)) {
@@ -925,11 +922,11 @@ public class SourceBuilder {
                             return buildJson(typeName, gicTypeName, this.fieldMap, false);
                         }
                     }
-                    if (REQUEST_HERDER.equals(annotationName)){
-                            paraName =null;
+                    if (REQUEST_HERDER.equals(annotationName)) {
+                        paraName = null;
                     }
                 }
-                if (requestBodyCounter < 1 && paraName !=null) {
+                if (requestBodyCounter < 1 && paraName != null) {
                     paramsMap.put(paraName, DocUtil.getValByTypeAndFieldName(simpleTypeName, paraName,
                             true));
                 }
@@ -1044,7 +1041,7 @@ public class SourceBuilder {
                             required = annotationValue.toString();
                         }
                         String annotationName = annotation.getType().getName();
-                        if(REQUEST_HERDER.equals(annotationName)){
+                        if (REQUEST_HERDER.equals(annotationName)) {
                             continue;
                         }
                         if (REQUEST_BODY.equals(annotationName)) {
@@ -1138,7 +1135,7 @@ public class SourceBuilder {
         List<JavaAnnotation> classAnnotations = cls.getAnnotations();
         for (JavaAnnotation annotation : classAnnotations) {
             String annotationName = annotation.getType().getName();
-            if (annotationName.contains(DocAnnotationConstants.SHORT_CONTROLLER)
+            if (DocAnnotationConstants.SHORT_CONTROLLER.equals(annotationName)
                     || DocAnnotationConstants.SHORT_REST_CONTROLLER.equals(annotationName)
                     || DocGlobalConstants.REST_CONTROLLER_FULLY.equals(annotationName)
                     || DocGlobalConstants.CONTROLLER_FULLY.equals(annotationName)
