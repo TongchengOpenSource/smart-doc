@@ -266,9 +266,17 @@ public class SourceBuilder {
                 apiMethodDoc.setResponseParams(responseParams);
                 //reduce create in template
                 apiMethodDoc.setHeaders(createHeaders(this.headers, this.isAdoc));
-                List<ApiReqHeader> allApiReqHeaders = Stream.of(this.headers,apiReqHeaders)
-                        .flatMap(Collection::stream)
-                        .collect(Collectors.toList());
+                List<ApiReqHeader> allApiReqHeaders;
+                if(this.headers!=null){
+                    allApiReqHeaders = Stream.of(this.headers,apiReqHeaders)
+                            .flatMap(Collection::stream)
+                            .collect(Collectors.toList());
+                }
+                else
+                {
+                    allApiReqHeaders = apiReqHeaders;
+                }
+
                 apiMethodDoc.setRequestHeaders(allApiReqHeaders);
                 methodDocList.add(apiMethodDoc);
 
