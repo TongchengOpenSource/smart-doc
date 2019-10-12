@@ -43,6 +43,7 @@ for(param in doc.requestParams){
 ${param.field}|${param.type}|${param.desc}|${param.required}|${param.version}
 <%}%>
 <%}%>
+
 <%if(isNotEmpty(doc.requestUsage)){%>
 **Request-example:**
 ```
