@@ -6,7 +6,9 @@ import com.power.common.util.IDCardUtil;
 import com.power.common.util.RandomUtil;
 import com.power.common.util.StringUtil;
 import com.power.doc.constants.DocGlobalConstants;
+import com.thoughtworks.qdox.model.DocletTag;
 import com.thoughtworks.qdox.model.JavaAnnotation;
+import com.thoughtworks.qdox.model.JavaMethod;
 
 import java.util.*;
 
@@ -253,5 +255,37 @@ public class DocUtil {
         } else {
             return annotation.getNamedParameter("value").toString();
         }
+    }
+
+    /**
+     * obtain params comments
+     * @param javaMethod JavaMethod
+     * @param tagName java comments tag
+     * @param className class name
+     * @return
+     */
+    public static Map<String,String> getParamsComments(final JavaMethod javaMethod, final String tagName, final String className) {
+        List<DocletTag> paramTags = javaMethod.getTagsByName(tagName);
+        Map<String, String> paramTagMap = new HashMap<>();
+        for (DocletTag docletTag : paramTags) {
+            String value = docletTag.getValue();
+            if (StringUtil.isEmpty(value)) {
+                throw new RuntimeException("ERROR: #" + javaMethod.getName()
+                        + "() - bad @param javadoc from " + className);
+            }
+            String pName;
+            String pValue;
+            int idx = value.indexOf("\n");
+            //existed \n
+            if (idx > -1) {
+                pName = value.substring(0, idx);
+                pValue = value.substring(idx + 1);
+            } else {
+                pName = (value.indexOf(" ") > -1) ? value.substring(0, value.indexOf(" ")) : value;
+                pValue = value.indexOf(" ") > -1 ? value.substring(value.indexOf(' ') + 1) : DocGlobalConstants.NO_COMMENTS_FOUND;
+            }
+            paramTagMap.put(pName, pValue);
+        }
+        return paramTagMap;
     }
 }

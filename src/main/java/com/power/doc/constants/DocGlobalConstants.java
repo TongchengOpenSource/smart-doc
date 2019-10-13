@@ -79,4 +79,6 @@ public class DocGlobalConstants {
     public static final String FIELD_SPACE = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 
     public static final String ANY_OBJECT_MSG = "any object.";
+
+    public static final String NO_COMMENTS_FOUND = "No comments found.";
 }
