@@ -99,7 +99,11 @@ public class ApiDocTest {
 (https://images.gitee.com/uploads/images/2018/0905/172510_853735b9_144669.png "2.png")
 #### Response parameter example renderings
 (https://images.gitee.com/uploads/images/2018/0905/172538_1918820c_144669.png "3.png")
-
+## Building
+you can build with the following commands. (Java 1.8 is required to build the master branch)
+```
+mvn clean install
+```
 ## Other reference
 - [Smart-doc manual](https://github.com/shalousun/smart-doc/wiki)
 ## License

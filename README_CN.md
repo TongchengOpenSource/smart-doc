@@ -122,7 +122,11 @@ public class ApiDocTest {
 ![请求参数示例](https://images.gitee.com/uploads/images/2018/0905/172510_853735b9_144669.png "2.png")
 #### 响应参数示例效果图
 ![响应参数示例](https://images.gitee.com/uploads/images/2018/0905/172538_1918820c_144669.png "3.png")
-
+## Building
+如果你需要自己构建，那可以使用下面命令，构建需要依赖Java 1.8。
+```
+mvn clean install
+```
 ## Releases
 [发布记录](https://github.com/shalousun/smart-doc/blob/master/RELEASE_CN.md/)
 ## Other reference
