@@ -271,7 +271,7 @@ public class DocUtil {
             String value = docletTag.getValue();
             if (StringUtil.isEmpty(value)) {
                 throw new RuntimeException("ERROR: #" + javaMethod.getName()
-                        + "() - bad @param javadoc from " + className);
+                        + "() - bad @"+tagName+" javadoc from " + className);
             }
             String pName;
             String pValue;

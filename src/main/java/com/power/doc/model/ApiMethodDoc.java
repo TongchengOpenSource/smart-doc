@@ -23,6 +23,11 @@ public class ApiMethodDoc implements Serializable {
     private String desc;
 
     /**
+     * detailed introduction of the method
+     */
+    private String description;
+
+    /**
      * controller method url
      */
     private String url;
@@ -156,5 +161,13 @@ public class ApiMethodDoc implements Serializable {
 
     public void setRequestHeaders(List<ApiReqHeader> requestHeaders) {
         this.requestHeaders = requestHeaders;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

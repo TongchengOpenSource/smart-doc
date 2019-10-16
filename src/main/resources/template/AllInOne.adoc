@@ -25,6 +25,8 @@ for(doc in api.list){
 
 *Type:* ${doc.type}
 
+*Description:* ${doc.description}
+
 *Content-Type:* ${doc.contentType}
 
 <%if(isNotEmpty(doc.headers)){%>

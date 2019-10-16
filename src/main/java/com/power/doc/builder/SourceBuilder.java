@@ -46,6 +46,8 @@ public class SourceBuilder {
 
     private static final String NO_COMMENTS_FOUND = "No comments found.";
 
+    private static final String METHOD_DESCRIPTION = "apiNote";
+
 
     private Map<String, JavaClass> javaFilesMap = new HashMap<>();
     private Map<String, CustomRespField> fieldMap = new HashMap<>();
@@ -185,6 +187,12 @@ public class SourceBuilder {
             ApiMethodDoc apiMethodDoc = new ApiMethodDoc();
             apiMethodDoc.setOrder(methodOrder);
             apiMethodDoc.setDesc(method.getComment());
+            Map<String,String> comment = DocUtil.getParamsComments(method,METHOD_DESCRIPTION,cls.getName());
+            String methodDesc = comment.get(METHOD_DESCRIPTION);
+            if(StringUtil.isEmpty(methodDesc)){
+                methodDesc = method.getComment();
+            }
+            apiMethodDoc.setDescription(methodDesc);
             List<JavaAnnotation> annotations = method.getAnnotations();
             String url = null;
             String methodType = null;
