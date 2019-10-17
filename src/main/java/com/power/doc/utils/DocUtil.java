@@ -30,6 +30,7 @@ public class DocUtil {
         fieldValue.put("uuid-string", UUID.randomUUID().toString());
         fieldValue.put("uid", UUID.randomUUID().toString());
         fieldValue.put("nickname-string", enFaker.name().username());
+        fieldValue.put("hostname-string",faker.internet().ipV4Address());
         fieldValue.put("name-string", faker.name().username());
         fieldValue.put("author-string",faker.book().author());
         fieldValue.put("url-string", faker.internet().url());
@@ -77,6 +78,8 @@ public class DocUtil {
         fieldValue.put("offset-int", "1");
         fieldValue.put("offset-integer", "1");
         fieldValue.put("offset-long", "1");
+        fieldValue.put("version-string",enFaker.app().version());
+
 
 
     }
@@ -262,7 +265,7 @@ public class DocUtil {
      * @param javaMethod JavaMethod
      * @param tagName java comments tag
      * @param className class name
-     * @return
+     * @return Map
      */
     public static Map<String,String> getParamsComments(final JavaMethod javaMethod, final String tagName, final String className) {
         List<DocletTag> paramTags = javaMethod.getTagsByName(tagName);
