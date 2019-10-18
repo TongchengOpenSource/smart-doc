@@ -316,7 +316,11 @@ public class DocUtil {
         if (map != null && map.size() > 0) {
             Map.Entry<String, String> entry = map.entrySet().iterator().next();
             if (entry != null) {
-                value = entry.getKey() + entry.getValue();
+                if(DocGlobalConstants.NO_COMMENTS_FOUND.equals(entry.getValue())){
+                    value = entry.getKey();
+                }else{
+                    value = entry.getKey() + entry.getValue();
+                }
                 value = value.replace("\r\n", "<br/>");
                 value = value.replace("\r", "<br/>");
             }
