@@ -46,6 +46,13 @@ public class SourceBuilder {
 
     private static final String NO_COMMENTS_FOUND = "No comments found.";
 
+
+    private static final String METHOD_DESCRIPTION = "apiNote";
+
+    private static final String TAGS_PARAM = "param";
+
+
+
     private Map<String, JavaClass> javaFilesMap = new HashMap<>();
     private Map<String, CustomRespField> fieldMap = new HashMap<>();
     private JavaProjectBuilder builder;
@@ -229,16 +236,22 @@ public class SourceBuilder {
             }
             for (JavaParameter javaParameter : method.getParameters()) {
                 List<JavaAnnotation> javaAnnotations = javaParameter.getAnnotations();
+                String className = method.getDeclaringClass().getCanonicalName();
+                Map<String,String> paramMap = DocUtil.getParamsComments(method,TAGS_PARAM,className);
+
                 for (JavaAnnotation annotation : javaAnnotations) {
                     String annotationName = annotation.getType().getName();
                     if (REQUEST_HERDER.equals(annotationName)) {
                         ApiReqHeader apiReqHeader = new ApiReqHeader();
                         Map<String, Object> requestHeaderMap = annotation.getNamedParameterMap();
                         if (requestHeaderMap.get("value") != null) {
-                            apiReqHeader.setName((String) requestHeaderMap.get("value"));
+                            apiReqHeader.setName(StringUtil.removeQuotes((String) requestHeaderMap.get("value")));
                         }
-                        if (requestHeaderMap.get("defaultValue") != null) {
-                            apiReqHeader.setDesc((String) requestHeaderMap.get("defaultValue"));
+
+                        for (Map.Entry<String,String> map : paramMap.entrySet()){
+                                    if(map.getKey().equals(javaParameter.getName())){
+                                        apiReqHeader.setDesc(map.getValue());
+                                    }
                         }
                         if (requestHeaderMap.get("required") != null) {
                             apiReqHeader.setRequired(!"false".equals(requestHeaderMap.get("required")));
@@ -959,29 +972,10 @@ public class SourceBuilder {
      * @return String
      */
     private List<ApiParam> requestParams(final JavaMethod javaMethod, final String tagName, final String className) {
-        //
+
+
         Map<String, CustomRespField> responseFieldMap = new HashMap<>();
-        List<DocletTag> paramTags = javaMethod.getTagsByName(tagName);
-        Map<String, String> paramTagMap = new HashMap<>();
-        for (DocletTag docletTag : paramTags) {
-            String value = docletTag.getValue();
-            if (StringUtil.isEmpty(value)) {
-                throw new RuntimeException("ERROR: #" + javaMethod.getName()
-                        + "() - bad @param javadoc from " + className);
-            }
-            String pName;
-            String pValue;
-            int idx = value.indexOf("\n");
-            //existed \n
-            if (idx > -1) {
-                pName = value.substring(0, idx);
-                pValue = value.substring(idx + 1);
-            } else {
-                pName = (value.indexOf(" ") > -1) ? value.substring(0, value.indexOf(" ")) : value;
-                pValue = value.indexOf(" ") > -1 ? value.substring(value.indexOf(' ') + 1) : NO_COMMENTS_FOUND;
-            }
-            paramTagMap.put(pName, pValue);
-        }
+        Map<String, String> paramTagMap = DocUtil.getParamsComments(javaMethod,tagName,className);
 
         List<JavaParameter> parameterList = javaMethod.getParameters();
         if (parameterList.size() > 0) {
