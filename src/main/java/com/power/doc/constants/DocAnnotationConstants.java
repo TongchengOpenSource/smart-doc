@@ -11,6 +11,10 @@ public class DocAnnotationConstants {
 
     public static final String SHORT_REST_CONTROLLER = "RestController";
 
+    public static final String SHORT_PATH_VARIABLE = "PathVariable";
+
+    public static final String SHORT_REQ_PARAM = "RequestParam";
+
     public static final String SHORT_JSON_IGNORE = "JsonIgnore";
 
     public static final String SHORT_JSON_PROPERTY = "JsonProperty";
@@ -24,6 +28,8 @@ public class DocAnnotationConstants {
     public static final String NAME_PROP = "name";
 
     public static final String VALUE_PROP = "value";
+
+    public static final String DEFAULT_VALUE_PROP = "defaultValue";
 
 
 }

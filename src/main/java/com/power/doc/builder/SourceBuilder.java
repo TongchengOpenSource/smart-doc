@@ -46,11 +46,7 @@ public class SourceBuilder {
 
     private static final String NO_COMMENTS_FOUND = "No comments found.";
 
-
-    private static final String METHOD_DESCRIPTION = "apiNote";
-
     private static final String TAGS_PARAM = "param";
-
 
 
     private Map<String, JavaClass> javaFilesMap = new HashMap<>();
@@ -114,31 +110,14 @@ public class SourceBuilder {
         int order = 0;
         for (JavaClass cls : javaClasses) {
             if (checkController(cls)) {
-                String controllerName = cls.getName();
                 if (StringUtil.isNotEmpty(packageMatch)) {
                     if (DocUtil.isMatch(packageMatch, cls.getCanonicalName())) {
                         order++;
-                        List<ApiMethodDoc> apiMethodDocs = buildControllerMethod(cls);
-                        ApiDoc apiDoc = new ApiDoc();
-                        apiDoc.setName(controllerName);
-                        apiDoc.setAlias(controllerName);
-                        apiDoc.setOrder(order);
-                        this.handControllerAlias(apiDoc);
-                        apiDoc.setDesc(cls.getComment());
-                        apiDoc.setList(apiMethodDocs);
-                        apiDocList.add(apiDoc);
+                        this.handleApiDoc(cls,apiDocList,order);
                     }
                 } else {
                     order++;
-                    List<ApiMethodDoc> apiMethodDocs = buildControllerMethod(cls);
-                    ApiDoc apiDoc = new ApiDoc();
-                    apiDoc.setOrder(order);
-                    apiDoc.setName(controllerName);
-                    apiDoc.setAlias(controllerName);
-                    this.handControllerAlias(apiDoc);
-                    apiDoc.setDesc(cls.getComment());
-                    apiDoc.setList(apiMethodDocs);
-                    apiDocList.add(apiDoc);
+                    this.handleApiDoc(cls,apiDocList,order);
                 }
             }
         }
@@ -194,14 +173,15 @@ public class SourceBuilder {
             ApiMethodDoc apiMethodDoc = new ApiMethodDoc();
             apiMethodDoc.setOrder(methodOrder);
             apiMethodDoc.setDesc(method.getComment());
-            String apiNoteValue = DocUtil.getNormalTagComments(method,DocTags.API_NOTE,cls.getName());
-            if(StringUtil.isEmpty(apiNoteValue)){
+            String apiNoteValue = DocUtil.getNormalTagComments(method, DocTags.API_NOTE, cls.getName());
+            if (StringUtil.isEmpty(apiNoteValue)) {
                 apiNoteValue = method.getComment();
             }
             apiMethodDoc.setDetail(apiNoteValue);
             List<JavaAnnotation> annotations = method.getAnnotations();
             String url = null;
             String methodType = null;
+            boolean isPostMethod = false;
             int methodCounter = 0;
             for (JavaAnnotation annotation : annotations) {
                 String annotationName = annotation.getType().getName();
@@ -211,6 +191,9 @@ public class SourceBuilder {
                     if (null != nameParam) {
                         methodType = nameParam.toString();
                         methodType = DocUtil.handleHttpMethod(methodType);
+                        if ("POST".equals(methodType) || "PUT".equals(methodType)) {
+                            isPostMethod = true;
+                        }
                     } else {
                         methodType = "GET";
                     }
@@ -223,6 +206,7 @@ public class SourceBuilder {
                     url = DocUtil.handleMappingValue(annotation);
                     methodType = "POST";
                     methodCounter++;
+                    isPostMethod = true;
                 } else if (PUT_MAPPING.equals(annotationName) || DocGlobalConstants.PUT_MAPPING_FULLY.equals(annotationName)) {
                     url = DocUtil.handleMappingValue(annotation);
                     methodType = "PUT";
@@ -237,7 +221,7 @@ public class SourceBuilder {
             for (JavaParameter javaParameter : method.getParameters()) {
                 List<JavaAnnotation> javaAnnotations = javaParameter.getAnnotations();
                 String className = method.getDeclaringClass().getCanonicalName();
-                Map<String,String> paramMap = DocUtil.getParamsComments(method,TAGS_PARAM,className);
+                Map<String, String> paramMap = DocUtil.getParamsComments(method, TAGS_PARAM, className);
 
                 for (JavaAnnotation annotation : javaAnnotations) {
                     String annotationName = annotation.getType().getName();
@@ -248,10 +232,10 @@ public class SourceBuilder {
                             apiReqHeader.setName(StringUtil.removeQuotes((String) requestHeaderMap.get("value")));
                         }
 
-                        for (Map.Entry<String,String> map : paramMap.entrySet()){
-                                    if(map.getKey().equals(javaParameter.getName())){
-                                        apiReqHeader.setDesc(map.getValue());
-                                    }
+                        for (Map.Entry<String, String> map : paramMap.entrySet()) {
+                            if (map.getKey().equals(javaParameter.getName())) {
+                                apiReqHeader.setDesc(map.getValue());
+                            }
                         }
                         if (requestHeaderMap.get("required") != null) {
                             apiReqHeader.setRequired(!"false".equals(requestHeaderMap.get("required")));
@@ -276,7 +260,7 @@ public class SourceBuilder {
                 apiMethodDoc.setUrl(UrlUtil.simplifyUrl(url));
                 List<ApiParam> requestParams = requestParams(method, DocTags.PARAM, cls.getCanonicalName());
                 apiMethodDoc.setRequestParams(requestParams);
-                String requestJson = buildReqJson(method, apiMethodDoc);
+                String requestJson = buildReqJson(method, apiMethodDoc, isPostMethod);
                 apiMethodDoc.setRequestUsage(JsonFormatUtil.formatJson(requestJson));
 
                 apiMethodDoc.setResponseUsage(buildReturnJson(method, this.fieldMap));
@@ -909,7 +893,7 @@ public class SourceBuilder {
         return data0.toString();
     }
 
-    private String buildReqJson(JavaMethod method, ApiMethodDoc apiMethodDoc) {
+    private String buildReqJson(JavaMethod method, ApiMethodDoc apiMethodDoc, boolean isPostMethod) {
         List<JavaParameter> parameterList = method.getParameters();
         if (parameterList.size() < 1) {
             return apiMethodDoc.getUrl();
@@ -925,6 +909,8 @@ public class SourceBuilder {
             if (!DocClassUtil.isMvcIgnoreParams(typeName)) {
                 List<JavaAnnotation> annotations = parameter.getAnnotations();
                 int requestBodyCounter = 0;
+                String defaultVal = null;
+                boolean notHasRequestParams = true;
                 for (JavaAnnotation annotation : annotations) {
                     String annotationName = annotation.getType().getSimpleName();
                     if (REQUEST_BODY.equals(annotationName) || DocGlobalConstants.REQUEST_BODY_FULLY.equals(annotationName)) {
@@ -942,15 +928,45 @@ public class SourceBuilder {
                             return buildJson(typeName, gicTypeName, this.fieldMap, false);
                         }
                     }
+
+                    if (DocAnnotationConstants.SHORT_REQ_PARAM.equals(annotationName)) {
+                        notHasRequestParams = false;
+                    }
+                    AnnotationValue annotationDefaultVal = annotation.getProperty(DocAnnotationConstants.DEFAULT_VALUE_PROP);
+                    if (null != annotationDefaultVal) {
+                        defaultVal = StringUtil.removeQuotes(annotationDefaultVal.toString());
+                    }
+                    AnnotationValue annotationValue = annotation.getProperty(DocAnnotationConstants.VALUE_PROP);
+                    if (null != annotationValue) {
+                        paraName = StringUtil.removeQuotes(annotationValue.toString());
+                    }
+                    AnnotationValue annotationOfName = annotation.getProperty(DocAnnotationConstants.NAME_PROP);
+                    if (null != annotationOfName) {
+                        paraName = StringUtil.removeQuotes(annotationOfName.toString());
+                    }
                     if (REQUEST_HERDER.equals(annotationName)) {
                         paraName = null;
                     }
                 }
-                if (requestBodyCounter < 1 && paraName != null) {
-                    paramsMap.put(paraName, DocUtil.getValByTypeAndFieldName(simpleTypeName, paraName,
-                            true));
+                if (DocClassUtil.isPrimitive(typeName) && parameterList.size() == 1
+                        && isPostMethod && notHasRequestParams && !containsBrace) {
+                    apiMethodDoc.setContentType(JSON_CONTENT_TYPE);
+                    StringBuilder builder = new StringBuilder();
+                    builder.append("{\"")
+                            .append(paraName)
+                            .append("\":")
+                            .append(DocUtil.jsonValueByType(simpleTypeName))
+                            .append("}");
+                    return builder.toString();
                 }
-
+                if (requestBodyCounter < 1 && paraName != null) {
+                    if (StringUtil.isEmpty(defaultVal)) {
+                        paramsMap.put(paraName, DocUtil.getValByTypeAndFieldName(simpleTypeName, paraName,
+                                true));
+                    } else {
+                        paramsMap.put(paraName, defaultVal);
+                    }
+                }
             }
         }
         String url;
@@ -975,7 +991,7 @@ public class SourceBuilder {
 
 
         Map<String, CustomRespField> responseFieldMap = new HashMap<>();
-        Map<String, String> paramTagMap = DocUtil.getParamsComments(javaMethod,tagName,className);
+        Map<String, String> paramTagMap = DocUtil.getParamsComments(javaMethod, tagName, className);
 
         List<JavaParameter> parameterList = javaMethod.getParameters();
         if (parameterList.size() > 0) {
@@ -1037,9 +1053,9 @@ public class SourceBuilder {
                     }
                     for (JavaAnnotation annotation : annotations) {
                         String required = "true";
-                        AnnotationValue annotationValue = annotation.getProperty(DocAnnotationConstants.REQUIRED_PROP);
-                        if (null != annotationValue) {
-                            required = annotationValue.toString();
+                        AnnotationValue annotationRequired = annotation.getProperty(DocAnnotationConstants.REQUIRED_PROP);
+                        if (null != annotationRequired) {
+                            required = annotationRequired.toString();
                         }
                         String annotationName = annotation.getType().getName();
                         if (REQUEST_HERDER.equals(annotationName)) {
@@ -1086,6 +1102,15 @@ public class SourceBuilder {
                             }
                             requestBodyCounter++;
                         } else {
+                            AnnotationValue annotationValue = annotation.getProperty(DocAnnotationConstants.VALUE_PROP);
+                            if (null != annotationValue) {
+                                paramName = StringUtil.removeQuotes(annotationValue.toString());
+                            }
+                            AnnotationValue annotationOfName = annotation.getProperty(DocAnnotationConstants.NAME_PROP);
+                            if (null != annotationOfName) {
+                                paramName = StringUtil.removeQuotes(annotationOfName.toString());
+                            }
+
                             ApiParam param = ApiParam.of().setField(paramName)
                                     .setType(DocClassUtil.processTypeNameForParams(simpleName))
                                     .setDesc(comment).setRequired(true).setVersion(DocGlobalConstants.DEFAULT_VERSION);
@@ -1148,23 +1173,6 @@ public class SourceBuilder {
     }
 
     /**
-     * is rest controller
-     *
-     * @param cls The JavaClass object
-     * @return boolean
-     */
-    private boolean isRestController(JavaClass cls) {
-        List<JavaAnnotation> classAnnotations = cls.getAnnotations();
-        for (JavaAnnotation annotation : classAnnotations) {
-            String annotationName = annotation.getType().getName();
-            if (DocAnnotationConstants.SHORT_REST_CONTROLLER.equals(annotationName)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
      * handle controller name
      *
      * @param apiDoc ApiDoc
@@ -1189,5 +1197,19 @@ public class SourceBuilder {
             param.setDesc(comment).setVersion(since).setRequired(strRequired);
             paramList.add(param);
         }
+    }
+
+
+    private void handleApiDoc(JavaClass cls,List<ApiDoc> apiDocList,int order){
+        List<ApiMethodDoc> apiMethodDocs = buildControllerMethod(cls);
+        String controllerName = cls.getName();
+        ApiDoc apiDoc = new ApiDoc();
+        apiDoc.setOrder(order);
+        apiDoc.setName(controllerName);
+        apiDoc.setAlias(controllerName);
+        this.handControllerAlias(apiDoc);
+        apiDoc.setDesc(cls.getComment());
+        apiDoc.setList(apiMethodDocs);
+        apiDocList.add(apiDoc);
     }
 }
