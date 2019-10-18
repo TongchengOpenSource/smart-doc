@@ -72,5 +72,13 @@
 	1. 优化注释换行\n\r问题。
 	2. 修改bug #I135PG
 	3. 添加requestHeader功能
+#### 版本号：1.7.2
+- 更新日期：待定
+- 更新内容：
+	1. 优化注释换行\n\r问题。
+	2. 修改bug #I135PG
+	3. 添加requestHeader功能
+	4. 增加javadoc apiNote tag的支持
+	5. 解决扫描分析controller中private方法的问题。
 	
 	
