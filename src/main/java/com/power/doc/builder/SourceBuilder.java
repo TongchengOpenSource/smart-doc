@@ -177,6 +177,9 @@ public class SourceBuilder {
         int methodOrder = 0;
         for (JavaMethod method : methods) {
             List<ApiReqHeader> apiReqHeaders = new ArrayList<>();
+            if (method.getModifiers().contains("private")) {
+                continue;
+            }
             if (StringUtil.isEmpty(method.getComment()) && isStrict) {
                 throw new RuntimeException("Unable to find comment for method " + method.getName() + " in " + cls.getCanonicalName());
             }
