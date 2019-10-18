@@ -19,4 +19,9 @@ public class DocTags {
      * java param tag
      */
     public static final String PARAM = "param";
+
+    /**
+     * java apiNote tag for method detail
+     */
+    public static final String API_NOTE = "apiNote";
 }
