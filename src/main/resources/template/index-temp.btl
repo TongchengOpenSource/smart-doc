@@ -58,7 +58,7 @@
              <p><strong>URL:</strong>${doc.url}</p>
              <p><strong>Type:</strong>${doc.type}</p>
              <p><strong>Content-Type:</strong> ${doc.contentType}</p>
-             <p><strong>Description:</strong> ${doc.description}</p>
+             <p><strong>Description:</strong> ${doc.detail}</p>
 
              <%if(isNotEmpty(doc.requestHeaders)){%>
              <p><strong>Request-headers:</strong></p>

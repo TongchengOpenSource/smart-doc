@@ -46,9 +46,11 @@ public class SourceBuilder {
 
     private static final String NO_COMMENTS_FOUND = "No comments found.";
 
+
     private static final String METHOD_DESCRIPTION = "apiNote";
 
     private static final String TAGS_PARAM = "param";
+
 
 
     private Map<String, JavaClass> javaFilesMap = new HashMap<>();
@@ -182,6 +184,9 @@ public class SourceBuilder {
         int methodOrder = 0;
         for (JavaMethod method : methods) {
             List<ApiReqHeader> apiReqHeaders = new ArrayList<>();
+            if (method.getModifiers().contains("private")) {
+                continue;
+            }
             if (StringUtil.isEmpty(method.getComment()) && isStrict) {
                 throw new RuntimeException("Unable to find comment for method " + method.getName() + " in " + cls.getCanonicalName());
             }
@@ -189,12 +194,11 @@ public class SourceBuilder {
             ApiMethodDoc apiMethodDoc = new ApiMethodDoc();
             apiMethodDoc.setOrder(methodOrder);
             apiMethodDoc.setDesc(method.getComment());
-            Map<String,String> comment = DocUtil.getParamsComments(method,METHOD_DESCRIPTION,cls.getName());
-            String methodDesc = comment.get(METHOD_DESCRIPTION);
-            if(StringUtil.isEmpty(methodDesc)){
-                methodDesc = method.getComment();
+            String apiNoteValue = DocUtil.getNormalTagComments(method,DocTags.API_NOTE,cls.getName());
+            if(StringUtil.isEmpty(apiNoteValue)){
+                apiNoteValue = method.getComment();
             }
-            apiMethodDoc.setDescription(methodDesc);
+            apiMethodDoc.setDetail(apiNoteValue);
             List<JavaAnnotation> annotations = method.getAnnotations();
             String url = null;
             String methodType = null;

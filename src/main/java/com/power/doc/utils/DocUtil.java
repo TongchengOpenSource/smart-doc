@@ -30,8 +30,9 @@ public class DocUtil {
         fieldValue.put("uuid-string", UUID.randomUUID().toString());
         fieldValue.put("uid", UUID.randomUUID().toString());
         fieldValue.put("nickname-string", enFaker.name().username());
+        fieldValue.put("hostname-string", faker.internet().ipV4Address());
         fieldValue.put("name-string", faker.name().username());
-        fieldValue.put("author-string",faker.book().author());
+        fieldValue.put("author-string", faker.book().author());
         fieldValue.put("url-string", faker.internet().url());
         fieldValue.put("username-string", faker.name().username());
         fieldValue.put("page-int", "1");
@@ -77,6 +78,7 @@ public class DocUtil {
         fieldValue.put("offset-int", "1");
         fieldValue.put("offset-integer", "1");
         fieldValue.put("offset-long", "1");
+        fieldValue.put("version-string", enFaker.app().version());
 
 
     }
@@ -259,19 +261,20 @@ public class DocUtil {
 
     /**
      * obtain params comments
+     *
      * @param javaMethod JavaMethod
-     * @param tagName java comments tag
-     * @param className class name
-     * @return
+     * @param tagName    java comments tag
+     * @param className  class name
+     * @return Map
      */
-    public static Map<String,String> getParamsComments(final JavaMethod javaMethod, final String tagName, final String className) {
+    public static Map<String, String> getParamsComments(final JavaMethod javaMethod, final String tagName, final String className) {
         List<DocletTag> paramTags = javaMethod.getTagsByName(tagName);
         Map<String, String> paramTagMap = new HashMap<>();
         for (DocletTag docletTag : paramTags) {
             String value = docletTag.getValue();
             if (StringUtil.isEmpty(value)) {
                 throw new RuntimeException("ERROR: #" + javaMethod.getName()
-                        + "() - bad @"+tagName+" javadoc from " + className);
+                        + "() - bad @" + tagName + " javadoc from " + className + ", must be add comment if you use it.");
             }
             String pName;
             String pValue;
@@ -287,5 +290,41 @@ public class DocUtil {
             paramTagMap.put(pName, pValue);
         }
         return paramTagMap;
+    }
+
+    /**
+     * obtain java doc tags comments,like apiNote
+     *
+     * @param javaMethod JavaMethod
+     * @param tagName    java comments tag
+     * @param className  class name
+     * @return Map
+     */
+    public static String getNormalTagComments(final JavaMethod javaMethod, final String tagName, final String className) {
+        Map<String, String> map = getParamsComments(javaMethod, tagName, className);
+        return getFirstKeyAndValue(map);
+    }
+
+    /**
+     * Get the first element of a map.
+     *
+     * @param map map
+     * @return String
+     */
+    public static String getFirstKeyAndValue(Map<String, String> map) {
+        String value = null;
+        if (map != null && map.size() > 0) {
+            Map.Entry<String, String> entry = map.entrySet().iterator().next();
+            if (entry != null) {
+                if (DocGlobalConstants.NO_COMMENTS_FOUND.equals(entry.getValue())) {
+                    value = entry.getKey();
+                } else {
+                    value = entry.getKey() + entry.getValue();
+                }
+                value = value.replace("\r\n", "<br/>");
+                value = value.replace("\r", "<br/>");
+            }
+        }
+        return value;
     }
 }

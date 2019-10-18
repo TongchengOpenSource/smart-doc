@@ -25,7 +25,7 @@ public class ApiMethodDoc implements Serializable {
     /**
      * detailed introduction of the method
      */
-    private String description;
+    private String detail;
 
     /**
      * controller method url
@@ -163,11 +163,11 @@ public class ApiMethodDoc implements Serializable {
         this.requestHeaders = requestHeaders;
     }
 
-    public String getDescription() {
-        return description;
+    public String getDetail() {
+        return detail;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setDetail(String detail) {
+        this.detail = detail;
     }
 }
