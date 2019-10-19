@@ -413,11 +413,7 @@ public class SourceBuilder {
 
 
         String[] globGicName = DocClassUtil.getSimpleGicName(className);
-        JavaClass cls = builder.getClassByName(simpleName);
-        //handle inner class
-        if (Objects.isNull(cls.getFields()) || cls.getFields().isEmpty()) {
-            cls = javaFilesMap.get(simpleName);
-        }
+        JavaClass cls = getJavaClass(simpleName);
         //clsss.isEnum()
         List<JavaField> fields = getFields(cls, 0);
         int n = 0;
@@ -634,6 +630,15 @@ public class SourceBuilder {
 
     }
 
+    private JavaClass getJavaClass(String simpleName) {
+        JavaClass cls = builder.getClassByName(simpleName);
+        //handle inner class
+        if (Objects.isNull(cls.getFields()) || cls.getFields().isEmpty()) {
+            cls = javaFilesMap.get(simpleName);
+        }
+        return cls;
+    }
+
 
     private List<ApiParam> primitiveReturnRespComment(String typeName) {
         StringBuilder comments = new StringBuilder();
@@ -681,11 +686,7 @@ public class SourceBuilder {
             return DocUtil.jsonValueByType(typeName).replace("\"", "");
         }
         StringBuilder data0 = new StringBuilder();
-        JavaClass cls = builder.getClassByName(typeName);
-        //handle inner class
-        if (Objects.isNull(cls.getFields()) || cls.getFields().isEmpty()) {
-            cls = javaFilesMap.get(typeName);
-        }
+        JavaClass cls = getJavaClass(typeName);
         data0.append("{");
         String[] globGicName = DocClassUtil.getSimpleGicName(genericCanonicalName);
         StringBuilder data = new StringBuilder();
