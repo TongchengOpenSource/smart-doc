@@ -274,7 +274,7 @@ public class SourceBuilder {
                 apiMethodDoc.setRequestUsage(JsonFormatUtil.formatJson(requestJson));
 
                 apiMethodDoc.setResponseUsage(buildReturnJson(method, this.fieldMap));
-                List<ApiParam> responseParams = buildMethodReturn(method, cls.getGenericFullyQualifiedName());
+                List<ApiParam> responseParams = buildReturnApiParams(method, cls.getGenericFullyQualifiedName());
                 apiMethodDoc.setResponseParams(responseParams);
                 //reduce create in template
                 apiMethodDoc.setHeaders(createHeaders(this.headers, this.isAdoc));
@@ -351,7 +351,7 @@ public class SourceBuilder {
         return builder.toString();
     }
 
-    private List<ApiParam> buildMethodReturn(JavaMethod method, String controllerName) {
+    private List<ApiParam> buildReturnApiParams(JavaMethod method, String controllerName) {
         ApiReturn apiReturn = DocClassUtil.processReturnType(method.getReturnType().getGenericCanonicalName());
         String returnType = apiReturn.getGenericCanonicalName();
         String typeName = apiReturn.getSimpleName();
