@@ -49,7 +49,6 @@ public class SourceBuilder {
 
     private static final String METHOD_DESCRIPTION = "apiNote";
 
-    private static final String TAGS_PARAM = "param";
 
 
 
@@ -237,7 +236,7 @@ public class SourceBuilder {
             for (JavaParameter javaParameter : method.getParameters()) {
                 List<JavaAnnotation> javaAnnotations = javaParameter.getAnnotations();
                 String className = method.getDeclaringClass().getCanonicalName();
-                Map<String,String> paramMap = DocUtil.getParamsComments(method,TAGS_PARAM,className);
+                Map<String,String> paramMap = DocUtil.getParamsComments(method,DocTags.PARAM,className);
 
                 for (JavaAnnotation annotation : javaAnnotations) {
                     String annotationName = annotation.getType().getName();
@@ -247,12 +246,26 @@ public class SourceBuilder {
                         if (requestHeaderMap.get("value") != null) {
                             apiReqHeader.setName(StringUtil.removeQuotes((String) requestHeaderMap.get("value")));
                         }
+                        StringBuilder desc= new StringBuilder();
 
                         for (Map.Entry<String,String> map : paramMap.entrySet()){
                                     if(map.getKey().equals(javaParameter.getName())){
-                                        apiReqHeader.setDesc(map.getValue());
+                                       desc.append(map.getValue());
                                     }
                         }
+                        if(requestHeaderMap.get("defaultValue") != null){
+                           desc.append("<br/>")
+                                .append("(")
+                                .append("defaultValue")
+                                .append(" : ")
+                                .append(StringUtil.removeQuotes((String) requestHeaderMap.get("defaultValue")))
+                                .append(")");
+                        }
+                        else {
+
+                        }
+                        apiReqHeader.setDesc(desc.toString());
+
                         if (requestHeaderMap.get("required") != null) {
                             apiReqHeader.setRequired(!"false".equals(requestHeaderMap.get("required")));
                         }
