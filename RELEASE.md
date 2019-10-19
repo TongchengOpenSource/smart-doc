@@ -72,5 +72,16 @@
 	1. 优化注释换行\n\r问题。
 	2. 修改bug #I135PG
 	3. 添加requestHeader功能
+#### 版本号：1.7.2
+- 更新日期：待定
+- 更新内容：
+	1. 优化注释换行\n\r问题。
+	2. 修改bug #I135PG
+	3. 添加@requestHeader注解的支持，文档自定将参数绑定到请求头列表中。
+	4. 增加javadoc apiNote tag的支持。
+	5. 解决扫描分析controller中private方法的问题。
+	6. 添加支持@RequestParam注解重写参数名和设置默认值的文档解析。
+	7. 支持使用@PostMapping和@PutMapping请求自定义注解接收单个json参数场景下生成json请求实例。
+	
 	
 	
