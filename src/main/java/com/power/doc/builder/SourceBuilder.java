@@ -113,11 +113,11 @@ public class SourceBuilder {
                 if (StringUtil.isNotEmpty(packageMatch)) {
                     if (DocUtil.isMatch(packageMatch, cls.getCanonicalName())) {
                         order++;
-                        this.handleApiDoc(cls,apiDocList,order);
+                        this.handleApiDoc(cls, apiDocList, order);
                     }
                 } else {
                     order++;
-                    this.handleApiDoc(cls,apiDocList,order);
+                    this.handleApiDoc(cls, apiDocList, order);
                 }
             }
         }
@@ -221,41 +221,36 @@ public class SourceBuilder {
             for (JavaParameter javaParameter : method.getParameters()) {
                 List<JavaAnnotation> javaAnnotations = javaParameter.getAnnotations();
                 String className = method.getDeclaringClass().getCanonicalName();
-                Map<String,String> paramMap = DocUtil.getParamsComments(method,DocTags.PARAM,className);
-
+                Map<String, String> paramMap = DocUtil.getParamsComments(method, DocTags.PARAM, className);
+                String paramName = javaParameter.getName();
                 for (JavaAnnotation annotation : javaAnnotations) {
                     String annotationName = annotation.getType().getName();
+
                     if (REQUEST_HERDER.equals(annotationName)) {
                         ApiReqHeader apiReqHeader = new ApiReqHeader();
                         Map<String, Object> requestHeaderMap = annotation.getNamedParameterMap();
-                        if (requestHeaderMap.get("value") != null) {
-                            apiReqHeader.setName(StringUtil.removeQuotes((String) requestHeaderMap.get("value")));
+                        if (requestHeaderMap.get(DocAnnotationConstants.VALUE_PROP) != null) {
+                            apiReqHeader.setName(StringUtil.removeQuotes((String) requestHeaderMap.get(DocAnnotationConstants.VALUE_PROP)));
+                        } else {
+                            apiReqHeader.setName(paramName);
                         }
-                        StringBuilder desc= new StringBuilder();
+                        StringBuilder desc = new StringBuilder();
+                        String comments = paramMap.get(paramName);
+                        desc.append(comments);
 
-
-                        for (Map.Entry<String, String> map : paramMap.entrySet()) {
-                            if (map.getKey().equals(javaParameter.getName())) {
-                                apiReqHeader.setDesc(map.getValue());
-                            }
-                        }
-                        if(requestHeaderMap.get("defaultValue") != null){
-                           desc.append("<br/>")
-                                .append("(")
-                                .append("defaultValue")
-                                .append(" : ")
-                                .append(StringUtil.removeQuotes((String) requestHeaderMap.get("defaultValue")))
-                                .append(")");
-                        }
-                        else {
-
+                        if (requestHeaderMap.get(DocAnnotationConstants.DEFAULT_VALUE_PROP) != null) {
+                            desc.append("(defaultValue: ")
+                                    .append(StringUtil.removeQuotes((String) requestHeaderMap.get(DocAnnotationConstants.DEFAULT_VALUE_PROP)))
+                                    .append(")");
                         }
                         apiReqHeader.setDesc(desc.toString());
-
-                        if (requestHeaderMap.get("required") != null) {
-                            apiReqHeader.setRequired(!"false".equals(requestHeaderMap.get("required")));
+                        if (requestHeaderMap.get(DocAnnotationConstants.REQUIRED_PROP) != null) {
+                            apiReqHeader.setRequired(!"false".equals(requestHeaderMap.get(DocAnnotationConstants.REQUIRED_PROP)));
+                        } else {
+                            apiReqHeader.setRequired(true);
                         }
-                        apiReqHeader.setType(javaParameter.getType().getValue());
+                        String typeName = javaParameter.getType().getValue().toLowerCase();
+                        apiReqHeader.setType(DocClassUtil.processTypeNameForParams(typeName));
                         apiReqHeaders.add(apiReqHeader);
                         break;
                     }
@@ -279,7 +274,6 @@ public class SourceBuilder {
                 apiMethodDoc.setRequestUsage(JsonFormatUtil.formatJson(requestJson));
 
                 apiMethodDoc.setResponseUsage(buildReturnJson(method, this.fieldMap));
-
                 List<ApiParam> responseParams = buildMethodReturn(method, cls.getGenericFullyQualifiedName());
                 apiMethodDoc.setResponseParams(responseParams);
                 //reduce create in template
@@ -420,6 +414,10 @@ public class SourceBuilder {
 
         String[] globGicName = DocClassUtil.getSimpleGicName(className);
         JavaClass cls = builder.getClassByName(simpleName);
+        //handle inner class
+        if (Objects.isNull(cls.getFields()) || cls.getFields().isEmpty()) {
+            cls = javaFilesMap.get(simpleName);
+        }
         //clsss.isEnum()
         List<JavaField> fields = getFields(cls, 0);
         int n = 0;
@@ -684,6 +682,10 @@ public class SourceBuilder {
         }
         StringBuilder data0 = new StringBuilder();
         JavaClass cls = builder.getClassByName(typeName);
+        //handle inner class
+        if (Objects.isNull(cls.getFields()) || cls.getFields().isEmpty()) {
+            cls = javaFilesMap.get(typeName);
+        }
         data0.append("{");
         String[] globGicName = DocClassUtil.getSimpleGicName(genericCanonicalName);
         StringBuilder data = new StringBuilder();
@@ -827,7 +829,7 @@ public class SourceBuilder {
 
                                 }
                             } else {
-                                if (!typeName.equals(gicName) && !gicName.contains(typeName)) {
+                                if (!typeName.equals(gicName)) {
                                     if (MAP_CLASS.equals(gicName)) {
                                         data0.append("[{\"mapKey\":{}}],");
                                         continue out;
@@ -1215,7 +1217,7 @@ public class SourceBuilder {
     }
 
 
-    private void handleApiDoc(JavaClass cls,List<ApiDoc> apiDocList,int order){
+    private void handleApiDoc(JavaClass cls, List<ApiDoc> apiDocList, int order) {
         List<ApiMethodDoc> apiMethodDocs = buildControllerMethod(cls);
         String controllerName = cls.getName();
         ApiDoc apiDoc = new ApiDoc();

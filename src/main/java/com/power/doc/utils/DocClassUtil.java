@@ -197,34 +197,34 @@ public class DocClassUtil {
             case "string":
                 return "string";
             case "char":
-                return "char";
+                return "string";
             case "java.util.List":
                 return "array";
             case "list":
                 return "array";
             case "java.lang.Integer":
-                return "int";
+                return "int32";
             case "integer":
-                return "int";
+                return "int32";
             case "int":
-                return "int";
+                return "int32";
             case "short":
-                return "int";
+                return "int16";
             case "java.lang.Short":
-                return "int";
+                return "int16";
             case "double":
-                return "number";
+                return "double";
             case "java.lang.Long":
-                return "number";
+                return "int64";
             case "long":
-                return "number";
+                return "int64";
             case "java.lang.Float":
-                return "number";
+                return "float";
+            case "float":
+                return "float";
             case "bigdecimal":
                 return "number";
             case "biginteger":
-                return "number";
-            case "float":
                 return "number";
             case "java.lang.Boolean":
                 return "boolean";
@@ -419,7 +419,8 @@ public class DocClassUtil {
                 fullyName.startsWith("java.util.concurrent.CompletableFuture") ||
                 fullyName.startsWith("org.springframework.web.context.request.async.DeferredResult") ||
                 fullyName.startsWith("org.springframework.web.context.request.async.WebAsyncTask") ||
-                fullyName.startsWith("reactor.core.publisher.Mono")) {
+                fullyName.startsWith("reactor.core.publisher.Mono")||
+                fullyName.startsWith("org.springframework.http.ResponseEntity")) {
             if (fullyName.contains("<")) {
                 String[] strings = getSimpleGicName(fullyName);
                 String newFullName = strings[0];
