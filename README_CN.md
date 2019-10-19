@@ -28,7 +28,7 @@ smart-doc使用和测试可参考[smart-doc demo](https://gitee.com/sunyureposit
 <dependency>
     <groupId>com.github.shalousun</groupId>
     <artifactId>smart-doc</artifactId>
-    <version>1.7.0</version>
+    <version>1.7.2</version>
     <scope>test</scope>
 </dependency>
 ```
@@ -128,11 +128,13 @@ public class ApiDocTest {
 mvn clean install
 ```
 ## Releases
-[发布记录](https://github.com/shalousun/smart-doc/blob/master/RELEASE_CN.md/)
+[发布记录](https://gitee.com/sunyurepository/smart-doc/blob/master/RELEASE.md)
 ## Other reference
 - [smart-doc功能使用介绍](https://my.oschina.net/u/1760791/blog/2250962)
 - [smart-doc wiki](https://gitee.com/sunyurepository/smart-doc/wikis/Home?sort_id=1652800)
 ## License
-Smart-doc is under the Apache 2.0 license.  See the [LICENSE](https://github.com/shalousun/smart-doc/blob/master/license.txt) file for details.
+Smart-doc is under the Apache 2.0 license.  See the [LICENSE](https://gitee.com/sunyurepository/smart-doc/blob/master/license.txt) file for details.
 ## Contact
+愿意参与构建smart-doc或者是需要交流问题可以加入qq群：
+
 QQ群： 170651381

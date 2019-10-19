@@ -67,15 +67,15 @@
 	5. 支持Spring Boot Web Flux(Controller方式书写)。
 	
 #### 版本号：1.7.1
-- 更新日期：待定
+- 更新日期：已废弃
 - 更新内容：
 	1. 优化注释换行\n\r问题。
 	2. 修改bug #I135PG
 	3. 添加requestHeader功能
 #### 版本号：1.7.2
-- 更新日期：待定
+- 更新日期：2019-10-19
 - 更新内容：
-	1. 优化注释换行\n\r问题。
+	1. 优化注释换行\n\r问题，依赖common-util 1.8.7。
 	2. 修改gitee上bug #I135PG、#I13NR1。
 	3. 添加@requestHeader注解的支持，文档自定将参数绑定到请求头列表中。
 	4. 增加javadoc apiNote tag的支持。
@@ -84,6 +84,7 @@
 	7. 支持使用@PostMapping和@PutMapping请求自定义注解接收单个json参数场景下生成json请求实例。
 	8. 新增对Spring ResponseEntity的解析。
 	9. 增加内部类返回结构解析。
+	10. 修改文档中显示的字段类型，float、double等由原来的number直接变成具体类型。
 	
 	
 	
