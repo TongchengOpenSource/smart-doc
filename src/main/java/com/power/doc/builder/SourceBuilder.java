@@ -566,7 +566,7 @@ public class SourceBuilder {
                             }
                             String gName = DocClassUtil.getSimpleGicName(gNameTemp)[0];
                             if (!DocClassUtil.isPrimitive(gName)) {
-                                if (!simpleName.equals(gName) && !gName.contains(simpleName)) {
+                                if (!simpleName.equals(gName) && !gName.equals(simpleName)) {
                                     if (gName.length() == 1) {
                                         int len = globGicName.length;
                                         if (len > 0) {
