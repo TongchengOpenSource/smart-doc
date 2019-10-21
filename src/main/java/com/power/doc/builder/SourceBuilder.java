@@ -978,6 +978,9 @@ public class SourceBuilder {
                     return builder.toString();
                 }
                 if (requestBodyCounter < 1 && paraName != null) {
+                    if(annotations.size()<1&& !DocClassUtil.isPrimitive(typeName)){
+                        return "Smart-doc can't support create form-data example,It is recommended to use @RequestBody to receive parameters.";
+                    }
                     if (StringUtil.isEmpty(defaultVal)) {
                         paramsMap.put(paraName, DocUtil.getValByTypeAndFieldName(simpleTypeName, paraName,
                                 true));
@@ -1076,9 +1079,6 @@ public class SourceBuilder {
                             required = annotationRequired.toString();
                         }
                         String annotationName = annotation.getType().getName();
-                        if (REQUEST_HERDER.equals(annotationName)) {
-                            continue;
-                        }
                         if (REQUEST_BODY.equals(annotationName)) {
                             if (requestBodyCounter > 0) {
                                 throw new RuntimeException("You have use @RequestBody Passing multiple variables  for method "
@@ -1120,22 +1120,26 @@ public class SourceBuilder {
                             }
                             requestBodyCounter++;
                         } else {
-                            AnnotationValue annotationValue = annotation.getProperty(DocAnnotationConstants.VALUE_PROP);
-                            if (null != annotationValue) {
-                                paramName = StringUtil.removeQuotes(annotationValue.toString());
-                            }
-                            AnnotationValue annotationOfName = annotation.getProperty(DocAnnotationConstants.NAME_PROP);
-                            if (null != annotationOfName) {
-                                paramName = StringUtil.removeQuotes(annotationOfName.toString());
-                            }
+                            if (REQUEST_PARAM.equals(annotationName) ||
+                                    DocAnnotationConstants.SHORT_PATH_VARIABLE.equals(annotationName)) {
+                                AnnotationValue annotationValue = annotation.getProperty(DocAnnotationConstants.VALUE_PROP);
+                                if (null != annotationValue) {
+                                    paramName = StringUtil.removeQuotes(annotationValue.toString());
+                                }
+                                AnnotationValue annotationOfName = annotation.getProperty(DocAnnotationConstants.NAME_PROP);
+                                if (null != annotationOfName) {
+                                    paramName = StringUtil.removeQuotes(annotationOfName.toString());
+                                }
 
-                            ApiParam param = ApiParam.of().setField(paramName)
-                                    .setType(DocClassUtil.processTypeNameForParams(simpleName))
-                                    .setDesc(comment).setRequired(true).setVersion(DocGlobalConstants.DEFAULT_VERSION);
-                            paramList.add(param);
+                                ApiParam param = ApiParam.of().setField(paramName)
+                                        .setType(DocClassUtil.processTypeNameForParams(simpleName))
+                                        .setDesc(comment).setRequired(true).setVersion(DocGlobalConstants.DEFAULT_VERSION);
+                                paramList.add(param);
+                            } else {
+                                continue;
+                            }
                         }
                     }
-
                 }
             }
             if (requestBodyCounter > 0) {
