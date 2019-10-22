@@ -149,6 +149,7 @@ public class SourceBuilder {
     }
 
     private List<ApiMethodDoc> buildControllerMethod(final JavaClass cls) {
+        String clazName = cls.getCanonicalName();
         List<JavaAnnotation> classAnnotations = cls.getAnnotations();
         String baseUrl = "";
         for (JavaAnnotation annotation : classAnnotations) {
@@ -173,6 +174,9 @@ public class SourceBuilder {
             ApiMethodDoc apiMethodDoc = new ApiMethodDoc();
             apiMethodDoc.setOrder(methodOrder);
             apiMethodDoc.setDesc(method.getComment());
+            apiMethodDoc.setName(method.getName());
+            String methodUid = clazName + method.getName();
+            this.handleMethodUid(apiMethodDoc, methodUid);
             String apiNoteValue = DocUtil.getNormalTagComments(method, DocTags.API_NOTE, cls.getName());
             if (StringUtil.isEmpty(apiNoteValue)) {
                 apiNoteValue = method.getComment();
@@ -978,7 +982,7 @@ public class SourceBuilder {
                     return builder.toString();
                 }
                 if (requestBodyCounter < 1 && paraName != null) {
-                    if(annotations.size()<1&& !DocClassUtil.isPrimitive(typeName)){
+                    if (annotations.size() < 1 && !DocClassUtil.isPrimitive(typeName)) {
                         return "Smart-doc can't support create form-data example,It is recommended to use @RequestBody to receive parameters.";
                     }
                     if (StringUtil.isEmpty(defaultVal)) {
@@ -1208,6 +1212,16 @@ public class SourceBuilder {
             } else {
                 apiDoc.setAlias(name.substring(length - 32, length));
             }
+        }
+    }
+
+    private void handleMethodUid(ApiMethodDoc methodDoc, String methodName) {
+        String name = DigestUtils.md5Hex(methodName);
+        int length = name.length();
+        if (name.length() < 32) {
+            methodDoc.setMethodId(name);
+        } else {
+            methodDoc.setMethodId(name.substring(length - 32, length));
         }
     }
 

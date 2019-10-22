@@ -58,6 +58,7 @@ public class ApiDocBuilder {
     public static List<ApiDoc> listOfApiData(ApiConfig config) {
         DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
         builderTemplate.checkAndInitForGetApiData(config);
+        config.setMd5EncryptedHtmlName(true);
         SourceBuilder sourceBuilder = new SourceBuilder(config);
         return sourceBuilder.getControllerApiData();
     }
@@ -72,6 +73,7 @@ public class ApiDocBuilder {
     public static ApiDoc getApiData(ApiConfig config, String controllerName) {
         DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
         builderTemplate.checkAndInitForGetApiData(config);
+        config.setMd5EncryptedHtmlName(true);
         SourceBuilder sourceBuilder = new SourceBuilder(config);
         return sourceBuilder.getSingleControllerApiData(controllerName);
     }

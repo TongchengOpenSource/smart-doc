@@ -10,12 +10,27 @@ public class ApiMethodDoc implements Serializable {
 
 
     private static final long serialVersionUID = 7211922919532562867L;
+
+    /**
+     * methodId handled by md5
+     * @since 1.7.3 +
+     *
+     */
+    private String methodId;
+
+    /**
+     * method name
+     * @since 1.7.3 +
+     */
+    private String name;
+
     /**
      * method order
      *
      * @since 1.7+
      */
     private int order;
+
 
     /**
      * method description
@@ -74,6 +89,22 @@ public class ApiMethodDoc implements Serializable {
      */
     private List<ApiParam> responseParams;
 
+
+    public String getMethodId() {
+        return methodId;
+    }
+
+    public void setMethodId(String methodId) {
+        this.methodId = methodId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public String getDesc() {
         return desc;
