@@ -1175,7 +1175,7 @@ public class SourceBuilder {
 
                                 ApiParam param = ApiParam.of().setField(paramName)
                                         .setType(DocClassUtil.processTypeNameForParams(simpleName))
-                                        .setDesc(comment).setRequired(true).setVersion(DocGlobalConstants.DEFAULT_VERSION);
+                                        .setDesc(comment).setRequired(Boolean.valueOf(required)).setVersion(DocGlobalConstants.DEFAULT_VERSION);
                                 paramList.add(param);
                             } else {
                                 continue;
