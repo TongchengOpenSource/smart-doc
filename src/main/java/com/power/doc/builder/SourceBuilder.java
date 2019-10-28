@@ -1122,7 +1122,7 @@ public class SourceBuilder {
                             required = annotationRequired.toString();
                         }
                         String annotationName = annotation.getType().getName();
-                        if (REQUEST_BODY.equals(annotationName) || VALID.equals(annotationName) && annotations.size() == 1) {
+                        if (REQUEST_BODY.equals(annotationName) || (VALID.equals(annotationName) && annotations.size() == 1)) {
                             if (requestBodyCounter > 0) {
                                 throw new RuntimeException("You have use @RequestBody Passing multiple variables  for method "
                                         + javaMethod.getName() + " in " + className + ",@RequestBody annotation could only bind one variables.");
