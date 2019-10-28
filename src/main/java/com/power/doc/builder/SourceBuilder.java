@@ -46,6 +46,8 @@ public class SourceBuilder {
 
     private static final String NO_COMMENTS_FOUND = "No comments found.";
 
+    private static final String VALID = "Valid";
+
     private static final String METHOD_DESCRIPTION = "apiNote";
 
     private Map<String, JavaClass> javaFilesMap = new HashMap<>();
@@ -1077,41 +1079,42 @@ public class SourceBuilder {
                         comment = NO_COMMENTS_FOUND;
                     }
                     List<JavaAnnotation> annotations = parameter.getAnnotations();
-                    //default set required is true
-                    if (DocClassUtil.isCollection(fullTypeName) || DocClassUtil.isArray(fullTypeName)) {
-                        String[] gicNameArr = DocClassUtil.getSimpleGicName(typeName);
-                        String gicName = gicNameArr[0];
-                        if (DocClassUtil.isArray(gicName)) {
-                            gicName = gicName.substring(0, gicName.indexOf("["));
-                        }
-                        String typeTemp = "";
-                        if (DocClassUtil.isPrimitive(gicName)) {
-                            typeTemp = " of " + DocClassUtil.processTypeNameForParams(gicName);
+                    if (annotations.size() == 0) {
+                        //default set required is true
+                        if (DocClassUtil.isCollection(fullTypeName) || DocClassUtil.isArray(fullTypeName)) {
+                            String[] gicNameArr = DocClassUtil.getSimpleGicName(typeName);
+                            String gicName = gicNameArr[0];
+                            if (DocClassUtil.isArray(gicName)) {
+                                gicName = gicName.substring(0, gicName.indexOf("["));
+                            }
+                            String typeTemp = "";
+                            if (DocClassUtil.isPrimitive(gicName)) {
+                                typeTemp = " of " + DocClassUtil.processTypeNameForParams(gicName);
+                                ApiParam param = ApiParam.of().setField(paramName)
+                                        .setType(DocClassUtil.processTypeNameForParams(simpleName) + typeTemp)
+                                        .setDesc(comment).setRequired(true).setVersion(DocGlobalConstants.DEFAULT_VERSION);
+                                paramList.add(param);
+                            } else {
+                                ApiParam param = ApiParam.of().setField(paramName)
+                                        .setType(DocClassUtil.processTypeNameForParams(simpleName) + typeTemp)
+                                        .setDesc(comment).setRequired(true).setVersion(DocGlobalConstants.DEFAULT_VERSION);
+                                paramList.add(param);
+                                paramList.addAll(buildParams(gicNameArr[0], "└─", 1, "true", responseFieldMap, false, false));
+                            }
+
+                        } else if (DocClassUtil.isPrimitive(simpleName)) {
                             ApiParam param = ApiParam.of().setField(paramName)
-                                    .setType(DocClassUtil.processTypeNameForParams(simpleName) + typeTemp)
+                                    .setType(DocClassUtil.processTypeNameForParams(simpleName))
                                     .setDesc(comment).setRequired(true).setVersion(DocGlobalConstants.DEFAULT_VERSION);
+                            paramList.add(param);
+                        } else if (DocGlobalConstants.JAVA_MAP_FULLY.equals(typeName)) {
+                            ApiParam param = ApiParam.of().setField(paramName)
+                                    .setType("map").setDesc(comment).setRequired(true).setVersion(DocGlobalConstants.DEFAULT_VERSION);
                             paramList.add(param);
                         } else {
-                            ApiParam param = ApiParam.of().setField(paramName)
-                                    .setType(DocClassUtil.processTypeNameForParams(simpleName) + typeTemp)
-                                    .setDesc(comment).setRequired(true).setVersion(DocGlobalConstants.DEFAULT_VERSION);
-                            paramList.add(param);
-                            paramList.addAll(buildParams(gicNameArr[0], "└─", 1, "true", responseFieldMap, false, false));
+                            paramList.addAll(buildParams(fullTypeName, "", 0, "true", responseFieldMap, false, false));
                         }
-
-                    } else if (DocClassUtil.isPrimitive(simpleName)) {
-                        ApiParam param = ApiParam.of().setField(paramName)
-                                .setType(DocClassUtil.processTypeNameForParams(simpleName))
-                                .setDesc(comment).setRequired(true).setVersion(DocGlobalConstants.DEFAULT_VERSION);
-                        paramList.add(param);
-                    } else if (DocGlobalConstants.JAVA_MAP_FULLY.equals(typeName)) {
-                        ApiParam param = ApiParam.of().setField(paramName)
-                                .setType("map").setDesc(comment).setRequired(true).setVersion(DocGlobalConstants.DEFAULT_VERSION);
-                        paramList.add(param);
-                    } else {
-                        paramList.addAll(buildParams(fullTypeName, "", 0, "true", responseFieldMap, false, false));
                     }
-
                     for (JavaAnnotation annotation : annotations) {
                         String required = "true";
                         AnnotationValue annotationRequired = annotation.getProperty(DocAnnotationConstants.REQUIRED_PROP);
@@ -1119,7 +1122,7 @@ public class SourceBuilder {
                             required = annotationRequired.toString();
                         }
                         String annotationName = annotation.getType().getName();
-                        if (REQUEST_BODY.equals(annotationName)) {
+                        if (REQUEST_BODY.equals(annotationName) || VALID.equals(annotationName) && annotations.size() == 1) {
                             if (requestBodyCounter > 0) {
                                 throw new RuntimeException("You have use @RequestBody Passing multiple variables  for method "
                                         + javaMethod.getName() + " in " + className + ",@RequestBody annotation could only bind one variables.");
