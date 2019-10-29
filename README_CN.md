@@ -28,7 +28,7 @@ smart-doc使用和测试可参考[smart-doc demo](https://gitee.com/sunyureposit
 <dependency>
     <groupId>com.github.shalousun</groupId>
     <artifactId>smart-doc</artifactId>
-    <version>1.7.3</version>
+    <version>1.7.4</version>
     <scope>test</scope>
 </dependency>
 ```
