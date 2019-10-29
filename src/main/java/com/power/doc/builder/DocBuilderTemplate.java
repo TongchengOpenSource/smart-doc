@@ -103,6 +103,15 @@ public class DocBuilderTemplate {
         tpl.binding(TemplateVariable.VERSION_LIST.getVariable(), config.getRevisionLogs());
         tpl.binding(TemplateVariable.VERSION.getVariable(),now);
         tpl.binding(TemplateVariable.CREATE_TIME.getVariable(), strTime);
+        if (null != config.getLanguage()) {
+            if (DocLanguage.CHINESE.code.equals(config.getLanguage().getCode())) {
+                tpl.binding(TemplateVariable.ERROR_LIST_TITLE.getVariable(), DocGlobalConstants.ERROR_CODE_LIST_CN_TITLE);
+            } else {
+                tpl.binding(TemplateVariable.ERROR_LIST_TITLE.getVariable(), DocGlobalConstants.ERROR_CODE_LIST_EN_TITLE);
+            }
+        } else {
+            tpl.binding(TemplateVariable.ERROR_LIST_TITLE.getVariable(), DocGlobalConstants.ERROR_CODE_LIST_CN_TITLE);
+        }
         FileUtil.nioWriteFile(tpl.render(), outPath + FILE_SEPARATOR + outPutFileName);
     }
 

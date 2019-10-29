@@ -86,7 +86,7 @@ ${doc.responseUsage}
 <% } %>
 <% } %>
 <%if(isNotEmpty(errorCodeList)){%>
-== Error code list
+== ${errorListTitle}
 
 [width="100%",options="header"]
 [stripes=even]
