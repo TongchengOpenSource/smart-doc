@@ -99,6 +99,8 @@
 	1. 修改gitee上bug #I1426C。
 	2. 修改gitee上bug #I13ZAL,1.7.0~1.7.3 结构优化后产生的bug，建议用户升级。
 	3. 修改gitee上bug #I13U4C。
+	4. 修改设置中文语言环境(默认中文)下错误码列表title显示英文的问题。
+	5. 优化AllInOne的markdown展示，生成时带上自动产生的序号。
 	
 	
 	
