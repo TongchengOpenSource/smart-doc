@@ -25,16 +25,16 @@ for(doc in api.list){
 **Content-Type:** ${doc.contentType}
 
 **Description:** ${doc.detail}
-
 <%if(isNotEmpty(doc.headers)){%>
+
 **Request-headers:**
 
 Header | Type|Description|Required|Since
 ---|---|---|---|----
 ${doc.headers}
 <%}%>
-
 <%if(isNotEmpty(doc.requestParams)){%>
+
 **Request-parameters:**
 
 Parameter | Type|Description|Required|Since
