@@ -453,215 +453,207 @@ public class SourceBuilder {
             out:
             for (JavaField field : fields) {
                 String fieldName = field.getName();
-                if (!"serialVersionUID".equals(fieldName)) {
+                if ("this$0".equals(fieldName) || "serialVersionUID".equals(fieldName)) {
+                    continue;
+                }
+                String typeSimpleName = field.getType().getSimpleName();
+                String subTypeName = field.getType().getFullyQualifiedName();
+                String fieldGicName = field.getType().getGenericCanonicalName();
+                List<JavaAnnotation> javaAnnotations = field.getAnnotations();
 
-                    String typeSimpleName = field.getType().getSimpleName();
-                    String subTypeName = field.getType().getFullyQualifiedName();
-                    String fieldGicName = field.getType().getGenericCanonicalName();
-                    List<JavaAnnotation> javaAnnotations = field.getAnnotations();
-
-                    List<DocletTag> paramTags = field.getTags();
-                    String since = DocGlobalConstants.DEFAULT_VERSION;//since tag value
-                    if (!isResp) {
-                        pre:
-                        for (DocletTag docletTag : paramTags) {
-                            if (DocClassUtil.isIgnoreTag(docletTag.getName())) {
-                                continue out;
-                            } else if (DocTags.SINCE.equals(docletTag.getName())) {
-                                since = docletTag.getValue();
-                            }
-                        }
-                    } else {
-                        for (DocletTag docletTag : paramTags) {
-                            if (DocTags.SINCE.equals(docletTag.getName())) {
-                                since = docletTag.getValue();
-                            }
-                        }
-                    }
-
-                    boolean strRequired = false;
-                    int annotationCounter = 0;
-                    an:
-                    for (JavaAnnotation annotation : javaAnnotations) {
-                        String annotationName = annotation.getType().getSimpleName();
-                        if (DocAnnotationConstants.SHORT_JSON_IGNORE.equals(annotationName) && isResp) {
+                List<DocletTag> paramTags = field.getTags();
+                String since = DocGlobalConstants.DEFAULT_VERSION;//since tag value
+                if (!isResp) {
+                    pre:
+                    for (DocletTag docletTag : paramTags) {
+                        if (DocClassUtil.isIgnoreTag(docletTag.getName())) {
                             continue out;
-                        } else if (DocAnnotationConstants.SHORT_JSON_FIELD.equals(annotationName) && isResp) {
-                            if (null != annotation.getProperty(DocAnnotationConstants.SERIALIZE_PROP)) {
-                                if ("false".equals(annotation.getProperty(DocAnnotationConstants.SERIALIZE_PROP).toString())) {
-                                    continue out;
-                                }
-                            } else if (null != annotation.getProperty(DocAnnotationConstants.NAME_PROP)) {
-                                fieldName = annotation.getProperty(DocAnnotationConstants.NAME_PROP).toString().replace("\"", "");
-                            }
-                        } else if (DocAnnotationConstants.SHORT_JSON_PROPERTY.equals(annotationName) && isResp) {
-                            if (null != annotation.getProperty(DocAnnotationConstants.VALUE_PROP)) {
-                                fieldName = annotation.getProperty(DocAnnotationConstants.VALUE_PROP).toString().replace("\"", "");
-                            }
-                        } else if (DocClassUtil.isJSR303Required(annotationName)) {
-                            strRequired = true;
-                            annotationCounter++;
-                            break an;
+                        } else if (DocTags.SINCE.equals(docletTag.getName())) {
+                            since = docletTag.getValue();
                         }
                     }
-                    if (annotationCounter < 1) {
-                        doc:
-                        for (DocletTag docletTag : paramTags) {
-                            if (DocClassUtil.isRequiredTag(docletTag.getName())) {
-                                strRequired = true;
-                                break doc;
-                            }
-                        }
-                    }
-                    //cover comment
-                    CustomRespField customResponseField = responseFieldMap.get(field.getName());
-                    String comment;
-                    if (null != customResponseField && StringUtil.isNotEmpty(customResponseField.getDesc())) {
-                        comment = customResponseField.getDesc();
-                    } else {
-                        comment = field.getComment();
-                    }
-                    if (StringUtil.isNotEmpty(comment)) {
-                        comment = comment.replace("\r\n", "<br>");
-                        comment = comment.replace("\n", "<br>");
-                    }
-                    if (DocClassUtil.isPrimitive(subTypeName)) {
-                        ApiParam param = ApiParam.of().setField(pre + fieldName);
-                        String processedType = DocClassUtil.processTypeNameForParams(typeSimpleName.toLowerCase());
-                        param.setType(processedType);
-                        if (StringUtil.isNotEmpty(comment)) {
-                            commonHandleParam(paramList, param, isRequired, comment, since, strRequired);
-                        } else {
-                            commonHandleParam(paramList, param, isRequired, NO_COMMENTS_FOUND, since, strRequired);
-                        }
-                    } else {
-                        ApiParam param = ApiParam.of().setField(pre + fieldName);
-                        String processedType = DocClassUtil.processTypeNameForParams(typeSimpleName.toLowerCase());
-                        param.setType(processedType);
-                        if (StringUtil.isNotEmpty(comment)) {
-                            commonHandleParam(paramList, param, isRequired, comment, since, strRequired);
-                        } else {
-                            commonHandleParam(paramList, param, isRequired, NO_COMMENTS_FOUND, since, strRequired);
-                        }
-                        StringBuilder preBuilder = new StringBuilder();
-                        for (int j = 0; j < i; j++) {
-                            preBuilder.append(DocGlobalConstants.FIELD_SPACE);
-                        }
-                        preBuilder.append("└─");
-                        if (DocClassUtil.isMap(subTypeName)) {
-                            String gNameTemp = field.getType().getGenericCanonicalName();
-                            if (DocGlobalConstants.JAVA_MAP_FULLY.equals(gNameTemp)) {
-                                ApiParam param1 = ApiParam.of().setField(preBuilder.toString() + "any object")
-                                        .setType("object").setDesc(DocGlobalConstants.ANY_OBJECT_MSG).setVersion(DocGlobalConstants.DEFAULT_VERSION);
-                                paramList.add(param1);
-                                continue;
-                            }
-                            String valType = DocClassUtil.getMapKeyValueType(gNameTemp)[1];
-                            if (!DocClassUtil.isPrimitive(valType)) {
-                                if (valType.length() == 1) {
-                                    String gicName = (n < globGicName.length) ? globGicName[n] : globGicName[globGicName.length - 1];
-                                    if (!DocClassUtil.isPrimitive(gicName) && !simpleName.equals(gicName)) {
-                                        paramList.addAll(buildParams(gicName, preBuilder.toString(), i + 1, isRequired, responseFieldMap, isResp, false));
-                                    }
-                                } else {
-                                    paramList.addAll(buildParams(valType, preBuilder.toString(), i + 1, isRequired, responseFieldMap, isResp, false));
-                                }
-                            }
-                        } else if (DocClassUtil.isCollection(subTypeName)) {
-                            String gNameTemp = field.getType().getGenericCanonicalName();
-                            String[] gNameArr = DocClassUtil.getSimpleGicName(gNameTemp);
-                            if (gNameArr.length == 0) {
-                                continue out;
-                            }
-                            String gName = DocClassUtil.getSimpleGicName(gNameTemp)[0];
-                            if (!DocClassUtil.isPrimitive(gName)) {
-                                if (!simpleName.equals(gName) && !gName.equals(simpleName)) {
-                                    if (gName.length() == 1) {
-                                        int len = globGicName.length;
-                                        if (len > 0) {
-                                            String gicName = (n < len) ? globGicName[n] : globGicName[len - 1];
-                                            if (!DocClassUtil.isPrimitive(gicName) && !simpleName.equals(gicName)) {
-                                                paramList.addAll(buildParams(gicName, preBuilder.toString(), i + 1, isRequired, responseFieldMap, isResp, false));
-                                            }
-                                        }
-                                    } else {
-                                        JavaClass javaClass = this.javaFilesMap.get(gName);
-                                        List<JavaField> javaFields = getFields(javaClass, 0);
-                                        boolean isNotCircularReference = true;
-                                        circularReference:
-                                        for (JavaField field1 : javaFields) {
-                                            String fieldGicName1 = field1.getType().getGenericCanonicalName();
-                                            if (fieldGicName1.contains(className)) {
-                                                isNotCircularReference = false;
-                                                break circularReference;
-                                            }
-                                        }
-                                        if (isNotCircularReference) {
-                                            paramList.addAll(buildParams(gName, preBuilder.toString(), i + 1, isRequired, responseFieldMap, isResp, false));
-                                        } else {
-                                            paramList.addAll(buildParams(gName, preBuilder.toString(), i + 1, isRequired, responseFieldMap, isResp, true));
-                                        }
-
-                                    }
-                                }
-                            }
-                        } else if (subTypeName.length() == 1 || DocGlobalConstants.JAVA_OBJECT_FULLY.equals(subTypeName)) {
-                            if (!simpleName.equals(className)) {
-                                if (n < globGicName.length) {
-                                    String gicName = globGicName[n];
-                                    String simple = DocClassUtil.getSimpleName(gicName);
-                                    if (DocClassUtil.isPrimitive(simple)) {
-                                        //do nothing
-                                    } else if (gicName.contains("<")) {
-                                        if (DocClassUtil.isCollection(simple)) {
-                                            String gName = DocClassUtil.getSimpleGicName(gicName)[0];
-                                            if (!DocClassUtil.isPrimitive(gName)) {
-                                                paramList.addAll(buildParams(gName, preBuilder.toString(), i + 1, isRequired, responseFieldMap, isResp, false));
-                                            }
-                                        } else if (DocClassUtil.isMap(simple)) {
-                                            String valType = DocClassUtil.getMapKeyValueType(gicName)[1];
-                                            if (!DocClassUtil.isPrimitive(valType)) {
-                                                paramList.addAll(buildParams(valType, preBuilder.toString(), i + 1, isRequired, responseFieldMap, isResp, false));
-                                            }
-                                        } else {
-                                            paramList.addAll(buildParams(gicName, preBuilder.toString(), i + 1, isRequired, responseFieldMap, isResp, false));
-                                        }
-                                    } else {
-                                        paramList.addAll(buildParams(gicName, preBuilder.toString(), i + 1, isRequired, responseFieldMap, isResp, false));
-                                    }
-                                } else {
-                                    paramList.addAll(buildParams(subTypeName, preBuilder.toString(), i + 1, isRequired, responseFieldMap, isResp, false));
-                                }
-                            }
-                            n++;
-                        } else if (DocClassUtil.isArray(subTypeName)) {
-                            fieldGicName = fieldGicName.substring(0, fieldGicName.indexOf("["));
-                            if (className.equals(fieldGicName)) {
-                                //do nothing
-                            } else if (!DocClassUtil.isPrimitive(fieldGicName)) {
-                                paramList.addAll(buildParams(fieldGicName, preBuilder.toString(), i + 1, isRequired, responseFieldMap, isResp, false));
-                            }
-                        } else if (simpleName.equals(subTypeName)) {
-                            //do nothing
-                        } else {
-                            paramList.addAll(buildParams(fieldGicName, preBuilder.toString(), i + 1, isRequired, responseFieldMap, isResp, false));
+                } else {
+                    for (DocletTag docletTag : paramTags) {
+                        if (DocTags.SINCE.equals(docletTag.getName())) {
+                            since = docletTag.getValue();
                         }
                     }
                 }
+
+                boolean strRequired = false;
+                int annotationCounter = 0;
+                an:
+                for (JavaAnnotation annotation : javaAnnotations) {
+                    String annotationName = annotation.getType().getSimpleName();
+                    if (DocAnnotationConstants.SHORT_JSON_IGNORE.equals(annotationName) && isResp) {
+                        continue out;
+                    } else if (DocAnnotationConstants.SHORT_JSON_FIELD.equals(annotationName) && isResp) {
+                        if (null != annotation.getProperty(DocAnnotationConstants.SERIALIZE_PROP)) {
+                            if ("false".equals(annotation.getProperty(DocAnnotationConstants.SERIALIZE_PROP).toString())) {
+                                continue out;
+                            }
+                        } else if (null != annotation.getProperty(DocAnnotationConstants.NAME_PROP)) {
+                            fieldName = annotation.getProperty(DocAnnotationConstants.NAME_PROP).toString().replace("\"", "");
+                        }
+                    } else if (DocAnnotationConstants.SHORT_JSON_PROPERTY.equals(annotationName) && isResp) {
+                        if (null != annotation.getProperty(DocAnnotationConstants.VALUE_PROP)) {
+                            fieldName = annotation.getProperty(DocAnnotationConstants.VALUE_PROP).toString().replace("\"", "");
+                        }
+                    } else if (DocClassUtil.isJSR303Required(annotationName)) {
+                        strRequired = true;
+                        annotationCounter++;
+                        break an;
+                    }
+                }
+                if (annotationCounter < 1) {
+                    doc:
+                    for (DocletTag docletTag : paramTags) {
+                        if (DocClassUtil.isRequiredTag(docletTag.getName())) {
+                            strRequired = true;
+                            break doc;
+                        }
+                    }
+                }
+                //cover comment
+                CustomRespField customResponseField = responseFieldMap.get(field.getName());
+                String comment;
+                if (null != customResponseField && StringUtil.isNotEmpty(customResponseField.getDesc())) {
+                    comment = customResponseField.getDesc();
+                } else {
+                    comment = field.getComment();
+                }
+                if (StringUtil.isNotEmpty(comment)) {
+                    comment = comment.replace("\r\n", "<br>");
+                    comment = comment.replace("\n", "<br>");
+                }
+                if (DocClassUtil.isPrimitive(subTypeName)) {
+                    ApiParam param = ApiParam.of().setField(pre + fieldName);
+                    String processedType = DocClassUtil.processTypeNameForParams(typeSimpleName.toLowerCase());
+                    param.setType(processedType);
+                    if (StringUtil.isNotEmpty(comment)) {
+                        commonHandleParam(paramList, param, isRequired, comment, since, strRequired);
+                    } else {
+                        commonHandleParam(paramList, param, isRequired, NO_COMMENTS_FOUND, since, strRequired);
+                    }
+                } else {
+                    ApiParam param = ApiParam.of().setField(pre + fieldName);
+                    String processedType = DocClassUtil.processTypeNameForParams(typeSimpleName.toLowerCase());
+                    param.setType(processedType);
+                    if (StringUtil.isNotEmpty(comment)) {
+                        commonHandleParam(paramList, param, isRequired, comment, since, strRequired);
+                    } else {
+                        commonHandleParam(paramList, param, isRequired, NO_COMMENTS_FOUND, since, strRequired);
+                    }
+                    StringBuilder preBuilder = new StringBuilder();
+                    for (int j = 0; j < i; j++) {
+                        preBuilder.append(DocGlobalConstants.FIELD_SPACE);
+                    }
+                    preBuilder.append("└─");
+                    if (DocClassUtil.isMap(subTypeName)) {
+                        String gNameTemp = field.getType().getGenericCanonicalName();
+                        if (DocGlobalConstants.JAVA_MAP_FULLY.equals(gNameTemp)) {
+                            ApiParam param1 = ApiParam.of().setField(preBuilder.toString() + "any object")
+                                    .setType("object").setDesc(DocGlobalConstants.ANY_OBJECT_MSG).setVersion(DocGlobalConstants.DEFAULT_VERSION);
+                            paramList.add(param1);
+                            continue;
+                        }
+                        String valType = DocClassUtil.getMapKeyValueType(gNameTemp)[1];
+                        if (!DocClassUtil.isPrimitive(valType)) {
+                            if (valType.length() == 1) {
+                                String gicName = (n < globGicName.length) ? globGicName[n] : globGicName[globGicName.length - 1];
+                                if (!DocClassUtil.isPrimitive(gicName) && !simpleName.equals(gicName)) {
+                                    paramList.addAll(buildParams(gicName, preBuilder.toString(), i + 1, isRequired, responseFieldMap, isResp, false));
+                                }
+                            } else {
+                                paramList.addAll(buildParams(valType, preBuilder.toString(), i + 1, isRequired, responseFieldMap, isResp, false));
+                            }
+                        }
+                    } else if (DocClassUtil.isCollection(subTypeName)) {
+                        String gNameTemp = field.getType().getGenericCanonicalName();
+                        String[] gNameArr = DocClassUtil.getSimpleGicName(gNameTemp);
+                        if (gNameArr.length == 0) {
+                            continue out;
+                        }
+                        String gName = DocClassUtil.getSimpleGicName(gNameTemp)[0];
+                        if (!DocClassUtil.isPrimitive(gName)) {
+                            if (!simpleName.equals(gName) && !gName.equals(simpleName)) {
+                                if (gName.length() == 1) {
+                                    int len = globGicName.length;
+                                    if (len > 0) {
+                                        String gicName = (n < len) ? globGicName[n] : globGicName[len - 1];
+                                        if (!DocClassUtil.isPrimitive(gicName) && !simpleName.equals(gicName)) {
+                                            paramList.addAll(buildParams(gicName, preBuilder.toString(), i + 1, isRequired, responseFieldMap, isResp, false));
+                                        }
+                                    }
+                                } else {
+                                    JavaClass javaClass = this.javaFilesMap.get(gName);
+                                    List<JavaField> javaFields = getFields(javaClass, 0);
+                                    boolean isNotCircularReference = true;
+                                    circularReference:
+                                    for (JavaField field1 : javaFields) {
+                                        String fieldGicName1 = field1.getType().getGenericCanonicalName();
+                                        if (fieldGicName1.contains(className)) {
+                                            isNotCircularReference = false;
+                                            break circularReference;
+                                        }
+                                    }
+                                    if (isNotCircularReference) {
+                                        paramList.addAll(buildParams(gName, preBuilder.toString(), i + 1, isRequired, responseFieldMap, isResp, false));
+                                    } else {
+                                        paramList.addAll(buildParams(gName, preBuilder.toString(), i + 1, isRequired, responseFieldMap, isResp, true));
+                                    }
+
+                                }
+                            }
+                        }
+                    } else if (subTypeName.length() == 1 || DocGlobalConstants.JAVA_OBJECT_FULLY.equals(subTypeName)) {
+                        if (!simpleName.equals(className)) {
+                            if (n < globGicName.length) {
+                                String gicName = globGicName[n];
+                                String simple = DocClassUtil.getSimpleName(gicName);
+                                if (DocClassUtil.isPrimitive(simple)) {
+                                    //do nothing
+                                } else if (gicName.contains("<")) {
+                                    if (DocClassUtil.isCollection(simple)) {
+                                        String gName = DocClassUtil.getSimpleGicName(gicName)[0];
+                                        if (!DocClassUtil.isPrimitive(gName)) {
+                                            paramList.addAll(buildParams(gName, preBuilder.toString(), i + 1, isRequired, responseFieldMap, isResp, false));
+                                        }
+                                    } else if (DocClassUtil.isMap(simple)) {
+                                        String valType = DocClassUtil.getMapKeyValueType(gicName)[1];
+                                        if (!DocClassUtil.isPrimitive(valType)) {
+                                            paramList.addAll(buildParams(valType, preBuilder.toString(), i + 1, isRequired, responseFieldMap, isResp, false));
+                                        }
+                                    } else {
+                                        paramList.addAll(buildParams(gicName, preBuilder.toString(), i + 1, isRequired, responseFieldMap, isResp, false));
+                                    }
+                                } else {
+                                    paramList.addAll(buildParams(gicName, preBuilder.toString(), i + 1, isRequired, responseFieldMap, isResp, false));
+                                }
+                            } else {
+                                paramList.addAll(buildParams(subTypeName, preBuilder.toString(), i + 1, isRequired, responseFieldMap, isResp, false));
+                            }
+                        }
+                        n++;
+                    } else if (DocClassUtil.isArray(subTypeName)) {
+                        fieldGicName = fieldGicName.substring(0, fieldGicName.indexOf("["));
+                        if (className.equals(fieldGicName)) {
+                            //do nothing
+                        } else if (!DocClassUtil.isPrimitive(fieldGicName)) {
+                            paramList.addAll(buildParams(fieldGicName, preBuilder.toString(), i + 1, isRequired, responseFieldMap, isResp, false));
+                        }
+                    } else if (simpleName.equals(subTypeName)) {
+                        //do nothing
+                    } else {
+                        paramList.addAll(buildParams(fieldGicName, preBuilder.toString(), i + 1, isRequired, responseFieldMap, isResp, false));
+                    }
+                }
+
             }
         }
 
         return paramList;
 
-    }
-
-    private JavaClass getJavaClass(String simpleName) {
-        JavaClass cls = builder.getClassByName(simpleName);
-        //handle inner class
-        if (Objects.isNull(cls.getFields()) || cls.getFields().isEmpty()) {
-            cls = javaFilesMap.get(simpleName);
-        }
-        return cls;
     }
 
 
@@ -780,171 +772,173 @@ public class SourceBuilder {
             out:
             for (JavaField field : fields) {
                 String fieldName = field.getName();
-                if (!"serialVersionUID".equals(fieldName)) {
-                    List<DocletTag> paramTags = field.getTags();
-                    if (!isResp) {
-                        pre:
-                        for (DocletTag docletTag : paramTags) {
-                            if (DocClassUtil.isIgnoreTag(docletTag.getName())) {
+                if ("this$0".equals(fieldName) || "serialVersionUID".equals(fieldName)) {
+                    continue;
+                }
+                List<DocletTag> paramTags = field.getTags();
+                if (!isResp) {
+                    pre:
+                    for (DocletTag docletTag : paramTags) {
+                        if (DocClassUtil.isIgnoreTag(docletTag.getName())) {
+                            continue out;
+                        }
+                    }
+                }
+                List<JavaAnnotation> annotations = field.getAnnotations();
+                for (JavaAnnotation annotation : annotations) {
+                    String annotationName = annotation.getType().getSimpleName();
+                    if (DocAnnotationConstants.SHORT_JSON_IGNORE.equals(annotationName) && isResp) {
+                        continue out;
+                    } else if (DocAnnotationConstants.SHORT_JSON_FIELD.equals(annotationName) && isResp) {
+                        if (null != annotation.getProperty(DocAnnotationConstants.SERIALIZE_PROP)) {
+                            if ("false".equals(annotation.getProperty(DocAnnotationConstants.SERIALIZE_PROP).toString())) {
                                 continue out;
                             }
+                        } else if (null != annotation.getProperty(DocAnnotationConstants.NAME_PROP)) {
+                            fieldName = annotation.getProperty(DocAnnotationConstants.NAME_PROP).toString().replace("\"", "");
+                        }
+                    } else if (DocAnnotationConstants.SHORT_JSON_PROPERTY.equals(annotationName) && isResp) {
+                        if (null != annotation.getProperty(DocAnnotationConstants.VALUE_PROP)) {
+                            fieldName = annotation.getProperty(DocAnnotationConstants.VALUE_PROP).toString().replace("\"", "");
                         }
                     }
-                    List<JavaAnnotation> annotations = field.getAnnotations();
-                    for (JavaAnnotation annotation : annotations) {
-                        String annotationName = annotation.getType().getSimpleName();
-                        if (DocAnnotationConstants.SHORT_JSON_IGNORE.equals(annotationName) && isResp) {
-                            continue out;
-                        } else if (DocAnnotationConstants.SHORT_JSON_FIELD.equals(annotationName) && isResp) {
-                            if (null != annotation.getProperty(DocAnnotationConstants.SERIALIZE_PROP)) {
-                                if ("false".equals(annotation.getProperty(DocAnnotationConstants.SERIALIZE_PROP).toString())) {
-                                    continue out;
-                                }
-                            } else if (null != annotation.getProperty(DocAnnotationConstants.NAME_PROP)) {
-                                fieldName = annotation.getProperty(DocAnnotationConstants.NAME_PROP).toString().replace("\"", "");
-                            }
-                        } else if (DocAnnotationConstants.SHORT_JSON_PROPERTY.equals(annotationName) && isResp) {
-                            if (null != annotation.getProperty(DocAnnotationConstants.VALUE_PROP)) {
-                                fieldName = annotation.getProperty(DocAnnotationConstants.VALUE_PROP).toString().replace("\"", "");
-                            }
-                        }
-                    }
-                    String typeSimpleName = field.getType().getSimpleName();
-                    String subTypeName = field.getType().getFullyQualifiedName();
-                    String fieldGicName = field.getType().getGenericCanonicalName();
-                    data0.append("\"").append(fieldName).append("\":");
-                    if (DocClassUtil.isPrimitive(typeSimpleName)) {
-                        CustomRespField customResponseField = responseFieldMap.get(fieldName);
-                        if (null != customResponseField) {
-                            Object val = customResponseField.getValue();
-                            if (null != val) {
-                                if ("String".equals(typeSimpleName)) {
-                                    data0.append("\"").append(val).append("\",");
-                                } else {
-                                    data0.append(val).append(",");
-                                }
+                }
+                String typeSimpleName = field.getType().getSimpleName();
+                String subTypeName = field.getType().getFullyQualifiedName();
+                String fieldGicName = field.getType().getGenericCanonicalName();
+                data0.append("\"").append(fieldName).append("\":");
+                if (DocClassUtil.isPrimitive(typeSimpleName)) {
+                    CustomRespField customResponseField = responseFieldMap.get(fieldName);
+                    if (null != customResponseField) {
+                        Object val = customResponseField.getValue();
+                        if (null != val) {
+                            if ("String".equals(typeSimpleName)) {
+                                data0.append("\"").append(val).append("\",");
                             } else {
-                                data0.append(DocUtil.getValByTypeAndFieldName(typeSimpleName, field.getName())).append(",");
+                                data0.append(val).append(",");
                             }
                         } else {
                             data0.append(DocUtil.getValByTypeAndFieldName(typeSimpleName, field.getName())).append(",");
                         }
                     } else {
-                        if (DocClassUtil.isCollection(subTypeName) || DocClassUtil.isArray(subTypeName)) {
-                            fieldGicName = DocClassUtil.isArray(subTypeName) ? fieldGicName.substring(0, fieldGicName.indexOf("[")) : fieldGicName;
-                            if (DocClassUtil.getSimpleGicName(fieldGicName).length == 0) {
+                        data0.append(DocUtil.getValByTypeAndFieldName(typeSimpleName, field.getName())).append(",");
+                    }
+                } else {
+                    if (DocClassUtil.isCollection(subTypeName) || DocClassUtil.isArray(subTypeName)) {
+                        fieldGicName = DocClassUtil.isArray(subTypeName) ? fieldGicName.substring(0, fieldGicName.indexOf("[")) : fieldGicName;
+                        if (DocClassUtil.getSimpleGicName(fieldGicName).length == 0) {
+                            data0.append("{\"object\":\"any object\"},");
+                            continue out;
+                        }
+                        String gicName = DocClassUtil.getSimpleGicName(fieldGicName)[0];
+
+                        if (DocGlobalConstants.JAVA_STRING_FULLY.equals(gicName)) {
+                            data0.append("[").append("\"").append(buildJson(gicName, fieldGicName, responseFieldMap, isResp, counter + 1, false)).append("\"]").append(",");
+                        } else if (DocGlobalConstants.JAVA_LIST_FULLY.equals(gicName)) {
+                            data0.append("{\"object\":\"any object\"},");
+                        } else if (gicName.length() == 1) {
+                            if (globGicName.length == 0) {
                                 data0.append("{\"object\":\"any object\"},");
                                 continue out;
                             }
-                            String gicName = DocClassUtil.getSimpleGicName(fieldGicName)[0];
-
-                            if (DocGlobalConstants.JAVA_STRING_FULLY.equals(gicName)) {
-                                data0.append("[").append("\"").append(buildJson(gicName, fieldGicName, responseFieldMap, isResp, counter + 1, false)).append("\"]").append(",");
-                            } else if (DocGlobalConstants.JAVA_LIST_FULLY.equals(gicName)) {
-                                data0.append("{\"object\":\"any object\"},");
-                            } else if (gicName.length() == 1) {
-                                if (globGicName.length == 0) {
-                                    data0.append("{\"object\":\"any object\"},");
-                                    continue out;
-                                }
-                                String gicName1 = (i < globGicName.length) ? globGicName[i] : globGicName[globGicName.length - 1];
-                                if (DocGlobalConstants.JAVA_STRING_FULLY.equals(gicName1)) {
-                                    data0.append("[").append("\"").append(buildJson(gicName1, gicName1, responseFieldMap, isResp, counter + 1, false)).append("\"]").append(",");
-                                } else {
-                                    if (!typeName.equals(gicName1)) {
-                                        data0.append("[").append(buildJson(DocClassUtil.getSimpleName(gicName1), gicName1, responseFieldMap, isResp, counter + 1, false)).append("]").append(",");
-                                    } else {
-                                        data0.append("[{\"$ref\":\"..\"}]").append(",");
-                                    }
-
-                                }
+                            String gicName1 = (i < globGicName.length) ? globGicName[i] : globGicName[globGicName.length - 1];
+                            if (DocGlobalConstants.JAVA_STRING_FULLY.equals(gicName1)) {
+                                data0.append("[").append("\"").append(buildJson(gicName1, gicName1, responseFieldMap, isResp, counter + 1, false)).append("\"]").append(",");
                             } else {
-                                if (!typeName.equals(gicName)) {
-                                    if (MAP_CLASS.equals(gicName)) {
-                                        data0.append("[{\"mapKey\":{}}],");
-                                        continue out;
-                                    }
-                                    JavaClass javaClass = this.javaFilesMap.get(gicName);
-                                    List<JavaField> javaFields = getFields(javaClass, 0);
-                                    boolean isNotCircularReference = true;
-                                    circularReference:
-                                    for (JavaField field1 : javaFields) {
-                                        String fieldGicName1 = field1.getType().getGenericCanonicalName();
-                                        if (fieldGicName1.contains(typeName)) {
-                                            isNotCircularReference = false;
-                                            break circularReference;
-                                        }
-                                    }
-                                    if (isNotCircularReference) {
-                                        data0.append("[").append(buildJson(gicName, fieldGicName, responseFieldMap, isResp, counter + 1, false)).append("]").append(",");
-                                    } else {
-                                        data0.append("[").append(buildJson(gicName, fieldGicName, responseFieldMap, isResp, counter + 1, true)).append("]").append(",");
-                                    }
+                                if (!typeName.equals(gicName1)) {
+                                    data0.append("[").append(buildJson(DocClassUtil.getSimpleName(gicName1), gicName1, responseFieldMap, isResp, counter + 1, false)).append("]").append(",");
                                 } else {
                                     data0.append("[{\"$ref\":\"..\"}]").append(",");
                                 }
-                            }
-                        } else if (DocClassUtil.isMap(subTypeName)) {
-                            if (DocGlobalConstants.JAVA_MAP_FULLY.equals(subTypeName)) {
-                                data0.append("{").append("\"mapKey\":{}},");
-                                continue out;
-                            }
-                            String gicName = fieldGicName.substring(fieldGicName.indexOf(",") + 1, fieldGicName.indexOf(">"));
-                            if (gicName.length() == 1) {
-                                String gicName1 = (i < globGicName.length) ? globGicName[i] : globGicName[globGicName.length - 1];
-                                if (DocGlobalConstants.JAVA_STRING_FULLY.equals(gicName1)) {
-                                    data0.append("{").append("\"mapKey\":\"").append(buildJson(gicName1, gicName1, responseFieldMap, isResp, counter + 1, false)).append("\"},");
-                                } else {
-                                    if (!typeName.equals(gicName1)) {
-                                        data0.append("{").append("\"mapKey\":").append(buildJson(DocClassUtil.getSimpleName(gicName1), gicName1, responseFieldMap, isResp, counter + 1, false)).append("},");
-                                    } else {
-                                        data0.append("{\"mapKey\":{}},");
-                                    }
-                                }
-                            } else {
-                                data0.append("{").append("\"mapKey\":").append(buildJson(gicName, fieldGicName, responseFieldMap, isResp, counter + 1, false)).append("},");
 
                             }
-                        } else if (subTypeName.length() == 1) {
-                            if (!typeName.equals(genericCanonicalName)) {
-                                String gicName = globGicName[i];
-                                if (gicName.contains("<")) {
-                                    String simple = DocClassUtil.getSimpleName(gicName);
-                                    data0.append(buildJson(simple, gicName, responseFieldMap, isResp, counter + 1, false)).append(",");
-                                } else {
-                                    if (DocClassUtil.isPrimitive(gicName)) {
-                                        data0.append(DocUtil.jsonValueByType(gicName)).append(",");
-                                    } else {
-                                        data0.append(buildJson(gicName, gicName, responseFieldMap, isResp, counter + 1, false)).append(",");
-                                    }
-                                }
-                            } else {
-                                data0.append("{\"waring\":\"You may have used non-display generics.\"},");
-                            }
-                            i++;
-                        } else if (DocGlobalConstants.JAVA_OBJECT_FULLY.equals(subTypeName)) {
-                            if (i < globGicName.length) {
-                                String gicName = globGicName[i];
-                                if (!typeName.equals(genericCanonicalName)) {
-                                    if (DocClassUtil.isPrimitive(gicName)) {
-                                        data0.append("\"").append(buildJson(gicName, genericCanonicalName, responseFieldMap, isResp, counter + 1, false)).append("\",");
-                                    } else {
-                                        data0.append(buildJson(gicName, gicName, responseFieldMap, isResp, counter + 1, false)).append(",");
-                                    }
-                                } else {
-                                    data0.append("{\"waring\":\"You may have used non-display generics.\"},");
-                                }
-                            } else {
-                                data0.append("{\"waring\":\"You may have used non-display generics.\"},");
-                            }
-                        } else if (typeName.equals(subTypeName)) {
-                            data0.append("{\"$ref\":\"...\"}").append(",");
                         } else {
-                            //
-                            data0.append(buildJson(subTypeName, fieldGicName, responseFieldMap, isResp, counter + 1, false)).append(",");
+                            if (!typeName.equals(gicName)) {
+                                if (MAP_CLASS.equals(gicName)) {
+                                    data0.append("[{\"mapKey\":{}}],");
+                                    continue out;
+                                }
+                                JavaClass javaClass = this.javaFilesMap.get(gicName);
+                                List<JavaField> javaFields = getFields(javaClass, 0);
+                                boolean isNotCircularReference = true;
+                                circularReference:
+                                for (JavaField field1 : javaFields) {
+                                    String fieldGicName1 = field1.getType().getGenericCanonicalName();
+                                    if (fieldGicName1.contains(typeName)) {
+                                        isNotCircularReference = false;
+                                        break circularReference;
+                                    }
+                                }
+                                if (isNotCircularReference) {
+                                    data0.append("[").append(buildJson(gicName, fieldGicName, responseFieldMap, isResp, counter + 1, false)).append("]").append(",");
+                                } else {
+                                    data0.append("[").append(buildJson(gicName, fieldGicName, responseFieldMap, isResp, counter + 1, true)).append("]").append(",");
+                                }
+                            } else {
+                                data0.append("[{\"$ref\":\"..\"}]").append(",");
+                            }
                         }
+                    } else if (DocClassUtil.isMap(subTypeName)) {
+                        if (DocGlobalConstants.JAVA_MAP_FULLY.equals(subTypeName)) {
+                            data0.append("{").append("\"mapKey\":{}},");
+                            continue out;
+                        }
+                        String gicName = fieldGicName.substring(fieldGicName.indexOf(",") + 1, fieldGicName.indexOf(">"));
+                        if (gicName.length() == 1) {
+                            String gicName1 = (i < globGicName.length) ? globGicName[i] : globGicName[globGicName.length - 1];
+                            if (DocGlobalConstants.JAVA_STRING_FULLY.equals(gicName1)) {
+                                data0.append("{").append("\"mapKey\":\"").append(buildJson(gicName1, gicName1, responseFieldMap, isResp, counter + 1, false)).append("\"},");
+                            } else {
+                                if (!typeName.equals(gicName1)) {
+                                    data0.append("{").append("\"mapKey\":").append(buildJson(DocClassUtil.getSimpleName(gicName1), gicName1, responseFieldMap, isResp, counter + 1, false)).append("},");
+                                } else {
+                                    data0.append("{\"mapKey\":{}},");
+                                }
+                            }
+                        } else {
+                            data0.append("{").append("\"mapKey\":").append(buildJson(gicName, fieldGicName, responseFieldMap, isResp, counter + 1, false)).append("},");
+
+                        }
+                    } else if (subTypeName.length() == 1) {
+                        if (!typeName.equals(genericCanonicalName)) {
+                            String gicName = globGicName[i];
+                            if (gicName.contains("<")) {
+                                String simple = DocClassUtil.getSimpleName(gicName);
+                                data0.append(buildJson(simple, gicName, responseFieldMap, isResp, counter + 1, false)).append(",");
+                            } else {
+                                if (DocClassUtil.isPrimitive(gicName)) {
+                                    data0.append(DocUtil.jsonValueByType(gicName)).append(",");
+                                } else {
+                                    data0.append(buildJson(gicName, gicName, responseFieldMap, isResp, counter + 1, false)).append(",");
+                                }
+                            }
+                        } else {
+                            data0.append("{\"waring\":\"You may have used non-display generics.\"},");
+                        }
+                        i++;
+                    } else if (DocGlobalConstants.JAVA_OBJECT_FULLY.equals(subTypeName)) {
+                        if (i < globGicName.length) {
+                            String gicName = globGicName[i];
+                            if (!typeName.equals(genericCanonicalName)) {
+                                if (DocClassUtil.isPrimitive(gicName)) {
+                                    data0.append("\"").append(buildJson(gicName, genericCanonicalName, responseFieldMap, isResp, counter + 1, false)).append("\",");
+                                } else {
+                                    data0.append(buildJson(gicName, gicName, responseFieldMap, isResp, counter + 1, false)).append(",");
+                                }
+                            } else {
+                                data0.append("{\"waring\":\"You may have used non-display generics.\"},");
+                            }
+                        } else {
+                            data0.append("{\"waring\":\"You may have used non-display generics.\"},");
+                        }
+                    } else if (typeName.equals(subTypeName)) {
+                        data0.append("{\"$ref\":\"...\"}").append(",");
+                    } else {
+                        //
+                        data0.append(buildJson(subTypeName, fieldGicName, responseFieldMap, isResp, counter + 1, false)).append(",");
                     }
                 }
+
             }
         }
         if (data0.toString().contains(",")) {
@@ -1194,6 +1188,21 @@ public class SourceBuilder {
         return null;
     }
 
+    private JavaClass getJavaClass(String simpleName) {
+        JavaClass cls = builder.getClassByName(simpleName);
+        List<JavaField> fieldList = this.getFields(cls, 0);
+        //handle inner class
+        if (Objects.isNull(cls.getFields()) || fieldList.isEmpty()) {
+            cls = javaFilesMap.get(simpleName);
+        } else {
+            List<JavaClass> classList = cls.getNestedClasses();
+            for (JavaClass javaClass : classList) {
+                javaFilesMap.put(javaClass.getFullyQualifiedName(), javaClass);
+            }
+        }
+        return cls;
+    }
+
     /**
      * Get fields
      *
@@ -1230,7 +1239,7 @@ public class SourceBuilder {
                     || DocAnnotationConstants.SHORT_REST_CONTROLLER.equals(annotationName)
                     || DocGlobalConstants.REST_CONTROLLER_FULLY.equals(annotationName)
                     || DocGlobalConstants.CONTROLLER_FULLY.equals(annotationName)
-            ) {
+                    ) {
                 return true;
             }
         }
