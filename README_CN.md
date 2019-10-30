@@ -125,7 +125,7 @@ public class ApiDocTest {
 ## Building
 如果你需要自己构建，那可以使用下面命令，构建需要依赖Java 1.8。
 ```
-mvn clean install
+mvn clean install -Dmaven.test.skip=true
 ```
 ## Releases
 [发布记录](https://gitee.com/sunyurepository/smart-doc/blob/master/RELEASE.md)

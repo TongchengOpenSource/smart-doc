@@ -102,7 +102,7 @@ public class ApiDocTest {
 ## Building
 you can build with the following commands. (Java 1.8 is required to build the master branch)
 ```
-mvn clean install
+mvn clean install -Dmaven.test.skip=true
 ```
 ## Other reference
 - [Smart-doc manual](https://github.com/shalousun/smart-doc/wiki)

@@ -7,6 +7,9 @@ import com.power.doc.model.RevisionLog;
 import com.power.doc.model.SourceCodePath;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Description:
  * ApiDoc测试
@@ -31,7 +34,9 @@ public class ApiDocTest {
      */
     @Test
     public void testBuilderControllersApi() {
-
+        List<String> list = new ArrayList<>();
+        list.add("aa");
+        list.contains("aa");
         ApiConfig config = new ApiConfig();
         config.setServerUrl("http://localhost:8080");
         //config.setStrict(true);
