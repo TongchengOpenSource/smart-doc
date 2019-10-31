@@ -17,6 +17,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 
 import java.io.File;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -42,16 +43,16 @@ public class SourceBuilder {
 
     private static final String JSON_CONTENT_TYPE = "application/json; charset=utf-8";
 
+    private static final String MULTIPART_TYPE = "multipart/form-data";
+
     private static final String MAP_CLASS = "java.util.Map";
 
     private static final String NO_COMMENTS_FOUND = "No comments found.";
 
     private static final String VALID = "Valid";
 
-    private static final String METHOD_DESCRIPTION = "apiNote";
-
-    private Map<String, JavaClass> javaFilesMap = new HashMap<>();
-    private Map<String, CustomRespField> fieldMap = new HashMap<>();
+    private Map<String, JavaClass> javaFilesMap = new ConcurrentHashMap<>();
+    private Map<String, CustomRespField> fieldMap = new ConcurrentHashMap<>();
     private JavaProjectBuilder builder;
     private Collection<JavaClass> javaClasses;
     private boolean isStrict;//Strict mode
@@ -156,8 +157,7 @@ public class SourceBuilder {
         for (JavaAnnotation annotation : classAnnotations) {
             String annotationName = annotation.getType().getName();
             if (REQUEST_MAPPING.equals(annotationName) || DocGlobalConstants.REQUEST_MAPPING_FULLY.equals(annotationName)) {
-                baseUrl = annotation.getNamedParameter("value").toString();
-                baseUrl = baseUrl.replaceAll("\"", "");
+                baseUrl = StringUtil.removeQuotes(annotation.getNamedParameter("value").toString());
             }
         }
         List<JavaMethod> methods = cls.getMethods();
@@ -221,7 +221,6 @@ public class SourceBuilder {
                     methodType = "DELETE";
                     methodCounter++;
                 }
-
             }
             for (JavaParameter javaParameter : method.getParameters()) {
                 List<JavaAnnotation> javaAnnotations = javaParameter.getAnnotations();
@@ -231,7 +230,6 @@ public class SourceBuilder {
                 ApiReqHeader apiReqHeader;
                 for (JavaAnnotation annotation : javaAnnotations) {
                     String annotationName = annotation.getType().getName();
-
                     if (REQUEST_HERDER.equals(annotationName)) {
                         apiReqHeader = new ApiReqHeader();
                         Map<String, Object> requestHeaderMap = annotation.getNamedParameterMap();
@@ -299,7 +297,6 @@ public class SourceBuilder {
             }
         }
         return methodDocList;
-
     }
 
     /**
@@ -358,6 +355,9 @@ public class SourceBuilder {
     }
 
     private List<ApiParam> buildReturnApiParams(JavaMethod method, String controllerName) {
+        if ("void".equals(method.getReturnType().getFullyQualifiedName())) {
+            return null;
+        }
         ApiReturn apiReturn = DocClassUtil.processReturnType(method.getReturnType().getGenericCanonicalName());
         String returnType = apiReturn.getGenericCanonicalName();
         String typeName = apiReturn.getSimpleName();
@@ -632,19 +632,15 @@ public class SourceBuilder {
                         paramList.addAll(buildParams(fieldGicName, preBuilder.toString(), i + 1, isRequired, responseFieldMap, isResp, registryClasses));
                     }
                 }
-
             }
         }
-
         return paramList;
-
     }
 
 
     private List<ApiParam> primitiveReturnRespComment(String typeName) {
         StringBuilder comments = new StringBuilder();
-        comments.append("The api directly returns the ")
-                .append(typeName).append(" type value.");
+        comments.append("The api directly returns the ").append(typeName).append(" type value.");
         ApiParam apiParam = ApiParam.of().setField("no param name")
                 .setType(typeName).setDesc(comments.toString()).setVersion(DocGlobalConstants.DEFAULT_VERSION);
         List<ApiParam> paramList = new ArrayList<>();
@@ -713,7 +709,7 @@ public class SourceBuilder {
                 data.append(DocUtil.jsonValueByType(gName));
             } else if (gName.contains("<")) {
                 String simple = DocClassUtil.getSimpleName(gName);
-                String json = buildJson(simple, gName, responseFieldMap, isResp, counter + 1,  registryClasses);
+                String json = buildJson(simple, gName, responseFieldMap, isResp, counter + 1, registryClasses);
                 data.append(json);
             } else if (DocClassUtil.isCollection(gName)) {
                 data.append("\"any object\"");
@@ -741,10 +737,10 @@ public class SourceBuilder {
                 data.append("\"mapKey2\":").append(DocUtil.jsonValueByType(gicName)).append("}");
             } else if (gicName.contains("<")) {
                 String simple = DocClassUtil.getSimpleName(gicName);
-                String json = buildJson(simple, gicName, responseFieldMap, isResp, counter + 1,  registryClasses);
+                String json = buildJson(simple, gicName, responseFieldMap, isResp, counter + 1, registryClasses);
                 data.append("{").append("\"mapKey\":").append(json).append("}");
             } else {
-                data.append("{").append("\"mapKey\":").append(buildJson(gicName, gNameTemp, responseFieldMap, isResp, counter + 1,  registryClasses)).append("}");
+                data.append("{").append("\"mapKey\":").append(buildJson(gicName, gNameTemp, responseFieldMap, isResp, counter + 1, registryClasses)).append("}");
             }
             return data.toString();
         } else if (DocGlobalConstants.JAVA_OBJECT_FULLY.equals(typeName)) {
@@ -819,7 +815,7 @@ public class SourceBuilder {
                         String gicName = DocClassUtil.getSimpleGicName(fieldGicName)[0];
 
                         if (DocGlobalConstants.JAVA_STRING_FULLY.equals(gicName)) {
-                            data0.append("[").append("\"").append(buildJson(gicName, fieldGicName, responseFieldMap, isResp, counter + 1,  registryClasses)).append("\"]").append(",");
+                            data0.append("[").append("\"").append(buildJson(gicName, fieldGicName, responseFieldMap, isResp, counter + 1, registryClasses)).append("\"]").append(",");
                         } else if (DocGlobalConstants.JAVA_LIST_FULLY.equals(gicName)) {
                             data0.append("{\"object\":\"any object\"},");
                         } else if (gicName.length() == 1) {
@@ -829,14 +825,13 @@ public class SourceBuilder {
                             }
                             String gicName1 = (i < globGicName.length) ? globGicName[i] : globGicName[globGicName.length - 1];
                             if (DocGlobalConstants.JAVA_STRING_FULLY.equals(gicName1)) {
-                                data0.append("[").append("\"").append(buildJson(gicName1, gicName1, responseFieldMap, isResp, counter + 1,  registryClasses)).append("\"]").append(",");
+                                data0.append("[").append("\"").append(buildJson(gicName1, gicName1, responseFieldMap, isResp, counter + 1, registryClasses)).append("\"]").append(",");
                             } else {
                                 if (!typeName.equals(gicName1)) {
-                                    data0.append("[").append(buildJson(DocClassUtil.getSimpleName(gicName1), gicName1, responseFieldMap, isResp, counter + 1,  registryClasses)).append("]").append(",");
+                                    data0.append("[").append(buildJson(DocClassUtil.getSimpleName(gicName1), gicName1, responseFieldMap, isResp, counter + 1, registryClasses)).append("]").append(",");
                                 } else {
                                     data0.append("[{\"$ref\":\"..\"}]").append(",");
                                 }
-
                             }
                         } else {
                             if (!typeName.equals(gicName)) {
@@ -861,14 +856,13 @@ public class SourceBuilder {
                                 data0.append("{").append("\"mapKey\":\"").append(buildJson(gicName1, gicName1, responseFieldMap, isResp, counter + 1, registryClasses)).append("\"},");
                             } else {
                                 if (!typeName.equals(gicName1)) {
-                                    data0.append("{").append("\"mapKey\":").append(buildJson(DocClassUtil.getSimpleName(gicName1), gicName1, responseFieldMap, isResp, counter + 1,  registryClasses)).append("},");
+                                    data0.append("{").append("\"mapKey\":").append(buildJson(DocClassUtil.getSimpleName(gicName1), gicName1, responseFieldMap, isResp, counter + 1, registryClasses)).append("},");
                                 } else {
                                     data0.append("{\"mapKey\":{}},");
                                 }
                             }
                         } else {
-                            data0.append("{").append("\"mapKey\":").append(buildJson(gicName, fieldGicName, responseFieldMap, isResp, counter + 1,  registryClasses)).append("},");
-
+                            data0.append("{").append("\"mapKey\":").append(buildJson(gicName, fieldGicName, responseFieldMap, isResp, counter + 1, registryClasses)).append("},");
                         }
                     } else if (subTypeName.length() == 1) {
                         if (!typeName.equals(genericCanonicalName)) {
@@ -880,7 +874,7 @@ public class SourceBuilder {
                                 if (DocClassUtil.isPrimitive(gicName)) {
                                     data0.append(DocUtil.jsonValueByType(gicName)).append(",");
                                 } else {
-                                    data0.append(buildJson(gicName, gicName, responseFieldMap, isResp, counter + 1,  registryClasses)).append(",");
+                                    data0.append(buildJson(gicName, gicName, responseFieldMap, isResp, counter + 1, registryClasses)).append(",");
                                 }
                             }
                         } else {
@@ -894,7 +888,7 @@ public class SourceBuilder {
                                 if (DocClassUtil.isPrimitive(gicName)) {
                                     data0.append("\"").append(buildJson(gicName, genericCanonicalName, responseFieldMap, isResp, counter + 1, registryClasses)).append("\",");
                                 } else {
-                                    data0.append(buildJson(gicName, gicName, responseFieldMap, isResp, counter + 1,  registryClasses)).append(",");
+                                    data0.append(buildJson(gicName, gicName, responseFieldMap, isResp, counter + 1, registryClasses)).append(",");
                                 }
                             } else {
                                 data0.append("{\"waring\":\"You may have used non-display generics.\"},");
@@ -905,28 +899,26 @@ public class SourceBuilder {
                     } else if (typeName.equals(subTypeName)) {
                         data0.append("{\"$ref\":\"...\"}").append(",");
                     } else {
-                        //
                         data0.append(buildJson(subTypeName, fieldGicName, responseFieldMap, isResp, counter + 1, registryClasses)).append(",");
                     }
                 }
-
             }
         }
         if (data0.toString().contains(",")) {
             data0.deleteCharAt(data0.lastIndexOf(","));
         }
-
         data0.append("}");
         return data0.toString();
     }
 
-    private String buildReqJson(JavaMethod method, ApiMethodDoc apiMethodDoc, boolean isPostMethod) {
+    private String buildReqJson(JavaMethod method, ApiMethodDoc apiMethodDoc, Boolean isPostMethod) {
         List<JavaParameter> parameterList = method.getParameters();
         if (parameterList.size() < 1) {
             return apiMethodDoc.getUrl();
         }
         boolean containsBrace = apiMethodDoc.getUrl().contains("{");
         Map<String, String> paramsMap = new LinkedHashMap<>();
+        boolean hasFile = false;
         for (JavaParameter parameter : parameterList) {
             JavaType javaType = parameter.getType();
             String simpleTypeName = javaType.getValue();
@@ -934,6 +926,11 @@ public class SourceBuilder {
             String typeName = javaType.getFullyQualifiedName();
             String paraName = parameter.getName();
             if (!DocClassUtil.isMvcIgnoreParams(typeName)) {
+                //file upload
+                if (gicTypeName.contains(DocGlobalConstants.MULTIPART_FILE_FULLY)) {
+                    apiMethodDoc.setContentType(MULTIPART_TYPE);
+                    return DocClassUtil.isArray(typeName) ? "Use FormData upload files." : "Use FormData upload file.";
+                }
                 List<JavaAnnotation> annotations = parameter.getAnnotations();
                 int requestBodyCounter = 0;
                 String defaultVal = null;
@@ -952,7 +949,7 @@ public class SourceBuilder {
                                     .append("}");
                             return builder.toString();
                         } else {
-                            return buildJson(typeName, gicTypeName, this.fieldMap, false, 0,  new HashMap<>());
+                            return buildJson(typeName, gicTypeName, this.fieldMap, false, 0, new HashMap<>());
                         }
                     }
 
@@ -1018,145 +1015,144 @@ public class SourceBuilder {
      * @return String
      */
     private List<ApiParam> requestParams(final JavaMethod javaMethod, final String tagName, final String className) {
-
-
         Map<String, CustomRespField> responseFieldMap = new HashMap<>();
         Map<String, String> paramTagMap = DocUtil.getParamsComments(javaMethod, tagName, className);
-
         List<JavaParameter> parameterList = javaMethod.getParameters();
-        if (parameterList.size() > 0) {
-            List<ApiParam> paramList = new ArrayList<>();
-            int requestBodyCounter = 0;
-            List<ApiParam> reqBodyParamsList = new ArrayList<>();
-            out:
-            for (JavaParameter parameter : parameterList) {
-                String paramName = parameter.getName();
-                String typeName = parameter.getType().getGenericCanonicalName();
-                String simpleName = parameter.getType().getValue().toLowerCase();
-                String fullTypeName = parameter.getType().getFullyQualifiedName();
-                if (!DocClassUtil.isMvcIgnoreParams(typeName)) {
-                    if (!paramTagMap.containsKey(paramName) && DocClassUtil.isPrimitive(fullTypeName) && isStrict) {
-                        throw new RuntimeException("ERROR: Unable to find javadoc @param for actual param \""
-                                + paramName + "\" in method " + javaMethod.getName() + " from " + className);
-                    }
-                    String comment = paramTagMap.get(paramName);
-                    if (StringUtil.isEmpty(comment)) {
-                        comment = NO_COMMENTS_FOUND;
-                    }
-                    List<JavaAnnotation> annotations = parameter.getAnnotations();
-                    if (annotations.size() == 0) {
-                        //default set required is true
-                        if (DocClassUtil.isCollection(fullTypeName) || DocClassUtil.isArray(fullTypeName)) {
-                            String[] gicNameArr = DocClassUtil.getSimpleGicName(typeName);
-                            String gicName = gicNameArr[0];
-                            if (DocClassUtil.isArray(gicName)) {
-                                gicName = gicName.substring(0, gicName.indexOf("["));
-                            }
-                            String typeTemp = "";
-                            if (DocClassUtil.isPrimitive(gicName)) {
-                                typeTemp = " of " + DocClassUtil.processTypeNameForParams(gicName);
-                                ApiParam param = ApiParam.of().setField(paramName)
-                                        .setType(DocClassUtil.processTypeNameForParams(simpleName) + typeTemp)
-                                        .setDesc(comment).setRequired(true).setVersion(DocGlobalConstants.DEFAULT_VERSION);
-                                paramList.add(param);
-                            } else {
-                                ApiParam param = ApiParam.of().setField(paramName)
-                                        .setType(DocClassUtil.processTypeNameForParams(simpleName) + typeTemp)
-                                        .setDesc(comment).setRequired(true).setVersion(DocGlobalConstants.DEFAULT_VERSION);
-                                paramList.add(param);
-                                paramList.addAll(buildParams(gicNameArr[0], "└─", 1, "true", responseFieldMap, false, new HashMap<>()));
-                            }
-
-                        } else if (DocClassUtil.isPrimitive(simpleName)) {
+        if (parameterList.size() < 1) {
+            return null;
+        }
+        List<ApiParam> paramList = new ArrayList<>();
+        int requestBodyCounter = 0;
+        List<ApiParam> reqBodyParamsList = new ArrayList<>();
+        out:
+        for (JavaParameter parameter : parameterList) {
+            String paramName = parameter.getName();
+            String typeName = parameter.getType().getGenericCanonicalName();
+            String simpleName = parameter.getType().getValue().toLowerCase();
+            String fullTypeName = parameter.getType().getFullyQualifiedName();
+            if (!DocClassUtil.isMvcIgnoreParams(typeName)) {
+                if (!paramTagMap.containsKey(paramName) && DocClassUtil.isPrimitive(fullTypeName) && isStrict) {
+                    throw new RuntimeException("ERROR: Unable to find javadoc @param for actual param \""
+                            + paramName + "\" in method " + javaMethod.getName() + " from " + className);
+                }
+                String comment = paramTagMap.get(paramName);
+                if (StringUtil.isEmpty(comment)) {
+                    comment = NO_COMMENTS_FOUND;
+                }
+                List<JavaAnnotation> annotations = parameter.getAnnotations();
+                if (annotations.size() == 0) {
+                    //default set required is true
+                    if (DocClassUtil.isCollection(fullTypeName) || DocClassUtil.isArray(fullTypeName)) {
+                        String[] gicNameArr = DocClassUtil.getSimpleGicName(typeName);
+                        String gicName = gicNameArr[0];
+                        if (DocClassUtil.isArray(gicName)) {
+                            gicName = gicName.substring(0, gicName.indexOf("["));
+                        }
+                        String typeTemp = "";
+                        if (DocClassUtil.isPrimitive(gicName)) {
+                            typeTemp = " of " + DocClassUtil.processTypeNameForParams(gicName);
                             ApiParam param = ApiParam.of().setField(paramName)
-                                    .setType(DocClassUtil.processTypeNameForParams(simpleName))
+                                    .setType(DocClassUtil.processTypeNameForParams(simpleName) + typeTemp)
                                     .setDesc(comment).setRequired(true).setVersion(DocGlobalConstants.DEFAULT_VERSION);
                             paramList.add(param);
-                        } else if (DocGlobalConstants.JAVA_MAP_FULLY.equals(typeName)) {
+                        } else {
                             ApiParam param = ApiParam.of().setField(paramName)
-                                    .setType("map").setDesc(comment).setRequired(true).setVersion(DocGlobalConstants.DEFAULT_VERSION);
+                                    .setType(DocClassUtil.processTypeNameForParams(simpleName) + typeTemp)
+                                    .setDesc(comment).setRequired(true).setVersion(DocGlobalConstants.DEFAULT_VERSION);
+                            paramList.add(param);
+                            paramList.addAll(buildParams(gicNameArr[0], "└─", 1, "true", responseFieldMap, false, new HashMap<>()));
+                        }
+
+                    } else if (DocClassUtil.isPrimitive(simpleName)) {
+                        ApiParam param = ApiParam.of().setField(paramName)
+                                .setType(DocClassUtil.processTypeNameForParams(simpleName))
+                                .setDesc(comment).setRequired(true).setVersion(DocGlobalConstants.DEFAULT_VERSION);
+                        paramList.add(param);
+                    } else if (DocGlobalConstants.JAVA_MAP_FULLY.equals(typeName)) {
+                        ApiParam param = ApiParam.of().setField(paramName)
+                                .setType("map").setDesc(comment).setRequired(true).setVersion(DocGlobalConstants.DEFAULT_VERSION);
+                        paramList.add(param);
+                    } else {
+                        paramList.addAll(buildParams(fullTypeName, "", 0, "true", responseFieldMap, false, new HashMap<>()));
+                    }
+                }
+                for (JavaAnnotation annotation : annotations) {
+                    String required = "true";
+                    AnnotationValue annotationRequired = annotation.getProperty(DocAnnotationConstants.REQUIRED_PROP);
+                    if (null != annotationRequired) {
+                        required = annotationRequired.toString();
+                    }
+                    String annotationName = annotation.getType().getName();
+                    if (REQUEST_BODY.equals(annotationName) || (VALID.equals(annotationName) && annotations.size() == 1)) {
+                        if (requestBodyCounter > 0) {
+                            throw new RuntimeException("You have use @RequestBody Passing multiple variables  for method "
+                                    + javaMethod.getName() + " in " + className + ",@RequestBody annotation could only bind one variables.");
+                        }
+                        if (DocClassUtil.isPrimitive(fullTypeName)) {
+                            ApiParam bodyParam = ApiParam.of()
+                                    .setField(paramName).setType(DocClassUtil.processTypeNameForParams(simpleName))
+                                    .setDesc(comment).setRequired(Boolean.valueOf(required));
+                            reqBodyParamsList.add(bodyParam);
+                        } else {
+                            if (DocClassUtil.isCollection(fullTypeName) || DocClassUtil.isArray(fullTypeName)) {
+                                String[] gicNameArr = DocClassUtil.getSimpleGicName(typeName);
+                                String gicName = gicNameArr[0];
+                                if (DocClassUtil.isArray(gicName)) {
+                                    gicName = gicName.substring(0, gicName.indexOf("["));
+                                }
+                                if (DocClassUtil.isPrimitive(gicName)) {
+                                    ApiParam bodyParam = ApiParam.of()
+                                            .setField(paramName).setType(DocClassUtil.processTypeNameForParams(simpleName))
+                                            .setDesc(comment).setRequired(Boolean.valueOf(required)).setVersion(DocGlobalConstants.DEFAULT_VERSION);
+                                    reqBodyParamsList.add(bodyParam);
+                                } else {
+                                    reqBodyParamsList.addAll(buildParams(gicNameArr[0], "", 0, "true", responseFieldMap, false, new HashMap<>()));
+                                }
+
+                            } else if (DocClassUtil.isMap(fullTypeName)) {
+                                if (DocGlobalConstants.JAVA_MAP_FULLY.equals(typeName)) {
+                                    ApiParam apiParam = ApiParam.of().setField(paramName).setType("map")
+                                            .setDesc(comment).setRequired(Boolean.valueOf(required)).setVersion(DocGlobalConstants.DEFAULT_VERSION);
+                                    paramList.add(apiParam);
+                                    continue out;
+                                }
+                                String[] gicNameArr = DocClassUtil.getSimpleGicName(typeName);
+                                reqBodyParamsList.addAll(buildParams(gicNameArr[1], "", 0, "true", responseFieldMap, false, new HashMap<>()));
+                            } else {
+                                reqBodyParamsList.addAll(buildParams(typeName, "", 0, "true", responseFieldMap, false, new HashMap<>()));
+                            }
+                        }
+                        requestBodyCounter++;
+                    } else {
+                        if (REQUEST_PARAM.equals(annotationName) ||
+                                DocAnnotationConstants.SHORT_PATH_VARIABLE.equals(annotationName)) {
+                            AnnotationValue annotationValue = annotation.getProperty(DocAnnotationConstants.VALUE_PROP);
+                            if (null != annotationValue) {
+                                paramName = StringUtil.removeQuotes(annotationValue.toString());
+                            }
+                            AnnotationValue annotationOfName = annotation.getProperty(DocAnnotationConstants.NAME_PROP);
+                            if (null != annotationOfName) {
+                                paramName = StringUtil.removeQuotes(annotationOfName.toString());
+                            }
+
+                            ApiParam param = ApiParam.of().setField(paramName)
+                                    .setType(DocClassUtil.processTypeNameForParams(simpleName))
+                                    .setDesc(comment).setRequired(Boolean.valueOf(required)).setVersion(DocGlobalConstants.DEFAULT_VERSION);
                             paramList.add(param);
                         } else {
-                            paramList.addAll(buildParams(fullTypeName, "", 0, "true", responseFieldMap, false, new HashMap<>()));
-                        }
-                    }
-                    for (JavaAnnotation annotation : annotations) {
-                        String required = "true";
-                        AnnotationValue annotationRequired = annotation.getProperty(DocAnnotationConstants.REQUIRED_PROP);
-                        if (null != annotationRequired) {
-                            required = annotationRequired.toString();
-                        }
-                        String annotationName = annotation.getType().getName();
-                        if (REQUEST_BODY.equals(annotationName) || (VALID.equals(annotationName) && annotations.size() == 1)) {
-                            if (requestBodyCounter > 0) {
-                                throw new RuntimeException("You have use @RequestBody Passing multiple variables  for method "
-                                        + javaMethod.getName() + " in " + className + ",@RequestBody annotation could only bind one variables.");
-                            }
-                            if (DocClassUtil.isPrimitive(fullTypeName)) {
-                                ApiParam bodyParam = ApiParam.of()
-                                        .setField(paramName).setType(DocClassUtil.processTypeNameForParams(simpleName))
-                                        .setDesc(comment).setRequired(Boolean.valueOf(required));
-                                reqBodyParamsList.add(bodyParam);
-                            } else {
-                                if (DocClassUtil.isCollection(fullTypeName) || DocClassUtil.isArray(fullTypeName)) {
-                                    String[] gicNameArr = DocClassUtil.getSimpleGicName(typeName);
-                                    String gicName = gicNameArr[0];
-                                    if (DocClassUtil.isArray(gicName)) {
-                                        gicName = gicName.substring(0, gicName.indexOf("["));
-                                    }
-                                    if (DocClassUtil.isPrimitive(gicName)) {
-                                        ApiParam bodyParam = ApiParam.of()
-                                                .setField(paramName).setType(DocClassUtil.processTypeNameForParams(simpleName))
-                                                .setDesc(comment).setRequired(Boolean.valueOf(required)).setVersion(DocGlobalConstants.DEFAULT_VERSION);
-                                        reqBodyParamsList.add(bodyParam);
-                                    } else {
-                                        reqBodyParamsList.addAll(buildParams(gicNameArr[0], "", 0, "true", responseFieldMap, false, new HashMap<>()));
-                                    }
-
-                                } else if (DocClassUtil.isMap(fullTypeName)) {
-                                    if (DocGlobalConstants.JAVA_MAP_FULLY.equals(typeName)) {
-                                        ApiParam apiParam = ApiParam.of().setField(paramName).setType("map")
-                                                .setDesc(comment).setRequired(Boolean.valueOf(required)).setVersion(DocGlobalConstants.DEFAULT_VERSION);
-                                        paramList.add(apiParam);
-                                        continue out;
-                                    }
-                                    String[] gicNameArr = DocClassUtil.getSimpleGicName(typeName);
-                                    reqBodyParamsList.addAll(buildParams(gicNameArr[1], "", 0, "true", responseFieldMap, false, new HashMap<>()));
-                                } else {
-                                    reqBodyParamsList.addAll(buildParams(typeName, "", 0, "true", responseFieldMap, false, new HashMap<>()));
-                                }
-                            }
-                            requestBodyCounter++;
-                        } else {
-                            if (REQUEST_PARAM.equals(annotationName) ||
-                                    DocAnnotationConstants.SHORT_PATH_VARIABLE.equals(annotationName)) {
-                                AnnotationValue annotationValue = annotation.getProperty(DocAnnotationConstants.VALUE_PROP);
-                                if (null != annotationValue) {
-                                    paramName = StringUtil.removeQuotes(annotationValue.toString());
-                                }
-                                AnnotationValue annotationOfName = annotation.getProperty(DocAnnotationConstants.NAME_PROP);
-                                if (null != annotationOfName) {
-                                    paramName = StringUtil.removeQuotes(annotationOfName.toString());
-                                }
-
-                                ApiParam param = ApiParam.of().setField(paramName)
-                                        .setType(DocClassUtil.processTypeNameForParams(simpleName))
-                                        .setDesc(comment).setRequired(Boolean.valueOf(required)).setVersion(DocGlobalConstants.DEFAULT_VERSION);
-                                paramList.add(param);
-                            } else {
-                                continue;
-                            }
+                            continue;
                         }
                     }
                 }
             }
-            if (requestBodyCounter > 0) {
-                paramList.addAll(reqBodyParamsList);
-                return paramList;
-            }
+        }
+        if (requestBodyCounter > 0) {
+            paramList.addAll(reqBodyParamsList);
             return paramList;
         }
-        return null;
+        return paramList;
+
+
     }
 
     private JavaClass getJavaClass(String simpleName) {

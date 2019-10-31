@@ -242,6 +242,8 @@ public class DocClassUtil {
                 return "string";
             case "localdate":
                 return "string";
+            case "multipartfile":
+                return "file";
             default:
                 return "object";
         }

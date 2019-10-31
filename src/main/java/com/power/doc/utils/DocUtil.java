@@ -29,6 +29,7 @@ public class DocUtil {
     static {
         fieldValue.put("uuid-string", UUID.randomUUID().toString());
         fieldValue.put("uid", UUID.randomUUID().toString());
+        fieldValue.put("id-string",String.valueOf(RandomUtil.randomInt(1, 200)));
         fieldValue.put("nickname-string", enFaker.name().username());
         fieldValue.put("hostname-string", faker.internet().ipV4Address());
         fieldValue.put("name-string", faker.name().username());

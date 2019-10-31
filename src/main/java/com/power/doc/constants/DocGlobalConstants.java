@@ -45,7 +45,6 @@ public class DocGlobalConstants {
 
     public static final String CONTROLLER_FULLY = "org.springframework.stereotype.Controller";
 
-
     public static final String REST_CONTROLLER_FULLY = "org.springframework.web.bind.annotation.RestController";
 
     public static final String GET_MAPPING_FULLY = "org.springframework.web.bind.annotation.GetMapping";
@@ -61,6 +60,8 @@ public class DocGlobalConstants {
     public static final String REQUEST_BODY_FULLY = "org.springframework.web.bind.annotation.RequestBody";
 
     public static final String MODE_AND_VIEW_FULLY = "org.springframework.web.servlet.ModelAndView";
+
+    public static final String MULTIPART_FILE_FULLY = "org.springframework.web.multipart.MultipartFile";
 
     public static final String JAVA_OBJECT_FULLY = "java.lang.Object";
 
