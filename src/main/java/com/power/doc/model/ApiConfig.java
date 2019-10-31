@@ -87,7 +87,7 @@ public class ApiConfig {
     /**
      * api data dictionary
      */
-    private List<ApiDataDictionary> dataDictionaries;
+    private List<ApiDataDictConfig> dataDictConfigs;
 
 
     public String getServerUrl() {
@@ -196,11 +196,13 @@ public class ApiConfig {
         this.adoc = adoc;
     }
 
-    public List<ApiDataDictionary> getDataDictionaries() {
-        return dataDictionaries;
+    public List<ApiDataDictConfig> getDataDictConfigs() {
+        return dataDictConfigs;
     }
 
-    public void setDataDictionaries(ApiDataDictionary... dataDictionary) {
-        this.dataDictionaries =  CollectionUtil.asList(dataDictionary);
+    public void setDataDictConfigs(ApiDataDictConfig... dataDictConfigs) {
+        this.dataDictConfigs = CollectionUtil.asList(dataDictConfigs);
     }
+
+
 }
