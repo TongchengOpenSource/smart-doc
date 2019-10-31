@@ -1,12 +1,16 @@
 package com.power.doc;
 
 import com.power.common.util.DateTimeUtil;
-import com.power.doc.builder.ApiDocBuilder;
+import com.power.common.util.StringUtil;
+import com.power.doc.enums.OrderEnum;
 import com.power.doc.model.ApiConfig;
+import com.power.doc.model.ApiDataDictionary;
 import com.power.doc.model.RevisionLog;
 import com.power.doc.model.SourceCodePath;
 import org.junit.Test;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,6 +54,9 @@ public class ApiDocTest {
                 //SourcePath.path().setPath("F:\\Personal\\project\\smart\\src\\main\\java")
                 //SourcePath.path().setDesc("加载项目外代码").setPath("E:\\ApplicationPower\\ApplicationPower\\Common-util\\src\\main\\java")
         );
+        config.setDataDictionaries(
+                ApiDataDictionary.dict().setTitle("订单字典").setEnumClass(OrderEnum.class).setValueField("code").setDescField("desc")
+        );
         //设置请求头，如果没有请求头，可以不用设置
      /*   config.setRequestHeaders(
                 ApiReqHeader.header().setName("access_token").setType("string").setDesc("Basic auth credentials"),
@@ -71,8 +78,32 @@ public class ApiDocTest {
                 RevisionLog.getLog().setRevisionTime("2018/12/16").setAuthor("chen2").setRemarks("测试2").setStatus("修改").setVersion("V2.0")
         );
 
+        List<ApiDataDictionary> apiDataDictionaryList = config.getDataDictionaries();
+        try {
+            for (ApiDataDictionary apiDataDictionary : apiDataDictionaryList) {
+                System.out.println("dictionary：" + apiDataDictionary.getTitle());
+                Class<?> clzz = apiDataDictionary.getEnumClass();
+                if (!clzz.isEnum()) {
+                    throw new RuntimeException(clzz.getCanonicalName() + " is not an enum class.");
+                }
+                Object[] objects = clzz.getEnumConstants();
+                String valueMethodName = "get" + StringUtil.firstToUpperCase(apiDataDictionary.getValueField());
+                String descMethodName = "get" + StringUtil.firstToUpperCase(apiDataDictionary.getDescField());
+                Method valueMethod = clzz.getMethod(valueMethodName);
+                Method descMethod = clzz.getMethod(descMethodName);
+                for (Object object : objects) {
+                    Object val = valueMethod.invoke(object);
+                    Object desc = descMethod.invoke(object);
+                    System.out.println("enum value=" + val + "desc=" + desc);
+                }
+            }
+        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+
+        }
+
+
         long start = System.currentTimeMillis();
-        ApiDocBuilder.builderControllersApi(config);
+//        ApiDocBuilder.builderControllersApi(config);
         long end = System.currentTimeMillis();
         DateTimeUtil.printRunTime(end, start);
     }

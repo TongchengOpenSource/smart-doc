@@ -26,7 +26,7 @@ public class ApiDataDictionary {
     private String descField;
 
 
-    public static ApiDataDictionary dictionary() {
+    public static ApiDataDictionary dict() {
         return new ApiDataDictionary();
     }
 
