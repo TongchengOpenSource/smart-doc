@@ -84,6 +84,11 @@ public class ApiConfig {
      */
     private boolean adoc;
 
+    /**
+     * api data dictionary
+     */
+    private List<ApiDataDictionary> dataDictionaries;
+
 
     public String getServerUrl() {
         return serverUrl;
@@ -166,6 +171,7 @@ public class ApiConfig {
         this.revisionLogs = CollectionUtil.asList(revisionLogs);
     }
 
+
     public boolean isMd5EncryptedHtmlName() {
         return md5EncryptedHtmlName;
     }
@@ -188,5 +194,13 @@ public class ApiConfig {
 
     public void setAdoc(boolean adoc) {
         this.adoc = adoc;
+    }
+
+    public List<ApiDataDictionary> getDataDictionaries() {
+        return dataDictionaries;
+    }
+
+    public void setDataDictionaries(ApiDataDictionary... dataDictionary) {
+        this.dataDictionaries =  CollectionUtil.asList(dataDictionary);
     }
 }
