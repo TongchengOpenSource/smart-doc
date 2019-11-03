@@ -103,6 +103,7 @@ public class DocBuilderTemplate {
         tpl.binding(TemplateVariable.VERSION_LIST.getVariable(), config.getRevisionLogs());
         tpl.binding(TemplateVariable.VERSION.getVariable(),now);
         tpl.binding(TemplateVariable.CREATE_TIME.getVariable(), strTime);
+        tpl.binding(TemplateVariable.PROJECT_NAME.getVariable(),config.getProjectName());
         if (null != config.getLanguage()) {
             if (DocLanguage.CHINESE.code.equals(config.getLanguage().getCode())) {
                 tpl.binding(TemplateVariable.ERROR_LIST_TITLE.getVariable(), DocGlobalConstants.ERROR_CODE_LIST_CN_TITLE);

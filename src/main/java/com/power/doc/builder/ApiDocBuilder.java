@@ -1,6 +1,7 @@
 package com.power.doc.builder;
 
 import com.power.common.util.DateTimeUtil;
+import com.power.common.util.StringUtil;
 import com.power.doc.model.ApiConfig;
 import com.power.doc.model.ApiDoc;
 
@@ -29,8 +30,8 @@ public class ApiDocBuilder {
         SourceBuilder sourceBuilder = new SourceBuilder(config);
         List<ApiDoc> apiDocList = sourceBuilder.getControllerApiData();
         if (config.isAllInOne()) {
-            String version = DateTimeUtil.long2Str(System.currentTimeMillis(), DATE_FORMAT);
-            builderTemplate.buildAllInOne(apiDocList, config, ALL_IN_ONE_MD_TPL, "AllInOne-V" + version + ".md");
+            String version = config.isCoverOld() ? "" : "-V" + DateTimeUtil.long2Str(System.currentTimeMillis(), DATE_FORMAT);
+            builderTemplate.buildAllInOne(apiDocList, config, ALL_IN_ONE_MD_TPL, "AllInOne" + version + ".md");
         } else {
             builderTemplate.buildApiDoc(apiDocList, config, API_DOC_MD_TPL, API_EXTENSION);
             builderTemplate.buildErrorCodeDoc(config.getErrorCodes(), config, ERROR_CODE_LIST_MD_TPL, ERROR_CODE_LIST_MD);
@@ -52,6 +53,7 @@ public class ApiDocBuilder {
 
     /**
      * Get list of ApiDoc
+     *
      * @param config ApiConfig
      * @return List of ApiDoc
      */

@@ -15,6 +15,7 @@ public enum TemplateVariable {
     TITLE("title"),
     ERROR_LIST_TITLE("errorListTitle"),
     CREATE_TIME("createTime"),
+    PROJECT_NAME("projectName"),
     VERSION("version");
 
 

@@ -45,6 +45,12 @@ public class ApiConfig {
     private List<ApiReqHeader> requestHeaders;
 
     /**
+     * @since 1.7.5
+     * cover old all in one markdown
+     */
+    private boolean coverOld;
+
+    /**
      * list of custom response filed
      */
     private List<CustomRespField> customResponseFields;
@@ -84,10 +90,17 @@ public class ApiConfig {
      */
     private boolean adoc;
 
+
     /**
      * api data dictionary
      */
     private List<ApiDataDictConfig> dataDictConfigs;
+
+    /**
+     * @since 1.7.5
+     * project name
+     */
+    private String projectName;
 
 
     public String getServerUrl() {
@@ -204,5 +217,19 @@ public class ApiConfig {
         this.dataDictConfigs = CollectionUtil.asList(dataDictConfigs);
     }
 
+    public boolean isCoverOld() {
+        return coverOld;
+    }
 
+    public void setCoverOld(boolean coverOld) {
+        this.coverOld = coverOld;
+    }
+
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
+    }
 }
