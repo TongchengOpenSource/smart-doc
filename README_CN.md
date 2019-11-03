@@ -23,7 +23,8 @@ smart-doc使用和测试可参考[smart-doc demo](https://gitee.com/sunyureposit
 # git clone https://github.com/shalousun/api-doc-test.git
 ```
 你可以启动这个Spring Boot的项目，然后访问`http://localhost:8080/doc/api.html`来浏览smart-doc生成的接口文档。
-### Maven dependency
+### dependency
+#### maven
 ```
 <dependency>
     <groupId>com.github.shalousun</groupId>
@@ -31,6 +32,10 @@ smart-doc使用和测试可参考[smart-doc demo](https://gitee.com/sunyureposit
     <version>1.7.4</version>
     <scope>test</scope>
 </dependency>
+```
+#### gradle
+```
+testCompile 'com.github.shalousun:smart-doc:1.7.4'
 ```
 ### Create a unit test
 通过运行一个单元测试来让Smart-doc为你生成一个简洁明了的api文档
