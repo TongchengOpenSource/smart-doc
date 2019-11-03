@@ -23,7 +23,7 @@ smart-doc使用和测试可参考[smart-doc demo](https://gitee.com/sunyureposit
 # git clone https://github.com/shalousun/api-doc-test.git
 ```
 你可以启动这个Spring Boot的项目，然后访问`http://localhost:8080/doc/api.html`来浏览smart-doc生成的接口文档。
-### dependency
+### Dependency
 #### maven
 ```
 <dependency>
