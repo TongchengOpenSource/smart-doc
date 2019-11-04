@@ -110,6 +110,7 @@
 	3. 支持环形依赖分析。只要你敢写！
 	4. 修改使用SpringMvc或者SpringBoot上传时接口的Content-Type显示错误。
 	5. 支持设置项目作为markdown的一级标题。
+	6. 修改方法注释相同引起的html链接跳转错误
 	
 	
 	

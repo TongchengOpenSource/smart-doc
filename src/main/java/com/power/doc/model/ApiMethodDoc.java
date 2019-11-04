@@ -61,7 +61,7 @@ public class ApiMethodDoc implements Serializable {
     /**
      * http contentType
      */
-    private String contentType = "application/x-www-form-urlencoded";
+    private String contentType = "application/x-www-form-urlencoded;charset=utf-8";
 
     /**
      * http request headers
