@@ -20,7 +20,7 @@ smart-doc完全基于接口源码分析来生成接口文档，完全做到零�
 ## Getting started
 smart-doc使用和测试可参考[smart-doc demo](https://gitee.com/sunyurepository/api-doc-test.git)。
 ```
-# git clone https://github.com/shalousun/api-doc-test.git
+# git clone https://gitee.com/sunyurepository/api-doc-test.git
 ```
 你可以启动这个Spring Boot的项目，然后访问`http://localhost:8080/doc/api.html`来浏览smart-doc生成的接口文档。
 ### Dependency
