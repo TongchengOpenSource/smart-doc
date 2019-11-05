@@ -77,6 +77,10 @@ public class DocGlobalConstants {
 
     public static final String ERROR_CODE_LIST_EN_TITLE = "Error Code List";
 
+    public static final String DICT_CN_TITLE = "数据字典";
+
+    public static final String DICT_EN_TITLE = "Data Dictionary";
+
     public static final String FIELD_SPACE = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 
     public static final String ANY_OBJECT_MSG = "any object.";

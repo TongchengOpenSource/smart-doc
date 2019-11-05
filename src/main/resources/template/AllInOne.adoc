@@ -99,3 +99,23 @@ for(error in errorCodeList){
 <%}%>
 |====================
 <%}%>
+
+<%if(isNotEmpty(dictList)){%>
+== ${dictListTitle}
+<%
+for(dict in dictList){
+%>
+=== ${dict.title}
+
+[width="100%",options="header"]
+[stripes=even]
+|====================
+|Value |Description
+<%
+for(dataDict in dict.dataDictList){
+%>
+|${dataDict.value}|${dataDict.desc}
+<%}%>
+|====================
+<%}%>
+<%}%>

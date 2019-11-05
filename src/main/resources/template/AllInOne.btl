@@ -86,3 +86,20 @@ for(error in errorCodeList){
 ${error.value}|${error.desc}
 <%}%>
 <%}%>
+
+<%if(isNotEmpty(dictList)){%>
+## ${dictListTitle}
+<%
+for(dict in dictList){
+%>
+### ${dict.title}
+
+Value |Description
+---|---
+<%
+for(dataDict in dict.dataDictList){
+%>
+${dataDict.value}|${dataDict.desc}
+<%}%>
+<%}%>
+<%}%>
