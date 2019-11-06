@@ -31,9 +31,24 @@
                     </ul>
                 </li>
                 <%}%>
+                <%if(isNotEmpty(errorCodeList)){%>
                 <li class="chapter " data-level="error_code" data-path="error_code.html">
                    <a href="error_code.html?v=${version}" target="book_iframe">${apiDocList.~size+1}. ${errorListTitle}</a>
                 </li>
+                <%}%>
+                <%if(isNotEmpty(dictList)){%>
+                 <li class="chapter " data-level="dict" data-path="dict.html">
+                      <a href="dict.html?v=${version}" target="book_iframe">${dictListOrder}. ${dictListTitle}</a>
+                      <ul class="articles">
+                         <%
+                         for(dict in dictList){
+                         %>
+                         <li class="chapter " data-level="${dict.title}" data-path="dict.html">
+                         <a href="dict.html?v=${version}" target="book_iframe">${dictListOrder}.${dictLP.index} ${dict.title}</a></li>
+                         <%}%>
+                     </ul>
+                 </li>
+                 <%}%>
                 <li class="divider"></li>
                 <li class="footer_link"><a href="https://github.com/shalousun/smart-doc" target="_blank" class="gitbook-link">Created by smart-doc</a>
                 </li>

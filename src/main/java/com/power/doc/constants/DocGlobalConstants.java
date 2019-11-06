@@ -35,6 +35,8 @@ public class DocGlobalConstants {
 
     public static final String ERROR_CODE_LIST_ADOC = "ErrorCodeList.md";
 
+    public static final String DICT_LIST_MD_TPL = "Dictionary.btl";
+
     public static final String INDEX_TPL = "Index.btl";
 
     public static final String INDEX_CSS_TPL = "index.css";
@@ -79,7 +81,7 @@ public class DocGlobalConstants {
 
     public static final String DICT_CN_TITLE = "数据字典";
 
-    public static final String DICT_EN_TITLE = "Data Dictionary";
+    public static final String DICT_EN_TITLE = "Data Dictionaries";
 
     public static final String FIELD_SPACE = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 

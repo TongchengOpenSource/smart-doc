@@ -3,10 +3,12 @@ package com.power.doc.builder;
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.DateTimeUtil;
 import com.power.common.util.FileUtil;
+import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.constants.DocLanguage;
 import com.power.doc.constants.TemplateVariable;
 import com.power.doc.model.ApiConfig;
 import com.power.doc.model.ApiDoc;
+import com.power.doc.model.ApiDocDict;
 import com.power.doc.model.ApiErrorCode;
 import com.power.doc.utils.BeetlTemplateUtil;
 import com.power.doc.utils.MarkDownUtil;
@@ -42,10 +44,13 @@ public class HtmlApiDocBuilder {
             FileUtil.nioWriteFile(indexCssTemplate.render(), config.getOutPath() + FILE_SEPARATOR + ALL_IN_ONE_CSS);
             builderTemplate.buildAllInOne(apiDocList, config, ALL_IN_ONE_HTML_TPL, INDEX_HTML);
         } else {
+            List<ApiDocDict> apiDocDictList = builderTemplate.buildDictionary(config);
             buildIndex(apiDocList, config);
             copyCss(config.getOutPath());
             buildApiDoc(apiDocList, config.getOutPath());
             buildErrorCodeDoc(config.getErrorCodes(), config.getOutPath());
+            buildDictionary(apiDocDictList,config.getOutPath());
+
         }
 
     }
@@ -74,14 +79,24 @@ public class HtmlApiDocBuilder {
         indexTemplate.binding(TemplateVariable.HOME_PAGE.getVariable(), homePage);
         indexTemplate.binding(TemplateVariable.API_DOC_LIST.getVariable(), apiDocList);
         indexTemplate.binding(TemplateVariable.VERSION.getVariable(), now);
+        indexTemplate.binding(TemplateVariable.ERROR_CODE_LIST.getVariable(),config.getErrorCodes());
+        indexTemplate.binding(TemplateVariable.DICT_LIST.getVariable(),config.getDataDictionaries());
+        if (CollectionUtil.isEmpty(config.getErrorCodes())) {
+            indexTemplate.binding(TemplateVariable.DICT_ORDER.getVariable(), apiDocList.size() + 1);
+        } else {
+            indexTemplate.binding(TemplateVariable.DICT_ORDER.getVariable(), apiDocList.size() + 2);
+        }
         if (null != config.getLanguage()) {
             if (DocLanguage.CHINESE.code.equals(config.getLanguage().getCode())) {
                 indexTemplate.binding(TemplateVariable.ERROR_LIST_TITLE.getVariable(), ERROR_CODE_LIST_CN_TITLE);
+                indexTemplate.binding(TemplateVariable.DICT_LIST_TITLE.getVariable(), DocGlobalConstants.DICT_CN_TITLE);
             } else {
                 indexTemplate.binding(TemplateVariable.ERROR_LIST_TITLE.getVariable(), ERROR_CODE_LIST_EN_TITLE);
+                indexTemplate.binding(TemplateVariable.DICT_LIST_TITLE.getVariable(), DocGlobalConstants.DICT_EN_TITLE);
             }
         } else {
             indexTemplate.binding(TemplateVariable.ERROR_LIST_TITLE.getVariable(), ERROR_CODE_LIST_CN_TITLE);
+            indexTemplate.binding(TemplateVariable.DICT_LIST_TITLE.getVariable(), DocGlobalConstants.DICT_CN_TITLE);
         }
         FileUtil.nioWriteFile(indexTemplate.render(), config.getOutPath() + FILE_SEPARATOR + "api.html");
     }
@@ -129,6 +144,25 @@ public class HtmlApiDocBuilder {
             errorCodeDoc.binding(TemplateVariable.HTML.getVariable(), errorHtml);
             errorCodeDoc.binding(TemplateVariable.CREATE_TIME.getVariable(), DateTimeUtil.long2Str(now, DateTimeUtil.DATE_FORMAT_SECOND));
             FileUtil.nioWriteFile(errorCodeDoc.render(), outPath + FILE_SEPARATOR + "error_code.html");
+        }
+    }
+
+    /**
+     * build dictionary
+     * @param apiDocDictList dictionary list
+     * @param outPath
+     */
+    private static void buildDictionary(List<ApiDocDict> apiDocDictList, String outPath) {
+        if(CollectionUtil.isNotEmpty(apiDocDictList)){
+            Template template = BeetlTemplateUtil.getByName(DICT_LIST_MD_TPL);
+            template.binding(TemplateVariable.DICT_LIST.getVariable(), apiDocDictList);
+            String dictHtml = MarkDownUtil.toHtml(template.render());
+            Template dictTpl = BeetlTemplateUtil.getByName(HTML_API_DOC_TPL);
+            dictTpl.binding(TemplateVariable.VERSION.getVariable(), now);
+            dictTpl.binding(TemplateVariable.TITLE.getVariable(), DICT_EN_TITLE);
+            dictTpl.binding(TemplateVariable.HTML.getVariable(), dictHtml);
+            dictTpl.binding(TemplateVariable.CREATE_TIME.getVariable(), DateTimeUtil.long2Str(now, DateTimeUtil.DATE_FORMAT_SECOND));
+            FileUtil.nioWriteFile(dictTpl.render(), outPath + FILE_SEPARATOR + "dict.html");
         }
     }
 }
