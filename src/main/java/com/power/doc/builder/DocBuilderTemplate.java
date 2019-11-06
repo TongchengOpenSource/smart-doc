@@ -172,11 +172,11 @@ public class DocBuilderTemplate {
      * @return list of ApiDocDict
      */
     public List<ApiDocDict> buildDictionary(ApiConfig config) {
-        List<ApiDataDictConfig> apiDataDictionaryList = config.getDataDictConfigs();
+        List<ApiDataDictionary> apiDataDictionaryList = config.getDataDictionaries();
         List<ApiDocDict> apiDocDictList = new ArrayList<>();
         try {
             int order = 0;
-            for (ApiDataDictConfig apiDataDictionary : apiDataDictionaryList) {
+            for (ApiDataDictionary apiDataDictionary : apiDataDictionaryList) {
                 order++;
                 ApiDocDict apiDocDict = new ApiDocDict();
                 apiDocDict.setOrder(order);

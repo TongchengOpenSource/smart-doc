@@ -52,8 +52,8 @@ public class ApiDocTest {
                 //SourcePath.path().setPath("F:\\Personal\\project\\smart\\src\\main\\java")
                 //SourcePath.path().setDesc("加载项目外代码").setPath("E:\\ApplicationPower\\ApplicationPower\\Common-util\\src\\main\\java")
         );
-        config.setDataDictConfigs(
-                ApiDataDictConfig.dict().setTitle("订单字典").setEnumClass(OrderEnum.class).setValueField("code").setDescField("desc")
+        config.setDataDictionaries(
+                ApiDataDictionary.dict().setTitle("订单字典").setEnumClass(OrderEnum.class).setValueField("code").setDescField("desc")
         );
         //设置请求头，如果没有请求头，可以不用设置
      /*   config.setRequestHeaders(
@@ -76,11 +76,11 @@ public class ApiDocTest {
                 RevisionLog.getLog().setRevisionTime("2018/12/16").setAuthor("chen2").setRemarks("测试2").setStatus("修改").setVersion("V2.0")
         );
 
-        List<ApiDataDictConfig> apiDataDictionaryList = config.getDataDictConfigs();
+        List<ApiDataDictionary> apiDataDictionaryList = config.getDataDictionaries();
         try {
             List<ApiDocDict> apiDocDictList = new ArrayList<>();//模板中遍历这个字典表生成字典文档
             int order = 0;
-            for (ApiDataDictConfig apiDataDictionary : apiDataDictionaryList) {
+            for (ApiDataDictionary apiDataDictionary : apiDataDictionaryList) {
                 System.out.println("dictionary：" + apiDataDictionary.getTitle());
                 order++;
                 ApiDocDict apiDocDict = new ApiDocDict();

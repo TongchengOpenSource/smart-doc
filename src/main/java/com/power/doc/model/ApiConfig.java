@@ -94,7 +94,7 @@ public class ApiConfig {
     /**
      * api data dictionary
      */
-    private List<ApiDataDictConfig> dataDictConfigs;
+    private List<ApiDataDictionary> dataDictionaries;
 
     /**
      * @since 1.7.5
@@ -209,12 +209,12 @@ public class ApiConfig {
         this.adoc = adoc;
     }
 
-    public List<ApiDataDictConfig> getDataDictConfigs() {
-        return dataDictConfigs;
+    public List<ApiDataDictionary> getDataDictionaries() {
+        return dataDictionaries;
     }
 
-    public void setDataDictConfigs(ApiDataDictConfig... dataDictConfigs) {
-        this.dataDictConfigs = CollectionUtil.asList(dataDictConfigs);
+    public void setDataDictionaries(ApiDataDictionary... dataDictConfigs) {
+        this.dataDictionaries = CollectionUtil.asList(dataDictConfigs);
     }
 
     public boolean isCoverOld() {

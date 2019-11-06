@@ -29,13 +29,13 @@ smart-doc使用和测试可参考[smart-doc demo](https://gitee.com/sunyureposit
 <dependency>
     <groupId>com.github.shalousun</groupId>
     <artifactId>smart-doc</artifactId>
-    <version>1.7.4</version>
+    <version>1.7.5</version>
     <scope>test</scope>
 </dependency>
 ```
 #### gradle
 ```
-testCompile 'com.github.shalousun:smart-doc:1.7.4'
+testCompile 'com.github.shalousun:smart-doc:1.7.5'
 ```
 ### Create a unit test
 通过运行一个单元测试来让Smart-doc为你生成一个简洁明了的api文档
@@ -108,6 +108,13 @@ public class ApiDocTest {
         config.setRevisionLogs(
                 RevisionLog.getLog().setRevisionTime("2018/12/15").setAuthor("chen").setRemarks("测试").setStatus("创建").setVersion("V1.0"),
                 RevisionLog.getLog().setRevisionTime("2018/12/16").setAuthor("chen2").setRemarks("测试2").setStatus("修改").setVersion("V2.0")
+        );
+        
+        //since 1.7.5
+        //文档添加数据字典
+        config.setDataDictionaries(
+            ApiDataDictionary.dict().setTitle("订单状态").setEnumClass(OrderEnum.class).setValueField("code").setDescField("desc"),
+            ApiDataDictionary.dict().setTitle("订单状态1").setEnumClass(OrderEnum.class).setValueField("code").setDescField("desc")
         );
 
 

@@ -3,7 +3,7 @@ package com.power.doc.model;
 /**
  * @author yu 2019/10/31.
  */
-public class ApiDataDictConfig {
+public class ApiDataDictionary {
 
     /**
      * Dictionary
@@ -31,15 +31,15 @@ public class ApiDataDictConfig {
     private String descField;
 
 
-    public static ApiDataDictConfig dict() {
-        return new ApiDataDictConfig();
+    public static ApiDataDictionary dict() {
+        return new ApiDataDictionary();
     }
 
     public String getTitle() {
         return title;
     }
 
-    public ApiDataDictConfig setTitle(String title) {
+    public ApiDataDictionary setTitle(String title) {
         this.title = title;
         return this;
     }
@@ -48,7 +48,7 @@ public class ApiDataDictConfig {
         return enumClass;
     }
 
-    public ApiDataDictConfig setEnumClass(Class enumClass) {
+    public ApiDataDictionary setEnumClass(Class enumClass) {
         this.enumClass = enumClass;
         return this;
     }
@@ -57,7 +57,7 @@ public class ApiDataDictConfig {
         return valueField;
     }
 
-    public ApiDataDictConfig setValueField(String valueField) {
+    public ApiDataDictionary setValueField(String valueField) {
         this.valueField = valueField;
         return this;
     }
@@ -66,7 +66,7 @@ public class ApiDataDictConfig {
         return descField;
     }
 
-    public ApiDataDictConfig setDescField(String descField) {
+    public ApiDataDictionary setDescField(String descField) {
         this.descField = descField;
         return this;
     }
@@ -75,7 +75,7 @@ public class ApiDataDictConfig {
         return enumClassName;
     }
 
-    public ApiDataDictConfig setEnumClassName(String enumClassName) {
+    public ApiDataDictionary setEnumClassName(String enumClassName) {
         this.enumClassName = enumClassName;
         return this;
     }

@@ -268,7 +268,7 @@ public class SourceBuilder {
                 if (null != method.getTagByName(IGNORE_TAG)) {
                     continue;
                 }
-                url = url.replaceAll("\"", "").trim();
+                url = StringUtil.removeQuotes(url);
                 apiMethodDoc.setType(methodType);
                 url = this.appUrl + "/" + baseUrl + "/" + url;
                 apiMethodDoc.setUrl(UrlUtil.simplifyUrl(url));
@@ -918,7 +918,6 @@ public class SourceBuilder {
         }
         boolean containsBrace = apiMethodDoc.getUrl().contains("{");
         Map<String, String> paramsMap = new LinkedHashMap<>();
-        boolean hasFile = false;
         for (JavaParameter parameter : parameterList) {
             JavaType javaType = parameter.getType();
             String simpleTypeName = javaType.getValue();
