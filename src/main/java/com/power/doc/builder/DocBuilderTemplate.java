@@ -201,6 +201,11 @@ public class DocBuilderTemplate {
                     Object val = valueMethod.invoke(object);
                     Object desc = descMethod.invoke(object);
                     DataDict dataDict = new DataDict();
+                    if (val instanceof String) {
+                        dataDict.setType("string");
+                    } else {
+                        dataDict.setType("int32");
+                    }
                     dataDict.setDesc(desc.toString());
                     dataDict.setValue(val.toString());
                     dataDictList.add(dataDict);

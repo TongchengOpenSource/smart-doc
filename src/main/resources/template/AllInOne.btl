@@ -94,12 +94,12 @@ for(dict in dictList){
 %>
 ### ${dict.title}
 
-Value |Description
+Code |Type|Description
 ---|---
 <%
 for(dataDict in dict.dataDictList){
 %>
-${dataDict.value}|${dataDict.desc}
+${dataDict.value}|${dataDict.type}|${dataDict.desc}
 <%}%>
 <%}%>
 <%}%>

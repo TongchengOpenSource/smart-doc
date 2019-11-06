@@ -14,6 +14,11 @@ public class ApiErrorCode {
     private String value;
 
     /**
+     * error code type
+     */
+    private String type;
+
+    /**
      * error description
      */
     private String desc;
@@ -25,6 +30,15 @@ public class ApiErrorCode {
 
     public ApiErrorCode setValue(String value) {
         this.value = value;
+        return this;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public ApiErrorCode setType(String type) {
+        this.type = type;
         return this;
     }
 

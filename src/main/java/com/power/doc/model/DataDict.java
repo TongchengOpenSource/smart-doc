@@ -14,6 +14,10 @@ public class DataDict {
     private String value;
 
     /**
+     * code type
+     */
+    private String Type;
+    /**
      * dict desc
      */
     private String desc;
