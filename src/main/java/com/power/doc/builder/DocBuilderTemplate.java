@@ -193,7 +193,7 @@ public class DocBuilderTemplate {
                 }
                 List<DataDict> dataDictList = new ArrayList<>();
                 Object[] objects = clzz.getEnumConstants();
-                String valueMethodName = "get" + StringUtil.firstToUpperCase(apiDataDictionary.getValueField());
+                String valueMethodName = "get" + StringUtil.firstToUpperCase(apiDataDictionary.getCodeField());
                 String descMethodName = "get" + StringUtil.firstToUpperCase(apiDataDictionary.getDescField());
                 Method valueMethod = clzz.getMethod(valueMethodName);
                 Method descMethod = clzz.getMethod(descMethodName);

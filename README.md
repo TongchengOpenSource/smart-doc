@@ -14,6 +14,7 @@ Or a static html document. If you are tired of the numerous annotations and stro
 - Support for generating json return value examples.
 - Support for loading source code from outside the project to generate field comments (including the sources jar package).
 - Support for generating multiple formats of documents: Markdown, HTML5, Asciidoctor.
+- Support for exporting error codes and data dictionary codes to API documentation.
 ## Getting started
 [Smart-doc Samples](https://github.com/shalousun/smart-doc-demo.git)。
 ```
@@ -99,8 +100,8 @@ public class ApiDocTest {
         //since 1.7.5
         //add data dictionary
         config.setDataDictionaries(
-            ApiDataDictionary.dict().setTitle("Order status").setEnumClass(OrderEnum.class).setValueField("code").setDescField("desc"),
-            ApiDataDictionary.dict().setTitle("Order status1").setEnumClass(OrderEnum.class).setValueField("code").setDescField("desc")
+            ApiDataDictionary.dict().setTitle("Order status").setEnumClass(OrderEnum.class).setCodeField("code").setDescField("desc"),
+            ApiDataDictionary.dict().setTitle("Order status1").setEnumClass(OrderEnum.class).setCodeField("code").setDescField("desc")
         );
     
         long start = System.currentTimeMillis();

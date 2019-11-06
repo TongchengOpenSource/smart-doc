@@ -17,6 +17,7 @@ smart-doc完全基于接口源码分析来生成接口文档，完全做到零�
 - 支持生成多种格式文档：Markdown、HTML5、Asciidoctor。
 - 轻易实现在Spring Boot服务上在线查看静态HTML5 api文档。
 - 开放文档数据，可自由实现接入文档管理系统。
+- 支持导出错误码和定义在代码中的各种字典码到接口文档。
 ## Getting started
 smart-doc使用和测试可参考[smart-doc demo](https://gitee.com/sunyurepository/api-doc-test.git)。
 ```
@@ -113,8 +114,8 @@ public class ApiDocTest {
         //since 1.7.5
         //文档添加数据字典
         config.setDataDictionaries(
-            ApiDataDictionary.dict().setTitle("订单状态").setEnumClass(OrderEnum.class).setValueField("code").setDescField("desc"),
-            ApiDataDictionary.dict().setTitle("订单状态1").setEnumClass(OrderEnum.class).setValueField("code").setDescField("desc")
+            ApiDataDictionary.dict().setTitle("订单状态").setEnumClass(OrderEnum.class).setCodeField("code").setDescField("desc"),
+            ApiDataDictionary.dict().setTitle("订单状态1").setEnumClass(OrderEnum.class).setCodeField("code").setDescField("desc")
         );
 
 

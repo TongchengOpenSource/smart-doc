@@ -21,17 +21,6 @@ import java.util.Objects;
 public class ApiDocTest {
 
     /**
-     * 简单型接口，不需要指定请求头，并且项目是maven的.
-     */
-/*
-    @Test
-    public void testBuilderControllersApiSimple() {
-        //将生成的文档输出到d:\md目录下，严格模式下api-doc会检测Controller的接口注释
-        ApiDocBuilder.builderControllersApi("d:\\md",true);
-    }
-*/
-
-    /**
      * 包括设置请求头，缺失注释的字段批量在文档生成期使用定义好的注释
      */
     @Test
@@ -53,7 +42,7 @@ public class ApiDocTest {
                 //SourcePath.path().setDesc("加载项目外代码").setPath("E:\\ApplicationPower\\ApplicationPower\\Common-util\\src\\main\\java")
         );
         config.setDataDictionaries(
-                ApiDataDictionary.dict().setTitle("订单字典").setEnumClass(OrderEnum.class).setValueField("code").setDescField("desc")
+                ApiDataDictionary.dict().setTitle("订单字典").setEnumClass(OrderEnum.class).setCodeField("code").setDescField("desc")
         );
         //设置请求头，如果没有请求头，可以不用设置
      /*   config.setRequestHeaders(
@@ -76,48 +65,6 @@ public class ApiDocTest {
                 RevisionLog.getLog().setRevisionTime("2018/12/16").setAuthor("chen2").setRemarks("测试2").setStatus("修改").setVersion("V2.0")
         );
 
-        List<ApiDataDictionary> apiDataDictionaryList = config.getDataDictionaries();
-        try {
-            List<ApiDocDict> apiDocDictList = new ArrayList<>();//模板中遍历这个字典表生成字典文档
-            int order = 0;
-            for (ApiDataDictionary apiDataDictionary : apiDataDictionaryList) {
-                System.out.println("dictionary：" + apiDataDictionary.getTitle());
-                order++;
-                ApiDocDict apiDocDict = new ApiDocDict();
-                apiDocDict.setOrder(order);//设置方便在文档中的小结顺序
-                apiDocDict.setTitle(apiDataDictionary.getTitle());
-                Class<?> clzz = apiDataDictionary.getEnumClass();
-                if (Objects.isNull(clzz)) {
-                    if (StringUtil.isEmpty(apiDataDictionary.getEnumClassName())) {
-                        throw new RuntimeException(" enum class name can't be null.");
-                    }
-                    //如果没有设置class那么检查是否设置了字符串类型的class name
-                    clzz = Class.forName(apiDataDictionary.getEnumClassName());
-                }
-                if (!clzz.isEnum()) {
-                    throw new RuntimeException(clzz.getCanonicalName() + " is not an enum class.");
-                }
-                List<DataDict> dataDictList = new ArrayList<>();
-                Object[] objects = clzz.getEnumConstants();
-                String valueMethodName = "get" + StringUtil.firstToUpperCase(apiDataDictionary.getValueField());
-                String descMethodName = "get" + StringUtil.firstToUpperCase(apiDataDictionary.getDescField());
-                Method valueMethod = clzz.getMethod(valueMethodName);
-                Method descMethod = clzz.getMethod(descMethodName);
-                for (Object object : objects) {
-                    Object val = valueMethod.invoke(object);
-                    Object desc = descMethod.invoke(object);
-                    DataDict dataDict = new DataDict();
-                    dataDict.setDesc(desc.toString());
-                    dataDict.setValue(val.toString());
-                    dataDictList.add(dataDict);
-                    System.out.println("enum value=" + val + "desc=" + desc);
-                }
-                apiDocDict.setDataDictList(dataDictList);
-                apiDocDictList.add(apiDocDict);
-            }
-        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException | ClassNotFoundException e) {
-            e.fillInStackTrace();
-        }
 
 
         long start = System.currentTimeMillis();

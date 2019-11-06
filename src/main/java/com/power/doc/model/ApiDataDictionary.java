@@ -21,9 +21,9 @@ public class ApiDataDictionary {
     private String enumClassName;
 
     /**
-     * value field
+     * code field
      */
-    private String valueField;
+    private String codeField;
 
     /**
      * description field
@@ -53,12 +53,12 @@ public class ApiDataDictionary {
         return this;
     }
 
-    public String getValueField() {
-        return valueField;
+    public String getCodeField() {
+        return codeField;
     }
 
-    public ApiDataDictionary setValueField(String valueField) {
-        this.valueField = valueField;
+    public ApiDataDictionary setCodeField(String codeField) {
+        this.codeField = codeField;
         return this;
     }
 
