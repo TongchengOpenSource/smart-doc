@@ -173,6 +173,9 @@ public class DocBuilderTemplate {
      */
     public List<ApiDocDict> buildDictionary(ApiConfig config) {
         List<ApiDataDictionary> apiDataDictionaryList = config.getDataDictionaries();
+        if (CollectionUtil.isEmpty(apiDataDictionaryList)) {
+            return new ArrayList<>(0);
+        }
         List<ApiDocDict> apiDocDictList = new ArrayList<>();
         try {
             int order = 0;
