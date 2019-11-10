@@ -446,7 +446,6 @@ public class SourceBuilder {
                 param.setDesc(DocGlobalConstants.ANY_OBJECT_MSG).setVersion(DocGlobalConstants.DEFAULT_VERSION);
             } else {
                 param.setDesc(DocGlobalConstants.ANY_OBJECT_MSG).setRequired(false).setVersion(DocGlobalConstants.DEFAULT_VERSION);
-
             }
             paramList.add(param);
         } else {
@@ -523,8 +522,8 @@ public class SourceBuilder {
                     comment = field.getComment();
                 }
                 if (StringUtil.isNotEmpty(comment)) {
-                    comment = comment.replace("\r\n", "<br>");
-                    comment = comment.replace("\n", "<br>");
+                    comment = comment.replaceAll("\r\n", "<br>");
+                    comment = comment.replaceAll("\n", "<br>");
                 }
                 if (DocClassUtil.isPrimitive(subTypeName)) {
                     ApiParam param = ApiParam.of().setField(pre + fieldName);
@@ -537,8 +536,36 @@ public class SourceBuilder {
                     }
                 } else {
                     ApiParam param = ApiParam.of().setField(pre + fieldName);
+                    JavaClass javaClass = builder.getClassByName(subTypeName);
+                    String enumComments = javaClass.getComment();
+                    if(StringUtil.isNotEmpty(enumComments)){
+                        enumComments = enumComments.replaceAll("\r\n", "<br>");
+                        enumComments = enumComments.replaceAll("\r\n", "<br>");
+                        comment = comment +"(See: "+ enumComments+")";
+                    }
                     String processedType = DocClassUtil.processTypeNameForParams(typeSimpleName.toLowerCase());
                     param.setType(processedType);
+                    if (!isResp && javaClass.isEnum()) {
+                        List<JavaMethod> methods = javaClass.getMethods();
+                        int index = 0;
+                        String reTypeName = "object";
+                        enumOut:for (JavaMethod method : methods) {
+                            JavaType type = method.getReturnType();
+                            reTypeName = type.getCanonicalName();
+                            List<JavaAnnotation> javaAnnotationList = method.getAnnotations();
+                            for (JavaAnnotation annotation : javaAnnotationList) {
+                                if (annotation.getType().getSimpleName().contains("JsonValue")) {
+                                    break enumOut;
+                                }
+                            }
+                            if (CollectionUtil.isEmpty(javaAnnotations) && index < 1) {
+                                break enumOut;
+                            }
+                            index++;
+                        }
+                        param.setType(DocClassUtil.processTypeNameForParams(reTypeName));
+                    }
+
                     if (StringUtil.isNotEmpty(comment)) {
                         commonHandleParam(paramList, param, isRequired, comment, since, strRequired);
                     } else {
@@ -629,7 +656,9 @@ public class SourceBuilder {
                     } else if (simpleName.equals(subTypeName)) {
                         //do nothing
                     } else {
-                        paramList.addAll(buildParams(fieldGicName, preBuilder.toString(), i + 1, isRequired, responseFieldMap, isResp, registryClasses));
+                        if (isResp && !javaClass.isEnum()) {
+                            paramList.addAll(buildParams(fieldGicName, preBuilder.toString(), i + 1, isRequired, responseFieldMap, isResp, registryClasses));
+                        }
                     }
                 }
             }
@@ -899,7 +928,38 @@ public class SourceBuilder {
                     } else if (typeName.equals(subTypeName)) {
                         data0.append("{\"$ref\":\"...\"}").append(",");
                     } else {
-                        data0.append(buildJson(subTypeName, fieldGicName, responseFieldMap, isResp, counter + 1, registryClasses)).append(",");
+                        JavaClass javaClass = builder.getClassByName(subTypeName);
+                        if (!isResp && javaClass.isEnum()) {
+                            List<JavaMethod> methods = javaClass.getMethods();
+                            int index = 0;
+                            enumOut:
+                            for (JavaMethod method : methods) {
+                                JavaType type = method.getReturnType();
+                                List<JavaAnnotation> javaAnnotations = method.getAnnotations();
+                                for (JavaAnnotation annotation : javaAnnotations) {
+                                    if (annotation.getType().getSimpleName().contains("JsonValue")) {
+                                        break enumOut;
+                                    }
+                                }
+                                if (CollectionUtil.isEmpty(javaAnnotations) && index < 1) {
+                                    break enumOut;
+                                }
+                                index++;
+                            }
+                            List<JavaField> javaFields = javaClass.getEnumConstants();
+                            Object value = null;
+                            index = 0;
+                            for (JavaField javaField : javaFields) {
+                                String simpleName = javaField.getType().getSimpleName();
+                                if (!DocClassUtil.isPrimitive(simpleName) && index < 1) {
+                                    value = javaField.getEnumConstantArguments().get(0);
+                                }
+                            }
+                            data0.append(value).append(",");
+                        } else {
+                            data0.append(buildJson(subTypeName, fieldGicName, responseFieldMap, isResp, counter + 1, registryClasses)).append(",");
+                        }
+
                     }
                 }
             }

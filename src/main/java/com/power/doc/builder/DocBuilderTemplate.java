@@ -209,15 +209,15 @@ public class DocBuilderTemplate {
                     } else {
                         dataDict.setType("int32");
                     }
-                    dataDict.setDesc(desc.toString());
-                    dataDict.setValue(val.toString());
+                    dataDict.setDesc(String.valueOf(desc));
+                    dataDict.setValue(String.valueOf(val));
                     dataDictList.add(dataDict);
                 }
                 apiDocDict.setDataDictList(dataDictList);
                 apiDocDictList.add(apiDocDict);
             }
         } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException | ClassNotFoundException e) {
-            e.fillInStackTrace();
+            e.printStackTrace();
         }
         return apiDocDictList;
     }
