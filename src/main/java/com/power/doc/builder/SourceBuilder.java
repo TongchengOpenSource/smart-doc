@@ -538,18 +538,19 @@ public class SourceBuilder {
                     ApiParam param = ApiParam.of().setField(pre + fieldName);
                     JavaClass javaClass = builder.getClassByName(subTypeName);
                     String enumComments = javaClass.getComment();
-                    if(StringUtil.isNotEmpty(enumComments)){
+                    if (StringUtil.isNotEmpty(enumComments) && javaClass.isEnum()) {
                         enumComments = enumComments.replaceAll("\r\n", "<br>");
                         enumComments = enumComments.replaceAll("\r\n", "<br>");
-                        comment = comment +"(See: "+ enumComments+")";
+                        comment = comment + "(See: " + enumComments + ")";
                     }
                     String processedType = DocClassUtil.processTypeNameForParams(typeSimpleName.toLowerCase());
                     param.setType(processedType);
                     if (!isResp && javaClass.isEnum()) {
                         List<JavaMethod> methods = javaClass.getMethods();
                         int index = 0;
-                        String reTypeName = "object";
-                        enumOut:for (JavaMethod method : methods) {
+                        String reTypeName = null;
+                        enumOut:
+                        for (JavaMethod method : methods) {
                             JavaType type = method.getReturnType();
                             reTypeName = type.getCanonicalName();
                             List<JavaAnnotation> javaAnnotationList = method.getAnnotations();
@@ -715,7 +716,7 @@ public class SourceBuilder {
             }
         }
         if (DocClassUtil.isPrimitive(typeName)) {
-            return DocUtil.jsonValueByType(typeName).replace("\"", "");
+            return StringUtil.removeQuotes(DocUtil.jsonValueByType(typeName));
         }
         StringBuilder data0 = new StringBuilder();
         JavaClass cls = getJavaClass(typeName);
@@ -930,25 +931,9 @@ public class SourceBuilder {
                     } else {
                         JavaClass javaClass = builder.getClassByName(subTypeName);
                         if (!isResp && javaClass.isEnum()) {
-                            List<JavaMethod> methods = javaClass.getMethods();
-                            int index = 0;
-                            enumOut:
-                            for (JavaMethod method : methods) {
-                                JavaType type = method.getReturnType();
-                                List<JavaAnnotation> javaAnnotations = method.getAnnotations();
-                                for (JavaAnnotation annotation : javaAnnotations) {
-                                    if (annotation.getType().getSimpleName().contains("JsonValue")) {
-                                        break enumOut;
-                                    }
-                                }
-                                if (CollectionUtil.isEmpty(javaAnnotations) && index < 1) {
-                                    break enumOut;
-                                }
-                                index++;
-                            }
                             List<JavaField> javaFields = javaClass.getEnumConstants();
                             Object value = null;
-                            index = 0;
+                            int index = 0;
                             for (JavaField javaField : javaFields) {
                                 String simpleName = javaField.getType().getSimpleName();
                                 if (!DocClassUtil.isPrimitive(simpleName) && index < 1) {
@@ -959,7 +944,6 @@ public class SourceBuilder {
                         } else {
                             data0.append(buildJson(subTypeName, fieldGicName, responseFieldMap, isResp, counter + 1, registryClasses)).append(",");
                         }
-
                     }
                 }
             }
