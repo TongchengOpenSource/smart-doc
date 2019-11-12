@@ -284,9 +284,14 @@ public class SourceBuilder {
                 apiMethodDoc.setHeaders(createHeaders(this.headers, this.isAdoc));
                 List<ApiReqHeader> allApiReqHeaders;
                 if (this.headers != null) {
+
                     allApiReqHeaders = Stream.of(this.headers, apiReqHeaders)
                             .flatMap(Collection::stream)
-                            .collect(Collectors.toList());
+                            .collect(Collectors.collectingAndThen(
+                                    Collectors.toCollection(
+                                            ()->new TreeSet<>(Comparator.comparing(ApiReqHeader::getName))
+                                    )
+                                    ,ArrayList::new));
                 } else {
                     allApiReqHeaders = apiReqHeaders;
                 }
