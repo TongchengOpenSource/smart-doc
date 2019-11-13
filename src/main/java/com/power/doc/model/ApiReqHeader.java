@@ -1,5 +1,7 @@
 package com.power.doc.model;
 
+import java.util.Objects;
+
 /**
  * Description:
  * http request header info model
@@ -83,5 +85,19 @@ public class ApiReqHeader {
     public ApiReqHeader setSince(String since) {
         this.since = since;
         return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ApiReqHeader that = (ApiReqHeader) o;
+        return Objects.equals(name, that.name);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(name);
     }
 }

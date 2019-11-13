@@ -4,6 +4,7 @@ import com.power.common.util.CollectionUtil;
 import com.power.doc.constants.DocLanguage;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Description:
@@ -133,6 +134,8 @@ public class ApiConfig {
 
     public void setRequestHeaders(ApiReqHeader... requestHeaders) {
         this.requestHeaders = CollectionUtil.asList(requestHeaders);
+        this.requestHeaders.stream().map(header -> header.setDesc(header.getDesc()+"(Global)"))
+                .collect(Collectors.toList());
     }
 
     public List<CustomRespField> getCustomResponseFields() {

@@ -30,13 +30,13 @@ smart-doc使用和测试可参考[smart-doc demo](https://gitee.com/sunyureposit
 <dependency>
     <groupId>com.github.shalousun</groupId>
     <artifactId>smart-doc</artifactId>
-    <version>1.7.5</version>
+    <version>1.7.6</version>
     <scope>test</scope>
 </dependency>
 ```
 #### gradle
 ```
-testCompile 'com.github.shalousun:smart-doc:1.7.5'
+testCompile 'com.github.shalousun:smart-doc:1.7.6'
 ```
 ### Create a unit test
 通过运行一个单元测试来让Smart-doc为你生成一个简洁明了的api文档

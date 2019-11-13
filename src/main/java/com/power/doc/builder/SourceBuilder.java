@@ -280,22 +280,18 @@ public class SourceBuilder {
                 apiMethodDoc.setResponseUsage(buildReturnJson(method, this.fieldMap));
                 List<ApiParam> responseParams = buildReturnApiParams(method, cls.getGenericFullyQualifiedName());
                 apiMethodDoc.setResponseParams(responseParams);
-                //reduce create in template
-                apiMethodDoc.setHeaders(createHeaders(this.headers, this.isAdoc));
+
                 List<ApiReqHeader> allApiReqHeaders;
                 if (this.headers != null) {
-
                     allApiReqHeaders = Stream.of(this.headers, apiReqHeaders)
                             .flatMap(Collection::stream)
-                            .collect(Collectors.collectingAndThen(
-                                    Collectors.toCollection(
-                                            ()->new TreeSet<>(Comparator.comparing(ApiReqHeader::getName))
-                                    )
-                                    ,ArrayList::new));
+                            .distinct()
+                            .collect(Collectors.toList());
                 } else {
                     allApiReqHeaders = apiReqHeaders;
                 }
-
+                //reduce create in template
+                apiMethodDoc.setHeaders(createHeaders(allApiReqHeaders, this.isAdoc));
                 apiMethodDoc.setRequestHeaders(allApiReqHeaders);
                 methodDocList.add(apiMethodDoc);
 
