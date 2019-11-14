@@ -119,6 +119,12 @@
 	1. fix #I14PT5 header重复渲染到文档
 	2. fix #I14MV7 不设置dataDictionaries出现空指针错误
 	3. 增加请求参数枚举字段解析(试用功能)
+
+#### 版本号：1.7.7
+- 更新日期：待定
+- 更新内容：
+	1. 修改timestamp类型字段创建json示例错误bug
+	
 	
 	
 	

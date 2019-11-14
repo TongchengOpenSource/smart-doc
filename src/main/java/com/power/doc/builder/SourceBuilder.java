@@ -820,7 +820,7 @@ public class SourceBuilder {
                 String subTypeName = field.getType().getFullyQualifiedName();
                 String fieldGicName = field.getType().getGenericCanonicalName();
                 data0.append("\"").append(fieldName).append("\":");
-                if (DocClassUtil.isPrimitive(typeSimpleName)) {
+                if (DocClassUtil.isPrimitive(subTypeName)) {
                     CustomRespField customResponseField = responseFieldMap.get(fieldName);
                     if (null != customResponseField) {
                         Object val = customResponseField.getValue();
