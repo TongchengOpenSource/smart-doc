@@ -269,8 +269,15 @@ public class SourceBuilder {
                     continue;
                 }
                 url = StringUtil.removeQuotes(url);
+
+                String[] urls = url.split(",");
+                if (urls.length > 1) {
+                    url = getUrls(baseUrl, urls);
+                } else {
+                    url = this.appUrl + "/" + baseUrl + "/" + url;
+                }
+
                 apiMethodDoc.setType(methodType);
-                url = this.appUrl + "/" + baseUrl + "/" + url;
                 apiMethodDoc.setUrl(UrlUtil.simplifyUrl(url));
                 List<ApiParam> requestParams = requestParams(method, DocTags.PARAM, cls.getCanonicalName());
                 apiMethodDoc.setRequestParams(requestParams);
@@ -298,6 +305,17 @@ public class SourceBuilder {
             }
         }
         return methodDocList;
+    }
+
+    private String getUrls(String baseUrl, String[] urls) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < urls.length; i++) {
+            sb.append(this.appUrl + "/" + baseUrl + "/" + urls[i].replace("[", "").replace("]", ""));
+            if (i < urls.length - 1) {
+                sb.append(";\t");
+            }
+        }
+        return sb.toString();
     }
 
     /**
@@ -1250,7 +1268,7 @@ public class SourceBuilder {
                     || DocAnnotationConstants.SHORT_REST_CONTROLLER.equals(annotationName)
                     || DocGlobalConstants.REST_CONTROLLER_FULLY.equals(annotationName)
                     || DocGlobalConstants.CONTROLLER_FULLY.equals(annotationName)
-                    ) {
+            ) {
                 return true;
             }
         }
