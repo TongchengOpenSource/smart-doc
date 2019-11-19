@@ -103,6 +103,11 @@ public class ApiConfig {
      */
     private String projectName;
 
+    /**
+     * Skip Transient Field
+     */
+    private boolean skipTransientField = true;
+
 
     public String getServerUrl() {
         return serverUrl;
@@ -234,5 +239,13 @@ public class ApiConfig {
 
     public void setProjectName(String projectName) {
         this.projectName = projectName;
+    }
+
+    public boolean isSkipTransientField() {
+        return skipTransientField;
+    }
+
+    public void setSkipTransientField(boolean skipTransientField) {
+        this.skipTransientField = skipTransientField;
     }
 }

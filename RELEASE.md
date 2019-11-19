@@ -121,12 +121,18 @@
 	3. 增加请求参数枚举字段解析(试用功能)
 
 #### 版本号：1.7.7
-- 更新日期：待定
+- 更新日期：2019-11-18
 - 更新内容：
 	1. 修改timestamp类型字段创建json示例错误bug。
 	2. fix #I1545A 单接口多路径bug。
 	3. 修改部分url生成部署空格问题。
 	4. 优化对java.util.concurrent.ConcurrentMap的解析。
+#### 版本号：1.7.8
+- 更新日期：待定
+- 更新内容：
+	1. 修改Spring Controller使用非Spring Web注解时生成的响应示例出错的bug。
+	2. 修改使用mybatis-plus实体继承Model对象时将log字段输出到文档的问题。
+	3. 添加对transient修饰字段文档输出开关，默认不输出。
 	
 	
 	

@@ -405,6 +405,22 @@ public class DocClassUtil {
     }
 
     /**
+     *  ignore field type name
+     * @param typeName field type name
+     * @return String
+     */
+    public static boolean isIgnoreFieldTypes(String typeName){
+        switch (typeName) {
+            case "org.slf4j.Logger":
+                return true;
+            case "org.apache.ibatis.logging.Log":
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    /**
      * process return type
      *
      * @param fullyName fully name

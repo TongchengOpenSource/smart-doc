@@ -274,7 +274,7 @@ public class SourceBuilder {
                 if (urls.length > 1) {
                     url = getUrls(baseUrl, urls);
                 } else {
-                    url = UrlUtil.simplifyUrl(this.appUrl + "/" + baseUrl + "/" + url) ;
+                    url = UrlUtil.simplifyUrl(this.appUrl + "/" + baseUrl + "/" + url);
                 }
                 apiMethodDoc.setType(methodType);
                 apiMethodDoc.setUrl(url);
@@ -473,11 +473,13 @@ public class SourceBuilder {
             out:
             for (JavaField field : fields) {
                 String fieldName = field.getName();
-                if ("this$0".equals(fieldName) || "serialVersionUID".equals(fieldName)) {
+                String subTypeName = field.getType().getFullyQualifiedName();
+                if ("this$0".equals(fieldName) ||
+                        "serialVersionUID".equals(fieldName) ||
+                        DocClassUtil.isIgnoreFieldTypes(subTypeName)) {
                     continue;
                 }
                 String typeSimpleName = field.getType().getSimpleName();
-                String subTypeName = field.getType().getFullyQualifiedName();
                 String fieldGicName = field.getType().getGenericCanonicalName();
                 List<JavaAnnotation> javaAnnotations = field.getAnnotations();
 
@@ -804,8 +806,11 @@ public class SourceBuilder {
             int i = 0;
             out:
             for (JavaField field : fields) {
+                String subTypeName = field.getType().getFullyQualifiedName();
                 String fieldName = field.getName();
-                if ("this$0".equals(fieldName) || "serialVersionUID".equals(fieldName)) {
+                if ("this$0".equals(fieldName) ||
+                        "serialVersionUID".equals(fieldName) ||
+                        DocClassUtil.isIgnoreFieldTypes(subTypeName)) {
                     continue;
                 }
                 List<DocletTag> paramTags = field.getTags();
@@ -837,7 +842,7 @@ public class SourceBuilder {
                     }
                 }
                 String typeSimpleName = field.getType().getSimpleName();
-                String subTypeName = field.getType().getFullyQualifiedName();
+
                 String fieldGicName = field.getType().getGenericCanonicalName();
                 data0.append("\"").append(fieldName).append("\":");
                 if (DocClassUtil.isPrimitive(subTypeName)) {
@@ -1000,6 +1005,10 @@ public class SourceBuilder {
                 String defaultVal = null;
                 boolean notHasRequestParams = true;
                 for (JavaAnnotation annotation : annotations) {
+                    String fullName = annotation.getType().getFullyQualifiedName();
+                    if (!fullName.contains(DocGlobalConstants.SPRING_WEB_ANNOTATION_PACKAGE)) {
+                        continue;
+                    }
                     String annotationName = annotation.getType().getSimpleName();
                     if (REQUEST_BODY.equals(annotationName) || DocGlobalConstants.REQUEST_BODY_FULLY.equals(annotationName)) {
                         requestBodyCounter++;
@@ -1270,7 +1279,7 @@ public class SourceBuilder {
                     || DocAnnotationConstants.SHORT_REST_CONTROLLER.equals(annotationName)
                     || DocGlobalConstants.REST_CONTROLLER_FULLY.equals(annotationName)
                     || DocGlobalConstants.CONTROLLER_FULLY.equals(annotationName)
-            ) {
+                    ) {
                 return true;
             }
         }

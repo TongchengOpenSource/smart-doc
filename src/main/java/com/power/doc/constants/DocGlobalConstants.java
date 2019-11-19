@@ -88,4 +88,6 @@ public class DocGlobalConstants {
     public static final String ANY_OBJECT_MSG = "any object.";
 
     public static final String NO_COMMENTS_FOUND = "No comments found.";
+
+    public static final String SPRING_WEB_ANNOTATION_PACKAGE = "org.springframework.web.bind.annotation";
 }
