@@ -1,7 +1,6 @@
 package com.power.doc.builder;
 
 import com.power.common.util.DateTimeUtil;
-import com.power.common.util.StringUtil;
 import com.power.doc.model.ApiConfig;
 import com.power.doc.model.ApiDoc;
 

@@ -5,6 +5,7 @@ import com.power.common.util.DateTimeUtil;
 import com.power.common.util.IDCardUtil;
 import com.power.common.util.RandomUtil;
 import com.power.common.util.StringUtil;
+import com.power.doc.constants.DocAnnotationConstants;
 import com.power.doc.constants.DocGlobalConstants;
 import com.thoughtworks.qdox.model.DocletTag;
 import com.thoughtworks.qdox.model.JavaAnnotation;
@@ -249,10 +250,10 @@ public class DocUtil {
      * @return String
      */
     public static String handleMappingValue(JavaAnnotation annotation) {
-        if (null == annotation.getNamedParameter("value")) {
+        if (null == annotation.getNamedParameter(DocAnnotationConstants.VALUE_PROP)) {
             return "/";
         } else {
-            return annotation.getNamedParameter("value").toString();
+            return StringUtil.trimBlank(String.valueOf(annotation.getNamedParameter(DocAnnotationConstants.VALUE_PROP)));
         }
     }
 

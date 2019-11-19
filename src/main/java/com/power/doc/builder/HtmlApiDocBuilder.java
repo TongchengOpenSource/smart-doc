@@ -49,7 +49,7 @@ public class HtmlApiDocBuilder {
             copyCss(config.getOutPath());
             buildApiDoc(apiDocList, config.getOutPath());
             buildErrorCodeDoc(config.getErrorCodes(), config.getOutPath());
-            buildDictionary(apiDocDictList,config.getOutPath());
+            buildDictionary(apiDocDictList, config.getOutPath());
 
         }
 
@@ -79,8 +79,8 @@ public class HtmlApiDocBuilder {
         indexTemplate.binding(TemplateVariable.HOME_PAGE.getVariable(), homePage);
         indexTemplate.binding(TemplateVariable.API_DOC_LIST.getVariable(), apiDocList);
         indexTemplate.binding(TemplateVariable.VERSION.getVariable(), now);
-        indexTemplate.binding(TemplateVariable.ERROR_CODE_LIST.getVariable(),config.getErrorCodes());
-        indexTemplate.binding(TemplateVariable.DICT_LIST.getVariable(),config.getDataDictionaries());
+        indexTemplate.binding(TemplateVariable.ERROR_CODE_LIST.getVariable(), config.getErrorCodes());
+        indexTemplate.binding(TemplateVariable.DICT_LIST.getVariable(), config.getDataDictionaries());
         if (CollectionUtil.isEmpty(config.getErrorCodes())) {
             indexTemplate.binding(TemplateVariable.DICT_ORDER.getVariable(), apiDocList.size() + 1);
         } else {
@@ -149,11 +149,12 @@ public class HtmlApiDocBuilder {
 
     /**
      * build dictionary
+     *
      * @param apiDocDictList dictionary list
      * @param outPath
      */
     private static void buildDictionary(List<ApiDocDict> apiDocDictList, String outPath) {
-        if(CollectionUtil.isNotEmpty(apiDocDictList)){
+        if (CollectionUtil.isNotEmpty(apiDocDictList)) {
             Template template = BeetlTemplateUtil.getByName(DICT_LIST_MD_TPL);
             template.binding(TemplateVariable.DICT_LIST.getVariable(), apiDocDictList);
             String dictHtml = MarkDownUtil.toHtml(template.render());

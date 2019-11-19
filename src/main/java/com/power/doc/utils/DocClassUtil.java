@@ -305,6 +305,8 @@ public class DocClassUtil {
                 return true;
             case "java.util.concurrent.ConcurrentHashMap":
                 return true;
+            case "java.util.concurrent.ConcurrentMap":
+                return true;
             case "java.util.Properties":
                 return true;
             case "java.util.Hashtable":

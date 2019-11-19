@@ -249,7 +249,7 @@ public class SourceBuilder {
                         }
                         apiReqHeader.setDesc(desc.toString());
                         if (requestHeaderMap.get(DocAnnotationConstants.REQUIRED_PROP) != null) {
-                            apiReqHeader.setRequired(!"false".equals(requestHeaderMap.get(DocAnnotationConstants.REQUIRED_PROP)));
+                            apiReqHeader.setRequired(!Boolean.FALSE.toString().equals(requestHeaderMap.get(DocAnnotationConstants.REQUIRED_PROP)));
                         } else {
                             apiReqHeader.setRequired(true);
                         }
@@ -274,11 +274,10 @@ public class SourceBuilder {
                 if (urls.length > 1) {
                     url = getUrls(baseUrl, urls);
                 } else {
-                    url = this.appUrl + "/" + baseUrl + "/" + url;
+                    url = UrlUtil.simplifyUrl(this.appUrl + "/" + baseUrl + "/" + url) ;
                 }
-
                 apiMethodDoc.setType(methodType);
-                apiMethodDoc.setUrl(UrlUtil.simplifyUrl(url));
+                apiMethodDoc.setUrl(url);
                 List<ApiParam> requestParams = requestParams(method, DocTags.PARAM, cls.getCanonicalName());
                 apiMethodDoc.setRequestParams(requestParams);
                 String requestJson = buildReqJson(method, apiMethodDoc, isPostMethod);
@@ -310,7 +309,9 @@ public class SourceBuilder {
     private String getUrls(String baseUrl, String[] urls) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < urls.length; i++) {
-            sb.append(this.appUrl + "/" + baseUrl + "/" + urls[i].replace("[", "").replace("]", ""));
+            String url = this.appUrl + "/" + baseUrl + "/" + StringUtil.trimBlank(urls[i])
+                    .replace("[", "").replace("]", "");
+            sb.append(UrlUtil.simplifyUrl(url));
             if (i < urls.length - 1) {
                 sb.append(";\t");
             }
@@ -422,7 +423,7 @@ public class SourceBuilder {
      *
      * @param className        class name
      * @param pre              pre
-     * @param i                counter
+     * @param i                Recursive counter
      * @param isRequired       required flag
      * @param responseFieldMap response map
      * @param isResp           response flag
@@ -434,16 +435,17 @@ public class SourceBuilder {
         if (StringUtil.isEmpty(className)) {
             throw new RuntimeException("Class name can't be null or empty.");
         }
+        // Check circular reference
         List<ApiParam> paramList = new ArrayList<>();
         if (registryClasses.containsKey(className) && i > registryClasses.size()) {
             return paramList;
         }
+        // Registry class
         registryClasses.put(className, className);
         String simpleName = DocClassUtil.getSimpleName(className);
         String[] globGicName = DocClassUtil.getSimpleGicName(className);
-        JavaClass cls = getJavaClass(simpleName);
-        //clsss.isEnum()
-        List<JavaField> fields = getFields(cls, 0);
+        JavaClass cls = this.getJavaClass(simpleName);
+        List<JavaField> fields = this.getFields(cls, 0);
         int n = 0;
         if (DocClassUtil.isPrimitive(simpleName)) {
             paramList.addAll(primitiveReturnRespComment(DocClassUtil.processTypeNameForParams(simpleName)));
@@ -507,7 +509,7 @@ public class SourceBuilder {
                         continue out;
                     } else if (DocAnnotationConstants.SHORT_JSON_FIELD.equals(annotationName) && isResp) {
                         if (null != annotation.getProperty(DocAnnotationConstants.SERIALIZE_PROP)) {
-                            if ("false".equals(annotation.getProperty(DocAnnotationConstants.SERIALIZE_PROP).toString())) {
+                            if (Boolean.FALSE.toString().equals(annotation.getProperty(DocAnnotationConstants.SERIALIZE_PROP).toString())) {
                                 continue out;
                             }
                         } else if (null != annotation.getProperty(DocAnnotationConstants.NAME_PROP)) {
@@ -598,7 +600,7 @@ public class SourceBuilder {
                     preBuilder.append("└─");
                     if (DocClassUtil.isMap(subTypeName)) {
                         String gNameTemp = field.getType().getGenericCanonicalName();
-                        if (DocGlobalConstants.JAVA_MAP_FULLY.equals(gNameTemp)) {
+                        if (DocClassUtil.isMap(gNameTemp)) {
                             ApiParam param1 = ApiParam.of().setField(preBuilder.toString() + "any object")
                                     .setType("object").setDesc(DocGlobalConstants.ANY_OBJECT_MSG).setVersion(DocGlobalConstants.DEFAULT_VERSION);
                             paramList.add(param1);
@@ -717,8 +719,8 @@ public class SourceBuilder {
      * @param typeName             type name
      * @param genericCanonicalName genericCanonicalName
      * @param responseFieldMap     map of response fields data
-     * @param isResp               response flag
-     * @param counter              counter
+     * @param isResp               Response flag
+     * @param counter              Recursive counter
      * @return String
      */
     private String buildJson(String typeName, String genericCanonicalName, Map<String, CustomRespField> responseFieldMap,
@@ -822,7 +824,7 @@ public class SourceBuilder {
                         continue out;
                     } else if (DocAnnotationConstants.SHORT_JSON_FIELD.equals(annotationName) && isResp) {
                         if (null != annotation.getProperty(DocAnnotationConstants.SERIALIZE_PROP)) {
-                            if ("false".equals(annotation.getProperty(DocAnnotationConstants.SERIALIZE_PROP).toString())) {
+                            if (Boolean.FALSE.toString().equals(annotation.getProperty(DocAnnotationConstants.SERIALIZE_PROP).toString())) {
                                 continue out;
                             }
                         } else if (null != annotation.getProperty(DocAnnotationConstants.NAME_PROP)) {
@@ -894,7 +896,7 @@ public class SourceBuilder {
                             }
                         }
                     } else if (DocClassUtil.isMap(subTypeName)) {
-                        if (DocGlobalConstants.JAVA_MAP_FULLY.equals(subTypeName)) {
+                        if (DocClassUtil.isMap(fieldGicName)) {
                             data0.append("{").append("\"mapKey\":{}},");
                             continue out;
                         }
