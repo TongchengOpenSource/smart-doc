@@ -886,7 +886,7 @@ public class SourceBuilder {
                             }
                         } else {
                             if (!typeName.equals(gicName)) {
-                                if (MAP_CLASS.equals(gicName)) {
+                                if (DocClassUtil.isMap(gicName)) {
                                     data0.append("[{\"mapKey\":{}}],");
                                     continue out;
                                 }
