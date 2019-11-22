@@ -133,6 +133,6 @@
 	1. 修改Spring Controller使用非Spring Web注解时生成的响应示例出错的bug。
 	2. 修改使用mybatis-plus实体继承Model对象时将log字段输出到文档的问题。
 	3. 添加对transient修饰字段文档输出开关，默认不输出。
-	
+	4. html文档添加项目名称显示
 	
 	

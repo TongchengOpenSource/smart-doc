@@ -1,3 +1,6 @@
+<%if(isNotEmpty(projectName)){%>
+= ${projectName}
+<%}%>
 <%if(isNotEmpty(revisionLogList)){%>
 
 [width="100%",options="header"]

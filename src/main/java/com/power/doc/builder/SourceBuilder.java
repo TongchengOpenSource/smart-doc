@@ -7,6 +7,7 @@ import com.power.common.util.UrlUtil;
 import com.power.doc.constants.DocAnnotationConstants;
 import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.constants.DocTags;
+import com.power.doc.constants.Methods;
 import com.power.doc.model.*;
 import com.power.doc.utils.DocClassUtil;
 import com.power.doc.utils.DocUtil;
@@ -200,25 +201,25 @@ public class SourceBuilder {
                             isPostMethod = true;
                         }
                     } else {
-                        methodType = "GET";
+                        methodType = Methods.GET.getValue();
                     }
                     methodCounter++;
                 } else if (GET_MAPPING.equals(annotationName) || DocGlobalConstants.GET_MAPPING_FULLY.equals(annotationName)) {
                     url = DocUtil.handleMappingValue(annotation);
-                    methodType = "GET";
+                    methodType = Methods.GET.getValue();
                     methodCounter++;
                 } else if (POST_MAPPING.equals(annotationName) || DocGlobalConstants.POST_MAPPING_FULLY.equals(annotationName)) {
                     url = DocUtil.handleMappingValue(annotation);
-                    methodType = "POST";
+                    methodType = Methods.POST.getValue();
                     methodCounter++;
                     isPostMethod = true;
                 } else if (PUT_MAPPING.equals(annotationName) || DocGlobalConstants.PUT_MAPPING_FULLY.equals(annotationName)) {
                     url = DocUtil.handleMappingValue(annotation);
-                    methodType = "PUT";
+                    methodType = Methods.PUT.getValue();
                     methodCounter++;
                 } else if (DELETE_MAPPING.equals(annotationName) || DocGlobalConstants.DELETE_MAPPING_FULLY.equals(annotationName)) {
                     url = DocUtil.handleMappingValue(annotation);
-                    methodType = "DELETE";
+                    methodType = Methods.DELETE.getValue();
                     methodCounter++;
                 }
             }
