@@ -92,13 +92,15 @@ public class DocUtil {
      * @return random value
      */
     public static String jsonValueByType(String typeName) {
-        String type = typeName.contains(".") ? typeName.substring(typeName.lastIndexOf(".") + 1, typeName.length()) : typeName;
+        String type = typeName.contains(".") ? typeName.substring(typeName.lastIndexOf(".") + 1) : typeName;
         String value = RandomUtil.randomValueByType(type);
         if ("Integer".equals(type) || "int".equals(type) || "Long".equals(type) || "long".equals(type)
                 || "Double".equals(type) || "double".equals(type) || "Float".equals(type) || "float".equals(type) ||
                 "BigDecimal".equals(type) || "boolean".equals(type) || "Boolean".equals(type) ||
                 "Short".equals(type) || "BigInteger".equals(type)) {
             return value;
+        } else if("Void".equals(type)){
+            return "null";
         } else {
             StringBuilder builder = new StringBuilder();
             builder.append("\"").append(value).append("\"");

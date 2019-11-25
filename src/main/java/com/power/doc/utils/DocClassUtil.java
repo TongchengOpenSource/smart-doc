@@ -25,41 +25,24 @@ public class DocClassUtil {
         type = type.toLowerCase();
         switch (type) {
             case "integer":
-                return true;
+            case  "void":
             case "int":
-                return true;
             case "long":
-                return true;
             case "double":
-                return true;
             case "float":
-                return true;
             case "short":
-                return true;
             case "bigdecimal":
-                return true;
             case "char":
-                return true;
             case "string":
-                return true;
             case "boolean":
-                return true;
             case "byte":
-                return true;
             case "java.sql.timestamp":
-                return true;
             case "java.util.date":
-                return true;
             case "java.time.localdatetime":
-                return true;
             case "localdatetime":
-                return true;
             case "localdate":
-                return true;
             case "java.time.localdate":
-                return true;
             case "java.math.bigdecimal":
-                return true;
             case "java.math.biginteger":
                 return true;
             default:
