@@ -386,7 +386,7 @@ public class SourceBuilder {
             if (DocGlobalConstants.MODE_AND_VIEW_FULLY.equals(typeName)) {
                 return null;
             } else {
-                throw new RuntimeException("smart-doc can't support " + typeName + " as method return in " + controllerName);
+                throw new RuntimeException("Smart-doc can't support " + typeName + " as method return in " + controllerName);
             }
         }
         if (DocClassUtil.isPrimitive(typeName)) {
@@ -471,6 +471,14 @@ public class SourceBuilder {
             }
             paramList.add(param);
         } else {
+            boolean isGenerics = false;
+            checkGenerics:
+            for (JavaField field : fields) {
+                if (field.getType().getFullyQualifiedName().length() == 1) {
+                    isGenerics = true;
+                    break checkGenerics;
+                }
+            }
             out:
             for (JavaField field : fields) {
                 String fieldName = field.getName();
@@ -564,7 +572,7 @@ public class SourceBuilder {
                     String enumComments = javaClass.getComment();
                     if (StringUtil.isNotEmpty(enumComments) && javaClass.isEnum()) {
                         enumComments = enumComments.replaceAll("\r\n", "<br>");
-                        enumComments = enumComments.replaceAll("\r\n", "<br>");
+                        enumComments = enumComments.replaceAll("\n", "<br>");
                         comment = comment + "(See: " + enumComments + ")";
                     }
                     String processedType = DocClassUtil.processTypeNameForParams(typeSimpleName.toLowerCase());
@@ -643,7 +651,11 @@ public class SourceBuilder {
                             }
                         }
                     } else if (subTypeName.length() == 1 || DocGlobalConstants.JAVA_OBJECT_FULLY.equals(subTypeName)) {
-                        if (!simpleName.equals(className)) {
+                        if (isGenerics && DocGlobalConstants.JAVA_OBJECT_FULLY.equals(subTypeName)) {
+                            ApiParam param1 = ApiParam.of().setField(preBuilder.toString() + "any object")
+                                    .setType("object").setDesc(DocGlobalConstants.ANY_OBJECT_MSG).setVersion(DocGlobalConstants.DEFAULT_VERSION);
+                            paramList.add(param1);
+                        } else if (!simpleName.equals(className)) {
                             if (n < globGicName.length) {
                                 String gicName = globGicName[n];
                                 String simple = DocClassUtil.getSimpleName(gicName);
@@ -669,8 +681,8 @@ public class SourceBuilder {
                             } else {
                                 paramList.addAll(buildParams(subTypeName, preBuilder.toString(), i + 1, isRequired, responseFieldMap, isResp, registryClasses));
                             }
+                            n++;
                         }
-                        n++;
                     } else if (DocClassUtil.isArray(subTypeName)) {
                         fieldGicName = fieldGicName.substring(0, fieldGicName.indexOf("["));
                         if (className.equals(fieldGicName)) {
@@ -695,7 +707,7 @@ public class SourceBuilder {
     private List<ApiParam> primitiveReturnRespComment(String typeName) {
         StringBuilder comments = new StringBuilder();
         comments.append("The api directly returns the ").append(typeName).append(" type value.");
-        ApiParam apiParam = ApiParam.of().setField("no param name")
+        ApiParam apiParam = ApiParam.of().setField("No field")
                 .setType(typeName).setDesc(comments.toString()).setVersion(DocGlobalConstants.DEFAULT_VERSION);
         List<ApiParam> paramList = new ArrayList<>();
         paramList.add(apiParam);
@@ -804,6 +816,14 @@ public class SourceBuilder {
             }
         } else {
             List<JavaField> fields = getFields(cls, 0);
+            boolean isGenerics = false;
+            checkGenerics:
+            for (JavaField field : fields) {
+                if (field.getType().getFullyQualifiedName().length() == 1) {
+                    isGenerics = true;
+                    break checkGenerics;
+                }
+            }
             int i = 0;
             out:
             for (JavaField field : fields) {
@@ -939,7 +959,9 @@ public class SourceBuilder {
                         }
                         i++;
                     } else if (DocGlobalConstants.JAVA_OBJECT_FULLY.equals(subTypeName)) {
-                        if (i < globGicName.length) {
+                        if (isGenerics) {
+                            data0.append("{\"object\":\"any object\"},");
+                        } else if (i < globGicName.length) {
                             String gicName = globGicName[i];
                             if (!typeName.equals(genericCanonicalName)) {
                                 if (DocClassUtil.isPrimitive(gicName)) {
@@ -953,12 +975,13 @@ public class SourceBuilder {
                         } else {
                             data0.append("{\"waring\":\"You may have used non-display generics.\"},");
                         }
+                        if (!isGenerics) i++;
                     } else if (typeName.equals(subTypeName)) {
                         data0.append("{\"$ref\":\"...\"}").append(",");
                     } else {
                         JavaClass javaClass = builder.getClassByName(subTypeName);
                         if (!isResp && javaClass.isEnum()) {
-                            Object value = this.handleEnumValue(javaClass,Boolean.FALSE);
+                            Object value = this.handleEnumValue(javaClass, Boolean.FALSE);
                             data0.append(value).append(",");
                         } else {
                             data0.append(buildJson(subTypeName, fieldGicName, responseFieldMap, isResp, counter + 1, registryClasses)).append(",");
@@ -1052,7 +1075,7 @@ public class SourceBuilder {
                 }
                 if (requestBodyCounter < 1 && paraName != null) {
                     if (javaClass.isEnum()) {
-                        Object value = this.handleEnumValue(javaClass,Boolean.TRUE);
+                        Object value = this.handleEnumValue(javaClass, Boolean.TRUE);
                         paramsMap.put(paraName, StringUtil.removeQuotes(String.valueOf(value)));
                     } else if (annotations.size() < 1 && !DocClassUtil.isPrimitive(typeName)) {
                         return "Smart-doc can't support create form-data example,It is recommended to use @RequestBody to receive parameters.";
@@ -1338,7 +1361,7 @@ public class SourceBuilder {
         apiDocList.add(apiDoc);
     }
 
-    private Object handleEnumValue(JavaClass javaClass,boolean returnEnum) {
+    private Object handleEnumValue(JavaClass javaClass, boolean returnEnum) {
         List<JavaField> javaFields = javaClass.getEnumConstants();
         Object value = null;
         int index = 0;
@@ -1346,7 +1369,7 @@ public class SourceBuilder {
             String simpleName = javaField.getType().getSimpleName();
             StringBuilder valueBuilder = new StringBuilder();
             valueBuilder.append("\"").append(javaField.getName()).append("\"").toString();
-            if(returnEnum){
+            if (returnEnum) {
                 value = valueBuilder.toString();
                 return value;
             }
