@@ -572,7 +572,7 @@ public class SourceBuilder {
                     if (!isResp && javaClass.isEnum()) {
                         List<JavaMethod> methods = javaClass.getMethods();
                         int index = 0;
-                        String reTypeName = null;
+                        String reTypeName = "string";
                         enumOut:
                         for (JavaMethod method : methods) {
                             JavaType type = method.getReturnType();
@@ -958,15 +958,7 @@ public class SourceBuilder {
                     } else {
                         JavaClass javaClass = builder.getClassByName(subTypeName);
                         if (!isResp && javaClass.isEnum()) {
-                            List<JavaField> javaFields = javaClass.getEnumConstants();
-                            Object value = null;
-                            int index = 0;
-                            for (JavaField javaField : javaFields) {
-                                String simpleName = javaField.getType().getSimpleName();
-                                if (!DocClassUtil.isPrimitive(simpleName) && index < 1) {
-                                    value = javaField.getEnumConstantArguments().get(0);
-                                }
-                            }
+                            Object value = this.handleEnumValue(javaClass,Boolean.FALSE);
                             data0.append(value).append(",");
                         } else {
                             data0.append(buildJson(subTypeName, fieldGicName, responseFieldMap, isResp, counter + 1, registryClasses)).append(",");
@@ -994,6 +986,7 @@ public class SourceBuilder {
             String simpleTypeName = javaType.getValue();
             String gicTypeName = javaType.getGenericCanonicalName();
             String typeName = javaType.getFullyQualifiedName();
+            JavaClass javaClass = builder.getClassByName(typeName);
             String paraName = parameter.getName();
             if (!DocClassUtil.isMvcIgnoreParams(typeName)) {
                 //file upload
@@ -1058,10 +1051,12 @@ public class SourceBuilder {
                     return builder.toString();
                 }
                 if (requestBodyCounter < 1 && paraName != null) {
-                    if (annotations.size() < 1 && !DocClassUtil.isPrimitive(typeName)) {
+                    if (javaClass.isEnum()) {
+                        Object value = this.handleEnumValue(javaClass,Boolean.TRUE);
+                        paramsMap.put(paraName, StringUtil.removeQuotes(String.valueOf(value)));
+                    } else if (annotations.size() < 1 && !DocClassUtil.isPrimitive(typeName)) {
                         return "Smart-doc can't support create form-data example,It is recommended to use @RequestBody to receive parameters.";
-                    }
-                    if (StringUtil.isEmpty(defaultVal)) {
+                    } else if (StringUtil.isEmpty(defaultVal) && DocClassUtil.isPrimitive(typeName)) {
                         paramsMap.put(paraName, DocUtil.getValByTypeAndFieldName(simpleTypeName, paraName,
                                 true));
                     } else {
@@ -1104,6 +1099,7 @@ public class SourceBuilder {
             String typeName = parameter.getType().getGenericCanonicalName();
             String simpleName = parameter.getType().getValue().toLowerCase();
             String fullTypeName = parameter.getType().getFullyQualifiedName();
+            JavaClass javaClass = builder.getClassByName(fullTypeName);
             if (!DocClassUtil.isMvcIgnoreParams(typeName)) {
                 if (!paramTagMap.containsKey(paramName) && DocClassUtil.isPrimitive(fullTypeName) && isStrict) {
                     throw new RuntimeException("ERROR: Unable to find javadoc @param for actual param \""
@@ -1145,6 +1141,10 @@ public class SourceBuilder {
                     } else if (DocGlobalConstants.JAVA_MAP_FULLY.equals(typeName)) {
                         ApiParam param = ApiParam.of().setField(paramName)
                                 .setType("map").setDesc(comment).setRequired(true).setVersion(DocGlobalConstants.DEFAULT_VERSION);
+                        paramList.add(param);
+                    } else if (javaClass.isEnum()) {
+                        ApiParam param = ApiParam.of().setField(paramName)
+                                .setType("string").setDesc(comment).setRequired(true).setVersion(DocGlobalConstants.DEFAULT_VERSION);
                         paramList.add(param);
                     } else {
                         paramList.addAll(buildParams(fullTypeName, "", 0, "true", responseFieldMap, false, new HashMap<>()));
@@ -1336,5 +1336,29 @@ public class SourceBuilder {
         apiDoc.setDesc(cls.getComment());
         apiDoc.setList(apiMethodDocs);
         apiDocList.add(apiDoc);
+    }
+
+    private Object handleEnumValue(JavaClass javaClass,boolean returnEnum) {
+        List<JavaField> javaFields = javaClass.getEnumConstants();
+        Object value = null;
+        int index = 0;
+        for (JavaField javaField : javaFields) {
+            String simpleName = javaField.getType().getSimpleName();
+            StringBuilder valueBuilder = new StringBuilder();
+            valueBuilder.append("\"").append(javaField.getName()).append("\"").toString();
+            if(returnEnum){
+                value = valueBuilder.toString();
+                return value;
+            }
+            if (!DocClassUtil.isPrimitive(simpleName) && index < 1) {
+                if (null != javaField.getEnumConstantArguments()) {
+                    value = javaField.getEnumConstantArguments().get(0);
+                } else {
+                    value = valueBuilder.toString();
+                }
+            }
+            index++;
+        }
+        return value;
     }
 }

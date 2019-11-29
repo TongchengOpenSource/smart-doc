@@ -1,5 +1,6 @@
 package com.power.doc.utils;
 
+import com.power.common.util.StringUtil;
 import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.model.ApiReturn;
 
@@ -25,7 +26,7 @@ public class DocClassUtil {
         type = type.toLowerCase();
         switch (type) {
             case "integer":
-            case  "void":
+            case "void":
             case "int":
             case "long":
             case "double":
@@ -168,6 +169,9 @@ public class DocClassUtil {
      * @return String
      */
     public static String processTypeNameForParams(String javaTypeName) {
+        if (StringUtil.isEmpty(javaTypeName)) {
+            return "object";
+        }
         if (javaTypeName.length() == 1) {
             return "object";
         }
@@ -388,11 +392,12 @@ public class DocClassUtil {
     }
 
     /**
-     *  ignore field type name
+     * ignore field type name
+     *
      * @param typeName field type name
      * @return String
      */
-    public static boolean isIgnoreFieldTypes(String typeName){
+    public static boolean isIgnoreFieldTypes(String typeName) {
         switch (typeName) {
             case "org.slf4j.Logger":
                 return true;
@@ -424,7 +429,7 @@ public class DocClassUtil {
                 fullyName.startsWith("java.util.concurrent.CompletableFuture") ||
                 fullyName.startsWith("org.springframework.web.context.request.async.DeferredResult") ||
                 fullyName.startsWith("org.springframework.web.context.request.async.WebAsyncTask") ||
-                fullyName.startsWith("reactor.core.publisher.Mono")||
+                fullyName.startsWith("reactor.core.publisher.Mono") ||
                 fullyName.startsWith("org.springframework.http.ResponseEntity")) {
             if (fullyName.contains("<")) {
                 String[] strings = getSimpleGicName(fullyName);
