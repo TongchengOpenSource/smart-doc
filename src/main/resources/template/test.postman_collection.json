@@ -1,0 +1,131 @@
+{
+	"info": {
+		"_postman_id": "1ae3c2c6-450c-873c-84bae5a6ed8d",
+		"name": "test1",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "登录",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "token",
+						"value": "0p7urnuy4jfx0pynb942kr16m",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userId\": \"admin\",\n    \"userName\": \"admin\",\n    \"password\": \"123456\",\n    \"captcha\": \"derx\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:8080/program/user/login",
+				"description": "45634534"
+			}
+		},
+		{
+			"name": "get请求测试",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "token",
+						"value": "d833ajrzkr1grz6d5u6urzwlu",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"current\":2,\n\t\"\n}"
+				},
+				"url":  "http://localhost:8080/program/statistics/getBurnDown?programId=2",
+				"description": "get描述"
+			}
+		},
+		{
+			"name": "post请求测试",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "token",
+						"value": "7bdn36y3797z8dk846uvusw1d",
+						"type": "text"
+					},
+					{
+						"key": "head2",
+						"value": "12312",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"programId\":2}"
+				},
+				"url": "http://localhost:8080/program/statistics/getprogram",
+				"description": "post描述"
+			}
+		},
+		{
+			"name": "post文件上传测试",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					},
+					{
+						"key": "token",
+						"type": "text",
+						"value": "7bdn36y3797z8dk846uvusw1d"
+					},
+					{
+						"key": "head2",
+						"type": "text",
+						"value": "12312"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/D:/wallhaven-dgk9qm.png"
+						}
+					]
+				},
+				"url": "http://localhost:8080/program/statistics/getprogram",
+				"description": "post文件上传测试"
+			}
+		}
+	]
+}
