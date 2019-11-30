@@ -1,8 +1,6 @@
 package com.power.doc.model.postman.request.body;
 
 
-import com.google.gson.Gson;
-
 /**
  * @author xingzi
  */
