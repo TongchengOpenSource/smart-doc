@@ -90,4 +90,14 @@ public class DocGlobalConstants {
     public static final String NO_COMMENTS_FOUND = "No comments found.";
 
     public static final String SPRING_WEB_ANNOTATION_PACKAGE = "org.springframework.web.bind.annotation";
+
+    public static final String FILE_CONTENT_TYPE = "multipart/form-data";
+
+    public static final String APPLICATION_JSON = "application/json";
+
+    public static final String POSTMAN_MODE_FORMDATA ="formdata";
+
+    public static final String POSTMAN_MODE_RAW ="raw";
+
+    public static final String HTTP_POST = "POST";
 }

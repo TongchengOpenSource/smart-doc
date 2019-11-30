@@ -10,7 +10,16 @@ import java.util.List;
 public class ItemBean {
     private String name;
     private RequestBean request;
+    private List<ItemBean> item;
+    private String description;
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
     public String getName() {
         return name;
@@ -28,5 +37,11 @@ public class ItemBean {
         this.request = request;
     }
 
+    public List<ItemBean> getItem() {
+        return item;
+    }
 
+    public void setItem(List<ItemBean> item) {
+        this.item = item;
+    }
 }

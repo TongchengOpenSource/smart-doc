@@ -10,6 +10,19 @@ public class HeaderBean {
     private String type;
     private boolean disabled;
     private String name;
+    private String description;
+
+    public HeaderBean() {
+        this.type = "text";
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
     public String getValue() {
         return value;
