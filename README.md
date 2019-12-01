@@ -1,6 +1,6 @@
 <h1 align="center">Smart-Doc Project</h1>
 
-ENGLISTS|[中文](https://github.com/shalousun/smart-doc/blob/master/README_CN.md)
+[中文文档](https://github.com/shalousun/smart-doc/blob/master/README_CN.md)
 
 ## Introduce
 Smart-doc is a java restful api document generation tool. Smart-doc is based on interface source code analysis to generate interface documents, and zero annotation intrusion.
