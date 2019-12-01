@@ -4,6 +4,7 @@ package com.power.doc.builder;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.power.common.util.FileUtil;
+import com.power.common.util.ValidateUtil;
 import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.model.ApiConfig;
 import com.power.doc.model.ApiDoc;
@@ -24,7 +25,7 @@ import java.util.List;
 /**
  * @author yu 2019/11/21.
  */
-public class PostMainJsonBuilder {
+public class PostManJsonBuilder {
 
     /**
      * 构建postman json
@@ -38,7 +39,7 @@ public class PostMainJsonBuilder {
         List<ApiDoc> apiDocList = sourceBuilder.getControllerApiData();
 
         RequestItem requestItem = new RequestItem();
-        requestItem.setInfo(new InfoBean());
+        requestItem.setInfo(new InfoBean(config.getProjectName()));
         List<ItemBean> itemBeans = new ArrayList<>();
         apiDocList.forEach(
                 apiDoc -> {
@@ -94,7 +95,9 @@ public class PostMainJsonBuilder {
         if (apiMethodDoc.getType().equals(DocGlobalConstants.HTTP_POST)) {
             requestBean.setBody(buildBodyBean(apiMethodDoc));
         } else {
-            requestBean.setUrl(apiMethodDoc.getRequestUsage());
+            if(! ValidateUtil.isNotUrl(apiMethodDoc.getRequestUsage())) {
+                requestBean.setUrl(apiMethodDoc.getRequestUsage());
+            }
         }
         item.setRequest(requestBean);
         return item;
