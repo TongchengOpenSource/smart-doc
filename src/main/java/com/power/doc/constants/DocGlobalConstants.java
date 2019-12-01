@@ -45,6 +45,8 @@ public class DocGlobalConstants {
 
     public static final String ALL_IN_ONE_CSS = "AllInOne.css";
 
+    public static final String POSTMAN_JSON = "/smart-doc.json";
+
     public static final String CONTROLLER_FULLY = "org.springframework.stereotype.Controller";
 
     public static final String REST_CONTROLLER_FULLY = "org.springframework.web.bind.annotation.RestController";

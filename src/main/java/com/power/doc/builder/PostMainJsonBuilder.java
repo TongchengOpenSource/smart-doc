@@ -1,6 +1,9 @@
 package com.power.doc.builder;
 
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.power.common.util.FileUtil;
 import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.model.ApiConfig;
 import com.power.doc.model.ApiDoc;
@@ -26,10 +29,9 @@ public class PostMainJsonBuilder {
     /**
      * 构建postman json
      *
-     * @param config
-     * @return
+     * @param config 配置文件
      */
-    public static RequestItem BuildPostmanApi(ApiConfig config) {
+    public static void BuildPostmanApi(ApiConfig config) {
         DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
         builderTemplate.checkAndInit(config);
         SourceBuilder sourceBuilder = new SourceBuilder(config);
@@ -45,9 +47,11 @@ public class PostMainJsonBuilder {
                 }
         );
         requestItem.setItem(itemBeans);
-        // requestItem 为最终的数据 转json ok
-//        System.out.println(new Gson().toJson(requestItem));
-        return requestItem;
+        String filePath = config.getOutPath();
+        filePath = filePath +DocGlobalConstants.POSTMAN_JSON;
+        Gson gson =  new GsonBuilder().setPrettyPrinting().create();
+        String data = gson.toJson(requestItem);
+        FileUtil.nioWriteFile(data,filePath);
     }
 
     /**
