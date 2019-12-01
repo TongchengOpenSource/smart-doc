@@ -146,7 +146,7 @@ public class ApiDocTest {
 mvn clean install -Dmaven.test.skip=true
 ```
 ## Releases
-[发布记录](https://gitee.com/sunyurepository/smart-doc/blob/master/RELEASE.md)
+[发布记录](https://gitee.com/sunyurepository/smart-doc/blob/master/CHANGELOG.md)
 ## Other reference
 - [smart-doc功能使用介绍](https://my.oschina.net/u/1760791/blog/2250962)
 - [smart-doc wiki](https://gitee.com/sunyurepository/smart-doc/wikis/Home?sort_id=1652800)
