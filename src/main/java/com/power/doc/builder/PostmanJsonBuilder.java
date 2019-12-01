@@ -17,7 +17,6 @@ import com.power.doc.model.postman.request.RequestBean;
 import com.power.doc.model.postman.request.body.BodyBean;
 import com.power.doc.model.postman.request.header.HeaderBean;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +24,7 @@ import java.util.List;
 /**
  * @author yu 2019/11/21.
  */
-public class PostManJsonBuilder {
+public class PostmanJsonBuilder {
 
     /**
      * 构建postman json
@@ -49,10 +48,10 @@ public class PostManJsonBuilder {
         );
         requestItem.setItem(itemBeans);
         String filePath = config.getOutPath();
-        filePath = filePath +DocGlobalConstants.POSTMAN_JSON;
-        Gson gson =  new GsonBuilder().setPrettyPrinting().create();
+        filePath = filePath + DocGlobalConstants.POSTMAN_JSON;
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String data = gson.toJson(requestItem);
-        FileUtil.nioWriteFile(data,filePath);
+        FileUtil.nioWriteFile(data, filePath);
     }
 
     /**
@@ -78,6 +77,7 @@ public class PostManJsonBuilder {
 
     /**
      * 构建第二层的item
+     *
      * @param apiMethodDoc
      * @return
      */
@@ -95,7 +95,7 @@ public class PostManJsonBuilder {
         if (apiMethodDoc.getType().equals(DocGlobalConstants.HTTP_POST)) {
             requestBean.setBody(buildBodyBean(apiMethodDoc));
         } else {
-            if(! ValidateUtil.isNotUrl(apiMethodDoc.getRequestUsage())) {
+            if (!ValidateUtil.isNotUrl(apiMethodDoc.getRequestUsage())) {
                 requestBean.setUrl(apiMethodDoc.getRequestUsage());
             }
         }

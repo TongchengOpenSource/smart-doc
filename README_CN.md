@@ -14,7 +14,7 @@ smart-doc完全基于接口源码分析来生成接口文档，完全做到零�
 - 对一些常用字段定义能够生成有效的模拟值。
 - 支持生成json返回值示例。
 - 支持从项目外部加载源代码来生成字段注释(包括标准规范发布的jar包)。
-- 支持生成多种格式文档：Markdown、HTML5、Asciidoctor。
+- 支持生成多种格式文档：Markdown、HTML5、Asciidoctor、Postman json。
 - 轻易实现在Spring Boot服务上在线查看静态HTML5 api文档。
 - 开放文档数据，可自由实现接入文档管理系统。
 - 支持导出错误码和定义在代码中的各种字典码到接口文档。
@@ -30,13 +30,13 @@ smart-doc使用和测试可参考[smart-doc demo](https://gitee.com/sunyureposit
 <dependency>
     <groupId>com.github.shalousun</groupId>
     <artifactId>smart-doc</artifactId>
-    <version>1.7.7</version>
+    <version>1.7.8</version>
     <scope>test</scope>
 </dependency>
 ```
 #### gradle
 ```
-testCompile 'com.github.shalousun:smart-doc:1.7.7'
+testCompile 'com.github.shalousun:smart-doc:1.7.8'
 ```
 ### Create a unit test
 通过运行一个单元测试来让Smart-doc为你生成一个简洁明了的api文档
@@ -127,6 +127,8 @@ public class ApiDocTest {
         //@since 1.7+版本开始，smart-doc支撑生成AsciiDoc文档，你可以把AsciiDoc转成HTML5的格式。
         //@see https://gitee.com/sunyurepository/api-doc-test
         //AdocDocBuilder.builderControllersApi(config);
+        //@since 1.7.8,smart-doc支持导出Postman测试的json
+        //PostmanJsonBuilder.BuildPostmanApi(config);
                 
         long end = System.currentTimeMillis();
         DateTimeUtil.printRunTime(end, start);

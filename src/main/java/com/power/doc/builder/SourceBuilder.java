@@ -471,14 +471,7 @@ public class SourceBuilder {
             }
             paramList.add(param);
         } else {
-            boolean isGenerics = false;
-            checkGenerics:
-            for (JavaField field : fields) {
-                if (field.getType().getFullyQualifiedName().length() == 1) {
-                    isGenerics = true;
-                    break checkGenerics;
-                }
-            }
+            boolean isGenerics = this.checkGenerics(fields);
             out:
             for (JavaField field : fields) {
                 String fieldName = field.getName();
@@ -816,14 +809,7 @@ public class SourceBuilder {
             }
         } else {
             List<JavaField> fields = getFields(cls, 0);
-            boolean isGenerics = false;
-            checkGenerics:
-            for (JavaField field : fields) {
-                if (field.getType().getFullyQualifiedName().length() == 1) {
-                    isGenerics = true;
-                    break checkGenerics;
-                }
-            }
+            boolean isGenerics = this.checkGenerics(fields);
             int i = 0;
             out:
             for (JavaField field : fields) {
@@ -1383,5 +1369,15 @@ public class SourceBuilder {
             index++;
         }
         return value;
+    }
+
+    private boolean checkGenerics(List<JavaField> fields) {
+        checkGenerics:
+        for (JavaField field : fields) {
+            if (field.getType().getFullyQualifiedName().length() == 1) {
+                return true;
+            }
+        }
+        return false;
     }
 }
