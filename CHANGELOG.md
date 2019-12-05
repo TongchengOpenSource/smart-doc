@@ -128,7 +128,7 @@
 	3. 修改部分url生成部署空格问题。
 	4. 优化对java.util.concurrent.ConcurrentMap的解析。
 #### 版本号：1.7.8
-- 更新日期：待定
+- 更新日期: 2019-12-02
 - 更新内容：
 	1. 修改Spring Controller使用非Spring Web注解时生成的响应示例出错的bug。
 	2. 修改使用mybatis-plus实体继承Model对象时将log字段输出到文档的问题。
