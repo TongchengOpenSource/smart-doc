@@ -322,8 +322,7 @@ public class DocUtil {
                 } else {
                     value = entry.getKey() + entry.getValue();
                 }
-                value = value.replace("\r\n", "<br/>");
-                value = value.replace("\r", "<br/>");
+                value = replaceNewLineToHtmlBr(value);
             }
         }
         return value;
@@ -342,5 +341,12 @@ public class DocUtil {
         } else {
             return valueId.substring(length - 32, length);
         }
+    }
+
+    public static String replaceNewLineToHtmlBr(String content){
+        if(StringUtil.isNotEmpty(content)){
+            return content.replaceAll("(\r\n|\r|\n|\n\r)", "<br>");
+        }
+        return null;
     }
 }

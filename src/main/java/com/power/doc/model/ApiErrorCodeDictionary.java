@@ -1,6 +1,7 @@
 package com.power.doc.model;
 
 /**
+ * @since 1.7.9
  * @author yu 2019/12/7.
  */
 public class ApiErrorCodeDictionary {

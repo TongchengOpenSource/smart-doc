@@ -543,8 +543,7 @@ public class SourceBuilder {
                     comment = field.getComment();
                 }
                 if (StringUtil.isNotEmpty(comment)) {
-                    comment = comment.replaceAll("\r\n", "<br>");
-                    comment = comment.replaceAll("\n", "<br>");
+                    comment = DocUtil.replaceNewLineToHtmlBr(comment);
                 }
                 if (DocClassUtil.isPrimitive(subTypeName)) {
                     ApiParam param = ApiParam.of().setField(pre + fieldName);
@@ -560,8 +559,7 @@ public class SourceBuilder {
                     JavaClass javaClass = builder.getClassByName(subTypeName);
                     String enumComments = javaClass.getComment();
                     if (StringUtil.isNotEmpty(enumComments) && javaClass.isEnum()) {
-                        enumComments = enumComments.replaceAll("\r\n", "<br>");
-                        enumComments = enumComments.replaceAll("\n", "<br>");
+                        enumComments = DocUtil.replaceNewLineToHtmlBr(enumComments);
                         comment = comment + "(See: " + enumComments + ")";
                     }
                     String processedType = DocClassUtil.processTypeNameForParams(typeSimpleName.toLowerCase());

@@ -10,6 +10,7 @@ import com.power.doc.constants.TemplateVariable;
 import com.power.doc.model.*;
 import com.power.doc.utils.BeetlTemplateUtil;
 import com.power.doc.utils.DocUtil;
+import com.power.doc.utils.EnumUtil;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.beetl.core.Template;
 
@@ -203,32 +204,15 @@ public class DocBuilderTemplate {
                     }
                     clzz = Class.forName(apiDataDictionary.getEnumClassName());
                 }
+                List<DataDict> enumDictionaryList = EnumUtil.getEnumValues(clzz,apiDataDictionary.getCodeField(),
+                        apiDataDictionary.getDescField());
                 if (!clzz.isEnum()) {
                     throw new RuntimeException(clzz.getCanonicalName() + " is not an enum class.");
                 }
-                List<DataDict> dataDictList = new ArrayList<>();
-                Object[] objects = clzz.getEnumConstants();
-                String valueMethodName = "get" + StringUtil.firstToUpperCase(apiDataDictionary.getCodeField());
-                String descMethodName = "get" + StringUtil.firstToUpperCase(apiDataDictionary.getDescField());
-                Method valueMethod = clzz.getMethod(valueMethodName);
-                Method descMethod = clzz.getMethod(descMethodName);
-                for (Object object : objects) {
-                    Object val = valueMethod.invoke(object);
-                    Object desc = descMethod.invoke(object);
-                    DataDict dataDict = new DataDict();
-                    if (val instanceof String) {
-                        dataDict.setType("string");
-                    } else {
-                        dataDict.setType("int32");
-                    }
-                    dataDict.setDesc(String.valueOf(desc));
-                    dataDict.setValue(String.valueOf(val));
-                    dataDictList.add(dataDict);
-                }
-                apiDocDict.setDataDictList(dataDictList);
+                apiDocDict.setDataDictList(enumDictionaryList);
                 apiDocDictList.add(apiDocDict);
             }
-        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException | ClassNotFoundException e) {
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
         return apiDocDictList;
@@ -253,24 +237,11 @@ public class DocBuilderTemplate {
                         }
                         clzz = Class.forName(dictionary.getEnumClassName());
                     }
-                    if (!clzz.isEnum()) {
-                        throw new RuntimeException(clzz.getCanonicalName() + " is not an enum class.");
-                    }
-                    Object[] objects = clzz.getEnumConstants();
-                    String valueMethodName = "get" + StringUtil.firstToUpperCase(dictionary.getCodeField());
-                    String descMethodName = "get" + StringUtil.firstToUpperCase(dictionary.getDescField());
-                    Method valueMethod = clzz.getMethod(valueMethodName);
-                    Method descMethod = clzz.getMethod(descMethodName);
-                    for (Object object : objects) {
-                        Object val = valueMethod.invoke(object);
-                        Object desc = descMethod.invoke(object);
-                        ApiErrorCode errorCode = new ApiErrorCode();
-                        errorCode.setDesc(String.valueOf(desc));
-                        errorCode.setValue(String.valueOf(val));
-                        errorCodeList.add(errorCode);
-                    }
+                    List<ApiErrorCode> enumDictionaryList = EnumUtil.getEnumValues(clzz,dictionary.getCodeField(),
+                            dictionary.getDescField());
+                    errorCodeList.addAll(enumDictionaryList);
                 }
-            } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException | ClassNotFoundException e) {
+            } catch ( ClassNotFoundException e) {
                 e.printStackTrace();
             }
             return errorCodeList;
