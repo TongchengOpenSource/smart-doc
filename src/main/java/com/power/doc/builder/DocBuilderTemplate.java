@@ -133,17 +133,18 @@ public class DocBuilderTemplate {
     /**
      * build error_code adoc
      *
-     * @param errorCodeList  list  data of Api doc
      * @param config         api config
      * @param template       template
      * @param outPutFileName output file
      */
-    public void buildErrorCodeDoc(List<ApiErrorCode> errorCodeList, ApiConfig config, String template, String outPutFileName) {
-        if (CollectionUtil.isNotEmpty(errorCodeList)) {
-            Template mapper = BeetlTemplateUtil.getByName(template);
-            mapper.binding(TemplateVariable.LIST.getVariable(), errorCodeList);
-            FileUtil.nioWriteFile(mapper.render(), config.getOutPath() + FILE_SEPARATOR + outPutFileName);
+    public void buildErrorCodeDoc(ApiConfig config, String template, String outPutFileName) {
+        List<ApiErrorCode> errorCodeList = config.getErrorCodes();
+        if (CollectionUtil.isEmpty(errorCodeList)) {
+            errorCodeList = errorCodeDictToList(config);
         }
+        Template mapper = BeetlTemplateUtil.getByName(template);
+        mapper.binding(TemplateVariable.LIST.getVariable(), errorCodeList);
+        FileUtil.nioWriteFile(mapper.render(), config.getOutPath() + FILE_SEPARATOR + outPutFileName);
     }
 
     /**
@@ -220,5 +221,44 @@ public class DocBuilderTemplate {
             e.printStackTrace();
         }
         return apiDocDictList;
+    }
+
+    private List<ApiErrorCode> errorCodeDictToList(ApiConfig config) {
+        List<ApiErrorCodeDictionary> errorCodeDictionaries = config.getErrorCodeDictionaries();
+        if (CollectionUtil.isEmpty(errorCodeDictionaries)) {
+            return new ArrayList<>(0);
+        } else {
+            List<ApiErrorCode> errorCodeList = new ArrayList<>();
+            try {
+                for (ApiErrorCodeDictionary dictionary : errorCodeDictionaries) {
+                    Class<?> clzz = dictionary.getEnumClass();
+                    if (Objects.isNull(clzz)) {
+                        if (StringUtil.isEmpty(dictionary.getEnumClassName())) {
+                            throw new RuntimeException(" enum class name can't be null.");
+                        }
+                        clzz = Class.forName(dictionary.getEnumClassName());
+                    }
+                    if (!clzz.isEnum()) {
+                        throw new RuntimeException(clzz.getCanonicalName() + " is not an enum class.");
+                    }
+                    Object[] objects = clzz.getEnumConstants();
+                    String valueMethodName = "get" + StringUtil.firstToUpperCase(dictionary.getCodeField());
+                    String descMethodName = "get" + StringUtil.firstToUpperCase(dictionary.getDescField());
+                    Method valueMethod = clzz.getMethod(valueMethodName);
+                    Method descMethod = clzz.getMethod(descMethodName);
+                    for (Object object : objects) {
+                        Object val = valueMethod.invoke(object);
+                        Object desc = descMethod.invoke(object);
+                        ApiErrorCode errorCode = new ApiErrorCode();
+                        errorCode.setDesc(String.valueOf(desc));
+                        errorCode.setValue(String.valueOf(val));
+                        errorCodeList.add(errorCode);
+                    }
+                }
+            } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            return errorCodeList;
+        }
     }
 }

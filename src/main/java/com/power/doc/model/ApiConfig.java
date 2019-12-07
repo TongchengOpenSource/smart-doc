@@ -98,6 +98,12 @@ public class ApiConfig {
     private List<ApiDataDictionary> dataDictionaries;
 
     /**
+     * @since 1.7.9
+     * api error code dictionary
+     */
+    private List<ApiErrorCodeDictionary> errorCodeDictionaries;
+
+    /**
      * @since 1.7.5
      * project name
      */
@@ -223,6 +229,14 @@ public class ApiConfig {
 
     public void setDataDictionaries(ApiDataDictionary... dataDictConfigs) {
         this.dataDictionaries = CollectionUtil.asList(dataDictConfigs);
+    }
+
+    public List<ApiErrorCodeDictionary> getErrorCodeDictionaries() {
+        return errorCodeDictionaries;
+    }
+
+    public void setErrorCodeDictionaries(ApiErrorCodeDictionary... errorCodeDictConfigs) {
+        this.errorCodeDictionaries = CollectionUtil.asList(errorCodeDictConfigs);
     }
 
     public boolean isCoverOld() {

@@ -58,6 +58,7 @@ public class ApiDocTest {
                 CustomRespField.field().setName("code").setValue("00000")
                 //.setDesc("响应代码")
         );*/
+        config.setErrorCodes();
 
         //非必须只有当setAllInOne设置为true时文档变更记录才生效，https://gitee.com/sunyurepository/ApplicationPower/issues/IPS4O
         config.setRevisionLogs(

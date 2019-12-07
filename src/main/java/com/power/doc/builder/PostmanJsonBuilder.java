@@ -31,7 +31,7 @@ public class PostmanJsonBuilder {
      *
      * @param config 配置文件
      */
-    public static void BuildPostmanApi(ApiConfig config) {
+    public static void buildPostmanApi(ApiConfig config) {
         DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
         builderTemplate.checkAndInit(config);
         SourceBuilder sourceBuilder = new SourceBuilder(config);

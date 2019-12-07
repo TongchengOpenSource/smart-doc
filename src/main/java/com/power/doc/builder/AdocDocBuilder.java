@@ -33,7 +33,7 @@ public class AdocDocBuilder {
             builderTemplate.buildAllInOne(apiDocList, config, ALL_IN_ONE_ADOC_TPL, INDEX_DOC);
         } else {
             builderTemplate.buildApiDoc(apiDocList, config, API_DOC_ADOC_TPL, API_EXTENSION);
-            builderTemplate.buildErrorCodeDoc(config.getErrorCodes(), config, ERROR_CODE_LIST_ADOC_TPL, ERROR_CODE_LIST_ADOC);
+            builderTemplate.buildErrorCodeDoc(config, ERROR_CODE_LIST_ADOC_TPL, ERROR_CODE_LIST_ADOC);
         }
     }
 
