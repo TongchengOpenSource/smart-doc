@@ -28,6 +28,10 @@ public class ApiErrorCodeDictionary {
         return enumClass;
     }
 
+    public static ApiErrorCodeDictionary dict(){
+        return new ApiErrorCodeDictionary();
+    }
+
     public ApiErrorCodeDictionary setEnumClass(Class enumClass) {
         this.enumClass = enumClass;
         return this;
