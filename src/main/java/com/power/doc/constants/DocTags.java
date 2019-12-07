@@ -24,4 +24,9 @@ public class DocTags {
      * java apiNote tag for method detail
      */
     public static final String API_NOTE = "apiNote";
+
+    /**
+     * custom ignore tag
+     */
+    public static final String IGNORE = "ignore";
 }

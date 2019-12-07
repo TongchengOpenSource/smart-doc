@@ -9,6 +9,8 @@ import com.power.doc.constants.DocLanguage;
 import com.power.doc.constants.TemplateVariable;
 import com.power.doc.model.*;
 import com.power.doc.utils.BeetlTemplateUtil;
+import com.power.doc.utils.DocUtil;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.beetl.core.Template;
 
 import java.lang.reflect.InvocationTargetException;
@@ -32,17 +34,9 @@ public class DocBuilderTemplate {
      * @param config Api config
      */
     public void checkAndInit(ApiConfig config) {
-        if (null == config) {
-            throw new NullPointerException("ApiConfig can't be null");
-        }
+        this.checkAndInitForGetApiData(config);
         if (StringUtil.isEmpty(config.getOutPath())) {
             throw new RuntimeException("doc output path can't be null or empty");
-        }
-        if (null != config.getLanguage()) {
-            System.setProperty(DocGlobalConstants.DOC_LANGUAGE, config.getLanguage().getCode());
-        } else {
-            //default is chinese
-            System.setProperty(DocGlobalConstants.DOC_LANGUAGE, DocLanguage.CHINESE.getCode());
         }
     }
 
@@ -61,6 +55,24 @@ public class DocBuilderTemplate {
             //default is chinese
             System.setProperty(DocGlobalConstants.DOC_LANGUAGE, DocLanguage.CHINESE.getCode());
         }
+    }
+
+    /**
+     * get all api data
+     *
+     * @param config
+     * @return
+     */
+    public ApiAllData getApiData(ApiConfig config) {
+        ApiAllData apiAllData = new ApiAllData();
+        apiAllData.setProjectName(config.getProjectName());
+        apiAllData.setProjectId(DocUtil.handleId(config.getProjectName()));
+        apiAllData.setLanguage(config.getLanguage().getCode());
+        apiAllData.setApiDocList(listOfApiData(config));
+        apiAllData.setErrorCodeList(errorCodeDictToList(config));
+        apiAllData.setRevisionLogs(config.getRevisionLogs());
+        apiAllData.setApiDocDictList(buildDictionary(config));
+        return apiAllData;
     }
 
     /**
@@ -100,10 +112,8 @@ public class DocBuilderTemplate {
         String outPath = config.getOutPath();
         String strTime = DateTimeUtil.long2Str(now, DateTimeUtil.DATE_FORMAT_SECOND);
         FileUtil.mkdirs(outPath);
-        List<ApiErrorCode> errorCodeList = config.getErrorCodes();
-        if (CollectionUtil.isEmpty(errorCodeList)) {
-            errorCodeList = errorCodeDictToList(config);
-        }
+        List<ApiErrorCode> errorCodeList = errorCodeDictToList(config);
+
         Template tpl = BeetlTemplateUtil.getByName(template);
         tpl.binding(TemplateVariable.API_DOC_LIST.getVariable(), apiDocList);
         tpl.binding(TemplateVariable.ERROR_CODE_LIST.getVariable(), errorCodeList);
@@ -142,10 +152,7 @@ public class DocBuilderTemplate {
      * @param outPutFileName output file
      */
     public void buildErrorCodeDoc(ApiConfig config, String template, String outPutFileName) {
-        List<ApiErrorCode> errorCodeList = config.getErrorCodes();
-        if (CollectionUtil.isEmpty(errorCodeList)) {
-            errorCodeList = errorCodeDictToList(config);
-        }
+        List<ApiErrorCode> errorCodeList = errorCodeDictToList(config);
         Template mapper = BeetlTemplateUtil.getByName(template);
         mapper.binding(TemplateVariable.LIST.getVariable(), errorCodeList);
         FileUtil.nioWriteFile(mapper.render(), config.getOutPath() + FILE_SEPARATOR + outPutFileName);
@@ -228,7 +235,11 @@ public class DocBuilderTemplate {
     }
 
     private List<ApiErrorCode> errorCodeDictToList(ApiConfig config) {
+        if (CollectionUtil.isNotEmpty(config.getErrorCodes())) {
+            return config.getErrorCodes();
+        }
         List<ApiErrorCodeDictionary> errorCodeDictionaries = config.getErrorCodeDictionaries();
+
         if (CollectionUtil.isEmpty(errorCodeDictionaries)) {
             return new ArrayList<>(0);
         } else {
@@ -264,5 +275,12 @@ public class DocBuilderTemplate {
             }
             return errorCodeList;
         }
+    }
+
+    private List<ApiDoc> listOfApiData(ApiConfig config) {
+        this.checkAndInitForGetApiData(config);
+        config.setMd5EncryptedHtmlName(true);
+        SourceBuilder sourceBuilder = new SourceBuilder(config);
+        return sourceBuilder.getControllerApiData();
     }
 }

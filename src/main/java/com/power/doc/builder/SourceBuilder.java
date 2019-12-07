@@ -14,7 +14,6 @@ import com.power.doc.utils.DocUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import com.thoughtworks.qdox.model.*;
 import com.thoughtworks.qdox.model.expression.AnnotationValue;
-import org.apache.commons.codec.digest.DigestUtils;
 
 import java.io.File;
 import java.util.*;
@@ -22,9 +21,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class SourceBuilder {
+import static com.power.doc.constants.DocGlobalConstants.NO_COMMENTS_FOUND;
+import static com.power.doc.constants.DocTags.IGNORE;
 
-    private static final String IGNORE_TAG = "ignore";
+public class SourceBuilder {
 
     private static final String GET_MAPPING = "GetMapping";
 
@@ -45,10 +45,6 @@ public class SourceBuilder {
     private static final String JSON_CONTENT_TYPE = "application/json; charset=utf-8";
 
     private static final String MULTIPART_TYPE = "multipart/form-data";
-
-    private static final String MAP_CLASS = "java.util.Map";
-
-    private static final String NO_COMMENTS_FOUND = "No comments found.";
 
     private static final String VALID = "Valid";
 
@@ -266,7 +262,7 @@ public class SourceBuilder {
 //                if ("void".equals(method.getReturnType().getFullyQualifiedName())) {
 //                    throw new RuntimeException(method.getName() + " method in " + cls.getCanonicalName() + " can't be  return type 'void'");
 //                }
-                if (null != method.getTagByName(IGNORE_TAG)) {
+                if (null != method.getTagByName(IGNORE)) {
                     continue;
                 }
                 url = StringUtil.removeQuotes(url);
@@ -1303,24 +1299,14 @@ public class SourceBuilder {
      */
     private void handControllerAlias(ApiDoc apiDoc) {
         if (isUseMD5) {
-            String name = DigestUtils.md5Hex(apiDoc.getName());
-            int length = name.length();
-            if (name.length() < 32) {
-                apiDoc.setAlias(name);
-            } else {
-                apiDoc.setAlias(name.substring(length - 32, length));
-            }
+            String name = DocUtil.handleId(apiDoc.getName());
+            apiDoc.setAlias(name);
         }
     }
 
     private void handleMethodUid(ApiMethodDoc methodDoc, String methodName) {
-        String name = DigestUtils.md5Hex(methodName);
-        int length = name.length();
-        if (name.length() < 32) {
-            methodDoc.setMethodId(name);
-        } else {
-            methodDoc.setMethodId(name.substring(length - 32, length));
-        }
+        String name = DocUtil.handleId(methodName);
+        methodDoc.setMethodId(name);
     }
 
     private void commonHandleParam(List<ApiParam> paramList, ApiParam param, String isRequired, String comment, String since, boolean strRequired) {

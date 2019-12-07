@@ -10,6 +10,7 @@ import com.power.doc.constants.DocGlobalConstants;
 import com.thoughtworks.qdox.model.DocletTag;
 import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaMethod;
+import org.apache.commons.codec.digest.DigestUtils;
 
 import java.util.*;
 
@@ -326,5 +327,20 @@ public class DocUtil {
             }
         }
         return value;
+    }
+
+    /**
+     * Use md5 generate id number
+     * @param value value
+     * @return String
+     */
+    public static  String handleId(String value) {
+        String valueId = DigestUtils.md5Hex(value);
+        int length = valueId.length();
+        if (valueId.length() < 32) {
+            return valueId;
+        } else {
+            return valueId.substring(length - 32, length);
+        }
     }
 }

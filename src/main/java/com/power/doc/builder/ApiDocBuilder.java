@@ -49,34 +49,4 @@ public class ApiDocBuilder {
         builderTemplate.checkAndInit(config);
         builderTemplate.buildSingleControllerApi(config.getOutPath(), controllerName, API_DOC_MD_TPL, API_EXTENSION);
     }
-
-    /**
-     * Get list of ApiDoc
-     *
-     * @param config ApiConfig
-     * @return List of ApiDoc
-     */
-    public static List<ApiDoc> listOfApiData(ApiConfig config) {
-        DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
-        builderTemplate.checkAndInitForGetApiData(config);
-        config.setMd5EncryptedHtmlName(true);
-        SourceBuilder sourceBuilder = new SourceBuilder(config);
-        return sourceBuilder.getControllerApiData();
-    }
-
-    /**
-     * Get single api data
-     *
-     * @param config         ApiConfig
-     * @param controllerName controller name
-     * @return ApiDoc
-     */
-    public static ApiDoc getApiData(ApiConfig config, String controllerName) {
-        DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
-        builderTemplate.checkAndInitForGetApiData(config);
-        config.setMd5EncryptedHtmlName(true);
-        SourceBuilder sourceBuilder = new SourceBuilder(config);
-        return sourceBuilder.getSingleControllerApiData(controllerName);
-    }
-
 }
