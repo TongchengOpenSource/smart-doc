@@ -1,5 +1,7 @@
 package com.power.doc.model;
 
+import com.power.common.model.EnumDictionary;
+
 /**
  * Description:
  * restful api error code

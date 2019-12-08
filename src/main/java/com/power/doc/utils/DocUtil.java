@@ -100,7 +100,7 @@ public class DocUtil {
                 "BigDecimal".equals(type) || "boolean".equals(type) || "Boolean".equals(type) ||
                 "Short".equals(type) || "BigInteger".equals(type)) {
             return value;
-        } else if("Void".equals(type)){
+        } else if ("Void".equals(type)) {
             return "null";
         } else {
             StringBuilder builder = new StringBuilder();
@@ -330,10 +330,14 @@ public class DocUtil {
 
     /**
      * Use md5 generate id number
+     *
      * @param value value
      * @return String
      */
-    public static  String handleId(String value) {
+    public static String handleId(String value) {
+        if (StringUtil.isEmpty(value)) {
+            return null;
+        }
         String valueId = DigestUtils.md5Hex(value);
         int length = valueId.length();
         if (valueId.length() < 32) {
@@ -343,8 +347,8 @@ public class DocUtil {
         }
     }
 
-    public static String replaceNewLineToHtmlBr(String content){
-        if(StringUtil.isNotEmpty(content)){
+    public static String replaceNewLineToHtmlBr(String content) {
+        if (StringUtil.isNotEmpty(content)) {
             return content.replaceAll("(\r\n|\r|\n|\n\r)", "<br>");
         }
         return null;

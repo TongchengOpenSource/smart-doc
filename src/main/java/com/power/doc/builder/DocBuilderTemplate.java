@@ -1,21 +1,14 @@
 package com.power.doc.builder;
 
-import com.power.common.util.CollectionUtil;
-import com.power.common.util.DateTimeUtil;
-import com.power.common.util.FileUtil;
-import com.power.common.util.StringUtil;
+import com.power.common.util.*;
 import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.constants.DocLanguage;
 import com.power.doc.constants.TemplateVariable;
 import com.power.doc.model.*;
 import com.power.doc.utils.BeetlTemplateUtil;
 import com.power.doc.utils.DocUtil;
-import com.power.doc.utils.EnumUtil;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.beetl.core.Template;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -54,6 +47,7 @@ public class DocBuilderTemplate {
             System.setProperty(DocGlobalConstants.DOC_LANGUAGE, config.getLanguage().getCode());
         } else {
             //default is chinese
+            config.setLanguage(DocLanguage.CHINESE);
             System.setProperty(DocGlobalConstants.DOC_LANGUAGE, DocLanguage.CHINESE.getCode());
         }
     }
@@ -204,7 +198,7 @@ public class DocBuilderTemplate {
                     }
                     clzz = Class.forName(apiDataDictionary.getEnumClassName());
                 }
-                List<DataDict> enumDictionaryList = EnumUtil.getEnumValues(clzz,apiDataDictionary.getCodeField(),
+                List<DataDict> enumDictionaryList = EnumUtil.getEnumInformation(clzz, apiDataDictionary.getCodeField(),
                         apiDataDictionary.getDescField());
                 if (!clzz.isEnum()) {
                     throw new RuntimeException(clzz.getCanonicalName() + " is not an enum class.");
@@ -223,7 +217,6 @@ public class DocBuilderTemplate {
             return config.getErrorCodes();
         }
         List<ApiErrorCodeDictionary> errorCodeDictionaries = config.getErrorCodeDictionaries();
-
         if (CollectionUtil.isEmpty(errorCodeDictionaries)) {
             return new ArrayList<>(0);
         } else {
@@ -237,7 +230,7 @@ public class DocBuilderTemplate {
                         }
                         clzz = Class.forName(dictionary.getEnumClassName());
                     }
-                    List<ApiErrorCode> enumDictionaryList = EnumUtil.getEnumValues(clzz,dictionary.getCodeField(),
+                    List<ApiErrorCode> enumDictionaryList = EnumUtil.getEnumInformation(clzz,dictionary.getCodeField(),
                             dictionary.getDescField());
                     errorCodeList.addAll(enumDictionaryList);
                 }

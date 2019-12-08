@@ -17,8 +17,8 @@ public class ApiDataBuilder {
      */
     public static ApiAllData getApiData(ApiConfig config) {
         DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
-        builderTemplate.getApiData(config);
         builderTemplate.checkAndInitForGetApiData(config);
+        builderTemplate.getApiData(config);
         return builderTemplate.getApiData(config);
     }
 
