@@ -51,6 +51,35 @@ public class DocClassUtil {
         }
     }
 
+
+    /**
+     * Check if it is the basic data array type of json data
+     *
+     * @param type0 java class name
+     * @return boolean
+     */
+    public static boolean isPrimitiveArray(String type0) {
+        String type = type0.contains("java.lang") ? type0.substring(type0.lastIndexOf(".") + 1, type0.length()) : type0;
+        type = type.toLowerCase();
+        switch (type) {
+            case "integer[]":
+            case "void":
+            case "int[]":
+            case "long[]":
+            case "double[]":
+            case "float[]":
+            case "short[]":
+            case "bigdecimal[]":
+            case "char[]":
+            case "string[]":
+            case "boolean[]":
+            case "byte[]":
+                return true;
+            default:
+                return false;
+        }
+    }
+
     /**
      * get class names by generic class name
      *

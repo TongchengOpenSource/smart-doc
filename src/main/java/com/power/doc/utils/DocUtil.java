@@ -23,7 +23,7 @@ import java.util.*;
 public class DocUtil {
 
     private static Faker faker = new Faker(new Locale(System.getProperty(DocGlobalConstants.DOC_LANGUAGE)));
-
+    //private static Faker faker = new Faker(new Locale("smart-doc_language"));
     private static Faker enFaker = new Faker(new Locale("en-US"));
 
     private static Map<String, String> fieldValue = new LinkedHashMap<>();
@@ -117,13 +117,27 @@ public class DocUtil {
      * @return random value
      */
     public static String getValByTypeAndFieldName(String typeName, String filedName) {
+        boolean isArray = true;
+
         String type = typeName.contains("java.lang") ? typeName.substring(typeName.lastIndexOf(".") + 1, typeName.length()) : typeName;
         String key = filedName.toLowerCase() + "-" + type.toLowerCase();
-        String value = null;
+        StringBuilder value = null;
+        if(! type.contains("[")){
+            isArray = false;
+        }
         for (Map.Entry<String, String> entry : fieldValue.entrySet()) {
             if (key.contains(entry.getKey())) {
-                value = entry.getValue();
-                break;
+                value = new StringBuilder(entry.getValue());
+                if(! isArray){
+                    break;
+                }
+                else {
+                    for(int i=0;i<2;i++){
+                        value.append(",").append(entry.getValue());
+                    }
+                     break;
+                }
+
             }
         }
         if (null == value) {
@@ -134,7 +148,7 @@ public class DocUtil {
                 builder.append("\"").append(value).append("\"");
                 return builder.toString();
             } else {
-                return value;
+                return value.toString();
             }
         }
     }

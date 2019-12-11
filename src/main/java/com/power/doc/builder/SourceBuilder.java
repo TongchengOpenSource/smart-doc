@@ -1062,13 +1062,18 @@ public class SourceBuilder {
                     } else if (StringUtil.isEmpty(defaultVal) && DocClassUtil.isPrimitive(typeName)) {
                         paramsMap.put(paraName, DocUtil.getValByTypeAndFieldName(simpleTypeName, paraName,
                                 true));
-                    } else {
+                    } else if((StringUtil.isEmpty(defaultVal) && DocClassUtil.isPrimitiveArray(typeName))){
+                        paramsMap.put(paraName, DocUtil.getValByTypeAndFieldName(simpleTypeName, paraName,
+                                true));
+                    }
+                    else {
                         paramsMap.put(paraName, defaultVal);
                     }
                 }
             }
         }
         String url;
+
         if (containsBrace) {
             url = DocUtil.formatAndRemove(apiMethodDoc.getUrl(), paramsMap);
             url = UrlUtil.urlJoin(url, paramsMap);
