@@ -680,7 +680,7 @@ public class SourceBuilder {
                     } else if (simpleName.equals(subTypeName)) {
                         //do nothing
                     } else {
-                        if (isResp && !javaClass.isEnum()) {
+                        if (!javaClass.isEnum()) {
                             paramList.addAll(buildParams(fieldGicName, preBuilder.toString(), i + 1, isRequired, responseFieldMap, isResp, registryClasses));
                         }
                     }
