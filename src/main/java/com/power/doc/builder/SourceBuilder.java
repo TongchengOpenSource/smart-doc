@@ -48,6 +48,8 @@ public class SourceBuilder {
 
     private static final String VALID = "Valid";
 
+    private static final String DEFAULT_SERVER_URL = "http://{server}";
+
     private Map<String, JavaClass> javaFilesMap = new ConcurrentHashMap<>();
     private Map<String, CustomRespField> fieldMap = new ConcurrentHashMap<>();
     private JavaProjectBuilder builder;
@@ -80,7 +82,7 @@ public class SourceBuilder {
         }
 
         if (StringUtil.isEmpty(config.getServerUrl())) {
-            this.appUrl = "http://{server}";
+            this.appUrl = DEFAULT_SERVER_URL;
         } else {
             this.appUrl = config.getServerUrl();
         }
@@ -982,7 +984,7 @@ public class SourceBuilder {
         if (parameterList.size() < 1) {
             return apiMethodDoc.getUrl();
         }
-        boolean containsBrace = apiMethodDoc.getUrl().contains("{");
+        boolean containsBrace = apiMethodDoc.getUrl().replace(DEFAULT_SERVER_URL,"").contains("{") ;
         Map<String, String> paramsMap = new LinkedHashMap<>();
         for (JavaParameter parameter : parameterList) {
             JavaType javaType = parameter.getType();
@@ -1074,7 +1076,7 @@ public class SourceBuilder {
         }
         String url;
 
-        if (containsBrace) {
+        if (containsBrace && !(apiMethodDoc.getUrl().equals(DEFAULT_SERVER_URL))) {
             url = DocUtil.formatAndRemove(apiMethodDoc.getUrl(), paramsMap);
             url = UrlUtil.urlJoin(url, paramsMap);
         } else {
