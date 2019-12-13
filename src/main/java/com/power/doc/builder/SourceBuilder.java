@@ -926,15 +926,11 @@ public class SourceBuilder {
                     } else if (subTypeName.length() == 1) {
                         if (!typeName.equals(genericCanonicalName)) {
                             String gicName = globGicName[i];
-                            if (gicName.contains("<")) {
+                            if (DocClassUtil.isPrimitive(gicName)) {
+                                data0.append(DocUtil.jsonValueByType(gicName)).append(",");
+                            } else {
                                 String simple = DocClassUtil.getSimpleName(gicName);
                                 data0.append(buildJson(simple, gicName, responseFieldMap, isResp, counter + 1, registryClasses)).append(",");
-                            } else {
-                                if (DocClassUtil.isPrimitive(gicName)) {
-                                    data0.append(DocUtil.jsonValueByType(gicName)).append(",");
-                                } else {
-                                    data0.append(buildJson(gicName, gicName, responseFieldMap, isResp, counter + 1, registryClasses)).append(",");
-                                }
                             }
                         } else {
                             data0.append("{\"waring\":\"You may have used non-display generics.\"},");
@@ -949,7 +945,8 @@ public class SourceBuilder {
                                 if (DocClassUtil.isPrimitive(gicName)) {
                                     data0.append("\"").append(buildJson(gicName, genericCanonicalName, responseFieldMap, isResp, counter + 1, registryClasses)).append("\",");
                                 } else {
-                                    data0.append(buildJson(gicName, gicName, responseFieldMap, isResp, counter + 1, registryClasses)).append(",");
+                                    String simpleName = DocClassUtil.getSimpleName(gicName);
+                                    data0.append(buildJson(simpleName, gicName, responseFieldMap, isResp, counter + 1, registryClasses)).append(",");
                                 }
                             } else {
                                 data0.append("{\"waring\":\"You may have used non-display generics.\"},");
@@ -984,7 +981,7 @@ public class SourceBuilder {
         if (parameterList.size() < 1) {
             return apiMethodDoc.getUrl();
         }
-        boolean containsBrace = apiMethodDoc.getUrl().replace(DEFAULT_SERVER_URL,"").contains("{") ;
+        boolean containsBrace = apiMethodDoc.getUrl().replace(DEFAULT_SERVER_URL, "").contains("{");
         Map<String, String> paramsMap = new LinkedHashMap<>();
         for (JavaParameter parameter : parameterList) {
             JavaType javaType = parameter.getType();
@@ -1064,11 +1061,10 @@ public class SourceBuilder {
                     } else if (StringUtil.isEmpty(defaultVal) && DocClassUtil.isPrimitive(typeName)) {
                         paramsMap.put(paraName, DocUtil.getValByTypeAndFieldName(simpleTypeName, paraName,
                                 true));
-                    } else if((StringUtil.isEmpty(defaultVal) && DocClassUtil.isPrimitiveArray(typeName))){
+                    } else if ((StringUtil.isEmpty(defaultVal) && DocClassUtil.isPrimitiveArray(typeName))) {
                         paramsMap.put(paraName, DocUtil.getValByTypeAndFieldName(simpleTypeName, paraName,
                                 true));
-                    }
-                    else {
+                    } else {
                         paramsMap.put(paraName, defaultVal);
                     }
                 }
