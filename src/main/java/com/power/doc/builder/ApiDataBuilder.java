@@ -5,6 +5,7 @@ import com.power.doc.model.ApiConfig;
 import com.power.doc.model.ApiDoc;
 
 /**
+ * @since 1.7.9
  * @author yu 2019/12/7.
  */
 public class ApiDataBuilder {

@@ -3,6 +3,7 @@ package com.power.doc.model;
 import java.util.List;
 
 /**
+ * @since 1.7.9
  * @author yu 2019/12/7.
  */
 public class ApiAllData {

@@ -30,13 +30,13 @@ smart-doc使用和测试可参考[smart-doc demo](https://gitee.com/sunyureposit
 <dependency>
     <groupId>com.github.shalousun</groupId>
     <artifactId>smart-doc</artifactId>
-    <version>1.7.8</version>
+    <version>1.7.9</version>
     <scope>test</scope>
 </dependency>
 ```
 #### gradle
 ```
-testCompile 'com.github.shalousun:smart-doc:1.7.8'
+testCompile 'com.github.shalousun:smart-doc:1.7.9'
 ```
 ### Create a unit test
 通过运行一个单元测试来让Smart-doc为你生成一个简洁明了的api文档
@@ -135,6 +135,10 @@ public class ApiDocTest {
     }
 }
 ```
+#### smart-doc-maven-plugin
+从smart-doc 1.7.9开始，官方提供了maven插件，使用smart-doc的maven插件后不再需要创建单元测试。
+[插件使用说明](https://gitee.com/sunyurepository/smart-doc/wikis/smart-doc%20maven插件?sort_id=1791450)
+
 ### Generated document example
 #### 接口头部效果图
 ![输入图片说明](https://images.gitee.com/uploads/images/2018/0905/173104_abcf4345_144669.png "1.png")

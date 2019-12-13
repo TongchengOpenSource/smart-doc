@@ -138,4 +138,11 @@
 	6. 修改github #5 简单枚举参数解析空指针异常
 	7. 添加导出PostMan json数据
 	
+#### 版本号：1.7.9
+- 更新日期: 2019-12-02
+- 更新内容：
+	1. 修改request请求参数中嵌套对象不能解析的bug，参考gitee #I16AN2.
+	2. controller参数是数组时添加@PathVariable注解会报空指针,参考gitee #I16F6G
+	3. 新增ApiDataBuilder用于获取smart-doc生成的文档数据，包含header、字典、错误码等。
+	4. 修改github #9 文档错误bug.
 	
