@@ -137,7 +137,7 @@ These are only part of the companies using smart-doc, for reference only. If you
 ![OnePlus](https://raw.githubusercontent.com/shalousun/smart-doc/dev/images/known-users/oneplus.png)
 ![Xiaomi](https://raw.githubusercontent.com/shalousun/smart-doc/dev/images/known-users/xiaomi.png)
 ![远盟健康](https://raw.githubusercontent.com/shalousun/smart-doc/dev/images/known-users/yuanmengjiankang.png)
-![上海普彻信息科技](https://raw.githubusercontent.com/shalousun/smart-doc/dev/images/known-users/puqie.jpg)
+![上海普彻信息科技](https://raw.githubusercontent.com/shalousun/smart-doc/dev/images/known-users/puqie_gaitubao_100x100.jpg))
 ## License
 Smart-doc is under the Apache 2.0 license.  See the [LICENSE](https://github.com/shalousun/smart-doc/blob/master/license.txt) file for details.
 ## Contact
