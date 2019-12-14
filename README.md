@@ -129,6 +129,15 @@ mvn clean install -Dmaven.test.skip=true
 ```
 ## Other reference
 - [Smart-doc manual](https://github.com/shalousun/smart-doc/wiki)
+
+## Who is using
+These are only part of the companies using smart-doc, for reference only. If you are using smart-doc, please [add your company here](https://github.com/shalousun/smart-doc/issues/12) to tell us your scenario to make Nacos better.
+
+![iFLYTEK](https://raw.githubusercontent.com/shalousun/smart-doc/dev/images/known-users/iflytek.png)
+![OnePlus](https://raw.githubusercontent.com/shalousun/smart-doc/dev/images/known-users/oneplus.png)
+![Xiaomi](https://raw.githubusercontent.com/shalousun/smart-doc/dev/images/known-users/xiaomi.png)
+![远盟健康](https://raw.githubusercontent.com/shalousun/smart-doc/dev/images/known-users/yuanmengjiankang.png)
+![上海普彻信息科技](https://raw.githubusercontent.com/shalousun/smart-doc/dev/images/known-users/puqie.jpg)
 ## License
 Smart-doc is under the Apache 2.0 license.  See the [LICENSE](https://github.com/shalousun/smart-doc/blob/master/license.txt) file for details.
 ## Contact
