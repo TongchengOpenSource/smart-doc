@@ -16,6 +16,7 @@ import com.power.doc.model.postman.RequestItem;
 import com.power.doc.model.postman.request.RequestBean;
 import com.power.doc.model.postman.request.body.BodyBean;
 import com.power.doc.model.postman.request.header.HeaderBean;
+import com.thoughtworks.qdox.JavaProjectBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +35,8 @@ public class PostmanJsonBuilder {
     public static void buildPostmanApi(ApiConfig config) {
         DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
         builderTemplate.checkAndInit(config);
-        SourceBuilder sourceBuilder = new SourceBuilder(config);
+        JavaProjectBuilder javaProjectBuilder = new JavaProjectBuilder();
+        SourceBuilder sourceBuilder = new SourceBuilder(config,javaProjectBuilder);
         List<ApiDoc> apiDocList = sourceBuilder.getControllerApiData();
 
         RequestItem requestItem = new RequestItem();

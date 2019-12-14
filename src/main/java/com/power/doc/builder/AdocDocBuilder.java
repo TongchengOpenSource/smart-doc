@@ -2,6 +2,7 @@ package com.power.doc.builder;
 
 import com.power.doc.model.ApiConfig;
 import com.power.doc.model.ApiDoc;
+import com.thoughtworks.qdox.JavaProjectBuilder;
 
 import java.util.List;
 
@@ -27,10 +28,11 @@ public class AdocDocBuilder {
         config.setAdoc(true);
         DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
         builderTemplate.checkAndInit(config);
-        SourceBuilder sourceBuilder = new SourceBuilder(config);
+        JavaProjectBuilder javaProjectBuilder = new JavaProjectBuilder();
+        SourceBuilder sourceBuilder = new SourceBuilder(config,javaProjectBuilder);
         List<ApiDoc> apiDocList = sourceBuilder.getControllerApiData();
         if (config.isAllInOne()) {
-            builderTemplate.buildAllInOne(apiDocList, config, ALL_IN_ONE_ADOC_TPL, INDEX_DOC);
+            builderTemplate.buildAllInOne(apiDocList, config, javaProjectBuilder,ALL_IN_ONE_ADOC_TPL, INDEX_DOC);
         } else {
             builderTemplate.buildApiDoc(apiDocList, config, API_DOC_ADOC_TPL, API_EXTENSION);
             builderTemplate.buildErrorCodeDoc(config, ERROR_CODE_LIST_ADOC_TPL, ERROR_CODE_LIST_ADOC);

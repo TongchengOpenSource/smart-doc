@@ -7,6 +7,8 @@ import com.power.doc.constants.TemplateVariable;
 import com.power.doc.model.*;
 import com.power.doc.utils.BeetlTemplateUtil;
 import com.power.doc.utils.DocUtil;
+import com.thoughtworks.qdox.JavaProjectBuilder;
+import com.thoughtworks.qdox.model.JavaClass;
 import org.beetl.core.Template;
 
 import java.util.ArrayList;
@@ -56,17 +58,18 @@ public class DocBuilderTemplate {
      * get all api data
      *
      * @param config
+     * @param javaProjectBuilder JavaProjectBuilder
      * @return
      */
-    public ApiAllData getApiData(ApiConfig config) {
+    public ApiAllData getApiData(ApiConfig config,JavaProjectBuilder javaProjectBuilder) {
         ApiAllData apiAllData = new ApiAllData();
         apiAllData.setProjectName(config.getProjectName());
         apiAllData.setProjectId(DocUtil.handleId(config.getProjectName()));
         apiAllData.setLanguage(config.getLanguage().getCode());
-        apiAllData.setApiDocList(listOfApiData(config));
+        apiAllData.setApiDocList(listOfApiData(config,javaProjectBuilder));
         apiAllData.setErrorCodeList(errorCodeDictToList(config));
         apiAllData.setRevisionLogs(config.getRevisionLogs());
-        apiAllData.setApiDocDictList(buildDictionary(config));
+        apiAllData.setApiDocDictList(buildDictionary(config,javaProjectBuilder));
         return apiAllData;
     }
 
@@ -100,10 +103,11 @@ public class DocBuilderTemplate {
      *
      * @param apiDocList     list  data of Api doc
      * @param config         api config
+     * @param javaProjectBuilder JavaProjectBuilder
      * @param template       template
      * @param outPutFileName output file
      */
-    public void buildAllInOne(List<ApiDoc> apiDocList, ApiConfig config, String template, String outPutFileName) {
+    public void buildAllInOne(List<ApiDoc> apiDocList, ApiConfig config,JavaProjectBuilder javaProjectBuilder, String template, String outPutFileName) {
         String outPath = config.getOutPath();
         String strTime = DateTimeUtil.long2Str(now, DateTimeUtil.DATE_FORMAT_SECOND);
         FileUtil.mkdirs(outPath);
@@ -133,7 +137,7 @@ public class DocBuilderTemplate {
             tpl.binding(TemplateVariable.ERROR_LIST_TITLE.getVariable(), DocGlobalConstants.ERROR_CODE_LIST_CN_TITLE);
             tpl.binding(TemplateVariable.DICT_LIST_TITLE.getVariable(), DocGlobalConstants.DICT_CN_TITLE);
         }
-        List<ApiDocDict> apiDocDictList = buildDictionary(config);
+        List<ApiDocDict> apiDocDictList = buildDictionary(config,javaProjectBuilder);
         tpl.binding(TemplateVariable.DICT_LIST.getVariable(), apiDocDictList);
         FileUtil.nioWriteFile(tpl.render(), outPath + FILE_SEPARATOR + outPutFileName);
     }
@@ -163,7 +167,7 @@ public class DocBuilderTemplate {
      */
     public void buildSingleControllerApi(String outPath, String controllerName, String template, String fileExtension) {
         FileUtil.mkdirs(outPath);
-        SourceBuilder sourceBuilder = new SourceBuilder(true);
+        SourceBuilder sourceBuilder = new SourceBuilder(Boolean.TRUE,new JavaProjectBuilder());
         ApiDoc doc = sourceBuilder.getSingleControllerApiData(controllerName);
         Template mapper = BeetlTemplateUtil.getByName(template);
         mapper.binding(TemplateVariable.DESC.getVariable(), doc.getDesc());
@@ -176,9 +180,10 @@ public class DocBuilderTemplate {
      * Build dictionary
      *
      * @param config api config
+     * @param javaProjectBuilder JavaProjectBuilder
      * @return list of ApiDocDict
      */
-    public List<ApiDocDict> buildDictionary(ApiConfig config) {
+    public List<ApiDocDict> buildDictionary(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
         List<ApiDataDictionary> apiDataDictionaryList = config.getDataDictionaries();
         if (CollectionUtil.isEmpty(apiDataDictionaryList)) {
             return new ArrayList<>(0);
@@ -188,20 +193,24 @@ public class DocBuilderTemplate {
             int order = 0;
             for (ApiDataDictionary apiDataDictionary : apiDataDictionaryList) {
                 order++;
+                Class<?> clazz = apiDataDictionary.getEnumClass();
+                if (Objects.isNull(clazz)) {
+                    if (StringUtil.isEmpty(apiDataDictionary.getEnumClassName())) {
+                        throw new RuntimeException("Enum class name can't be null.");
+                    }
+                    clazz = Class.forName(apiDataDictionary.getEnumClassName());
+                }
                 ApiDocDict apiDocDict = new ApiDocDict();
                 apiDocDict.setOrder(order);
                 apiDocDict.setTitle(apiDataDictionary.getTitle());
-                Class<?> clzz = apiDataDictionary.getEnumClass();
-                if (Objects.isNull(clzz)) {
-                    if (StringUtil.isEmpty(apiDataDictionary.getEnumClassName())) {
-                        throw new RuntimeException(" enum class name can't be null.");
-                    }
-                    clzz = Class.forName(apiDataDictionary.getEnumClassName());
+                JavaClass javaClass = javaProjectBuilder.getClassByName(clazz.getCanonicalName());
+                if (apiDataDictionary.getTitle() == null) {
+                    apiDocDict.setTitle(javaClass.getComment());
                 }
-                List<DataDict> enumDictionaryList = EnumUtil.getEnumInformation(clzz, apiDataDictionary.getCodeField(),
+                List<DataDict> enumDictionaryList = EnumUtil.getEnumInformation(clazz, apiDataDictionary.getCodeField(),
                         apiDataDictionary.getDescField());
-                if (!clzz.isEnum()) {
-                    throw new RuntimeException(clzz.getCanonicalName() + " is not an enum class.");
+                if (!clazz.isEnum()) {
+                    throw new RuntimeException(clazz.getCanonicalName() + " is not an enum class.");
                 }
                 apiDocDict.setDataDictList(enumDictionaryList);
                 apiDocDictList.add(apiDocDict);
@@ -241,10 +250,10 @@ public class DocBuilderTemplate {
         }
     }
 
-    private List<ApiDoc> listOfApiData(ApiConfig config) {
+    private List<ApiDoc> listOfApiData(ApiConfig config,JavaProjectBuilder javaProjectBuilder) {
         this.checkAndInitForGetApiData(config);
         config.setMd5EncryptedHtmlName(true);
-        SourceBuilder sourceBuilder = new SourceBuilder(config);
+        SourceBuilder sourceBuilder = new SourceBuilder(config,javaProjectBuilder);
         return sourceBuilder.getControllerApiData();
     }
 }

@@ -65,9 +65,10 @@ public class SourceBuilder {
      * if isStrict value is true,it while check all method
      *
      * @param isStrict strict flag
+     * @param projectBuilder JavaProjectBuilder
      */
-    public SourceBuilder(boolean isStrict) {
-        loadJavaFiles(null);
+    public SourceBuilder(boolean isStrict,JavaProjectBuilder projectBuilder) {
+        loadJavaFiles(null,projectBuilder);
         this.isStrict = isStrict;
     }
 
@@ -75,8 +76,9 @@ public class SourceBuilder {
      * use custom config
      *
      * @param config config
+     * @param projectBuilder JavaProjectBuilder
      */
-    public SourceBuilder(ApiConfig config) {
+    public SourceBuilder(ApiConfig config,JavaProjectBuilder projectBuilder) {
         if (null == config) {
             throw new NullPointerException("ApiConfig can't be null.");
         }
@@ -91,7 +93,7 @@ public class SourceBuilder {
         this.packageMatch = config.getPackageFilters();
         this.isStrict = config.isStrict();
         this.isAdoc = config.isAdoc();
-        loadJavaFiles(config.getSourceCodePaths());
+        loadJavaFiles(config.getSourceCodePaths(),projectBuilder);
 
         this.headers = config.getRequestHeaders();
         if (CollectionUtil.isNotEmpty(config.getCustomResponseFields())) {
@@ -299,7 +301,6 @@ public class SourceBuilder {
                 apiMethodDoc.setHeaders(createHeaders(allApiReqHeaders, this.isAdoc));
                 apiMethodDoc.setRequestHeaders(allApiReqHeaders);
                 methodDocList.add(apiMethodDoc);
-
             }
         }
         return methodDocList;
@@ -323,8 +324,10 @@ public class SourceBuilder {
      *
      * @param paths list of SourcePath
      */
-    private void loadJavaFiles(List<SourceCodePath> paths) {
-        JavaProjectBuilder builder = new JavaProjectBuilder();
+    private void loadJavaFiles(List<SourceCodePath> paths,JavaProjectBuilder builder) {
+        if(Objects.isNull(builder)) {
+            builder = new JavaProjectBuilder();
+        }
         if (CollectionUtil.isEmpty(paths)) {
             builder.addSourceTree(new File(DocGlobalConstants.PROJECT_CODE_PATH));
         } else {

@@ -12,6 +12,7 @@ import com.power.doc.model.ApiDocDict;
 import com.power.doc.model.ApiErrorCode;
 import com.power.doc.utils.BeetlTemplateUtil;
 import com.power.doc.utils.MarkDownUtil;
+import com.thoughtworks.qdox.JavaProjectBuilder;
 import org.beetl.core.Template;
 
 import java.util.List;
@@ -37,14 +38,15 @@ public class HtmlApiDocBuilder {
     public static void builderControllersApi(ApiConfig config) {
         DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
         builderTemplate.checkAndInit(config);
-        SourceBuilder sourceBuilder = new SourceBuilder(config);
+        JavaProjectBuilder javaProjectBuilder = new JavaProjectBuilder();
+        SourceBuilder sourceBuilder = new SourceBuilder(config,javaProjectBuilder);
         List<ApiDoc> apiDocList = sourceBuilder.getControllerApiData();
         if (config.isAllInOne()) {
             Template indexCssTemplate = BeetlTemplateUtil.getByName(ALL_IN_ONE_CSS);
             FileUtil.nioWriteFile(indexCssTemplate.render(), config.getOutPath() + FILE_SEPARATOR + ALL_IN_ONE_CSS);
-            builderTemplate.buildAllInOne(apiDocList, config, ALL_IN_ONE_HTML_TPL, INDEX_HTML);
+            builderTemplate.buildAllInOne(apiDocList, config,javaProjectBuilder, ALL_IN_ONE_HTML_TPL, INDEX_HTML);
         } else {
-            List<ApiDocDict> apiDocDictList = builderTemplate.buildDictionary(config);
+            List<ApiDocDict> apiDocDictList = builderTemplate.buildDictionary(config,javaProjectBuilder);
             buildIndex(apiDocList, config);
             copyCss(config.getOutPath());
             buildApiDoc(apiDocList, config.getOutPath());

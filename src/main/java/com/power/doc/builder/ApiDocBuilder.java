@@ -3,6 +3,7 @@ package com.power.doc.builder;
 import com.power.common.util.DateTimeUtil;
 import com.power.doc.model.ApiConfig;
 import com.power.doc.model.ApiDoc;
+import com.thoughtworks.qdox.JavaProjectBuilder;
 
 import java.util.List;
 
@@ -24,13 +25,14 @@ public class ApiDocBuilder {
      */
     public static void builderControllersApi(ApiConfig config) {
         config.setAdoc(false);
+        JavaProjectBuilder javaProjectBuilder = new JavaProjectBuilder();
         DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
         builderTemplate.checkAndInit(config);
-        SourceBuilder sourceBuilder = new SourceBuilder(config);
+        SourceBuilder sourceBuilder = new SourceBuilder(config,javaProjectBuilder);
         List<ApiDoc> apiDocList = sourceBuilder.getControllerApiData();
         if (config.isAllInOne()) {
             String version = config.isCoverOld() ? "" : "-V" + DateTimeUtil.long2Str(System.currentTimeMillis(), DATE_FORMAT);
-            builderTemplate.buildAllInOne(apiDocList, config, ALL_IN_ONE_MD_TPL, "AllInOne" + version + ".md");
+            builderTemplate.buildAllInOne(apiDocList, config, javaProjectBuilder,ALL_IN_ONE_MD_TPL, "AllInOne" + version + ".md");
         } else {
             builderTemplate.buildApiDoc(apiDocList, config, API_DOC_MD_TPL, API_EXTENSION);
             builderTemplate.buildErrorCodeDoc(config, ERROR_CODE_LIST_MD_TPL, ERROR_CODE_LIST_MD);
