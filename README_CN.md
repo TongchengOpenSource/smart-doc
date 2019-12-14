@@ -55,7 +55,7 @@ public class ApiDocTest {
     @Test
     public void testBuilderControllersApi() {
         ApiConfig config = new ApiConfig();
-        config.setServerUrl("http://localhost:8080");
+        config.setServerUrl("http://localhost:8080"); //非必须像
         //true会严格要求注释，推荐设置true
         config.setStrict(true);
         //true会将文档合并导出到一个markdown
@@ -118,10 +118,9 @@ public class ApiDocTest {
             ApiDataDictionary.dict().setTitle("订单状态1").setEnumClass(OrderEnum.class).setCodeField("code").setDescField("desc")
         );
 
-
         long start = System.currentTimeMillis();
         ApiDocBuilder.builderControllersApi(config);
-
+        
         //@since 1.7+版本开始，smart-doc支持生成带书签的html文档，html文档可选择下面额方式
         //HtmlApiDocBuilder.builderControllersApi(config);
         //@since 1.7+版本开始，smart-doc支撑生成AsciiDoc文档，你可以把AsciiDoc转成HTML5的格式。
@@ -129,7 +128,7 @@ public class ApiDocTest {
         //AdocDocBuilder.builderControllersApi(config);
         //@since 1.7.8,smart-doc支持导出Postman测试的json
         //PostmanJsonBuilder.buildPostmanApi(config);
-                
+        
         long end = System.currentTimeMillis();
         DateTimeUtil.printRunTime(end, start);
     }
@@ -140,12 +139,7 @@ public class ApiDocTest {
 [插件使用说明](https://gitee.com/sunyurepository/smart-doc/wikis/smart-doc%20maven插件?sort_id=1791450)
 
 ### Generated document example
-#### 接口头部效果图
-![输入图片说明](https://images.gitee.com/uploads/images/2018/0905/173104_abcf4345_144669.png "1.png")
-#### 请求参数示例效果图
-![请求参数示例](https://images.gitee.com/uploads/images/2018/0905/172510_853735b9_144669.png "2.png")
-#### 响应参数示例效果图
-![响应参数示例](https://images.gitee.com/uploads/images/2018/0905/172538_1918820c_144669.png "3.png")
+[点击查看文档生成文档效果图](https://gitee.com/sunyurepository/smart-doc/wikis/文档效果图?sort_id=1652819)
 ## Building
 如果你需要自己构建，那可以使用下面命令，构建需要依赖Java 1.8。
 ```
