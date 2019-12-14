@@ -114,6 +114,12 @@ public class ApiConfig {
      */
     private boolean skipTransientField = true;
 
+    /**
+     * @since 1.7.10
+     * default show author
+     */
+    private boolean showAuthor = true;
+
 
     public String getServerUrl() {
         return serverUrl;
@@ -261,5 +267,13 @@ public class ApiConfig {
 
     public void setSkipTransientField(boolean skipTransientField) {
         this.skipTransientField = skipTransientField;
+    }
+
+    public boolean isShowAuthor() {
+        return showAuthor;
+    }
+
+    public void setShowAuthor(boolean showAuthor) {
+        this.showAuthor = showAuthor;
     }
 }
