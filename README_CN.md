@@ -158,6 +158,13 @@ mvn clean install -Dmaven.test.skip=true
 - [smart-doc wiki](https://gitee.com/sunyurepository/smart-doc/wikis/Home?sort_id=1652800)
 ## License
 Smart-doc is under the Apache 2.0 license.  See the [LICENSE](https://gitee.com/sunyurepository/smart-doc/blob/master/license.txt) file for details.
+## Known Users
+> 排名不分先后，更多接入公司，欢迎在[https://gitee.com/sunyurepository/smart-doc/issues/I1594T](https://gitee.com/sunyurepository/smart-doc/issues/I1594T)登记（仅供开源用户参考）
+
+![科大讯飞](https://github.com/shalousun/smart-doc/blob/dev/images/known-users/iflytek.png)
+![一加手机](https://raw.githubusercontent.com/shalousun/smart-doc/dev/images/known-users/oneplus.png)
+![小米](https://raw.githubusercontent.com/shalousun/smart-doc/dev/images/known-users/xiaomi.png)
+![远盟健康](https://raw.githubusercontent.com/shalousun/smart-doc/dev/images/known-users/yuanmengjiankang.png)
 ## Contact
 愿意参与构建smart-doc或者是需要交流问题可以加入qq群：
 
