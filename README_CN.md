@@ -163,4 +163,4 @@ Smart-doc is under the Apache 2.0 license.  See the [LICENSE](https://gitee.com
 ## Contact
 愿意参与构建smart-doc或者是需要交流问题可以加入qq群：
 
-![qq群](https://raw.githubusercontent.com/shalousun/smart-doc/dev/images/smart-doc-qq.png)
+<img src="https://raw.githubusercontent.com/shalousun/smart-doc/dev/images/smart-doc-qq.png" title="qq群" width="200px" height="200px"/>
