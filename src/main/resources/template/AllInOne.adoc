@@ -27,7 +27,9 @@ for(doc in api.list){
 *URL:* ${doc.url}
 
 *Type:* ${doc.type}
-
+<%if(isNotEmpty(doc.author)){%>
+*Author:* ${doc.author}
+<%}%>
 *Description:* ${doc.detail}
 
 *Content-Type:* ${doc.contentType}

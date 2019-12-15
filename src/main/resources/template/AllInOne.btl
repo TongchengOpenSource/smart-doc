@@ -25,6 +25,10 @@ for(doc in api.list){
 
 **Type:** ${doc.type}
 
+<%if(isNotEmpty(doc.author)){%>
+**Author:** ${doc.author}
+<%}%>
+
 **Content-Type:** ${doc.contentType}
 
 **Description:** ${doc.detail}

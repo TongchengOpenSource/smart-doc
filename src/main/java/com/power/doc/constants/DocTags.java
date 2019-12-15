@@ -26,6 +26,11 @@ public class DocTags {
     public static final String API_NOTE = "apiNote";
 
     /**
+     * java author tag for method author
+     */
+    public static final String AUTHOR = "author";
+
+    /**
      * custom ignore tag
      */
     public static final String IGNORE = "ignore";

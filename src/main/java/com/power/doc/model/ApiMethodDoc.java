@@ -53,6 +53,11 @@ public class ApiMethodDoc implements Serializable {
     private String type;
 
     /**
+     * http request author
+     */
+    private String author;
+
+    /**
      * only used for generate markdown and adoc
      * http readers
      */
@@ -200,5 +205,13 @@ public class ApiMethodDoc implements Serializable {
 
     public void setDetail(String detail) {
         this.detail = detail;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
     }
 }

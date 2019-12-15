@@ -60,25 +60,26 @@ public class SourceBuilder {
     private String appUrl;
     private boolean isUseMD5;
     private boolean isAdoc;
+    private boolean isShowAuthor;
 
     /**
      * if isStrict value is true,it while check all method
      *
-     * @param isStrict strict flag
+     * @param isStrict       strict flag
      * @param projectBuilder JavaProjectBuilder
      */
-    public SourceBuilder(boolean isStrict,JavaProjectBuilder projectBuilder) {
-        loadJavaFiles(null,projectBuilder);
+    public SourceBuilder(boolean isStrict, JavaProjectBuilder projectBuilder) {
+        loadJavaFiles(null, projectBuilder);
         this.isStrict = isStrict;
     }
 
     /**
      * use custom config
      *
-     * @param config config
+     * @param config         config
      * @param projectBuilder JavaProjectBuilder
      */
-    public SourceBuilder(ApiConfig config,JavaProjectBuilder projectBuilder) {
+    public SourceBuilder(ApiConfig config, JavaProjectBuilder projectBuilder) {
         if (null == config) {
             throw new NullPointerException("ApiConfig can't be null.");
         }
@@ -93,7 +94,8 @@ public class SourceBuilder {
         this.packageMatch = config.getPackageFilters();
         this.isStrict = config.isStrict();
         this.isAdoc = config.isAdoc();
-        loadJavaFiles(config.getSourceCodePaths(),projectBuilder);
+        this.isShowAuthor = config.isShowAuthor();
+        loadJavaFiles(config.getSourceCodePaths(), projectBuilder);
 
         this.headers = config.getRequestHeaders();
         if (CollectionUtil.isNotEmpty(config.getCustomResponseFields())) {
@@ -182,6 +184,10 @@ public class SourceBuilder {
             String apiNoteValue = DocUtil.getNormalTagComments(method, DocTags.API_NOTE, cls.getName());
             if (StringUtil.isEmpty(apiNoteValue)) {
                 apiNoteValue = method.getComment();
+            }
+            String authorValue = DocUtil.getNormalTagComments(method, DocTags.AUTHOR, cls.getName());
+            if(this.isShowAuthor && StringUtil.isNotEmpty(authorValue)){
+                apiMethodDoc.setAuthor(authorValue);
             }
             apiMethodDoc.setDetail(apiNoteValue);
             List<JavaAnnotation> annotations = method.getAnnotations();
@@ -324,8 +330,8 @@ public class SourceBuilder {
      *
      * @param paths list of SourcePath
      */
-    private void loadJavaFiles(List<SourceCodePath> paths,JavaProjectBuilder builder) {
-        if(Objects.isNull(builder)) {
+    private void loadJavaFiles(List<SourceCodePath> paths, JavaProjectBuilder builder) {
+        if (Objects.isNull(builder)) {
             builder = new JavaProjectBuilder();
         }
         if (CollectionUtil.isEmpty(paths)) {
@@ -1289,7 +1295,7 @@ public class SourceBuilder {
                     || DocAnnotationConstants.SHORT_REST_CONTROLLER.equals(annotationName)
                     || DocGlobalConstants.REST_CONTROLLER_FULLY.equals(annotationName)
                     || DocGlobalConstants.CONTROLLER_FULLY.equals(annotationName)
-                    ) {
+            ) {
                 return true;
             }
         }
