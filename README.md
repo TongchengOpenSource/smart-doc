@@ -131,7 +131,7 @@ mvn clean install -Dmaven.test.skip=true
 - [Smart-doc manual](https://github.com/shalousun/smart-doc/wiki)
 
 ## Who is using
-These are only part of the companies using smart-doc, for reference only. If you are using smart-doc, please [add your company here](https://github.com/shalousun/smart-doc/issues/12) to tell us your scenario to make Nacos better.
+These are only part of the companies using smart-doc, for reference only. If you are using smart-doc, please [add your company here](https://github.com/shalousun/smart-doc/issues/12) to tell us your scenario to make smart-doc better.
 
 ![iFLYTEK](https://raw.githubusercontent.com/shalousun/smart-doc/dev/images/known-users/iflytek.png)
 ![OnePlus](https://raw.githubusercontent.com/shalousun/smart-doc/dev/images/known-users/oneplus.png)
