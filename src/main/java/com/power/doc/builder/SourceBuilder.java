@@ -1107,6 +1107,8 @@ public class SourceBuilder {
         List<ApiParam> reqBodyParamsList = new ArrayList<>();
         out:
         for (JavaParameter parameter : parameterList) {
+
+            boolean paramAdded = false;
             String paramName = parameter.getName();
             String typeName = parameter.getType().getGenericCanonicalName();
             String simpleName = parameter.getType().getValue().toLowerCase();
@@ -1210,10 +1212,12 @@ public class SourceBuilder {
                         }
                         requestBodyCounter++;
                     } else {
+                        if (paramAdded) {
+                            continue;
+                        }
                         List<String> validatorAnnotations = DocValidatorAnnotations.listValidatorAnnotations();
                         if (REQUEST_PARAM.equals(annotationName) ||
-                                DocAnnotationConstants.SHORT_PATH_VARIABLE.equals(annotationName)
-                                || validatorAnnotations.contains(annotationName)) {
+                                DocAnnotationConstants.SHORT_PATH_VARIABLE.equals(annotationName)) {
                             AnnotationValue annotationValue = annotation.getProperty(DocAnnotationConstants.VALUE_PROP);
                             if (null != annotationValue) {
                                 paramName = StringUtil.removeQuotes(annotationValue.toString());
@@ -1222,11 +1226,17 @@ public class SourceBuilder {
                             if (null != annotationOfName) {
                                 paramName = StringUtil.removeQuotes(annotationOfName.toString());
                             }
-
                             ApiParam param = ApiParam.of().setField(paramName)
                                     .setType(DocClassUtil.processTypeNameForParams(simpleName))
                                     .setDesc(comment).setRequired(Boolean.valueOf(required)).setVersion(DocGlobalConstants.DEFAULT_VERSION);
                             paramList.add(param);
+                            paramAdded = true;
+                        } else if (validatorAnnotations.contains(annotationName)) {
+                            ApiParam param = ApiParam.of().setField(paramName)
+                                    .setType(DocClassUtil.processTypeNameForParams(simpleName))
+                                    .setDesc(comment).setRequired(Boolean.valueOf(required)).setVersion(DocGlobalConstants.DEFAULT_VERSION);
+                            paramList.add(param);
+                            paramAdded = true;
                         } else {
                             continue;
                         }
