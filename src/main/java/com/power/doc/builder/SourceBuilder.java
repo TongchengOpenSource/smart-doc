@@ -1077,12 +1077,47 @@ public class SourceBuilder {
             }
         }
         String url;
-
         if (containsBrace && !(apiMethodDoc.getUrl().equals(DEFAULT_SERVER_URL))) {
-            url = DocUtil.formatAndRemove(apiMethodDoc.getUrl(), paramsMap);
-            url = UrlUtil.urlJoin(url, paramsMap);
+            String[] urls = apiMethodDoc.getUrl().split(";");
+            StringBuilder urlBuilder = new StringBuilder();
+            int uriCounter = 0;
+            String body = "";
+            for (String uri : urls) {
+                Map<String, String> paramsMapTemp = new HashMap<>();
+                paramsMapTemp.putAll(paramsMap);
+
+                if (isPostMethod) {
+                    url = DocUtil.formatAndRemove(uri, paramsMapTemp);
+                    body = UrlUtil.urlJoin("", paramsMapTemp).replace("?", "");
+                    url = url.replaceAll("\t", "");
+                    if (uriCounter == 0) {
+                        url = "curl -X POST -i " + url + " --data \'" + body + "'\n";
+                    } else {
+                        url = "curl -X POST -i " + url + " --data \'" + body + "'";
+                    }
+                    urlBuilder.append(url);
+                } else {
+                    url = DocUtil.formatAndRemove(uri, paramsMapTemp);
+                    url = UrlUtil.urlJoin(url, paramsMapTemp);
+                    if (uriCounter == 0) {
+                        urlBuilder.append(url).append(";\t");
+                    } else {
+                        urlBuilder.append(url);
+                    }
+                }
+                uriCounter++;
+            }
+            url = urlBuilder.toString();
         } else {
-            url = UrlUtil.urlJoin(apiMethodDoc.getUrl(), paramsMap);
+            if (isPostMethod) {
+                StringBuilder urlBuilder = new StringBuilder();
+                url = UrlUtil.urlJoin("", paramsMap).replace("?", "");
+                urlBuilder.append("curl -X POST -i ").append(apiMethodDoc.getUrl())
+                        .append(" --data ").append("\'").append(url).append("\'");
+                url = urlBuilder.toString();
+            } else {
+                url = UrlUtil.urlJoin(apiMethodDoc.getUrl(), paramsMap);
+            }
         }
         return url;
     }

@@ -223,20 +223,24 @@ public class DocUtil {
      * @return formatted string
      */
     public static String formatAndRemove(String str, Map<String, String> values) {
-        //StringBuilder builder = new StringBuilder(str);
+        StringBuilder builder = new StringBuilder(str);
         Set<Map.Entry<String, String>> entries = values.entrySet();
         Iterator<Map.Entry<String, String>> iteratorMap = entries.iterator();
         while (iteratorMap.hasNext()) {
             Map.Entry<String, String> next = iteratorMap.next();
-            String pattern = "\\{" + next.getKey() + "\\}";
+            int start;
+            String pattern = "{" + next.getKey() + "}";
             String value = next.getValue().toString();
             // values.remove(next.getKey());
             // Replace every occurence of {key} with value
-            str = str.replaceAll(pattern, value);
-            iteratorMap.remove();
-            values.remove(next.getKey());
+            while ((start = builder.indexOf(pattern)) != -1) {
+                builder.replace(start, start + pattern.length(), value);
+                iteratorMap.remove();
+                values.remove(next.getKey());
+            }
+
         }
-        return str;
+        return builder.toString();
     }
 
     /**
