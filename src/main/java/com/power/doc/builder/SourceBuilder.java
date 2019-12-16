@@ -4,10 +4,7 @@ import com.power.common.util.CollectionUtil;
 import com.power.common.util.JsonFormatUtil;
 import com.power.common.util.StringUtil;
 import com.power.common.util.UrlUtil;
-import com.power.doc.constants.DocAnnotationConstants;
-import com.power.doc.constants.DocGlobalConstants;
-import com.power.doc.constants.DocTags;
-import com.power.doc.constants.Methods;
+import com.power.doc.constants.*;
 import com.power.doc.model.*;
 import com.power.doc.utils.DocClassUtil;
 import com.power.doc.utils.DocUtil;
@@ -186,7 +183,7 @@ public class SourceBuilder {
                 apiNoteValue = method.getComment();
             }
             String authorValue = DocUtil.getNormalTagComments(method, DocTags.AUTHOR, cls.getName());
-            if(this.isShowAuthor && StringUtil.isNotEmpty(authorValue)){
+            if (this.isShowAuthor && StringUtil.isNotEmpty(authorValue)) {
                 apiMethodDoc.setAuthor(authorValue);
             }
             apiMethodDoc.setDetail(apiNoteValue);
@@ -1213,8 +1210,10 @@ public class SourceBuilder {
                         }
                         requestBodyCounter++;
                     } else {
+                        List<String> validatorAnnotations = DocValidatorAnnotations.listValidatorAnnotations();
                         if (REQUEST_PARAM.equals(annotationName) ||
-                                DocAnnotationConstants.SHORT_PATH_VARIABLE.equals(annotationName)) {
+                                DocAnnotationConstants.SHORT_PATH_VARIABLE.equals(annotationName)
+                                || validatorAnnotations.contains(annotationName)) {
                             AnnotationValue annotationValue = annotation.getProperty(DocAnnotationConstants.VALUE_PROP);
                             if (null != annotationValue) {
                                 paramName = StringUtil.removeQuotes(annotationValue.toString());
@@ -1295,7 +1294,7 @@ public class SourceBuilder {
                     || DocAnnotationConstants.SHORT_REST_CONTROLLER.equals(annotationName)
                     || DocGlobalConstants.REST_CONTROLLER_FULLY.equals(annotationName)
                     || DocGlobalConstants.CONTROLLER_FULLY.equals(annotationName)
-            ) {
+                    ) {
                 return true;
             }
         }
