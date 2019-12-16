@@ -45,6 +45,7 @@ public class DocClassUtil {
             case "java.time.localdate":
             case "java.math.bigdecimal":
             case "java.math.biginteger":
+            case "java.io.serializable":
                 return true;
             default:
                 return false;
