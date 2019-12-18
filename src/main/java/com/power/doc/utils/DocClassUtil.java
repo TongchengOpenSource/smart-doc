@@ -445,6 +445,7 @@ public class DocClassUtil {
      * @return ApiReturn
      */
     public static ApiReturn processReturnType(String fullyName) {
+        System.out.println("返回类的类名："+fullyName);
         ApiReturn apiReturn = new ApiReturn();
 
         //support web flux
@@ -487,5 +488,28 @@ public class DocClassUtil {
             }
         }
         return apiReturn;
+    }
+
+    /**
+     * Get annotation simpleName
+     *
+     * @param annotationName annotationName
+     * @return String
+     */
+    public static String getAnnotationSimpleName(String annotationName) {
+        return getClassSimpleName(annotationName);
+    }
+
+    /**
+     * Get className
+     * @param className className
+     * @return String
+     */
+    public static String getClassSimpleName(String className) {
+        if (className.contains(".")) {
+            int index = className.lastIndexOf(".");
+            className = className.substring(index + 1, className.length());
+        }
+        return className;
     }
 }

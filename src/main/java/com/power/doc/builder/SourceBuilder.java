@@ -448,9 +448,11 @@ public class SourceBuilder {
         // Registry class
         registryClasses.put(className, className);
         String simpleName = DocClassUtil.getSimpleName(className);
+        System.out.println("simpleName:"+simpleName);
         String[] globGicName = DocClassUtil.getSimpleGicName(className);
         JavaClass cls = this.getJavaClass(simpleName);
         List<JavaField> fields = this.getFields(cls, 0);
+        System.out.println("字段李彪长度："+fields.size());
         int n = 0;
         if (DocClassUtil.isPrimitive(simpleName)) {
             paramList.addAll(primitiveReturnRespComment(DocClassUtil.processTypeNameForParams(simpleName)));
@@ -1205,7 +1207,7 @@ public class SourceBuilder {
                     if (null != annotationRequired) {
                         required = annotationRequired.toString();
                     }
-                    String annotationName = annotation.getType().getName();
+                    String annotationName = DocClassUtil.getAnnotationSimpleName(annotation.getType().getCanonicalName());
                     if (REQUEST_BODY.equals(annotationName) || (VALID.equals(annotationName) && annotations.size() == 1)) {
                         if (requestBodyCounter > 0) {
                             throw new RuntimeException("You have use @RequestBody Passing multiple variables  for method "
