@@ -9,11 +9,6 @@
     <link rel="stylesheet" href="index.css?v=${version}"/>
     <title>api doc</title>
 </head>
-<style>
-   body::-webkit-scrollbar {
-       display: none;
-   }
-</style>
 <body>
 <div class="book without-animation with-summary font-size-2 font-family-1">
     <div class="book-summary">
