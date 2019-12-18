@@ -9,28 +9,32 @@
     <link rel="stylesheet" href="index.css?v=${version}"/>
     <title>api doc</title>
 </head>
+<body>
 <div class="book without-animation with-summary font-size-2 font-family-1">
     <div class="book-summary">
-        <div id="book-search-input"><input type="text" placeholder="Type to search"></div>
+        <div id="book-search-input"><input id="search" type="text" placeholder="Type to search"></div>
         <nav role="navigation">
             <ul class="summary">
                 <li><ul id="reference">API Reference</ul></li>
                 <li class="divider"></li>
-               <%
-               for(api in apiDocList){
-               %>
-                <li class="chapter " data-level="${api.alias}" data-path="${api.alias}.html">
-                   <a href="${api.alias}.html?v=${version}" target="book_iframe">${api.order}. ${api.desc}</a>
-                    <ul class="articles">
-                        <%
-                        for(doc in api.list){
-                        %>
-                        <li class="chapter " data-level="${api.alias}" data-path="${api.alias}.html">
-                        <a href="${api.alias}.html?v=${version}" target="book_iframe">${api.order}.${doc.order} ${doc.desc}</a></li>
-                        <%}%>
-                    </ul>
-                </li>
-                <%}%>
+                <div id="doc">
+                 <%
+                   for(api in apiDocList){
+                   %>
+                    <li class="chapter " data-level="${api.alias}" data-path="${api.alias}.html">
+                       <a href="javascript:void(0)" onclick="go('${api.alias}', '${api.desc}');">${api.order} ${api.desc}</a>
+                        <ul class="articles">
+                            <%
+                            for(doc in api.list){
+                            %>
+                            <li class="chapter " data-level="${api.alias}" data-path="${api.alias}.html">
+                            <a href="javascript:void(0)" onclick="go('${api.alias}', '${doc.desc}');">${api.order}.${doc.order} ${doc.desc}</a></li>
+                            <%}%>
+                        </ul>
+                    </li>
+                  <%}%>
+                </div>
+
                 <%if(isNotEmpty(errorCodeList)){%>
                 <li class="chapter " data-level="error_code" data-path="error_code.html">
                    <a href="error_code.html?v=${version}" target="book_iframe">${apiDocList.~size+1}. ${errorListTitle}</a>
@@ -59,13 +63,141 @@
         <iframe src="${homePage}.html?v=${version}" frameborder="0" id="book_iframe" name="book_iframe" width="100%"></iframe>
     </div>
 </div>
+
 <script type="text/javascript">
+    var api = [];
+
     function changeFrameHeight() {
         var ifm = document.getElementById("book_iframe");
-        ifm.height = document.documentElement.clientHeight
+        ifm.height = document.documentElement.clientHeight;
     }
+
+    function toPage() {
+        var page = localStorage.getItem('page');
+        var title = localStorage.getItem('title');
+        if(page) {
+           var iframe = document.getElementById("book_iframe");
+           iframe.src = page + ".html";
+           var obj = iframe.contentWindow;
+           obj.onload = function(){
+           var h2 = obj.document.getElementsByTagName('h2');
+               for(j = 0; j < h2.length; j++) {
+                   var dom = h2[j];
+                   if(dom.innerText == title){
+                       obj.scroll(0, dom.offsetTop);
+                       break;
+                   }
+               }
+           }
+        }
+    }
+
+    toPage();
+
+    function go(alias, desc) {
+        console.log(alias, desc);
+        var iframe = document.getElementById("book_iframe");
+        var page = localStorage.getItem('page');
+
+        if(page != alias){
+            iframe.src = alias + ".html";
+        }
+
+        localStorage.setItem('page', alias);
+        localStorage.setItem('title', desc);
+
+        setTimeout(() => {
+            var obj = iframe.contentWindow;
+            var h2 = obj.document.getElementsByTagName('h2');
+            for(j = 0; j < h2.length; j++) {
+                var dom = h2[j];
+                if(dom.innerText == desc){
+                    obj.scroll(0, dom.offsetTop);
+                    break;
+                }
+            }
+         }, 200)
+    }
+
     changeFrameHeight();
     setInterval(function(){changeFrameHeight(); }, 500);
+
+    document.onkeydown = keyDownSearch;
+    function keyDownSearch(e) {
+        var theEvent = e || window.event;
+        var code = theEvent.keyCode || theEvent.which || theEvent.charCode;
+        if (code == 13) {
+            var search = document.getElementById('search');
+            var searchArr = [];
+            <% for(api in apiDocList) { %>
+                searchArr.push({
+                    alias: '${api.alias}',
+                    order: '${api.order}',
+                    desc: '${api.desc}',
+                    list: []
+                })
+                api.push({
+                    alias: '${api.alias}',
+                    order: '${api.order}',
+                    desc: '${api.desc}',
+                    list: []
+                })
+                <% for(doc in api.list) {  %>
+                    api[${apiLP.dataIndex}].list.push({
+                        order: '${doc.order}',
+                        desc: '${doc.desc}',
+                    });
+                    if('${doc.desc}'.indexOf(search.value) > -1) {
+                        searchArr[${apiLP.dataIndex}].list.push({
+                            order: '${doc.order}',
+                            desc: '${doc.desc}',
+                        });
+                    }
+                <%}%>
+            <%}%>
+            var searchResult = searchArr.filter(obj => obj.list.length > 0);
+            if(searchResult.length > 0) {
+                var html = '';
+                for(j = 0; j < searchResult.length; j++) {
+                   html += '<li class="chapter " data-level="' + searchResult[j].alias + '" data-path="' + searchResult[j].alias + '.html">';
+                   html += '    <a href="javascript:void(0)" onclick="go(\'' + searchResult[j].alias + '\', \'' + searchResult[j].desc + '\');">' + searchResult[j].order + ' ' + searchResult[j].desc + '</a>';
+
+
+                   html += '    <ul class="articles">';
+
+                   var doc = searchResult[j].list;
+                   for(m = 0; m < doc.length; m++) {
+                         html += '    <li class="chapter " data-level="' + searchResult[j].alias + '" data-path="' + searchResult[j].alias + '.html">';
+                         html += '      <a href="javascript:void(0)" onclick="go(\'' + searchResult[j].alias + '\', \'' + doc[m].desc + '\');">' + searchResult[j].order + '.' + doc[m].order + ' ' + doc[m].desc + '</a></li>';
+                         html += '    </li>';
+                   }
+                   html += '</ul>';
+                }
+                document.getElementById('doc').innerHTML = html;
+            } else {
+                if(search.value == '') {
+                    var html = '';
+                    for(j = 0; j < api.length; j++) {
+                       html += '<li class="chapter " data-level="' + api[j].alias + '" data-path="' + api[j].alias + '.html">';
+                       html += '    <a href="javascript:void(0)" onclick="go(\'' + api[j].alias  + '\', \'' + api[j].desc + '\');">' + api[j].order + ' ' +api[j].desc + '</a>';
+                       html += '    <ul class="articles">';
+
+                       var doc = api[j].list;
+                       for(m = 0; m < doc.length; m++) {
+                             html += '    <li class="chapter " data-level="' + searchResult[j].alias + '" data-path="' + searchResult[j].alias + '.html">';
+                             html += '      <a href="javascript:void(0)" onclick="go(\'' + api[j].alias  + '\', \'' + doc[m].desc + '\');">' + searchResult[j].order + '.' + doc[m].order + ' ' + doc[m].desc + '</a></li>';
+                             html += '    </li>';
+                       }
+                       html += '</ul>';
+                    }
+
+                    document.getElementById('doc').innerHTML = html;
+                } else {
+                    document.getElementById('doc').innerHTML = '';
+                }
+            }
+        }
+    }
 </script>
 </body>
 </html>
