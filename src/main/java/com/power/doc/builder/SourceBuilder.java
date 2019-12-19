@@ -285,7 +285,10 @@ public class SourceBuilder {
                 List<ApiParam> requestParams = requestParams(method, DocTags.PARAM, cls.getCanonicalName());
                 apiMethodDoc.setRequestParams(requestParams);
                 String requestJson = buildReqJson(method, apiMethodDoc, isPostMethod);
-                apiMethodDoc.setRequestUsage(JsonFormatUtil.formatJson(requestJson));
+                if (StringUtil.isNotEmpty(requestJson) && !requestJson.startsWith("http")) {
+                    requestJson = JsonFormatUtil.formatJson(requestJson);
+                }
+                apiMethodDoc.setRequestUsage(requestJson);
 
                 apiMethodDoc.setResponseUsage(buildReturnJson(method, this.fieldMap));
                 List<ApiParam> responseParams = buildReturnApiParams(method, cls.getGenericFullyQualifiedName());
@@ -1099,7 +1102,7 @@ public class SourceBuilder {
                 } else {
                     url = DocUtil.formatAndRemove(uri, paramsMapTemp);
                     url = UrlUtil.urlJoin(url, paramsMapTemp);
-                    if (uriCounter == 0) {
+                    if (uriCounter == 0 && urls.length > 1) {
                         urlBuilder.append(url).append(";\t");
                     } else {
                         urlBuilder.append(url);
