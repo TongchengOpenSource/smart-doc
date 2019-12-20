@@ -992,6 +992,7 @@ public class SourceBuilder {
         }
         boolean containsBrace = apiMethodDoc.getUrl().replace(DEFAULT_SERVER_URL, "").contains("{");
         Map<String, String> paramsMap = new LinkedHashMap<>();
+        List<String> springMvcRequestAnnotations = SpringMvcRequestAnnotations.listSpringMvcRequestAnnotations();
         for (JavaParameter parameter : parameterList) {
             JavaType javaType = parameter.getType();
             String simpleTypeName = javaType.getValue();
@@ -1010,8 +1011,8 @@ public class SourceBuilder {
                 String defaultVal = null;
                 boolean notHasRequestParams = true;
                 for (JavaAnnotation annotation : annotations) {
-                    String fullName = annotation.getType().getFullyQualifiedName();
-                    if (!fullName.contains(DocGlobalConstants.SPRING_WEB_ANNOTATION_PACKAGE)) {
+                    String fullName = annotation.getType().getSimpleName();
+                    if (!springMvcRequestAnnotations.contains(fullName)) {
                         continue;
                     }
                     String annotationName = annotation.getType().getSimpleName();
