@@ -9,10 +9,12 @@ import com.power.doc.constants.DocAnnotationConstants;
 import com.power.doc.constants.DocGlobalConstants;
 import com.thoughtworks.qdox.model.DocletTag;
 import com.thoughtworks.qdox.model.JavaAnnotation;
+import com.thoughtworks.qdox.model.JavaField;
 import com.thoughtworks.qdox.model.JavaMethod;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Description:
@@ -144,9 +146,7 @@ public class DocUtil {
             return jsonValueByType(typeName);
         } else {
             if ("string".equals(type.toLowerCase())) {
-                StringBuilder builder = new StringBuilder();
-                builder.append("\"").append(value).append("\"");
-                return builder.toString();
+                return handleJsonStr(value.toString());
             } else {
                 return value.toString();
             }
@@ -291,7 +291,7 @@ public class DocUtil {
         Map<String, String> paramTagMap = new HashMap<>();
         for (DocletTag docletTag : paramTags) {
             String value = docletTag.getValue();
-            if (StringUtil.isEmpty(value)) {
+            if (StringUtil.isEmpty(value)&&StringUtil.isNotEmpty(className)) {
                 throw new RuntimeException("ERROR: #" + javaMethod.getName()
                         + "() - bad @" + tagName + " javadoc from " + className + ", must be add comment if you use it.");
             }
@@ -322,6 +322,16 @@ public class DocUtil {
     public static String getNormalTagComments(final JavaMethod javaMethod, final String tagName, final String className) {
         Map<String, String> map = getParamsComments(javaMethod, tagName, className);
         return getFirstKeyAndValue(map);
+    }
+
+    /**
+     * Get field tags
+     * @param field JavaField
+     * @return map
+     */
+    public static  Map<String, String> getFieldTagsValue(final JavaField field) {
+        List<DocletTag> paramTags = field.getTags();
+        return  paramTags.stream().collect(Collectors.toMap(DocletTag::getName, DocletTag::getValue));
     }
 
     /**
@@ -370,5 +380,11 @@ public class DocUtil {
             return content.replaceAll("(\r\n|\r|\n|\n\r)", "<br>");
         }
         return null;
+    }
+
+    public static String handleJsonStr(String content){
+        StringBuilder builder = new StringBuilder();
+        builder.append("\"").append(content).append("\"");
+        return builder.toString();
     }
 }

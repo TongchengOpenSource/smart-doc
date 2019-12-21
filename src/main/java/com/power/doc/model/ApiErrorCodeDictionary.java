@@ -9,7 +9,7 @@ public class ApiErrorCodeDictionary {
     /**
      * enumClass
      */
-    private Class enumClass;
+    private Class<? extends Enum> enumClass;
 
     /**
      * enum class name
