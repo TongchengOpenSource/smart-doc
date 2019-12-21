@@ -34,4 +34,9 @@ public class DocTags {
      * custom ignore tag
      */
     public static final String IGNORE = "ignore";
+
+    /**
+     * custom @mock tag
+     */
+    public static final String MOCK = "mock";
 }

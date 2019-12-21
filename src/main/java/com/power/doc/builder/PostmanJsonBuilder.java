@@ -4,7 +4,6 @@ package com.power.doc.builder;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.power.common.util.FileUtil;
-import com.power.common.util.ValidateUtil;
 import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.model.ApiConfig;
 import com.power.doc.model.ApiDoc;
@@ -17,6 +16,7 @@ import com.power.doc.model.postman.request.RequestBean;
 import com.power.doc.model.postman.request.body.BodyBean;
 import com.power.doc.model.postman.request.header.HeaderBean;
 import com.thoughtworks.qdox.JavaProjectBuilder;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +36,7 @@ public class PostmanJsonBuilder {
         DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
         builderTemplate.checkAndInit(config);
         JavaProjectBuilder javaProjectBuilder = new JavaProjectBuilder();
-        SourceBuilder sourceBuilder = new SourceBuilder(config,javaProjectBuilder);
+        SourceBuilder sourceBuilder = new SourceBuilder(config, javaProjectBuilder);
         List<ApiDoc> apiDocList = sourceBuilder.getControllerApiData();
 
         RequestItem requestItem = new RequestItem();
@@ -97,7 +97,8 @@ public class PostmanJsonBuilder {
         if (apiMethodDoc.getType().equals(DocGlobalConstants.HTTP_POST)) {
             requestBean.setBody(buildBodyBean(apiMethodDoc));
         } else {
-            if (!ValidateUtil.isNotUrl(apiMethodDoc.getRequestUsage())) {
+            if (StringUtils.isNotBlank(apiMethodDoc.getRequestUsage()) &&
+                    apiMethodDoc.getRequestUsage().startsWith("http")) {
                 requestBean.setUrl(apiMethodDoc.getRequestUsage());
             }
         }

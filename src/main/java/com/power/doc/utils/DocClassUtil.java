@@ -445,7 +445,6 @@ public class DocClassUtil {
      * @return ApiReturn
      */
     public static ApiReturn processReturnType(String fullyName) {
-        System.out.println("返回类的类名："+fullyName);
         ApiReturn apiReturn = new ApiReturn();
 
         //support web flux
@@ -489,7 +488,6 @@ public class DocClassUtil {
         }
         return apiReturn;
     }
-
     /**
      * Get annotation simpleName
      *

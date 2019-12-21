@@ -285,7 +285,10 @@ public class SourceBuilder {
                 List<ApiParam> requestParams = requestParams(method, DocTags.PARAM, cls.getCanonicalName());
                 apiMethodDoc.setRequestParams(requestParams);
                 String requestJson = buildReqJson(method, apiMethodDoc, isPostMethod);
-                apiMethodDoc.setRequestUsage(JsonFormatUtil.formatJson(requestJson));
+                if (StringUtil.isNotEmpty(requestJson) && !requestJson.startsWith("http")) {
+                    requestJson = JsonFormatUtil.formatJson(requestJson);
+                }
+                apiMethodDoc.setRequestUsage(requestJson);
 
                 apiMethodDoc.setResponseUsage(buildReturnJson(method, this.fieldMap));
                 List<ApiParam> responseParams = buildReturnApiParams(method, cls.getGenericFullyQualifiedName());
@@ -491,22 +494,18 @@ public class SourceBuilder {
                 String fieldGicName = field.getType().getGenericCanonicalName();
                 List<JavaAnnotation> javaAnnotations = field.getAnnotations();
 
-                List<DocletTag> paramTags = field.getTags();
+                Map<String, String> tagsMap = DocUtil.getFieldTagsValue(field);
                 String since = DocGlobalConstants.DEFAULT_VERSION;//since tag value
                 if (!isResp) {
                     pre:
-                    for (DocletTag docletTag : paramTags) {
-                        if (DocClassUtil.isIgnoreTag(docletTag.getName())) {
-                            continue out;
-                        } else if (DocTags.SINCE.equals(docletTag.getName())) {
-                            since = docletTag.getValue();
-                        }
+                    if (tagsMap.containsKey(DocTags.IGNORE)) {
+                        continue out;
+                    } else if (tagsMap.containsKey(DocTags.SINCE)) {
+                        since = tagsMap.get(DocTags.SINCE);
                     }
                 } else {
-                    for (DocletTag docletTag : paramTags) {
-                        if (DocTags.SINCE.equals(docletTag.getName())) {
-                            since = docletTag.getValue();
-                        }
+                    if (tagsMap.containsKey(DocTags.SINCE)) {
+                        since = tagsMap.get(DocTags.SINCE);
                     }
                 }
 
@@ -537,11 +536,9 @@ public class SourceBuilder {
                 }
                 if (annotationCounter < 1) {
                     doc:
-                    for (DocletTag docletTag : paramTags) {
-                        if (DocClassUtil.isRequiredTag(docletTag.getName())) {
-                            strRequired = true;
-                            break doc;
-                        }
+                    if (tagsMap.containsKey(DocTags.REQUIRED)) {
+                        strRequired = true;
+                        break doc;
                     }
                 }
                 //cover comment
@@ -824,13 +821,10 @@ public class SourceBuilder {
                         DocClassUtil.isIgnoreFieldTypes(subTypeName)) {
                     continue;
                 }
-                List<DocletTag> paramTags = field.getTags();
+                Map<String, String> tagsMap = DocUtil.getFieldTagsValue(field);
                 if (!isResp) {
-                    pre:
-                    for (DocletTag docletTag : paramTags) {
-                        if (DocClassUtil.isIgnoreTag(docletTag.getName())) {
-                            continue out;
-                        }
+                    if (tagsMap.containsKey(DocTags.IGNORE)) {
+                        continue out;
                     }
                 }
                 List<JavaAnnotation> annotations = field.getAnnotations();
@@ -857,20 +851,29 @@ public class SourceBuilder {
                 String fieldGicName = field.getType().getGenericCanonicalName();
                 data0.append("\"").append(fieldName).append("\":");
                 if (DocClassUtil.isPrimitive(subTypeName)) {
+                    String fieldValue = "";
+                    if (tagsMap.containsKey(DocTags.MOCK) && StringUtil.isNotEmpty(tagsMap.get(DocTags.MOCK))) {
+                        fieldValue = tagsMap.get(DocTags.MOCK);
+                        if ("String".equals(typeSimpleName)) {
+                            fieldValue = DocUtil.handleJsonStr(fieldValue);
+                        }
+                    } else {
+                        fieldValue = DocUtil.getValByTypeAndFieldName(typeSimpleName, field.getName());
+                    }
                     CustomRespField customResponseField = responseFieldMap.get(fieldName);
                     if (null != customResponseField) {
                         Object val = customResponseField.getValue();
                         if (null != val) {
                             if ("String".equals(typeSimpleName)) {
-                                data0.append("\"").append(val).append("\",");
+                                data0.append(DocUtil.handleJsonStr(String.valueOf(val))).append(",");
                             } else {
                                 data0.append(val).append(",");
                             }
                         } else {
-                            data0.append(DocUtil.getValByTypeAndFieldName(typeSimpleName, field.getName())).append(",");
+                            data0.append(fieldValue).append(",");
                         }
                     } else {
-                        data0.append(DocUtil.getValByTypeAndFieldName(typeSimpleName, field.getName())).append(",");
+                        data0.append(fieldValue).append(",");
                     }
                 } else {
                     if (DocClassUtil.isCollection(subTypeName) || DocClassUtil.isArray(subTypeName)) {
@@ -991,6 +994,8 @@ public class SourceBuilder {
         }
         boolean containsBrace = apiMethodDoc.getUrl().replace(DEFAULT_SERVER_URL, "").contains("{");
         Map<String, String> paramsMap = new LinkedHashMap<>();
+        Map<String, String> paramsComments = DocUtil.getParamsComments(method, DocTags.PARAM, null);
+        List<String> springMvcRequestAnnotations = SpringMvcRequestAnnotations.listSpringMvcRequestAnnotations();
         for (JavaParameter parameter : parameterList) {
             JavaType javaType = parameter.getType();
             String simpleTypeName = javaType.getValue();
@@ -998,85 +1003,98 @@ public class SourceBuilder {
             String typeName = javaType.getFullyQualifiedName();
             JavaClass javaClass = builder.getClassByName(typeName);
             String paraName = parameter.getName();
-            if (!DocClassUtil.isMvcIgnoreParams(typeName)) {
-                //file upload
-                if (gicTypeName.contains(DocGlobalConstants.MULTIPART_FILE_FULLY)) {
-                    apiMethodDoc.setContentType(MULTIPART_TYPE);
-                    return DocClassUtil.isArray(typeName) ? "Use FormData upload files." : "Use FormData upload file.";
+            if (DocClassUtil.isMvcIgnoreParams(typeName)) {
+                continue;
+            }
+            String mockValue = "";
+            if (DocClassUtil.isPrimitive(simpleTypeName)) {
+                mockValue = paramsComments.get(paraName);
+                if(mockValue.contains("|")){
+                    mockValue = mockValue.substring(mockValue.lastIndexOf("|") + 1, mockValue.length());
+                } else {
+                    mockValue ="";
                 }
-                List<JavaAnnotation> annotations = parameter.getAnnotations();
-                int requestBodyCounter = 0;
-                String defaultVal = null;
-                boolean notHasRequestParams = true;
-                for (JavaAnnotation annotation : annotations) {
-                    String fullName = annotation.getType().getFullyQualifiedName();
-                    if (!fullName.contains(DocGlobalConstants.SPRING_WEB_ANNOTATION_PACKAGE)) {
-                        continue;
-                    }
-                    String annotationName = annotation.getType().getSimpleName();
-                    if (REQUEST_BODY.equals(annotationName) || DocGlobalConstants.REQUEST_BODY_FULLY.equals(annotationName)) {
-                        requestBodyCounter++;
-                        apiMethodDoc.setContentType(JSON_CONTENT_TYPE);
-                        if (DocClassUtil.isPrimitive(simpleTypeName)) {
-                            StringBuilder builder = new StringBuilder();
-                            builder.append("{\"")
-                                    .append(paraName)
-                                    .append("\":")
-                                    .append(DocUtil.jsonValueByType(simpleTypeName))
-                                    .append("}");
-                            return builder.toString();
-                        } else {
-                            return buildJson(typeName, gicTypeName, this.fieldMap, false, 0, new HashMap<>());
-                        }
-                    }
-
-                    if (DocAnnotationConstants.SHORT_REQ_PARAM.equals(annotationName)) {
-                        notHasRequestParams = false;
-                    }
-                    AnnotationValue annotationDefaultVal = annotation.getProperty(DocAnnotationConstants.DEFAULT_VALUE_PROP);
-                    if (null != annotationDefaultVal) {
-                        defaultVal = StringUtil.removeQuotes(annotationDefaultVal.toString());
-                    }
-                    AnnotationValue annotationValue = annotation.getProperty(DocAnnotationConstants.VALUE_PROP);
-                    if (null != annotationValue) {
-                        paraName = StringUtil.removeQuotes(annotationValue.toString());
-                    }
-                    AnnotationValue annotationOfName = annotation.getProperty(DocAnnotationConstants.NAME_PROP);
-                    if (null != annotationOfName) {
-                        paraName = StringUtil.removeQuotes(annotationOfName.toString());
-                    }
-                    if (REQUEST_HERDER.equals(annotationName)) {
-                        paraName = null;
-                    }
-                }
-                if (DocClassUtil.isPrimitive(typeName) && parameterList.size() == 1
-                        && isPostMethod && notHasRequestParams && !containsBrace) {
-                    apiMethodDoc.setContentType(JSON_CONTENT_TYPE);
-                    StringBuilder builder = new StringBuilder();
-                    builder.append("{\"")
-                            .append(paraName)
-                            .append("\":")
-                            .append(DocUtil.jsonValueByType(simpleTypeName))
-                            .append("}");
-                    return builder.toString();
-                }
-                if (requestBodyCounter < 1 && paraName != null) {
-                    if (javaClass.isEnum()) {
-                        Object value = this.handleEnumValue(javaClass, Boolean.TRUE);
-                        paramsMap.put(paraName, StringUtil.removeQuotes(String.valueOf(value)));
-                    } else if (annotations.size() < 1 && !DocClassUtil.isPrimitive(typeName)) {
-                        return "Smart-doc can't support create form-data example,It is recommended to use @RequestBody to receive parameters.";
-                    } else if (StringUtil.isEmpty(defaultVal) && DocClassUtil.isPrimitive(typeName)) {
-                        paramsMap.put(paraName, DocUtil.getValByTypeAndFieldName(simpleTypeName, paraName,
-                                true));
-                    } else if ((StringUtil.isEmpty(defaultVal) && DocClassUtil.isPrimitiveArray(typeName))) {
-                        paramsMap.put(paraName, DocUtil.getValByTypeAndFieldName(simpleTypeName, paraName,
-                                true));
-                    } else {
-                        paramsMap.put(paraName, defaultVal);
-                    }
+                if (StringUtil.isEmpty(mockValue)) {
+                    mockValue = DocUtil.getValByTypeAndFieldName(simpleTypeName, paraName, true);
                 }
             }
+
+            //file upload
+            if (gicTypeName.contains(DocGlobalConstants.MULTIPART_FILE_FULLY)) {
+                apiMethodDoc.setContentType(MULTIPART_TYPE);
+                return DocClassUtil.isArray(typeName) ? "Use FormData upload files." : "Use FormData upload file.";
+            }
+            List<JavaAnnotation> annotations = parameter.getAnnotations();
+            int requestBodyCounter = 0;
+            String defaultVal = null;
+            boolean notHasRequestParams = true;
+            for (JavaAnnotation annotation : annotations) {
+                String fullName = annotation.getType().getSimpleName();
+                if (!springMvcRequestAnnotations.contains(fullName)) {
+                    continue;
+                }
+                String annotationName = annotation.getType().getSimpleName();
+                if (REQUEST_BODY.equals(annotationName) || DocGlobalConstants.REQUEST_BODY_FULLY.equals(annotationName)) {
+                    requestBodyCounter++;
+                    apiMethodDoc.setContentType(JSON_CONTENT_TYPE);
+                    if (DocClassUtil.isPrimitive(simpleTypeName)) {
+                        StringBuilder builder = new StringBuilder();
+                        builder.append("{\"")
+                                .append(paraName)
+                                .append("\":")
+                                .append(DocUtil.handleJsonStr(mockValue))
+                                .append("}");
+                        return builder.toString();
+                    } else {
+                        return buildJson(typeName, gicTypeName, this.fieldMap, false, 0, new HashMap<>());
+                    }
+                }
+
+                if (DocAnnotationConstants.SHORT_REQ_PARAM.equals(annotationName)) {
+                    notHasRequestParams = false;
+                }
+                AnnotationValue annotationDefaultVal = annotation.getProperty(DocAnnotationConstants.DEFAULT_VALUE_PROP);
+                if (null != annotationDefaultVal) {
+                    defaultVal = StringUtil.removeQuotes(annotationDefaultVal.toString());
+                }
+                AnnotationValue annotationValue = annotation.getProperty(DocAnnotationConstants.VALUE_PROP);
+                if (null != annotationValue) {
+                    paraName = StringUtil.removeQuotes(annotationValue.toString());
+                }
+                AnnotationValue annotationOfName = annotation.getProperty(DocAnnotationConstants.NAME_PROP);
+                if (null != annotationOfName) {
+                    paraName = StringUtil.removeQuotes(annotationOfName.toString());
+                }
+                if (REQUEST_HERDER.equals(annotationName)) {
+                    paraName = null;
+                }
+            }
+            if (DocClassUtil.isPrimitive(typeName) && parameterList.size() == 1
+                    && isPostMethod && notHasRequestParams && !containsBrace) {
+                apiMethodDoc.setContentType(JSON_CONTENT_TYPE);
+                StringBuilder builder = new StringBuilder();
+                builder.append("{\"")
+                        .append(paraName)
+                        .append("\":")
+                        .append(DocUtil.handleJsonStr(mockValue))
+                        .append("}");
+                return builder.toString();
+            }
+            if (requestBodyCounter < 1 && paraName != null) {
+                if (javaClass.isEnum()) {
+                    Object value = this.handleEnumValue(javaClass, Boolean.TRUE);
+                    paramsMap.put(paraName, StringUtil.removeQuotes(String.valueOf(value)));
+                } else if (annotations.size() < 1 && !DocClassUtil.isPrimitive(typeName)) {
+                    return "Smart-doc can't support create form-data example,It is recommended to use @RequestBody to receive parameters.";
+                } else if (StringUtil.isEmpty(defaultVal) && DocClassUtil.isPrimitive(typeName)) {
+                    paramsMap.put(paraName, mockValue);
+                } else if ((StringUtil.isEmpty(defaultVal) && DocClassUtil.isPrimitiveArray(typeName))) {
+                    paramsMap.put(paraName, mockValue);
+                } else {
+                    paramsMap.put(paraName, defaultVal);
+                }
+            }
+
         }
         String url;
         if (containsBrace && !(apiMethodDoc.getUrl().equals(DEFAULT_SERVER_URL))) {
@@ -1101,7 +1119,7 @@ public class SourceBuilder {
                 } else {
                     url = DocUtil.formatAndRemove(uri, paramsMapTemp);
                     url = UrlUtil.urlJoin(url, paramsMapTemp);
-                    if (uriCounter == 0) {
+                    if (uriCounter == 0 && urls.length > 1) {
                         urlBuilder.append(url).append(";\t");
                     } else {
                         urlBuilder.append(url);
@@ -1159,6 +1177,10 @@ public class SourceBuilder {
                 String comment = paramTagMap.get(paramName);
                 if (StringUtil.isEmpty(comment)) {
                     comment = NO_COMMENTS_FOUND;
+                } else {
+                    if(comment.contains("|")){
+                        comment = comment.substring(0,comment.indexOf("|"));
+                    }
                 }
                 List<JavaAnnotation> annotations = parameter.getAnnotations();
                 if (annotations.size() == 0) {
