@@ -13,7 +13,7 @@ public class ApiDataDictionary {
     /**
      * enumClass
      */
-    private Class enumClass;
+    private Class<? extends Enum> enumClass;
 
     /**
      * enum class name
