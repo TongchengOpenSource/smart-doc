@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * @author yu 2019/12/21.
  */
-public interface FrameworkDocBuildTemplate {
+public interface IDocBuildTemplate {
 
 
     default String createDocRenderHeaders(List<ApiReqHeader> headers, boolean isAdoc) {
