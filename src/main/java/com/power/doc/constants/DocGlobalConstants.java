@@ -104,4 +104,6 @@ public class DocGlobalConstants {
     public static final String HTTP_POST = "POST";
 
     public static final String SHORT_MULTIPART_FILE_FULLY = "MultipartFile";
+
+    public static final String DEFAULT_SERVER_URL = "http://{server}";
 }

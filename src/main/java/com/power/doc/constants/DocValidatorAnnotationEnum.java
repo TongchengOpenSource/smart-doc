@@ -9,7 +9,7 @@ import java.util.List;
  *
  * @author yu 2019/9/19.
  */
-public enum DocValidatorAnnotations {
+public enum DocValidatorAnnotationEnum {
 
 
     NOT_EMPTY("NotEmpty"),
@@ -50,13 +50,13 @@ public enum DocValidatorAnnotations {
 
     private String value;
 
-    DocValidatorAnnotations(String value) {
+    DocValidatorAnnotationEnum(String value) {
         this.value = value;
     }
 
     public static List<String> listValidatorAnnotations() {
         List<String> annotations = new ArrayList<>();
-        for (DocValidatorAnnotations annotation : DocValidatorAnnotations.values()) {
+        for (DocValidatorAnnotationEnum annotation : DocValidatorAnnotationEnum.values()) {
             annotations.add(annotation.value);
         }
         return annotations;

@@ -1198,7 +1198,7 @@ public class SourceBuilders {
                         if (paramAdded) {
                             continue;
                         }
-                        List<String> validatorAnnotations = DocValidatorAnnotations.listValidatorAnnotations();
+                        List<String> validatorAnnotations = DocValidatorAnnotationEnum.listValidatorAnnotations();
                         if (REQUEST_PARAM.equals(annotationName) ||
                                 DocAnnotationConstants.SHORT_PATH_VARIABLE.equals(annotationName)) {
                             AnnotationValue annotationValue = annotation.getProperty(DocAnnotationConstants.VALUE_PROP);

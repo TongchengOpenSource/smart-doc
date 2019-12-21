@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * @author yu 2019/12/20.
  */
-public enum  SpringMvcRequestAnnotations {
+public enum SpringMvcRequestAnnotationsEnum {
 
     PATH_VARIABLE("PathVariable"),
     REQ_PARAM ("RequestParam"),
@@ -15,13 +15,13 @@ public enum  SpringMvcRequestAnnotations {
     ;
     private String value;
 
-    SpringMvcRequestAnnotations(String value) {
+    SpringMvcRequestAnnotationsEnum(String value) {
         this.value = value;
     }
 
     public static List<String> listSpringMvcRequestAnnotations() {
         List<String> annotations = new ArrayList<>();
-        for (SpringMvcRequestAnnotations annotation : SpringMvcRequestAnnotations.values()) {
+        for (SpringMvcRequestAnnotationsEnum annotation : SpringMvcRequestAnnotationsEnum.values()) {
             annotations.add(annotation.value);
         }
         return annotations;

@@ -993,7 +993,7 @@ public class SourceBuilder {
         boolean containsBrace = apiMethodDoc.getUrl().replace(DEFAULT_SERVER_URL, "").contains("{");
         Map<String, String> paramsMap = new LinkedHashMap<>();
         Map<String, String> paramsComments = DocUtil.getParamsComments(method, DocTags.PARAM, null);
-        List<String> springMvcRequestAnnotations = SpringMvcRequestAnnotations.listSpringMvcRequestAnnotations();
+        List<String> springMvcRequestAnnotations = SpringMvcRequestAnnotationsEnum.listSpringMvcRequestAnnotations();
         for (JavaParameter parameter : parameterList) {
             JavaType javaType = parameter.getType();
             String simpleTypeName = javaType.getValue();
@@ -1272,7 +1272,7 @@ public class SourceBuilder {
                         if (paramAdded) {
                             continue;
                         }
-                        List<String> validatorAnnotations = DocValidatorAnnotations.listValidatorAnnotations();
+                        List<String> validatorAnnotations = DocValidatorAnnotationEnum.listValidatorAnnotations();
                         if (REQUEST_PARAM.equals(annotationName) ||
                                 DocAnnotationConstants.SHORT_PATH_VARIABLE.equals(annotationName)) {
                             AnnotationValue annotationValue = annotation.getProperty(DocAnnotationConstants.VALUE_PROP);
