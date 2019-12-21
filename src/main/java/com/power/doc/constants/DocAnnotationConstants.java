@@ -31,5 +31,9 @@ public class DocAnnotationConstants {
 
     public static final String DEFAULT_VALUE_PROP = "defaultValue";
 
+    public static final String SHORT_REQUSRT_BODY = "RequestBody";
+
+    public static final String SHORT_REQUSRT_HEADER = "RequestHeader";
+
 
 }

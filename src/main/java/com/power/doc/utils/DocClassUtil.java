@@ -510,4 +510,13 @@ public class DocClassUtil {
         }
         return className;
     }
+
+    /**
+     * Is FormData File
+     * @param typeName 参数全称
+     * @return
+     */
+    public static boolean isFormDataFile(String typeName){
+        return typeName.contains(DocGlobalConstants.SHORT_MULTIPART_FILE_FULLY);
+    }
 }
