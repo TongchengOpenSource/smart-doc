@@ -3,11 +3,9 @@ package com.power.doc.utils;
 import com.power.common.util.StringUtil;
 import com.power.common.util.UrlUtil;
 
+
 import com.power.doc.builder.SourceBuilder;
-import com.power.doc.builder.SourceBuilders;
 import com.power.doc.constants.DocAnnotationConstants;
-import com.power.doc.constants.DocGlobalConstants;
-import com.power.doc.model.CustomRespField;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import com.thoughtworks.qdox.model.*;
 
@@ -20,6 +18,13 @@ import java.util.Map;
  */
 public class ReqJsonUtil {
 
+    /**
+     *
+     * @param uri 请求的url
+     * @param containsBrace 是否是PathVariable
+     * @param paramsMap 参数列表
+     * @return url
+     */
     public static String buildUrl(String uri, boolean containsBrace, Map<String, String> paramsMap) {
         String url;
         String[] urls = uri.split(";");
@@ -32,6 +37,11 @@ public class ReqJsonUtil {
         return url;
     }
 
+    /**
+     *
+     * @param parameter 方法参数
+     * @return 参数列表
+     */
     public static Map<String, String> buildGetParam(List<JavaParameter> parameter) {
         Map<String, String> paramsMap = new HashMap<>(6);
         param:
@@ -41,9 +51,10 @@ public class ReqJsonUtil {
             String typeName = javaType.getFullyQualifiedName();
             String paraName = javaParameter.getName();
             JavaClass javaClass = new JavaProjectBuilder().getClassByName(typeName);
-            //如果参数是header 继续下一个参数
+            //如果参数是header 或者是@RequestBody 继续下一个参数
             for (JavaAnnotation annotation : javaParameter.getAnnotations()) {
-                if (annotation.getType().getSimpleName().equals(DocAnnotationConstants.SHORT_REQUSRT_HEADER)) {
+                if (annotation.getType().getSimpleName().equals(DocAnnotationConstants.SHORT_REQUSRT_HEADER)||
+                        annotation.getType().getSimpleName().equals(DocAnnotationConstants.SHORT_REQUSRT_BODY)) {
                     continue param;
                 }
             }
@@ -54,7 +65,7 @@ public class ReqJsonUtil {
             }
             //是枚举
             else if (javaClass.isEnum()) {
-                Object value = handleEnumValue(javaClass, Boolean.TRUE);
+                Object value = JavaClassUtil.getEnumValue(javaClass, Boolean.TRUE);
                 paramsMap.put(paraName, StringUtil.removeQuotes(String.valueOf(value)));
             }
             //如果是基本数据类型数组
@@ -69,32 +80,5 @@ public class ReqJsonUtil {
 
         }
         return paramsMap;
-    }
-    public static String createFormData(){
-
-        return "sd";
-    }
-    private static Object handleEnumValue(JavaClass javaClass, boolean returnEnum) {
-        List<JavaField> javaFields = javaClass.getEnumConstants();
-        Object value = null;
-        int index = 0;
-        for (JavaField javaField : javaFields) {
-            String simpleName = javaField.getType().getSimpleName();
-            StringBuilder valueBuilder = new StringBuilder();
-            valueBuilder.append("\"").append(javaField.getName()).append("\"").toString();
-            if (returnEnum) {
-                value = valueBuilder.toString();
-                return value;
-            }
-            if (!DocClassUtil.isPrimitive(simpleName) && index < 1) {
-                if (null != javaField.getEnumConstantArguments()) {
-                    value = javaField.getEnumConstantArguments().get(0);
-                } else {
-                    value = valueBuilder.toString();
-                }
-            }
-            index++;
-        }
-        return value;
     }
 }

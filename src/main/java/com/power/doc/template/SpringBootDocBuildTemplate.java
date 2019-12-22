@@ -1,6 +1,5 @@
 package com.power.doc.template;
 
-import com.power.common.util.JsonFormatUtil;
 import com.power.common.util.StringUtil;
 import com.power.doc.builder.ProjectDocConfigBuilder;
 import com.power.doc.constants.*;
@@ -117,11 +116,15 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
                 List<ApiParam> requestParams = requestParams(method, DocTags.PARAM, cls.getCanonicalName(), projectBuilder);
                 apiMethodDoc.setRequestParams(requestParams);
                 // build request json
-                String requestJson = buildReqJson(method, apiMethodDoc, requestMapping.isPostMethod());
-                if (StringUtil.isNotEmpty(requestJson) && !requestJson.startsWith("http")) {
-                    requestJson = JsonFormatUtil.formatJson(requestJson);
-                }
-                apiMethodDoc.setRequestUsage(requestJson);
+                HashMap<String,String> requestJson = JsonBuildHelper.buildReqJson(method, apiMethodDoc, requestMapping.isPostMethod(),projectBuilder);
+
+                //build request urlParams json
+                apiMethodDoc.setRequestUrlParam(requestJson.get(JsonBuildHelper.JSON_GET_PARAMS ));
+                //build request body json
+                apiMethodDoc.setRequestBody(requestJson.get(JsonBuildHelper.JSON_REQUEST_BODY));
+                //build request-example json
+                apiMethodDoc.setRequestUsage(requestJson.get(JsonBuildHelper.JSON_GET_PARAMS )+"\n"+requestJson.get(JsonBuildHelper.JSON_REQUEST_BODY));
+
                 // build response usage
                 apiMethodDoc.setResponseUsage(JsonBuildHelper.buildReturnJson(method, projectBuilder));
                 // build response params
@@ -143,11 +146,6 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
             }
         }
         return methodDocList;
-    }
-
-
-    String buildReqJson(JavaMethod method, ApiMethodDoc apiMethodDoc, Boolean isPostMethod) {
-        return null;
     }
 
     /**
