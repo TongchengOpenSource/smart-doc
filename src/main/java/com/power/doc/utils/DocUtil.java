@@ -7,6 +7,7 @@ import com.power.common.util.RandomUtil;
 import com.power.common.util.StringUtil;
 import com.power.doc.constants.DocAnnotationConstants;
 import com.power.doc.constants.DocGlobalConstants;
+import com.power.doc.model.postman.request.body.FormData;
 import com.thoughtworks.qdox.model.DocletTag;
 import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaField;
@@ -386,5 +387,9 @@ public class DocUtil {
         StringBuilder builder = new StringBuilder();
         builder.append("\"").append(content).append("\"");
         return builder.toString();
+    }
+
+    public static Map<String,String> formDataToMap(List<FormData> formDataList){
+        return formDataList.stream().collect(Collectors.toMap(FormData::getKey,FormData::getValue));
     }
 }
