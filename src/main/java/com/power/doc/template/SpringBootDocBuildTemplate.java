@@ -323,12 +323,9 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
     private boolean checkController(JavaClass cls) {
         List<JavaAnnotation> classAnnotations = cls.getAnnotations();
         for (JavaAnnotation annotation : classAnnotations) {
-            String annotationName = annotation.getType().getName();
-            if (DocAnnotationConstants.SHORT_CONTROLLER.equals(annotationName)
-                    || DocAnnotationConstants.SHORT_REST_CONTROLLER.equals(annotationName)
-                    || DocGlobalConstants.REST_CONTROLLER_FULLY.equals(annotationName)
-                    || DocGlobalConstants.CONTROLLER_FULLY.equals(annotationName)
-                    ) {
+            String name = annotation.getType().getName();
+            name = DocClassUtil.getAnnotationSimpleName(name);
+            if (SpringMvcAnnotations.CONTROLLER.equals(name) || SpringMvcAnnotations.REST_CONTROLLER.equals(name)) {
                 return true;
             }
         }
