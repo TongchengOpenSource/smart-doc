@@ -49,8 +49,8 @@ public class JsonBuildHelper {
      * @param counter              Recursive counter
      * @return String
      */
-    private static String buildJson(String typeName, String genericCanonicalName,
-                             boolean isResp, int counter, Map<String, String> registryClasses, ProjectDocConfigBuilder builder) {
+    public static String buildJson(String typeName, String genericCanonicalName,
+                                   boolean isResp, int counter, Map<String, String> registryClasses, ProjectDocConfigBuilder builder) {
         if (registryClasses.containsKey(typeName) && counter > registryClasses.size()) {
             return "{\"$ref\":\"...\"}";
         }
