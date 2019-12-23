@@ -3,8 +3,6 @@ package com.power.doc.utils;
 import com.power.common.util.StringUtil;
 import com.power.common.util.UrlUtil;
 
-
-import com.power.doc.builder.SourceBuilder;
 import com.power.doc.constants.DocAnnotationConstants;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import com.thoughtworks.qdox.model.*;
@@ -51,7 +49,7 @@ public class ReqJsonUtil {
             String typeName = javaType.getFullyQualifiedName();
             String paraName = javaParameter.getName();
             JavaClass javaClass = new JavaProjectBuilder().getClassByName(typeName);
-            //如果参数是header 或者是@RequestBody 继续下一个参数
+            //如果参数是header 或者是@RequestBody 忽略继续下一个参数
             for (JavaAnnotation annotation : javaParameter.getAnnotations()) {
                 if (annotation.getType().getSimpleName().equals(DocAnnotationConstants.SHORT_REQUSRT_HEADER)||
                         annotation.getType().getSimpleName().equals(DocAnnotationConstants.SHORT_REQUSRT_BODY)) {
@@ -75,7 +73,7 @@ public class ReqJsonUtil {
             }
             //不是基本数据类型
             else {
-                paramsMap.put(paraName, "can't create data for this type");
+                paramsMap.put(paraName, "Object");
             }
 
         }

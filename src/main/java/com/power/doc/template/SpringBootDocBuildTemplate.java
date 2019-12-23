@@ -22,6 +22,8 @@ import java.util.stream.Stream;
 
 import static com.power.doc.constants.DocGlobalConstants.NO_COMMENTS_FOUND;
 import static com.power.doc.constants.DocTags.IGNORE;
+import static com.power.doc.helper.JsonBuildHelper.JSON_GET_PARAMS;
+import static com.power.doc.helper.JsonBuildHelper.JSON_REQUEST_BODY;
 
 /**
  * @author yu 2019/12/21.
@@ -123,7 +125,12 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
                 //build request body json
                 apiMethodDoc.setRequestBody(requestJson.get(JsonBuildHelper.JSON_REQUEST_BODY));
                 //build request-example json
-                apiMethodDoc.setRequestUsage(requestJson.get(JsonBuildHelper.JSON_GET_PARAMS )+"\n"+requestJson.get(JsonBuildHelper.JSON_REQUEST_BODY));
+                if(requestJson.get(JSON_REQUEST_BODY)!=null){
+                    apiMethodDoc.setRequestUsage(requestJson.get(JSON_GET_PARAMS )+"\n\n"+requestJson.get(JSON_REQUEST_BODY));
+                }
+                else {
+                    apiMethodDoc.setRequestUsage(requestJson.get(JSON_GET_PARAMS));
+                }
 
                 // build response usage
                 apiMethodDoc.setResponseUsage(JsonBuildHelper.buildReturnJson(method, projectBuilder));

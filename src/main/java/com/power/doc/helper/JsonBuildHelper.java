@@ -317,7 +317,7 @@ public class JsonBuildHelper {
         String requestBody;
         //Url 参数
         String urlParams;
-        boolean containsBrace = apiMethodDoc.getUrl().replaceAll(DocGlobalConstants.DEFAULT_SERVER_URL,"").contains("{");
+        boolean containsBrace = apiMethodDoc.getUrl().replace(DocGlobalConstants.DEFAULT_SERVER_URL,"").contains("{");
         HashMap<String,String> requestParams = new HashMap<>(4);
         List<JavaParameter> parameterList = method.getParameters();
         if (parameterList.size() < 1) {
@@ -344,6 +344,7 @@ public class JsonBuildHelper {
                         String gicTypeName = javaType.getGenericCanonicalName();
                         String typeName = javaType.getFullyQualifiedName();
                         String paraName = parameter.getName();
+
                         apiMethodDoc.setContentType(DocGlobalConstants.APPLICATION_JSON);
                         if (DocClassUtil.isPrimitive(simpleTypeName)) {
                              requestBody =  "{\"" +
@@ -431,4 +432,8 @@ public class JsonBuildHelper {
 
         }
     }
+
+
+
+
 }

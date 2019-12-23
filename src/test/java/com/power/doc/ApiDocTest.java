@@ -2,6 +2,8 @@ package com.power.doc;
 
 import com.power.common.util.DateTimeUtil;
 import com.power.common.util.StringUtil;
+import com.power.doc.builder.HtmlApiDocBuilder;
+import com.power.doc.builder.PostmanJsonBuilder;
 import com.power.doc.enums.OrderEnum;
 import com.power.doc.model.*;
 import org.junit.Test;
@@ -32,12 +34,12 @@ public class ApiDocTest {
         config.setServerUrl("http://localhost:8080");
         //config.setStrict(true);
 
-        config.setAllInOne(false);
+        config.setAllInOne(true);
         config.setOutPath("d:\\md2");
         config.setMd5EncryptedHtmlName(true);
         //不指定SourcePaths默认加载代码为项目src/main/java下的
         config.setSourceCodePaths(
-                SourceCodePath.path().setDesc("本项目代码").setPath("src/test/java")
+                SourceCodePath.path().setDesc("本项目代码").setPath("C:\\Users\\xingzi\\Desktop\\smart\\api-doc-test\\src\\main\\java")
                 //SourcePath.path().setPath("F:\\Personal\\project\\smart\\src\\main\\java")
                 //SourcePath.path().setDesc("加载项目外代码").setPath("E:\\ApplicationPower\\ApplicationPower\\Common-util\\src\\main\\java")
         );
@@ -68,6 +70,8 @@ public class ApiDocTest {
 
         long start = System.currentTimeMillis();
 //        ApiDocBuilder.builderControllersApi(config);
+        HtmlApiDocBuilder.builderControllersApi(config);
+        PostmanJsonBuilder.buildPostmanApi(config);
         long end = System.currentTimeMillis();
         DateTimeUtil.printRunTime(end, start);
     }

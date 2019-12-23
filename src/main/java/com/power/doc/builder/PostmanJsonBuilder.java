@@ -3,6 +3,7 @@ package com.power.doc.builder;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.power.common.util.FileUtil;
 import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.model.ApiConfig;
@@ -14,10 +15,12 @@ import com.power.doc.model.postman.ItemBean;
 import com.power.doc.model.postman.RequestItem;
 import com.power.doc.model.postman.request.RequestBean;
 import com.power.doc.model.postman.request.body.BodyBean;
+import com.power.doc.model.postman.request.body.FormData;
 import com.power.doc.model.postman.request.header.HeaderBean;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import org.apache.commons.lang3.StringUtils;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +39,7 @@ public class PostmanJsonBuilder {
         DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
         builderTemplate.checkAndInit(config);
         JavaProjectBuilder javaProjectBuilder = new JavaProjectBuilder();
-        SourceBuilder sourceBuilder = new SourceBuilder(config, javaProjectBuilder);
+        SourceBuilders sourceBuilder = new SourceBuilders(config, javaProjectBuilder);
         List<ApiDoc> apiDocList = sourceBuilder.getControllerApiData();
 
         RequestItem requestItem = new RequestItem();
@@ -99,7 +102,7 @@ public class PostmanJsonBuilder {
         } else {
             if (StringUtils.isNotBlank(apiMethodDoc.getRequestUsage()) &&
                     apiMethodDoc.getRequestUsage().startsWith("http")) {
-                requestBean.setUrl(apiMethodDoc.getRequestUsage());
+                requestBean.setUrl(apiMethodDoc.getRequestUrlParam());
             }
         }
         item.setRequest(requestBean);
@@ -115,14 +118,20 @@ public class PostmanJsonBuilder {
      */
     private static BodyBean buildBodyBean(ApiMethodDoc apiMethodDoc) {
 
-        if (apiMethodDoc.getContentType().equals(DocGlobalConstants.FILE_CONTENT_TYPE)) {
+        if (apiMethodDoc.getContentType().equals(DocGlobalConstants.POSTMAN_MODE_FORMDATA)) {
             BodyBean bodyBean = new BodyBean(true);
             bodyBean.setMode(DocGlobalConstants.POSTMAN_MODE_FORMDATA);
+            String formData = apiMethodDoc.getRequestBody();
+
+            Type type = new TypeToken<List<FormData>>(){}.getType();
+            List<FormData> list = new Gson().fromJson(formData,type);
+            bodyBean.setFormdata(list);
+
             return bodyBean;
         } else if (apiMethodDoc.getContentType().contains(DocGlobalConstants.APPLICATION_JSON)) {
             BodyBean bodyBean = new BodyBean(false);
             bodyBean.setMode(DocGlobalConstants.POSTMAN_MODE_RAW);
-            bodyBean.setRaw(apiMethodDoc.getRequestUsage());
+            bodyBean.setRaw(apiMethodDoc.getRequestBody());
             return bodyBean;
         } else {
             return new BodyBean(false);
