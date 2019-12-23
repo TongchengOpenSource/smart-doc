@@ -20,4 +20,10 @@ public class SpringMvcAnnotations {
     public static final String REQUEST_PARAM = "RequestParam";
 
     public static final String REQUEST_BODY = "RequestBody";
+
+    public static final String CONTROLLER = "Controller";
+
+    public static final String REST_CONTROLLER = "RestController";
+
+    public static final String PATH_VARIABLE = "PathVariable";
 }

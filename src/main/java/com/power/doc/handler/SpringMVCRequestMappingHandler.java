@@ -85,7 +85,7 @@ public class SpringMVCRequestMappingHandler {
                 url = DocUrlUtil.getMvcUrls(serverUrl, controllerBaseUrl, Arrays.asList(urls));
                 shortUrl = DocUrlUtil.getMvcUrls("", controllerBaseUrl, Arrays.asList(urls));
             } else {
-                url = UrlUtil.simplifyUrl(serverUrl + "/" + controllerBaseUrl + "/" + url);
+                url = UrlUtil.simplifyUrl(serverUrl + "/" + controllerBaseUrl + "/" + shortUrl);
                 shortUrl = UrlUtil.simplifyUrl("/" + controllerBaseUrl + "/" + url);
             }
             RequestMapping requestMapping = RequestMapping.builder().
