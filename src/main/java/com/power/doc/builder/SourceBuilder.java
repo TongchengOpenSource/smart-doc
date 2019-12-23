@@ -1007,10 +1007,10 @@ public class SourceBuilder {
             String mockValue = "";
             if (DocClassUtil.isPrimitive(simpleTypeName)) {
                 mockValue = paramsComments.get(paraName);
-                if(mockValue.contains("|")){
+                if (Objects.nonNull(mockValue) && mockValue.contains("|")) {
                     mockValue = mockValue.substring(mockValue.lastIndexOf("|") + 1, mockValue.length());
                 } else {
-                    mockValue ="";
+                    mockValue = "";
                 }
                 if (StringUtil.isEmpty(mockValue)) {
                     mockValue = DocUtil.getValByTypeAndFieldName(simpleTypeName, paraName, true);
@@ -1176,8 +1176,8 @@ public class SourceBuilder {
                 if (StringUtil.isEmpty(comment)) {
                     comment = NO_COMMENTS_FOUND;
                 } else {
-                    if(comment.contains("|")){
-                        comment = comment.substring(0,comment.indexOf("|"));
+                    if (comment.contains("|")) {
+                        comment = comment.substring(0, comment.indexOf("|"));
                     }
                 }
                 List<JavaAnnotation> annotations = parameter.getAnnotations();

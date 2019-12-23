@@ -181,7 +181,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
             String typeName = parameter.getType().getGenericCanonicalName();
             String simpleName = parameter.getType().getValue().toLowerCase();
             String fullTypeName = parameter.getType().getFullyQualifiedName();
-            JavaClass javaClass = builder.getClassByName(fullTypeName);
+            JavaClass javaClass = builder.getJavaProjectBuilder().getClassByName(fullTypeName);
             if (!DocClassUtil.isMvcIgnoreParams(typeName)) {
                 if (!paramTagMap.containsKey(paramName) && DocClassUtil.isPrimitive(fullTypeName) && isStrict) {
                     throw new RuntimeException("ERROR: Unable to find javadoc @param for actual param \""
