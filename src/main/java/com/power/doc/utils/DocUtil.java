@@ -125,20 +125,19 @@ public class DocUtil {
         String type = typeName.contains("java.lang") ? typeName.substring(typeName.lastIndexOf(".") + 1, typeName.length()) : typeName;
         String key = filedName.toLowerCase() + "-" + type.toLowerCase();
         StringBuilder value = null;
-        if(! type.contains("[")){
+        if (!type.contains("[")) {
             isArray = false;
         }
         for (Map.Entry<String, String> entry : fieldValue.entrySet()) {
             if (key.contains(entry.getKey())) {
                 value = new StringBuilder(entry.getValue());
-                if(! isArray){
+                if (!isArray) {
                     break;
-                }
-                else {
-                    for(int i=0;i<2;i++){
+                } else {
+                    for (int i = 0; i < 2; i++) {
                         value.append(",").append(entry.getValue());
                     }
-                     break;
+                    break;
                 }
 
             }
@@ -292,7 +291,7 @@ public class DocUtil {
         Map<String, String> paramTagMap = new HashMap<>();
         for (DocletTag docletTag : paramTags) {
             String value = docletTag.getValue();
-            if (StringUtil.isEmpty(value)&&StringUtil.isNotEmpty(className)) {
+            if (StringUtil.isEmpty(value) && StringUtil.isNotEmpty(className)) {
                 throw new RuntimeException("ERROR: #" + javaMethod.getName()
                         + "() - bad @" + tagName + " javadoc from " + className + ", must be add comment if you use it.");
             }
@@ -327,12 +326,13 @@ public class DocUtil {
 
     /**
      * Get field tags
+     *
      * @param field JavaField
      * @return map
      */
-    public static  Map<String, String> getFieldTagsValue(final JavaField field) {
+    public static Map<String, String> getFieldTagsValue(final JavaField field) {
         List<DocletTag> paramTags = field.getTags();
-        return  paramTags.stream().collect(Collectors.toMap(DocletTag::getName, DocletTag::getValue));
+        return paramTags.stream().collect(Collectors.toMap(DocletTag::getName, DocletTag::getValue));
     }
 
     /**
@@ -383,13 +383,22 @@ public class DocUtil {
         return null;
     }
 
-    public static String handleJsonStr(String content){
+    public static String handleJsonStr(String content) {
         StringBuilder builder = new StringBuilder();
         builder.append("\"").append(content).append("\"");
         return builder.toString();
     }
 
-    public static Map<String,String> formDataToMap(List<FormData> formDataList){
-        return formDataList.stream().collect(Collectors.toMap(FormData::getKey,FormData::getValue));
+    public static Map<String, String> formDataToMap(List<FormData> formDataList) {
+        Map<String, String> map = formDataList.stream()
+                .collect(Collectors.toMap(
+                        FormData::getKey,
+                        FormData::getValue,
+                        (u, v) -> {
+                            throw new IllegalStateException(String.format("Duplicate key %s", u));
+                        },
+                        LinkedHashMap::new
+                ));
+        return map;
     }
 }

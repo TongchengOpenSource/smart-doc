@@ -149,7 +149,7 @@ public class ParamsBuildHelper {
                     }
                 } else {
                     ApiParam param = ApiParam.of().setField(pre + fieldName);
-                    JavaClass javaClass = projectBuilder.getClassByName(subTypeName);
+                    JavaClass javaClass = projectBuilder.getJavaProjectBuilder().getClassByName(subTypeName);
                     String enumComments = javaClass.getComment();
                     if (StringUtil.isNotEmpty(enumComments) && javaClass.isEnum()) {
                         enumComments = DocUtil.replaceNewLineToHtmlBr(enumComments);
