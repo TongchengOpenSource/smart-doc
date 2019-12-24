@@ -7,7 +7,7 @@ import com.power.common.util.RandomUtil;
 import com.power.common.util.StringUtil;
 import com.power.doc.constants.DocAnnotationConstants;
 import com.power.doc.constants.DocGlobalConstants;
-import com.power.doc.model.postman.request.body.FormData;
+import com.power.doc.model.FormData;
 import com.thoughtworks.qdox.model.DocletTag;
 import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaField;
@@ -293,7 +293,7 @@ public class DocUtil {
             String value = docletTag.getValue();
             if (StringUtil.isEmpty(value) && StringUtil.isNotEmpty(className)) {
                 throw new RuntimeException("ERROR: #" + javaMethod.getName()
-                        + "() - bad @" + tagName + " javadoc from " + className + ", must be add comment if you use it.");
+                        + "() - bad @" + tagName + " javadoc from " + javaMethod.getDeclaringClass().getCanonicalName() + ", must be add comment if you use it.");
             }
             String pName;
             String pValue;
@@ -390,15 +390,13 @@ public class DocUtil {
     }
 
     public static Map<String, String> formDataToMap(List<FormData> formDataList) {
-        Map<String, String> map = formDataList.stream()
-                .collect(Collectors.toMap(
-                        FormData::getKey,
-                        FormData::getValue,
-                        (u, v) -> {
-                            throw new IllegalStateException(String.format("Duplicate key %s", u));
-                        },
-                        LinkedHashMap::new
-                ));
-        return map;
+        Map<String, String> formDataMap = new LinkedHashMap<>();
+        for (FormData formData : formDataList) {
+            if ("file".equals(formData.getType())) {
+                continue;
+            }
+            formDataMap.put(formData.getKey(), formData.getValue());
+        }
+        return formDataMap;
     }
 }

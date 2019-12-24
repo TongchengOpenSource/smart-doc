@@ -52,7 +52,7 @@ public class ProjectDocConfigBuilder {
         }
         this.javaProjectBuilder = javaProjectBuilder;
         this.loadJavaSource(apiConfig.getSourceCodePaths(),this.javaProjectBuilder);
-        this.initClassFilesMap(apiConfig);
+        this.initClassFilesMap();
         this.initCustomResponseFieldsMap(apiConfig);
     }
 
@@ -76,7 +76,7 @@ public class ProjectDocConfigBuilder {
         }
     }
 
-    private void initClassFilesMap(ApiConfig config) {
+    private void initClassFilesMap() {
         Collection<JavaClass> javaClasses = javaProjectBuilder.getClasses();
         for (JavaClass cls : javaClasses) {
             classFilesMap.put(cls.getFullyQualifiedName(), cls);

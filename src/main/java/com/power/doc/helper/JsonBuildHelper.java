@@ -10,7 +10,7 @@ import com.power.doc.constants.DocTags;
 import com.power.doc.model.ApiMethodDoc;
 import com.power.doc.model.ApiReturn;
 import com.power.doc.model.CustomRespField;
-import com.power.doc.model.postman.request.body.FormData;
+import com.power.doc.model.FormData;
 import com.power.doc.utils.*;
 import com.thoughtworks.qdox.model.*;
 

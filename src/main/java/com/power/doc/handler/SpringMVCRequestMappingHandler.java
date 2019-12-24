@@ -5,7 +5,7 @@ import com.power.common.util.UrlUtil;
 import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.constants.Methods;
 import com.power.doc.constants.SpringMvcAnnotations;
-import com.power.doc.model.RequestMapping;
+import com.power.doc.model.request.RequestMapping;
 import com.power.doc.utils.DocUrlUtil;
 import com.power.doc.utils.DocUtil;
 import com.thoughtworks.qdox.model.JavaAnnotation;
@@ -86,7 +86,7 @@ public class SpringMVCRequestMappingHandler {
                 shortUrl = DocUrlUtil.getMvcUrls("", controllerBaseUrl, Arrays.asList(urls));
             } else {
                 url = UrlUtil.simplifyUrl(serverUrl + "/" + controllerBaseUrl + "/" + shortUrl);
-                shortUrl = UrlUtil.simplifyUrl("/" + controllerBaseUrl + "/" + url);
+                shortUrl = UrlUtil.simplifyUrl("/" + controllerBaseUrl + "/" + shortUrl);
             }
             RequestMapping requestMapping = RequestMapping.builder().
                     setMediaType(mediaType).setMethodType(methodType).setUrl(url).setShortUrl(shortUrl)

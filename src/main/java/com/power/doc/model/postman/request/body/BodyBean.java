@@ -1,6 +1,8 @@
 package com.power.doc.model.postman.request.body;
 
 
+import com.power.doc.model.FormData;
+
 import java.util.List;
 
 /**

@@ -10,6 +10,8 @@ import com.power.doc.model.ApiConfig;
 import com.power.doc.model.ApiDoc;
 import com.power.doc.model.ApiDocDict;
 import com.power.doc.model.ApiErrorCode;
+import com.power.doc.template.IDocBuildTemplate;
+import com.power.doc.template.SpringBootDocBuildTemplate;
 import com.power.doc.utils.BeetlTemplateUtil;
 import com.power.doc.utils.MarkDownUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
@@ -39,8 +41,9 @@ public class HtmlApiDocBuilder {
         DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
         builderTemplate.checkAndInit(config);
         JavaProjectBuilder javaProjectBuilder = new JavaProjectBuilder();
-        SourceBuilder sourceBuilder = new SourceBuilder(config,javaProjectBuilder);
-        List<ApiDoc> apiDocList = sourceBuilder.getControllerApiData();
+        ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config,javaProjectBuilder);
+        IDocBuildTemplate docBuildTemplate = new SpringBootDocBuildTemplate();
+        List<ApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder);
         if (config.isAllInOne()) {
             Template indexCssTemplate = BeetlTemplateUtil.getByName(ALL_IN_ONE_CSS);
             FileUtil.nioWriteFile(indexCssTemplate.render(), config.getOutPath() + FILE_SEPARATOR + ALL_IN_ONE_CSS);
@@ -52,7 +55,6 @@ public class HtmlApiDocBuilder {
             buildApiDoc(apiDocList, config.getOutPath());
             buildErrorCodeDoc(config.getErrorCodes(), config.getOutPath());
             buildDictionary(apiDocDictList, config.getOutPath());
-
         }
 
     }

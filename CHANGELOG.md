@@ -154,4 +154,6 @@
 	2. 修改支持上传文件参数不列举到文档的问题。
 	3. 新增ApiDataBuilder用于获取smart-doc生成的文档数据，包含header、字典、错误码等。
 	4. 合并fork分支的github book html5模板，新增搜索和锚点。
-	5. 重点：smart-doc的maven插件smart-doc-maven-plugin增强对maven标准项目的支持。
+	5. 新增自定义@mock tag用于指定生成文档的字段值，@param 的参数注释增加mock值的功能(@param name 姓名|张三)
+	6. 重点：smart-doc的maven插件smart-doc-maven-plugin增强对maven标准项目的支持。
+	7. 全面支持表单。

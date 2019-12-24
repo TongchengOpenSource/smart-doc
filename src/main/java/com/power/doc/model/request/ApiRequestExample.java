@@ -1,6 +1,6 @@
-package com.power.doc.model;
+package com.power.doc.model.request;
 
-import com.power.doc.model.postman.request.body.FormData;
+import com.power.doc.model.FormData;
 
 import java.util.List;
 
@@ -10,12 +10,24 @@ import java.util.List;
 
 public class ApiRequestExample {
 
+    /**
+     * json body
+     */
     private String jsonBody;
 
+    /**
+     * example body
+     */
     private String exampleBody;
 
+    /**
+     * url
+     */
     private String url;
 
+    /**
+     * list of form data
+     */
     private List<FormData> formDataList;
 
     private boolean json;

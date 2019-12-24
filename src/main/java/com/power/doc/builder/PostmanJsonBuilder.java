@@ -15,7 +15,7 @@ import com.power.doc.model.postman.ItemBean;
 import com.power.doc.model.postman.RequestItem;
 import com.power.doc.model.postman.request.RequestBean;
 import com.power.doc.model.postman.request.body.BodyBean;
-import com.power.doc.model.postman.request.body.FormData;
+import com.power.doc.model.FormData;
 import com.power.doc.model.postman.request.header.HeaderBean;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import org.apache.commons.lang3.StringUtils;

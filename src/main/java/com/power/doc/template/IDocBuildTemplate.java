@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import static com.power.doc.constants.DocGlobalConstants.NO_COMMENTS_FOUND;
+
 /**
  * @author yu 2019/12/21.
  */
@@ -36,6 +38,17 @@ public interface IDocBuildTemplate {
                     .append(header.getSince()).append("\n");
         }
         return builder.toString();
+    }
+
+    default String paramCommentResolve(String comment) {
+        if (StringUtil.isEmpty(comment)) {
+            comment = NO_COMMENTS_FOUND;
+        } else {
+            if (comment.contains("|")) {
+                comment = comment.substring(0, comment.indexOf("|"));
+            }
+        }
+        return comment;
     }
 
 

@@ -1,13 +1,14 @@
-package com.power.doc.model.postman.request.body;
+package com.power.doc.model;
 
 /**
  * @author xingzi  2019/12/21  20:20
  */
 public class FormData {
-    private  String key;
-    private  String type;
-    private  String src;
-    private  String value;
+    private String key;
+    private String type;
+    private String desc;
+    private String src;
+    private String value;
 
     public String getKey() {
         return key;
@@ -39,5 +40,13 @@ public class FormData {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
     }
 }

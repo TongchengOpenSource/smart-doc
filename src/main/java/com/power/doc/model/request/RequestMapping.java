@@ -1,16 +1,23 @@
-package com.power.doc.model;
+package com.power.doc.model.request;
 
 /**
  * @author yu 2019/12/22.
  */
 public class RequestMapping {
+    /**
+     * url
+     */
     private String url;
+
+    /**
+     * path
+     */
     private String shortUrl;
     private String methodType;
     private String mediaType;
     private boolean postMethod;
 
-    public static RequestMapping builder(){
+    public static RequestMapping builder() {
         return new RequestMapping();
     }
 
