@@ -17,6 +17,8 @@ import com.power.doc.model.postman.request.RequestBean;
 import com.power.doc.model.postman.request.body.BodyBean;
 import com.power.doc.model.FormData;
 import com.power.doc.model.postman.request.header.HeaderBean;
+import com.power.doc.template.IDocBuildTemplate;
+import com.power.doc.template.SpringBootDocBuildTemplate;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import org.apache.commons.lang3.StringUtils;
 
@@ -39,9 +41,9 @@ public class PostmanJsonBuilder {
         DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
         builderTemplate.checkAndInit(config);
         JavaProjectBuilder javaProjectBuilder = new JavaProjectBuilder();
-        SourceBuilders sourceBuilder = new SourceBuilders(config, javaProjectBuilder);
-        List<ApiDoc> apiDocList = sourceBuilder.getControllerApiData();
-
+        ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
+        IDocBuildTemplate docBuildTemplate = new SpringBootDocBuildTemplate();
+        List<ApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder);
         RequestItem requestItem = new RequestItem();
         requestItem.setInfo(new InfoBean(config.getProjectName()));
         List<ItemBean> itemBeans = new ArrayList<>();
@@ -95,16 +97,11 @@ public class PostmanJsonBuilder {
 
         requestBean.setDescription(apiMethodDoc.getDesc());
         requestBean.setMethod(apiMethodDoc.getType());
-        requestBean.setUrl(apiMethodDoc.getUrl());
         requestBean.setHeader(buildHeaderBeanList(apiMethodDoc));
-        if (apiMethodDoc.getType().equals(DocGlobalConstants.HTTP_POST)) {
-            requestBean.setBody(buildBodyBean(apiMethodDoc));
-        } else {
-            if (StringUtils.isNotBlank(apiMethodDoc.getRequestUsage()) &&
-                    apiMethodDoc.getRequestUsage().startsWith("http")) {
-                requestBean.setUrl(apiMethodDoc.getRequestUrlParam());
-            }
-        }
+
+        requestBean.setBody(buildBodyBean(apiMethodDoc));
+        requestBean.setUrl(apiMethodDoc.getRequestExample().getUrl());
+
         item.setRequest(requestBean);
         return item;
 
@@ -118,23 +115,18 @@ public class PostmanJsonBuilder {
      */
     private static BodyBean buildBodyBean(ApiMethodDoc apiMethodDoc) {
 
-        if (apiMethodDoc.getContentType().equals(DocGlobalConstants.POSTMAN_MODE_FORMDATA)) {
-            BodyBean bodyBean = new BodyBean(true);
-            bodyBean.setMode(DocGlobalConstants.POSTMAN_MODE_FORMDATA);
-            String formData = apiMethodDoc.getRequestBody();
-
-            Type type = new TypeToken<List<FormData>>(){}.getType();
-            List<FormData> list = new Gson().fromJson(formData,type);
-            bodyBean.setFormdata(list);
-
-            return bodyBean;
-        } else if (apiMethodDoc.getContentType().contains(DocGlobalConstants.APPLICATION_JSON)) {
+        if (apiMethodDoc.getContentType().contains(DocGlobalConstants.JSON_CONTENT_TYPE)) {
             BodyBean bodyBean = new BodyBean(false);
             bodyBean.setMode(DocGlobalConstants.POSTMAN_MODE_RAW);
-            bodyBean.setRaw(apiMethodDoc.getRequestBody());
+            if (apiMethodDoc.getRequestExample() != null) {
+                bodyBean.setRaw(apiMethodDoc.getRequestExample().getJsonBody());
+            }
             return bodyBean;
         } else {
-            return new BodyBean(false);
+            BodyBean bodyBean = new BodyBean(true);
+            bodyBean.setMode(DocGlobalConstants.POSTMAN_MODE_FORMDATA);
+            bodyBean.setFormdata(apiMethodDoc.getRequestExample().getFormDataList());
+            return bodyBean;
         }
 
     }

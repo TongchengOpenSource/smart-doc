@@ -49,4 +49,15 @@ public class FormData {
     public void setDesc(String desc) {
         this.desc = desc;
     }
+
+    @Override
+    public String toString() {
+        return "FormData{" +
+                "key='" + key + '\'' +
+                ", type='" + type + '\'' +
+                ", desc='" + desc + '\'' +
+                ", src='" + src + '\'' +
+                ", value='" + value + '\'' +
+                '}';
+    }
 }

@@ -102,16 +102,6 @@ public class ApiMethodDoc implements Serializable {
     private ApiRequestExample requestExample;
 
     /**
-     * http request-example requestUrlParam
-     */
-    private String requestUrlParam;
-
-    /**
-     * http request-example requestBody
-     */
-    private String requestBody;
-
-    /**
      * http response usage
      */
     private String responseUsage;
@@ -121,21 +111,6 @@ public class ApiMethodDoc implements Serializable {
      */
     private List<ApiParam> responseParams;
 
-    public String getRequestUrlParam() {
-        return requestUrlParam;
-    }
-
-    public void setRequestUrlParam(String requestUrlParam) {
-        this.requestUrlParam = requestUrlParam;
-    }
-
-    public String getRequestBody() {
-        return requestBody;
-    }
-
-    public void setRequestBody(String requestBody) {
-        this.requestBody = requestBody;
-    }
 
     public String getMethodId() {
         return methodId;
