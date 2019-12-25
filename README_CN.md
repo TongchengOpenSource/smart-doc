@@ -30,28 +30,35 @@ smart-doc使用和测试可参考[smart-doc demo](https://gitee.com/sunyureposit
 <dependency>
     <groupId>com.github.shalousun</groupId>
     <artifactId>smart-doc</artifactId>
-    <version>1.7.9</version>
+    <version>1.8.0</version>
     <scope>test</scope>
 </dependency>
 ```
 #### gradle
 ```
-testCompile 'com.github.shalousun:smart-doc:1.7.9'
+testCompile 'com.github.shalousun:smart-doc:1.8.0'
 ```
 ### Create a unit test
-通过运行一个单元测试来让Smart-doc为你生成一个简洁明了的api文档
+通过运行一个单元测试来让Smart-doc为你生成一个简洁明了的api文档，最简单例子如下：
+
 ```
-/**
- * Description:
- * ApiDoc测试
- *
- * @author yu 2018/06/11.
- */
+@Test
+public void testBuilderControllersApi() {
+    ApiConfig config = new ApiConfig();
+    //true会严格要求代码中必须有java注释，首次体验可关闭，正式产品推荐设置true
+    config.setStrict(true);
+    //当把AllInOne设置为true时，Smart-doc将会把所有接口生成到一个Markdown、HHTML或者AsciiDoc中
+    config.setAllInOne(true);
+    //Set the api document output path.
+    config.setOutPath("d:\\md");
+    //生成Markdown文件
+    ApiDocBuilder.builderControllersApi(config);
+}
+```
+**详细用例：**
+```
 public class ApiDocTest {
 
-    /**
-     * 包括设置请求头，缺失注释的字段批量在文档生成期使用定义好的注释
-     */
     @Test
     public void testBuilderControllersApi() {
         ApiConfig config = new ApiConfig();
