@@ -31,19 +31,5 @@ public class DocAnnotationConstants {
 
     public static final String DEFAULT_VALUE_PROP = "defaultValue";
 
-    public static final String SHORT_REQUSRT_BODY = "RequestBody";
-
-    public static final String SHORT_REQUSRT_HEADER = "RequestHeader";
-
     public static final String REQUEST_MAPPING = "RequestMapping";
-
-    private static final String GET_MAPPING = "GetMapping";
-
-    private static final String POST_MAPPING = "PostMapping";
-
-    private static final String PUT_MAPPING = "PutMapping";
-
-    private static final String DELETE_MAPPING = "DeleteMapping";
-
-
 }
