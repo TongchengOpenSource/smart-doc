@@ -154,7 +154,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
     private ApiRequestExample buildReqJson(JavaMethod method, ApiMethodDoc apiMethodDoc, Boolean isPostMethod, ProjectDocConfigBuilder configBuilder) {
         List<JavaParameter> parameterList = method.getParameters();
         if (parameterList.size() < 1) {
-            return ApiRequestExample.builder().setJsonBody(apiMethodDoc.getUrl());
+            return ApiRequestExample.builder().setUrl(apiMethodDoc.getUrl());
         }
         Map<String, String> pathParamsMap = new LinkedHashMap<>();
         Map<String, String> paramsComments = DocUtil.getParamsComments(method, DocTags.PARAM, null);
