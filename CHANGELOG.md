@@ -156,4 +156,5 @@
 	4. 合并fork分支的github book html5模板，新增搜索和锚点。
 	5. 新增自定义@mock tag用于指定生成文档的字段值，@param 的参数注释增加mock值的功能(@param name 姓名|张三)
 	6. 重点：smart-doc的maven插件smart-doc-maven-plugin增强对maven标准项目的支持。
-	7. 全面支持表单。
+	7. 全面支持spring的表单参数绑定解析。
+	8. postman json生成支持所有参数自动回填。再也不用自己建参数了。

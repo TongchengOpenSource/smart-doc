@@ -27,7 +27,7 @@ public class SpringMVCRequestMappingHandler {
      * @param serverUrl         server url
      * @param controllerBaseUrl spring mvc controller base url
      * @param method            JavaMethod
-     * @return
+     * @return RequestMapping
      */
     public RequestMapping handle(String serverUrl, String controllerBaseUrl, JavaMethod method) {
         List<JavaAnnotation> annotations = method.getAnnotations();

@@ -2,6 +2,7 @@ package com.power.doc.util;
 
 import com.power.doc.model.ApiReturn;
 import com.power.doc.utils.DocClassUtil;
+import com.power.doc.utils.JavaClassValidateUtil;
 import org.junit.Test;
 
 /**
@@ -23,7 +24,7 @@ public class DocClassUtilTest {
     @Test
     public void testIsPrimitive() {
         String typeName = "java.time.LocalDateTime";
-        System.out.println(DocClassUtil.isPrimitive(typeName));
+        System.out.println(JavaClassValidateUtil.isPrimitive(typeName));
     }
 
     @Test

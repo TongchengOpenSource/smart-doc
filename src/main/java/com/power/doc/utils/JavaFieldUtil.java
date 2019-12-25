@@ -10,8 +10,8 @@ import java.util.List;
 public class JavaFieldUtil {
 
     /**
-     * @param fields
-     * @return
+     * @param fields list of fields
+     * @return boolean
      */
     public static boolean checkGenerics(List<JavaField> fields) {
         checkGenerics:

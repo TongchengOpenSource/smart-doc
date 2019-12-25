@@ -7,6 +7,7 @@ import com.power.doc.helper.ParamsBuildHelper;
 import com.power.doc.model.*;
 import com.power.doc.utils.DocClassUtil;
 import com.power.doc.utils.DocUtil;
+import com.power.doc.utils.JavaClassValidateUtil;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaMethod;
 
@@ -78,13 +79,13 @@ public interface IDocBuildTemplate {
         if (this.ignoreReturnObject(typeName)) {
             throw new RuntimeException("Smart-doc can't support " + typeName + " as method return in " + controllerName);
         }
-        if (DocClassUtil.isPrimitive(typeName)) {
+        if (JavaClassValidateUtil.isPrimitive(typeName)) {
             return ParamsBuildHelper.primitiveReturnRespComment(DocClassUtil.processTypeNameForParams(typeName));
         }
-        if (DocClassUtil.isCollection(typeName)) {
+        if (JavaClassValidateUtil.isCollection(typeName)) {
             if (returnType.contains("<")) {
                 String gicName = returnType.substring(returnType.indexOf("<") + 1, returnType.lastIndexOf(">"));
-                if (DocClassUtil.isPrimitive(gicName)) {
+                if (JavaClassValidateUtil.isPrimitive(gicName)) {
                     return ParamsBuildHelper.primitiveReturnRespComment("array of " + DocClassUtil.processTypeNameForParams(gicName));
                 }
                 return ParamsBuildHelper.buildParams(gicName, "", 0, null, projectBuilder.getCustomRespFieldMap(), true, new HashMap<>(), projectBuilder);
@@ -92,12 +93,12 @@ public interface IDocBuildTemplate {
                 return null;
             }
         }
-        if (DocClassUtil.isMap(typeName)) {
+        if (JavaClassValidateUtil.isMap(typeName)) {
             String[] keyValue = DocClassUtil.getMapKeyValueType(returnType);
             if (keyValue.length == 0) {
                 return null;
             }
-            if (DocClassUtil.isPrimitive(keyValue[1])) {
+            if (JavaClassValidateUtil.isPrimitive(keyValue[1])) {
                 return ParamsBuildHelper.primitiveReturnRespComment("key value");
             }
             return ParamsBuildHelper.buildParams(keyValue[1], "", 0, null, projectBuilder.getCustomRespFieldMap(), true, new HashMap<>(), projectBuilder);

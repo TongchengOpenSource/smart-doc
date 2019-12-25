@@ -8,6 +8,7 @@ import com.power.doc.model.FormData;
 import com.power.doc.utils.DocClassUtil;
 import com.power.doc.utils.DocUtil;
 import com.power.doc.utils.JavaClassUtil;
+import com.power.doc.utils.JavaClassValidateUtil;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaField;
 
@@ -47,7 +48,7 @@ public class FormDataBuildHelper {
         JavaClass cls = builder.getJavaProjectBuilder().getClassByName(simpleName);
         List<JavaField> fields = JavaClassUtil.getFields(cls, 0);
 
-        if (DocClassUtil.isPrimitive(simpleName)) {
+        if (JavaClassValidateUtil.isPrimitive(simpleName)) {
             FormData formData = new FormData();
             formData.setKey(pre);
             formData.setType("text");
@@ -55,9 +56,9 @@ public class FormDataBuildHelper {
             formDataList.add(formData);
             return formDataList;
         }
-        if (DocClassUtil.isCollection(simpleName) || DocClassUtil.isArray(simpleName)) {
+        if (JavaClassValidateUtil.isCollection(simpleName) || JavaClassValidateUtil.isArray(simpleName)) {
             String gicName = globGicName[0];
-            if (DocClassUtil.isArray(gicName)) {
+            if (JavaClassValidateUtil.isArray(gicName)) {
                 gicName = gicName.substring(0, gicName.indexOf("["));
             }
             formDataList.addAll(getFormData(gicName, registryClasses, counter, builder, pre + "[]"));
@@ -71,18 +72,18 @@ public class FormDataBuildHelper {
             JavaClass javaClass = builder.getJavaProjectBuilder().getClassByName(subTypeName);
             if ("this$0".equals(fieldName) ||
                     "serialVersionUID".equals(fieldName) ||
-                    DocClassUtil.isIgnoreFieldTypes(subTypeName)) {
+                    JavaClassValidateUtil.isIgnoreFieldTypes(subTypeName)) {
                 continue;
             }
             String typeSimpleName = field.getType().getSimpleName();
-            if (DocClassUtil.isMap(subTypeName)) {
+            if (JavaClassValidateUtil.isMap(subTypeName)) {
                 continue;
             }
             String comment = field.getComment();
             if (StringUtil.isNotEmpty(comment)) {
                 comment = DocUtil.replaceNewLineToHtmlBr(comment);
             }
-            if (DocClassUtil.isPrimitive(subTypeName)) {
+            if (JavaClassValidateUtil.isPrimitive(subTypeName)) {
                 String fieldValue = DocUtil.getValByTypeAndFieldName(typeSimpleName, field.getName());
                 FormData formData = new FormData();
                 formData.setKey(pre + fieldName);
@@ -98,20 +99,20 @@ public class FormDataBuildHelper {
                 formData.setValue(String.valueOf(value));
                 formData.setDesc(comment);
                 formDataList.add(formData);
-            } else if (DocClassUtil.isCollection(subTypeName)) {
+            } else if (JavaClassValidateUtil.isCollection(subTypeName)) {
                 String gNameTemp = field.getType().getGenericCanonicalName();
                 String[] gNameArr = DocClassUtil.getSimpleGicName(gNameTemp);
                 if (gNameArr.length == 0) {
                     continue out;
                 }
                 String gName = DocClassUtil.getSimpleGicName(gNameTemp)[0];
-                if (!DocClassUtil.isPrimitive(gName)) {
+                if (!JavaClassValidateUtil.isPrimitive(gName)) {
                     if (!simpleName.equals(gName) && !gName.equals(simpleName)) {
                         if (gName.length() == 1) {
                             int len = globGicName.length;
                             if (len > 0) {
                                 String gicName = (n < len) ? globGicName[n] : globGicName[len - 1];
-                                if (!DocClassUtil.isPrimitive(gicName) && !simpleName.equals(gicName)) {
+                                if (!JavaClassValidateUtil.isPrimitive(gicName) && !simpleName.equals(gicName)) {
                                     formDataList.addAll(getFormData(gicName, registryClasses, counter, builder, pre + fieldName + "[0]."));
                                 }
                             }
