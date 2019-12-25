@@ -3,6 +3,7 @@ package com.power.doc.helper;
 import com.power.common.util.RandomUtil;
 import com.power.common.util.StringUtil;
 import com.power.doc.builder.ProjectDocConfigBuilder;
+import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.model.FormData;
 import com.power.doc.utils.DocClassUtil;
 import com.power.doc.utils.DocUtil;
@@ -119,8 +120,16 @@ public class FormDataBuildHelper {
                         }
                     }
                 }
+            } else if (subTypeName.length() == 1 || DocGlobalConstants.JAVA_OBJECT_FULLY.equals(subTypeName)) {
+                //  For Generics,do nothing, spring mvc not support
+//                if (n < globGicName.length) {
+//                    String gicName = globGicName[n];
+//                    formDataList.addAll(getFormData(gicName, registryClasses, counter, builder, pre + fieldName + "."));
+//                }
+//                n++;
+                continue;
             } else {
-                formDataList.addAll(getFormData(fieldGicName, registryClasses,counter, builder, pre + fieldName + "."));
+                formDataList.addAll(getFormData(fieldGicName, registryClasses, counter, builder, pre + fieldName + "."));
             }
         }
         return formDataList;
