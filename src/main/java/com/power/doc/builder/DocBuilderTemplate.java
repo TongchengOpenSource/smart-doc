@@ -59,9 +59,9 @@ public class DocBuilderTemplate {
     /**
      * get all api data
      *
-     * @param config
+     * @param config ApiConfig
      * @param javaProjectBuilder JavaProjectBuilder
-     * @return
+     * @return ApiAllData
      */
     public ApiAllData getApiData(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
         ApiAllData apiAllData = new ApiAllData();

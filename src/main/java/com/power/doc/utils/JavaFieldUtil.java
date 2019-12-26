@@ -1,12 +1,7 @@
 package com.power.doc.utils;
 
-import com.power.common.util.RandomUtil;
-import com.power.doc.builder.ProjectDocConfigBuilder;
-import com.power.doc.model.FormData;
-import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaField;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,8 +10,8 @@ import java.util.List;
 public class JavaFieldUtil {
 
     /**
-     * @param fields
-     * @return
+     * @param fields list of fields
+     * @return boolean
      */
     public static boolean checkGenerics(List<JavaField> fields) {
         checkGenerics:

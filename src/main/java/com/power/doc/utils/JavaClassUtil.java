@@ -39,9 +39,9 @@ public class JavaClassUtil {
      * get enum value
      * @param javaClass enum class
      * @param returnEnum is return method
-     * @return
+     * @return Object
      */
-    public  static Object getEnumValue(JavaClass javaClass, boolean returnEnum) {
+    public static Object getEnumValue(JavaClass javaClass, boolean returnEnum) {
         List<JavaField> javaFields = javaClass.getEnumConstants();
         Object value = null;
         int index = 0;
@@ -53,7 +53,7 @@ public class JavaClassUtil {
                 value = valueBuilder.toString();
                 return value;
             }
-            if (!DocClassUtil.isPrimitive(simpleName) && index < 1) {
+            if (!JavaClassValidateUtil.isPrimitive(simpleName) && index < 1) {
                 if (null != javaField.getEnumConstantArguments()) {
                     value = javaField.getEnumConstantArguments().get(0);
                 } else {
@@ -63,5 +63,29 @@ public class JavaClassUtil {
             index++;
         }
         return value;
+    }
+
+
+    /**
+     * Get annotation simpleName
+     *
+     * @param annotationName annotationName
+     * @return String
+     */
+    public static String getAnnotationSimpleName(String annotationName) {
+        return getClassSimpleName(annotationName);
+    }
+
+    /**
+     * Get className
+     * @param className className
+     * @return String
+     */
+    public static String getClassSimpleName(String className) {
+        if (className.contains(".")) {
+            int index = className.lastIndexOf(".");
+            className = className.substring(index + 1, className.length());
+        }
+        return className;
     }
 }

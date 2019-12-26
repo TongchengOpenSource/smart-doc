@@ -112,4 +112,10 @@ public class DocGlobalConstants {
     public static final String DEFAULT_SERVER_URL = "http://{server}";
 
     public static final String SHORT_REQUEST_BODY = "RequestBody";
+
+    public static final String CURL_POST = "curl -X POST -i ";
+
+    public static final String CURL_POST_JSON = "curl -X POST -H 'Content-Type: application/json; charset=utf-8' -i ";
+
+    public static final String ENMPTY = "";
 }

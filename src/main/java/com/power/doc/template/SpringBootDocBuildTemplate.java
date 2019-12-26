@@ -17,6 +17,7 @@ import com.power.doc.model.request.RequestMapping;
 import com.power.doc.utils.DocClassUtil;
 import com.power.doc.utils.DocUtil;
 import com.power.doc.utils.JavaClassUtil;
+import com.power.doc.utils.JavaClassValidateUtil;
 import com.thoughtworks.qdox.model.*;
 import com.thoughtworks.qdox.model.expression.AnnotationValue;
 
@@ -42,18 +43,19 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
         List<ApiDoc> apiDocList = new ArrayList<>();
         int order = 0;
         for (JavaClass cls : projectBuilder.getJavaProjectBuilder().getClasses()) {
-            if (checkController(cls)) {
-                if (StringUtil.isNotEmpty(apiConfig.getPackageFilters())) {
-                    if (DocUtil.isMatch(apiConfig.getPackageFilters(), cls.getCanonicalName())) {
-                        order++;
-                        List<ApiMethodDoc> apiMethodDocs = buildControllerMethod(cls, apiConfig, projectBuilder);
-                        this.handleApiDoc(cls, apiDocList, apiMethodDocs, order, apiConfig.isMd5EncryptedHtmlName());
-                    }
-                } else {
+            if (!checkController(cls)) {
+                continue;
+            }
+            if (StringUtil.isNotEmpty(apiConfig.getPackageFilters())) {
+                if (DocUtil.isMatch(apiConfig.getPackageFilters(), cls.getCanonicalName())) {
                     order++;
                     List<ApiMethodDoc> apiMethodDocs = buildControllerMethod(cls, apiConfig, projectBuilder);
                     this.handleApiDoc(cls, apiDocList, apiMethodDocs, order, apiConfig.isMd5EncryptedHtmlName());
                 }
+            } else {
+                order++;
+                List<ApiMethodDoc> apiMethodDocs = buildControllerMethod(cls, apiConfig, projectBuilder);
+                this.handleApiDoc(cls, apiDocList, apiMethodDocs, order, apiConfig.isMd5EncryptedHtmlName());
             }
         }
         return apiDocList;
@@ -61,7 +63,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
 
     @Override
     public boolean ignoreReturnObject(String typeName) {
-        if (DocClassUtil.isMvcIgnoreParams(typeName)) {
+        if (JavaClassValidateUtil.isMvcIgnoreParams(typeName)) {
             if (DocGlobalConstants.MODE_AND_VIEW_FULLY.equals(typeName)) {
                 return true;
             }
@@ -152,7 +154,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
     private ApiRequestExample buildReqJson(JavaMethod method, ApiMethodDoc apiMethodDoc, Boolean isPostMethod, ProjectDocConfigBuilder configBuilder) {
         List<JavaParameter> parameterList = method.getParameters();
         if (parameterList.size() < 1) {
-            return ApiRequestExample.builder().setJsonBody(apiMethodDoc.getUrl());
+            return ApiRequestExample.builder().setUrl(apiMethodDoc.getUrl());
         }
         Map<String, String> pathParamsMap = new LinkedHashMap<>();
         Map<String, String> paramsComments = DocUtil.getParamsComments(method, DocTags.PARAM, null);
@@ -167,12 +169,12 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
             JavaClass javaClass = configBuilder.getJavaProjectBuilder().getClassByName(typeName);
             String[] globGicName = DocClassUtil.getSimpleGicName(gicTypeName);
             String paramName = parameter.getName();
-            if (DocClassUtil.isMvcIgnoreParams(typeName)) {
+            if (JavaClassValidateUtil.isMvcIgnoreParams(typeName)) {
                 continue;
             }
             String comment = this.paramCommentResolve(paramsComments.get(paramName));
             String mockValue = "";
-            if (DocClassUtil.isPrimitive(simpleTypeName)) {
+            if (JavaClassValidateUtil.isPrimitive(simpleTypeName)) {
                 mockValue = paramsComments.get(paramName);
                 if (Objects.nonNull(mockValue) && mockValue.contains("|")) {
                     mockValue = mockValue.substring(mockValue.lastIndexOf("|") + 1, mockValue.length());
@@ -180,7 +182,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
                     mockValue = "";
                 }
                 if (StringUtil.isEmpty(mockValue)) {
-                    mockValue = DocUtil.getValByTypeAndFieldName(simpleTypeName, paramName, true);
+                    mockValue = DocUtil.getValByTypeAndFieldName(simpleTypeName, paramName, Boolean.TRUE);
                 }
             }
             List<JavaAnnotation> annotations = parameter.getAnnotations();
@@ -208,7 +210,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
                 }
                 if (SpringMvcAnnotations.REQUEST_BODY.equals(annotationName) || DocGlobalConstants.REQUEST_BODY_FULLY.equals(annotationName)) {
                     apiMethodDoc.setContentType(JSON_CONTENT_TYPE);
-                    if (DocClassUtil.isPrimitive(simpleTypeName)) {
+                    if (JavaClassValidateUtil.isPrimitive(simpleTypeName)) {
                         StringBuilder builder = new StringBuilder();
                         builder.append("{\"")
                                 .append(paramName)
@@ -218,7 +220,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
                         requestExample.setJsonBody(builder.toString()).setJson(true);
                         paramAdded = true;
                     } else {
-                        String json = JsonBuildHelper.buildJson(typeName, gicTypeName, false, 0, new HashMap<>(), configBuilder);
+                        String json = JsonBuildHelper.buildJson(typeName, gicTypeName, Boolean.FALSE, 0, new HashMap<>(), configBuilder);
                         requestExample.setJsonBody(json).setJson(true);
                         paramAdded = true;
                     }
@@ -243,19 +245,19 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
                 formData.setDesc(comment);
                 formData.setValue(mockValue);
                 formDataList.add(formData);
-            } else if (DocClassUtil.isPrimitive(typeName)) {
+            } else if (JavaClassValidateUtil.isPrimitive(typeName)) {
                 FormData formData = new FormData();
                 formData.setKey(paramName);
                 formData.setDesc(comment);
                 formData.setType("text");
                 formData.setValue(mockValue);
                 formDataList.add(formData);
-            } else if (DocClassUtil.isArray(typeName) || DocClassUtil.isCollection(typeName)) {
+            } else if (JavaClassValidateUtil.isArray(typeName) || JavaClassValidateUtil.isCollection(typeName)) {
                 String gicName = globGicName[0];
-                if (DocClassUtil.isArray(gicName)) {
+                if (JavaClassValidateUtil.isArray(gicName)) {
                     gicName = gicName.substring(0, gicName.indexOf("["));
                 }
-                if (!DocClassUtil.isPrimitive(gicName)) {
+                if (!JavaClassValidateUtil.isPrimitive(gicName)) {
                     throw new RuntimeException("FormData can't support binding Collection<T> on method "
                             + method.getName() + "Check it in " + method.getDeclaringClass().getCanonicalName());
                 }
@@ -279,7 +281,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
                 formData.setValue(strVal);
                 formDataList.add(formData);
             } else {
-                formDataList.addAll(FormDataBuildHelper.getFormData(gicTypeName, new HashMap<>(), 0, configBuilder, ""));
+                formDataList.addAll(FormDataBuildHelper.getFormData(gicTypeName, new HashMap<>(), 0, configBuilder, DocGlobalConstants.ENMPTY));
             }
         }
         requestExample.setFormDataList(formDataList);
@@ -292,22 +294,22 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
         if (isPostMethod) {
             //for post
             path = DocUtil.formatAndRemove(path, pathParamsMap);
-            body = UrlUtil.urlJoin("", DocUtil.formDataToMap(formDataList)).replace("?", "");
+            body = UrlUtil.urlJoin(DocGlobalConstants.ENMPTY, DocUtil.formDataToMap(formDataList)).replace("?", DocGlobalConstants.ENMPTY);
             body = StringUtil.removeQuotes(body);
             url = apiMethodDoc.getServerUrl() + "/" + path;
             url = UrlUtil.simplifyUrl(url);
             if (requestExample.isJson()) {
                 if (StringUtil.isNotEmpty(requestExample.getJsonBody())) {
-                    exampleBody = "curl -X POST -H 'Content-Type: application/json; charset=utf-8' -i " + url + " --data \'" + JsonFormatUtil.formatJson(requestExample.getJsonBody()) + "\n'";
+                    exampleBody = DocGlobalConstants.CURL_POST_JSON + url + " --data \'" + JsonFormatUtil.formatJson(requestExample.getJsonBody()) + "\n'";
                 } else {
-                    exampleBody = "curl -X POST -i " + url;
+                    exampleBody = DocGlobalConstants.CURL_POST + url;
                 }
                 requestExample.setExampleBody(exampleBody).setUrl(url);
             } else {
                 if (StringUtil.isNotEmpty(body)) {
-                    exampleBody = "curl -X POST -i " + url + " --data \'" + body + "'";
+                    exampleBody = DocGlobalConstants.CURL_POST + url + " --data \'" + body + "'";
                 } else {
-                    exampleBody = "curl -X POST -i " + url;
+                    exampleBody = DocGlobalConstants.CURL_POST + url;
                 }
                 requestExample.setExampleBody(exampleBody).setJsonBody(body).setUrl(url);
             }
@@ -346,16 +348,14 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
             String typeName = parameter.getType().getGenericCanonicalName();
             String simpleName = parameter.getType().getValue().toLowerCase();
             String fullTypeName = parameter.getType().getFullyQualifiedName();
-            if (DocClassUtil.isMvcIgnoreParams(typeName)) {
+            if (JavaClassValidateUtil.isMvcIgnoreParams(typeName)) {
                 continue out;
             }
-
-            JavaClass javaClass = builder.getJavaProjectBuilder().getClassByName(fullTypeName);
-
-            if (!paramTagMap.containsKey(paramName) && DocClassUtil.isPrimitive(fullTypeName) && isStrict) {
+            if (!paramTagMap.containsKey(paramName) && JavaClassValidateUtil.isPrimitive(fullTypeName) && isStrict) {
                 throw new RuntimeException("ERROR: Unable to find javadoc @param for actual param \""
                         + paramName + "\" in method " + javaMethod.getName() + " from " + className);
             }
+            JavaClass javaClass = builder.getJavaProjectBuilder().getClassByName(fullTypeName);
             String comment = this.paramCommentResolve(paramTagMap.get(paramName));
             //file upload
             if (typeName.contains(DocGlobalConstants.MULTIPART_FILE_FULLY)) {
@@ -367,14 +367,14 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
             List<JavaAnnotation> annotations = parameter.getAnnotations();
             if (annotations.size() == 0) {
                 //default set required is true
-                if (DocClassUtil.isCollection(fullTypeName) || DocClassUtil.isArray(fullTypeName)) {
+                if (JavaClassValidateUtil.isCollection(fullTypeName) || JavaClassValidateUtil.isArray(fullTypeName)) {
                     String[] gicNameArr = DocClassUtil.getSimpleGicName(typeName);
                     String gicName = gicNameArr[0];
-                    if (DocClassUtil.isArray(gicName)) {
+                    if (JavaClassValidateUtil.isArray(gicName)) {
                         gicName = gicName.substring(0, gicName.indexOf("["));
                     }
                     String typeTemp = "";
-                    if (DocClassUtil.isPrimitive(gicName)) {
+                    if (JavaClassValidateUtil.isPrimitive(gicName)) {
                         typeTemp = " of " + DocClassUtil.processTypeNameForParams(gicName);
                         ApiParam param = ApiParam.of().setField(paramName)
                                 .setType(DocClassUtil.processTypeNameForParams(simpleName) + typeTemp)
@@ -385,9 +385,9 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
                                 .setType(DocClassUtil.processTypeNameForParams(simpleName) + typeTemp)
                                 .setDesc(comment).setRequired(true).setVersion(DocGlobalConstants.DEFAULT_VERSION);
                         paramList.add(param);
-                        paramList.addAll(ParamsBuildHelper.buildParams(gicNameArr[0], "└─", 1, "true", responseFieldMap, false, new HashMap<>(), builder));
+                        paramList.addAll(ParamsBuildHelper.buildParams(gicNameArr[0], "└─", 1, "true", responseFieldMap, Boolean.FALSE, new HashMap<>(), builder));
                     }
-                } else if (DocClassUtil.isPrimitive(simpleName)) {
+                } else if (JavaClassValidateUtil.isPrimitive(simpleName)) {
                     ApiParam param = ApiParam.of().setField(paramName)
                             .setType(DocClassUtil.processTypeNameForParams(simpleName))
                             .setDesc(comment).setRequired(true).setVersion(DocGlobalConstants.DEFAULT_VERSION);
@@ -401,7 +401,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
                             .setType("string").setDesc(comment).setRequired(true).setVersion(DocGlobalConstants.DEFAULT_VERSION);
                     paramList.add(param);
                 } else {
-                    paramList.addAll(ParamsBuildHelper.buildParams(fullTypeName, "", 0, "true", responseFieldMap, false, new HashMap<>(), builder));
+                    paramList.addAll(ParamsBuildHelper.buildParams(fullTypeName, DocGlobalConstants.ENMPTY, 0, "true", responseFieldMap, Boolean.FALSE, new HashMap<>(), builder));
                 }
             }
             for (JavaAnnotation annotation : annotations) {
@@ -416,28 +416,28 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
                         throw new RuntimeException("You have use @RequestBody Passing multiple variables  for method "
                                 + javaMethod.getName() + " in " + className + ",@RequestBody annotation could only bind one variables.");
                     }
-                    if (DocClassUtil.isPrimitive(fullTypeName)) {
+                    if (JavaClassValidateUtil.isPrimitive(fullTypeName)) {
                         ApiParam bodyParam = ApiParam.of()
                                 .setField(paramName).setType(DocClassUtil.processTypeNameForParams(simpleName))
                                 .setDesc(comment).setRequired(Boolean.valueOf(required));
                         reqBodyParamsList.add(bodyParam);
                     } else {
-                        if (DocClassUtil.isCollection(fullTypeName) || DocClassUtil.isArray(fullTypeName)) {
+                        if (JavaClassValidateUtil.isCollection(fullTypeName) || JavaClassValidateUtil.isArray(fullTypeName)) {
                             String[] gicNameArr = DocClassUtil.getSimpleGicName(typeName);
                             String gicName = gicNameArr[0];
-                            if (DocClassUtil.isArray(gicName)) {
+                            if (JavaClassValidateUtil.isArray(gicName)) {
                                 gicName = gicName.substring(0, gicName.indexOf("["));
                             }
-                            if (DocClassUtil.isPrimitive(gicName)) {
+                            if (JavaClassValidateUtil.isPrimitive(gicName)) {
                                 ApiParam bodyParam = ApiParam.of()
                                         .setField(paramName).setType(DocClassUtil.processTypeNameForParams(simpleName))
                                         .setDesc(comment).setRequired(Boolean.valueOf(required)).setVersion(DocGlobalConstants.DEFAULT_VERSION);
                                 reqBodyParamsList.add(bodyParam);
                             } else {
-                                reqBodyParamsList.addAll(ParamsBuildHelper.buildParams(gicNameArr[0], "", 0, "true", responseFieldMap, false, new HashMap<>(), builder));
+                                reqBodyParamsList.addAll(ParamsBuildHelper.buildParams(gicNameArr[0], DocGlobalConstants.ENMPTY, 0, "true", responseFieldMap, Boolean.FALSE, new HashMap<>(), builder));
                             }
 
-                        } else if (DocClassUtil.isMap(fullTypeName)) {
+                        } else if (JavaClassValidateUtil.isMap(fullTypeName)) {
                             if (DocGlobalConstants.JAVA_MAP_FULLY.equals(typeName)) {
                                 ApiParam apiParam = ApiParam.of().setField(paramName).setType("map")
                                         .setDesc(comment).setRequired(Boolean.valueOf(required)).setVersion(DocGlobalConstants.DEFAULT_VERSION);
@@ -445,9 +445,9 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
                                 continue out;
                             }
                             String[] gicNameArr = DocClassUtil.getSimpleGicName(typeName);
-                            reqBodyParamsList.addAll(ParamsBuildHelper.buildParams(gicNameArr[1], "", 0, "true", responseFieldMap, false, new HashMap<>(), builder));
+                            reqBodyParamsList.addAll(ParamsBuildHelper.buildParams(gicNameArr[1], DocGlobalConstants.ENMPTY, 0, "true", responseFieldMap, Boolean.FALSE, new HashMap<>(), builder));
                         } else {
-                            reqBodyParamsList.addAll(ParamsBuildHelper.buildParams(typeName, "", 0, "true", responseFieldMap, false, new HashMap<>(), builder));
+                            reqBodyParamsList.addAll(ParamsBuildHelper.buildParams(typeName, DocGlobalConstants.ENMPTY, 0, "true", responseFieldMap, Boolean.FALSE, new HashMap<>(), builder));
                         }
                     }
                     requestBodyCounter++;
@@ -495,7 +495,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
         List<JavaAnnotation> classAnnotations = cls.getAnnotations();
         for (JavaAnnotation annotation : classAnnotations) {
             String name = annotation.getType().getName();
-            name = DocClassUtil.getAnnotationSimpleName(name);
+            name = JavaClassUtil.getAnnotationSimpleName(name);
             if (SpringMvcAnnotations.CONTROLLER.equals(name) || SpringMvcAnnotations.REST_CONTROLLER.equals(name)) {
                 return true;
             }

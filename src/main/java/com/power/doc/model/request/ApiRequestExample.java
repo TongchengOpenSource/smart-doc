@@ -49,8 +49,9 @@ public class ApiRequestExample {
         return url;
     }
 
-    public void setUrl(String url) {
+    public ApiRequestExample setUrl(String url) {
         this.url = url;
+        return this;
     }
 
     public List<FormData> getFormDataList() {
