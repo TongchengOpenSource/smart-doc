@@ -78,7 +78,9 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
         for (JavaAnnotation annotation : classAnnotations) {
             String annotationName = annotation.getType().getName();
             if (DocAnnotationConstants.REQUEST_MAPPING.equals(annotationName) || DocGlobalConstants.REQUEST_MAPPING_FULLY.equals(annotationName)) {
-                baseUrl = StringUtil.removeQuotes(annotation.getNamedParameter("value").toString());
+                if(annotation.getNamedParameter("value")!=null){
+                    baseUrl = StringUtil.removeQuotes(annotation.getNamedParameter("value").toString());
+                }
             }
         }
         List<JavaMethod> methods = cls.getMethods();
@@ -304,16 +306,14 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
                 } else {
                     exampleBody = DocGlobalConstants.CURL_POST + url;
                 }
-                requestExample.setExampleBody(exampleBody).setUrl(url);
             } else {
                 if (StringUtil.isNotEmpty(body)) {
                     exampleBody = DocGlobalConstants.CURL_POST + url + " --data \'" + body + "'";
                 } else {
                     exampleBody = DocGlobalConstants.CURL_POST + url;
                 }
-                requestExample.setExampleBody(exampleBody).setJsonBody(body).setUrl(url);
             }
-
+            requestExample.setExampleBody(exampleBody).setUrl(url);
         } else {
             // for get
             pathParamsMap.putAll(DocUtil.formDataToMap(formDataList));
