@@ -51,7 +51,7 @@ public class FormDataBuildHelper {
             FormData formData = new FormData();
             formData.setKey(pre);
             formData.setType("text");
-            formData.setValue(RandomUtil.randomValueByType(className));
+            formData.setValue(StringUtil.removeQuotes(RandomUtil.randomValueByType(className)));
             formDataList.add(formData);
             return formDataList;
         }
@@ -87,7 +87,7 @@ public class FormDataBuildHelper {
                 FormData formData = new FormData();
                 formData.setKey(pre + fieldName);
                 formData.setType("text");
-                formData.setValue(fieldValue);
+                formData.setValue(StringUtil.removeQuotes(fieldValue));
                 formData.setDesc(comment);
                 formDataList.add(formData);
             } else if (javaClass.isEnum()) {
@@ -95,7 +95,7 @@ public class FormDataBuildHelper {
                 FormData formData = new FormData();
                 formData.setKey(pre + fieldName);
                 formData.setType("text");
-                formData.setValue(String.valueOf(value));
+                formData.setValue(StringUtil.removeQuotes(String.valueOf(value)));
                 formData.setDesc(comment);
                 formDataList.add(formData);
             } else if (DocClassUtil.isCollection(subTypeName)) {

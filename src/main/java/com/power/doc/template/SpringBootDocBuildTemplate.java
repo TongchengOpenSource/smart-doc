@@ -302,14 +302,16 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
                 } else {
                     exampleBody = "curl -X POST -i " + url;
                 }
+                requestExample.setExampleBody(exampleBody).setUrl(url);
             } else {
                 if (StringUtil.isNotEmpty(body)) {
                     exampleBody = "curl -X POST -i " + url + " --data \'" + body + "'";
                 } else {
                     exampleBody = "curl -X POST -i " + url;
                 }
+                requestExample.setExampleBody(exampleBody).setJsonBody(body).setUrl(url);
             }
-            requestExample.setExampleBody(exampleBody).setJsonBody(body).setUrl(url);
+
         } else {
             // for get
             pathParamsMap.putAll(DocUtil.formDataToMap(formDataList));
