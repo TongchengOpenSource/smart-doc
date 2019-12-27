@@ -165,15 +165,16 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
         ApiRequestExample requestExample = ApiRequestExample.builder();
         for (JavaParameter parameter : parameterList) {
             JavaType javaType = parameter.getType();
-            String simpleTypeName = javaType.getValue();
-            String gicTypeName = javaType.getGenericCanonicalName();
             String typeName = javaType.getFullyQualifiedName();
-            JavaClass javaClass = configBuilder.getJavaProjectBuilder().getClassByName(typeName);
-            String[] globGicName = DocClassUtil.getSimpleGicName(gicTypeName);
-            String paramName = parameter.getName();
             if (JavaClassValidateUtil.isMvcIgnoreParams(typeName)) {
                 continue;
             }
+            String simpleTypeName = javaType.getValue();
+            String gicTypeName = javaType.getGenericCanonicalName();
+            JavaClass javaClass = configBuilder.getJavaProjectBuilder().getClassByName(typeName);
+            String[] globGicName = DocClassUtil.getSimpleGicName(gicTypeName);
+            String paramName = parameter.getName();
+
             String comment = this.paramCommentResolve(paramsComments.get(paramName));
             String mockValue = "";
             if (JavaClassValidateUtil.isPrimitive(simpleTypeName)) {
