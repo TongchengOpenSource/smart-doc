@@ -100,7 +100,7 @@ public class PostmanJsonBuilder {
         requestBean.setHeader(buildHeaderBeanList(apiMethodDoc));
 
         requestBean.setBody(buildBodyBean(apiMethodDoc));
-        requestBean.setUrl(apiMethodDoc.getRequestExample().getUrl());
+        requestBean.setUrl(apiMethodDoc.getRequestExample().getUrl() == null ? apiMethodDoc.getUrl() : apiMethodDoc.getRequestExample().getUrl());
 
         item.setRequest(requestBean);
         return item;

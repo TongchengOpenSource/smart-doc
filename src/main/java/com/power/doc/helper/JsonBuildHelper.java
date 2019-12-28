@@ -51,6 +51,7 @@ public class JsonBuildHelper {
      */
     public static String buildJson(String typeName, String genericCanonicalName,
                                    boolean isResp, int counter, Map<String, String> registryClasses, ProjectDocConfigBuilder builder) {
+        JavaClass javaClass = builder.getJavaProjectBuilder().getClassByName(typeName);
         if (registryClasses.containsKey(typeName) && counter > registryClasses.size()) {
             return "{\"$ref\":\"...\"}";
         }
@@ -64,6 +65,9 @@ public class JsonBuildHelper {
         }
         if (JavaClassValidateUtil.isPrimitive(typeName)) {
             return StringUtil.removeQuotes(DocUtil.jsonValueByType(typeName));
+        }
+        if(javaClass.isEnum()){
+            return String.valueOf(JavaClassUtil.getEnumValue(javaClass, Boolean.FALSE));
         }
         StringBuilder data0 = new StringBuilder();
         JavaClass cls = builder.getClassByName(typeName);
@@ -286,7 +290,7 @@ public class JsonBuildHelper {
                     } else if (typeName.equals(subTypeName)) {
                         data0.append("{\"$ref\":\"...\"}").append(",");
                     } else {
-                        JavaClass javaClass = builder.getJavaProjectBuilder().getClassByName(subTypeName);
+                         javaClass = builder.getJavaProjectBuilder().getClassByName(subTypeName);
                         if (!isResp && javaClass.isEnum()) {
                             Object value = JavaClassUtil.getEnumValue(javaClass, Boolean.FALSE);
                             data0.append(value).append(",");
