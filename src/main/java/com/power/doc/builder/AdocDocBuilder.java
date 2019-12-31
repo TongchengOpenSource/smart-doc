@@ -2,6 +2,8 @@ package com.power.doc.builder;
 
 import com.power.doc.model.ApiConfig;
 import com.power.doc.model.ApiDoc;
+import com.power.doc.template.IDocBuildTemplate;
+import com.power.doc.template.SpringBootDocBuildTemplate;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 
 import java.util.List;
@@ -29,8 +31,9 @@ public class AdocDocBuilder {
         DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
         builderTemplate.checkAndInit(config);
         JavaProjectBuilder javaProjectBuilder = new JavaProjectBuilder();
-        SourceBuilder sourceBuilder = new SourceBuilder(config,javaProjectBuilder);
-        List<ApiDoc> apiDocList = sourceBuilder.getControllerApiData();
+        ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config,javaProjectBuilder);
+        IDocBuildTemplate docBuildTemplate = new SpringBootDocBuildTemplate();
+        List<ApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder);
         if (config.isAllInOne()) {
             builderTemplate.buildAllInOne(apiDocList, config, javaProjectBuilder,ALL_IN_ONE_ADOC_TPL, INDEX_DOC);
         } else {

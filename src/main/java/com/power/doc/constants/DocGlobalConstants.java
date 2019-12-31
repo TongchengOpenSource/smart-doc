@@ -95,11 +95,31 @@ public class DocGlobalConstants {
 
     public static final String FILE_CONTENT_TYPE = "multipart/form-data";
 
+    public static final String MULTIPART_TYPE = "multipart/form-data";
+
     public static final String APPLICATION_JSON = "application/json";
+
+    public static final String JSON_CONTENT_TYPE = "application/json; charset=utf-8";
 
     public static final String POSTMAN_MODE_FORMDATA ="formdata";
 
     public static final String POSTMAN_MODE_RAW ="raw";
 
     public static final String HTTP_POST = "POST";
+
+    public static final String SHORT_MULTIPART_FILE_FULLY = "MultipartFile";
+
+    public static final String DEFAULT_SERVER_URL = "http://{server}";
+
+    public static final String SHORT_REQUEST_BODY = "RequestBody";
+
+    public static final String CURL_POST = "curl -X POST -i ";
+
+    public static final String CURL_POST_JSON = "curl -X POST -H 'Content-Type: application/json; charset=utf-8' -i ";
+
+    public static final String ENMPTY = "";
+
+    public static final String STATIC = "static";
+
+    public static final String FINAL = "final";
 }

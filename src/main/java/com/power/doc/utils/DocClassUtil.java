@@ -16,72 +16,6 @@ import java.util.List;
 public class DocClassUtil {
 
     /**
-     * Check if it is the basic data type of json data
-     *
-     * @param type0 java class name
-     * @return boolean
-     */
-    public static boolean isPrimitive(String type0) {
-        String type = type0.contains("java.lang") ? type0.substring(type0.lastIndexOf(".") + 1, type0.length()) : type0;
-        type = type.toLowerCase();
-        switch (type) {
-            case "integer":
-            case "void":
-            case "int":
-            case "long":
-            case "double":
-            case "float":
-            case "short":
-            case "bigdecimal":
-            case "char":
-            case "string":
-            case "boolean":
-            case "byte":
-            case "java.sql.timestamp":
-            case "java.util.date":
-            case "java.time.localdatetime":
-            case "localdatetime":
-            case "localdate":
-            case "java.time.localdate":
-            case "java.math.bigdecimal":
-            case "java.math.biginteger":
-            case "java.io.serializable":
-                return true;
-            default:
-                return false;
-        }
-    }
-
-
-    /**
-     * Check if it is the basic data array type of json data
-     *
-     * @param type0 java class name
-     * @return boolean
-     */
-    public static boolean isPrimitiveArray(String type0) {
-        String type = type0.contains("java.lang") ? type0.substring(type0.lastIndexOf(".") + 1, type0.length()) : type0;
-        type = type.toLowerCase();
-        switch (type) {
-            case "integer[]":
-            case "void":
-            case "int[]":
-            case "long[]":
-            case "double[]":
-            case "float[]":
-            case "short[]":
-            case "bigdecimal[]":
-            case "char[]":
-            case "string[]":
-            case "boolean[]":
-            case "byte[]":
-                return true;
-            default:
-                return false;
-        }
-    }
-
-    /**
      * get class names by generic class name
      *
      * @param returnType generic class name
@@ -90,11 +24,11 @@ public class DocClassUtil {
     public static String[] getSimpleGicName(String returnType) {
         if (returnType.contains("<")) {
             String pre = returnType.substring(0, returnType.indexOf("<"));
-            if (DocClassUtil.isMap(pre)) {
+            if (JavaClassValidateUtil.isMap(pre)) {
                 return getMapKeyValueType(returnType);
             }
             String type = returnType.substring(returnType.indexOf("<") + 1, returnType.lastIndexOf(">"));
-            if (DocClassUtil.isCollection(pre)) {
+            if (JavaClassValidateUtil.isCollection(pre)) {
                 return type.split(" ");
             }
             String[] arr = type.split(",");
@@ -270,175 +204,6 @@ public class DocClassUtil {
     }
 
     /**
-     * validate java collection
-     *
-     * @param type java typeName
-     * @return boolean
-     */
-    public static boolean isCollection(String type) {
-        switch (type) {
-            case "java.util.List":
-                return true;
-            case "java.util.LinkedList":
-                return true;
-            case "java.util.ArrayList":
-                return true;
-            case "java.util.Set":
-                return true;
-            case "java.util.TreeSet":
-                return true;
-            case "java.util.HashSet":
-                return true;
-            case "java.util.SortedSet":
-                return true;
-            case "java.util.Collection":
-                return true;
-            case "java.util.ArrayDeque":
-                return true;
-            case "java.util.PriorityQueue":
-                return true;
-            default:
-                return false;
-        }
-    }
-
-    /**
-     * Check if it is an map
-     *
-     * @param type java type
-     * @return boolean
-     */
-    public static boolean isMap(String type) {
-        switch (type) {
-            case "java.util.Map":
-                return true;
-            case "java.util.SortedMap":
-                return true;
-            case "java.util.TreeMap":
-                return true;
-            case "java.util.LinkedHashMap":
-                return true;
-            case "java.util.HashMap":
-                return true;
-            case "java.util.concurrent.ConcurrentHashMap":
-                return true;
-            case "java.util.concurrent.ConcurrentMap":
-                return true;
-            case "java.util.Properties":
-                return true;
-            case "java.util.Hashtable":
-                return true;
-            default:
-                return false;
-        }
-    }
-
-    /**
-     * check array
-     *
-     * @param type type name
-     * @return boolean
-     */
-    public static boolean isArray(String type) {
-        return type.contains("[]");
-    }
-
-    /**
-     * check JSR303
-     *
-     * @param annotationSimpleName annotation name
-     * @return boolean
-     */
-    public static boolean isJSR303Required(String annotationSimpleName) {
-        switch (annotationSimpleName) {
-            case "NotNull":
-                return true;
-            case "NotEmpty":
-                return true;
-            case "NotBlank":
-                return true;
-            case "Required":
-                return true;
-            default:
-                return false;
-        }
-    }
-
-    /**
-     * custom tag
-     *
-     * @param tagName custom field tag
-     * @return boolean
-     */
-    public static boolean isRequiredTag(String tagName) {
-        switch (tagName) {
-            case "required":
-                return true;
-            default:
-                return false;
-        }
-    }
-
-    /**
-     * ignore tag request field
-     *
-     * @param tagName custom field tag
-     * @return boolean
-     */
-    public static boolean isIgnoreTag(String tagName) {
-        switch (tagName) {
-            case "ignore":
-                return true;
-            default:
-                return false;
-        }
-    }
-
-    /**
-     * ignore param of spring mvc
-     *
-     * @param paramType param type name
-     * @return boolean
-     */
-    public static boolean isMvcIgnoreParams(String paramType) {
-        switch (paramType) {
-            case "org.springframework.ui.Model":
-                return true;
-            case "org.springframework.ui.ModelMap":
-                return true;
-            case "org.springframework.web.servlet.ModelAndView":
-                return true;
-            case "org.springframework.validation.BindingResult":
-                return true;
-            case "javax.servlet.http.HttpServletRequest":
-                return true;
-            case "org.springframework.web.context.request.WebRequest":
-                return true;
-            case "javax.servlet.http.HttpServletResponse":
-                return true;
-            default:
-                return false;
-        }
-    }
-
-    /**
-     * ignore field type name
-     *
-     * @param typeName field type name
-     * @return String
-     */
-    public static boolean isIgnoreFieldTypes(String typeName) {
-        switch (typeName) {
-            case "org.slf4j.Logger":
-                return true;
-            case "org.apache.ibatis.logging.Log":
-                return true;
-            default:
-                return false;
-        }
-    }
-
-    /**
      * process return type
      *
      * @param fullyName fully name
@@ -488,26 +253,5 @@ public class DocClassUtil {
         }
         return apiReturn;
     }
-    /**
-     * Get annotation simpleName
-     *
-     * @param annotationName annotationName
-     * @return String
-     */
-    public static String getAnnotationSimpleName(String annotationName) {
-        return getClassSimpleName(annotationName);
-    }
 
-    /**
-     * Get className
-     * @param className className
-     * @return String
-     */
-    public static String getClassSimpleName(String className) {
-        if (className.contains(".")) {
-            int index = className.lastIndexOf(".");
-            className = className.substring(index + 1, className.length());
-        }
-        return className;
-    }
 }

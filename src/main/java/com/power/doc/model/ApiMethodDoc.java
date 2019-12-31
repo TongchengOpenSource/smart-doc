@@ -1,5 +1,7 @@
 package com.power.doc.model;
 
+import com.power.doc.model.request.ApiRequestExample;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -43,9 +45,19 @@ public class ApiMethodDoc implements Serializable {
     private String detail;
 
     /**
-     * controller method url
+     * server url
+     */
+    private String serverUrl;
+
+    /**
+     * controller method url contains server
      */
     private String url;
+
+    /**
+     * controller path
+     */
+    private String path;
 
     /**
      * http request type
@@ -80,9 +92,14 @@ public class ApiMethodDoc implements Serializable {
 
 
     /**
-     * http request usage
+     * http request-example usage(requestUrlParam + requestBody)
      */
     private String requestUsage;
+
+    /**
+     * request example detail
+     */
+    private ApiRequestExample requestExample;
 
     /**
      * http response usage
@@ -213,5 +230,29 @@ public class ApiMethodDoc implements Serializable {
 
     public void setAuthor(String author) {
         this.author = author;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public String getServerUrl() {
+        return serverUrl;
+    }
+
+    public void setServerUrl(String serverUrl) {
+        this.serverUrl = serverUrl;
+    }
+
+    public ApiRequestExample getRequestExample() {
+        return requestExample;
+    }
+
+    public void setRequestExample(ApiRequestExample requestExample) {
+        this.requestExample = requestExample;
     }
 }

@@ -147,3 +147,17 @@
 	4. 修改github #9 文档错误bug.
 	5. 新增接口的@author展示，方法从文档中查到找到接口负责人，生成文档可以选择关闭显示。
 	6. 重点：smart-doc的maven插件smart-doc-maven-plugin 1.0.0版本发布。
+#### 版本号：1.8.0
+- 更新日期: 2019-12-16
+- 更新内容：
+	1. 修改参数上多个验证注解不支持的问题。
+	2. 修改支持上传文件参数不列举到文档的问题。
+	3. 新增ApiDataBuilder用于获取smart-doc生成的文档数据，包含header、字典、错误码等。
+	4. 合并fork分支的github book html5模板，新增搜索和锚点。
+	5. 新增自定义@mock tag用于指定生成文档的字段值，@param 的参数注释增加mock值的功能(@param name 姓名|张三)
+	6. 重点：smart-doc的maven插件smart-doc-maven-plugin增强对maven标准项目的支持。
+	7. 全面支持spring的表单参数绑定解析。
+	8. postman json生成支持所有参数自动回填。再也不用自己建参数了。
+	9. 优化对实体类中枚举字段的支持。
+	10. 增加对实体中静态常量常量字段的过滤。
+	

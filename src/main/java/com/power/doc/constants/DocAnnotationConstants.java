@@ -31,5 +31,5 @@ public class DocAnnotationConstants {
 
     public static final String DEFAULT_VALUE_PROP = "defaultValue";
 
-
+    public static final String REQUEST_MAPPING = "RequestMapping";
 }

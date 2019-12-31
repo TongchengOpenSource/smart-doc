@@ -1,18 +1,30 @@
 package com.power.doc.model.postman.request.body;
 
 
+import com.power.doc.model.FormData;
+
+import java.util.List;
+
 /**
  * @author xingzi
  */
 public class BodyBean {
     private String mode;
     private String raw;
-    private FormData formdata;
+    private List<FormData> formdata;
     private BodyOptions options;
 
-    public BodyBean(boolean isFile) {
-        if(isFile){
-            this.formdata = new FormData();
+    public List<FormData> getFormdata() {
+        return formdata;
+    }
+
+    public void setFormdata(List<FormData> formdata) {
+        this.formdata = formdata;
+    }
+
+    public BodyBean(boolean isFormData) {
+        if(isFormData){
+
         }else {
             this.options = new BodyOptions();
         }
@@ -34,17 +46,6 @@ public class BodyBean {
         this.raw = raw;
     }
 
-    private class FormData{
-        private  String key;
-        private  String type;
-        private  String src;
-
-        FormData() {
-            this.key =  "file";
-            this.type = "file";
-            this.src = "";
-        }
-    }
     private class BodyOptions{
         private Raw raw;
         public BodyOptions() {
