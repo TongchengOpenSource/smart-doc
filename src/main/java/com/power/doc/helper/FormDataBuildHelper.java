@@ -92,7 +92,7 @@ public class FormDataBuildHelper {
                 formData.setDesc(comment);
                 formDataList.add(formData);
             } else if (javaClass.isEnum()) {
-                Object value = JavaClassUtil.getEnumValue(javaClass, Boolean.FALSE);
+                Object value = JavaClassUtil.getEnumValue(javaClass, Boolean.TRUE);
                 FormData formData = new FormData();
                 formData.setKey(pre + fieldName);
                 formData.setType("text");
