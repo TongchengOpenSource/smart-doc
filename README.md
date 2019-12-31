@@ -131,12 +131,12 @@ public class ApiDocTest {
 }
 ```
 ### Generated document example
-#### Interface head rendering
-(https://images.gitee.com/uploads/images/2018/0905/173104_abcf4345_144669.png "1.png")
+#### Interface header rendering
+![header](https://images.gitee.com/uploads/images/2019/1231/223538_be45f8a9_144669.png "header.png")
 #### Request parameter example rendering
-(https://images.gitee.com/uploads/images/2018/0905/172510_853735b9_144669.png "2.png")
+![request-params](https://images.gitee.com/uploads/images/2019/1231/223710_88933f55_144669.png "request.png")
 #### Response parameter example renderings
-(https://images.gitee.com/uploads/images/2018/0905/172538_1918820c_144669.png "3.png")
+![response-fields](https://images.gitee.com/uploads/images/2019/1231/223817_32bea6dc_144669.png "response.png")
 ## Building
 you can build with the following commands. (Java 1.8 is required to build the master branch)
 ```
@@ -152,7 +152,7 @@ These are only part of the companies using smart-doc, for reference only. If you
 ![OnePlus](https://raw.githubusercontent.com/shalousun/smart-doc/dev/images/known-users/oneplus.png)
 ![Xiaomi](https://raw.githubusercontent.com/shalousun/smart-doc/dev/images/known-users/xiaomi.png)
 ![远盟健康](https://raw.githubusercontent.com/shalousun/smart-doc/dev/images/known-users/yuanmengjiankang.png)
-![上海普彻信息科技](https://raw.githubusercontent.com/shalousun/smart-doc/dev/images/known-users/puqie_gaitubao_100x100.jpg))
+![上海普彻信息科技](https://raw.githubusercontent.com/shalousun/smart-doc/dev/images/known-users/puqie_gaitubao_100x100.jpg)
 ## License
 Smart-doc is under the Apache 2.0 license.  See the [LICENSE](https://github.com/shalousun/smart-doc/blob/master/license.txt) file for details.
 ## Contact

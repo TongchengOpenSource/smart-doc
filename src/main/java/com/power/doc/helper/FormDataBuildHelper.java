@@ -70,7 +70,9 @@ public class FormDataBuildHelper {
             String subTypeName = field.getType().getFullyQualifiedName();
             String fieldGicName = field.getType().getGenericCanonicalName();
             JavaClass javaClass = builder.getJavaProjectBuilder().getClassByName(subTypeName);
-            if ("this$0".equals(fieldName) ||
+            boolean ignoreField = field.getModifiers().stream()
+                    .anyMatch(str -> str.equals(DocGlobalConstants.STATIC) || str.equals(DocGlobalConstants.FINAL));
+            if (ignoreField || "this$0".equals(fieldName) ||
                     "serialVersionUID".equals(fieldName) ||
                     JavaClassValidateUtil.isIgnoreFieldTypes(subTypeName)) {
                 continue;

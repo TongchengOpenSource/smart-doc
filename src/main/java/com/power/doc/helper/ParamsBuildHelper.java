@@ -68,7 +68,9 @@ public class ParamsBuildHelper {
             for (JavaField field : fields) {
                 String fieldName = field.getName();
                 String subTypeName = field.getType().getFullyQualifiedName();
-                if ("this$0".equals(fieldName) ||
+                boolean ignoreField = field.getModifiers().stream()
+                        .anyMatch(str -> str.equals(DocGlobalConstants.STATIC) || str.equals(DocGlobalConstants.FINAL));
+                if (ignoreField || "this$0".equals(fieldName) ||
                         "serialVersionUID".equals(fieldName) ||
                         JavaClassValidateUtil.isIgnoreFieldTypes(subTypeName)) {
                     continue;

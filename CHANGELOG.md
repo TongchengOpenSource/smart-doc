@@ -158,3 +158,6 @@
 	6. 重点：smart-doc的maven插件smart-doc-maven-plugin增强对maven标准项目的支持。
 	7. 全面支持spring的表单参数绑定解析。
 	8. postman json生成支持所有参数自动回填。再也不用自己建参数了。
+	9. 优化对实体类中枚举字段的支持。
+	10. 增加对实体中静态常量常量字段的过滤。
+	
