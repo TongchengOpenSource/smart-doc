@@ -118,4 +118,8 @@ public class DocGlobalConstants {
     public static final String CURL_POST_JSON = "curl -X POST -H 'Content-Type: application/json; charset=utf-8' -i ";
 
     public static final String ENMPTY = "";
+
+    public static final String STATIC = "static";
+
+    public static final String FINAL = "final";
 }

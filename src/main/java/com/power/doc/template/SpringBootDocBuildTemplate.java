@@ -131,7 +131,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
                 String requestJson = requestExample.getExampleBody();
                 // set request example detail
                 apiMethodDoc.setRequestExample(requestExample);
-                apiMethodDoc.setRequestUsage(requestJson);
+                apiMethodDoc.setRequestUsage(requestJson==null?requestExample.getUrl():requestJson);
                 // build response usage
                 apiMethodDoc.setResponseUsage(JsonBuildHelper.buildReturnJson(method, projectBuilder));
                 // build response params

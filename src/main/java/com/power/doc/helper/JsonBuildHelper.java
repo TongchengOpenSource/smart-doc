@@ -137,7 +137,10 @@ public class JsonBuildHelper {
             for (JavaField field : fields) {
                 String subTypeName = field.getType().getFullyQualifiedName();
                 String fieldName = field.getName();
-                if ("this$0".equals(fieldName) ||
+
+                boolean ignoreField = field.getModifiers().stream()
+                        .anyMatch(str -> str.equals(DocGlobalConstants.STATIC) || str.equals(DocGlobalConstants.FINAL));
+                if (ignoreField || "this$0".equals(fieldName) ||
                         "serialVersionUID".equals(fieldName) ||
                         JavaClassValidateUtil.isIgnoreFieldTypes(subTypeName)) {
                     continue;
