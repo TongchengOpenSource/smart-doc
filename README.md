@@ -137,6 +137,9 @@ public class ApiDocTest {
 ![request-params](https://images.gitee.com/uploads/images/2019/1231/223710_88933f55_144669.png "request.png")
 #### Response parameter example renderings
 ![response-fields](https://images.gitee.com/uploads/images/2019/1231/223817_32bea6dc_144669.png "response.png")
+## Use Maven Plugin
+Smart-doc provides a maven plugin to quickly integrate into the project to generate documentation.
+ You can use the plugin instead of the unit test above.[smart-doc-maven-plugin](https://github.com/shalousun/smart-doc-maven-plugin)
 ## Building
 you can build with the following commands. (Java 1.8 is required to build the master branch)
 ```
