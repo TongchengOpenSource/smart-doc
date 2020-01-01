@@ -411,7 +411,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
                 if (null != annotationRequired) {
                     required = annotationRequired.toString();
                 }
-                String annotationName = annotation.getType().getName();
+                String annotationName = JavaClassUtil.getAnnotationSimpleName(annotation.getType().getName());
                 if (SpringMvcAnnotations.REQUEST_BODY.equals(annotationName) || (ValidatorAnnotations.VALID.equals(annotationName) && annotations.size() == 1)) {
                     if (requestBodyCounter > 0) {
                         throw new RuntimeException("You have use @RequestBody Passing multiple variables  for method "

@@ -201,7 +201,11 @@ public class JsonBuildHelper {
                     }
                 } else {
                     if (JavaClassValidateUtil.isCollection(subTypeName) || JavaClassValidateUtil.isArray(subTypeName)) {
+                        if (globGicName.length > 0 && "java.util.List".equals(fieldGicName)) {
+                            fieldGicName = fieldGicName + "<T>";
+                        }
                         fieldGicName = JavaClassValidateUtil.isArray(subTypeName) ? fieldGicName.substring(0, fieldGicName.indexOf("[")) : fieldGicName;
+
                         if (DocClassUtil.getSimpleGicName(fieldGicName).length == 0) {
                             data0.append("{\"object\":\"any object\"},");
                             continue out;
