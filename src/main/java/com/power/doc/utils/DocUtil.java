@@ -363,7 +363,7 @@ public class DocUtil {
      * @param value value
      * @return String
      */
-    public static String handleId(String value) {
+    public static String generateId(String value) {
         if (StringUtil.isEmpty(value)) {
             return null;
         }

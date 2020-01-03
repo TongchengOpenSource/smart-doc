@@ -1376,13 +1376,13 @@ public class SourceBuilder {
      */
     private void handControllerAlias(ApiDoc apiDoc) {
         if (isUseMD5) {
-            String name = DocUtil.handleId(apiDoc.getName());
+            String name = DocUtil.generateId(apiDoc.getName());
             apiDoc.setAlias(name);
         }
     }
 
     private void handleMethodUid(ApiMethodDoc methodDoc, String methodName) {
-        String name = DocUtil.handleId(methodName);
+        String name = DocUtil.generateId(methodName);
         methodDoc.setMethodId(name);
     }
 
