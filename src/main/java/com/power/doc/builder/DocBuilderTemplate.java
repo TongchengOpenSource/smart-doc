@@ -66,7 +66,7 @@ public class DocBuilderTemplate {
     public ApiAllData getApiData(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
         ApiAllData apiAllData = new ApiAllData();
         apiAllData.setProjectName(config.getProjectName());
-        apiAllData.setProjectId(DocUtil.handleId(config.getProjectName()));
+        apiAllData.setProjectId(DocUtil.generateId(config.getProjectName()));
         apiAllData.setLanguage(config.getLanguage().getCode());
         apiAllData.setApiDocList(listOfApiData(config, javaProjectBuilder));
         apiAllData.setErrorCodeList(errorCodeDictToList(config));

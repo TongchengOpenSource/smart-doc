@@ -78,7 +78,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
         for (JavaAnnotation annotation : classAnnotations) {
             String annotationName = annotation.getType().getName();
             if (DocAnnotationConstants.REQUEST_MAPPING.equals(annotationName) || DocGlobalConstants.REQUEST_MAPPING_FULLY.equals(annotationName)) {
-                if(annotation.getNamedParameter("value")!=null){
+                if (annotation.getNamedParameter("value") != null) {
                     baseUrl = StringUtil.removeQuotes(annotation.getNamedParameter("value").toString());
                 }
             }
@@ -87,7 +87,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
         List<ApiMethodDoc> methodDocList = new ArrayList<>(methods.size());
         int methodOrder = 0;
         for (JavaMethod method : methods) {
-            if (method.getModifiers().contains("private")) {
+            if (method.isPrivate()) {
                 continue;
             }
             if (StringUtil.isEmpty(method.getComment()) && apiConfig.isStrict()) {
@@ -98,7 +98,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
             apiMethodDoc.setOrder(methodOrder);
             apiMethodDoc.setDesc(method.getComment());
             apiMethodDoc.setName(method.getName());
-            String methodUid = DocUtil.handleId(clazName + method.getName());
+            String methodUid = DocUtil.generateId(clazName + method.getName());
             apiMethodDoc.setMethodId(methodUid);
             String apiNoteValue = DocUtil.getNormalTagComments(method, DocTags.API_NOTE, cls.getName());
             if (StringUtil.isEmpty(apiNoteValue)) {
@@ -131,7 +131,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
                 String requestJson = requestExample.getExampleBody();
                 // set request example detail
                 apiMethodDoc.setRequestExample(requestExample);
-                apiMethodDoc.setRequestUsage(requestJson==null?requestExample.getUrl():requestJson);
+                apiMethodDoc.setRequestUsage(requestJson == null ? requestExample.getUrl() : requestJson);
                 // build response usage
                 apiMethodDoc.setResponseUsage(JsonBuildHelper.buildReturnJson(method, projectBuilder));
                 // build response params
@@ -261,7 +261,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
                     gicName = gicName.substring(0, gicName.indexOf("["));
                 }
                 if (!JavaClassValidateUtil.isPrimitive(gicName)) {
-                    throw new RuntimeException("FormData can't support binding Collection<T> on method "
+                    throw new RuntimeException("Spring MVC can't support binding Collection on method "
                             + method.getName() + "Check it in " + method.getDeclaringClass().getCanonicalName());
                 }
                 FormData formData = new FormData();
