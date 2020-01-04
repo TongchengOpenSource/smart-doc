@@ -220,11 +220,11 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
                                 .append("\":")
                                 .append(DocUtil.handleJsonStr(mockValue))
                                 .append("}");
-                        requestExample.setJsonBody(builder.toString()).setJson(true);
+                        requestExample.setJsonBody(JsonFormatUtil.formatJson(builder.toString())).setJson(true);
                         paramAdded = true;
                     } else {
                         String json = JsonBuildHelper.buildJson(typeName, gicTypeName, Boolean.FALSE, 0, new HashMap<>(), configBuilder);
-                        requestExample.setJsonBody(json).setJson(true);
+                        requestExample.setJsonBody(JsonFormatUtil.formatJson(json)).setJson(true);
                         paramAdded = true;
                     }
                 } else if (SpringMvcAnnotations.PATH_VARIABLE.contains(annotationName)) {
