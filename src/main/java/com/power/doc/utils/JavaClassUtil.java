@@ -31,7 +31,10 @@ public class JavaClassUtil {
                 "Date".equals(cls1.getSimpleName()) || "Locale".equals(cls1.getSimpleName())) {
             return fieldList;
         } else {
-            if (cls1.isInterface()) {
+            String className = cls1.getFullyQualifiedName();
+            if (cls1.isInterface() &&
+                    !JavaClassValidateUtil.isCollection(className) &&
+                    !JavaClassValidateUtil.isMap(className)) {
                 List<JavaMethod> methods = cls1.getMethods();
                 for (JavaMethod javaMethod : methods) {
                     String methodName = javaMethod.getName();
