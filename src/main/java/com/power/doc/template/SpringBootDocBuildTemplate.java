@@ -303,7 +303,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
             url = UrlUtil.simplifyUrl(url);
             if (requestExample.isJson()) {
                 if (StringUtil.isNotEmpty(requestExample.getJsonBody())) {
-                    exampleBody = DocGlobalConstants.CURL_POST_JSON + url + " --data \'" + JsonFormatUtil.formatJson(requestExample.getJsonBody()) + "\n'";
+                    exampleBody = DocGlobalConstants.CURL_POST_JSON + url + " --data \'" + requestExample.getJsonBody() + "\n'";
                 } else {
                     exampleBody = DocGlobalConstants.CURL_POST + url;
                 }

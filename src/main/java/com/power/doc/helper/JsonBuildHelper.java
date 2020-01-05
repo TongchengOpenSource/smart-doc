@@ -31,13 +31,13 @@ public class JsonBuildHelper {
      * @return String
      */
     public static String buildReturnJson(JavaMethod method, ProjectDocConfigBuilder builder) {
-        if ("void".equals(method.getReturnType().getFullyQualifiedName())) {
+        if (method.getReturns().isVoid()) {
             return "This api return nothing.";
         }
         ApiReturn apiReturn = DocClassUtil.processReturnType(method.getReturnType().getGenericCanonicalName());
         String returnType = apiReturn.getGenericCanonicalName();
         String typeName = apiReturn.getSimpleName();
-        return JsonFormatUtil.formatJson(buildJson(typeName, returnType, true, 0, new HashMap<>(), builder));
+        return JsonFormatUtil.formatJson(buildJson(typeName, returnType, Boolean.TRUE, 0, new HashMap<>(), builder));
     }
 
     /**

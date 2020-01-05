@@ -73,7 +73,7 @@ public interface IDocBuildTemplate {
 
 
     default List<ApiParam> buildReturnApiParams(JavaMethod method, String controllerName, ProjectDocConfigBuilder projectBuilder) {
-        if ("void".equals(method.getReturnType().getFullyQualifiedName())) {
+        if (method.getReturns().isVoid()) {
             return null;
         }
         ApiReturn apiReturn = DocClassUtil.processReturnType(method.getReturnType().getGenericCanonicalName());
