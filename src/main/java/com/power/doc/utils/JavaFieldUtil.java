@@ -14,7 +14,6 @@ public class JavaFieldUtil {
      * @return boolean
      */
     public static boolean checkGenerics(List<JavaField> fields) {
-        checkGenerics:
         for (JavaField field : fields) {
             if (field.getType().getFullyQualifiedName().length() == 1) {
                 return true;

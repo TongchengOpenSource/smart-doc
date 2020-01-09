@@ -3,6 +3,8 @@ package com.power.doc.builder;
 import com.power.doc.model.ApiAllData;
 import com.power.doc.model.ApiConfig;
 import com.power.doc.model.ApiDoc;
+import com.power.doc.template.IDocBuildTemplate;
+import com.power.doc.template.SpringBootDocBuildTemplate;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 
 /**
@@ -23,21 +25,5 @@ public class ApiDataBuilder {
         JavaProjectBuilder javaProjectBuilder = new JavaProjectBuilder();
         builderTemplate.getApiData(config,javaProjectBuilder);
         return builderTemplate.getApiData(config,javaProjectBuilder);
-    }
-
-    /**
-     * Get single api data
-     *
-     * @param config         ApiConfig
-     * @param controllerName controller name
-     * @return ApiDoc
-     */
-    public static ApiDoc getApiData(ApiConfig config, String controllerName) {
-        DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
-        builderTemplate.checkAndInitForGetApiData(config);
-        config.setMd5EncryptedHtmlName(true);
-        JavaProjectBuilder projectBuilder = new JavaProjectBuilder();
-        SourceBuilder sourceBuilder = new SourceBuilder(config,projectBuilder);
-        return sourceBuilder.getSingleControllerApiData(controllerName);
     }
 }

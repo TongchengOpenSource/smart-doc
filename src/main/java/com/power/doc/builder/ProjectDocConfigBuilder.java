@@ -12,6 +12,7 @@ import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaField;
 
 import java.io.File;
+import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -50,6 +51,7 @@ public class ProjectDocConfigBuilder {
         } else {
             this.serverUrl = apiConfig.getServerUrl();
         }
+        javaProjectBuilder.setEncoding(Charset.defaultCharset().toString());
         this.javaProjectBuilder = javaProjectBuilder;
         this.loadJavaSource(apiConfig.getSourceCodePaths(),this.javaProjectBuilder);
         this.initClassFilesMap();

@@ -1,8 +1,10 @@
 package com.power.doc.utils;
 
+import com.power.common.util.StringUtil;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaField;
 import com.thoughtworks.qdox.model.JavaMethod;
+import com.thoughtworks.qdox.model.impl.DefaultJavaField;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +31,21 @@ public class JavaClassUtil {
                 "Date".equals(cls1.getSimpleName()) || "Locale".equals(cls1.getSimpleName())) {
             return fieldList;
         } else {
+            String className = cls1.getFullyQualifiedName();
+            if (cls1.isInterface() &&
+                    !JavaClassValidateUtil.isCollection(className) &&
+                    !JavaClassValidateUtil.isMap(className)) {
+                List<JavaMethod> methods = cls1.getMethods();
+                for (JavaMethod javaMethod : methods) {
+                    String methodName = javaMethod.getName();
+                    if (!methodName.startsWith("get")) {
+                        continue;
+                    }
+                    methodName = StringUtil.firstToLowerCase(methodName.substring(3, methodName.length()));
+                    JavaField javaField = new DefaultJavaField(javaMethod.getReturns(), methodName);
+                    fieldList.add(javaField);
+                }
+            }
             JavaClass pcls = cls1.getSuperJavaClass();
             fieldList.addAll(getFields(pcls, i));
             fieldList.addAll(cls1.getFields());
@@ -40,7 +57,7 @@ public class JavaClassUtil {
     /**
      * get enum value
      *
-     * @param javaClass  enum class
+     * @param javaClass    enum class
      * @param formDataEnum is return method
      * @return Object
      */

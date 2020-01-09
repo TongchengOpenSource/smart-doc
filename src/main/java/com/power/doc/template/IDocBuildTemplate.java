@@ -10,7 +10,10 @@ import com.power.doc.utils.DocUtil;
 import com.power.doc.utils.JavaClassValidateUtil;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaMethod;
+import com.thoughtworks.qdox.model.JavaType;
+import com.thoughtworks.qdox.model.JavaTypeVariable;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -60,7 +63,7 @@ public interface IDocBuildTemplate {
         apiDoc.setName(controllerName);
         apiDoc.setAlias(controllerName);
         if (isUseMD5) {
-            String name = DocUtil.handleId(apiDoc.getName());
+            String name = DocUtil.generateId(apiDoc.getName());
             apiDoc.setAlias(name);
         }
         apiDoc.setDesc(cls.getComment());
@@ -70,7 +73,7 @@ public interface IDocBuildTemplate {
 
 
     default List<ApiParam> buildReturnApiParams(JavaMethod method, String controllerName, ProjectDocConfigBuilder projectBuilder) {
-        if ("void".equals(method.getReturnType().getFullyQualifiedName())) {
+        if (method.getReturns().isVoid()) {
             return null;
         }
         ApiReturn apiReturn = DocClassUtil.processReturnType(method.getReturnType().getGenericCanonicalName());
@@ -88,7 +91,7 @@ public interface IDocBuildTemplate {
                 if (JavaClassValidateUtil.isPrimitive(gicName)) {
                     return ParamsBuildHelper.primitiveReturnRespComment("array of " + DocClassUtil.processTypeNameForParams(gicName));
                 }
-                return ParamsBuildHelper.buildParams(gicName, "", 0, null, projectBuilder.getCustomRespFieldMap(), true, new HashMap<>(), projectBuilder);
+                return ParamsBuildHelper.buildParams(gicName, "", 0, null, projectBuilder.getCustomRespFieldMap(), Boolean.TRUE, new HashMap<>(), projectBuilder);
             } else {
                 return null;
             }
@@ -101,15 +104,17 @@ public interface IDocBuildTemplate {
             if (JavaClassValidateUtil.isPrimitive(keyValue[1])) {
                 return ParamsBuildHelper.primitiveReturnRespComment("key value");
             }
-            return ParamsBuildHelper.buildParams(keyValue[1], "", 0, null, projectBuilder.getCustomRespFieldMap(), true, new HashMap<>(), projectBuilder);
+            return ParamsBuildHelper.buildParams(keyValue[1], "", 0, null, projectBuilder.getCustomRespFieldMap(), Boolean.TRUE, new HashMap<>(), projectBuilder);
         }
         if (StringUtil.isNotEmpty(returnType)) {
-            return ParamsBuildHelper.buildParams(returnType, "", 0, null, projectBuilder.getCustomRespFieldMap(), true, new HashMap<>(), projectBuilder);
+            return ParamsBuildHelper.buildParams(returnType, "", 0, null, projectBuilder.getCustomRespFieldMap(), Boolean.TRUE, new HashMap<>(), projectBuilder);
         }
         return null;
     }
 
     List<ApiDoc> getApiData(ProjectDocConfigBuilder projectBuilder);
+
+    ApiDoc getSingleApiData(ProjectDocConfigBuilder projectBuilder,String apiClassName);
 
 
     boolean ignoreReturnObject(String typeName);

@@ -37,10 +37,19 @@ public class HtmlApiDocBuilder {
      *
      * @param config config
      */
-    public static void builderControllersApi(ApiConfig config) {
+    public static void buildApiDoc(ApiConfig config) {
+        JavaProjectBuilder javaProjectBuilder = new JavaProjectBuilder();
+        buildApiDoc(config,javaProjectBuilder);
+    }
+
+    /**
+     * Used for plugin
+     * @param config ApiConfig
+     * @param javaProjectBuilder ProjectDocConfigBuilder
+     */
+    public static void buildApiDoc(ApiConfig config,JavaProjectBuilder javaProjectBuilder) {
         DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
         builderTemplate.checkAndInit(config);
-        JavaProjectBuilder javaProjectBuilder = new JavaProjectBuilder();
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config,javaProjectBuilder);
         IDocBuildTemplate docBuildTemplate = new SpringBootDocBuildTemplate();
         List<ApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder);
@@ -52,11 +61,10 @@ public class HtmlApiDocBuilder {
             List<ApiDocDict> apiDocDictList = builderTemplate.buildDictionary(config,javaProjectBuilder);
             buildIndex(apiDocList, config);
             copyCss(config.getOutPath());
-            buildApiDoc(apiDocList, config.getOutPath());
+            buildDoc(apiDocList, config.getOutPath());
             buildErrorCodeDoc(config.getErrorCodes(), config.getOutPath());
             buildDictionary(apiDocDictList, config.getOutPath());
         }
-
     }
 
     private static void copyCss(String outPath) {
@@ -111,7 +119,7 @@ public class HtmlApiDocBuilder {
      * @param apiDocList list of api doc
      * @param outPath    output path
      */
-    private static void buildApiDoc(List<ApiDoc> apiDocList, String outPath) {
+    private static void buildDoc(List<ApiDoc> apiDocList, String outPath) {
         FileUtil.mkdirs(outPath);
         Template htmlApiDoc;
         String strTime = DateTimeUtil.long2Str(now, DateTimeUtil.DATE_FORMAT_SECOND);

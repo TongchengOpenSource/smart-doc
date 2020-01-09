@@ -26,11 +26,20 @@ public class AdocDocBuilder {
      *
      * @param config ApiConfig
      */
-    public static void builderControllersApi(ApiConfig config) {
+    public static void builderApiDoc(ApiConfig config) {
+        JavaProjectBuilder javaProjectBuilder = new JavaProjectBuilder();
+        buildApiDoc(config,javaProjectBuilder);
+    }
+
+    /**
+     * Used for plugin
+     * @param config ApiConfig
+     * @param javaProjectBuilder ProjectDocConfigBuilder
+     */
+    public static void buildApiDoc(ApiConfig config,JavaProjectBuilder javaProjectBuilder) {
         config.setAdoc(true);
         DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
         builderTemplate.checkAndInit(config);
-        JavaProjectBuilder javaProjectBuilder = new JavaProjectBuilder();
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config,javaProjectBuilder);
         IDocBuildTemplate docBuildTemplate = new SpringBootDocBuildTemplate();
         List<ApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder);
@@ -48,10 +57,11 @@ public class AdocDocBuilder {
      * @param config         ApiConfig
      * @param controllerName controller name
      */
-    public static void buildSingleControllerApi(ApiConfig config, String controllerName) {
-        config.setAdoc(true);
+    public static void buildSingleApiDoc(ApiConfig config, String controllerName) {
+        config.setAdoc(false);
+        ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, new JavaProjectBuilder());
         DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
         builderTemplate.checkAndInit(config);
-        builderTemplate.buildSingleControllerApi(config.getOutPath(), controllerName, API_DOC_ADOC_TPL, API_EXTENSION);
+        builderTemplate.buildSingleApi(configBuilder, controllerName, API_DOC_ADOC_TPL, API_EXTENSION);
     }
 }

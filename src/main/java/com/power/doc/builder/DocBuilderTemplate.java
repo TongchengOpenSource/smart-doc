@@ -66,7 +66,7 @@ public class DocBuilderTemplate {
     public ApiAllData getApiData(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
         ApiAllData apiAllData = new ApiAllData();
         apiAllData.setProjectName(config.getProjectName());
-        apiAllData.setProjectId(DocUtil.handleId(config.getProjectName()));
+        apiAllData.setProjectId(DocUtil.generateId(config.getProjectName()));
         apiAllData.setLanguage(config.getLanguage().getCode());
         apiAllData.setApiDocList(listOfApiData(config, javaProjectBuilder));
         apiAllData.setErrorCodeList(errorCodeDictToList(config));
@@ -167,15 +167,16 @@ public class DocBuilderTemplate {
      * @param template       template
      * @param fileExtension  file extension
      */
-    public void buildSingleControllerApi(String outPath, String controllerName, String template, String fileExtension) {
-        FileUtil.mkdirs(outPath);
-        SourceBuilder sourceBuilder = new SourceBuilder(Boolean.TRUE, new JavaProjectBuilder());
-        ApiDoc doc = sourceBuilder.getSingleControllerApiData(controllerName);
+    public void buildSingleApi(ProjectDocConfigBuilder projectBuilder, String controllerName, String template, String fileExtension) {
+        ApiConfig config = projectBuilder.getApiConfig();
+        FileUtil.mkdirs(config.getOutPath());
+        IDocBuildTemplate docBuildTemplate = new SpringBootDocBuildTemplate();
+        ApiDoc doc = docBuildTemplate.getSingleApiData(projectBuilder,controllerName);
         Template mapper = BeetlTemplateUtil.getByName(template);
         mapper.binding(TemplateVariable.DESC.getVariable(), doc.getDesc());
         mapper.binding(TemplateVariable.NAME.getVariable(), doc.getName());
         mapper.binding(TemplateVariable.LIST.getVariable(), doc.getList());
-        FileUtil.writeFileNotAppend(mapper.render(), outPath + FILE_SEPARATOR + doc.getName() + fileExtension);
+        FileUtil.writeFileNotAppend(mapper.render(), config.getOutPath() + FILE_SEPARATOR + doc.getName() + fileExtension);
     }
 
     /**
