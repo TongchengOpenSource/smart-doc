@@ -162,12 +162,12 @@ Smart-doc is under the Apache 2.0 license.  See the [LICENSE](https://gitee.com
 ## Who is using
 > 排名不分先后，更多接入公司，欢迎在[https://gitee.com/sunyurepository/smart-doc/issues/I1594T](https://gitee.com/sunyurepository/smart-doc/issues/I1594T)登记（仅供开源用户参考）
 
-![科大讯飞](https://raw.githubusercontent.com/shalousun/smart-doc/dev/images/known-users/iflytek.png)
-![一加手机](https://raw.githubusercontent.com/shalousun/smart-doc/dev/images/known-users/oneplus.png)
-![小米](https://raw.githubusercontent.com/shalousun/smart-doc/dev/images/known-users/xiaomi.png)
-![远盟健康](https://raw.githubusercontent.com/shalousun/smart-doc/dev/images/known-users/yuanmengjiankang.png)
-![上海普彻信息科技](https://raw.githubusercontent.com/shalousun/smart-doc/dev/images/known-users/puqie_gaitubao_100x100.jpg)
-<img src="https://raw.githubusercontent.com/shalousun/smart-doc/dev/images/known-users/zhongkezhilian.png" title="中科智链信息科技" width="272px" height="83px"/>
+![iFLYTEK](https://raw.githubusercontent.com/shalousun/smart-doc/dev/images/known-users/iflytek.png)
+<img src="https://raw.githubusercontent.com/shalousun/smart-doc/dev/images/known-users/oneplus.png" title="一加" width="83px" height="83px"/>
+<img src="https://raw.githubusercontent.com/shalousun/smart-doc/dev/images/known-users/xiaomi.png" title="小米" width="170px" height="83px"/>
+<img src="https://raw.githubusercontent.com/shalousun/smart-doc/dev/images/known-users/yuanmengjiankang.png" title="远盟健康" width="260px" height="83px"/>
+<img src="https://raw.githubusercontent.com/shalousun/smart-doc/dev/images/known-users/puqie_gaitubao_100x100.jpg" title="普切信息科技" width="83px" height="83px"/>
+<img src="https://raw.githubusercontent.com/shalousun/smart-doc/dev/images/known-users/zhongkezhilian.png" title="中科智链" width="272px" height="83px"/>
 
 ## Contact
 愿意参与构建smart-doc或者是需要交流问题可以加入qq群：
