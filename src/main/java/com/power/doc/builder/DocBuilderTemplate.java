@@ -162,7 +162,7 @@ public class DocBuilderTemplate {
     /**
      * Generate a single controller api document
      *
-     * @param outPath        output path
+     * @param projectBuilder projectBuilder
      * @param controllerName controller name
      * @param template       template
      * @param fileExtension  file extension

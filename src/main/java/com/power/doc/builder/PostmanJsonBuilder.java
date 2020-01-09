@@ -32,16 +32,7 @@ import java.util.List;
  */
 public class PostmanJsonBuilder {
 
-    /**
-     * 构建postman json
-     *
-     * @param config 配置文件
-     */
-    public static void buildPostmanApi(ApiConfig config) {
-        DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
-        builderTemplate.checkAndInit(config);
-        JavaProjectBuilder javaProjectBuilder = new JavaProjectBuilder();
-        ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
+    public static void postManCreate(ApiConfig config,ProjectDocConfigBuilder configBuilder){
         IDocBuildTemplate docBuildTemplate = new SpringBootDocBuildTemplate();
         List<ApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder);
         RequestItem requestItem = new RequestItem();
@@ -59,6 +50,25 @@ public class PostmanJsonBuilder {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String data = gson.toJson(requestItem);
         FileUtil.nioWriteFile(data, filePath);
+    }
+    /**
+     * 构建postman json
+     *
+     * @param config 配置文件
+     */
+    public static void buildPostmanApi(ApiConfig config) {
+        DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
+        builderTemplate.checkAndInit(config);
+        JavaProjectBuilder javaProjectBuilder = new JavaProjectBuilder();
+        ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
+        postManCreate(config,configBuilder);
+
+    }
+    public static void buildPostmanApi(ApiConfig config,JavaProjectBuilder projectBuilder) {
+        DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
+        builderTemplate.checkAndInit(config);
+        ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, projectBuilder);
+        postManCreate(config,configBuilder);
     }
 
     /**
