@@ -167,6 +167,7 @@ Smart-doc is under the Apache 2.0 license.  See the [LICENSE](https://gitee.com
 ![小米](https://raw.githubusercontent.com/shalousun/smart-doc/dev/images/known-users/xiaomi.png)
 ![远盟健康](https://raw.githubusercontent.com/shalousun/smart-doc/dev/images/known-users/yuanmengjiankang.png)
 ![上海普彻信息科技](https://raw.githubusercontent.com/shalousun/smart-doc/dev/images/known-users/puqie_gaitubao_100x100.jpg)
+![中科智链信息科技](https://raw.githubusercontent.com/shalousun/smart-doc/dev/images/known-users/zhongkezhilian.png)
 ## Contact
 愿意参与构建smart-doc或者是需要交流问题可以加入qq群：
 
