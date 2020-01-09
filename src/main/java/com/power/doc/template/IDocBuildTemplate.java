@@ -114,6 +114,8 @@ public interface IDocBuildTemplate {
 
     List<ApiDoc> getApiData(ProjectDocConfigBuilder projectBuilder);
 
+    ApiDoc getSingleApiData(ProjectDocConfigBuilder projectBuilder,String apiClassName);
+
 
     boolean ignoreReturnObject(String typeName);
 

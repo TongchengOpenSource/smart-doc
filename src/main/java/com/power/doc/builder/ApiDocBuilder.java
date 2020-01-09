@@ -25,17 +25,26 @@ public class ApiDocBuilder {
     /**
      * @param config ApiConfig
      */
-    public static void builderControllersApi(ApiConfig config) {
-        config.setAdoc(false);
+    public static void buildApiDoc(ApiConfig config) {
         JavaProjectBuilder javaProjectBuilder = new JavaProjectBuilder();
+        buildApiDoc(config, javaProjectBuilder);
+    }
+
+    /**
+     * Used for plugin
+     * @param config ApiConfig
+     * @param javaProjectBuilder ProjectDocConfigBuilder
+     */
+    public static void buildApiDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
+        config.setAdoc(false);
         DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
         builderTemplate.checkAndInit(config);
-        ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config,javaProjectBuilder);
+        ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
         IDocBuildTemplate docBuildTemplate = new SpringBootDocBuildTemplate();
         List<ApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder);
         if (config.isAllInOne()) {
             String version = config.isCoverOld() ? "" : "-V" + DateTimeUtil.long2Str(System.currentTimeMillis(), DATE_FORMAT);
-            builderTemplate.buildAllInOne(apiDocList, config, javaProjectBuilder,ALL_IN_ONE_MD_TPL, "AllInOne" + version + ".md");
+            builderTemplate.buildAllInOne(apiDocList, config, javaProjectBuilder, ALL_IN_ONE_MD_TPL, "AllInOne" + version + ".md");
         } else {
             builderTemplate.buildApiDoc(apiDocList, config, API_DOC_MD_TPL, API_EXTENSION);
             builderTemplate.buildErrorCodeDoc(config, ERROR_CODE_LIST_MD_TPL, ERROR_CODE_LIST_MD);
@@ -48,10 +57,12 @@ public class ApiDocBuilder {
      * @param config         (ApiConfig
      * @param controllerName controller name
      */
-    public static void buildSingleControllerApi(ApiConfig config, String controllerName) {
+    public static void buildSingleApiDoc(ApiConfig config, String controllerName) {
         config.setAdoc(false);
+        JavaProjectBuilder javaProjectBuilder = new JavaProjectBuilder();
+        ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
         DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
         builderTemplate.checkAndInit(config);
-        builderTemplate.buildSingleControllerApi(config.getOutPath(), controllerName, API_DOC_MD_TPL, API_EXTENSION);
+        builderTemplate.buildSingleApi(configBuilder, controllerName, API_DOC_MD_TPL, API_EXTENSION);
     }
 }

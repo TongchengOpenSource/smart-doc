@@ -62,6 +62,11 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
     }
 
     @Override
+    public ApiDoc getSingleApiData(ProjectDocConfigBuilder projectBuilder,String apiClassName) {
+        return null;
+    }
+
+    @Override
     public boolean ignoreReturnObject(String typeName) {
         if (JavaClassValidateUtil.isMvcIgnoreParams(typeName)) {
             if (DocGlobalConstants.MODE_AND_VIEW_FULLY.equals(typeName)) {
