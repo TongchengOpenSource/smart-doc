@@ -140,7 +140,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
                 // build response usage
                 apiMethodDoc.setResponseUsage(JsonBuildHelper.buildReturnJson(method, projectBuilder));
                 // build response params
-                List<ApiParam> responseParams = buildReturnApiParams(method, cls.getGenericFullyQualifiedName(), projectBuilder);
+                List<ApiParam> responseParams = buildReturnApiParams(method, projectBuilder);
                 apiMethodDoc.setResponseParams(responseParams);
                 List<ApiReqHeader> allApiReqHeaders;
                 if (this.headers != null) {
@@ -335,7 +335,6 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
     }
 
     private List<ApiParam> requestParams(final JavaMethod javaMethod, final String tagName, ProjectDocConfigBuilder builder) {
-
         boolean isStrict = builder.getApiConfig().isStrict();
         Map<String, CustomRespField> responseFieldMap = new HashMap<>();
         String className = javaMethod.getDeclaringClass().getCanonicalName();

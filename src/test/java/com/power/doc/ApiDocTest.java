@@ -68,7 +68,7 @@ public class ApiDocTest {
         long start = System.currentTimeMillis();
 //        ApiDocBuilder.builderControllersApi(config);
         //HtmlApiDocBuilder.builderControllersApi(config);
-        PostmanJsonBuilder.buildPostmanApi(config);
+        PostmanJsonBuilder.buildPostmanCollection(config);
         long end = System.currentTimeMillis();
         DateTimeUtil.printRunTime(end, start);
     }

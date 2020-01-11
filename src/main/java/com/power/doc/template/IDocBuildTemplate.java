@@ -22,7 +22,6 @@ import static com.power.doc.constants.DocGlobalConstants.NO_COMMENTS_FOUND;
  */
 public interface IDocBuildTemplate {
 
-
     default String createDocRenderHeaders(List<ApiReqHeader> headers, boolean isAdoc) {
         StringBuilder builder = new StringBuilder();
         if (CollectionUtil.isEmpty(headers)) {
@@ -69,7 +68,7 @@ public interface IDocBuildTemplate {
     }
 
 
-    default List<ApiParam> buildReturnApiParams(JavaMethod method, String controllerName, ProjectDocConfigBuilder projectBuilder) {
+    default List<ApiParam> buildReturnApiParams(JavaMethod method, ProjectDocConfigBuilder projectBuilder) {
         if (method.getReturns().isVoid()) {
             return null;
         }
@@ -77,7 +76,7 @@ public interface IDocBuildTemplate {
         String returnType = apiReturn.getGenericCanonicalName();
         String typeName = apiReturn.getSimpleName();
         if (this.ignoreReturnObject(typeName)) {
-            throw new RuntimeException("Smart-doc can't support " + typeName + " as method return in " + controllerName);
+            return null;
         }
         if (JavaClassValidateUtil.isPrimitive(typeName)) {
             return ParamsBuildHelper.primitiveReturnRespComment(DocClassUtil.processTypeNameForParams(typeName));
@@ -113,8 +112,6 @@ public interface IDocBuildTemplate {
 
     ApiDoc getSingleApiData(ProjectDocConfigBuilder projectBuilder, String apiClassName);
 
-
     boolean ignoreReturnObject(String typeName);
-
 
 }
