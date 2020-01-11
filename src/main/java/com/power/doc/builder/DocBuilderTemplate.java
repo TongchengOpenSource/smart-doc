@@ -59,7 +59,7 @@ public class DocBuilderTemplate {
     /**
      * get all api data
      *
-     * @param config ApiConfig
+     * @param config             ApiConfig
      * @param javaProjectBuilder JavaProjectBuilder
      * @return ApiAllData
      */
@@ -171,7 +171,7 @@ public class DocBuilderTemplate {
         ApiConfig config = projectBuilder.getApiConfig();
         FileUtil.mkdirs(config.getOutPath());
         IDocBuildTemplate docBuildTemplate = new SpringBootDocBuildTemplate();
-        ApiDoc doc = docBuildTemplate.getSingleApiData(projectBuilder,controllerName);
+        ApiDoc doc = docBuildTemplate.getSingleApiData(projectBuilder, controllerName);
         Template mapper = BeetlTemplateUtil.getByName(template);
         mapper.binding(TemplateVariable.DESC.getVariable(), doc.getDesc());
         mapper.binding(TemplateVariable.NAME.getVariable(), doc.getName());

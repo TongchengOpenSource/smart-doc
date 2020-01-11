@@ -62,7 +62,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
     }
 
     @Override
-    public ApiDoc getSingleApiData(ProjectDocConfigBuilder projectBuilder,String apiClassName) {
+    public ApiDoc getSingleApiData(ProjectDocConfigBuilder projectBuilder, String apiClassName) {
         return null;
     }
 

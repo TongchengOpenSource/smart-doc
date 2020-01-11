@@ -53,12 +53,12 @@ public class ProjectDocConfigBuilder {
         }
         javaProjectBuilder.setEncoding(Charset.defaultCharset().toString());
         this.javaProjectBuilder = javaProjectBuilder;
-        this.loadJavaSource(apiConfig.getSourceCodePaths(),this.javaProjectBuilder);
+        this.loadJavaSource(apiConfig.getSourceCodePaths(), this.javaProjectBuilder);
         this.initClassFilesMap();
         this.initCustomResponseFieldsMap(apiConfig);
     }
 
-    private void loadJavaSource(List<SourceCodePath> paths,JavaProjectBuilder builder) {
+    private void loadJavaSource(List<SourceCodePath> paths, JavaProjectBuilder builder) {
         if (CollectionUtil.isEmpty(paths)) {
             builder.addSourceTree(new File(DocGlobalConstants.PROJECT_CODE_PATH));
         } else {
@@ -85,7 +85,7 @@ public class ProjectDocConfigBuilder {
         }
     }
 
-    private void initCustomResponseFieldsMap(ApiConfig config){
+    private void initCustomResponseFieldsMap(ApiConfig config) {
         if (CollectionUtil.isNotEmpty(config.getCustomResponseFields())) {
             for (CustomRespField field : config.getCustomResponseFields()) {
                 customRespFieldMap.put(field.getName(), field);

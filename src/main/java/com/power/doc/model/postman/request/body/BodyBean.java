@@ -14,20 +14,20 @@ public class BodyBean {
     private List<FormData> formdata;
     private BodyOptions options;
 
+    public BodyBean(boolean isFormData) {
+        if (isFormData) {
+
+        } else {
+            this.options = new BodyOptions();
+        }
+    }
+
     public List<FormData> getFormdata() {
         return formdata;
     }
 
     public void setFormdata(List<FormData> formdata) {
         this.formdata = formdata;
-    }
-
-    public BodyBean(boolean isFormData) {
-        if(isFormData){
-
-        }else {
-            this.options = new BodyOptions();
-        }
     }
 
     public String getMode() {
@@ -46,14 +46,16 @@ public class BodyBean {
         this.raw = raw;
     }
 
-    private class BodyOptions{
+    private class BodyOptions {
         private Raw raw;
+
         public BodyOptions() {
             this.raw = new Raw();
         }
 
-        private class Raw{
+        private class Raw {
             private String language;
+
             Raw() {
                 this.language = "json";
             }

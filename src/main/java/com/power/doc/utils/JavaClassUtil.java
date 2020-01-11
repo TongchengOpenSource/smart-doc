@@ -4,7 +4,9 @@ import com.power.common.util.StringUtil;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaField;
 import com.thoughtworks.qdox.model.JavaMethod;
+import com.thoughtworks.qdox.model.JavaType;
 import com.thoughtworks.qdox.model.impl.DefaultJavaField;
+import com.thoughtworks.qdox.model.impl.DefaultJavaParameterizedType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -116,5 +118,34 @@ public class JavaClassUtil {
             className = className.substring(index + 1, className.length());
         }
         return className;
+    }
+
+    /**
+     * get Actual type
+     *
+     * @param javaClass JavaClass
+     * @return JavaClass
+     */
+    public static JavaClass getActualType(JavaClass javaClass) {
+        return getActualTypes(javaClass).get(0);
+    }
+
+    /**
+     * get Actual type list
+     *
+     * @param javaClass JavaClass
+     * @return JavaClass
+     */
+    public static List<JavaClass> getActualTypes(JavaClass javaClass) {
+        if (null == javaClass) {
+            return new ArrayList<>(0);
+        }
+        List<JavaClass> javaClassList = new ArrayList<>();
+        List<JavaType> actualTypes = ((DefaultJavaParameterizedType) javaClass).getActualTypeArguments();
+        actualTypes.forEach(javaType -> {
+            JavaClass actualClass = (JavaClass) javaType;
+            javaClassList.add(actualClass);
+        });
+        return javaClassList;
     }
 }

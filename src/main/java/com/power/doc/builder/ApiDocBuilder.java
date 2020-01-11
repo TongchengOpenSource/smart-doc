@@ -31,8 +31,9 @@ public class ApiDocBuilder {
     }
 
     /**
-     * Used for plugin
-     * @param config ApiConfig
+     * Only for smart-doc-maven-plugin.
+     *
+     * @param config             ApiConfig
      * @param javaProjectBuilder ProjectDocConfigBuilder
      */
     public static void buildApiDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {

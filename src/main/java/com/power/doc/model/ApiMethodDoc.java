@@ -15,13 +15,14 @@ public class ApiMethodDoc implements Serializable {
 
     /**
      * methodId handled by md5
-     * @since 1.7.3 +
      *
+     * @since 1.7.3 +
      */
     private String methodId;
 
     /**
      * method name
+     *
      * @since 1.7.3 +
      */
     private String name;

@@ -10,10 +10,7 @@ import com.power.doc.utils.DocUtil;
 import com.power.doc.utils.JavaClassValidateUtil;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaMethod;
-import com.thoughtworks.qdox.model.JavaType;
-import com.thoughtworks.qdox.model.JavaTypeVariable;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -114,7 +111,7 @@ public interface IDocBuildTemplate {
 
     List<ApiDoc> getApiData(ProjectDocConfigBuilder projectBuilder);
 
-    ApiDoc getSingleApiData(ProjectDocConfigBuilder projectBuilder,String apiClassName);
+    ApiDoc getSingleApiData(ProjectDocConfigBuilder projectBuilder, String apiClassName);
 
 
     boolean ignoreReturnObject(String typeName);

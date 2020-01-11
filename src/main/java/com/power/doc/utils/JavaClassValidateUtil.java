@@ -32,6 +32,7 @@ public class JavaClassValidateUtil {
                 return false;
         }
     }
+
     /**
      * Check if it is the basic data type of json data
      *

@@ -10,13 +10,12 @@ public enum SpringMvcRequestAnnotationsEnum {
 
     PATH_VARIABLE("PathVariable"),
     PATH_VARIABLE_FULLY("org.springframework.web.bind.annotation.PathVariable"),
-    REQ_PARAM ("RequestParam"),
+    REQ_PARAM("RequestParam"),
     REQ_PARAM_FULLY("org.springframework.web.bind.annotation.RequestParam"),
     REQUEST_BODY("RequestBody"),
     REQUEST_BODY_FULLY("org.springframework.web.bind.annotation.RequestBody"),
-    REQUEST_HERDER ("RequestHeader"),
-    REQUEST_HERDER_FULLY ("org.springframework.web.bind.annotation.RequestHeader"),
-    ;
+    REQUEST_HERDER("RequestHeader"),
+    REQUEST_HERDER_FULLY("org.springframework.web.bind.annotation.RequestHeader"),;
     private String value;
 
     SpringMvcRequestAnnotationsEnum(String value) {

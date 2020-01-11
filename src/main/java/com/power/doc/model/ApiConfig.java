@@ -151,7 +151,7 @@ public class ApiConfig {
 
     public void setRequestHeaders(ApiReqHeader... requestHeaders) {
         this.requestHeaders = CollectionUtil.asList(requestHeaders);
-        this.requestHeaders.stream().map(header -> header.setDesc(header.getDesc()+"(Global)"))
+        this.requestHeaders.stream().map(header -> header.setDesc(header.getDesc() + "(Global)"))
                 .collect(Collectors.toList());
     }
 

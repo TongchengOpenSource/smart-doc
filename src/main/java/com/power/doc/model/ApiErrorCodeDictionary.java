@@ -1,8 +1,8 @@
 package com.power.doc.model;
 
 /**
- * @since 1.7.9
  * @author yu 2019/12/7.
+ * @since 1.7.9
  */
 public class ApiErrorCodeDictionary {
 
@@ -25,12 +25,12 @@ public class ApiErrorCodeDictionary {
      */
     private String descField;
 
-    public Class getEnumClass() {
-        return enumClass;
+    public static ApiErrorCodeDictionary dict() {
+        return new ApiErrorCodeDictionary();
     }
 
-    public static ApiErrorCodeDictionary dict(){
-        return new ApiErrorCodeDictionary();
+    public Class getEnumClass() {
+        return enumClass;
     }
 
     public ApiErrorCodeDictionary setEnumClass(Class enumClass) {

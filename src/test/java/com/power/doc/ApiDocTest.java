@@ -1,18 +1,16 @@
 package com.power.doc;
 
 import com.power.common.util.DateTimeUtil;
-import com.power.common.util.StringUtil;
-import com.power.doc.builder.HtmlApiDocBuilder;
 import com.power.doc.builder.PostmanJsonBuilder;
 import com.power.doc.enums.OrderEnum;
-import com.power.doc.model.*;
+import com.power.doc.model.ApiConfig;
+import com.power.doc.model.ApiDataDictionary;
+import com.power.doc.model.RevisionLog;
+import com.power.doc.model.SourceCodePath;
 import org.junit.Test;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Description:
@@ -65,7 +63,6 @@ public class ApiDocTest {
                 RevisionLog.getLog().setRevisionTime("2018/12/15").setAuthor("chen").setRemarks("测试").setStatus("创建").setVersion("V1.0"),
                 RevisionLog.getLog().setRevisionTime("2018/12/16").setAuthor("chen2").setRemarks("测试2").setStatus("修改").setVersion("V2.0")
         );
-
 
 
         long start = System.currentTimeMillis();

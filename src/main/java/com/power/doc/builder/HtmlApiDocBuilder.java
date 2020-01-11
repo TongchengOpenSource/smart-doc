@@ -39,26 +39,27 @@ public class HtmlApiDocBuilder {
      */
     public static void buildApiDoc(ApiConfig config) {
         JavaProjectBuilder javaProjectBuilder = new JavaProjectBuilder();
-        buildApiDoc(config,javaProjectBuilder);
+        buildApiDoc(config, javaProjectBuilder);
     }
 
     /**
-     * Used for plugin
-     * @param config ApiConfig
+     * Only for smart-doc-maven-plugin.
+     *
+     * @param config             ApiConfig
      * @param javaProjectBuilder ProjectDocConfigBuilder
      */
-    public static void buildApiDoc(ApiConfig config,JavaProjectBuilder javaProjectBuilder) {
+    public static void buildApiDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
         DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
         builderTemplate.checkAndInit(config);
-        ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config,javaProjectBuilder);
+        ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
         IDocBuildTemplate docBuildTemplate = new SpringBootDocBuildTemplate();
         List<ApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder);
         if (config.isAllInOne()) {
             Template indexCssTemplate = BeetlTemplateUtil.getByName(ALL_IN_ONE_CSS);
             FileUtil.nioWriteFile(indexCssTemplate.render(), config.getOutPath() + FILE_SEPARATOR + ALL_IN_ONE_CSS);
-            builderTemplate.buildAllInOne(apiDocList, config,javaProjectBuilder, ALL_IN_ONE_HTML_TPL, INDEX_HTML);
+            builderTemplate.buildAllInOne(apiDocList, config, javaProjectBuilder, ALL_IN_ONE_HTML_TPL, INDEX_HTML);
         } else {
-            List<ApiDocDict> apiDocDictList = builderTemplate.buildDictionary(config,javaProjectBuilder);
+            List<ApiDocDict> apiDocDictList = builderTemplate.buildDictionary(config, javaProjectBuilder);
             buildIndex(apiDocList, config);
             copyCss(config.getOutPath());
             buildDoc(apiDocList, config.getOutPath());

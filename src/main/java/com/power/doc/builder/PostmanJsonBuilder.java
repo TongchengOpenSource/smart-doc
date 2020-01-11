@@ -3,7 +3,6 @@ package com.power.doc.builder;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import com.power.common.util.FileUtil;
 import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.model.ApiConfig;
@@ -15,14 +14,11 @@ import com.power.doc.model.postman.ItemBean;
 import com.power.doc.model.postman.RequestItem;
 import com.power.doc.model.postman.request.RequestBean;
 import com.power.doc.model.postman.request.body.BodyBean;
-import com.power.doc.model.FormData;
 import com.power.doc.model.postman.request.header.HeaderBean;
 import com.power.doc.template.IDocBuildTemplate;
 import com.power.doc.template.SpringBootDocBuildTemplate;
 import com.thoughtworks.qdox.JavaProjectBuilder;
-import org.apache.commons.lang3.StringUtils;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,43 +28,32 @@ import java.util.List;
  */
 public class PostmanJsonBuilder {
 
-    public static void postManCreate(ApiConfig config,ProjectDocConfigBuilder configBuilder){
-        IDocBuildTemplate docBuildTemplate = new SpringBootDocBuildTemplate();
-        List<ApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder);
-        RequestItem requestItem = new RequestItem();
-        requestItem.setInfo(new InfoBean(config.getProjectName()));
-        List<ItemBean> itemBeans = new ArrayList<>();
-        apiDocList.forEach(
-                apiDoc -> {
-                    ItemBean itemBean = buildItemBean(apiDoc);
-                    itemBeans.add(itemBean);
-                }
-        );
-        requestItem.setItem(itemBeans);
-        String filePath = config.getOutPath();
-        filePath = filePath + DocGlobalConstants.POSTMAN_JSON;
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        String data = gson.toJson(requestItem);
-        FileUtil.nioWriteFile(data, filePath);
-    }
+
     /**
      * 构建postman json
      *
      * @param config 配置文件
      */
-    public static void buildPostmanApi(ApiConfig config) {
+    public static void buildPostmanCollection(ApiConfig config) {
         DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
         builderTemplate.checkAndInit(config);
         JavaProjectBuilder javaProjectBuilder = new JavaProjectBuilder();
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
-        postManCreate(config,configBuilder);
+        postManCreate(config, configBuilder);
 
     }
-    public static void buildPostmanApi(ApiConfig config,JavaProjectBuilder projectBuilder) {
+
+    /**
+     * Only for smart-doc-maven-plugin.
+     *
+     * @param config         ApiConfig Object
+     * @param projectBuilder QDOX avaProjectBuilder
+     */
+    public static void buildPostmanCollection(ApiConfig config, JavaProjectBuilder projectBuilder) {
         DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
         builderTemplate.checkAndInit(config);
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, projectBuilder);
-        postManCreate(config,configBuilder);
+        postManCreate(config, configBuilder);
     }
 
     /**
@@ -163,6 +148,26 @@ public class PostmanJsonBuilder {
         );
 
         return headerBeans;
+    }
+
+    private static void postManCreate(ApiConfig config, ProjectDocConfigBuilder configBuilder) {
+        IDocBuildTemplate docBuildTemplate = new SpringBootDocBuildTemplate();
+        List<ApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder);
+        RequestItem requestItem = new RequestItem();
+        requestItem.setInfo(new InfoBean(config.getProjectName()));
+        List<ItemBean> itemBeans = new ArrayList<>();
+        apiDocList.forEach(
+                apiDoc -> {
+                    ItemBean itemBean = buildItemBean(apiDoc);
+                    itemBeans.add(itemBean);
+                }
+        );
+        requestItem.setItem(itemBeans);
+        String filePath = config.getOutPath();
+        filePath = filePath + DocGlobalConstants.POSTMAN_JSON;
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        String data = gson.toJson(requestItem);
+        FileUtil.nioWriteFile(data, filePath);
     }
 
 }

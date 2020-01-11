@@ -1,9 +1,7 @@
 package com.power.doc.util;
 
 import com.power.common.util.FileUtil;
-import com.power.common.util.MD6Util;
 import com.power.doc.utils.MarkDownUtil;
-import org.apache.commons.codec.digest.Md5Crypt;
 import org.junit.Test;
 
 /**

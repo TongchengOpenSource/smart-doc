@@ -28,23 +28,24 @@ public class AdocDocBuilder {
      */
     public static void builderApiDoc(ApiConfig config) {
         JavaProjectBuilder javaProjectBuilder = new JavaProjectBuilder();
-        buildApiDoc(config,javaProjectBuilder);
+        buildApiDoc(config, javaProjectBuilder);
     }
 
     /**
-     * Used for plugin
-     * @param config ApiConfig
+     * Only for smart-doc-maven-plugin.
+     *
+     * @param config             ApiConfig
      * @param javaProjectBuilder ProjectDocConfigBuilder
      */
-    public static void buildApiDoc(ApiConfig config,JavaProjectBuilder javaProjectBuilder) {
+    public static void buildApiDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
         config.setAdoc(true);
         DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
         builderTemplate.checkAndInit(config);
-        ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config,javaProjectBuilder);
+        ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
         IDocBuildTemplate docBuildTemplate = new SpringBootDocBuildTemplate();
         List<ApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder);
         if (config.isAllInOne()) {
-            builderTemplate.buildAllInOne(apiDocList, config, javaProjectBuilder,ALL_IN_ONE_ADOC_TPL, INDEX_DOC);
+            builderTemplate.buildAllInOne(apiDocList, config, javaProjectBuilder, ALL_IN_ONE_ADOC_TPL, INDEX_DOC);
         } else {
             builderTemplate.buildApiDoc(apiDocList, config, API_DOC_ADOC_TPL, API_EXTENSION);
             builderTemplate.buildErrorCodeDoc(config, ERROR_CODE_LIST_ADOC_TPL, ERROR_CODE_LIST_ADOC);

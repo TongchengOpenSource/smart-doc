@@ -101,9 +101,9 @@ public class DocGlobalConstants {
 
     public static final String JSON_CONTENT_TYPE = "application/json; charset=utf-8";
 
-    public static final String POSTMAN_MODE_FORMDATA ="formdata";
+    public static final String POSTMAN_MODE_FORMDATA = "formdata";
 
-    public static final String POSTMAN_MODE_RAW ="raw";
+    public static final String POSTMAN_MODE_RAW = "raw";
 
     public static final String SHORT_MULTIPART_FILE_FULLY = "MultipartFile";
 

@@ -32,7 +32,7 @@ public class ApiRequestExample {
 
     private boolean json;
 
-    public static ApiRequestExample builder(){
+    public static ApiRequestExample builder() {
         return new ApiRequestExample();
     }
 
