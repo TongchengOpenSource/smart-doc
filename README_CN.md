@@ -164,7 +164,7 @@ Smart-doc is under the Apache 2.0 license.  See the [LICENSE](https://gitee.com
 ## Who is using
 > 排名不分先后，更多接入公司，欢迎在[https://gitee.com/sunyurepository/smart-doc/issues/I1594T](https://gitee.com/sunyurepository/smart-doc/issues/I1594T)登记（仅供开源用户参考）
 
-<img src="https://raw.githubusercontent.com/shalousun/smart-doc/dev/images/known-users/iflytek.png" title="科大讯飞" width="272px" height="83px"/>
+![iFLYTEK](https://raw.githubusercontent.com/shalousun/smart-doc/dev/images/known-users/iflytek.png)
 &nbsp;&nbsp;<img src="https://raw.githubusercontent.com/shalousun/smart-doc/dev/images/known-users/oneplus.png" title="一加" width="83px" height="83px"/>
 &nbsp;&nbsp;<img src="https://raw.githubusercontent.com/shalousun/smart-doc/dev/images/known-users/xiaomi.png" title="小米" width="170px" height="83px"/>
 <img src="https://raw.githubusercontent.com/shalousun/smart-doc/dev/images/known-users/yuanmengjiankang.png" title="远盟健康" width="260px" height="83px"/>
