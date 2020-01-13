@@ -1,9 +1,30 @@
+/*
+ * smart-doc https://github.com/shalousun/smart-doc
+ *
+ * Copyright (C) 2019-2020 smart-doc
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package com.power.doc.builder;
 
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import com.power.common.util.FileUtil;
 import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.model.ApiConfig;
@@ -15,14 +36,11 @@ import com.power.doc.model.postman.ItemBean;
 import com.power.doc.model.postman.RequestItem;
 import com.power.doc.model.postman.request.RequestBean;
 import com.power.doc.model.postman.request.body.BodyBean;
-import com.power.doc.model.FormData;
 import com.power.doc.model.postman.request.header.HeaderBean;
 import com.power.doc.template.IDocBuildTemplate;
 import com.power.doc.template.SpringBootDocBuildTemplate;
 import com.thoughtworks.qdox.JavaProjectBuilder;
-import org.apache.commons.lang3.StringUtils;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,33 +50,32 @@ import java.util.List;
  */
 public class PostmanJsonBuilder {
 
+
     /**
      * 构建postman json
      *
      * @param config 配置文件
      */
-    public static void buildPostmanApi(ApiConfig config) {
+    public static void buildPostmanCollection(ApiConfig config) {
         DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
         builderTemplate.checkAndInit(config);
         JavaProjectBuilder javaProjectBuilder = new JavaProjectBuilder();
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
-        IDocBuildTemplate docBuildTemplate = new SpringBootDocBuildTemplate();
-        List<ApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder);
-        RequestItem requestItem = new RequestItem();
-        requestItem.setInfo(new InfoBean(config.getProjectName()));
-        List<ItemBean> itemBeans = new ArrayList<>();
-        apiDocList.forEach(
-                apiDoc -> {
-                    ItemBean itemBean = buildItemBean(apiDoc);
-                    itemBeans.add(itemBean);
-                }
-        );
-        requestItem.setItem(itemBeans);
-        String filePath = config.getOutPath();
-        filePath = filePath + DocGlobalConstants.POSTMAN_JSON;
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        String data = gson.toJson(requestItem);
-        FileUtil.nioWriteFile(data, filePath);
+        postManCreate(config, configBuilder);
+
+    }
+
+    /**
+     * Only for smart-doc-maven-plugin.
+     *
+     * @param config         ApiConfig Object
+     * @param projectBuilder QDOX avaProjectBuilder
+     */
+    public static void buildPostmanCollection(ApiConfig config, JavaProjectBuilder projectBuilder) {
+        DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
+        builderTemplate.checkAndInit(config);
+        ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, projectBuilder);
+        postManCreate(config, configBuilder);
     }
 
     /**
@@ -153,6 +170,26 @@ public class PostmanJsonBuilder {
         );
 
         return headerBeans;
+    }
+
+    private static void postManCreate(ApiConfig config, ProjectDocConfigBuilder configBuilder) {
+        IDocBuildTemplate docBuildTemplate = new SpringBootDocBuildTemplate();
+        List<ApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder);
+        RequestItem requestItem = new RequestItem();
+        requestItem.setInfo(new InfoBean(config.getProjectName()));
+        List<ItemBean> itemBeans = new ArrayList<>();
+        apiDocList.forEach(
+                apiDoc -> {
+                    ItemBean itemBean = buildItemBean(apiDoc);
+                    itemBeans.add(itemBean);
+                }
+        );
+        requestItem.setItem(itemBeans);
+        String filePath = config.getOutPath();
+        filePath = filePath + DocGlobalConstants.POSTMAN_JSON;
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        String data = gson.toJson(requestItem);
+        FileUtil.nioWriteFile(data, filePath);
     }
 
 }
