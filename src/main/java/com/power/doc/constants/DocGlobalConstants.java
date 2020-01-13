@@ -11,7 +11,9 @@ public class DocGlobalConstants {
 
     public static final String ADOC_OUT_PATH = "src/docs/asciidoc";
 
-    public static final String PROJECT_CODE_PATH = "src/main/java";
+    public static final String PROJECT_CODE_PATH = "src" + FILE_SEPARATOR + "main" + FILE_SEPARATOR + "java";
+
+    public static final String ABSOLUTE_CODE_PATH = System.getProperty("user.dir") + FILE_SEPARATOR + PROJECT_CODE_PATH;
 
     public static final String DOC_LANGUAGE = "smart-doc_language";
 
