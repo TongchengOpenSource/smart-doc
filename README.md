@@ -61,7 +61,7 @@ public class ApiDocTest {
         config.setOutPath("d:\\md");
         
         //Generating Markdown documentation
-        ApiDocBuilder.builderControllersApi(config);
+        ApiDocBuilder.builderApiDoc(config);
     }
 }
 ```
@@ -126,7 +126,7 @@ public class ApiDocTest {
             ApiDataDictionary.dict().setTitle("Order status1").setEnumClass(OrderEnum.class).setCodeField("code").setDescField("desc")
         );
         //Generating Markdown documentation
-        ApiDocBuilder.builderControllersApi(config);
+        ApiDocBuilder.builderApiDoc(config);
     }
 }
 ```
@@ -139,7 +139,7 @@ public class ApiDocTest {
 ![response-fields](https://images.gitee.com/uploads/images/2019/1231/223817_32bea6dc_144669.png "response.png")
 ## Use Maven Plugin
 Smart-doc provides a maven plugin to quickly integrate into the project to generate documentation.
- You can use the plugin instead of the unit test above. [smart-doc-maven-plugin](https://github.com/shalousun/smart-doc-maven-plugin)
+ It is recommended that you use plugins instead of the unit tests above. [smart-doc-maven-plugin](https://github.com/shalousun/smart-doc-maven-plugin)
 ## Building
 you can build with the following commands. (Java 1.8 is required to build the master branch)
 ```
