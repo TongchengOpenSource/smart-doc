@@ -67,7 +67,10 @@ public class SpringMVCRequestMappingHandler {
             if (SpringMvcAnnotations.REQUEST_MAPPING.equals(annotationName) || DocGlobalConstants.REQUEST_MAPPING_FULLY.equals(annotationName)) {
                 shortUrl = DocUtil.handleMappingValue(annotation);
                 Object nameParam = annotation.getNamedParameter("method");
-                if ( null == nameParam ) {
+                if (null != nameParam) {
+                    methodType = nameParam.toString();
+                    methodType = DocUtil.handleHttpMethod(methodType);
+                } else {
                     methodType = Methods.GET.getValue();
                 }
                 methodCounter++;

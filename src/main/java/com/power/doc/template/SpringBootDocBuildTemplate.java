@@ -322,59 +322,44 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
         String body;
         String exampleBody;
         String url;
-        if (Methods.POST.getValue().equals( methodType ) || Methods.PUT.getValue().equals( methodType )) {
+        if (Methods.POST.getValue()
+                .equals( methodType ) || Methods.PUT.getValue()
+                .equals( methodType )) {
             //for post put
-            path = DocUtil.formatAndRemove(path, pathParamsMap);
-            body = UrlUtil.urlJoin(DocGlobalConstants.ENMPTY, DocUtil.formDataToMap(formDataList)).replace("?", DocGlobalConstants.ENMPTY);
-            body = StringUtil.removeQuotes(body);
+            path = DocUtil.formatAndRemove( path, pathParamsMap );
+            body = UrlUtil.urlJoin( DocGlobalConstants.ENMPTY, DocUtil.formDataToMap( formDataList ) )
+                    .replace( "?", DocGlobalConstants.ENMPTY );
+            body = StringUtil.removeQuotes( body );
             url = apiMethodDoc.getServerUrl() + "/" + path;
-            url = UrlUtil.simplifyUrl(url);
+            url = UrlUtil.simplifyUrl( url );
             if (requestExample.isJson()) {
-                if (StringUtil.isNotEmpty(requestExample.getJsonBody())) {
-                    if(Methods.POST.getValue().equals( methodType )){
-                        exampleBody =
-                                DocGlobalConstants.CURL_POST_JSON + url + " --data '" + requestExample.getJsonBody() + "'";
-                    }else{
-                        exampleBody =
-                                DocGlobalConstants.CURL_PUT_JSON + url + " --data '" + requestExample.getJsonBody() + "'";
-                    }
+                if (StringUtil.isNotEmpty( requestExample.getJsonBody() )) {
+                    exampleBody = String.format( DocGlobalConstants.CURL_POST_PUT_JSON, methodType, url,
+                            requestExample.getJsonBody() );
                 } else {
-                    if(Methods.POST.getValue().equals( methodType )){
-                        exampleBody = DocGlobalConstants.CURL_POST + url;
-                    }else{
-                        exampleBody = DocGlobalConstants.CURL_PUT + url;
-                    }
+                    exampleBody = String.format( DocGlobalConstants.CURL_REQUEST_TYPE, methodType, url );
                 }
             } else {
-                if (StringUtil.isNotEmpty(body)) {
-                    if(Methods.POST.getValue().equals( methodType )){
-                        exampleBody = DocGlobalConstants.CURL_POST + url + " --data '" + body + "'";
-                    }else{
-                        exampleBody = DocGlobalConstants.CURL_PUT + url + " --data '" + body + "'";
-                    }
+                if (StringUtil.isNotEmpty( body )) {
+                    exampleBody = String.format( DocGlobalConstants.CURL_REQUEST_TYPE_DATA, methodType, url,
+                            body );
                 } else {
-                    if(Methods.POST.getValue().equals( methodType )){
-                        exampleBody = DocGlobalConstants.CURL_POST + url;
-                    }else{
-                        exampleBody = DocGlobalConstants.CURL_PUT + url;
-                    }
+                    exampleBody = String.format( DocGlobalConstants.CURL_REQUEST_TYPE, methodType, url );
                 }
             }
-            requestExample.setExampleBody(exampleBody).setUrl(url);
+            requestExample.setExampleBody( exampleBody ).setUrl( url );
         } else {
             // for get delete
-            pathParamsMap.putAll(DocUtil.formDataToMap(formDataList));
-            path = DocUtil.formatAndRemove(path, pathParamsMap);
-            url = UrlUtil.urlJoin(path, pathParamsMap);
-            url = StringUtil.removeQuotes(url);
+            pathParamsMap.putAll( DocUtil.formDataToMap( formDataList ) );
+            path = DocUtil.formatAndRemove( path, pathParamsMap );
+            url = UrlUtil.urlJoin( path, pathParamsMap );
+            url = StringUtil.removeQuotes( url );
             url = apiMethodDoc.getServerUrl() + "/" + url;
-            url = UrlUtil.simplifyUrl(url);
-            if(Methods.GET.getValue().equals( methodType )){
-                exampleBody = DocGlobalConstants.CURL_GET  + url ;
-            }else{
-                exampleBody = DocGlobalConstants.CURL_DELETE  + url ;
-            }
-            requestExample.setExampleBody(exampleBody).setJsonBody("").setUrl(url);
+            url = UrlUtil.simplifyUrl( url );
+            exampleBody = String.format( DocGlobalConstants.CURL_REQUEST_TYPE, methodType, url );
+            requestExample.setExampleBody( exampleBody )
+                    .setJsonBody( "" )
+                    .setUrl( url );
         }
         return requestExample;
     }
