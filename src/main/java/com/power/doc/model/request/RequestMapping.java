@@ -37,7 +37,6 @@ public class RequestMapping {
     private String shortUrl;
     private String methodType;
     private String mediaType;
-    private boolean postMethod;
 
     public static RequestMapping builder() {
         return new RequestMapping();
@@ -76,15 +75,6 @@ public class RequestMapping {
 
     public RequestMapping setMediaType(String mediaType) {
         this.mediaType = mediaType;
-        return this;
-    }
-
-    public boolean isPostMethod() {
-        return postMethod;
-    }
-
-    public RequestMapping setPostMethod(boolean postMethod) {
-        this.postMethod = postMethod;
         return this;
     }
 }

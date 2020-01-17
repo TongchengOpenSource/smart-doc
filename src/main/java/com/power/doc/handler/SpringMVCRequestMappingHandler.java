@@ -53,11 +53,10 @@ public class SpringMVCRequestMappingHandler {
      */
     public RequestMapping handle(String serverUrl, String controllerBaseUrl, JavaMethod method) {
         List<JavaAnnotation> annotations = method.getAnnotations();
-        String url = null;
+        String url;
         String methodType = null;
         String shortUrl = null;
         String mediaType = null;
-        boolean isPostMethod = false;
         int methodCounter = 0;
         for (JavaAnnotation annotation : annotations) {
             String annotationName = annotation.getType().getName();
@@ -68,13 +67,7 @@ public class SpringMVCRequestMappingHandler {
             if (SpringMvcAnnotations.REQUEST_MAPPING.equals(annotationName) || DocGlobalConstants.REQUEST_MAPPING_FULLY.equals(annotationName)) {
                 shortUrl = DocUtil.handleMappingValue(annotation);
                 Object nameParam = annotation.getNamedParameter("method");
-                if (null != nameParam) {
-                    methodType = nameParam.toString();
-                    methodType = DocUtil.handleHttpMethod(methodType);
-                    if ("POST".equals(methodType) || "PUT".equals(methodType)) {
-                        isPostMethod = true;
-                    }
-                } else {
+                if ( null == nameParam ) {
                     methodType = Methods.GET.getValue();
                 }
                 methodCounter++;
@@ -86,7 +79,6 @@ public class SpringMVCRequestMappingHandler {
                 shortUrl = DocUtil.handleMappingValue(annotation);
                 methodType = Methods.POST.getValue();
                 methodCounter++;
-                isPostMethod = true;
             } else if (SpringMvcAnnotations.PUT_MAPPING.equals(annotationName) || DocGlobalConstants.PUT_MAPPING_FULLY.equals(annotationName)) {
                 shortUrl = DocUtil.handleMappingValue(annotation);
                 methodType = Methods.PUT.getValue();
@@ -111,8 +103,7 @@ public class SpringMVCRequestMappingHandler {
                 shortUrl = UrlUtil.simplifyUrl("/" + controllerBaseUrl + "/" + shortUrl);
             }
             RequestMapping requestMapping = RequestMapping.builder().
-                    setMediaType(mediaType).setMethodType(methodType).setUrl(url).setShortUrl(shortUrl)
-                    .setPostMethod(isPostMethod);
+                    setMediaType(mediaType).setMethodType(methodType).setUrl(url).setShortUrl(shortUrl);
             return requestMapping;
         }
         return null;

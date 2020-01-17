@@ -113,9 +113,13 @@ public class DocGlobalConstants {
 
     public static final String SHORT_REQUEST_BODY = "RequestBody";
 
+    public static final String CURL_GET = "curl -X GET -i ";
     public static final String CURL_POST = "curl -X POST -i ";
+    public static final String CURL_PUT = "curl -X PUT -i ";
+    public static final String CURL_DELETE = "curl -X DELETE -i ";
 
     public static final String CURL_POST_JSON = "curl -X POST -H 'Content-Type: application/json; charset=utf-8' -i ";
+    public static final String CURL_PUT_JSON = "curl -X PUT -H 'Content-Type: application/json; charset=utf-8' -i ";
 
     public static final String ENMPTY = "";
 }
