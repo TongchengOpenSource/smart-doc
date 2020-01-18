@@ -62,7 +62,7 @@
     display: inline
 }
 
-.book-summary ul.summary li a, .book-summary ul.summary li span {
+.book-summary ul.summary li a, .book-summary {
     display: block;
     padding: 10px 15px;
     border-bottom: 0;
@@ -225,4 +225,8 @@ body {
 
 .footer_link {
     margin-bottom: 45px
+}
+
+.line-through {
+    text-decoration: line-through;
 }
