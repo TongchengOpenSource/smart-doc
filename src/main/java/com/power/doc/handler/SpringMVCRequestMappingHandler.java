@@ -58,11 +58,15 @@ public class SpringMVCRequestMappingHandler {
         String shortUrl = null;
         String mediaType = null;
         int methodCounter = 0;
+        boolean deprecated = false;
         for (JavaAnnotation annotation : annotations) {
             String annotationName = annotation.getType().getName();
             Object produces = annotation.getNamedParameter("produces");
             if (produces != null) {
                 mediaType = produces.toString();
+            }
+            if ("Deprecated".equals(annotationName)) {
+                deprecated = true;
             }
             if (SpringMvcAnnotations.REQUEST_MAPPING.equals(annotationName) || DocGlobalConstants.REQUEST_MAPPING_FULLY.equals(annotationName)) {
                 shortUrl = DocUtil.handleMappingValue(annotation);
@@ -105,8 +109,8 @@ public class SpringMVCRequestMappingHandler {
                 url = UrlUtil.simplifyUrl(serverUrl + "/" + controllerBaseUrl + "/" + shortUrl);
                 shortUrl = UrlUtil.simplifyUrl("/" + controllerBaseUrl + "/" + shortUrl);
             }
-            RequestMapping requestMapping = RequestMapping.builder().
-                    setMediaType(mediaType).setMethodType(methodType).setUrl(url).setShortUrl(shortUrl);
+            RequestMapping requestMapping = RequestMapping.builder().setMediaType(mediaType).setMethodType(methodType)
+                    .setUrl(url).setShortUrl(shortUrl).setDeprecated(deprecated);
             return requestMapping;
         }
         return null;

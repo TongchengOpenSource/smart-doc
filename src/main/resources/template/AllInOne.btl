@@ -20,7 +20,11 @@ for(api in apiDocList){
 <%
 for(doc in api.list){
 %>
+<%if(doc.deprecated){%>
+### ~~${doc.desc}~~
+<%}else{%>
 ### ${doc.desc}
+<%}%>
 **URL:** ${doc.url}
 
 **Type:** ${doc.type}

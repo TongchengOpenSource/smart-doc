@@ -150,6 +150,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
                 apiMethodDoc.setUrl(requestMapping.getUrl());
                 apiMethodDoc.setServerUrl(projectBuilder.getServerUrl());
                 apiMethodDoc.setPath(requestMapping.getShortUrl());
+                apiMethodDoc.setDeprecated(requestMapping.isDeprecated());
                 // build request params
                 List<ApiParam> requestParams = requestParams(method, DocTags.PARAM, projectBuilder);
                 apiMethodDoc.setRequestParams(requestParams);
@@ -323,45 +324,103 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
         String exampleBody;
         String url;
         if (Methods.POST.getValue()
-                .equals( methodType ) || Methods.PUT.getValue()
-                .equals( methodType )) {
+                .equals(methodType) || Methods.PUT.getValue()
+                .equals(methodType)) {
             //for post put
-            path = DocUtil.formatAndRemove( path, pathParamsMap );
-            body = UrlUtil.urlJoin( DocGlobalConstants.ENMPTY, DocUtil.formDataToMap( formDataList ) )
-                    .replace( "?", DocGlobalConstants.ENMPTY );
-            body = StringUtil.removeQuotes( body );
+            path = DocUtil.formatAndRemove(path, pathParamsMap);
+            body = UrlUtil.urlJoin(DocGlobalConstants.ENMPTY, DocUtil.formDataToMap(formDataList))
+                    .replace("?", DocGlobalConstants.ENMPTY);
+            body = StringUtil.removeQuotes(body);
             url = apiMethodDoc.getServerUrl() + "/" + path;
-            url = UrlUtil.simplifyUrl( url );
+            url = UrlUtil.simplifyUrl(url);
             if (requestExample.isJson()) {
-                if (StringUtil.isNotEmpty( requestExample.getJsonBody() )) {
-                    exampleBody = String.format( DocGlobalConstants.CURL_POST_PUT_JSON, methodType, url,
-                            requestExample.getJsonBody() );
+                if (StringUtil.isNotEmpty(requestExample.getJsonBody())) {
+                    exampleBody = String.format(DocGlobalConstants.CURL_POST_PUT_JSON, methodType, url,
+                            requestExample.getJsonBody());
                 } else {
-                    exampleBody = String.format( DocGlobalConstants.CURL_REQUEST_TYPE, methodType, url );
+                    exampleBody = String.format(DocGlobalConstants.CURL_REQUEST_TYPE, methodType, url);
                 }
             } else {
-                if (StringUtil.isNotEmpty( body )) {
-                    exampleBody = String.format( DocGlobalConstants.CURL_REQUEST_TYPE_DATA, methodType, url,
-                            body );
+                if (StringUtil.isNotEmpty(body)) {
+                    exampleBody = String.format(DocGlobalConstants.CURL_REQUEST_TYPE_DATA, methodType, url,
+                            body);
                 } else {
-                    exampleBody = String.format( DocGlobalConstants.CURL_REQUEST_TYPE, methodType, url );
+                    exampleBody = String.format(DocGlobalConstants.CURL_REQUEST_TYPE, methodType, url);
                 }
             }
-            requestExample.setExampleBody( exampleBody ).setUrl( url );
+            requestExample.setExampleBody(exampleBody).setUrl(url);
         } else {
             // for get delete
-            pathParamsMap.putAll( DocUtil.formDataToMap( formDataList ) );
-            path = DocUtil.formatAndRemove( path, pathParamsMap );
-            url = UrlUtil.urlJoin( path, pathParamsMap );
-            url = StringUtil.removeQuotes( url );
+            pathParamsMap.putAll(DocUtil.formDataToMap(formDataList));
+            path = DocUtil.formatAndRemove(path, pathParamsMap);
+            url = UrlUtil.urlJoin(path, pathParamsMap);
+            url = StringUtil.removeQuotes(url);
             url = apiMethodDoc.getServerUrl() + "/" + url;
-            url = UrlUtil.simplifyUrl( url );
-            exampleBody = String.format( DocGlobalConstants.CURL_REQUEST_TYPE, methodType, url );
-            requestExample.setExampleBody( exampleBody )
-                    .setJsonBody( "" )
-                    .setUrl( url );
+            url = UrlUtil.simplifyUrl(url);
+            exampleBody = String.format(DocGlobalConstants.CURL_REQUEST_TYPE, methodType, url);
+            requestExample.setExampleBody(exampleBody)
+                    .setJsonBody("")
+                    .setUrl(url);
         }
         return requestExample;
+    }
+
+    //rewrite
+    private List<ApiParam> requestParams2(final JavaMethod javaMethod, final String tagName, ProjectDocConfigBuilder builder){
+        boolean isStrict = builder.getApiConfig().isStrict();
+        Map<String, CustomRespField> responseFieldMap = new HashMap<>();
+        String className = javaMethod.getDeclaringClass().getCanonicalName();
+        Map<String, String> paramTagMap = DocUtil.getParamsComments(javaMethod, tagName, className);
+        List<JavaParameter> parameterList = javaMethod.getParameters();
+        if (parameterList.size() < 1) {
+            return null;
+        }
+        List<String> validatorAnnotations = DocValidatorAnnotationEnum.listValidatorAnnotations();
+        List<ApiParam> paramList = new ArrayList<>();
+        int requestBodyCounter = 0;
+        List<ApiParam> reqBodyParamsList = new ArrayList<>();
+        out:for (JavaParameter parameter : parameterList) {
+            boolean paramAdded = false;
+            String paramName = parameter.getName();
+            String typeName = parameter.getType().getGenericCanonicalName();
+            String simpleName = parameter.getType().getValue().toLowerCase();
+            String fullTypeName = parameter.getType().getFullyQualifiedName();
+            if (JavaClassValidateUtil.isMvcIgnoreParams(typeName)) {
+                continue out;
+            }
+            if (!paramTagMap.containsKey(paramName) && JavaClassValidateUtil.isPrimitive(fullTypeName) && isStrict) {
+                throw new RuntimeException("ERROR: Unable to find javadoc @param for actual param \""
+                        + paramName + "\" in method " + javaMethod.getName() + " from " + className);
+            }
+            JavaClass javaClass = builder.getJavaProjectBuilder().getClassByName(fullTypeName);
+            String comment = this.paramCommentResolve(paramTagMap.get(paramName));
+            List<JavaAnnotation> annotations = parameter.getAnnotations();
+            String required = "true";
+            for (JavaAnnotation annotation : annotations) {
+                AnnotationValue annotationRequired = annotation.getProperty(DocAnnotationConstants.REQUIRED_PROP);
+                if (null != annotationRequired) {
+                    required = annotationRequired.toString();
+                }
+                String annotationName = JavaClassUtil.getAnnotationSimpleName(annotation.getType().getName());
+                if (SpringMvcAnnotations.REQUEST_PARAM.equals(annotationName) ||
+                        DocAnnotationConstants.SHORT_PATH_VARIABLE.equals(annotationName)) {
+                    AnnotationValue annotationValue = annotation.getProperty(DocAnnotationConstants.VALUE_PROP);
+                    if (null != annotationValue) {
+                        paramName = StringUtil.removeQuotes(annotationValue.toString());
+                    }
+                    AnnotationValue annotationOfName = annotation.getProperty(DocAnnotationConstants.NAME_PROP);
+                    if (null != annotationOfName) {
+                        paramName = StringUtil.removeQuotes(annotationOfName.toString());
+                    }
+                }
+                if(SpringMvcAnnotations.REQUEST_BODY.equals(annotationName)){
+                    requestBodyCounter++;
+                }
+            }
+
+        }
+
+        return null;
     }
 
     private List<ApiParam> requestParams(final JavaMethod javaMethod, final String tagName, ProjectDocConfigBuilder builder) {

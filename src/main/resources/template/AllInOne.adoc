@@ -23,14 +23,18 @@ for(api in apiDocList){
 <%
 for(doc in api.list){
 %>
+<%if(doc.deprecated){%>
+=== [line-through]#${doc.desc}#
+<%}else{%>
 === ${doc.desc}
+<%}%>
 *URL:* ${doc.url}
 
 *Type:* ${doc.type}
+
 <%if(isNotEmpty(doc.author)){%>
 *Author:* ${doc.author}
 <%}%>
-*Description:* ${doc.detail}
 
 *Content-Type:* ${doc.contentType}
 

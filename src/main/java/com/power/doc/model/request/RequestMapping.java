@@ -38,6 +38,11 @@ public class RequestMapping {
     private String methodType;
     private String mediaType;
 
+    /**
+     * method deprecated
+     */
+    private boolean deprecated;
+
     public static RequestMapping builder() {
         return new RequestMapping();
     }
@@ -75,6 +80,15 @@ public class RequestMapping {
 
     public RequestMapping setMediaType(String mediaType) {
         this.mediaType = mediaType;
+        return this;
+    }
+
+    public boolean isDeprecated() {
+        return deprecated;
+    }
+
+    public RequestMapping setDeprecated(boolean deprecated) {
+        this.deprecated = deprecated;
         return this;
     }
 }
