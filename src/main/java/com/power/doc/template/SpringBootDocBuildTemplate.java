@@ -91,9 +91,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
     @Override
     public boolean ignoreReturnObject(String typeName) {
         if (JavaClassValidateUtil.isMvcIgnoreParams(typeName)) {
-            if (DocGlobalConstants.MODE_AND_VIEW_FULLY.equals(typeName)) {
-                return true;
-            }
+            return DocGlobalConstants.MODE_AND_VIEW_FULLY.equals(typeName);
         }
         return false;
     }
@@ -513,7 +511,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
                     if (JavaClassValidateUtil.isPrimitive(fullTypeName)) {
                         ApiParam bodyParam = ApiParam.of()
                                 .setField(paramName).setType(DocClassUtil.processTypeNameForParams(simpleName))
-                                .setDesc(comment).setRequired(Boolean.valueOf(required));
+                                .setDesc(comment).setRequired(Boolean.parseBoolean(required));
                         reqBodyParamsList.add(bodyParam);
                     } else {
                         if (JavaClassValidateUtil.isCollection(fullTypeName) || JavaClassValidateUtil.isArray(fullTypeName)) {
@@ -525,7 +523,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
                             if (JavaClassValidateUtil.isPrimitive(gicName)) {
                                 ApiParam bodyParam = ApiParam.of()
                                         .setField(paramName).setType(DocClassUtil.processTypeNameForParams(simpleName))
-                                        .setDesc(comment).setRequired(Boolean.valueOf(required)).setVersion(DocGlobalConstants.DEFAULT_VERSION);
+                                        .setDesc(comment).setRequired(Boolean.parseBoolean(required)).setVersion(DocGlobalConstants.DEFAULT_VERSION);
                                 reqBodyParamsList.add(bodyParam);
                             } else {
                                 reqBodyParamsList.addAll(ParamsBuildHelper.buildParams(gicNameArr[0], DocGlobalConstants.ENMPTY, 0, "true", responseFieldMap, Boolean.FALSE, new HashMap<>(), builder));
@@ -534,7 +532,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
                         } else if (JavaClassValidateUtil.isMap(fullTypeName)) {
                             if (DocGlobalConstants.JAVA_MAP_FULLY.equals(typeName)) {
                                 ApiParam apiParam = ApiParam.of().setField(paramName).setType("map")
-                                        .setDesc(comment).setRequired(Boolean.valueOf(required)).setVersion(DocGlobalConstants.DEFAULT_VERSION);
+                                        .setDesc(comment).setRequired(Boolean.parseBoolean(required)).setVersion(DocGlobalConstants.DEFAULT_VERSION);
                                 paramList.add(apiParam);
                                 continue out;
                             }
@@ -562,13 +560,13 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
                         }
                         ApiParam param = ApiParam.of().setField(paramName)
                                 .setType(DocClassUtil.processTypeNameForParams(simpleName))
-                                .setDesc(comment).setRequired(Boolean.valueOf(required)).setVersion(DocGlobalConstants.DEFAULT_VERSION);
+                                .setDesc(comment).setRequired(Boolean.parseBoolean(required)).setVersion(DocGlobalConstants.DEFAULT_VERSION);
                         paramList.add(param);
                         paramAdded = true;
                     } else if (validatorAnnotations.contains(annotationName)) {
                         ApiParam param = ApiParam.of().setField(paramName)
                                 .setType(DocClassUtil.processTypeNameForParams(simpleName))
-                                .setDesc(comment).setRequired(Boolean.valueOf(required)).setVersion(DocGlobalConstants.DEFAULT_VERSION);
+                                .setDesc(comment).setRequired(Boolean.parseBoolean(required)).setVersion(DocGlobalConstants.DEFAULT_VERSION);
                         paramList.add(param);
                         paramAdded = true;
                     } else {

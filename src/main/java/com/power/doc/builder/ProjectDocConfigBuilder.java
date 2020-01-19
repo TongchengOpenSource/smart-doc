@@ -84,9 +84,6 @@ public class ProjectDocConfigBuilder {
         if (CollectionUtil.isEmpty(paths)) {
             builder.addSourceTree(new File(DocGlobalConstants.PROJECT_CODE_PATH));
         } else {
-            if (!paths.contains(DocGlobalConstants.PROJECT_CODE_PATH)) {
-                builder.addSourceTree(new File(DocGlobalConstants.PROJECT_CODE_PATH));
-            }
             for (SourceCodePath path : paths) {
                 if (null == path) {
                     continue;

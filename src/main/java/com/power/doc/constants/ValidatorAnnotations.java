@@ -25,7 +25,7 @@ package com.power.doc.constants;
 /**
  * @author yu 2019/12/22.
  */
-public class ValidatorAnnotations {
+public interface ValidatorAnnotations {
 
-    public static final String VALID = "Valid";
+    String VALID = "Valid";
 }
