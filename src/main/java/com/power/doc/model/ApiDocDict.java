@@ -22,14 +22,12 @@
  */
 package com.power.doc.model;
 
-import lombok.Data;
-
 import java.util.List;
 
 /**
  * @author yu 2019/10/31.
  */
-@Data
+
 public class ApiDocDict {
 
     /**
@@ -46,4 +44,28 @@ public class ApiDocDict {
      * data dict
      */
     private List<DataDict> dataDictList;
+
+    public int getOrder() {
+        return order;
+    }
+
+    public void setOrder(int order) {
+        this.order = order;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public List<DataDict> getDataDictList() {
+        return dataDictList;
+    }
+
+    public void setDataDictList(List<DataDict> dataDictList) {
+        this.dataDictList = dataDictList;
+    }
 }

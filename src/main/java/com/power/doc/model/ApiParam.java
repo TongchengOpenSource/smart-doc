@@ -22,16 +22,9 @@
  */
 package com.power.doc.model;
 
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.Accessors;
-
 /**
  * @author yu 2019/9/27.
  */
-@Data
-@Accessors(chain = true)
-@RequiredArgsConstructor(staticName = "of")
 public class ApiParam {
 
     /**
@@ -58,4 +51,53 @@ public class ApiParam {
      * version
      */
     private String version;
+
+    public static ApiParam of(){
+        return new ApiParam();
+    }
+
+    public String getField() {
+        return field;
+    }
+
+    public ApiParam setField(String field) {
+        this.field = field;
+        return this;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public ApiParam setType(String type) {
+        this.type = type;
+        return this;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public ApiParam setDesc(String desc) {
+        this.desc = desc;
+        return this;
+    }
+
+    public boolean isRequired() {
+        return required;
+    }
+
+    public ApiParam setRequired(boolean required) {
+        this.required = required;
+        return this;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public ApiParam setVersion(String version) {
+        this.version = version;
+        return this;
+    }
 }

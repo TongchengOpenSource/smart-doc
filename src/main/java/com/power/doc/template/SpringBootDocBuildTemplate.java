@@ -191,7 +191,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
         List<String> springMvcRequestAnnotations = SpringMvcRequestAnnotationsEnum.listSpringMvcRequestAnnotations();
         List<FormData> formDataList = new ArrayList<>();
         ApiRequestExample requestExample = ApiRequestExample.builder();
-        for (JavaParameter parameter : parameterList) {
+        out:for (JavaParameter parameter : parameterList) {
             JavaType javaType = parameter.getType();
             String typeName = javaType.getFullyQualifiedName();
             if (JavaClassValidateUtil.isMvcIgnoreParams(typeName)) {
@@ -225,7 +225,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
                     continue;
                 }
                 if (SpringMvcAnnotations.REQUEST_HERDER.equals(annotationName)) {
-                    continue;
+                    continue out;
                 }
                 AnnotationValue annotationDefaultVal = annotation.getProperty(DocAnnotationConstants.DEFAULT_VALUE_PROP);
                 if (null != annotationDefaultVal) {
@@ -340,8 +340,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
                 }
             } else {
                 if (StringUtil.isNotEmpty(body)) {
-                    exampleBody = String.format(DocGlobalConstants.CURL_REQUEST_TYPE_DATA, methodType, url,
-                            body);
+                    exampleBody = String.format(DocGlobalConstants.CURL_REQUEST_TYPE_DATA, methodType, url, body);
                 } else {
                     exampleBody = String.format(DocGlobalConstants.CURL_REQUEST_TYPE, methodType, url);
                 }
@@ -357,13 +356,12 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
             url = UrlUtil.simplifyUrl(url);
             exampleBody = String.format(DocGlobalConstants.CURL_REQUEST_TYPE, methodType, url);
             requestExample.setExampleBody(exampleBody)
-                    .setJsonBody("")
+                    .setJsonBody(DocGlobalConstants.ENMPTY)
                     .setUrl(url);
         }
         return requestExample;
     }
 
-    //rewrite
     private List<ApiParam> requestParams(final JavaMethod javaMethod, final String tagName, ProjectDocConfigBuilder builder) {
         boolean isStrict = builder.getApiConfig().isStrict();
         Map<String, CustomRespField> responseFieldMap = new HashMap<>();
@@ -401,6 +399,9 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
             String strRequired = "true";
             for (JavaAnnotation annotation : annotations) {
                 String annotationName = JavaClassUtil.getAnnotationSimpleName(annotation.getType().getName());
+                if (SpringMvcAnnotations.REQUEST_HERDER.equals(annotationName)) {
+                    continue out;
+                }
                 if (SpringMvcAnnotations.REQUEST_PARAM.equals(annotationName) ||
                         DocAnnotationConstants.SHORT_PATH_VARIABLE.equals(annotationName)) {
                     AnnotationValue annotationValue = annotation.getProperty(DocAnnotationConstants.VALUE_PROP);
@@ -431,12 +432,9 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
                 if (JavaClassValidateUtil.isArray(gicName)) {
                     gicName = gicName.substring(0, gicName.indexOf("["));
                 }
-                String typeTemp = "";
                 if (JavaClassValidateUtil.isPrimitive(gicName)) {
-                    typeTemp = " of " + DocClassUtil.processTypeNameForParams(gicName);
                     ApiParam param = ApiParam.of().setField(paramName)
-                            .setType(DocClassUtil.processTypeNameForParams(simpleName) + typeTemp)
-                            .setDesc(comment).setRequired(required).setVersion(DocGlobalConstants.DEFAULT_VERSION);
+                            .setType(DocClassUtil.processTypeNameForParams(simpleName));
                     paramList.add(param);
                 } else {
                     if (requestBodyCounter > 0) {
@@ -468,169 +466,6 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
             } else {
                 paramList.addAll(ParamsBuildHelper.buildParams(fullTypeName, DocGlobalConstants.ENMPTY, 0, "true", responseFieldMap, Boolean.FALSE, new HashMap<>(), builder));
             }
-        }
-        return paramList;
-    }
-
-    @Deprecated
-    private List<ApiParam> requestParamsOld(final JavaMethod javaMethod, final String tagName, ProjectDocConfigBuilder builder) {
-        boolean isStrict = builder.getApiConfig().isStrict();
-        Map<String, CustomRespField> responseFieldMap = new HashMap<>();
-        String className = javaMethod.getDeclaringClass().getCanonicalName();
-        Map<String, String> paramTagMap = DocUtil.getParamsComments(javaMethod, tagName, className);
-        List<JavaParameter> parameterList = javaMethod.getParameters();
-        if (parameterList.size() < 1) {
-            return null;
-        }
-        List<ApiParam> paramList = new ArrayList<>();
-        int requestBodyCounter = 0;
-        List<ApiParam> reqBodyParamsList = new ArrayList<>();
-        out:
-        for (JavaParameter parameter : parameterList) {
-            boolean paramAdded = false;
-            String paramName = parameter.getName();
-            String typeName = parameter.getType().getGenericCanonicalName();
-            String simpleName = parameter.getType().getValue().toLowerCase();
-            String fullTypeName = parameter.getType().getFullyQualifiedName();
-            if (JavaClassValidateUtil.isMvcIgnoreParams(typeName)) {
-                continue out;
-            }
-            if (!paramTagMap.containsKey(paramName) && JavaClassValidateUtil.isPrimitive(fullTypeName) && isStrict) {
-                throw new RuntimeException("ERROR: Unable to find javadoc @param for actual param \""
-                        + paramName + "\" in method " + javaMethod.getName() + " from " + className);
-            }
-            JavaClass javaClass = builder.getJavaProjectBuilder().getClassByName(fullTypeName);
-            String comment = this.paramCommentResolve(paramTagMap.get(paramName));
-            //file upload
-            if (typeName.contains(DocGlobalConstants.MULTIPART_FILE_FULLY)) {
-                ApiParam param = ApiParam.of().setField(paramName).setType("file")
-                        .setDesc(comment).setRequired(true).setVersion(DocGlobalConstants.DEFAULT_VERSION);
-                paramList.add(param);
-                continue out;
-            }
-            List<JavaAnnotation> annotations = parameter.getAnnotations();
-            if (annotations.size() == 0) {
-                //default set required is true
-                if (JavaClassValidateUtil.isCollection(fullTypeName) || JavaClassValidateUtil.isArray(fullTypeName)) {
-                    String[] gicNameArr = DocClassUtil.getSimpleGicName(typeName);
-                    String gicName = gicNameArr[0];
-                    if (JavaClassValidateUtil.isArray(gicName)) {
-                        gicName = gicName.substring(0, gicName.indexOf("["));
-                    }
-                    String typeTemp = "";
-                    if (JavaClassValidateUtil.isPrimitive(gicName)) {
-                        typeTemp = " of " + DocClassUtil.processTypeNameForParams(gicName);
-                        ApiParam param = ApiParam.of().setField(paramName)
-                                .setType(DocClassUtil.processTypeNameForParams(simpleName) + typeTemp)
-                                .setDesc(comment).setRequired(true).setVersion(DocGlobalConstants.DEFAULT_VERSION);
-                        paramList.add(param);
-                    } else {
-                        ApiParam param = ApiParam.of().setField(paramName)
-                                .setType(DocClassUtil.processTypeNameForParams(simpleName) + typeTemp)
-                                .setDesc(comment).setRequired(true).setVersion(DocGlobalConstants.DEFAULT_VERSION);
-                        paramList.add(param);
-                        paramList.addAll(ParamsBuildHelper.buildParams(gicNameArr[0], "└─", 1, "true", responseFieldMap, Boolean.FALSE, new HashMap<>(), builder));
-                    }
-                } else if (JavaClassValidateUtil.isPrimitive(simpleName)) {
-                    ApiParam param = ApiParam.of().setField(paramName)
-                            .setType(DocClassUtil.processTypeNameForParams(simpleName))
-                            .setDesc(comment).setRequired(true).setVersion(DocGlobalConstants.DEFAULT_VERSION);
-                    paramList.add(param);
-                } else if (DocGlobalConstants.JAVA_MAP_FULLY.equals(typeName)) {
-                    ApiParam param = ApiParam.of().setField(paramName)
-                            .setType("map").setDesc(comment).setRequired(true).setVersion(DocGlobalConstants.DEFAULT_VERSION);
-                    paramList.add(param);
-                } else if (javaClass.isEnum()) {
-                    ApiParam param = ApiParam.of().setField(paramName)
-                            .setType("string").setDesc(comment).setRequired(true).setVersion(DocGlobalConstants.DEFAULT_VERSION);
-                    paramList.add(param);
-                } else {
-                    paramList.addAll(ParamsBuildHelper.buildParams(fullTypeName, DocGlobalConstants.ENMPTY, 0, "true", responseFieldMap, Boolean.FALSE, new HashMap<>(), builder));
-                }
-            }
-            for (JavaAnnotation annotation : annotations) {
-                String required = "true";
-                AnnotationValue annotationRequired = annotation.getProperty(DocAnnotationConstants.REQUIRED_PROP);
-                if (null != annotationRequired) {
-                    required = annotationRequired.toString();
-                }
-                String annotationName = JavaClassUtil.getAnnotationSimpleName(annotation.getType().getName());
-                if (SpringMvcAnnotations.REQUEST_BODY.equals(annotationName) || (ValidatorAnnotations.VALID.equals(annotationName) && annotations.size() == 1)) {
-                    if (requestBodyCounter > 0) {
-                        throw new RuntimeException("You have use @RequestBody Passing multiple variables  for method "
-                                + javaMethod.getName() + " in " + className + ",@RequestBody annotation could only bind one variables.");
-                    }
-                    if (JavaClassValidateUtil.isPrimitive(fullTypeName)) {
-                        ApiParam bodyParam = ApiParam.of()
-                                .setField(paramName).setType(DocClassUtil.processTypeNameForParams(simpleName))
-                                .setDesc(comment).setRequired(Boolean.parseBoolean(required));
-                        reqBodyParamsList.add(bodyParam);
-                    } else {
-                        if (JavaClassValidateUtil.isCollection(fullTypeName) || JavaClassValidateUtil.isArray(fullTypeName)) {
-                            String[] gicNameArr = DocClassUtil.getSimpleGicName(typeName);
-                            String gicName = gicNameArr[0];
-                            if (JavaClassValidateUtil.isArray(gicName)) {
-                                gicName = gicName.substring(0, gicName.indexOf("["));
-                            }
-                            if (JavaClassValidateUtil.isPrimitive(gicName)) {
-                                ApiParam bodyParam = ApiParam.of()
-                                        .setField(paramName).setType(DocClassUtil.processTypeNameForParams(simpleName))
-                                        .setDesc(comment).setRequired(Boolean.parseBoolean(required)).setVersion(DocGlobalConstants.DEFAULT_VERSION);
-                                reqBodyParamsList.add(bodyParam);
-                            } else {
-                                reqBodyParamsList.addAll(ParamsBuildHelper.buildParams(gicNameArr[0], DocGlobalConstants.ENMPTY, 0, "true", responseFieldMap, Boolean.FALSE, new HashMap<>(), builder));
-                            }
-
-                        } else if (JavaClassValidateUtil.isMap(fullTypeName)) {
-                            if (DocGlobalConstants.JAVA_MAP_FULLY.equals(typeName)) {
-                                ApiParam apiParam = ApiParam.of().setField(paramName).setType("map")
-                                        .setDesc(comment).setRequired(Boolean.parseBoolean(required)).setVersion(DocGlobalConstants.DEFAULT_VERSION);
-                                paramList.add(apiParam);
-                                continue out;
-                            }
-                            String[] gicNameArr = DocClassUtil.getSimpleGicName(typeName);
-                            reqBodyParamsList.addAll(ParamsBuildHelper.buildParams(gicNameArr[1], DocGlobalConstants.ENMPTY, 0, "true", responseFieldMap, Boolean.FALSE, new HashMap<>(), builder));
-                        } else {
-                            reqBodyParamsList.addAll(ParamsBuildHelper.buildParams(typeName, DocGlobalConstants.ENMPTY, 0, "true", responseFieldMap, Boolean.FALSE, new HashMap<>(), builder));
-                        }
-                    }
-                    requestBodyCounter++;
-                } else {
-                    if (paramAdded) {
-                        continue;
-                    }
-                    List<String> validatorAnnotations = DocValidatorAnnotationEnum.listValidatorAnnotations();
-                    if (SpringMvcAnnotations.REQUEST_PARAM.equals(annotationName) ||
-                            DocAnnotationConstants.SHORT_PATH_VARIABLE.equals(annotationName)) {
-                        AnnotationValue annotationValue = annotation.getProperty(DocAnnotationConstants.VALUE_PROP);
-                        if (null != annotationValue) {
-                            paramName = StringUtil.removeQuotes(annotationValue.toString());
-                        }
-                        AnnotationValue annotationOfName = annotation.getProperty(DocAnnotationConstants.NAME_PROP);
-                        if (null != annotationOfName) {
-                            paramName = StringUtil.removeQuotes(annotationOfName.toString());
-                        }
-                        ApiParam param = ApiParam.of().setField(paramName)
-                                .setType(DocClassUtil.processTypeNameForParams(simpleName))
-                                .setDesc(comment).setRequired(Boolean.parseBoolean(required)).setVersion(DocGlobalConstants.DEFAULT_VERSION);
-                        paramList.add(param);
-                        paramAdded = true;
-                    } else if (validatorAnnotations.contains(annotationName)) {
-                        ApiParam param = ApiParam.of().setField(paramName)
-                                .setType(DocClassUtil.processTypeNameForParams(simpleName))
-                                .setDesc(comment).setRequired(Boolean.parseBoolean(required)).setVersion(DocGlobalConstants.DEFAULT_VERSION);
-                        paramList.add(param);
-                        paramAdded = true;
-                    } else {
-                        continue;
-                    }
-                }
-            }
-
-        }
-        if (requestBodyCounter > 0) {
-            paramList.addAll(reqBodyParamsList);
-            return paramList;
         }
         return paramList;
     }

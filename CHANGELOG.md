@@ -167,4 +167,7 @@
 	2. 增加对第三方jar中list泛型数据的解析。
 	3. 删除原来冗长的SourceBuilder代码。
 	4. 修改AdocDocBuilder、HtmlApiDocBuilder、ApiDocBuilder的方法名规范化，单元测试的升级需要做小部分变更。
+	5. 修改1.8.0重构后的请求示例将header放入普通参数的bug。
+	6. 修改参数加上@Validated注解后，文档里没有该参数信息的bug。
+	7. 新增@Deprecated标注接口的支持(使用line through完成样式标记)
 	
