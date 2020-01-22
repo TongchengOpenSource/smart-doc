@@ -134,6 +134,11 @@ public class ApiMethodDoc implements Serializable {
      */
     private List<ApiParam> responseParams;
 
+    /**
+     * method deprecated
+     */
+    private boolean deprecated;
+
 
     public String getMethodId() {
         return methodId;
@@ -277,5 +282,13 @@ public class ApiMethodDoc implements Serializable {
 
     public void setRequestExample(ApiRequestExample requestExample) {
         this.requestExample = requestExample;
+    }
+
+    public boolean isDeprecated() {
+        return deprecated;
+    }
+
+    public void setDeprecated(boolean deprecated) {
+        this.deprecated = deprecated;
     }
 }

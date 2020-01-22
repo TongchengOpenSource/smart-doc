@@ -53,17 +53,20 @@ public class SpringMVCRequestMappingHandler {
      */
     public RequestMapping handle(String serverUrl, String controllerBaseUrl, JavaMethod method) {
         List<JavaAnnotation> annotations = method.getAnnotations();
-        String url = null;
+        String url;
         String methodType = null;
         String shortUrl = null;
         String mediaType = null;
-        boolean isPostMethod = false;
         int methodCounter = 0;
+        boolean deprecated = false;
         for (JavaAnnotation annotation : annotations) {
             String annotationName = annotation.getType().getName();
             Object produces = annotation.getNamedParameter("produces");
             if (produces != null) {
                 mediaType = produces.toString();
+            }
+            if ("Deprecated".equals(annotationName)) {
+                deprecated = true;
             }
             if (SpringMvcAnnotations.REQUEST_MAPPING.equals(annotationName) || DocGlobalConstants.REQUEST_MAPPING_FULLY.equals(annotationName)) {
                 shortUrl = DocUtil.handleMappingValue(annotation);
@@ -71,9 +74,6 @@ public class SpringMVCRequestMappingHandler {
                 if (null != nameParam) {
                     methodType = nameParam.toString();
                     methodType = DocUtil.handleHttpMethod(methodType);
-                    if ("POST".equals(methodType) || "PUT".equals(methodType)) {
-                        isPostMethod = true;
-                    }
                 } else {
                     methodType = Methods.GET.getValue();
                 }
@@ -86,7 +86,6 @@ public class SpringMVCRequestMappingHandler {
                 shortUrl = DocUtil.handleMappingValue(annotation);
                 methodType = Methods.POST.getValue();
                 methodCounter++;
-                isPostMethod = true;
             } else if (SpringMvcAnnotations.PUT_MAPPING.equals(annotationName) || DocGlobalConstants.PUT_MAPPING_FULLY.equals(annotationName)) {
                 shortUrl = DocUtil.handleMappingValue(annotation);
                 methodType = Methods.PUT.getValue();
@@ -110,9 +109,8 @@ public class SpringMVCRequestMappingHandler {
                 url = UrlUtil.simplifyUrl(serverUrl + "/" + controllerBaseUrl + "/" + shortUrl);
                 shortUrl = UrlUtil.simplifyUrl("/" + controllerBaseUrl + "/" + shortUrl);
             }
-            RequestMapping requestMapping = RequestMapping.builder().
-                    setMediaType(mediaType).setMethodType(methodType).setUrl(url).setShortUrl(shortUrl)
-                    .setPostMethod(isPostMethod);
+            RequestMapping requestMapping = RequestMapping.builder().setMediaType(mediaType).setMethodType(methodType)
+                    .setUrl(url).setShortUrl(shortUrl).setDeprecated(deprecated);
             return requestMapping;
         }
         return null;

@@ -32,7 +32,7 @@
     </developers>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <flexmark.version>0.50.46</flexmark.version>
+        <flexmark.version>0.50.48</flexmark.version>
     </properties>
     <dependencies>
         <dependency>
@@ -78,10 +78,9 @@
             <version>${flexmark.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.10</version>
-            <scope>provided</scope>
+            <groupId>com.vladsch.flexmark</groupId>
+            <artifactId>flexmark-ext-gfm-strikethrough</artifactId>
+            <version>${flexmark.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>

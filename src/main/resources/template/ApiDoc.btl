@@ -3,7 +3,11 @@
 <%
 for(doc in list){
 %>
+<%if(doc.deprecated){%>
+## ~~${doc.desc}~~
+<%}else{%>
 ## ${doc.desc}
+<%}%>
 **URL:** `${doc.url}`
 
 **Type:** `${doc.type}`

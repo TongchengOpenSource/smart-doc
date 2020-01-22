@@ -37,7 +37,11 @@ public class RequestMapping {
     private String shortUrl;
     private String methodType;
     private String mediaType;
-    private boolean postMethod;
+
+    /**
+     * method deprecated
+     */
+    private boolean deprecated;
 
     public static RequestMapping builder() {
         return new RequestMapping();
@@ -79,12 +83,12 @@ public class RequestMapping {
         return this;
     }
 
-    public boolean isPostMethod() {
-        return postMethod;
+    public boolean isDeprecated() {
+        return deprecated;
     }
 
-    public RequestMapping setPostMethod(boolean postMethod) {
-        this.postMethod = postMethod;
+    public RequestMapping setDeprecated(boolean deprecated) {
+        this.deprecated = deprecated;
         return this;
     }
 }

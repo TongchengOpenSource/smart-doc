@@ -147,10 +147,8 @@ public class JsonBuildHelper {
             }
             return data.toString();
         } else if (DocGlobalConstants.JAVA_OBJECT_FULLY.equals(typeName)) {
-            if (DocGlobalConstants.JAVA_OBJECT_FULLY.equals(typeName)) {
                 data.append("{\"object\":\" any object\"},");
                 // throw new RuntimeException("Please do not return java.lang.Object directly in api interface.");
-            }
         } else {
             List<JavaField> fields = JavaClassUtil.getFields(cls, 0);
             boolean isGenerics = JavaFieldUtil.checkGenerics(fields);
@@ -311,7 +309,9 @@ public class JsonBuildHelper {
                         } else {
                             data0.append("{\"waring\":\"You may have used non-display generics.\"},");
                         }
-                        if (!isGenerics) i++;
+                        if (!isGenerics) {
+                            i++;
+                        }
                     } else if (typeName.equals(subTypeName)) {
                         data0.append("{\"$ref\":\"...\"}").append(",");
                     } else {

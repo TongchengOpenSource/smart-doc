@@ -119,12 +119,6 @@ public class DocBuilderTemplate {
     /**
      * Merge all api doc into one document
      *
-     * @param apiDocList list  data of Api doc
-     */
-
-    /**
-     * Merge all api doc into one document
-     *
      * @param apiDocList         list  data of Api doc
      * @param config             api config
      * @param javaProjectBuilder JavaProjectBuilder

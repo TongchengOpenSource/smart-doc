@@ -3,119 +3,121 @@ package com.power.doc.constants;
 /**
  * @author yu 2018/12/15.
  */
-public class DocGlobalConstants {
+public interface DocGlobalConstants {
 
-    public static final String FILE_SEPARATOR = System.getProperty("file.separator");
+    String FILE_SEPARATOR = System.getProperty("file.separator");
 
-    public static final String HTML_DOC_OUT_PATH = "src/main/resources/static/doc";
+    String HTML_DOC_OUT_PATH = "src/main/resources/static/doc";
 
-    public static final String ADOC_OUT_PATH = "src/docs/asciidoc";
+    String ADOC_OUT_PATH = "src/docs/asciidoc";
 
-    public static final String PROJECT_CODE_PATH = "src" + FILE_SEPARATOR + "main" + FILE_SEPARATOR + "java";
+    String PROJECT_CODE_PATH = "src" + FILE_SEPARATOR + "main" + FILE_SEPARATOR + "java";
 
-    public static final String ABSOLUTE_CODE_PATH = System.getProperty("user.dir") + FILE_SEPARATOR + PROJECT_CODE_PATH;
+    String ABSOLUTE_CODE_PATH = System.getProperty("user.dir") + FILE_SEPARATOR + PROJECT_CODE_PATH;
 
-    public static final String DOC_LANGUAGE = "smart-doc_language";
+    String DOC_LANGUAGE = "smart-doc_language";
 
-    public static final String API_DOC_MD_TPL = "ApiDoc.btl";
+    String API_DOC_MD_TPL = "ApiDoc.btl";
 
-    public static final String API_DOC_ADOC_TPL = "ApiDoc.adoc";
+    String API_DOC_ADOC_TPL = "ApiDoc.adoc";
 
-    public static final String ALL_IN_ONE_MD_TPL = "AllInOne.btl";
+    String ALL_IN_ONE_MD_TPL = "AllInOne.btl";
 
-    public static final String ALL_IN_ONE_ADOC_TPL = "AllInOne.adoc";
+    String ALL_IN_ONE_ADOC_TPL = "AllInOne.adoc";
 
-    public static final String ALL_IN_ONE_HTML_TPL = "AllInOne.html";
+    String ALL_IN_ONE_HTML_TPL = "AllInOne.html";
 
-    public static final String HTML_API_DOC_TPL = "HtmlApiDoc.btl";
+    String HTML_API_DOC_TPL = "HtmlApiDoc.btl";
 
-    public static final String ERROR_CODE_LIST_MD_TPL = "ErrorCodeList.btl";
+    String ERROR_CODE_LIST_MD_TPL = "ErrorCodeList.btl";
 
-    public static final String ERROR_CODE_LIST_ADOC_TPL = "ErrorCodeList.btl";
+    String ERROR_CODE_LIST_ADOC_TPL = "ErrorCodeList.btl";
 
-    public static final String ERROR_CODE_LIST_MD = "ErrorCodeList.md";
+    String ERROR_CODE_LIST_MD = "ErrorCodeList.md";
 
-    public static final String ERROR_CODE_LIST_ADOC = "ErrorCodeList.md";
+    String ERROR_CODE_LIST_ADOC = "ErrorCodeList.md";
 
-    public static final String DICT_LIST_MD_TPL = "Dictionary.btl";
+    String DICT_LIST_MD_TPL = "Dictionary.btl";
 
-    public static final String INDEX_TPL = "Index.btl";
+    String INDEX_TPL = "Index.btl";
 
-    public static final String INDEX_CSS_TPL = "index.css";
+    String INDEX_CSS_TPL = "index.css";
 
-    public static final String MARKDOWN_CSS_TPL = "markdown.css";
+    String MARKDOWN_CSS_TPL = "markdown.css";
 
-    public static final String ALL_IN_ONE_CSS = "AllInOne.css";
+    String ALL_IN_ONE_CSS = "AllInOne.css";
 
-    public static final String POSTMAN_JSON = "/postman.json";
+    String POSTMAN_JSON = "/postman.json";
 
-    public static final String CONTROLLER_FULLY = "org.springframework.stereotype.Controller";
+    String CONTROLLER_FULLY = "org.springframework.stereotype.Controller";
 
-    public static final String REST_CONTROLLER_FULLY = "org.springframework.web.bind.annotation.RestController";
+    String REST_CONTROLLER_FULLY = "org.springframework.web.bind.annotation.RestController";
 
-    public static final String GET_MAPPING_FULLY = "org.springframework.web.bind.annotation.GetMapping";
+    String GET_MAPPING_FULLY = "org.springframework.web.bind.annotation.GetMapping";
 
-    public static final String POST_MAPPING_FULLY = "org.springframework.web.bind.annotation.PostMapping";
+    String POST_MAPPING_FULLY = "org.springframework.web.bind.annotation.PostMapping";
 
-    public static final String PUT_MAPPING_FULLY = "org.springframework.web.bind.annotation.PutMapping";
+    String PUT_MAPPING_FULLY = "org.springframework.web.bind.annotation.PutMapping";
 
-    public static final String DELETE_MAPPING_FULLY = "org.springframework.web.bind.annotation.DeleteMapping";
+    String DELETE_MAPPING_FULLY = "org.springframework.web.bind.annotation.DeleteMapping";
 
-    public static final String REQUEST_MAPPING_FULLY = "org.springframework.web.bind.annotation.RequestMapping";
+    String REQUEST_MAPPING_FULLY = "org.springframework.web.bind.annotation.RequestMapping";
 
-    public static final String REQUEST_BODY_FULLY = "org.springframework.web.bind.annotation.RequestBody";
+    String REQUEST_BODY_FULLY = "org.springframework.web.bind.annotation.RequestBody";
 
-    public static final String MODE_AND_VIEW_FULLY = "org.springframework.web.servlet.ModelAndView";
+    String MODE_AND_VIEW_FULLY = "org.springframework.web.servlet.ModelAndView";
 
-    public static final String MULTIPART_FILE_FULLY = "org.springframework.web.multipart.MultipartFile";
+    String MULTIPART_FILE_FULLY = "org.springframework.web.multipart.MultipartFile";
 
-    public static final String JAVA_OBJECT_FULLY = "java.lang.Object";
+    String JAVA_OBJECT_FULLY = "java.lang.Object";
 
-    public static final String JAVA_STRING_FULLY = "java.lang.String";
+    String JAVA_STRING_FULLY = "java.lang.String";
 
-    public static final String JAVA_MAP_FULLY = "java.util.Map";
+    String JAVA_MAP_FULLY = "java.util.Map";
 
-    public static final String JAVA_LIST_FULLY = "java.util.List";
+    String JAVA_LIST_FULLY = "java.util.List";
 
-    public static final String DEFAULT_VERSION = "-";
+    String DEFAULT_VERSION = "-";
 
-    public static final String ERROR_CODE_LIST_CN_TITLE = "错误码列表";
+    String ERROR_CODE_LIST_CN_TITLE = "错误码列表";
 
-    public static final String ERROR_CODE_LIST_EN_TITLE = "Error Code List";
+    String ERROR_CODE_LIST_EN_TITLE = "Error Code List";
 
-    public static final String DICT_CN_TITLE = "数据字典";
+    String DICT_CN_TITLE = "数据字典";
 
-    public static final String DICT_EN_TITLE = "Data Dictionaries";
+    String DICT_EN_TITLE = "Data Dictionaries";
 
-    public static final String FIELD_SPACE = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+    String FIELD_SPACE = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 
-    public static final String ANY_OBJECT_MSG = "any object.";
+    String ANY_OBJECT_MSG = "any object.";
 
-    public static final String NO_COMMENTS_FOUND = "No comments found.";
+    String NO_COMMENTS_FOUND = "No comments found.";
 
-    public static final String SPRING_WEB_ANNOTATION_PACKAGE = "org.springframework.web.bind.annotation";
+    String SPRING_WEB_ANNOTATION_PACKAGE = "org.springframework.web.bind.annotation";
 
-    public static final String FILE_CONTENT_TYPE = "multipart/form-data";
+    String FILE_CONTENT_TYPE = "multipart/form-data";
 
-    public static final String MULTIPART_TYPE = "multipart/form-data";
+    String MULTIPART_TYPE = "multipart/form-data";
 
-    public static final String APPLICATION_JSON = "application/json";
+    String APPLICATION_JSON = "application/json";
 
-    public static final String JSON_CONTENT_TYPE = "application/json; charset=utf-8";
+    String JSON_CONTENT_TYPE = "application/json; charset=utf-8";
 
-    public static final String POSTMAN_MODE_FORMDATA = "formdata";
+    String POSTMAN_MODE_FORMDATA = "formdata";
 
-    public static final String POSTMAN_MODE_RAW = "raw";
+    String POSTMAN_MODE_RAW = "raw";
 
-    public static final String SHORT_MULTIPART_FILE_FULLY = "MultipartFile";
+    String SHORT_MULTIPART_FILE_FULLY = "MultipartFile";
 
-    public static final String DEFAULT_SERVER_URL = "http://{server}";
+    String DEFAULT_SERVER_URL = "http://{server}";
 
-    public static final String SHORT_REQUEST_BODY = "RequestBody";
+    String SHORT_REQUEST_BODY = "RequestBody";
 
-    public static final String CURL_POST = "curl -X POST -i ";
+    String CURL_REQUEST_TYPE = "curl -X %s -i %s";
 
-    public static final String CURL_POST_JSON = "curl -X POST -H 'Content-Type: application/json; charset=utf-8' -i ";
+    String CURL_REQUEST_TYPE_DATA = "curl -X %s -i %s  --data '%s'";
 
-    public static final String ENMPTY = "";
+    String CURL_POST_PUT_JSON = "curl -X %s -H 'Content-Type: application/json; charset=utf-8' -i %s --data '%s'";
+
+    String ENMPTY = "";
 }

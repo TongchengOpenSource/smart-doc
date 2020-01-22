@@ -28,7 +28,11 @@
                             for(doc in api.list){
                             %>
                             <li class="chapter " data-level="${api.alias}" data-path="${api.alias}.html">
-                            <a href="javascript:void(0)" onclick="go('${api.alias}', '${doc.desc}');">${api.order}.${doc.order} ${doc.desc}</a></li>
+                            <%if(doc.deprecated){%>
+                              <a href="javascript:void(0)" onclick="go('${api.alias}', '${doc.desc}');">${api.order}.${doc.order}&nbsp;<span class="line-through">${doc.desc}</span></a></li>
+                            <%}else{%>
+                              <a href="javascript:void(0)" onclick="go('${api.alias}', '${doc.desc}');">${api.order}.${doc.order}&nbsp;${doc.desc}</a></li>
+                            <%}%>
                             <%}%>
                         </ul>
                     </li>
