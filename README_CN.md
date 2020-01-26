@@ -88,6 +88,8 @@ public class ApiDocTest {
         //since 1.7.5
         //设置项目名(非必须)，如果不设置会导致在使用一些自动添加标题序号的工具显示的序号不正常
         config.setProjectName("抢购系统");
+        //since 1.7.9 新增是否显示接口作者 默认true
+        config.setShowAuthor(false);
         //设置请求头，如果没有请求头，可以不用设置
         config.setRequestHeaders(
                 ApiReqHeader.header().setName("access_token").setType("string").setDesc("Basic auth credentials"),
