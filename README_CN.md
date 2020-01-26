@@ -131,13 +131,13 @@ public class ApiDocTest {
         //@since 1.7+版本开始，smart-doc支持生成带书签的html文档，html文档可选择下面额方式
         //HtmlApiDocBuilder.builderControllersApi(config);
         //@since 1.8.1+版本开始,方法名做了调整
-        //HtmlApiDocBuilder.builderApiDoc(config);
+        //HtmlApiDocBuilder.buildApiDoc(config);
         
         //@since 1.7+版本开始，smart-doc支撑生成AsciiDoc文档，你可以把AsciiDoc转成HTML5的格式。
         //@see https://gitee.com/sunyurepository/api-doc-test
         //AdocDocBuilder.builderControllersApi(config);
         //@since 1.8.1+版本开始,方法名做了调整
-        //AdocDocBuilder.builderApiDoc(config);
+        //AdocDocBuilder.buildApiDoc(config);
         
         //@since 1.7.8,smart-doc支持导出Postman测试的json
         //PostmanJsonBuilder.buildPostmanApi(config);
