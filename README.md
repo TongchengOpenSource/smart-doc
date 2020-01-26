@@ -61,7 +61,7 @@ public class ApiDocTest {
         config.setOutPath("d:\\md");
         
         //Generating Markdown documentation
-        ApiDocBuilder.builderApiDoc(config);
+        ApiDocBuilder.buildApiDoc(config);
     }
 }
 ```
@@ -126,7 +126,7 @@ public class ApiDocTest {
             ApiDataDictionary.dict().setTitle("Order status1").setEnumClass(OrderEnum.class).setCodeField("code").setDescField("desc")
         );
         //Generating Markdown documentation
-        ApiDocBuilder.builderApiDoc(config);
+        ApiDocBuilder.buildApiDoc(config);
     }
 }
 ```
