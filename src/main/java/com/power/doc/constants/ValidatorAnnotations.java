@@ -28,4 +28,6 @@ package com.power.doc.constants;
 public interface ValidatorAnnotations {
 
     String VALID = "Valid";
+
+    String NULL = "Null";
 }

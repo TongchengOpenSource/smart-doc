@@ -22,16 +22,19 @@
  */
 package com.power.doc.utils;
 
+import com.power.common.util.CollectionUtil;
 import com.power.common.util.StringUtil;
-import com.thoughtworks.qdox.model.JavaClass;
-import com.thoughtworks.qdox.model.JavaField;
-import com.thoughtworks.qdox.model.JavaMethod;
-import com.thoughtworks.qdox.model.JavaType;
+import com.power.doc.constants.DocValidatorAnnotationEnum;
+import com.thoughtworks.qdox.model.*;
+import com.thoughtworks.qdox.model.expression.AnnotationValue;
+import com.thoughtworks.qdox.model.expression.AnnotationValueList;
+import com.thoughtworks.qdox.model.expression.TypeRef;
 import com.thoughtworks.qdox.model.impl.DefaultJavaField;
 import com.thoughtworks.qdox.model.impl.DefaultJavaParameterizedType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Handle JavaClass
@@ -169,5 +172,67 @@ public class JavaClassUtil {
             javaClassList.add(actualClass);
         });
         return javaClassList;
+    }
+
+    /**
+     * Obtain Validate Group classes
+     *
+     * @param annotations the annotations of controller method param
+     * @return the group annotation value
+     */
+    public static List<String> getParamGroupJavaClass(List<JavaAnnotation> annotations) {
+        if (CollectionUtil.isEmpty(annotations)) {
+            return new ArrayList<>(0);
+        }
+        List<String> javaClassList = new ArrayList<>();
+        List<String> validates = DocValidatorAnnotationEnum.listValidatorAnnotations();
+        for (JavaAnnotation javaAnnotation : annotations) {
+            List<AnnotationValue> annotationValueList = getAnnotationValues(validates,javaAnnotation);
+            addGroupClass(annotationValueList, javaClassList);
+        }
+        return javaClassList;
+    }
+
+    /**
+     * Obtain Validate Group classes
+     * @param javaAnnotation the annotation of controller method param
+     * @return the group annotation value
+     */
+    public static List<String> getParamGroupJavaClass(JavaAnnotation javaAnnotation) {
+        if (Objects.isNull(javaAnnotation)) {
+            return new ArrayList<>(0);
+        }
+        List<String> javaClassList = new ArrayList<>();
+        List<String> validates = DocValidatorAnnotationEnum.listValidatorAnnotations();
+        List<AnnotationValue> annotationValueList = getAnnotationValues(validates,javaAnnotation);
+        addGroupClass(annotationValueList, javaClassList);
+        return javaClassList;
+    }
+
+
+    private static void addGroupClass(List<AnnotationValue> annotationValueList, List<String> javaClassList) {
+        if (CollectionUtil.isEmpty(annotationValueList)) {
+            return;
+        }
+        for (int i = 0; i < annotationValueList.size(); i++) {
+            TypeRef annotationValue = (TypeRef) annotationValueList.get(i);
+            DefaultJavaParameterizedType annotationValueType = (DefaultJavaParameterizedType) annotationValue.getType();
+            javaClassList.add(annotationValueType.getGenericCanonicalName());
+        }
+    }
+
+    private static List<AnnotationValue> getAnnotationValues(List<String> validates,JavaAnnotation javaAnnotation){
+        List<AnnotationValue> annotationValueList = null;
+        String simpleName = javaAnnotation.getType().getSimpleName();
+        if (simpleName.equalsIgnoreCase("Validated")) {
+            if (Objects.nonNull(javaAnnotation.getProperty("value"))) {
+                annotationValueList = ((AnnotationValueList) javaAnnotation.getProperty("value")).getValueList();
+            }
+        } else if (validates.contains(simpleName)) {
+            if (Objects.nonNull(javaAnnotation.getProperty("groups"))) {
+                annotationValueList = ((AnnotationValueList) javaAnnotation.getProperty("groups")).getValueList();
+            }
+        }
+        return annotationValueList;
     }
 }

@@ -175,17 +175,15 @@ public class JavaClassValidateUtil {
     public static boolean isJSR303Required(String annotationSimpleName) {
         switch (annotationSimpleName) {
             case "NotNull":
-                return true;
             case "NotEmpty":
-                return true;
             case "NotBlank":
-                return true;
             case "Required":
                 return true;
             default:
                 return false;
         }
     }
+
 
     /**
      * custom tag

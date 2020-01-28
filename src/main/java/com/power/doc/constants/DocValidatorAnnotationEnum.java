@@ -33,7 +33,6 @@ import java.util.List;
  */
 public enum DocValidatorAnnotationEnum {
 
-
     NOT_EMPTY("NotEmpty"),
 
     NOT_BLANK("NotBlank"),
@@ -68,7 +67,10 @@ public enum DocValidatorAnnotationEnum {
 
     LENGTH("Length"),
 
-    RANGE("Range");
+    RANGE("Range"),
+
+    VALIDATED("Validated")
+    ;
 
     private String value;
 
