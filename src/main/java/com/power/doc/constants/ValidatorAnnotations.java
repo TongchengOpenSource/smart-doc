@@ -30,4 +30,6 @@ public interface ValidatorAnnotations {
     String VALID = "Valid";
 
     String NULL = "Null";
+
+    String VALIDATED = "Validated";
 }

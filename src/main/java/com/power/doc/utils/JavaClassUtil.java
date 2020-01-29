@@ -24,7 +24,9 @@ package com.power.doc.utils;
 
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.StringUtil;
+import com.power.doc.constants.DocAnnotationConstants;
 import com.power.doc.constants.DocValidatorAnnotationEnum;
+import com.power.doc.constants.ValidatorAnnotations;
 import com.thoughtworks.qdox.model.*;
 import com.thoughtworks.qdox.model.expression.AnnotationValue;
 import com.thoughtworks.qdox.model.expression.AnnotationValueList;
@@ -224,13 +226,13 @@ public class JavaClassUtil {
     private static List<AnnotationValue> getAnnotationValues(List<String> validates,JavaAnnotation javaAnnotation){
         List<AnnotationValue> annotationValueList = null;
         String simpleName = javaAnnotation.getType().getSimpleName();
-        if (simpleName.equalsIgnoreCase("Validated")) {
-            if (Objects.nonNull(javaAnnotation.getProperty("value"))) {
-                annotationValueList = ((AnnotationValueList) javaAnnotation.getProperty("value")).getValueList();
+        if (simpleName.equalsIgnoreCase(ValidatorAnnotations.VALIDATED)) {
+            if (Objects.nonNull(javaAnnotation.getProperty(DocAnnotationConstants.VALUE_PROP))) {
+                annotationValueList = ((AnnotationValueList) javaAnnotation.getProperty(DocAnnotationConstants.VALUE_PROP)).getValueList();
             }
         } else if (validates.contains(simpleName)) {
-            if (Objects.nonNull(javaAnnotation.getProperty("groups"))) {
-                annotationValueList = ((AnnotationValueList) javaAnnotation.getProperty("groups")).getValueList();
+            if (Objects.nonNull(javaAnnotation.getProperty(DocAnnotationConstants.GROUP_PROP))) {
+                annotationValueList = ((AnnotationValueList) javaAnnotation.getProperty(DocAnnotationConstants.GROUP_PROP)).getValueList();
             }
         }
         return annotationValueList;

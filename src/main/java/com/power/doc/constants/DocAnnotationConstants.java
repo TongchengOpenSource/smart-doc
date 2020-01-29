@@ -29,6 +29,8 @@ public interface DocAnnotationConstants {
 
     String VALUE_PROP = "value";
 
+    String GROUP_PROP = "groups";
+
     String DEFAULT_VALUE_PROP = "defaultValue";
 
     String REQUEST_MAPPING = "RequestMapping";
