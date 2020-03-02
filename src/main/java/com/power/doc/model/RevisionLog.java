@@ -22,14 +22,18 @@
  */
 package com.power.doc.model;
 
+import java.io.Serializable;
+
 /**
  * 接口文档修订日志
  *
  * @author yolanda0608 2018/12/15
  */
-public class RevisionLog {
+public class RevisionLog implements Serializable {
 
-    /**
+	private static final long serialVersionUID = 5037752171214837313L;
+
+	/**
      * version
      */
     private String version;

@@ -22,6 +22,7 @@
  */
 package com.power.doc.model;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
@@ -30,9 +31,11 @@ import java.util.Objects;
  *
  * @author yu 2018/06/18.
  */
-public class ApiReqHeader {
+public class ApiReqHeader implements Serializable {
 
-    /**
+	private static final long serialVersionUID = -7016715633109115442L;
+
+	/**
      * Request header name
      */
     private String name;

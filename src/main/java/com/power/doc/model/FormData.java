@@ -22,11 +22,16 @@
  */
 package com.power.doc.model;
 
+import java.io.Serializable;
+
 /**
  * @author xingzi  2019/12/21  20:20
  */
-public class FormData {
-    private String key;
+public class FormData implements Serializable {
+
+	private static final long serialVersionUID = 989019144833315394L;
+	
+	private String key;
     private String type;
     private String desc;
     private String src;

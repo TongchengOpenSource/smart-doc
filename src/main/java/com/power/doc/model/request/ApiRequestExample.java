@@ -24,15 +24,18 @@ package com.power.doc.model.request;
 
 import com.power.doc.model.FormData;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * @author yu 2019/12/22.
  */
 
-public class ApiRequestExample {
+public class ApiRequestExample implements Serializable {
 
-    /**
+	private static final long serialVersionUID = 383591096320338911L;
+
+	/**
      * json body
      */
     private String jsonBody;

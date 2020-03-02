@@ -22,6 +22,8 @@
  */
 package com.power.doc.model;
 
+import java.io.Serializable;
+
 import com.power.common.model.EnumDictionary;
 
 /**
@@ -30,5 +32,6 @@ import com.power.common.model.EnumDictionary;
  *
  * @author yu 2018/06/25.
  */
-public class ApiErrorCode extends EnumDictionary {
+public class ApiErrorCode extends EnumDictionary implements Serializable {
+	private static final long serialVersionUID = -2108166514027515904L;
 }

@@ -22,15 +22,18 @@
  */
 package com.power.doc.model;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * @author yu 2019/12/7.
  * @since 1.7.9
  */
-public class ApiAllData {
+public class ApiAllData implements Serializable {
 
-    /**
+	private static final long serialVersionUID = 602546687902889168L;
+
+	/**
      * project name
      */
     private String projectName;

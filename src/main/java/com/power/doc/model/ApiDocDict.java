@@ -22,15 +22,18 @@
  */
 package com.power.doc.model;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * @author yu 2019/10/31.
  */
 
-public class ApiDocDict {
+public class ApiDocDict implements Serializable {
 
-    /**
+	private static final long serialVersionUID = 5718335408953507971L;
+
+	/**
      * order
      */
     private int order;

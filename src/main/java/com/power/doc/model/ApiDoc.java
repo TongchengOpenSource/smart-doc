@@ -22,11 +22,14 @@
  */
 package com.power.doc.model;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class ApiDoc {
+public class ApiDoc implements Serializable {
 
-    /**
+	private static final long serialVersionUID = -8167906915692352771L;
+
+	/**
      * Order of controller
      *
      * @since 1.7+

@@ -22,12 +22,16 @@
  */
 package com.power.doc.model;
 
+import java.io.Serializable;
+
 /**
  * @author yu 2019/9/27.
  */
-public class ApiParam {
+public class ApiParam implements Serializable {
 
-    /**
+	private static final long serialVersionUID = 4788813778215143210L;
+
+	/**
      * field
      */
     private String field;
