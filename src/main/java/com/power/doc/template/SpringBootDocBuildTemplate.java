@@ -435,7 +435,8 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
                 }
                 if (JavaClassValidateUtil.isPrimitive(gicName)) {
                     ApiParam param = ApiParam.of().setField(paramName)
-                            .setType(DocClassUtil.processTypeNameForParams(simpleName));
+                            .setType(DocClassUtil.processTypeNameForParams(simpleName))
+                            .setDesc(comment).setRequired(required).setVersion(DocGlobalConstants.DEFAULT_VERSION);
                     paramList.add(param);
                 } else {
                     if (requestBodyCounter > 0) {

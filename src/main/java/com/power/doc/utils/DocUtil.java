@@ -412,9 +412,14 @@ public class DocUtil {
     }
 
     public static Map<String, String> formDataToMap(List<FormData> formDataList) {
-        Map<String, String> formDataMap = new LinkedHashMap<>();
+        Map<String, String> formDataMap = new IdentityHashMap<>();
         for (FormData formData : formDataList) {
             if ("file".equals(formData.getType())) {
+                continue;
+            }
+            if(formData.getKey().contains("[]")){
+                String key = formData.getKey().substring(0,formData.getKey().indexOf("["));
+                formDataMap.put(key,formData.getValue()+"&"+key+"="+formData.getValue());
                 continue;
             }
             formDataMap.put(formData.getKey(), formData.getValue());
