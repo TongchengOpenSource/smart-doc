@@ -197,7 +197,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
             if (JavaClassValidateUtil.isMvcIgnoreParams(typeName)) {
                 continue;
             }
-            String simpleTypeName = javaType.getValue();
+            String simpleTypeName = javaType.getValue().toLowerCase();
             String gicTypeName = javaType.getGenericCanonicalName();
             JavaClass javaClass = configBuilder.getJavaProjectBuilder().getClassByName(typeName);
             String[] globGicName = DocClassUtil.getSimpleGicName(gicTypeName);
@@ -205,7 +205,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
 
             String comment = this.paramCommentResolve(paramsComments.get(paramName));
             String mockValue = "";
-            if (JavaClassValidateUtil.isPrimitive(simpleTypeName)) {
+            if (JavaClassValidateUtil.isPrimitive(typeName)) {
                 mockValue = paramsComments.get(paramName);
                 if (Objects.nonNull(mockValue) && mockValue.contains("|")) {
                     mockValue = mockValue.substring(mockValue.lastIndexOf("|") + 1, mockValue.length());
@@ -434,9 +434,10 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
                     gicName = gicName.substring(0, gicName.indexOf("["));
                 }
                 if (JavaClassValidateUtil.isPrimitive(gicName)) {
-                    ApiParam param = ApiParam.of().setField(paramName)
-                            .setType(DocClassUtil.processTypeNameForParams(simpleName))
-                            .setDesc(comment).setRequired(required).setVersion(DocGlobalConstants.DEFAULT_VERSION);
+                    String shortSimple = DocClassUtil.processTypeNameForParams(gicName);
+                    ApiParam param = ApiParam.of().setField(paramName).setDesc(comment+",[array of "+shortSimple+"]" )
+                            .setRequired(required)
+                            .setType("array");
                     paramList.add(param);
                 } else {
                     if (requestBodyCounter > 0) {
@@ -447,7 +448,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
                                 + javaMethod.getName() + "Check it in " + javaMethod.getDeclaringClass().getCanonicalName());
                     }
                 }
-            } else if (JavaClassValidateUtil.isPrimitive(simpleName)) {
+            } else if (JavaClassValidateUtil.isPrimitive(fullTypeName)) {
                 ApiParam param = ApiParam.of().setField(paramName)
                         .setType(DocClassUtil.processTypeNameForParams(simpleName))
                         .setDesc(comment).setRequired(required).setVersion(DocGlobalConstants.DEFAULT_VERSION);
