@@ -182,6 +182,9 @@
 	7. 新增@Deprecated标注接口的支持(使用line through完成样式标记)
 
 #### 版本号：1.8.2
-- 更新日期: 2020-03-x
+- 更新日期: 2020-03-13
 - 更新内容：
-	1. 修改gitee I19IYW 。
+	1. 修改gitee #I19IYW 。
+	2. 修改文档模板中的title设置错误。
+	3. 修改gitee #I191EO
+	4. 支持@Validated 分组
