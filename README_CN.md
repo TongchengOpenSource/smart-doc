@@ -24,140 +24,135 @@ smart-doc使用和测试可参考[smart-doc demo](https://gitee.com/sunyureposit
 # git clone https://gitee.com/sunyurepository/api-doc-test.git
 ```
 你可以启动这个Spring Boot的项目，然后访问`http://localhost:8080/doc/api.html`来浏览smart-doc生成的接口文档。
-### Dependency
-#### maven
+### Add Maven plugin
+Smart-doc官方目前由于人力有限仅实现了maven 插件，使用Gradle的请走单元测试方式集成Smart-doc。
+#### add plugin
 ```
-<dependency>
+<plugin>
     <groupId>com.github.shalousun</groupId>
-    <artifactId>smart-doc</artifactId>
-    <version>1.8.1</version>
-    <scope>test</scope>
-</dependency>
+    <artifactId>smart-doc-maven-plugin</artifactId>
+    <version>[最新版本]</version>
+    <configuration>
+        <!--指定生成文档的使用的配置文件,配置文件放在自己的项目中-->
+        <configFile>./src/main/resources/smart-doc.json</configFile>
+        <!--指定项目名称-->
+        <projectName>测试</projectName>
+        <!--smart-doc实现自动分析依赖树加载第三方依赖的源码，如果一些框架依赖库加载不到导致报错，这时请使用excludes排除掉-->
+        <excludes>
+            <!--格式为：groupId:artifactId;参考如下-->
+            <exclude>com.alibaba:fastjson</exclude>
+        </excludes>
+    </configuration>
+    <executions>
+        <execution>
+            <!--如果不需要在执行编译时启动smart-doc，则将phase注释掉-->
+            <phase>compile</phase>
+            <goals>
+                <goal>html</goal>
+            </goals>
+        </execution>
+    </executions>
+</plugin>
 ```
-#### gradle
-```
-testCompile 'com.github.shalousun:smart-doc:1.8.1'
-```
-### Create a unit test
-通过运行一个单元测试来让Smart-doc为你生成一个简洁明了的api文档，最简单例子如下：
+#### Add Config
+在项目中添加创建一个`smart-doc.json`配置文件，插件读取这个配置来生成项目的文档，这个配置内容实际上就是以前采用单元测试编写的`ApiConfig`转成json后的结果，因此关于配置项说明可以参考原来单元测试的配置。
 
+ **最小配置单元：** 
 ```
-@Test
-public void testBuilderControllersApi() {
-    ApiConfig config = new ApiConfig();
-    //true会严格要求代码中必须有java注释，首次体验可关闭，正式产品推荐设置true
-    config.setStrict(true);
-    //当把AllInOne设置为true时，Smart-doc将会把所有接口生成到一个Markdown、HHTML或者AsciiDoc中
-    config.setAllInOne(true);
-    //Set the api document output path.
-    config.setOutPath("d:\\md");
-    //生成Markdown文件
-    ApiDocBuilder.builderControllersApi(config);
+{
+   "outPath": "D://md2" //指定文档的输出路径
 }
 ```
-**详细用例：**
+
+ **详细配置说明** 
 ```
-public class ApiDocTest {
-
-    @Test
-    public void testBuilderControllersApi() {
-        ApiConfig config = new ApiConfig();
-        config.setServerUrl("http://localhost:8080"); //非必须像
-        //true会严格要求注释，推荐设置true
-        config.setStrict(true);
-        //true会将文档合并导出到一个markdown
-        config.setAllInOne(false);
-        //生成html时加密文档名不暴露controller的名称
-        config.setMd5EncryptedHtmlName(true);
-
-        //指定文档输出路径
-        //@since 1.7 版本开始，选择生成静态html doc文档可使用该路径：DocGlobalConstants.HTML_DOC_OUT_PATH;
-        config.setOutPath(DocGlobalConstants.HTML_DOC_OUT_PATH);
-        // @since 1.2,如果不配置该选项，则默认匹配全部的controller,
-        // 如果需要配置有多个controller可以使用逗号隔开
-        config.setPackageFilters("com.power.doc.controller");
-        //不指定SourcePaths默认加载代码为项目src/main/java下的,如果项目的某一些实体来自外部代码可以一起加载
-        config.setSourceCodePaths(
-                //自1.7.0版本开始，在此处可以不设置本地代码路径，单独添加外部代码路径即可
-//            SourceCodePath.path().setDesc("本项目代码").setPath("src/main/java"),
-            SourceCodePath.path().setDesc("加载项目外代码").setPath("E:\\ApplicationPower\\ApplicationPower\\Common-util\\src\\main\\java")
-        );
-        //since 1.7.5
-        //如果该选项的值为false,则smart-doc生成allInOne.md文件的名称会自动添加版本号
-        config.setCoverOld(true);
-        //since 1.7.5
-        //设置项目名(非必须)，如果不设置会导致在使用一些自动添加标题序号的工具显示的序号不正常
-        config.setProjectName("抢购系统");
-        //since 1.7.9 新增是否显示接口作者 默认true
-        config.setShowAuthor(false);
-        //设置请求头，如果没有请求头，可以不用设置
-        config.setRequestHeaders(
-                ApiReqHeader.header().setName("access_token").setType("string").setDesc("Basic auth credentials"),
-                ApiReqHeader.header().setName("user_uuid").setType("string").setDesc("User Uuid key")
-        );
-        //对于外部jar的类，编译后注释会被擦除，无法获取注释，但是如果量比较多请使用setSourcePaths来加载外部代码
-        //如果有这种场景，则自己添加字段和注释，api-doc后期遇到同名字段则直接给相应字段加注释
-        config.setCustomResponseFields(
-                CustomRespField.field().setName("success").setDesc("成功返回true,失败返回false"),
-                CustomRespField.field().setName("message").setDesc("接口响应信息"),
-                CustomRespField.field().setName("data").setDesc("接口响应数据"),
-                CustomRespField.field().setName("code").setValue("00000").setDesc("响应代码")
-        );
-
-        //设置项目错误码列表，设置自动生成错误列表,
-        List<ApiErrorCode> errorCodeList = new ArrayList<>();
-        for (ErrorCodeEnum codeEnum : ErrorCodeEnum.values()) {
-            ApiErrorCode errorCode = new ApiErrorCode();
-            errorCode.setValue(codeEnum.getCode()).setDesc(codeEnum.getDesc());
-            errorCodeList.add(errorCode);
-        }
-        //如果没需要可以不设置
-        config.setErrorCodes(errorCodeList);
-
-        //非必须只有当setAllInOne设置为true时文档变更记录才生效，https://gitee.com/sunyurepository/ApplicationPower/issues/IPS4O
-        config.setRevisionLogs(
-                RevisionLog.getLog().setRevisionTime("2018/12/15").setAuthor("chen").setRemarks("测试").setStatus("创建").setVersion("V1.0"),
-                RevisionLog.getLog().setRevisionTime("2018/12/16").setAuthor("chen2").setRemarks("测试2").setStatus("修改").setVersion("V2.0")
-        );
-        
-        //since 1.7.5
-        //文档添加数据字典
-        config.setDataDictionaries(
-            ApiDataDictionary.dict().setTitle("订单状态").setEnumClass(OrderEnum.class).setCodeField("code").setDescField("desc"),
-            ApiDataDictionary.dict().setTitle("订单状态1").setEnumClass(OrderEnum.class).setCodeField("code").setDescField("desc")
-        );
-
-        long start = System.currentTimeMillis();
-        ApiDocBuilder.builderControllersApi(config);
-        
-        //@since 1.7+版本开始，smart-doc支持生成带书签的html文档，html文档可选择下面额方式
-        //HtmlApiDocBuilder.builderControllersApi(config);
-        //@since 1.8.1+版本开始,方法名做了调整
-        //HtmlApiDocBuilder.buildApiDoc(config);
-        
-        //@since 1.7+版本开始，smart-doc支撑生成AsciiDoc文档，你可以把AsciiDoc转成HTML5的格式。
-        //@see https://gitee.com/sunyurepository/api-doc-test
-        //AdocDocBuilder.builderControllersApi(config);
-        //@since 1.8.1+版本开始,方法名做了调整
-        //AdocDocBuilder.buildApiDoc(config);
-        
-        //@since 1.7.8,smart-doc支持导出Postman测试的json
-        //PostmanJsonBuilder.buildPostmanApi(config);
-        //@since 1.8.1+版本开始,方法名做了调整
-        //PostmanJsonBuilder.buildPostmanCollection(config)
-        long end = System.currentTimeMillis();
-        DateTimeUtil.printRunTime(end, start);
+{
+  "serverUrl": "http://127.0.0.1", //设置服务器地址,非必须
+  "isStrict": false, //是否开启严格模式
+  "allInOne": true,  //是否将文档合并到一个文件中，一般推荐为true
+  "outPath": "D://md2", //指定文档的输出路径
+  "coverOld": true,  //是否覆盖旧的文件，主要用于mardown文件覆盖
+  "packageFilters": "",//controller包过滤，多个包用英文逗号隔开
+  "md5EncryptedHtmlName": false,//只有每个controller生成一个html文件是才使用
+  "projectName": "smart-doc",//配置自己的项目名称
+  "skipTransientField": true,//目前未实现
+  "showAuthor":true,//是否显示接口作者名称，默认是true,不想显示可关闭
+  "dataDictionaries": [ //配置数据字典，没有需求可以不设置
+    {
+      "title": "http状态码字典", //数据字典的名称
+      "enumClassName": "com.power.common.enums.HttpCodeEnum", //数据字典枚举类名称
+      "codeField": "code",//数据字典字典码对应的字段名称
+      "descField": "message"//数据字典对象的描述信息字典
     }
+  ],
+
+  "errorCodeDictionaries": [{ //错误码列表，没有需求可以不设置
+    "title": "title",
+    "enumClassName": "com.power.common.enums.HttpCodeEnum", //错误码枚举类
+    "codeField": "code",//错误码的code码字段名称
+    "descField": "message"//错误码的描述信息对应的字段名
+  }],
+
+  "revisionLogs": [ //设置文档变更记录，没有需求可以不设置
+    {
+      "version": "1.0", //文档版本号
+      "status": "update", //变更操作状态，一般为：创建、更新等
+      "author": "author", //文档变更作者
+      "remarks": "desc" //变更描述
+    }
+  ],
+  "customResponseFields": [ //自定义添加字段和注释，api-doc后期遇到同名字段则直接给相应字段加注释，非必须
+    {
+      "name": "code",//覆盖响应码字段
+      "desc": "响应代码",//覆盖响应码的字段注释
+      "value": "00000"//设置响应码的值
+    }
+  ],
+  "requestHeaders": [ //设置请求头，没有需求可以不设置
+    {
+      "name": "token",
+      "type": "string",
+      "desc": "desc",
+      "required": false,
+      "since": "-"
+    }
+  ],
+
+  "sourceCodePaths": [ //设置代码路径，smart-doc默认会自动加载src/main/java, 没有需求可以不设置
+    {
+      "path": "src/main/java",
+      "desc": "测试"
+    }
+  ]
 }
 ```
-#### smart-doc-maven-plugin
+上面的json配置实例中只有"outPath"是必填项。
+**注意：** 对于老用户完全可以通过`Fastjson`或者是`Gson`库将`ApiConfig`转化成json配置。
+#### Use Maven Command
+添加好插件和配置文件后可以直接运行maven命令生成文档。
+```
+//生成html
+mvn -Dfile.encoding=UTF-8 smart-doc:html
+//生成markdown
+mvn -Dfile.encoding=UTF-8 smart-doc:markdown
+//生成adoc
+mvn -Dfile.encoding=UTF-8 smart-doc:adoc
+//生成postman json数据
+mvn -Dfile.encoding=UTF-8 smart-doc:postman
+```
+**注意：** 尤其在window系统下，如果实际使用maven命令行执行文档生成，可能会出现乱码，因此需要在执行时指定`-Dfile.encoding=UTF-8`。
+#### Use Idea
+![idea中smart-doc-maven插件使用](https://images.gitee.com/uploads/images/2019/1215/004902_b0c153d6_144669.png "idea.png")
+
+
+### Use Junit Test 
 从smart-doc 1.7.9开始，官方提供了maven插件，使用smart-doc的maven插件后不再需要创建单元测试。
-[插件使用说明](https://gitee.com/sunyurepository/smart-doc/wikis/smart-doc%20maven插件?sort_id=1791450)
+[单元测试生成文档](https://gitee.com/sunyurepository/smart-doc/wikis/单元测试集成smart-doc?sort_id=1990284)
 
 ### Generated document example
 [点击查看文档生成文档效果图](https://gitee.com/sunyurepository/smart-doc/wikis/文档效果图?sort_id=1652819)
 ## Building
-如果你需要自己构建，那可以使用下面命令，构建需要依赖Java 1.8。
+如果你需要自己构建smart-doc，那可以使用下面命令，构建需要依赖Java 1.8。
 ```
 mvn clean install -Dmaven.test.skip=true
 ```

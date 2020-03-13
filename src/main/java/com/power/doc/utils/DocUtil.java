@@ -87,8 +87,8 @@ public class DocUtil {
         fieldValue.put("message-string", "success,fail".split(",")[RandomUtil.randomInt(0, 1)]);
         fieldValue.put("date-string", DateTimeUtil.dateToStr(new Date(), DateTimeUtil.DATE_FORMAT_DAY));
         fieldValue.put("date-date", DateTimeUtil.dateToStr(new Date(), DateTimeUtil.DATE_FORMAT_DAY));
-        fieldValue.put("begintime-date",DateTimeUtil.dateToStr(new Date(), DateTimeUtil.DATE_FORMAT_DAY));
-        fieldValue.put("endtime-date",DateTimeUtil.dateToStr(new Date(), DateTimeUtil.DATE_FORMAT_DAY));
+        fieldValue.put("begintime-date", DateTimeUtil.dateToStr(new Date(), DateTimeUtil.DATE_FORMAT_DAY));
+        fieldValue.put("endtime-date", DateTimeUtil.dateToStr(new Date(), DateTimeUtil.DATE_FORMAT_DAY));
         fieldValue.put("state-int", String.valueOf(RandomUtil.randomInt(0, 10)));
         fieldValue.put("state-integer", String.valueOf(RandomUtil.randomInt(0, 10)));
         fieldValue.put("flag-int", String.valueOf(RandomUtil.randomInt(0, 10)));
@@ -419,9 +419,9 @@ public class DocUtil {
             if ("file".equals(formData.getType())) {
                 continue;
             }
-            if(formData.getKey().contains("[]")){
-                String key = formData.getKey().substring(0,formData.getKey().indexOf("["));
-                formDataMap.put(key,formData.getValue()+"&"+key+"="+formData.getValue());
+            if (formData.getKey().contains("[]")) {
+                String key = formData.getKey().substring(0, formData.getKey().indexOf("["));
+                formDataMap.put(key, formData.getValue() + "&" + key + "=" + formData.getValue());
                 continue;
             }
             formDataMap.put(formData.getKey(), formData.getValue());
