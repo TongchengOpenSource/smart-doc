@@ -33,7 +33,6 @@ import com.power.doc.model.SourceCodePath;
 import com.power.doc.utils.JavaClassUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import com.thoughtworks.qdox.model.JavaClass;
-import com.thoughtworks.qdox.model.JavaField;
 
 import java.io.File;
 import java.util.Collection;

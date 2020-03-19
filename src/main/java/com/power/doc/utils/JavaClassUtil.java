@@ -35,7 +35,6 @@ import com.thoughtworks.qdox.model.expression.TypeRef;
 import com.thoughtworks.qdox.model.impl.DefaultJavaField;
 import com.thoughtworks.qdox.model.impl.DefaultJavaParameterizedType;
 
-import javax.print.Doc;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -82,7 +81,7 @@ public class JavaClassUtil {
             JavaClass pcls = cls1.getSuperJavaClass();
             fieldList.addAll(getFields(pcls, i));
             List<DocJavaField> docJavaFields = new ArrayList<>();
-            for(JavaField javaField:cls1.getFields()){
+            for (JavaField javaField : cls1.getFields()) {
                 docJavaFields.add(DocJavaField.builder().setComment(javaField.getComment()).setJavaField(javaField));
             }
             fieldList.addAll(docJavaFields);
@@ -197,7 +196,7 @@ public class JavaClassUtil {
         List<String> javaClassList = new ArrayList<>();
         List<String> validates = DocValidatorAnnotationEnum.listValidatorAnnotations();
         for (JavaAnnotation javaAnnotation : annotations) {
-            List<AnnotationValue> annotationValueList = getAnnotationValues(validates,javaAnnotation);
+            List<AnnotationValue> annotationValueList = getAnnotationValues(validates, javaAnnotation);
             addGroupClass(annotationValueList, javaClassList);
         }
         return javaClassList;
@@ -205,6 +204,7 @@ public class JavaClassUtil {
 
     /**
      * Obtain Validate Group classes
+     *
      * @param javaAnnotation the annotation of controller method param
      * @return the group annotation value
      */
@@ -214,7 +214,7 @@ public class JavaClassUtil {
         }
         List<String> javaClassList = new ArrayList<>();
         List<String> validates = DocValidatorAnnotationEnum.listValidatorAnnotations();
-        List<AnnotationValue> annotationValueList = getAnnotationValues(validates,javaAnnotation);
+        List<AnnotationValue> annotationValueList = getAnnotationValues(validates, javaAnnotation);
         addGroupClass(annotationValueList, javaClassList);
         return javaClassList;
     }
@@ -231,7 +231,7 @@ public class JavaClassUtil {
         }
     }
 
-    private static List<AnnotationValue> getAnnotationValues(List<String> validates,JavaAnnotation javaAnnotation){
+    private static List<AnnotationValue> getAnnotationValues(List<String> validates, JavaAnnotation javaAnnotation) {
         List<AnnotationValue> annotationValueList = null;
         String simpleName = javaAnnotation.getType().getSimpleName();
         if (simpleName.equalsIgnoreCase(ValidatorAnnotations.VALIDATED)) {
