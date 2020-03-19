@@ -27,6 +27,7 @@ import com.power.common.util.StringUtil;
 import com.power.doc.constants.DocAnnotationConstants;
 import com.power.doc.constants.DocValidatorAnnotationEnum;
 import com.power.doc.constants.ValidatorAnnotations;
+import com.power.doc.model.DocJavaField;
 import com.thoughtworks.qdox.model.*;
 import com.thoughtworks.qdox.model.expression.AnnotationValue;
 import com.thoughtworks.qdox.model.expression.AnnotationValueList;
@@ -34,6 +35,7 @@ import com.thoughtworks.qdox.model.expression.TypeRef;
 import com.thoughtworks.qdox.model.impl.DefaultJavaField;
 import com.thoughtworks.qdox.model.impl.DefaultJavaParameterizedType;
 
+import javax.print.Doc;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -52,8 +54,8 @@ public class JavaClassUtil {
      * @param i    Recursive counter
      * @return list of JavaField
      */
-    public static List<JavaField> getFields(JavaClass cls1, int i) {
-        List<JavaField> fieldList = new ArrayList<>();
+    public static List<DocJavaField> getFields(JavaClass cls1, int i) {
+        List<DocJavaField> fieldList = new ArrayList<>();
         if (null == cls1) {
             return fieldList;
         } else if ("Object".equals(cls1.getSimpleName()) || "Timestamp".equals(cls1.getSimpleName()) ||
@@ -71,13 +73,19 @@ public class JavaClassUtil {
                         continue;
                     }
                     methodName = StringUtil.firstToLowerCase(methodName.substring(3, methodName.length()));
+                    String comment = javaMethod.getComment();
                     JavaField javaField = new DefaultJavaField(javaMethod.getReturns(), methodName);
-                    fieldList.add(javaField);
+                    DocJavaField docJavaField = DocJavaField.builder().setJavaField(javaField).setComment(comment);
+                    fieldList.add(docJavaField);
                 }
             }
             JavaClass pcls = cls1.getSuperJavaClass();
             fieldList.addAll(getFields(pcls, i));
-            fieldList.addAll(cls1.getFields());
+            List<DocJavaField> docJavaFields = new ArrayList<>();
+            for(JavaField javaField:cls1.getFields()){
+                docJavaFields.add(DocJavaField.builder().setComment(javaField.getComment()).setJavaField(javaField));
+            }
+            fieldList.addAll(docJavaFields);
         }
         return fieldList;
     }

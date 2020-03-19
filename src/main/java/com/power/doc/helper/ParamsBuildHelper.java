@@ -31,6 +31,7 @@ import com.power.doc.constants.DocTags;
 import com.power.doc.constants.ValidatorAnnotations;
 import com.power.doc.model.ApiParam;
 import com.power.doc.model.CustomRespField;
+import com.power.doc.model.DocJavaField;
 import com.power.doc.utils.*;
 import com.thoughtworks.qdox.model.*;
 
@@ -62,7 +63,7 @@ public class ParamsBuildHelper {
         String simpleName = DocClassUtil.getSimpleName(className);
         String[] globGicName = DocClassUtil.getSimpleGicName(className);
         JavaClass cls = projectBuilder.getClassByName(simpleName);
-        List<JavaField> fields = JavaClassUtil.getFields(cls, 0);
+        List<DocJavaField> fields = JavaClassUtil.getFields(cls, 0);
         int n = 0;
         if (JavaClassValidateUtil.isPrimitive(simpleName)) {
             paramList.addAll(primitiveReturnRespComment(DocClassUtil.processTypeNameForParams(simpleName)));
@@ -89,7 +90,8 @@ public class ParamsBuildHelper {
         } else {
             boolean isGenerics = JavaFieldUtil.checkGenerics(fields);
             out:
-            for (JavaField field : fields) {
+            for (DocJavaField docField : fields) {
+                JavaField field = docField.getJavaField();
                 String fieldName = field.getName();
                 String subTypeName = field.getType().getFullyQualifiedName();
                 if (field.isStatic() || "this$0".equals(fieldName) ||
@@ -173,7 +175,7 @@ public class ParamsBuildHelper {
                 if (null != customResponseField && StringUtil.isNotEmpty(customResponseField.getDesc())) {
                     comment = customResponseField.getDesc();
                 } else {
-                    comment = field.getComment();
+                    comment = docField.getComment();
                 }
                 if (StringUtil.isNotEmpty(comment)) {
                     comment = DocUtil.replaceNewLineToHtmlBr(comment);

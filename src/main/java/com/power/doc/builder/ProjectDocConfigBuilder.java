@@ -28,6 +28,7 @@ import com.power.common.util.StringUtil;
 import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.model.ApiConfig;
 import com.power.doc.model.CustomRespField;
+import com.power.doc.model.DocJavaField;
 import com.power.doc.model.SourceCodePath;
 import com.power.doc.utils.JavaClassUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
@@ -115,7 +116,7 @@ public class ProjectDocConfigBuilder {
 
     public JavaClass getClassByName(String simpleName) {
         JavaClass cls = javaProjectBuilder.getClassByName(simpleName);
-        List<JavaField> fieldList = JavaClassUtil.getFields(cls, 0);
+        List<DocJavaField> fieldList = JavaClassUtil.getFields(cls, 0);
         // handle inner class
         if (Objects.isNull(cls.getFields()) || fieldList.isEmpty()) {
             cls = classFilesMap.get(simpleName);

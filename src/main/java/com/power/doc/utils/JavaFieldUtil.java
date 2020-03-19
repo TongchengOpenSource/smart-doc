@@ -22,6 +22,7 @@
  */
 package com.power.doc.utils;
 
+import com.power.doc.model.DocJavaField;
 import com.thoughtworks.qdox.model.JavaField;
 
 import java.util.List;
@@ -35,9 +36,9 @@ public class JavaFieldUtil {
      * @param fields list of fields
      * @return boolean
      */
-    public static boolean checkGenerics(List<JavaField> fields) {
-        for (JavaField field : fields) {
-            if (field.getType().getFullyQualifiedName().length() == 1) {
+    public static boolean checkGenerics(List<DocJavaField> fields) {
+        for (DocJavaField field : fields) {
+            if (field.getJavaField().getType().getFullyQualifiedName().length() == 1) {
                 return true;
             }
         }

@@ -26,6 +26,7 @@ import com.power.common.util.RandomUtil;
 import com.power.common.util.StringUtil;
 import com.power.doc.builder.ProjectDocConfigBuilder;
 import com.power.doc.constants.DocGlobalConstants;
+import com.power.doc.model.DocJavaField;
 import com.power.doc.model.FormData;
 import com.power.doc.utils.DocClassUtil;
 import com.power.doc.utils.DocUtil;
@@ -68,7 +69,7 @@ public class FormDataBuildHelper {
         String simpleName = DocClassUtil.getSimpleName(className);
         String[] globGicName = DocClassUtil.getSimpleGicName(className);
         JavaClass cls = builder.getJavaProjectBuilder().getClassByName(simpleName);
-        List<JavaField> fields = JavaClassUtil.getFields(cls, 0);
+        List<DocJavaField> fields = JavaClassUtil.getFields(cls, 0);
 
         if (JavaClassValidateUtil.isPrimitive(simpleName)) {
             FormData formData = new FormData();
@@ -87,7 +88,8 @@ public class FormDataBuildHelper {
         }
         int n = 0;
         out:
-        for (JavaField field : fields) {
+        for (DocJavaField docField : fields) {
+            JavaField field = docField.getJavaField();
             String fieldName = field.getName();
             String subTypeName = field.getType().getFullyQualifiedName();
             String fieldGicName = field.getType().getGenericCanonicalName();
@@ -100,7 +102,7 @@ public class FormDataBuildHelper {
             if (JavaClassValidateUtil.isMap(subTypeName)) {
                 continue;
             }
-            String comment = field.getComment();
+            String comment = docField.getComment();
             if (StringUtil.isNotEmpty(comment)) {
                 comment = DocUtil.replaceNewLineToHtmlBr(comment);
             }

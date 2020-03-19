@@ -30,6 +30,7 @@ import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.constants.DocTags;
 import com.power.doc.model.ApiReturn;
 import com.power.doc.model.CustomRespField;
+import com.power.doc.model.DocJavaField;
 import com.power.doc.utils.*;
 import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaClass;
@@ -150,11 +151,12 @@ public class JsonBuildHelper {
                 data.append("{\"object\":\" any object\"},");
                 // throw new RuntimeException("Please do not return java.lang.Object directly in api interface.");
         } else {
-            List<JavaField> fields = JavaClassUtil.getFields(cls, 0);
+            List<DocJavaField> fields = JavaClassUtil.getFields(cls, 0);
             boolean isGenerics = JavaFieldUtil.checkGenerics(fields);
             int i = 0;
             out:
-            for (JavaField field : fields) {
+            for (DocJavaField docField : fields) {
+                JavaField field = docField.getJavaField();
                 String subTypeName = field.getType().getFullyQualifiedName();
                 String fieldName = field.getName();
                 if (field.isStatic() || "this$0".equals(fieldName) ||
