@@ -64,7 +64,8 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
         this.headers = apiConfig.getRequestHeaders();
         List<ApiDoc> apiDocList = new ArrayList<>();
         int order = 0;
-        for (JavaClass cls : projectBuilder.getJavaProjectBuilder().getClasses()) {
+        Collection<JavaClass> classes = projectBuilder.getJavaProjectBuilder().getClasses();
+        for (JavaClass cls : classes) {
             if (!checkController(cls)) {
                 continue;
             }
