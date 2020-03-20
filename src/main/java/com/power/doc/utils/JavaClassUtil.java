@@ -219,6 +219,35 @@ public class JavaClassUtil {
         return javaClassList;
     }
 
+    /**
+     * 通过name获取类标签的value
+     *
+     * @param cls     类
+     * @param tagName 需要获取的标签name
+     * @return 类标签的value
+     * @author songhaozhi
+     */
+    public static String getClassTagsValue(final JavaClass cls, final String tagName) {
+        if (StringUtil.isNotEmpty(tagName)) {
+            StringBuilder result = new StringBuilder();
+            List<DocletTag> tags = cls.getTags();
+            for (int i = 0; i < tags.size(); i++) {
+                String value = tags.get(i).getValue();
+                if (StringUtil.isEmpty(value)) {
+                    throw new RuntimeException("ERROR: #" + cls.getName()
+                            + "() - bad @" + tagName + " javadoc from " + cls.getName() + ", must be add comment if you use it.");
+                }
+                if (tagName.equals(tags.get(i).getName())) {
+                    if (i != 0) {
+                        result.append(",");
+                    }
+                    result.append(value);
+                }
+            }
+            return result.toString();
+        }
+        return null;
+    }
 
     private static void addGroupClass(List<AnnotationValue> annotationValueList, List<String> javaClassList) {
         if (CollectionUtil.isEmpty(annotationValueList)) {
