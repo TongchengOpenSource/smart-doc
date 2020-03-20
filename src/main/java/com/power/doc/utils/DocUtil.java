@@ -327,8 +327,8 @@ public class DocUtil {
                 pName = value.substring(0, idx);
                 pValue = value.substring(idx + 1);
             } else {
-                pName = (value.indexOf(" ") > -1) ? value.substring(0, value.indexOf(" ")) : value;
-                pValue = value.indexOf(" ") > -1 ? value.substring(value.indexOf(' ') + 1) : DocGlobalConstants.NO_COMMENTS_FOUND;
+                pName = (value.contains(" ")) ? value.substring(0, value.indexOf(" ")) : value;
+                pValue = value.contains(" ") ? value.substring(value.indexOf(' ') + 1) : DocGlobalConstants.NO_COMMENTS_FOUND;
             }
             paramTagMap.put(pName, pValue);
         }
