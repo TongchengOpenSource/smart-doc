@@ -224,17 +224,12 @@ public class JavaClassValidateUtil {
     public static boolean isMvcIgnoreParams(String paramType) {
         switch (paramType) {
             case "org.springframework.ui.Model":
-                return true;
             case "org.springframework.ui.ModelMap":
-                return true;
             case "org.springframework.web.servlet.ModelAndView":
-                return true;
             case "org.springframework.validation.BindingResult":
-                return true;
             case "javax.servlet.http.HttpServletRequest":
-                return true;
             case "org.springframework.web.context.request.WebRequest":
-                return true;
+            case "javax.servlet.http.HttpSession":
             case "javax.servlet.http.HttpServletResponse":
                 return true;
             default:

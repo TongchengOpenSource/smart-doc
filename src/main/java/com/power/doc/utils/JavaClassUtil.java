@@ -58,7 +58,8 @@ public class JavaClassUtil {
         if (null == cls1) {
             return fieldList;
         } else if ("Object".equals(cls1.getSimpleName()) || "Timestamp".equals(cls1.getSimpleName()) ||
-                "Date".equals(cls1.getSimpleName()) || "Locale".equals(cls1.getSimpleName())) {
+                "Date".equals(cls1.getSimpleName()) || "Locale".equals(cls1.getSimpleName())
+                || "ClassLoader".equals(cls1.getSimpleName())) {
             return fieldList;
         } else {
             String className = cls1.getFullyQualifiedName();
