@@ -122,10 +122,10 @@ public class ParamsBuildHelper {
 
                 an:
                 for (JavaAnnotation annotation : javaAnnotations) {
-                    String annotationName = annotation.getType().getSimpleName();
-                    if (DocAnnotationConstants.SHORT_JSON_IGNORE.equals(annotationName) && isResp) {
+                    String simpleAnnotationName = annotation.getType().getValue();
+                    if (DocAnnotationConstants.SHORT_JSON_IGNORE.equals(simpleAnnotationName) && isResp) {
                         continue out;
-                    } else if (DocAnnotationConstants.SHORT_JSON_FIELD.equals(annotationName) && isResp) {
+                    } else if (DocAnnotationConstants.SHORT_JSON_FIELD.equals(simpleAnnotationName) && isResp) {
                         if (null != annotation.getProperty(DocAnnotationConstants.SERIALIZE_PROP)) {
                             if (Boolean.FALSE.toString().equals(annotation.getProperty(DocAnnotationConstants.SERIALIZE_PROP).toString())) {
                                 continue out;
@@ -133,11 +133,11 @@ public class ParamsBuildHelper {
                         } else if (null != annotation.getProperty(DocAnnotationConstants.NAME_PROP)) {
                             fieldName = StringUtil.removeQuotes(annotation.getProperty(DocAnnotationConstants.NAME_PROP).toString());
                         }
-                    } else if (DocAnnotationConstants.SHORT_JSON_PROPERTY.equals(annotationName) && isResp) {
+                    } else if (DocAnnotationConstants.SHORT_JSON_PROPERTY.equals(simpleAnnotationName) && isResp) {
                         if (null != annotation.getProperty(DocAnnotationConstants.VALUE_PROP)) {
                             fieldName = StringUtil.removeQuotes(annotation.getProperty(DocAnnotationConstants.VALUE_PROP).toString());
                         }
-                    } else if (ValidatorAnnotations.NULL.equals(annotationName)) {
+                    } else if (ValidatorAnnotations.NULL.equals(simpleAnnotationName)) {
                         List<String> groupClassList = JavaClassUtil.getParamGroupJavaClass(annotation);
                         for (String javaClass : groupClassList) {
                             if (groupClasses.contains(javaClass)) {
@@ -145,7 +145,7 @@ public class ParamsBuildHelper {
                                 break an;
                             }
                         }
-                    } else if (JavaClassValidateUtil.isJSR303Required(annotationName)) {
+                    } else if (JavaClassValidateUtil.isJSR303Required(simpleAnnotationName)) {
                         annotationCounter++;
                         boolean hasGroup = false;
                         List<String> groupClassList = JavaClassUtil.getParamGroupJavaClass(annotation);
