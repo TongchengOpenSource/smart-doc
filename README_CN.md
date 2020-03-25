@@ -162,6 +162,7 @@ mvn clean install -Dmaven.test.skip=true
 - [@zuonidelaowang](https://github.com/zuonidelaowang)
 - [@su-qiu](https://github.com/su-qiu)
 - [@qinkangdeid](https://github.com/qinkangdeid)
+- [@br7roy](https://github.com/br7roy)
 ## Other reference
 - [smart-doc功能使用介绍](https://my.oschina.net/u/1760791/blog/2250962)
 - [smart-doc官方wiki](https://gitee.com/sunyurepository/smart-doc/wikis/Home?sort_id=1652800)

@@ -179,6 +179,7 @@ Thanks to the following people who have submitted major pull requests:
 - [@zuonidelaowang](https://github.com/zuonidelaowang)
 - [@su-qiu](https://github.com/su-qiu)
 - [@qinkangdeid](https://github.com/qinkangdeid)
+- [@br7roy](https://github.com/br7roy)
 ## Other reference
 - [Smart-doc manual](https://github.com/shalousun/smart-doc/wiki)
 

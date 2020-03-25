@@ -226,7 +226,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
             List<JavaAnnotation> annotations = parameter.getAnnotations();
             boolean paramAdded = false;
             for (JavaAnnotation annotation : annotations) {
-                String annotationName = annotation.getType().getSimpleName();
+                String annotationName = JavaClassUtil.getAnnotationSimpleName(annotation.getType().getName());
                 String fullName = annotation.getType().getSimpleName();
                 if (!springMvcRequestAnnotations.contains(fullName) || paramAdded) {
                     continue;
