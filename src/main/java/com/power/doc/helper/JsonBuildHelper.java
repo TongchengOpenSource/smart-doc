@@ -171,7 +171,7 @@ public class JsonBuildHelper {
                 }
                 List<JavaAnnotation> annotations = field.getAnnotations();
                 for (JavaAnnotation annotation : annotations) {
-                    String annotationName = annotation.getType().getName();
+                    String annotationName = annotation.getType().getValue();
                     if (DocAnnotationConstants.SHORT_JSON_IGNORE.equals(annotationName) && isResp) {
                         continue out;
                     } else if (DocAnnotationConstants.SHORT_JSON_FIELD.equals(annotationName) && isResp) {

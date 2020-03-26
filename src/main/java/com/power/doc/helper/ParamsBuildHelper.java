@@ -209,7 +209,7 @@ public class ParamsBuildHelper {
                             reTypeName = type.getCanonicalName();
                             List<JavaAnnotation> javaAnnotationList = method.getAnnotations();
                             for (JavaAnnotation annotation : javaAnnotationList) {
-                                if (annotation.getType().getSimpleName().contains("JsonValue")) {
+                                if (annotation.getType().getValue().contains("JsonValue")) {
                                     break enumOut;
                                 }
                             }

@@ -263,7 +263,7 @@ public class JavaClassUtil {
 
     private static List<AnnotationValue> getAnnotationValues(List<String> validates, JavaAnnotation javaAnnotation) {
         List<AnnotationValue> annotationValueList = null;
-        String simpleName = javaAnnotation.getType().getSimpleName();
+        String simpleName = javaAnnotation.getType().getValue();
         if (simpleName.equalsIgnoreCase(ValidatorAnnotations.VALIDATED)) {
             if (Objects.nonNull(javaAnnotation.getProperty(DocAnnotationConstants.VALUE_PROP))) {
                 annotationValueList = ((AnnotationValueList) javaAnnotation.getProperty(DocAnnotationConstants.VALUE_PROP)).getValueList();

@@ -57,7 +57,7 @@ public class SpringMVCRequestHeaderHandler {
             String paramName = javaParameter.getName();
             ApiReqHeader apiReqHeader;
             for (JavaAnnotation annotation : javaAnnotations) {
-                String annotationName = annotation.getType().getName();
+                String annotationName = annotation.getType().getValue();
                 if (SpringMvcAnnotations.REQUEST_HERDER.equals(annotationName)) {
                     apiReqHeader = new ApiReqHeader();
                     Map<String, Object> requestHeaderMap = annotation.getNamedParameterMap();

@@ -103,7 +103,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
         List<JavaAnnotation> classAnnotations = cls.getAnnotations();
         String baseUrl = "";
         for (JavaAnnotation annotation : classAnnotations) {
-            String annotationName = annotation.getType().getName();
+            String annotationName = annotation.getType().getValue();
             if (DocAnnotationConstants.REQUEST_MAPPING.equals(annotationName) || DocGlobalConstants.REQUEST_MAPPING_FULLY.equals(annotationName)) {
                 if (annotation.getNamedParameter("value") != null) {
                     baseUrl = StringUtil.removeQuotes(annotation.getNamedParameter("value").toString());
@@ -226,7 +226,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
             List<JavaAnnotation> annotations = parameter.getAnnotations();
             boolean paramAdded = false;
             for (JavaAnnotation annotation : annotations) {
-                String annotationName = JavaClassUtil.getAnnotationSimpleName(annotation.getType().getName());
+                String annotationName = annotation.getType().getValue();
                 String fullName = annotation.getType().getSimpleName();
                 if (!springMvcRequestAnnotations.contains(fullName) || paramAdded) {
                     continue;
@@ -406,7 +406,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
             List<String> groupClasses = JavaClassUtil.getParamGroupJavaClass(annotations);
             String strRequired = "true";
             for (JavaAnnotation annotation : annotations) {
-                String annotationName = JavaClassUtil.getAnnotationSimpleName(annotation.getType().getName());
+                String annotationName = annotation.getType().getValue();
                 if (SpringMvcAnnotations.REQUEST_HERDER.equals(annotationName)) {
                     continue out;
                 }
@@ -483,8 +483,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
     private boolean checkController(JavaClass cls) {
         List<JavaAnnotation> classAnnotations = cls.getAnnotations();
         for (JavaAnnotation annotation : classAnnotations) {
-            String name = annotation.getType().getName();
-            name = JavaClassUtil.getAnnotationSimpleName(name);
+            String name = annotation.getType().getValue();
             if (SpringMvcAnnotations.CONTROLLER.equals(name) || SpringMvcAnnotations.REST_CONTROLLER.equals(name)) {
                 return true;
             }
