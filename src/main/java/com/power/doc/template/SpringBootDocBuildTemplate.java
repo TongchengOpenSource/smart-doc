@@ -66,7 +66,8 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
         int order = 0;
         Collection<JavaClass> classes = projectBuilder.getJavaProjectBuilder().getClasses();
         for (JavaClass cls : classes) {
-            if (!checkController(cls)) {
+            String ignoreTag = JavaClassUtil.getClassTagsValue(cls, DocTags.IGNORE,Boolean.FALSE);
+            if (!checkController(cls) || StringUtil.isNotEmpty(ignoreTag)) {
                 continue;
             }
             if (StringUtil.isNotEmpty(apiConfig.getPackageFilters())) {
@@ -99,7 +100,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
 
     private List<ApiMethodDoc> buildControllerMethod(final JavaClass cls, ApiConfig apiConfig, ProjectDocConfigBuilder projectBuilder) {
         String clazName = cls.getCanonicalName();
-        String classAuthor = JavaClassUtil.getClassTagsValue(cls, DocTags.AUTHOR);
+        String classAuthor = JavaClassUtil.getClassTagsValue(cls, DocTags.AUTHOR,Boolean.TRUE);
         List<JavaAnnotation> classAnnotations = cls.getAnnotations();
         String baseUrl = "";
         for (JavaAnnotation annotation : classAnnotations) {

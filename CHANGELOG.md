@@ -1,152 +1,34 @@
 ## smart-doc版本
 版本小于1.0都属于试用，正式1.0起始发布将会等到文中提到的问题解决后才发布。
-### 版本号：0.1 
-- 更新日期：2018-06-25  
+#### 版本号：1.8.4
+- 更新日期: 2020-04-xx
 - 更新内容：
-	1. 手册将api-doc发布到中央仓库
-### 版本号：0.2  
-- 更新日期：2018-07-07
+	1. Controller新增时候@ignore tag,可适应该tag忽略不需要生成文档的controller[git #24](https://github.com/smart-doc-group/smart-doc/issues/24)。
+	2. 参数中包含 HttpSession时smart-doc卡主，[gitee #I1CA9M](https://gitee.com/sunyurepository/smart-doc/issues/I1CA9M)
+	3. 增加对代码中@author tag的支持，支持多作者。
+#### 版本号：1.8.3
+- 更新日期: 2020-03-21
 - 更新内容：
-	1. 修改api-doc泛型推导的bug.
-#### 版本号：0.3
-- 更新日期：2018-07-10
+	1. 增加从接口方法getter或者setter方法中读取注释。
+	2. 修改smart-doc默认编码为utf-8，解决生成文档乱码问题。
+	3. 增加对代码中@author tag的支持，支持多作者。
+#### 版本号：1.8.2
+- 更新日期: 2020-03-13
 - 更新内容：
-	1. api-doc增加对jackson和fastjson注解的支持，可根据注解定义来生成返回信息。
-#### 版本号：0.4
-- 更新日期：2018-07-11
+	1. 修改gitee #I19IYW 。
+	2. 修改文档模板中的title设置错误。
+	3. 修改gitee #I191EO
+	4. 支持@Validated 分组
+#### 版本号：1.8.1
+- 更新日期: 2020-01-22
 - 更新内容：
-	1. 修改api-doc对类继承属性的支持。
-#### 版本号：0.5
-- 更新日期：2018-08-04
-- 更新内容：
-	1. 修改api-doc对各种字段的解析错误bug。
-#### 版本号：0.5
-- 更新日期：2018-08-23
-- 更新内容：
-	1. 将api-doc重命名为smart-doc并发布到中央仓库
-#### 版本号：1.0
-- 更新日期：2018-08-25
-- 更新内容：
-	1. smart-doc增加将所有文档导出归档到一个markdown中件的功能
-	2. 参考阿里开发手册将直接提升到1.0，之前的版本主要是个人内部测试
-#### 版本号：1.1
-- 更新日期：2018-08-30
-- 更新内容：
-	1. 修改PostMapping和GetMapping value为空报错的bug
-	2. 增强时间字段的mock数据创建
-	3. 修改smart-doc解析自引用对象出错的bug
-#### 版本号：1.2
-- 更新日期：2018-09-04
-- 更新内容：
-	1. 根据用户反馈增加controller报名过滤功能，该功能为可选项
-#### 版本号：1.3
-- 更新日期：2018-09-15
-- 更新内容：
-	1. 增加PutMapping和DeleteMapping支持
-	2. 添加字符串date和Date类型时间的模拟值生成
-#### 版本号：1.6.2
-- 更新日期：2019-09-13
-- 更新内容：
-	1. 修改字段注释多行显示错误bug
-	2. 字段描述文档增加@Since tag的支持
-	3. 解析代码忽略WebRequest类防止生产过多信息
-	4. 升级基础库依赖版本
-#### 版本号：1.6.4
-- 更新日期：2019-09-23
-- 更新内容：
-	1. 优化代码
-	2. 增加对普通的get请求参数拼装示例的生成
-	3. 增加spring mvc占位符restful url请求示例生成
-#### 版本号：1.7.0
-- 更新日期：2019-09-30
-- 更新内容：
-	1. 优化代码。
-	2. 添加生成HTML5和Asciidoctor文档的功能。
-	3. 增加开放API数据接口功能。
-	4. 支持Callable,Future,CompletableFuture等异步接口返回的推导。
-	5. 支持Spring Boot Web Flux(Controller方式书写)。
-	
-#### 版本号：1.7.1
-- 更新日期：已废弃
-- 更新内容：
-	1. 优化注释换行\n\r问题。
-	2. 修改bug #I135PG
-	3. 添加requestHeader功能
-#### 版本号：1.7.2
-- 更新日期：2019-10-19
-- 更新内容：
-	1. 优化注释换行\n\r问题，依赖common-util 1.8.7。
-	2. 修改gitee上bug #I135PG、#I13NR1。
-	3. 添加@requestHeader注解的支持，文档自定将参数绑定到请求头列表中。
-	4. 增加javadoc apiNote tag的支持。
-	5. 解决扫描分析controller中private方法的问题。
-	6. 添加支持@RequestParam注解重写参数名和设置默认值的文档解析。
-	7. 支持使用@PostMapping和@PutMapping请求自定义注解接收单个json参数场景下生成json请求实例。
-	8. 新增对Spring ResponseEntity的解析。
-	9. 增加内部类返回结构解析。
-	10. 修改文档中显示的字段类型，float、double等由原来的number直接变成具体类型。
-#### 版本号：1.7.3
-- 更新日期：2019-10-24
-- 更新内容：
-	1. 优化html5模板左侧文档目录展示，能够展开和收缩。
-	2. 修改gitee上bug #I13R3K。
-	3. 修改gitee上bug #I13NR1。
-	4. 开放的文档数据获取接口添加返回方法的唯一id和方法名称，方便一些企业自己做对接。
-
-#### 版本号：1.7.4
-- 更新日期：2019-10-29
-- 更新内容：
-	1. 修改gitee上bug #I1426C。
-	2. 修改gitee上bug #I13ZAL,1.7.0~1.7.3 结构优化后产生的bug，建议用户升级。
-	3. 修改gitee上bug #I13U4C。
-	4. 修改设置中文语言环境(默认中文)下错误码列表title显示英文的问题。
-	5. 优化AllInOne的markdown展示，生成时带上自动产生的序号。
-	
-#### 版本号：1.7.5
-- 更新日期：2019-11-06
-- 更新内容：
-	1. 优化文档中错误列表的标题，可根据语言环境变化显示中文或因为。
-	2. 解决项目外jar中内部类生成文档错误的bug。
-	3. 支持环形依赖分析。只要你敢写！
-	4. 修改使用SpringMvc或者SpringBoot上传时接口的Content-Type显示错误。
-	5. 支持设置项目作为markdown的一级标题。
-	6. 修改方法注释相同引起的html链接跳转错误。
-	7. 添加生成AllInOne的覆盖配置项，默认自动加版本号不覆盖。
-	8. 新增枚举字典码导出到文档的功能。
-#### 版本号：1.7.6
-- 更新日期：2019-11-13
-- 更新内容：
-	1. fix #I14PT5 header重复渲染到文档
-	2. fix #I14MV7 不设置dataDictionaries出现空指针错误
-	3. 增加请求参数枚举字段解析(试用功能)
-
-#### 版本号：1.7.7
-- 更新日期：2019-11-18
-- 更新内容：
-	1. 修改timestamp类型字段创建json示例错误bug。
-	2. fix #I1545A 单接口多路径bug。
-	3. 修改部分url生成部署空格问题。
-	4. 优化对java.util.concurrent.ConcurrentMap的解析。
-#### 版本号：1.7.8
-- 更新日期: 2019-12-02
-- 更新内容：
-	1. 修改Spring Controller使用非Spring Web注解时生成的响应示例出错的bug。
-	2. 修改使用mybatis-plus实体继承Model对象时将log字段输出到文档的问题。
-	3. 添加对transient修饰字段文档输出开关，默认不输出。
-	4. html文档添加项目名称显示
-	5. 修改github #4 泛型中Void类型解析死循环
-	6. 修改github #5 简单枚举参数解析空指针异常
-	7. 添加导出PostMan json数据
-	
-#### 版本号：1.7.9
-- 更新日期: 2019-12-16
-- 更新内容：
-	1. 修改request请求参数中嵌套对象不能解析的bug，参考gitee #I16AN2.
-	2. controller参数是数组时添加@PathVariable注解会报空指针,参考gitee #I16F6G
-	3. 新增ApiDataBuilder用于获取smart-doc生成的文档数据，包含header、字典、错误码等。
-	4. 修改github #9 文档错误bug.
-	5. 新增接口的@author展示，方法从文档中查到找到接口负责人，生成文档可以选择关闭显示。
-	6. 重点：smart-doc的maven插件smart-doc-maven-plugin 1.0.0版本发布。
+	1. 增加对接口get方法的分析。
+	2. 增加对第三方jar中list泛型数据的解析。
+	3. 删除原来冗长的SourceBuilder代码。
+	4. 修改AdocDocBuilder、HtmlApiDocBuilder、ApiDocBuilder的方法名规范化，单元测试的升级需要做小部分变更。
+	5. 修改1.8.0重构后的请求示例将header放入普通参数的bug。
+	6. 修改参数加上@Validated注解后，文档里没有该参数信息的bug。
+	7. 新增@Deprecated标注接口的支持(使用line through完成样式标记)
 #### 版本号：1.8.0
 - 更新日期: 2020-01-01
 - 更新内容：
@@ -160,39 +42,145 @@
 	8. postman json生成支持所有参数自动回填。再也不用自己建参数了。
 	9. 优化对实体类中枚举字段的支持。
 	10. 增加对实体中静态常量常量字段的过滤。
-#### 版本号：1.8.1
-- 更新日期: 2020-01-xx
+#### 版本号：1.7.9
+- 更新日期: 2019-12-16
 - 更新内容：
-	1. 增加对接口get方法的分析。
-	2. 增加对第三方jar中list泛型数据的解析。
-	3. 删除原来冗长的SourceBuilder代码。
-	4. 修改AdocDocBuilder、HtmlApiDocBuilder、ApiDocBuilder的方法名规范化，单元测试的升级需要做小部分变更。
-	5. 修改1.8.0重构后的请求示例将header放入普通参数的bug。
-	6. 修改参数加上@Validated注解后，文档里没有该参数信息的bug。
-	7. 新增@Deprecated标注接口的支持(使用line through完成样式标记)
-#### 版本号：1.8.1
-- 更新日期: 2020-01-22
+	1. 修改request请求参数中嵌套对象不能解析的bug，参考gitee #I16AN2.
+	2. controller参数是数组时添加@PathVariable注解会报空指针,参考gitee #I16F6G
+	3. 新增ApiDataBuilder用于获取smart-doc生成的文档数据，包含header、字典、错误码等。
+	4. 修改github #9 文档错误bug.
+	5. 新增接口的@author展示，方法从文档中查到找到接口负责人，生成文档可以选择关闭显示。
+	6. 重点：smart-doc的maven插件smart-doc-maven-plugin 1.0.0版本发布。
+#### 版本号：1.7.8
+- 更新日期: 2019-12-02
 - 更新内容：
-	1. 增加对接口get方法的分析。
-	2. 增加对第三方jar中list泛型数据的解析。
-	3. 删除原来冗长的SourceBuilder代码。
-	4. 修改AdocDocBuilder、HtmlApiDocBuilder、ApiDocBuilder的方法名规范化，单元测试的升级需要做小部分变更。
-	5. 修改1.8.0重构后的请求示例将header放入普通参数的bug。
-	6. 修改参数加上@Validated注解后，文档里没有该参数信息的bug。
-	7. 新增@Deprecated标注接口的支持(使用line through完成样式标记)
+	1. 修改Spring Controller使用非Spring Web注解时生成的响应示例出错的bug。
+	2. 修改使用mybatis-plus实体继承Model对象时将log字段输出到文档的问题。
+	3. 添加对transient修饰字段文档输出开关，默认不输出。
+	4. html文档添加项目名称显示
+	5. 修改github #4 泛型中Void类型解析死循环
+	6. 修改github #5 简单枚举参数解析空指针异常
+	7. 添加导出PostMan json数据
+#### 版本号：1.7.7
+- 更新日期：2019-11-18
+- 更新内容：
+	1. 修改timestamp类型字段创建json示例错误bug。
+	2. fix #I1545A 单接口多路径bug。
+	3. 修改部分url生成部署空格问题。
+	4. 优化对java.util.concurrent.ConcurrentMap的解析。
+#### 版本号：1.7.6
+- 更新日期：2019-11-13
+- 更新内容：
+	1. fix #I14PT5 header重复渲染到文档
+	2. fix #I14MV7 不设置dataDictionaries出现空指针错误
+	3. 增加请求参数枚举字段解析(试用功能)
+#### 版本号：1.7.5
+- 更新日期：2019-11-06
+- 更新内容：
+	1. 优化文档中错误列表的标题，可根据语言环境变化显示中文或因为。
+	2. 解决项目外jar中内部类生成文档错误的bug。
+	3. 支持环形依赖分析。只要你敢写！
+	4. 修改使用SpringMvc或者SpringBoot上传时接口的Content-Type显示错误。
+	5. 支持设置项目作为markdown的一级标题。
+	6. 修改方法注释相同引起的html链接跳转错误。
+	7. 添加生成AllInOne的覆盖配置项，默认自动加版本号不覆盖。
+	8. 新增枚举字典码导出到文档的功能。
+#### 版本号：1.7.4
+- 更新日期：2019-10-29
+- 更新内容：
+	1. 修改gitee上bug #I1426C。
+	2. 修改gitee上bug #I13ZAL,1.7.0~1.7.3 结构优化后产生的bug，建议用户升级。
+	3. 修改gitee上bug #I13U4C。
+	4. 修改设置中文语言环境(默认中文)下错误码列表title显示英文的问题。
+	5. 优化AllInOne的markdown展示，生成时带上自动产生的序号。
+#### 版本号：1.7.3
+- 更新日期：2019-10-24
+- 更新内容：
+	1. 优化html5模板左侧文档目录展示，能够展开和收缩。
+	2. 修改gitee上bug #I13R3K。
+	3. 修改gitee上bug #I13NR1。
+	4. 开放的文档数据获取接口添加返回方法的唯一id和方法名称，方便一些企业自己做对接。
+#### 版本号：1.7.2
+- 更新日期：2019-10-19
+- 更新内容：
+	1. 优化注释换行\n\r问题，依赖common-util 1.8.7。
+	2. 修改gitee上bug #I135PG、#I13NR1。
+	3. 添加@requestHeader注解的支持，文档自定将参数绑定到请求头列表中。
+	4. 增加javadoc apiNote tag的支持。
+	5. 解决扫描分析controller中private方法的问题。
+	6. 添加支持@RequestParam注解重写参数名和设置默认值的文档解析。
+	7. 支持使用@PostMapping和@PutMapping请求自定义注解接收单个json参数场景下生成json请求实例。
+	8. 新增对Spring ResponseEntity的解析。
+	9. 增加内部类返回结构解析。
+	10. 修改文档中显示的字段类型，float、double等由原来的number直接变成具体类型。
+#### 版本号：1.7.1
+- 更新日期：已废弃
+- 更新内容：
+	1. 优化注释换行\n\r问题。
+	2. 修改bug #I135PG
+	3. 添加requestHeader功能
+#### 版本号：1.7.0
+- 更新日期：2019-09-30
+- 更新内容：
+	1. 优化代码。
+	2. 添加生成HTML5和Asciidoctor文档的功能。
+	3. 增加开放API数据接口功能。
+	4. 支持Callable,Future,CompletableFuture等异步接口返回的推导。
+	5. 支持Spring Boot Web Flux(Controller方式书写)。
+#### 版本号：1.6.4
+- 更新日期：2019-09-23
+- 更新内容：
+	1. 优化代码
+	2. 增加对普通的get请求参数拼装示例的生成
+	3. 增加spring mvc占位符restful url请求示例生成
+#### 版本号：1.6.2
+- 更新日期：2019-09-13
+- 更新内容：
+	1. 修改字段注释多行显示错误bug
+	2. 字段描述文档增加@Since tag的支持
+	3. 解析代码忽略WebRequest类防止生产过多信息
+	4. 升级基础库依赖版本
+#### 版本号：1.3
+- 更新日期：2018-09-15
+- 更新内容：
+	1. 增加PutMapping和DeleteMapping支持
+	2. 添加字符串date和Date类型时间的模拟值生成
+#### 版本号：1.2
+- 更新日期：2018-09-04
+- 更新内容：
+	1. 根据用户反馈增加controller报名过滤功能，该功能为可选项
+#### 版本号：1.1
+- 更新日期：2018-08-30
+- 更新内容：
+	1. 修改PostMapping和GetMapping value为空报错的bug
+	2. 增强时间字段的mock数据创建
+	3. 修改smart-doc解析自引用对象出错的bug
+#### 版本号：1.0
+- 更新日期：2018-08-25
+- 更新内容：
+	1. smart-doc增加将所有文档导出归档到一个markdown中件的功能
+	2. 参考阿里开发手册将直接提升到1.0，之前的版本主要是个人内部测试
+	
+#### 版本号：0.5
+- 更新日期：2018-08-23
+- 更新内容：
+	1. 将api-doc重命名为smart-doc并发布到中央仓库	
+#### 版本号：0.4
+- 更新日期：2018-07-11
+- 更新内容：
+	1. 修改api-doc对类继承属性的支持。	
+	
+#### 版本号：0.3
+- 更新日期：2018-07-10
+- 更新内容：
+	1. api-doc增加对jackson和fastjson注解的支持，可根据注解定义来生成返回信息。
 
-#### 版本号：1.8.2
-- 更新日期: 2020-03-13
+### 版本号：0.2  
+- 更新日期：2018-07-07
 - 更新内容：
-	1. 修改gitee #I19IYW 。
-	2. 修改文档模板中的title设置错误。
-	3. 修改gitee #I191EO
-	4. 支持@Validated 分组
+	1. 修改api-doc泛型推导的bug.
 
-#### 版本号：1.8.3
-- 更新日期: 2020-03-21
+### 版本号：0.1 
+- 更新日期：2018-06-25  
 - 更新内容：
-	1. 增加从接口方法getter或者setter方法中读取注释。
-	2. 修改smart-doc默认编码为utf-8，解决生成文档乱码问题。
-	3. 增加对代码中@author tag的支持，支持多作者。
-
+	1. 手册将api-doc发布到中央仓库
