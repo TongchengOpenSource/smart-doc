@@ -9,7 +9,7 @@ smart-doc完全基于接口源码分析来生成接口文档，完全做到零�
 - 基于源代码接口定义自动推导，强大的返回结构推导。
 - 支持Spring MVC,Spring Boot,Spring Boot Web Flux(controller书写方式)。
 - 支持Callable,Future,CompletableFuture等异步接口返回的推导。
-- 支持JavaBean上的JSR303参数校验规范。
+- 支持JavaBean上的JSR303参数校验规范，包括分组验证。
 - 对json请求参数的接口能够自动生成模拟json参数。
 - 对一些常用字段定义能够生成有效的模拟值。
 - 支持生成json返回值示例。
@@ -18,6 +18,7 @@ smart-doc完全基于接口源码分析来生成接口文档，完全做到零�
 - 轻易实现在Spring Boot服务上在线查看静态HTML5 api文档。
 - 开放文档数据，可自由实现接入文档管理系统。
 - 支持导出错误码和定义在代码中的各种字典码到接口文档。
+- 支持插件式轻松集成。
 ## Getting started
 smart-doc使用和测试可参考[smart-doc demo](https://gitee.com/sunyurepository/api-doc-test.git)。
 ```
@@ -163,6 +164,7 @@ mvn clean install -Dmaven.test.skip=true
 - [@su-qiu](https://github.com/su-qiu)
 - [@qinkangdeid](https://github.com/qinkangdeid)
 - [@br7roy](https://github.com/br7roy)
+- [@caiqyxyx](https://gitee.com/cy-work)
 ## Other reference
 - [smart-doc功能使用介绍](https://my.oschina.net/u/1760791/blog/2250962)
 - [smart-doc官方wiki](https://gitee.com/sunyurepository/smart-doc/wikis/Home?sort_id=1652800)

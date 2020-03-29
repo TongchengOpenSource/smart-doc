@@ -5,7 +5,7 @@
 - 更新内容：
 	1. Controller新增时候@ignore tag,可适应该tag忽略不需要生成文档的controller[git #24](https://github.com/smart-doc-group/smart-doc/issues/24)。
 	2. 参数中包含 HttpSession时smart-doc卡主，[gitee #I1CA9M](https://gitee.com/sunyurepository/smart-doc/issues/I1CA9M)
-	3. 增加对代码中@author tag的支持，支持多作者。
+	3. 解决一些复杂分组场景smart-doc报错的问题[gitee #I1CPSM](https://gitee.com/sunyurepository/smart-doc/issues/I1CPSM)。
 #### 版本号：1.8.3
 - 更新日期: 2020-03-21
 - 更新内容：

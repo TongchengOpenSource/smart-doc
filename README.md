@@ -180,6 +180,7 @@ Thanks to the following people who have submitted major pull requests:
 - [@su-qiu](https://github.com/su-qiu)
 - [@qinkangdeid](https://github.com/qinkangdeid)
 - [@br7roy](https://github.com/br7roy)
+- [@caiqyxyx](https://gitee.com/cy-work)
 ## Other reference
 - [Smart-doc manual](https://github.com/shalousun/smart-doc/wiki)
 

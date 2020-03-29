@@ -223,8 +223,8 @@ public class JavaClassUtil {
     /**
      * 通过name获取类标签的value
      *
-     * @param cls     类
-     * @param tagName 需要获取的标签name
+     * @param cls           类
+     * @param tagName       需要获取的标签name
      * @param checkComments 检查注释
      * @return 类标签的value
      * @author songhaozhi
@@ -267,11 +267,25 @@ public class JavaClassUtil {
         String simpleName = javaAnnotation.getType().getValue();
         if (simpleName.equalsIgnoreCase(ValidatorAnnotations.VALIDATED)) {
             if (Objects.nonNull(javaAnnotation.getProperty(DocAnnotationConstants.VALUE_PROP))) {
-                annotationValueList = ((AnnotationValueList) javaAnnotation.getProperty(DocAnnotationConstants.VALUE_PROP)).getValueList();
+                AnnotationValue v = javaAnnotation.getProperty(DocAnnotationConstants.VALUE_PROP);
+                if (v instanceof AnnotationValueList) {
+                    annotationValueList = ((AnnotationValueList) v).getValueList();
+                }
+                if (v instanceof TypeRef) {
+                    annotationValueList = new ArrayList<>();
+                    annotationValueList.add(v);
+                }
             }
         } else if (validates.contains(simpleName)) {
             if (Objects.nonNull(javaAnnotation.getProperty(DocAnnotationConstants.GROUP_PROP))) {
-                annotationValueList = ((AnnotationValueList) javaAnnotation.getProperty(DocAnnotationConstants.GROUP_PROP)).getValueList();
+                AnnotationValue v = javaAnnotation.getProperty(DocAnnotationConstants.GROUP_PROP);
+                if (v instanceof AnnotationValueList) {
+                    annotationValueList = ((AnnotationValueList) v).getValueList();
+                }
+                if (v instanceof TypeRef) {
+                    annotationValueList = new ArrayList<>();
+                    annotationValueList.add(v);
+                }
             }
         }
         return annotationValueList;
