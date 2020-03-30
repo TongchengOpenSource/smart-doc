@@ -1,11 +1,12 @@
 ## smart-doc版本
 版本小于1.0都属于试用，正式1.0起始发布将会等到文中提到的问题解决后才发布。
 #### 版本号：1.8.4
-- 更新日期: 2020-04-xx
+- 更新日期: 2020-03-30
 - 更新内容：
 	1. Controller新增时候@ignore tag,可适应该tag忽略不需要生成文档的controller[git #24](https://github.com/smart-doc-group/smart-doc/issues/24)。
 	2. 参数中包含 HttpSession时smart-doc卡主，[gitee #I1CA9M](https://gitee.com/sunyurepository/smart-doc/issues/I1CA9M)
 	3. 解决一些复杂分组场景smart-doc报错的问题[gitee #I1CPSM](https://gitee.com/sunyurepository/smart-doc/issues/I1CPSM)。
+    4. 解决smart-doc-maven-plugin插件读取配置乱码问题。
 #### 版本号：1.8.3
 - 更新日期: 2020-03-21
 - 更新内容：

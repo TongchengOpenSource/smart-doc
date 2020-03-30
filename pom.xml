@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>smart-doc</artifactId>
     <packaging>jar</packaging>
-    <version>1.8.3</version>
+    <version>1.8.4</version>
 
     <name>smart-doc</name>
     <url>https://github.com/shalousun/smart-doc.git</url>
@@ -32,7 +32,7 @@
     </developers>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <flexmark.version>0.50.48</flexmark.version>
+        <flexmark.version>0.60.2</flexmark.version>
     </properties>
     <dependencies>
         <dependency>
@@ -44,7 +44,7 @@
         <dependency>
             <groupId>com.ibeetl</groupId>
             <artifactId>beetl</artifactId>
-            <version>3.0.20.RELEASE</version>
+            <version>3.1.1.RELEASE</version>
         </dependency>
         <dependency>
             <groupId>com.thoughtworks.qdox</groupId>
@@ -54,12 +54,12 @@
         <dependency>
             <groupId>com.github.javafaker</groupId>
             <artifactId>javafaker</artifactId>
-            <version>1.0.1</version>
+            <version>1.0.2</version>
         </dependency>
         <dependency>
             <groupId>com.github.shalousun</groupId>
             <artifactId>common-util</artifactId>
-            <version>1.9.0</version>
+            <version>1.9.2</version>
         </dependency>
         <!--markdown to html-->
         <dependency>
