@@ -64,6 +64,7 @@ smart-doc官方目前由于人力有限仅实现了maven 插件，使用Gradle�
    "outPath": "D://md2" //指定文档的输出路径
 }
 ```
+仅仅需要上面一行配置就能启动smart-doc-maven-plugin插件，根据自己项目情况更多详细的配置参考下面。
 
  **详细配置说明** 
 ```
@@ -119,7 +120,7 @@ smart-doc官方目前由于人力有限仅实现了maven 插件，使用Gradle�
     }
   ],
 
-  "sourceCodePaths": [ //设置代码路径，smart-doc默认会自动加载src/main/java, 没有需求可以不设置
+  "sourceCodePaths": [ //设置代码路径, 插件已经能够自动下载发布的源码包，没必要配置
     {
       "path": "src/main/java",
       "desc": "测试"
@@ -128,6 +129,7 @@ smart-doc官方目前由于人力有限仅实现了maven 插件，使用Gradle�
 }
 ```
 上面的json配置实例中只有"outPath"是必填项。
+
 **注意：** 对于老用户完全可以通过`Fastjson`或者是`Gson`库将`ApiConfig`转化成json配置。
 #### Use Maven Command
 添加好插件和配置文件后可以直接运行maven命令生成文档。
