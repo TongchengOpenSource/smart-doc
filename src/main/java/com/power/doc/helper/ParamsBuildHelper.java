@@ -46,16 +46,17 @@ import static com.power.doc.constants.DocGlobalConstants.NO_COMMENTS_FOUND;
  */
 public class ParamsBuildHelper {
 
-    public static List<ApiParam> buildParams(String className, String pre, int i, String isRequired,
+    public static List<ApiParam> buildParams(String className, String pre, int level, String isRequired,
                                              Map<String, CustomRespField> responseFieldMap, boolean isResp,
                                              Map<String, String> registryClasses, ProjectDocConfigBuilder projectBuilder,
                                              List<String> groupClasses) {
         if (StringUtil.isEmpty(className)) {
             throw new RuntimeException("Class name can't be null or empty.");
         }
+        int nextLevel = level + 1;
         // Check circular reference
         List<ApiParam> paramList = new ArrayList<>();
-        if (registryClasses.containsKey(className) && i > registryClasses.size()) {
+        if (registryClasses.containsKey(className) && level > registryClasses.size()) {
             return paramList;
         }
         // Registry class
@@ -73,11 +74,11 @@ public class ParamsBuildHelper {
                 if (JavaClassValidateUtil.isArray(gicName)) {
                     gicName = gicName.substring(0, gicName.indexOf("["));
                 }
-                paramList.addAll(buildParams(gicName, pre, i + 1, isRequired, responseFieldMap, isResp, registryClasses, projectBuilder, groupClasses));
+                paramList.addAll(buildParams(gicName, pre, nextLevel, isRequired, responseFieldMap, isResp, registryClasses, projectBuilder, groupClasses));
             }
         } else if (JavaClassValidateUtil.isMap(simpleName)) {
             if (globGicName.length == 2) {
-                paramList.addAll(buildParams(globGicName[1], pre, i + 1, isRequired, responseFieldMap, isResp, registryClasses, projectBuilder, groupClasses));
+                paramList.addAll(buildParams(globGicName[1], pre, nextLevel, isRequired, responseFieldMap, isResp, registryClasses, projectBuilder, groupClasses));
             }
         } else if (DocGlobalConstants.JAVA_OBJECT_FULLY.equals(className)) {
             ApiParam param = ApiParam.of().setField(pre + "any object").setType("object");
@@ -227,7 +228,7 @@ public class ParamsBuildHelper {
                         commonHandleParam(paramList, param, isRequired, NO_COMMENTS_FOUND, since, strRequired);
                     }
                     StringBuilder preBuilder = new StringBuilder();
-                    for (int j = 0; j < i; j++) {
+                    for (int j = 0; j < level; j++) {
                         preBuilder.append(DocGlobalConstants.FIELD_SPACE);
                     }
                     preBuilder.append("└─");
@@ -244,10 +245,10 @@ public class ParamsBuildHelper {
                             if (valType.length() == 1) {
                                 String gicName = (n < globGicName.length) ? globGicName[n] : globGicName[globGicName.length - 1];
                                 if (!JavaClassValidateUtil.isPrimitive(gicName) && !simpleName.equals(gicName)) {
-                                    paramList.addAll(buildParams(gicName, preBuilder.toString(), i + 1, isRequired, responseFieldMap, isResp, registryClasses, projectBuilder, groupClasses));
+                                    paramList.addAll(buildParams(gicName, preBuilder.toString(), nextLevel, isRequired, responseFieldMap, isResp, registryClasses, projectBuilder, groupClasses));
                                 }
                             } else {
-                                paramList.addAll(buildParams(valType, preBuilder.toString(), i + 1, isRequired, responseFieldMap, isResp, registryClasses, projectBuilder, groupClasses));
+                                paramList.addAll(buildParams(valType, preBuilder.toString(), nextLevel, isRequired, responseFieldMap, isResp, registryClasses, projectBuilder, groupClasses));
                             }
                         }
                     } else if (JavaClassValidateUtil.isCollection(subTypeName)) {
@@ -267,11 +268,11 @@ public class ParamsBuildHelper {
                                     if (len > 0) {
                                         String gicName = (n < len) ? globGicName[n] : globGicName[len - 1];
                                         if (!JavaClassValidateUtil.isPrimitive(gicName) && !simpleName.equals(gicName)) {
-                                            paramList.addAll(buildParams(gicName, preBuilder.toString(), i + 1, isRequired, responseFieldMap, isResp, registryClasses, projectBuilder, groupClasses));
+                                            paramList.addAll(buildParams(gicName, preBuilder.toString(), nextLevel, isRequired, responseFieldMap, isResp, registryClasses, projectBuilder, groupClasses));
                                         }
                                     }
                                 } else {
-                                    paramList.addAll(buildParams(gName, preBuilder.toString(), i + 1, isRequired, responseFieldMap, isResp, registryClasses, projectBuilder, groupClasses));
+                                    paramList.addAll(buildParams(gName, preBuilder.toString(), nextLevel, isRequired, responseFieldMap, isResp, registryClasses, projectBuilder, groupClasses));
                                 }
                             }
                         }
@@ -290,21 +291,21 @@ public class ParamsBuildHelper {
                                     if (JavaClassValidateUtil.isCollection(simple)) {
                                         String gName = DocClassUtil.getSimpleGicName(gicName)[0];
                                         if (!JavaClassValidateUtil.isPrimitive(gName)) {
-                                            paramList.addAll(buildParams(gName, preBuilder.toString(), i + 1, isRequired, responseFieldMap, isResp, registryClasses, projectBuilder, groupClasses));
+                                            paramList.addAll(buildParams(gName, preBuilder.toString(), nextLevel, isRequired, responseFieldMap, isResp, registryClasses, projectBuilder, groupClasses));
                                         }
                                     } else if (JavaClassValidateUtil.isMap(simple)) {
                                         String valType = DocClassUtil.getMapKeyValueType(gicName)[1];
                                         if (!JavaClassValidateUtil.isPrimitive(valType)) {
-                                            paramList.addAll(buildParams(valType, preBuilder.toString(), i + 1, isRequired, responseFieldMap, isResp, registryClasses, projectBuilder, groupClasses));
+                                            paramList.addAll(buildParams(valType, preBuilder.toString(), nextLevel, isRequired, responseFieldMap, isResp, registryClasses, projectBuilder, groupClasses));
                                         }
                                     } else {
-                                        paramList.addAll(buildParams(gicName, preBuilder.toString(), i + 1, isRequired, responseFieldMap, isResp, registryClasses, projectBuilder, groupClasses));
+                                        paramList.addAll(buildParams(gicName, preBuilder.toString(), nextLevel, isRequired, responseFieldMap, isResp, registryClasses, projectBuilder, groupClasses));
                                     }
                                 } else {
-                                    paramList.addAll(buildParams(gicName, preBuilder.toString(), i + 1, isRequired, responseFieldMap, isResp, registryClasses, projectBuilder, groupClasses));
+                                    paramList.addAll(buildParams(gicName, preBuilder.toString(), nextLevel, isRequired, responseFieldMap, isResp, registryClasses, projectBuilder, groupClasses));
                                 }
                             } else {
-                                paramList.addAll(buildParams(subTypeName, preBuilder.toString(), i + 1, isRequired, responseFieldMap, isResp, registryClasses, projectBuilder, groupClasses));
+                                paramList.addAll(buildParams(subTypeName, preBuilder.toString(), nextLevel, isRequired, responseFieldMap, isResp, registryClasses, projectBuilder, groupClasses));
                             }
                             n++;
                         }
@@ -313,13 +314,13 @@ public class ParamsBuildHelper {
                         if (className.equals(fieldGicName)) {
                             //do nothing
                         } else if (!JavaClassValidateUtil.isPrimitive(fieldGicName)) {
-                            paramList.addAll(buildParams(fieldGicName, preBuilder.toString(), i + 1, isRequired, responseFieldMap, isResp, registryClasses, projectBuilder, groupClasses));
+                            paramList.addAll(buildParams(fieldGicName, preBuilder.toString(), nextLevel, isRequired, responseFieldMap, isResp, registryClasses, projectBuilder, groupClasses));
                         }
                     } else if (simpleName.equals(subTypeName)) {
                         //do nothing
                     } else {
                         if (!javaClass.isEnum()) {
-                            paramList.addAll(buildParams(fieldGicName, preBuilder.toString(), i + 1, isRequired, responseFieldMap, isResp, registryClasses, projectBuilder, groupClasses));
+                            paramList.addAll(buildParams(fieldGicName, preBuilder.toString(), nextLevel, isRequired, responseFieldMap, isResp, registryClasses, projectBuilder, groupClasses));
                         }
                     }
                 }
