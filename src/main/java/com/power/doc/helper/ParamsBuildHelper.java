@@ -138,7 +138,7 @@ public class ParamsBuildHelper {
                         if (null != annotation.getProperty(DocAnnotationConstants.VALUE_PROP)) {
                             fieldName = StringUtil.removeQuotes(annotation.getProperty(DocAnnotationConstants.VALUE_PROP).toString());
                         }
-                    } else if (ValidatorAnnotations.NULL.equals(simpleAnnotationName)) {
+                    } else if (ValidatorAnnotations.NULL.equals(simpleAnnotationName) && !isResp) {
                         List<String> groupClassList = JavaClassUtil.getParamGroupJavaClass(annotation);
                         for (String javaClass : groupClassList) {
                             if (groupClasses.contains(javaClass)) {
@@ -146,7 +146,7 @@ public class ParamsBuildHelper {
                                 break an;
                             }
                         }
-                    } else if (JavaClassValidateUtil.isJSR303Required(simpleAnnotationName)) {
+                    } else if (JavaClassValidateUtil.isJSR303Required(simpleAnnotationName) && !isResp) {
                         annotationCounter++;
                         boolean hasGroup = false;
                         List<String> groupClassList = JavaClassUtil.getParamGroupJavaClass(annotation);
