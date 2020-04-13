@@ -35,6 +35,8 @@ public interface SpringMvcAnnotations {
 
     String PUT_MAPPING = "PutMapping";
 
+    String PATCH_MAPPING = "PatchMapping";
+
     String DELETE_MAPPING = "DeleteMapping";
 
     String REQUEST_HERDER = "RequestHeader";

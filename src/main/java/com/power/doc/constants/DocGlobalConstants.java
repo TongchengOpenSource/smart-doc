@@ -59,6 +59,8 @@ public interface DocGlobalConstants {
 
     String PUT_MAPPING_FULLY = "org.springframework.web.bind.annotation.PutMapping";
 
+    String PATCH_MAPPING_FULLY = "org.springframework.web.bind.annotation.PatchMapping";
+
     String DELETE_MAPPING_FULLY = "org.springframework.web.bind.annotation.DeleteMapping";
 
     String REQUEST_MAPPING_FULLY = "org.springframework.web.bind.annotation.RequestMapping";

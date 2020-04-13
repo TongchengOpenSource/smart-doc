@@ -90,6 +90,10 @@ public class SpringMVCRequestMappingHandler {
                 shortUrl = DocUtil.handleMappingValue(annotation);
                 methodType = Methods.PUT.getValue();
                 methodCounter++;
+            } else if (SpringMvcAnnotations.PATCH_MAPPING.equals(annotationName) || DocGlobalConstants.PATCH_MAPPING_FULLY.equals(annotationName)) {
+                shortUrl = DocUtil.handleMappingValue(annotation);
+                methodType = Methods.PATCH.getValue();
+                methodCounter++;
             } else if (SpringMvcAnnotations.DELETE_MAPPING.equals(annotationName) || DocGlobalConstants.DELETE_MAPPING_FULLY.equals(annotationName)) {
                 shortUrl = DocUtil.handleMappingValue(annotation);
                 methodType = Methods.DELETE.getValue();
