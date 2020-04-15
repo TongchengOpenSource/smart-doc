@@ -3,7 +3,7 @@
 <%}%>
 <%if(isNotEmpty(revisionLogList)){%>
 Version |  Update Time  | Status | Author |  Description
-------|--------|-----|------|-------
+---|---|---|---|---
 <%
 for(revisionLog in revisionLogList){
 %>
