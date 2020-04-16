@@ -29,10 +29,8 @@ public class DocClassUtilTest {
 
     @Test
     public void testProcessReturnType() {
-        String typeName = "org.springframework.web.context.request.async.WebAsyncTask";
-        System.out.println(typeName.hashCode());
-        ApiReturn apiReturn = DocClassUtil.processReturnType(typeName);
-        System.out.println(apiReturn.getGenericCanonicalName());
-        System.out.println(apiReturn.getSimpleName());
+        String typeName = "org.springframework.data.domain.Pageable";
+        System.out.println(DocClassUtil.rewriteRequestParam(typeName));
+
     }
 }

@@ -3,10 +3,7 @@ package com.power.doc;
 import com.power.common.util.DateTimeUtil;
 import com.power.doc.builder.PostmanJsonBuilder;
 import com.power.doc.enums.OrderEnum;
-import com.power.doc.model.ApiConfig;
-import com.power.doc.model.ApiDataDictionary;
-import com.power.doc.model.RevisionLog;
-import com.power.doc.model.SourceCodePath;
+import com.power.doc.model.*;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -51,13 +48,13 @@ public class ApiDocTest {
         );*/
         //对于外部jar的类，api-doc目前无法自动获取注释，
         //如果有这种场景，则自己添加字段和注释，api-doc后期遇到同名字段则直接给相应字段加注释
-  /*      config.setCustomResponseFields(
+        config.setCustomResponseFields(
 //                CustomRespField.field().setName("success").setDesc("成功返回true,失败返回false"),
 //                CustomRespField.field().setName("message").setDesc("接口响应信息"),
 //                CustomRespField.field().setName("data").setDesc("接口响应数据"),
                 CustomRespField.field().setName("code").setValue("00000")
                 //.setDesc("响应代码")
-        );*/
+        );
         //非必须只有当setAllInOne设置为true时文档变更记录才生效，https://gitee.com/sunyurepository/ApplicationPower/issues/IPS4O
         config.setRevisionLogs(
                 RevisionLog.getLog().setRevisionTime("2018/12/15").setAuthor("chen").setRemarks("测试").setStatus("创建").setVersion("V1.0"),
