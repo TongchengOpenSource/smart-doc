@@ -233,7 +233,6 @@ public class DocClassUtil {
      */
     public static ApiReturn processReturnType(String fullyName) {
         ApiReturn apiReturn = new ApiReturn();
-
         //support web flux
         if (fullyName.startsWith("reactor.core.publisher.Flux")) {
             fullyName = fullyName.replace("reactor.core.publisher.Flux", DocGlobalConstants.JAVA_LIST_FULLY);
@@ -276,4 +275,17 @@ public class DocClassUtil {
         return apiReturn;
     }
 
+    /**
+     * rewrite request param
+     * @param typeName param type name
+     * @return String
+     */
+    public static String rewriteRequestParam(String typeName) {
+        switch (typeName) {
+            case "org.springframework.data.domain.Pageable":
+               return "org.springframework.data.domain.PageRequest";
+            default:
+                return typeName;
+        }
+    }
 }

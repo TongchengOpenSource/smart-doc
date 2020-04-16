@@ -205,8 +205,10 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
             if (JavaClassValidateUtil.isMvcIgnoreParams(typeName)) {
                 continue;
             }
+            typeName = DocClassUtil.rewriteRequestParam(typeName);
             String simpleTypeName = javaType.getValue().toLowerCase();
             String gicTypeName = javaType.getGenericCanonicalName();
+            gicTypeName = DocClassUtil.rewriteRequestParam(gicTypeName);
             JavaClass javaClass = configBuilder.getJavaProjectBuilder().getClassByName(typeName);
             String[] globGicName = DocClassUtil.getSimpleGicName(gicTypeName);
             String paramName = parameter.getName();
@@ -390,6 +392,8 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
             if (JavaClassValidateUtil.isMvcIgnoreParams(typeName)) {
                 continue out;
             }
+            fullTypeName =  DocClassUtil.rewriteRequestParam(fullTypeName);
+            typeName = DocClassUtil.rewriteRequestParam(fullTypeName);
             if (!paramTagMap.containsKey(paramName) && JavaClassValidateUtil.isPrimitive(fullTypeName) && isStrict) {
                 throw new RuntimeException("ERROR: Unable to find javadoc @param for actual param \""
                         + paramName + "\" in method " + javaMethod.getName() + " from " + className);
