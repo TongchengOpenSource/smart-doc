@@ -109,8 +109,6 @@ public class DocUtil {
         fieldValue.put("offset-integer", "1");
         fieldValue.put("offset-long", "1");
         fieldValue.put("version-string", enFaker.app().version());
-
-
     }
 
     /**
@@ -122,10 +120,7 @@ public class DocUtil {
     public static String jsonValueByType(String typeName) {
         String type = typeName.contains(".") ? typeName.substring(typeName.lastIndexOf(".") + 1) : typeName;
         String value = RandomUtil.randomValueByType(type);
-        if ("Integer".equals(type) || "int".equals(type) || "Long".equals(type) || "long".equals(type)
-                || "Double".equals(type) || "double".equals(type) || "Float".equals(type) || "float".equals(type) ||
-                "BigDecimal".equals(type) || "boolean".equals(type) || "Boolean".equals(type) ||
-                "Short".equals(type) || "BigInteger".equals(type)) {
+        if (javaPrimaryType(type)) {
             return value;
         } else if ("Void".equals(type)) {
             return "null";
@@ -135,6 +130,7 @@ public class DocUtil {
             return builder.toString();
         }
     }
+
 
     /**
      * Generate random field values based on field field names and type.
@@ -163,7 +159,6 @@ public class DocUtil {
                     }
                     break;
                 }
-
             }
         }
         if (null == value) {
@@ -207,9 +202,8 @@ public class DocUtil {
             return false;
         } else if (className.contains(">") && !className.contains("<")) {
             return false;
-        } else {
-            return true;
         }
+        return true;
     }
 
     /**
@@ -220,19 +214,17 @@ public class DocUtil {
      * @return boolean
      */
     public static boolean isMatch(String packageFilters, String controllerName) {
-        if (StringUtil.isNotEmpty(packageFilters)) {
-            String[] patterns = packageFilters.split(",");
-            for (String str : patterns) {
-                if (str.endsWith("*")) {
-                    String name = str.substring(0, str.length() - 2);
-                    if (controllerName.contains(name)) {
-                        return true;
-                    }
-                } else {
-                    if (controllerName.contains(str)) {
-                        return true;
-                    }
-                }
+        if (StringUtil.isEmpty(packageFilters)) {
+            return false;
+        }
+        String[] patterns = packageFilters.split(",");
+        for (String str : patterns) {
+            String name = str;
+            if (str.endsWith("*")) {
+                name = str.substring(0, str.length() - 2);
+            }
+            if (controllerName.contains(name)) {
+                return true;
             }
         }
         return false;
@@ -283,6 +275,8 @@ public class DocUtil {
                 return "PUT";
             case "RequestMethod.DELETE":
                 return "DELETE";
+            case "RequestMethod.PATCH":
+                return "PATCH";
             default:
                 return "GET";
         }
@@ -428,5 +422,27 @@ public class DocUtil {
             formDataMap.put(formData.getKey(), formData.getValue());
         }
         return formDataMap;
+    }
+
+    private static boolean javaPrimaryType(String type) {
+        switch (type) {
+            case "Integer":
+            case "int":
+            case "Long":
+            case "long":
+            case "Double":
+            case "double":
+            case "Float":
+            case "float":
+            case "Boolean":
+            case "boolean":
+            case "Short":
+            case "short":
+            case "BigDecimal":
+            case "BigInteger":
+                return true;
+            default:
+                return false;
+        }
     }
 }

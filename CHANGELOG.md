@@ -1,5 +1,14 @@
 ## smart-doc版本
 版本小于1.0都属于试用，正式1.0起始发布将会等到文中提到的问题解决后才发布。
+#### 版本号：1.8.5
+- 更新日期: 2020-04-xx
+- 更新内容：
+	1. maven插件错误码列表导出bug[git #I1EHXA](https://gitee.com/sunyurepository/smart-doc/issues/I1EHXA)。
+	2. 增加@PatchMapping支持[gitee #I1EDRF](https://gitee.com/sunyurepository/smart-doc/issues/I1EDRF)
+	3. 解决javadoc包含重复tag生成文档报错[gitee #I1ENNM](https://gitee.com/sunyurepository/smart-doc/issues/I1ENNM)。
+    4. 修改当请求参数为泛型时数据解析错误问题。
+    5. 修复分组验证空指针问题，不对返回对象做分组验证处理。
+    6. 优化smart-doc-maven-plugin对多级maven项目的加载。
 #### 版本号：1.8.4
 - 更新日期: 2020-03-30
 - 更新内容：
