@@ -4,6 +4,7 @@ import com.power.doc.model.ApiReturn;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author yu 2020/4/17.
@@ -29,6 +30,9 @@ public class ReturnTypeProcessor {
         ApiReturn apiReturn = null;
         for (ReturnTypeFilter filter : filters) {
             apiReturn = filter.doFilter(typeName);
+            if (Objects.nonNull(apiReturn)) {
+                return apiReturn;
+            }
         }
         return apiReturn;
     }

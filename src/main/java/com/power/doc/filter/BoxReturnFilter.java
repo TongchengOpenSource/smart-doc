@@ -26,8 +26,8 @@ public class BoxReturnFilter implements ReturnTypeFilter {
 
     @Override
     public ApiReturn doFilter(String fullyName) {
-        ApiReturn apiReturn = new ApiReturn();
         if (TYPE_SET.stream().anyMatch(fullyName::startsWith)) {
+            ApiReturn apiReturn = new ApiReturn();
             if (fullyName.contains("<")) {
                 String[] strings = DocClassUtil.getSimpleGicName(fullyName);
                 String newFullName = strings[0];
@@ -42,9 +42,9 @@ public class BoxReturnFilter implements ReturnTypeFilter {
                 //directly return Java Object
                 apiReturn.setGenericCanonicalName(DocGlobalConstants.JAVA_OBJECT_FULLY);
                 apiReturn.setSimpleName(DocGlobalConstants.JAVA_OBJECT_FULLY);
-                return apiReturn;
             }
+            return apiReturn;
         }
-        return apiReturn;
+        return null;
     }
 }

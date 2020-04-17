@@ -356,7 +356,8 @@ public class DocUtil {
      */
     public static Map<String, String> getFieldTagsValue(final JavaField field) {
         List<DocletTag> paramTags = field.getTags();
-        return paramTags.stream().collect(Collectors.toMap(DocletTag::getName, DocletTag::getValue));
+        return paramTags.stream().collect(Collectors.toMap(DocletTag::getName, DocletTag::getValue,
+                (key1, key2) -> key1 + "," + key2));
     }
 
     /**
