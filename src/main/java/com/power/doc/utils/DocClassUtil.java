@@ -23,7 +23,7 @@
 package com.power.doc.utils;
 
 import com.power.common.util.StringUtil;
-import com.power.doc.constants.DocGlobalConstants;
+import com.power.doc.filter.ReturnTypeProcessor;
 import com.power.doc.model.ApiReturn;
 
 import java.util.ArrayList;
@@ -36,6 +36,7 @@ import java.util.List;
  * @author yu 2018//14.
  */
 public class DocClassUtil {
+
 
     /**
      * get class names by generic class name
@@ -232,58 +233,21 @@ public class DocClassUtil {
      * @return ApiReturn
      */
     public static ApiReturn processReturnType(String fullyName) {
-        ApiReturn apiReturn = new ApiReturn();
-        //support web flux
-        if (fullyName.startsWith("reactor.core.publisher.Flux")) {
-            fullyName = fullyName.replace("reactor.core.publisher.Flux", DocGlobalConstants.JAVA_LIST_FULLY);
-            apiReturn.setGenericCanonicalName(fullyName);
-            apiReturn.setSimpleName(DocGlobalConstants.JAVA_LIST_FULLY);
-            return apiReturn;
-        }
-        if (fullyName.startsWith("java.util.concurrent.Callable") ||
-                fullyName.startsWith("java.util.concurrent.Future") ||
-                fullyName.startsWith("java.util.concurrent.CompletableFuture") ||
-                fullyName.startsWith("org.springframework.web.context.request.async.DeferredResult") ||
-                fullyName.startsWith("org.springframework.web.context.request.async.WebAsyncTask") ||
-                fullyName.startsWith("reactor.core.publisher.Mono") ||
-                fullyName.startsWith("org.springframework.http.ResponseEntity")) {
-            if (fullyName.contains("<")) {
-                String[] strings = getSimpleGicName(fullyName);
-                String newFullName = strings[0];
-                if (newFullName.contains("<")) {
-                    apiReturn.setGenericCanonicalName(newFullName);
-                    apiReturn.setSimpleName(newFullName.substring(0, newFullName.indexOf("<")));
-                } else {
-                    apiReturn.setGenericCanonicalName(newFullName);
-                    apiReturn.setSimpleName(newFullName);
-                }
-            } else {
-                //directly return Java Object
-                apiReturn.setGenericCanonicalName(DocGlobalConstants.JAVA_OBJECT_FULLY);
-                apiReturn.setSimpleName(DocGlobalConstants.JAVA_OBJECT_FULLY);
-                return apiReturn;
-            }
-
-        } else {
-            apiReturn.setGenericCanonicalName(fullyName);
-            if (fullyName.contains("<")) {
-                apiReturn.setSimpleName(fullyName.substring(0, fullyName.indexOf("<")));
-            } else {
-                apiReturn.setSimpleName(fullyName);
-            }
-        }
-        return apiReturn;
+        ReturnTypeProcessor processor = new ReturnTypeProcessor();
+        processor.setTypeName(fullyName);
+        return processor.process();
     }
 
     /**
      * rewrite request param
+     *
      * @param typeName param type name
      * @return String
      */
     public static String rewriteRequestParam(String typeName) {
         switch (typeName) {
             case "org.springframework.data.domain.Pageable":
-               return "org.springframework.data.domain.PageRequest";
+                return "org.springframework.data.domain.PageRequest";
             default:
                 return typeName;
         }

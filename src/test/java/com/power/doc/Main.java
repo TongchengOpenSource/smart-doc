@@ -1,43 +1,36 @@
 package com.power.doc;
 
-import com.power.common.model.CommonResult;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Main {
+    private final static Set<String> PREFIX_LIST = new HashSet<>();
 
-    public static void exeCmd(String commandStr) {
-        BufferedReader br = null;
-        try {
-            Process p = Runtime.getRuntime().exec(commandStr);
-            br = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            String line = null;
-            StringBuilder sb = new StringBuilder();
-            while ((line = br.readLine()) != null) {
-                sb.append(line + "\n");
-            }
-            System.out.println(sb.toString());
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (br != null) {
-                try {
-                    br.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
+
+    static {
+        PREFIX_LIST.add("maven");
+        PREFIX_LIST.add("asm");
+        PREFIX_LIST.add("tomcat");
+        PREFIX_LIST.add("jboss");
+        PREFIX_LIST.add("undertow");
+        PREFIX_LIST.add("jackson");
+        PREFIX_LIST.add("micrometer");
+        PREFIX_LIST.add("spring-boot-actuator");
+        PREFIX_LIST.add("sharding");
+        PREFIX_LIST.add("mybatis-spring-boot-starter");
+        PREFIX_LIST.add("flexmark");
     }
 
-    public static void main(String[] args) throws Exception {
-        Class cls = CommonResult.class;
-        System.out.println("path:" + cls.getResource(""));
-        String path = cls.getResource("").getPath();
-        String commandStr = String.format("javap  -classpath %s -private CommonResult", path);
-        String cmd = "java -jar d:/procyon-decompiler-0.5.30.jar D:/ProgramFiles/mvnrepository/repository/com/boco/sp/Common-util/1.0-SNAPSHOT/Common-util-1.0-20180105.062727-5.jar -o out";
-        //String commandStr = "ipconfig";
-        Main.exeCmd(cmd);
+    public static void main(String[] args) {
+        String artifactId = "ksharding-jdbc";
+        System.out.println(ignoreArtifactById(artifactId));
+    }
+
+
+    public static boolean ignoreArtifactById(String artifactId) {
+        if (PREFIX_LIST.stream().anyMatch(artifactId::startsWith)) {
+            return true;
+        }
+        return false;
     }
 }
