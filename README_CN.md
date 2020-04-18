@@ -119,7 +119,10 @@ smart-doc官方目前由于人力有限仅实现了maven 插件，使用Gradle�
       "since": "-"
     }
   ],
-
+  "apiObjectReplacements": [{ // 自smart-doc 1.8.5开始你可以使用自定义类覆盖其他类做文档渲染，非必须
+      "className": "org.springframework.data.domain.Pageable",
+      "replacementClassName": "com.power.doc.model.PageRequestDto" //自定义的PageRequestDto替换Pageable做文档渲染
+  }],
   "sourceCodePaths": [ //设置代码路径, 插件已经能够自动下载发布的源码包，没必要配置
     {
       "path": "src/main/java",
