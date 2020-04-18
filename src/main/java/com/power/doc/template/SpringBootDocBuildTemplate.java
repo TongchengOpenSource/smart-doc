@@ -66,7 +66,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
         int order = 0;
         Collection<JavaClass> classes = projectBuilder.getJavaProjectBuilder().getClasses();
         for (JavaClass cls : classes) {
-            String ignoreTag = JavaClassUtil.getClassTagsValue(cls, DocTags.IGNORE,Boolean.FALSE);
+            String ignoreTag = JavaClassUtil.getClassTagsValue(cls, DocTags.IGNORE, Boolean.FALSE);
             if (!checkController(cls) || StringUtil.isNotEmpty(ignoreTag)) {
                 continue;
             }
@@ -100,7 +100,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
 
     private List<ApiMethodDoc> buildControllerMethod(final JavaClass cls, ApiConfig apiConfig, ProjectDocConfigBuilder projectBuilder) {
         String clazName = cls.getCanonicalName();
-        String classAuthor = JavaClassUtil.getClassTagsValue(cls, DocTags.AUTHOR,Boolean.TRUE);
+        String classAuthor = JavaClassUtil.getClassTagsValue(cls, DocTags.AUTHOR, Boolean.TRUE);
         List<JavaAnnotation> classAnnotations = cls.getAnnotations();
         String baseUrl = "";
         for (JavaAnnotation annotation : classAnnotations) {
@@ -193,6 +193,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
         if (parameterList.size() < 1) {
             return ApiRequestExample.builder().setUrl(apiMethodDoc.getUrl());
         }
+        Map<String, String> replacementMap = configBuilder.getReplaceClassMap();
         Map<String, String> pathParamsMap = new LinkedHashMap<>();
         Map<String, String> paramsComments = DocUtil.getParamsComments(method, DocTags.PARAM, null);
         List<String> springMvcRequestAnnotations = SpringMvcRequestAnnotationsEnum.listSpringMvcRequestAnnotations();
@@ -201,18 +202,30 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
         out:
         for (JavaParameter parameter : parameterList) {
             JavaType javaType = parameter.getType();
+            String paramName = parameter.getName();
             String typeName = javaType.getFullyQualifiedName();
+            String gicTypeName = javaType.getGenericCanonicalName();
+            String rewriteClassName = null;
+            String commentClass = paramsComments.get(paramName);
+            if (Objects.nonNull(commentClass) && !DocGlobalConstants.NO_COMMENTS_FOUND.equals(commentClass)) {
+                String[] comments = commentClass.split("\\|");
+                rewriteClassName = comments[comments.length - 1];
+            } else {
+                rewriteClassName = replacementMap.get(typeName);
+            }
+            // rewrite class
+            if (DocUtil.isClassName(rewriteClassName)) {
+                gicTypeName = rewriteClassName;
+                typeName = DocClassUtil.getSimpleName(rewriteClassName);
+            }
             if (JavaClassValidateUtil.isMvcIgnoreParams(typeName)) {
                 continue;
             }
-            typeName = DocClassUtil.rewriteRequestParam(typeName);
             String simpleTypeName = javaType.getValue().toLowerCase();
-            String gicTypeName = javaType.getGenericCanonicalName();
+            typeName = DocClassUtil.rewriteRequestParam(typeName);
             gicTypeName = DocClassUtil.rewriteRequestParam(gicTypeName);
             JavaClass javaClass = configBuilder.getJavaProjectBuilder().getClassByName(typeName);
             String[] globGicName = DocClassUtil.getSimpleGicName(gicTypeName);
-            String paramName = parameter.getName();
-
             String comment = this.paramCommentResolve(paramsComments.get(paramName));
             String mockValue = "";
             if (JavaClassValidateUtil.isPrimitive(typeName)) {
@@ -375,6 +388,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
     private List<ApiParam> requestParams(final JavaMethod javaMethod, final String tagName, ProjectDocConfigBuilder builder) {
         boolean isStrict = builder.getApiConfig().isStrict();
         Map<String, CustomRespField> responseFieldMap = new HashMap<>();
+        Map<String, String> replacementMap = builder.getReplaceClassMap();
         String className = javaMethod.getDeclaringClass().getCanonicalName();
         Map<String, String> paramTagMap = DocUtil.getParamsComments(javaMethod, tagName, className);
         List<JavaParameter> parameterList = javaMethod.getParameters();
@@ -389,11 +403,24 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
             String typeName = parameter.getType().getGenericCanonicalName();
             String simpleName = parameter.getType().getValue().toLowerCase();
             String fullTypeName = parameter.getType().getFullyQualifiedName();
+            String rewriteClassName = null;
+            String commentClass = paramTagMap.get(paramName);
+            if (Objects.nonNull(commentClass) && !DocGlobalConstants.NO_COMMENTS_FOUND.equals(commentClass)) {
+                String[] comments = commentClass.split("\\|");
+                rewriteClassName = comments[comments.length - 1];
+            } else {
+                rewriteClassName = replacementMap.get(fullTypeName);
+            }
+            // rewrite class
+            if (DocUtil.isClassName(rewriteClassName)) {
+                typeName = rewriteClassName;
+                fullTypeName = DocClassUtil.getSimpleName(rewriteClassName);
+            }
             if (JavaClassValidateUtil.isMvcIgnoreParams(typeName)) {
                 continue out;
             }
-            fullTypeName =  DocClassUtil.rewriteRequestParam(fullTypeName);
-            typeName = DocClassUtil.rewriteRequestParam(fullTypeName);
+            fullTypeName = DocClassUtil.rewriteRequestParam(fullTypeName);
+            typeName = DocClassUtil.rewriteRequestParam(typeName);
             if (!paramTagMap.containsKey(paramName) && JavaClassValidateUtil.isPrimitive(fullTypeName) && isStrict) {
                 throw new RuntimeException("ERROR: Unable to find javadoc @param for actual param \""
                         + paramName + "\" in method " + javaMethod.getName() + " from " + className);

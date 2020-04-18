@@ -79,8 +79,11 @@ public class JavaClassUtil {
                     fieldList.add(docJavaField);
                 }
             }
-            JavaClass pcls = cls1.getSuperJavaClass();
-            fieldList.addAll(getFields(pcls, i));
+            // ignore enum parent class
+            if (!cls1.isEnum()) {
+                JavaClass parentClass = cls1.getSuperJavaClass();
+                fieldList.addAll(getFields(parentClass, i));
+            }
             List<DocJavaField> docJavaFields = new ArrayList<>();
             for (JavaField javaField : cls1.getFields()) {
                 docJavaFields.add(DocJavaField.builder().setComment(javaField.getComment()).setJavaField(javaField));

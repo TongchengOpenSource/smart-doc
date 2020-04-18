@@ -1,5 +1,5 @@
 /*
- * smart-doc https://github.com/shalousun/smart-doc
+ * smart-doc
  *
  * Copyright (C) 2019-2020 smart-doc
  *
@@ -20,25 +20,36 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.power.doc.filter;
-
-import com.power.doc.model.ApiReturn;
+package com.power.doc.model;
 
 /**
- * must be put last
- * @author yu 2020/4/17.
+ * @author yu 2020/4/18.
  */
-public class DefaultReturnFilter implements ReturnTypeFilter {
+public class ApiObjectReplacement {
 
-    @Override
-    public ApiReturn doFilter(String fullyName) {
-        ApiReturn apiReturn = new ApiReturn();
-        apiReturn.setGenericCanonicalName(fullyName);
-        if (fullyName.contains("<")) {
-            apiReturn.setSimpleName(fullyName.substring(0, fullyName.indexOf("<")));
-        } else {
-            apiReturn.setSimpleName(fullyName);
-        }
-        return apiReturn;
+    private String className;
+
+    private String replacementClassName;
+
+    public static ApiObjectReplacement builder(){
+        return new ApiObjectReplacement();
+    }
+
+    public String getClassName() {
+        return className;
+    }
+
+    public ApiObjectReplacement setClassName(String className) {
+        this.className = className;
+        return this;
+    }
+
+    public String getReplacementClassName() {
+        return replacementClassName;
+    }
+
+    public ApiObjectReplacement setReplacementClassName(String replacementClassName) {
+        this.replacementClassName = replacementClassName;
+        return this;
     }
 }

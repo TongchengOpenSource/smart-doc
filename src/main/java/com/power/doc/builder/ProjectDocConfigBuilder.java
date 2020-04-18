@@ -26,10 +26,7 @@ import com.power.common.constants.Charset;
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.StringUtil;
 import com.power.doc.constants.DocGlobalConstants;
-import com.power.doc.model.ApiConfig;
-import com.power.doc.model.CustomRespField;
-import com.power.doc.model.DocJavaField;
-import com.power.doc.model.SourceCodePath;
+import com.power.doc.model.*;
 import com.power.doc.utils.JavaClassUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import com.thoughtworks.qdox.model.JavaClass;
@@ -53,6 +50,8 @@ public class ProjectDocConfigBuilder {
     private Map<String, JavaClass> classFilesMap = new ConcurrentHashMap<>();
 
     private Map<String, CustomRespField> customRespFieldMap = new ConcurrentHashMap<>();
+
+    private Map<String,String> replaceClassMap = new ConcurrentHashMap<>();
 
     private String serverUrl;
 
@@ -78,6 +77,7 @@ public class ProjectDocConfigBuilder {
         this.loadJavaSource(apiConfig.getSourceCodePaths(), this.javaProjectBuilder);
         this.initClassFilesMap();
         this.initCustomResponseFieldsMap(apiConfig);
+        this.initReplaceClassMap(apiConfig);
     }
 
     private void loadJavaSource(List<SourceCodePath> paths, JavaProjectBuilder builder) {
@@ -108,6 +108,14 @@ public class ProjectDocConfigBuilder {
         if (CollectionUtil.isNotEmpty(config.getCustomResponseFields())) {
             for (CustomRespField field : config.getCustomResponseFields()) {
                 customRespFieldMap.put(field.getName(), field);
+            }
+        }
+    }
+
+    private void initReplaceClassMap(ApiConfig config){
+        if (CollectionUtil.isNotEmpty(config.getApiObjectReplacements())) {
+            for (ApiObjectReplacement replace : config.getApiObjectReplacements()) {
+                replaceClassMap.put(replace.getClassName(),replace.getReplacementClassName());
             }
         }
     }
@@ -148,5 +156,10 @@ public class ProjectDocConfigBuilder {
 
     public ApiConfig getApiConfig() {
         return apiConfig;
+    }
+
+
+    public Map<String, String> getReplaceClassMap() {
+        return replaceClassMap;
     }
 }

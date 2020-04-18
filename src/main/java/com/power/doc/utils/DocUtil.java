@@ -23,10 +23,7 @@
 package com.power.doc.utils;
 
 import com.github.javafaker.Faker;
-import com.power.common.util.DateTimeUtil;
-import com.power.common.util.IDCardUtil;
-import com.power.common.util.RandomUtil;
-import com.power.common.util.StringUtil;
+import com.power.common.util.*;
 import com.power.doc.constants.DocAnnotationConstants;
 import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.model.FormData;
@@ -37,6 +34,8 @@ import com.thoughtworks.qdox.model.JavaMethod;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -50,6 +49,10 @@ public class DocUtil {
     private static Faker faker = new Faker(new Locale(System.getProperty(DocGlobalConstants.DOC_LANGUAGE)));
     //private static Faker faker = new Faker(new Locale("smart-doc_language"));
     private static Faker enFaker = new Faker(new Locale("en-US"));
+
+    private static String CLASS_PATTERN = "^([A-Za-z]{1}[A-Za-z\\d_]*\\.)+[A-Za-z][A-Za-z\\d_]*$";
+
+    public static final String CONTAINS_CHINESE_PATTERN = "[\u4E00-\u9FA5|\\！|\\，|\\。|\\（|\\）|\\《|\\》|\\“|\\”|\\？|\\：|\\；|\\【|\\】]";
 
     private static Map<String, String> fieldValue = new LinkedHashMap<>();
 
@@ -195,7 +198,18 @@ public class DocUtil {
      * @return boolean
      */
     public static boolean isClassName(String className) {
-        if (StringUtil.isEmpty(className)) {
+        if (StringUtil.isEmpty(className) || !className.contains(".")) {
+            return false;
+        }
+        if (isContainsChinese(className)) {
+            return false;
+        }
+        String classNameTemp = className;
+        if (className.contains("<")) {
+            int index = className.indexOf("<");
+            classNameTemp = className.substring(0, index);
+        }
+        if (!ValidateUtil.validate(classNameTemp, CLASS_PATTERN)) {
             return false;
         }
         if (className.contains("<") && !className.contains(">")) {
@@ -444,5 +458,23 @@ public class DocUtil {
             default:
                 return false;
         }
+    }
+
+    /**
+     * contains chinese
+     *
+     * @param str str
+     * @return boolean
+     */
+    public static boolean isContainsChinese(String str) {
+        if (StringUtil.isEmpty(str)) {
+            return true;
+        }
+        Pattern p = Pattern.compile(CONTAINS_CHINESE_PATTERN);
+        Matcher m = p.matcher(str);
+        if (m.find()) {
+            return true;
+        }
+        return false;
     }
 }

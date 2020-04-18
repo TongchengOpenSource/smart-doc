@@ -126,6 +126,11 @@ public class ApiConfig {
     private List<ApiErrorCodeDictionary> errorCodeDictionaries;
 
     /**
+     * list of custom response filed
+     */
+    private List<ApiObjectReplacement> apiObjectReplacements;
+
+    /**
      * @since 1.7.5
      * project name
      */
@@ -265,6 +270,14 @@ public class ApiConfig {
 
     public void setErrorCodeDictionaries(ApiErrorCodeDictionary... errorCodeDictConfigs) {
         this.errorCodeDictionaries = CollectionUtil.asList(errorCodeDictConfigs);
+    }
+
+    public List<ApiObjectReplacement> getApiObjectReplacements() {
+        return apiObjectReplacements;
+    }
+
+    public void setApiObjectReplacements(ApiObjectReplacement... apiObjectReplaces) {
+        this.apiObjectReplacements = CollectionUtil.asList(apiObjectReplaces);
     }
 
     public boolean isCoverOld() {
