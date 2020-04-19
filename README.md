@@ -185,6 +185,7 @@ Thanks to the following people who have submitted major pull requests:
 - [@qinkangdeid](https://github.com/qinkangdeid)
 - [@br7roy](https://github.com/br7roy)
 - [@caiqyxyx](https://gitee.com/cy-work)
+- [@lichoking](https://gitee.com/lichoking)
 ## Other reference
 - [Smart-doc manual](https://github.com/shalousun/smart-doc/wiki)
 

@@ -34,8 +34,6 @@ import com.thoughtworks.qdox.model.JavaMethod;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -51,8 +49,6 @@ public class DocUtil {
     private static Faker enFaker = new Faker(new Locale("en-US"));
 
     private static String CLASS_PATTERN = "^([A-Za-z]{1}[A-Za-z\\d_]*\\.)+[A-Za-z][A-Za-z\\d_]*$";
-
-    public static final String CONTAINS_CHINESE_PATTERN = "[\u4E00-\u9FA5|\\！|\\，|\\。|\\（|\\）|\\《|\\》|\\“|\\”|\\？|\\：|\\；|\\【|\\】]";
 
     private static Map<String, String> fieldValue = new LinkedHashMap<>();
 
@@ -144,7 +140,6 @@ public class DocUtil {
      */
     public static String getValByTypeAndFieldName(String typeName, String filedName) {
         boolean isArray = true;
-
         String type = typeName.contains("java.lang") ? typeName.substring(typeName.lastIndexOf(".") + 1, typeName.length()) : typeName;
         String key = filedName.toLowerCase() + "-" + type.toLowerCase();
         StringBuilder value = null;
@@ -201,7 +196,7 @@ public class DocUtil {
         if (StringUtil.isEmpty(className) || !className.contains(".")) {
             return false;
         }
-        if (isContainsChinese(className)) {
+        if (ValidateUtil.isContainsChinese(className)) {
             return false;
         }
         String classNameTemp = className;
@@ -438,7 +433,7 @@ public class DocUtil {
         return formDataMap;
     }
 
-    private static boolean javaPrimaryType(String type) {
+    public static boolean javaPrimaryType(String type) {
         switch (type) {
             case "Integer":
             case "int":
@@ -458,23 +453,5 @@ public class DocUtil {
             default:
                 return false;
         }
-    }
-
-    /**
-     * contains chinese
-     *
-     * @param str str
-     * @return boolean
-     */
-    public static boolean isContainsChinese(String str) {
-        if (StringUtil.isEmpty(str)) {
-            return true;
-        }
-        Pattern p = Pattern.compile(CONTAINS_CHINESE_PATTERN);
-        Matcher m = p.matcher(str);
-        if (m.find()) {
-            return true;
-        }
-        return false;
     }
 }

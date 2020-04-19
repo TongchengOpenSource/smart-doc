@@ -30,13 +30,15 @@ import com.power.doc.model.ApiReturn;
  */
 public class WebFluxReturnFilter implements ReturnTypeFilter {
 
+    private static final String FLUX = "reactor.core.publisher.Flux";
+
     @Override
     public ApiReturn doFilter(String fullyName) {
         //support web flux
-        if (fullyName.startsWith("reactor.core.publisher.Flux")) {
+        if (fullyName.startsWith(FLUX)) {
             ApiReturn apiReturn = new ApiReturn();
             // rewrite type name
-            fullyName = fullyName.replace("reactor.core.publisher.Flux", DocGlobalConstants.JAVA_LIST_FULLY);
+            fullyName = fullyName.replace(FLUX, DocGlobalConstants.JAVA_LIST_FULLY);
             apiReturn.setGenericCanonicalName(fullyName);
             apiReturn.setSimpleName(DocGlobalConstants.JAVA_LIST_FULLY);
             return apiReturn;
