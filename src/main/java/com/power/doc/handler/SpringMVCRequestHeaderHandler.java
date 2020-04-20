@@ -71,6 +71,7 @@ public class SpringMVCRequestHeaderHandler {
                     desc.append(comments);
 
                     if (requestHeaderMap.get(DocAnnotationConstants.DEFAULT_VALUE_PROP) != null) {
+                        apiReqHeader.setValue(StringUtil.removeQuotes((String) requestHeaderMap.get(DocAnnotationConstants.DEFAULT_VALUE_PROP)));
                         desc.append("(defaultValue: ")
                                 .append(StringUtil.removeQuotes((String) requestHeaderMap.get(DocAnnotationConstants.DEFAULT_VALUE_PROP)))
                                 .append(")");

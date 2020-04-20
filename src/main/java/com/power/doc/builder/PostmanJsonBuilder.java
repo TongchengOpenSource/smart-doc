@@ -163,6 +163,7 @@ public class PostmanJsonBuilder {
                     HeaderBean headerBean = new HeaderBean();
                     headerBean.setKey(apiReqHeader.getName());
                     headerBean.setName(apiReqHeader.getName());
+                    headerBean.setValue(apiReqHeader.getValue());
                     headerBean.setDisabled(!apiReqHeader.isRequired());
                     headerBean.setDescription(apiReqHeader.getDesc());
                     headerBeans.add(headerBean);

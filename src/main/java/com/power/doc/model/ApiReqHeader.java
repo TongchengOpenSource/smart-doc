@@ -42,6 +42,10 @@ public class ApiReqHeader {
      */
     private String type;
     /**
+     * request header defaultValue
+     */
+    private String value;
+    /**
      * Request header description
      */
     private String desc;
@@ -106,6 +110,15 @@ public class ApiReqHeader {
 
     public ApiReqHeader setSince(String since) {
         this.since = since;
+        return this;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public ApiReqHeader setValue(String value) {
+        this.value = value;
         return this;
     }
 
