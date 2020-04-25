@@ -80,6 +80,7 @@ public class JavaClassValidateUtil {
             case "java.sql.timestamp":
             case "java.util.date":
             case "java.time.localdatetime":
+            case "java.time.localtime":
             case "localdatetime":
             case "localdate":
             case "java.time.localdate":

@@ -88,6 +88,7 @@ public class DocUtil {
         fieldValue.put("date-date", DateTimeUtil.dateToStr(new Date(), DateTimeUtil.DATE_FORMAT_DAY));
         fieldValue.put("begintime-date", DateTimeUtil.dateToStr(new Date(), DateTimeUtil.DATE_FORMAT_DAY));
         fieldValue.put("endtime-date", DateTimeUtil.dateToStr(new Date(), DateTimeUtil.DATE_FORMAT_DAY));
+        fieldValue.put("time-localtime", DateTimeUtil.long2Str(System.currentTimeMillis(), DateTimeUtil.DATE_FORMAT_SECOND));
         fieldValue.put("state-int", String.valueOf(RandomUtil.randomInt(0, 10)));
         fieldValue.put("state-integer", String.valueOf(RandomUtil.randomInt(0, 10)));
         fieldValue.put("flag-int", String.valueOf(RandomUtil.randomInt(0, 10)));

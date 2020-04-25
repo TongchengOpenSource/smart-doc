@@ -216,6 +216,8 @@ public class DocClassUtil {
                 return "string";
             case "localdate":
                 return "string";
+            case "localtime":
+                return "string";
             case "timestamp":
                 return "string";
             case "multipartfile":
