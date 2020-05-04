@@ -62,7 +62,6 @@ public class PostmanJsonBuilder {
         JavaProjectBuilder javaProjectBuilder = new JavaProjectBuilder();
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
         postManCreate(config, configBuilder);
-
     }
 
     /**

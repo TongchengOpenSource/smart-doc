@@ -23,7 +23,6 @@
 package com.power.doc.utils;
 
 import com.power.doc.model.DocJavaField;
-import com.thoughtworks.qdox.model.JavaField;
 
 import java.util.List;
 

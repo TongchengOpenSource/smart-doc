@@ -22,10 +22,9 @@
  */
 package com.power.doc.model.postman;
 
+import com.power.common.util.DateTimeUtil;
 import org.apache.commons.lang3.StringUtils;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 /**
@@ -39,7 +38,7 @@ public class InfoBean {
 
     public InfoBean(String name) {
         if (StringUtils.isBlank(name)) {
-            this.name = "smart-doc    " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("YYYY-MM-DD HH:MM:SS"));
+            this.name = "smart-doc    " + DateTimeUtil.long2Str(System.currentTimeMillis(),DateTimeUtil.DATE_FORMAT_SECOND);
         } else {
             this.name = name;
         }
