@@ -1,5 +1,12 @@
 ## smart-doc版本
 版本小于1.0都属于试用，正式1.0起始发布将会等到文中提到的问题解决后才发布。
+#### 版本号：1.8.6
+- 更新日期: 2020-05-09
+- 更新内容：
+	1. 增加localTime支持[git #I1F7CW](https://gitee.com/sunyurepository/smart-doc/issues/I1F7CW)。
+	2. 优化smart-doc导入Postman collection时的header问题[gitee #I1EX42](https://gitee.com/sunyurepository/smart-doc/issues/I1EX42)
+    3. 优化smart-doc-maven-plugin加载source的过滤，支持使用通配符来过滤。
+    7. 首次发布gradle插件，发布smart-doc-gradle-plugin插件，
 #### 版本号：1.8.5
 - 更新日期: 2020-04-19
 - 更新内容：
