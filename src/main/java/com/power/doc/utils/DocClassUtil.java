@@ -99,7 +99,7 @@ public class DocClassUtil {
                 } else {
                     globIndex = globIndex + 1;
                     if (globIndex < length) {
-                        if (DocUtil.isClassName(arr[globIndex])) {
+                        if (DocUtil.isClassName(arr[globIndex]) || arr[i].length() == 1) {
                             indexList.add(globIndex);
                             classes.add(arr[globIndex]);
                         } else {
@@ -113,7 +113,7 @@ public class DocClassUtil {
                     }
                 }
             } else {
-                if (DocUtil.isClassName(arr[i])) {
+                if (DocUtil.isClassName(arr[i]) || arr[i].length() == 1) {
                     indexList.add(i);
                     classes.add(arr[i]);
                 } else {
