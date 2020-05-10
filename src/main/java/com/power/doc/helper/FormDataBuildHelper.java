@@ -39,6 +39,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static com.power.doc.constants.DocGlobalConstants.FILE_CONTENT_TYPE;
+
 /**
  * @author yu 2019/12/25.
  */
@@ -106,7 +108,14 @@ public class FormDataBuildHelper {
             if (StringUtil.isNotEmpty(comment)) {
                 comment = DocUtil.replaceNewLineToHtmlBr(comment);
             }
-            if (JavaClassValidateUtil.isPrimitive(subTypeName)) {
+            if (fieldGicName.contains(DocGlobalConstants.MULTIPART_FILE_FULLY)) {
+                FormData formData = new FormData();
+                formData.setKey(pre + fieldName);
+                formData.setType("file");
+                formData.setDesc(comment);
+                formData.setValue("");
+                formDataList.add(formData);
+            } else if (JavaClassValidateUtil.isPrimitive(subTypeName)) {
                 String fieldValue = DocUtil.getValByTypeAndFieldName(typeSimpleName, field.getName());
                 FormData formData = new FormData();
                 formData.setKey(pre + fieldName);
