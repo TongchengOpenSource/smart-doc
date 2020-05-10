@@ -39,8 +39,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static com.power.doc.constants.DocGlobalConstants.FILE_CONTENT_TYPE;
-
 /**
  * @author yu 2019/12/25.
  */

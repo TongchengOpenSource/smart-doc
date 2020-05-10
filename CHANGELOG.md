@@ -3,10 +3,11 @@
 #### 版本号：1.8.6
 - 更新日期: 2020-05-09
 - 更新内容：
-	1. 增加localTime支持[git #I1F7CW](https://gitee.com/sunyurepository/smart-doc/issues/I1F7CW)。
+	1. 增加localTime支持[gitee #I1F7CW](https://gitee.com/sunyurepository/smart-doc/issues/I1F7CW)。
 	2. 优化smart-doc导入Postman collection时的header问题[gitee #I1EX42](https://gitee.com/sunyurepository/smart-doc/issues/I1EX42)
     3. 优化smart-doc-maven-plugin加载source的过滤，支持使用通配符来过滤。
-    7. 首次发布gradle插件，发布smart-doc-gradle-plugin插件，
+    4. 首次发布gradle插件，发布smart-doc-gradle-plugin插件，
+    5. 修复通用泛型解析出错[git #28](https://github.com/smart-doc-group/smart-doc/issues/28)。
 #### 版本号：1.8.5
 - 更新日期: 2020-04-19
 - 更新内容：
