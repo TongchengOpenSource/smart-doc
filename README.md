@@ -165,8 +165,10 @@ On Use IntelliJ IDE, if you have added smart-doc-maven-plugin to the project,
 you can directly find the plugin smart-doc plugin and click to generate API documentation.
 
 ![smart-doc-maven-plugin](https://raw.githubusercontent.com/shalousun/smart-doc-maven-plugin/master/images/idea.png)
-
-## Generated document example
+### Use gradle plugin
+If you use gradle to build the project, you can refer to the documentation of the gradle plugin to integrate,
+[smart-doc-gradle-plugin](https://github.com/smart-doc-group/smart-doc-gradle-plugin/blob/master/README.md)
+### Generated document example
 #### Interface header rendering
 ![header](https://images.gitee.com/uploads/images/2019/1231/223538_be45f8a9_144669.png "header.png")
 #### Request parameter example rendering
@@ -204,7 +206,6 @@ These are only part of the companies using smart-doc, for reference only. If you
 <img src="https://raw.githubusercontent.com/shalousun/smart-doc/dev/images/known-users/yuanmengjiankang.png" title="yuanmengjiankang" width="260px" height="83px"/>
 <img src="https://raw.githubusercontent.com/shalousun/smart-doc/dev/images/known-users/zhongkezhilian.png" title="zhongkezhilian" width="272px" height="83px"/>
 <img src="https://raw.githubusercontent.com/shalousun/smart-doc/dev/images/known-users/puqie_gaitubao_100x100.jpg" title="puqie" width="83px" height="83px"/>
-<img src="https://raw.githubusercontent.com/shalousun/smart-doc/dev/images/known-users/akf.png" title="akf" width="83px" height="83px"/>
 
 ## License
 Smart-doc is under the Apache 2.0 license.  See the [LICENSE](https://github.com/shalousun/smart-doc/blob/master/LICENSE) file for details.
