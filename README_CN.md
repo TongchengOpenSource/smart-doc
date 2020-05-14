@@ -43,6 +43,12 @@ smart-doc官方目前由于人力有限仅实现了maven 插件，使用Gradle�
             <!--格式为：groupId:artifactId;参考如下-->
             <exclude>com.alibaba:fastjson</exclude>
         </excludes>
+        <!--自1.0.8版本开始，插件提供includes支持-->
+        <!--smart-doc能自动分析依赖树加载所有依赖源码，原则上会影响文档构建效率，因此你可以使用includes来让插件加载你配置的组件-->
+        <includes>
+            <!--格式为：groupId:artifactId;参考如下-->
+            <include>com.alibaba:fastjson</include>
+        </includes>
     </configuration>
     <executions>
         <execution>
@@ -187,7 +193,7 @@ Smart-doc is under the Apache 2.0 license.  See the [LICENSE](https://gitee.com
 <img src="https://gitee.com/sunyurepository/smart-doc/raw/master/images/known-users/yuanmengjiankang.png" title="远盟健康" width="260px" height="83px"/>
 <img src="https://gitee.com/sunyurepository/smart-doc/raw/master/images/known-users/zhongkezhilian.png" title="中科智链" width="272px" height="83px"/>
 <img src="https://gitee.com/sunyurepository/smart-doc/raw/master/images/known-users/puqie_gaitubao_100x100.jpg" title="普切信息科技" width="83px" height="83px"/>
-
+<img src="https://gitee.com/sunyurepository/smart-doc/raw/master/images/known-users/akf.png" title="洛阳奥凯" width="83px" height="83px"/>
 ## Contact
 愿意参与构建smart-doc或者是需要交流问题可以加入qq群：
 

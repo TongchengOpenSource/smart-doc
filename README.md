@@ -40,6 +40,12 @@ Add smart-doc-maven-plugin in your pom.xml.
             <!-The format is: groupId: artifactId; refer to the following->
             <exclude>com.google.guava:guava</exclude>
         </excludes>
+        <!--Since version 1.0.8, the plugin provides includes support-->
+        <!--smart-doc can automatically analyze the dependency tree to load all dependent source code. In principle, it will affect the efficiency of document construction, so you can use includes to let the plugin load the components you configure.-->
+        <includes>
+            <!-The format is: groupId: artifactId; refer to the following->
+            <include>com.alibaba:fastjson</include>
+        </includes>
     </configuration>
     <executions>
         <execution>
@@ -198,6 +204,8 @@ These are only part of the companies using smart-doc, for reference only. If you
 <img src="https://raw.githubusercontent.com/shalousun/smart-doc/dev/images/known-users/yuanmengjiankang.png" title="yuanmengjiankang" width="260px" height="83px"/>
 <img src="https://raw.githubusercontent.com/shalousun/smart-doc/dev/images/known-users/zhongkezhilian.png" title="zhongkezhilian" width="272px" height="83px"/>
 <img src="https://raw.githubusercontent.com/shalousun/smart-doc/dev/images/known-users/puqie_gaitubao_100x100.jpg" title="puqie" width="83px" height="83px"/>
+<img src="https://raw.githubusercontent.com/shalousun/smart-doc/dev/images/known-users/akf.png" title="akf" width="83px" height="83px"/>
+
 ## License
 Smart-doc is under the Apache 2.0 license.  See the [LICENSE](https://github.com/shalousun/smart-doc/blob/master/LICENSE) file for details.
 ## Contact
