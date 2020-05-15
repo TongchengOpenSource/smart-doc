@@ -127,5 +127,5 @@ public interface DocGlobalConstants {
 
     String CURL_POST_PUT_JSON = "curl -X %s -H 'Content-Type: application/json; charset=utf-8' -i %s --data '%s'";
 
-    String ENMPTY = "";
+    String EMPTY = "";
 }
