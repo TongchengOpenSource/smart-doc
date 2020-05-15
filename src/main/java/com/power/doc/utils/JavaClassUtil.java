@@ -69,20 +69,34 @@ public class JavaClassUtil {
                 List<JavaMethod> methods = cls1.getMethods();
                 for (JavaMethod javaMethod : methods) {
                     String methodName = javaMethod.getName();
-                    if (!methodName.startsWith("get")) {
+                    boolean enable = false;
+                    if (methodName.startsWith("get") && !"get".equals(methodName)) {
+                        methodName = StringUtil.firstToLowerCase(methodName.substring(3, methodName.length()));
+                        enable = true;
+                    } else if (methodName.startsWith("is") && !"is".equals(methodName)) {
+                        methodName = StringUtil.firstToLowerCase(methodName.substring(2, methodName.length()));
+                        enable = true;
+                    }
+                    if (enable) {
+                        String comment = javaMethod.getComment();
+                        JavaField javaField = new DefaultJavaField(javaMethod.getReturns(), methodName);
+                        DocJavaField docJavaField = DocJavaField.builder().setJavaField(javaField).setComment(comment);
+                        fieldList.add(docJavaField);
+                    } else {
                         continue;
                     }
-                    methodName = StringUtil.firstToLowerCase(methodName.substring(3, methodName.length()));
-                    String comment = javaMethod.getComment();
-                    JavaField javaField = new DefaultJavaField(javaMethod.getReturns(), methodName);
-                    DocJavaField docJavaField = DocJavaField.builder().setJavaField(javaField).setComment(comment);
-                    fieldList.add(docJavaField);
                 }
             }
             // ignore enum parent class
             if (!cls1.isEnum()) {
                 JavaClass parentClass = cls1.getSuperJavaClass();
                 fieldList.addAll(getFields(parentClass, i));
+                List<JavaType> implClasses = cls1.getImplements();
+                for (JavaType type : implClasses) {
+                    JavaClass javaClass = (JavaClass) type;
+                    fieldList.addAll(getFields(javaClass, i));
+                }
+
             }
             List<DocJavaField> docJavaFields = new ArrayList<>();
             for (JavaField javaField : cls1.getFields()) {
