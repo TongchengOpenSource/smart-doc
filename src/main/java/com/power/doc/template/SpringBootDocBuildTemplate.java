@@ -395,11 +395,16 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
         if (parameterList.size() < 1) {
             return null;
         }
+        List<String> springMvcRequestAnnotations = SpringMvcRequestAnnotationsEnum.listSpringMvcRequestAnnotations();
+        Set<String> jsonParamSet = this.jsonParamSet(parameterList);
         List<ApiParam> paramList = new ArrayList<>();
         int requestBodyCounter = 0;
         out:
         for (JavaParameter parameter : parameterList) {
             String paramName = parameter.getName();
+            if (jsonParamSet.size() > 0 && !jsonParamSet.contains(paramName)) {
+                continue;
+            }
             String typeName = parameter.getType().getGenericCanonicalName();
             String simpleName = parameter.getType().getValue().toLowerCase();
             String fullTypeName = parameter.getType().getFullyQualifiedName();
@@ -439,6 +444,10 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
             String strRequired = "true";
             for (JavaAnnotation annotation : annotations) {
                 String annotationName = annotation.getType().getValue();
+                String fullName = annotation.getType().getSimpleName();
+                if (!springMvcRequestAnnotations.contains(fullName)) {
+                    continue out;
+                }
                 if (SpringMvcAnnotations.REQUEST_HERDER.equals(annotationName)) {
                     continue out;
                 }
@@ -521,5 +530,20 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
             }
         }
         return false;
+    }
+
+    public Set<String> jsonParamSet(List<JavaParameter> parameterList) {
+        Set<String> jsonParamSet = new HashSet<>();
+        for (JavaParameter parameter : parameterList) {
+            String paramName = parameter.getName();
+            List<JavaAnnotation> annotations = parameter.getAnnotations();
+            for (JavaAnnotation annotation : annotations) {
+                String annotationName = annotation.getType().getValue();
+                if (SpringMvcAnnotations.REQUEST_BODY.equals(annotationName)) {
+                    jsonParamSet.add(paramName);
+                }
+            }
+        }
+        return jsonParamSet;
     }
 }
