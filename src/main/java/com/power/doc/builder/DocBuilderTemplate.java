@@ -143,18 +143,7 @@ public class DocBuilderTemplate {
         } else {
             tpl.binding(TemplateVariable.DICT_ORDER.getVariable(), apiDocList.size() + 2);
         }
-        if (null != config.getLanguage()) {
-            if (DocLanguage.CHINESE.code.equals(config.getLanguage().getCode())) {
-                tpl.binding(TemplateVariable.ERROR_LIST_TITLE.getVariable(), DocGlobalConstants.ERROR_CODE_LIST_CN_TITLE);
-                tpl.binding(TemplateVariable.DICT_LIST_TITLE.getVariable(), DocGlobalConstants.DICT_CN_TITLE);
-            } else {
-                tpl.binding(TemplateVariable.ERROR_LIST_TITLE.getVariable(), DocGlobalConstants.ERROR_CODE_LIST_EN_TITLE);
-                tpl.binding(TemplateVariable.DICT_LIST_TITLE.getVariable(), DocGlobalConstants.DICT_EN_TITLE);
-            }
-        } else {
-            tpl.binding(TemplateVariable.ERROR_LIST_TITLE.getVariable(), DocGlobalConstants.ERROR_CODE_LIST_CN_TITLE);
-            tpl.binding(TemplateVariable.DICT_LIST_TITLE.getVariable(), DocGlobalConstants.DICT_CN_TITLE);
-        }
+        setDirectoryLanguageVariable(config, tpl);
         List<ApiDocDict> apiDocDictList = buildDictionary(config, javaProjectBuilder);
         tpl.binding(TemplateVariable.DICT_LIST.getVariable(), apiDocDictList);
         FileUtil.nioWriteFile(tpl.render(), outPath + FILE_SEPARATOR + outPutFileName);
@@ -173,6 +162,36 @@ public class DocBuilderTemplate {
         Template mapper = BeetlTemplateUtil.getByName(template);
         mapper.binding(TemplateVariable.LIST.getVariable(), errorCodeList);
         FileUtil.nioWriteFile(mapper.render(), config.getOutPath() + FILE_SEPARATOR + outPutFileName);
+    }
+
+    /**
+     * build common_data doc
+     *
+     * @param config         api config
+     * @param template       template
+     * @param outPutFileName output file
+     */
+    public void buildDirectoryDataDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder, String template, String outPutFileName) {
+        List<ApiDocDict> directoryList = buildDictionary(config, javaProjectBuilder);
+        Template mapper = BeetlTemplateUtil.getByName(template);
+        setDirectoryLanguageVariable(config, mapper);
+        mapper.binding(TemplateVariable.DICT_LIST.getVariable(), directoryList);
+        FileUtil.nioWriteFile(mapper.render(), config.getOutPath() + FILE_SEPARATOR + outPutFileName);
+    }
+
+    private void setDirectoryLanguageVariable(ApiConfig config, Template mapper) {
+        if (null != config.getLanguage()) {
+            if (DocLanguage.CHINESE.code.equals(config.getLanguage().getCode())) {
+                mapper.binding(TemplateVariable.ERROR_LIST_TITLE.getVariable(), DocGlobalConstants.ERROR_CODE_LIST_CN_TITLE);
+                mapper.binding(TemplateVariable.DICT_LIST_TITLE.getVariable(), DocGlobalConstants.DICT_CN_TITLE);
+            } else {
+                mapper.binding(TemplateVariable.ERROR_LIST_TITLE.getVariable(), DocGlobalConstants.ERROR_CODE_LIST_EN_TITLE);
+                mapper.binding(TemplateVariable.DICT_LIST_TITLE.getVariable(), DocGlobalConstants.DICT_EN_TITLE);
+            }
+        } else {
+            mapper.binding(TemplateVariable.ERROR_LIST_TITLE.getVariable(), DocGlobalConstants.ERROR_CODE_LIST_CN_TITLE);
+            mapper.binding(TemplateVariable.DICT_LIST_TITLE.getVariable(), DocGlobalConstants.DICT_CN_TITLE);
+        }
     }
 
     /**
