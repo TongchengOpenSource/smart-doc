@@ -1,5 +1,5 @@
 <%if(isNotEmpty(dictList)){%>
-# Data Dictionaries
+# ${dictListTitle!"Data Dictionaries"}
 <%
 for(dict in dictList){
 %>

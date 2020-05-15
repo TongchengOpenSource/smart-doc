@@ -37,7 +37,13 @@ public interface DocGlobalConstants {
 
     String ERROR_CODE_LIST_ADOC = "ErrorCodeList.md";
 
+    String DICT_LIST_MD = "Dictionary.md";
+
     String DICT_LIST_MD_TPL = "Dictionary.btl";
+
+    String DICT_LIST_ADOC = "Dictionary.adoc";
+
+    String DICT_LIST_ADOC_TPL = "Dictionary.btl";
 
     String INDEX_TPL = "Index.btl";
 
