@@ -1,7 +1,7 @@
 /*
  * smart-doc
  *
- * Copyright (C) 2019-2020 smart-doc
+ * Copyright (C) 2018-2020 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -77,14 +77,13 @@ public class JavaClassUtil {
                         methodName = StringUtil.firstToLowerCase(methodName.substring(2, methodName.length()));
                         enable = true;
                     }
-                    if (enable) {
-                        String comment = javaMethod.getComment();
-                        JavaField javaField = new DefaultJavaField(javaMethod.getReturns(), methodName);
-                        DocJavaField docJavaField = DocJavaField.builder().setJavaField(javaField).setComment(comment);
-                        fieldList.add(docJavaField);
-                    } else {
+                    if (!enable) {
                         continue;
                     }
+                    String comment = javaMethod.getComment();
+                    JavaField javaField = new DefaultJavaField(javaMethod.getReturns(), methodName);
+                    DocJavaField docJavaField = DocJavaField.builder().setJavaField(javaField).setComment(comment);
+                    fieldList.add(docJavaField);
                 }
             }
             // ignore enum parent class
