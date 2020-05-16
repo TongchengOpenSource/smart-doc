@@ -194,6 +194,7 @@ Thanks to the following people who have submitted major pull requests:
 - [@br7roy](https://github.com/br7roy)
 - [@caiqyxyx](https://gitee.com/cy-work)
 - [@lichoking](https://gitee.com/lichoking)
+- [@JtePromise](https://github.com/JtePromise)
 ## Other reference
 - [Smart-doc manual](https://github.com/shalousun/smart-doc/wiki)
 

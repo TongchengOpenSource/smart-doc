@@ -2,7 +2,7 @@
 
 ## Introduce
 smart-doc是一个java restful api文档生成工具，smart-doc颠覆了传统类似swagger这种大量采用注解侵入来生成文档的实现方法。
-smart-doc完全基于接口源码分析来生成接口文档，完全做到零注解侵入，你只需要按照java标准注释的写，smart-doc就能帮你生成一个简易明了的markdown
+smart-doc完全基于接口源码分析来生成接口文档，完全做到零注解侵入，你只需要按照java标准注释编写，smart-doc就能帮你生成一个简易明了的markdown
 或是一个像GitBook样式的静态html文档。如果你已经厌倦了swagger等文档工具的无数注解和强侵入污染，那请拥抱smart-doc吧！
 ## Features
 - 零注解、零学习成本、只需要写标准java注释。
@@ -18,7 +18,7 @@ smart-doc完全基于接口源码分析来生成接口文档，完全做到零�
 - 轻易实现在Spring Boot服务上在线查看静态HTML5 api文档。
 - 开放文档数据，可自由实现接入文档管理系统。
 - 支持导出错误码和定义在代码中的各种字典码到接口文档。
-- 支持插件式轻松集成。
+- 支持maven、gradle插件式轻松集成。
 ## Getting started
 smart-doc使用和测试可参考[smart-doc demo](https://gitee.com/sunyurepository/api-doc-test.git)。
 ```
@@ -179,6 +179,7 @@ mvn clean install -Dmaven.test.skip=true
 - [@br7roy](https://github.com/br7roy)
 - [@caiqyxyx](https://gitee.com/cy-work)
 - [@lichoking](https://gitee.com/lichoking)
+- [@JtePromise](https://github.com/JtePromise)
 ## Other reference
 - [smart-doc功能使用介绍](https://my.oschina.net/u/1760791/blog/2250962)
 - [smart-doc官方wiki](https://gitee.com/sunyurepository/smart-doc/wikis/Home?sort_id=1652800)
