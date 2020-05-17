@@ -6,7 +6,7 @@ import com.power.doc.builder.BaseDocBuilderTemplate;
 import com.power.doc.constants.TemplateVariable;
 import com.power.doc.model.ApiConfig;
 import com.power.doc.model.ApiErrorCode;
-import com.power.doc.model.JavaApiDoc;
+import com.power.doc.model.rpc.RpcApiDoc;
 import com.power.doc.utils.BeetlTemplateUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import org.beetl.core.Template;
@@ -29,14 +29,18 @@ public class RpcDocBuilderTemplate extends BaseDocBuilderTemplate {
      * @param template      template
      * @param fileExtension file extension
      */
-    public void buildApiDoc(List<JavaApiDoc> apiDocList, ApiConfig config, String template, String fileExtension) {
+    public void buildApiDoc(List<RpcApiDoc> apiDocList, ApiConfig config, String template, String fileExtension) {
         FileUtil.mkdirs(config.getOutPath());
-        for (JavaApiDoc rpcDoc : apiDocList) {
+        for (RpcApiDoc rpcDoc : apiDocList) {
             Template mapper = BeetlTemplateUtil.getByName(template);
             mapper.binding(TemplateVariable.DESC.getVariable(), rpcDoc.getDesc());
             mapper.binding(TemplateVariable.NAME.getVariable(), rpcDoc.getName());
             mapper.binding(TemplateVariable.LIST.getVariable(), rpcDoc.getList());
-            FileUtil.nioWriteFile(mapper.render(), config.getOutPath() + FILE_SEPARATOR + rpcDoc.getName() + fileExtension);
+            mapper.binding(TemplateVariable.PROTOCOL.getVariable(),rpcDoc.getProtocol());
+            mapper.binding(TemplateVariable.AUTHOR.getVariable(),rpcDoc.getAuthor());
+            mapper.binding(TemplateVariable.VERSION.getVariable(),rpcDoc.getVersion());
+            mapper.binding(TemplateVariable.URI.getVariable(),rpcDoc.getUri());
+            FileUtil.nioWriteFile(mapper.render(), config.getOutPath() + FILE_SEPARATOR + rpcDoc.getShortName() + fileExtension);
         }
     }
 
@@ -49,7 +53,7 @@ public class RpcDocBuilderTemplate extends BaseDocBuilderTemplate {
      * @param template           template
      * @param outPutFileName     output file
      */
-    public void buildAllInOne(List<JavaApiDoc> apiDocList, ApiConfig config, JavaProjectBuilder javaProjectBuilder, String template, String outPutFileName) {
+    public void buildAllInOne(List<RpcApiDoc> apiDocList, ApiConfig config, JavaProjectBuilder javaProjectBuilder, String template, String outPutFileName) {
         String outPath = config.getOutPath();
         String strTime = DateTimeUtil.long2Str(now, DateTimeUtil.DATE_FORMAT_SECOND);
         FileUtil.mkdirs(outPath);
@@ -58,6 +62,7 @@ public class RpcDocBuilderTemplate extends BaseDocBuilderTemplate {
         tpl.binding(TemplateVariable.API_DOC_LIST.getVariable(), apiDocList);
         tpl.binding(TemplateVariable.ERROR_CODE_LIST.getVariable(), errorCodeList);
         tpl.binding(TemplateVariable.VERSION_LIST.getVariable(), config.getRevisionLogs());
+        tpl.binding(TemplateVariable.DEPENDENCY_LIST.getVariable(),config.getRpcApiDependencies());
         tpl.binding(TemplateVariable.VERSION.getVariable(), now);
         tpl.binding(TemplateVariable.CREATE_TIME.getVariable(), strTime);
         tpl.binding(TemplateVariable.PROJECT_NAME.getVariable(), config.getProjectName());

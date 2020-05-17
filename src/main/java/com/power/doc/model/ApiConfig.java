@@ -24,6 +24,7 @@ package com.power.doc.model;
 
 import com.power.common.util.CollectionUtil;
 import com.power.doc.constants.DocLanguage;
+import com.power.doc.model.rpc.RpcApiDependency;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -129,6 +130,11 @@ public class ApiConfig {
      * list of custom response filed
      */
     private List<ApiObjectReplacement> apiObjectReplacements;
+
+    /**
+     * list of rpc api dependencies
+     */
+    private List<RpcApiDependency> rpcApiDependencies;
 
     /**
      * @since 1.7.5
@@ -278,6 +284,14 @@ public class ApiConfig {
 
     public void setApiObjectReplacements(ApiObjectReplacement... apiObjectReplaces) {
         this.apiObjectReplacements = CollectionUtil.asList(apiObjectReplaces);
+    }
+
+    public List<RpcApiDependency> getRpcApiDependencies() {
+        return rpcApiDependencies;
+    }
+
+    public void setRpcApiDependencies(RpcApiDependency... rpcApiDependencies) {
+        this.rpcApiDependencies = CollectionUtil.asList(rpcApiDependencies);
     }
 
     public boolean isCoverOld() {

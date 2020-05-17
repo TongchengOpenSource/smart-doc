@@ -7,6 +7,7 @@ import com.power.doc.constants.DocTags;
 import com.power.doc.constants.DubboAnnotationConstants;
 import com.power.doc.helper.ParamsBuildHelper;
 import com.power.doc.model.*;
+import com.power.doc.model.rpc.RpcApiDoc;
 import com.power.doc.utils.DocClassUtil;
 import com.power.doc.utils.DocUtil;
 import com.power.doc.utils.JavaClassUtil;
@@ -26,9 +27,9 @@ import static com.power.doc.constants.DocTags.IGNORE;
  */
 public class JavaDocBuildTemplate {
 
-    public List<JavaApiDoc> getApiData(ProjectDocConfigBuilder projectBuilder) {
+    public List<RpcApiDoc> getApiData(ProjectDocConfigBuilder projectBuilder) {
         ApiConfig apiConfig = projectBuilder.getApiConfig();
-        List<JavaApiDoc> apiDocList = new ArrayList<>();
+        List<RpcApiDoc> apiDocList = new ArrayList<>();
         int order = 0;
         for (JavaClass cls : projectBuilder.getJavaProjectBuilder().getClasses()) {
             if (!checkDubboInterface(cls)) {
@@ -38,12 +39,12 @@ public class JavaDocBuildTemplate {
                 if (DocUtil.isMatch(apiConfig.getPackageFilters(), cls.getCanonicalName())) {
                     order++;
                     List<JavaMethodDoc> apiMethodDocs = buildServiceMethod(cls, apiConfig, projectBuilder);
-                    this.handleJavaApiDoc(cls, apiDocList, apiMethodDocs, order, apiConfig.isMd5EncryptedHtmlName());
+                    this.handleJavaApiDoc(cls, apiDocList, apiMethodDocs, order, projectBuilder);
                 }
             } else {
                 order++;
                 List<JavaMethodDoc> apiMethodDocs = buildServiceMethod(cls, apiConfig, projectBuilder);
-                this.handleJavaApiDoc(cls, apiDocList, apiMethodDocs, order, apiConfig.isMd5EncryptedHtmlName());
+                this.handleJavaApiDoc(cls, apiDocList, apiMethodDocs, order, projectBuilder);
             }
         }
         return apiDocList;
@@ -80,6 +81,7 @@ public class JavaDocBuildTemplate {
             }
             methodOrder++;
             JavaMethodDoc apiMethodDoc = new JavaMethodDoc();
+            apiMethodDoc.setMethodDefinition(methodDefinition(method));
             apiMethodDoc.setOrder(methodOrder);
             apiMethodDoc.setDesc(method.getComment());
             apiMethodDoc.setName(method.getName());
@@ -187,27 +189,42 @@ public class JavaDocBuildTemplate {
         }
         List<DocletTag> docletTags = cls.getTags();
         for (DocletTag docletTag : docletTags) {
-            String value = docletTag.getValue();
-            if ("dubbo".equals(value) || "api".equals(value)) {
+            String value = docletTag.getName();
+            if (DocTags.DUBBO.equals(value)) {
                 return true;
             }
         }
         return false;
     }
 
-    private void handleJavaApiDoc(JavaClass cls, List<JavaApiDoc> apiDocList, List<JavaMethodDoc> apiMethodDocs, int order, boolean isUseMD5) {
-        String controllerName = cls.getName();
-        JavaApiDoc apiDoc = new JavaApiDoc();
+    private void handleJavaApiDoc(JavaClass cls, List<RpcApiDoc> apiDocList, List<JavaMethodDoc> apiMethodDocs, int order, ProjectDocConfigBuilder builder) {
+        String className = cls.getCanonicalName();
+        RpcApiDoc apiDoc = new RpcApiDoc();
         apiDoc.setOrder(order);
-        apiDoc.setName(controllerName);
-        apiDoc.setAlias(controllerName);
-        if (isUseMD5) {
+        apiDoc.setName(className);
+        apiDoc.setShortName(cls.getName());
+        apiDoc.setAlias(className);
+        apiDoc.setUri(builder.getServerUrl()+"/"+className);
+        apiDoc.setProtocol("dubbo");
+        if (builder.getApiConfig().isMd5EncryptedHtmlName()) {
             String name = DocUtil.generateId(apiDoc.getName());
             apiDoc.setAlias(name);
         }
         apiDoc.setDesc(cls.getComment());
         apiDoc.setList(apiMethodDocs);
         apiDocList.add(apiDoc);
+        List<DocletTag> docletTags = cls.getTags();
+        List<String> authorList = new ArrayList<>();
+        for (DocletTag docletTag : docletTags) {
+            String name = docletTag.getName();
+            if (DocTags.VERSION.equals(name)) {
+                apiDoc.setVersion(docletTag.getValue());
+            }
+            if (DocTags.AUTHOR.equals(name)) {
+                authorList.add(docletTag.getValue());
+            }
+        }
+        apiDoc.setAuthor(String.join(",",authorList));
     }
 
     private List<ApiParam> buildReturnApiParams(JavaMethod method, ProjectDocConfigBuilder projectBuilder) {
@@ -262,6 +279,20 @@ public class JavaDocBuildTemplate {
             }
         }
         return comment;
+    }
+
+    private String methodDefinition(JavaMethod method) {
+        StringBuilder methodBuilder = new StringBuilder();
+        String returnClass = method.getReturnType().getGenericCanonicalName();
+        methodBuilder.append(returnClass).append(" ");
+        List<String> params = new ArrayList<>();
+        List<JavaParameter> parameters = method.getParameters();
+        for (JavaParameter parameter : parameters) {
+            params.add(parameter.getType() + " " + parameter.getName());
+        }
+        methodBuilder.append(method.getName()).append("(")
+                .append(String.join(",", params)).append(")");
+        return methodBuilder.toString();
     }
 
 }

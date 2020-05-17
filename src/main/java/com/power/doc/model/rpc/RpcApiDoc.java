@@ -1,5 +1,7 @@
 package com.power.doc.model.rpc;
 
+import com.power.doc.model.JavaMethodDoc;
+
 import java.util.List;
 
 /**
@@ -24,6 +26,11 @@ public class RpcApiDoc {
     private String name;
 
     /**
+     * interface short name
+     */
+    private String shortName;
+
+    /**
      * controller alias handled by md5
      *
      * @since 1.7+
@@ -41,6 +48,11 @@ public class RpcApiDoc {
     private String protocol;
 
     /**
+     * interface author
+     */
+    private String author;
+
+    /**
      * interface uri
      */
     private String uri;
@@ -53,7 +65,7 @@ public class RpcApiDoc {
     /**
      * List of method doc
      */
-    private List<RpcApiMethodDoc> list;
+    private List<JavaMethodDoc> list;
 
     public int getOrder() {
         return order;
@@ -119,11 +131,27 @@ public class RpcApiDoc {
         this.version = version;
     }
 
-    public List<RpcApiMethodDoc> getList() {
+    public List<JavaMethodDoc> getList() {
         return list;
     }
 
-    public void setList(List<RpcApiMethodDoc> list) {
+    public void setList(List<JavaMethodDoc> list) {
         this.list = list;
+    }
+
+    public String getShortName() {
+        return shortName;
+    }
+
+    public void setShortName(String shortName) {
+        this.shortName = shortName;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
     }
 }

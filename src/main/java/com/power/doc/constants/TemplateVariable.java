@@ -32,6 +32,7 @@ public enum TemplateVariable {
     API_DOC_LIST("apiDocList"),
     ERROR_CODE_LIST("errorCodeList"),
     VERSION_LIST("revisionLogList"),
+    DEPENDENCY_LIST("dependencyList"),
     HOME_PAGE("homePage"),
     HTML("html"),
     TITLE("title"),
@@ -41,7 +42,10 @@ public enum TemplateVariable {
     DICT_LIST("dictList"),
     DICT_LIST_TITLE("dictListTitle"),
     DICT_ORDER("dictListOrder"),
-    VERSION("version");
+    VERSION("version"),
+    PROTOCOL("protocol"),
+    AUTHOR("author"),
+    URI("uri"),;
 
 
     private String variable;

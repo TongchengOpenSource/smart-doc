@@ -53,7 +53,7 @@ public interface DocGlobalConstants {
 
     String ALL_IN_ONE_CSS = "AllInOne.css";
 
-    String RPC_API_DOC_MD_TPL = "dubbo.md";
+    String RPC_API_DOC_MD_TPL = "Dubbo.md";
 
     String RPC_ALL_IN_ONE_MD_TPL = "DubboAllIneOne.md";
 

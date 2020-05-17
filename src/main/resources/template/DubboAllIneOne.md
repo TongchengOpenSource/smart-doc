@@ -1,29 +1,99 @@
-# 1、数据同步接口
+<%if(isNotEmpty(projectName)){%>
+# ${projectName}
+<%}%>
 
-**接口名称：** com.xxx.service
+<%if(isNotEmpty(revisionLogList)){%>
+Version |  Update Time  | Status | Author |  Description
+---|---|---|---|---
+<%
+for(revisionLog in revisionLogList){
+%>
+${revisionLog.version}|${revisionLog.revisionTime}|${revisionLog.status}|${revisionLog.author}|${revisionLog.remarks}
+<%}%>
+<%}%>
 
-**接口地址：** dubbo://xxx:20880/com.xxx.service
+<%if(isNotEmpty(dependencyList)){%>
+## Add dependency
 
-**接口协议：** dubbo
+```
+<%
+for(dependency in dependencyList){
+%>
+<dependency>
+    <groupId>${dependency.groupId}</groupId>
+    <artifactId>${dependency.artifactId}</artifactId>
+    <version>${dependency.version}</version>
+</dependency>
 
-**接口版本：** 1.0.0
+<%}%>
+```
+<%}%>
 
-## 1.1 sycData方法
+<%
+for(api in apiDocList){
+%>
+## ${api.desc}
 
-**方法定义：** User getUser(String name)
+**URI:** ${api.uri}
 
-**方法描述：** com.xxx.service
+**Service:** ${api.name}
 
-**请求参数：**
+**Protocol:** ${api.protocol}
 
-Param | Type|Description|Since
----|---|---|---
-name|String|姓名|-
-age|Integer|年龄|-
+**Author:** ${api.author}
 
-**响应参数：**
+**Version:** ${api.version}
+<%
+for(doc in api.list){
+%>
+<%if(doc.deprecated){%>
+### ~~${doc.desc}~~
+<%}else{%>
+### ${doc.desc}
+<%}%>
+
+**Definition：** ${doc.methodDefinition}
+
+<%if(isNotEmpty(doc.author)){%>
+**Author:** ${doc.author}
+<%}%>
+
+**Description:** ${doc.detail}
+
+<%if(isNotEmpty(doc.requestParams)){%>
+**Request-parameters:**
+
+Parameter|Type|Description|Required|Since
+---|---|---|---|---
+<%
+for(param in doc.requestParams){
+%>
+${param.field}|${param.type}|${param.desc}|${param.required}|${param.version}
+<%}%>
+<%}%>
+
+<%if(isNotEmpty(doc.responseParams)){%>
+**Response-fields:**
 
 Field | Type|Description|Since
 ---|---|---|---
-name|String|姓名|-
-age|Integer|年龄|-
+<%
+for(param in doc.responseParams){
+%>
+${param.field}|${param.type}|${param.desc}|${param.version}
+<%}%>
+<%}%>
+
+<%if(isNotEmpty(errorCodeList)){%>
+## ${errorListTitle}
+Error code |Description
+---|---
+<%
+for(error in errorCodeList){
+%>
+${error.value}|${error.desc}
+<%}%>
+<%}%>
+
+<%}%>
+<%}%>

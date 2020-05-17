@@ -3,7 +3,7 @@ package com.power.doc.builder.rpc;
 import com.power.common.util.DateTimeUtil;
 import com.power.doc.builder.ProjectDocConfigBuilder;
 import com.power.doc.model.ApiConfig;
-import com.power.doc.model.JavaApiDoc;
+import com.power.doc.model.rpc.RpcApiDoc;
 import com.power.doc.template.JavaDocBuildTemplate;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 
@@ -40,10 +40,10 @@ public class RpcMarkdownBuilder {
         builderTemplate.checkAndInit(config);
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
         JavaDocBuildTemplate docBuildTemplate = new JavaDocBuildTemplate();
-        List<JavaApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder);
+        List<RpcApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder);
         if (config.isAllInOne()) {
             String version = config.isCoverOld() ? "" : "-V" + DateTimeUtil.long2Str(System.currentTimeMillis(), DATE_FORMAT);
-            builderTemplate.buildAllInOne(apiDocList, config, javaProjectBuilder, RPC_ALL_IN_ONE_MD_TPL, "AllInOne" + version + ".md");
+            builderTemplate.buildAllInOne(apiDocList, config, javaProjectBuilder, RPC_ALL_IN_ONE_MD_TPL, "DubboAllInOne" + version + ".md");
         } else {
             builderTemplate.buildApiDoc(apiDocList, config, RPC_API_DOC_MD_TPL, API_EXTENSION);
             builderTemplate.buildErrorCodeDoc(config, ERROR_CODE_LIST_MD_TPL, ERROR_CODE_LIST_MD);

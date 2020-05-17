@@ -31,6 +31,11 @@ public interface DocTags {
     String AUTHOR = "author";
 
     /**
+     * java verion tag
+     */
+    String VERSION = "version";
+
+    /**
      * custom ignore tag
      */
     String IGNORE = "ignore";
@@ -39,4 +44,9 @@ public interface DocTags {
      * custom @mock tag
      */
     String MOCK = "mock";
+
+    /**
+     * custom dubbo tag
+     */
+    String DUBBO = "dubbo";
 }
