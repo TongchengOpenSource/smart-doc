@@ -21,9 +21,13 @@ public interface DocGlobalConstants {
 
     String API_DOC_ADOC_TPL = "ApiDoc.adoc";
 
+    String RPC_API_DOC_ADOC_TPL = "dubbo/Dubbo.adoc";
+
     String ALL_IN_ONE_MD_TPL = "AllInOne.btl";
 
     String ALL_IN_ONE_ADOC_TPL = "AllInOne.adoc";
+
+    String RPC_ALL_IN_ONE_ADOC_TPL = "dubbo/DubboAllInOne.adoc";
 
     String ALL_IN_ONE_HTML_TPL = "AllInOne.html";
 
@@ -31,11 +35,11 @@ public interface DocGlobalConstants {
 
     String ERROR_CODE_LIST_MD_TPL = "ErrorCodeList.btl";
 
-    String ERROR_CODE_LIST_ADOC_TPL = "ErrorCodeList.btl";
+    String ERROR_CODE_LIST_ADOC_TPL = "ErrorCodeList.adoc";
 
     String ERROR_CODE_LIST_MD = "ErrorCodeList.md";
 
-    String ERROR_CODE_LIST_ADOC = "ErrorCodeList.md";
+    String ERROR_CODE_LIST_ADOC = "ErrorCodeList.adoc";
 
     String DICT_LIST_MD = "Dictionary.md";
 
@@ -53,9 +57,9 @@ public interface DocGlobalConstants {
 
     String ALL_IN_ONE_CSS = "AllInOne.css";
 
-    String RPC_API_DOC_MD_TPL = "Dubbo.md";
+    String RPC_API_DOC_MD_TPL = "dubbo/Dubbo.md";
 
-    String RPC_ALL_IN_ONE_MD_TPL = "DubboAllIneOne.md";
+    String RPC_ALL_IN_ONE_MD_TPL = "dubbo/DubboAllInOne.md";
 
     String POSTMAN_JSON = "/postman.json";
 

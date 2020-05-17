@@ -65,7 +65,7 @@ public class PostmanJsonBuilder {
     }
 
     /**
-     * Only for smart-doc-maven-plugin.
+     * Only for smart-doc maven plugin and gradle plugin.
      *
      * @param config         ApiConfig Object
      * @param projectBuilder QDOX avaProjectBuilder

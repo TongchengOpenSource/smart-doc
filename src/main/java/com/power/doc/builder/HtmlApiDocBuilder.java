@@ -65,7 +65,7 @@ public class HtmlApiDocBuilder {
     }
 
     /**
-     * Only for smart-doc-maven-plugin.
+     * Only for smart-doc maven plugin and gradle plugin.
      *
      * @param config             ApiConfig
      * @param javaProjectBuilder ProjectDocConfigBuilder
