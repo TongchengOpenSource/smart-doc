@@ -29,6 +29,8 @@ public interface DocGlobalConstants {
 
     String RPC_ALL_IN_ONE_ADOC_TPL = "dubbo/DubboAllInOne.adoc";
 
+    String RPC_ALL_IN_ONE_HTML_TPL = "AllInOne.html";
+
     String ALL_IN_ONE_HTML_TPL = "AllInOne.html";
 
     String HTML_API_DOC_TPL = "HtmlApiDoc.btl";
@@ -44,6 +46,8 @@ public interface DocGlobalConstants {
     String DICT_LIST_MD = "Dictionary.md";
 
     String DICT_LIST_MD_TPL = "Dictionary.btl";
+
+    String RPC_DEPENDENCY_MD_TPL = "dubbo/DubboApiDependency.html";
 
     String DICT_LIST_ADOC = "Dictionary.adoc";
 
