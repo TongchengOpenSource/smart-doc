@@ -24,7 +24,7 @@ public class RpcAdocBuilder {
      *
      * @param config ApiConfig
      */
-    public static void builderApiDoc(ApiConfig config) {
+    public static void buildApiDoc(ApiConfig config) {
         JavaProjectBuilder javaProjectBuilder = new JavaProjectBuilder();
         buildApiDoc(config, javaProjectBuilder);
     }

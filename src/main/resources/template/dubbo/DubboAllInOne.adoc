@@ -35,6 +35,7 @@ for(dependency in dependencyList){
 <%
 for(api in apiDocList){
 %>
+
 == ${api.desc}
 
 *URI:* ${api.uri}
@@ -49,6 +50,7 @@ for(api in apiDocList){
 <%
 for(doc in api.list){
 %>
+
 <%if(doc.deprecated){%>
 === ~~${doc.desc}~~
 <%}else{%>
@@ -73,7 +75,7 @@ for(doc in api.list){
 <%
 for(param in doc.requestParams){
 %>
-${param.field}|${param.type}|${param.desc}|${param.required}|${param.version}
+|${param.field}|${param.type}|${param.desc}|${param.required}|${param.version}
 <%}%>
 |====================
 <%}%>
@@ -88,7 +90,7 @@ ${param.field}|${param.type}|${param.desc}|${param.required}|${param.version}
 <%
 for(param in doc.responseParams){
 %>
-${param.field}|${param.type}|${param.desc}|${param.version}
+|${param.field}|${param.type}|${param.desc}|${param.version}
 <%}%>
 |====================
 <%}%>
@@ -102,7 +104,7 @@ ${param.field}|${param.type}|${param.desc}|${param.version}
 <%
 for(error in errorCodeList){
 %>
-${error.value}|${error.desc}
+|${error.value}|${error.desc}
 <%}%>
 |====================
 <%}%>
