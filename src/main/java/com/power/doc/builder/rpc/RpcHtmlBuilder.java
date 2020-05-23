@@ -80,7 +80,7 @@ public class RpcHtmlBuilder {
      */
     private static void buildIndex(List<RpcApiDoc> apiDocList, ApiConfig config) {
         FileUtil.mkdirs(config.getOutPath());
-        Template indexTemplate = BeetlTemplateUtil.getByName(INDEX_TPL);
+        Template indexTemplate = BeetlTemplateUtil.getByName(RPC_INDEX_TPL);
         if (CollectionUtil.isEmpty(apiDocList)) {
             return;
         }
@@ -92,9 +92,9 @@ public class RpcHtmlBuilder {
         indexTemplate.binding(TemplateVariable.ERROR_CODE_LIST.getVariable(), config.getErrorCodes());
         indexTemplate.binding(TemplateVariable.DICT_LIST.getVariable(), config.getDataDictionaries());
         if (CollectionUtil.isEmpty(config.getErrorCodes())) {
-            indexTemplate.binding(TemplateVariable.DICT_ORDER.getVariable(), apiDocList.size() + 1);
-        } else {
             indexTemplate.binding(TemplateVariable.DICT_ORDER.getVariable(), apiDocList.size() + 2);
+        } else {
+            indexTemplate.binding(TemplateVariable.DICT_ORDER.getVariable(), apiDocList.size() + 3);
         }
         if (null != config.getLanguage()) {
             if (DocLanguage.CHINESE.code.equals(config.getLanguage().getCode())) {
@@ -105,7 +105,7 @@ public class RpcHtmlBuilder {
         } else {
             indexTemplate.binding(TemplateVariable.ERROR_LIST_TITLE.getVariable(), ERROR_CODE_LIST_CN_TITLE);
         }
-        FileUtil.nioWriteFile(indexTemplate.render(), config.getOutPath() + FILE_SEPARATOR + "api.html");
+        FileUtil.nioWriteFile(indexTemplate.render(), config.getOutPath() + FILE_SEPARATOR + "rpc-api.html");
     }
 
     /**
@@ -119,7 +119,7 @@ public class RpcHtmlBuilder {
         Template htmlApiDoc;
         String strTime = DateTimeUtil.long2Str(now, DateTimeUtil.DATE_FORMAT_SECOND);
         for (RpcApiDoc rpcDoc : apiDocList) {
-            Template apiTemplate = BeetlTemplateUtil.getByName(API_DOC_MD_TPL);
+            Template apiTemplate = BeetlTemplateUtil.getByName(RPC_API_DOC_MD_TPL);
             apiTemplate.binding(TemplateVariable.DESC.getVariable(), rpcDoc.getDesc());
             apiTemplate.binding(TemplateVariable.NAME.getVariable(), rpcDoc.getName());
             apiTemplate.binding(TemplateVariable.LIST.getVariable(), rpcDoc.getList());
@@ -174,7 +174,7 @@ public class RpcHtmlBuilder {
             dictTpl.binding(TemplateVariable.TITLE.getVariable(), DICT_EN_TITLE);
             dictTpl.binding(TemplateVariable.HTML.getVariable(), dictHtml);
             dictTpl.binding(TemplateVariable.CREATE_TIME.getVariable(), DateTimeUtil.long2Str(now, DateTimeUtil.DATE_FORMAT_SECOND));
-            FileUtil.nioWriteFile(dictTpl.render(), outPath + FILE_SEPARATOR + "dict.html");
+            FileUtil.nioWriteFile(dictTpl.render(), outPath + FILE_SEPARATOR + "dependency.html");
         }
     }
 }

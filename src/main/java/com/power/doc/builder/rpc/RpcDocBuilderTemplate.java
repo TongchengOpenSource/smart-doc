@@ -21,6 +21,7 @@ import static com.power.doc.constants.DocGlobalConstants.FILE_SEPARATOR;
 public class RpcDocBuilderTemplate extends BaseDocBuilderTemplate {
 
     private static long now = System.currentTimeMillis();
+
     /**
      * Generate api documentation for all controllers.
      *
@@ -36,10 +37,10 @@ public class RpcDocBuilderTemplate extends BaseDocBuilderTemplate {
             mapper.binding(TemplateVariable.DESC.getVariable(), rpcDoc.getDesc());
             mapper.binding(TemplateVariable.NAME.getVariable(), rpcDoc.getName());
             mapper.binding(TemplateVariable.LIST.getVariable(), rpcDoc.getList());
-            mapper.binding(TemplateVariable.PROTOCOL.getVariable(),rpcDoc.getProtocol());
-            mapper.binding(TemplateVariable.AUTHOR.getVariable(),rpcDoc.getAuthor());
-            mapper.binding(TemplateVariable.VERSION.getVariable(),rpcDoc.getVersion());
-            mapper.binding(TemplateVariable.URI.getVariable(),rpcDoc.getUri());
+            mapper.binding(TemplateVariable.PROTOCOL.getVariable(), rpcDoc.getProtocol());
+            mapper.binding(TemplateVariable.AUTHOR.getVariable(), rpcDoc.getAuthor());
+            mapper.binding(TemplateVariable.VERSION.getVariable(), rpcDoc.getVersion());
+            mapper.binding(TemplateVariable.URI.getVariable(), rpcDoc.getUri());
             FileUtil.nioWriteFile(mapper.render(), config.getOutPath() + FILE_SEPARATOR + rpcDoc.getShortName() + fileExtension);
         }
     }
@@ -62,7 +63,7 @@ public class RpcDocBuilderTemplate extends BaseDocBuilderTemplate {
         tpl.binding(TemplateVariable.API_DOC_LIST.getVariable(), apiDocList);
         tpl.binding(TemplateVariable.ERROR_CODE_LIST.getVariable(), errorCodeList);
         tpl.binding(TemplateVariable.VERSION_LIST.getVariable(), config.getRevisionLogs());
-        tpl.binding(TemplateVariable.DEPENDENCY_LIST.getVariable(),config.getRpcApiDependencies());
+        tpl.binding(TemplateVariable.DEPENDENCY_LIST.getVariable(), config.getRpcApiDependencies());
         tpl.binding(TemplateVariable.VERSION.getVariable(), now);
         tpl.binding(TemplateVariable.CREATE_TIME.getVariable(), strTime);
         tpl.binding(TemplateVariable.PROJECT_NAME.getVariable(), config.getProjectName());
