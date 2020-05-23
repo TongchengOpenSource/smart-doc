@@ -151,8 +151,8 @@ public class RpcHtmlBuilder {
             String errorHtml = MarkDownUtil.toHtml(error.render());
             Template errorCodeDoc = BeetlTemplateUtil.getByName(HTML_API_DOC_TPL);
             errorCodeDoc.binding(TemplateVariable.VERSION.getVariable(), now);
-            errorCodeDoc.binding(TemplateVariable.TITLE.getVariable(), ERROR_CODE_LIST_EN_TITLE);
             errorCodeDoc.binding(TemplateVariable.HTML.getVariable(), errorHtml);
+            errorCodeDoc.binding(TemplateVariable.TITLE.getVariable(), ERROR_CODE_LIST_EN_TITLE);
             errorCodeDoc.binding(TemplateVariable.CREATE_TIME.getVariable(), DateTimeUtil.long2Str(now, DateTimeUtil.DATE_FORMAT_SECOND));
             FileUtil.nioWriteFile(errorCodeDoc.render(), outPath + FILE_SEPARATOR + "error_code.html");
         }
