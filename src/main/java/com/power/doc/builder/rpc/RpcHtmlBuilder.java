@@ -1,3 +1,25 @@
+/*
+ * smart-doc https://github.com/shalousun/smart-doc
+ *
+ * Copyright (C) 2018-2020 smart-doc
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package com.power.doc.builder.rpc;
 
 import com.power.common.util.CollectionUtil;
@@ -10,7 +32,7 @@ import com.power.doc.model.ApiConfig;
 import com.power.doc.model.ApiErrorCode;
 import com.power.doc.model.rpc.RpcApiDependency;
 import com.power.doc.model.rpc.RpcApiDoc;
-import com.power.doc.template.JavaDocBuildTemplate;
+import com.power.doc.template.RpcDocBuildTemplate;
 import com.power.doc.utils.BeetlTemplateUtil;
 import com.power.doc.utils.MarkDownUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
@@ -24,6 +46,7 @@ import static com.power.doc.constants.DocGlobalConstants.*;
  * @author yu 2020/5/17.
  */
 public class RpcHtmlBuilder {
+
     private static long now = System.currentTimeMillis();
 
     private static String INDEX_HTML = "rpc-index.html";
@@ -50,7 +73,7 @@ public class RpcHtmlBuilder {
         builderTemplate.checkAndInit(config);
         builderTemplate.checkAndInit(config);
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
-        JavaDocBuildTemplate docBuildTemplate = new JavaDocBuildTemplate();
+        RpcDocBuildTemplate docBuildTemplate = new RpcDocBuildTemplate();
         List<RpcApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder);
         if (config.isAllInOne()) {
             Template indexCssTemplate = BeetlTemplateUtil.getByName(ALL_IN_ONE_CSS);
@@ -167,7 +190,7 @@ public class RpcHtmlBuilder {
     private static void buildDependency(List<RpcApiDependency> apiDocDictList, String outPath) {
         if (CollectionUtil.isNotEmpty(apiDocDictList)) {
             Template template = BeetlTemplateUtil.getByName(RPC_DEPENDENCY_MD_TPL);
-            template.binding(TemplateVariable.DICT_LIST.getVariable(), apiDocDictList);
+            template.binding(TemplateVariable.DEPENDENCY_LIST.getVariable(), apiDocDictList);
             String dictHtml = MarkDownUtil.toHtml(template.render());
             Template dictTpl = BeetlTemplateUtil.getByName(HTML_API_DOC_TPL);
             dictTpl.binding(TemplateVariable.VERSION.getVariable(), now);

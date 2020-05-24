@@ -32,7 +32,7 @@
     </developers>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <flexmark.version>0.60.2</flexmark.version>
+        <flexmark.version>0.61.32</flexmark.version>
     </properties>
     <dependencies>
         <dependency>
@@ -44,7 +44,7 @@
         <dependency>
             <groupId>com.ibeetl</groupId>
             <artifactId>beetl</artifactId>
-            <version>3.1.1.RELEASE</version>
+            <version>3.1.6.RELEASE</version>
         </dependency>
         <dependency>
             <groupId>com.thoughtworks.qdox</groupId>

@@ -23,8 +23,6 @@
 package com.power.doc.builder;
 
 import com.power.common.util.*;
-import com.power.doc.constants.DocGlobalConstants;
-import com.power.doc.constants.DocLanguage;
 import com.power.doc.constants.TemplateVariable;
 import com.power.doc.model.*;
 import com.power.doc.template.IDocBuildTemplate;
@@ -44,39 +42,9 @@ import static com.power.doc.constants.DocGlobalConstants.FILE_SEPARATOR;
 /**
  * @author yu 2019/9/26.
  */
-public class DocBuilderTemplate {
+public class DocBuilderTemplate extends BaseDocBuilderTemplate {
 
     private static long now = System.currentTimeMillis();
-
-    /**
-     * check condition and init
-     *
-     * @param config Api config
-     */
-    public void checkAndInit(ApiConfig config) {
-        this.checkAndInitForGetApiData(config);
-        if (StringUtil.isEmpty(config.getOutPath())) {
-            throw new RuntimeException("doc output path can't be null or empty");
-        }
-    }
-
-    /**
-     * check condition and init for get Data
-     *
-     * @param config Api config
-     */
-    public void checkAndInitForGetApiData(ApiConfig config) {
-        if (null == config) {
-            throw new NullPointerException("ApiConfig can't be null");
-        }
-        if (null != config.getLanguage()) {
-            System.setProperty(DocGlobalConstants.DOC_LANGUAGE, config.getLanguage().getCode());
-        } else {
-            //default is chinese
-            config.setLanguage(DocLanguage.CHINESE);
-            System.setProperty(DocGlobalConstants.DOC_LANGUAGE, DocLanguage.CHINESE.getCode());
-        }
-    }
 
     /**
      * get all api data
@@ -179,20 +147,6 @@ public class DocBuilderTemplate {
         FileUtil.nioWriteFile(mapper.render(), config.getOutPath() + FILE_SEPARATOR + outPutFileName);
     }
 
-    private void setDirectoryLanguageVariable(ApiConfig config, Template mapper) {
-        if (null != config.getLanguage()) {
-            if (DocLanguage.CHINESE.code.equals(config.getLanguage().getCode())) {
-                mapper.binding(TemplateVariable.ERROR_LIST_TITLE.getVariable(), DocGlobalConstants.ERROR_CODE_LIST_CN_TITLE);
-                mapper.binding(TemplateVariable.DICT_LIST_TITLE.getVariable(), DocGlobalConstants.DICT_CN_TITLE);
-            } else {
-                mapper.binding(TemplateVariable.ERROR_LIST_TITLE.getVariable(), DocGlobalConstants.ERROR_CODE_LIST_EN_TITLE);
-                mapper.binding(TemplateVariable.DICT_LIST_TITLE.getVariable(), DocGlobalConstants.DICT_EN_TITLE);
-            }
-        } else {
-            mapper.binding(TemplateVariable.ERROR_LIST_TITLE.getVariable(), DocGlobalConstants.ERROR_CODE_LIST_CN_TITLE);
-            mapper.binding(TemplateVariable.DICT_LIST_TITLE.getVariable(), DocGlobalConstants.DICT_CN_TITLE);
-        }
-    }
 
     /**
      * Generate a single controller api document
@@ -205,7 +159,7 @@ public class DocBuilderTemplate {
     public void buildSingleApi(ProjectDocConfigBuilder projectBuilder, String controllerName, String template, String fileExtension) {
         ApiConfig config = projectBuilder.getApiConfig();
         FileUtil.mkdirs(config.getOutPath());
-        IDocBuildTemplate docBuildTemplate = new SpringBootDocBuildTemplate();
+        IDocBuildTemplate<ApiDoc> docBuildTemplate = new SpringBootDocBuildTemplate();
         ApiDoc doc = docBuildTemplate.getSingleApiData(projectBuilder, controllerName);
         Template mapper = BeetlTemplateUtil.getByName(template);
         mapper.binding(TemplateVariable.DESC.getVariable(), doc.getDesc());
@@ -257,35 +211,6 @@ public class DocBuilderTemplate {
             e.printStackTrace();
         }
         return apiDocDictList;
-    }
-
-    private List<ApiErrorCode> errorCodeDictToList(ApiConfig config) {
-        if (CollectionUtil.isNotEmpty(config.getErrorCodes())) {
-            return config.getErrorCodes();
-        }
-        List<ApiErrorCodeDictionary> errorCodeDictionaries = config.getErrorCodeDictionaries();
-        if (CollectionUtil.isEmpty(errorCodeDictionaries)) {
-            return new ArrayList<>(0);
-        } else {
-            List<ApiErrorCode> errorCodeList = new ArrayList<>();
-            try {
-                for (ApiErrorCodeDictionary dictionary : errorCodeDictionaries) {
-                    Class<?> clzz = dictionary.getEnumClass();
-                    if (Objects.isNull(clzz)) {
-                        if (StringUtil.isEmpty(dictionary.getEnumClassName())) {
-                            throw new RuntimeException(" enum class name can't be null.");
-                        }
-                        clzz = Class.forName(dictionary.getEnumClassName());
-                    }
-                    List<ApiErrorCode> enumDictionaryList = EnumUtil.getEnumInformation(clzz, dictionary.getCodeField(),
-                            dictionary.getDescField());
-                    errorCodeList.addAll(enumDictionaryList);
-                }
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-            return errorCodeList;
-        }
     }
 
     private List<ApiDoc> listOfApiData(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {

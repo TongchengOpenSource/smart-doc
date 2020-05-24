@@ -1,13 +1,40 @@
+/*
+ * smart-doc https://github.com/shalousun/smart-doc
+ *
+ * Copyright (C) 2018-2020 smart-doc
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package com.power.doc.builder.rpc;
 
 import com.power.common.util.DateTimeUtil;
 import com.power.common.util.FileUtil;
 import com.power.doc.builder.BaseDocBuilderTemplate;
+import com.power.doc.builder.ProjectDocConfigBuilder;
 import com.power.doc.constants.TemplateVariable;
 import com.power.doc.model.ApiConfig;
 import com.power.doc.model.ApiErrorCode;
+import com.power.doc.model.rpc.RpcApiAllData;
 import com.power.doc.model.rpc.RpcApiDoc;
+import com.power.doc.template.IDocBuildTemplate;
+import com.power.doc.template.RpcDocBuildTemplate;
 import com.power.doc.utils.BeetlTemplateUtil;
+import com.power.doc.utils.DocUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import org.beetl.core.Template;
 
@@ -83,6 +110,33 @@ public class RpcDocBuilderTemplate extends BaseDocBuilderTemplate {
         Template mapper = BeetlTemplateUtil.getByName(template);
         mapper.binding(TemplateVariable.LIST.getVariable(), errorCodeList);
         FileUtil.nioWriteFile(mapper.render(), config.getOutPath() + FILE_SEPARATOR + outPutFileName);
+    }
+
+    /**
+     * get all api data
+     *
+     * @param config             ApiConfig
+     * @param javaProjectBuilder JavaProjectBuilder
+     * @return ApiAllData
+     */
+    public RpcApiAllData getApiData(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
+        RpcApiAllData apiAllData = new RpcApiAllData();
+        apiAllData.setProjectName(config.getProjectName());
+        apiAllData.setProjectId(DocUtil.generateId(config.getProjectName()));
+        apiAllData.setLanguage(config.getLanguage().getCode());
+        apiAllData.setApiDocList(listOfApiData(config, javaProjectBuilder));
+        apiAllData.setErrorCodeList(errorCodeDictToList(config));
+        apiAllData.setRevisionLogs(config.getRevisionLogs());
+        apiAllData.setDependencyList(config.getRpcApiDependencies());
+        return apiAllData;
+    }
+
+    private List<RpcApiDoc> listOfApiData(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
+        this.checkAndInitForGetApiData(config);
+        config.setMd5EncryptedHtmlName(true);
+        ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
+        IDocBuildTemplate docBuildTemplate = new RpcDocBuildTemplate();
+        return docBuildTemplate.getApiData(configBuilder);
     }
 
 }

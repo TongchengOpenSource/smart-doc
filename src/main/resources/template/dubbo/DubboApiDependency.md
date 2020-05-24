@@ -1,9 +1,14 @@
 # Add dependency
 
 ```
+<%
+for(dependency in dependencyList){
+%>
 <dependency>
-    <groupId>com.thoughtworks.qdox</groupId>
-    <artifactId>qdox</artifactId>
-    <version>2.0.0</version>
+    <groupId>${dependency.groupId}</groupId>
+    <artifactId>${dependency.artifactId}</artifactId>
+    <version>${dependency.version}</version>
 </dependency>
+
+<%}%>
 ```

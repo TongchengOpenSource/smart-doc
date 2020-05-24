@@ -1,3 +1,25 @@
+/*
+ * smart-doc
+ *
+ * Copyright (C) 2018-2020 smart-doc
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package com.power.doc.template;
 
 import com.power.common.util.StringUtil;
@@ -6,7 +28,10 @@ import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.constants.DocTags;
 import com.power.doc.constants.DubboAnnotationConstants;
 import com.power.doc.helper.ParamsBuildHelper;
-import com.power.doc.model.*;
+import com.power.doc.model.ApiConfig;
+import com.power.doc.model.ApiParam;
+import com.power.doc.model.CustomRespField;
+import com.power.doc.model.JavaMethodDoc;
 import com.power.doc.model.rpc.RpcApiDoc;
 import com.power.doc.utils.DocClassUtil;
 import com.power.doc.utils.DocUtil;
@@ -19,13 +44,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.power.doc.constants.DocGlobalConstants.NO_COMMENTS_FOUND;
 import static com.power.doc.constants.DocTags.IGNORE;
 
 /**
  * @author yu 2020/1/29.
  */
-public class JavaDocBuildTemplate {
+public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
 
     public List<RpcApiDoc> getApiData(ProjectDocConfigBuilder projectBuilder) {
         ApiConfig apiConfig = projectBuilder.getApiConfig();
@@ -50,7 +74,7 @@ public class JavaDocBuildTemplate {
         return apiDocList;
     }
 
-    public ApiDoc getSingleApiData(ProjectDocConfigBuilder projectBuilder, String apiClassName) {
+    public RpcApiDoc getSingleApiData(ProjectDocConfigBuilder projectBuilder, String apiClassName) {
         return null;
     }
 
@@ -225,60 +249,6 @@ public class JavaDocBuildTemplate {
             }
         }
         apiDoc.setAuthor(String.join(",",authorList));
-    }
-
-    private List<ApiParam> buildReturnApiParams(JavaMethod method, ProjectDocConfigBuilder projectBuilder) {
-        if (method.getReturns().isVoid()) {
-            return null;
-        }
-        ApiReturn apiReturn = DocClassUtil.processReturnType(method.getReturnType().getGenericCanonicalName());
-        String returnType = apiReturn.getGenericCanonicalName();
-        String typeName = apiReturn.getSimpleName();
-        if (this.ignoreReturnObject(typeName)) {
-            return null;
-        }
-        if (JavaClassValidateUtil.isPrimitive(typeName)) {
-            return ParamsBuildHelper.primitiveReturnRespComment(DocClassUtil.processTypeNameForParams(typeName));
-        }
-        if (JavaClassValidateUtil.isCollection(typeName)) {
-            if (returnType.contains("<")) {
-                String gicName = returnType.substring(returnType.indexOf("<") + 1, returnType.lastIndexOf(">"));
-                if (JavaClassValidateUtil.isPrimitive(gicName)) {
-                    return ParamsBuildHelper.primitiveReturnRespComment("array of " + DocClassUtil.processTypeNameForParams(gicName));
-                }
-                return ParamsBuildHelper.buildParams(gicName, "", 0, null, projectBuilder.getCustomRespFieldMap(),
-                        Boolean.TRUE, new HashMap<>(), projectBuilder, null);
-            } else {
-                return null;
-            }
-        }
-        if (JavaClassValidateUtil.isMap(typeName)) {
-            String[] keyValue = DocClassUtil.getMapKeyValueType(returnType);
-            if (keyValue.length == 0) {
-                return null;
-            }
-            if (JavaClassValidateUtil.isPrimitive(keyValue[1])) {
-                return ParamsBuildHelper.primitiveReturnRespComment("key value");
-            }
-            return ParamsBuildHelper.buildParams(keyValue[1], "", 0, null, projectBuilder.getCustomRespFieldMap(),
-                    Boolean.TRUE, new HashMap<>(), projectBuilder, null);
-        }
-        if (StringUtil.isNotEmpty(returnType)) {
-            return ParamsBuildHelper.buildParams(returnType, "", 0, null, projectBuilder.getCustomRespFieldMap(),
-                    Boolean.TRUE, new HashMap<>(), projectBuilder, null);
-        }
-        return null;
-    }
-
-    private String paramCommentResolve(String comment) {
-        if (StringUtil.isEmpty(comment)) {
-            comment = NO_COMMENTS_FOUND;
-        } else {
-            if (comment.contains("|")) {
-                comment = comment.substring(0, comment.indexOf("|"));
-            }
-        }
-        return comment;
     }
 
     private String methodDefinition(JavaMethod method) {

@@ -42,7 +42,7 @@ import static com.power.doc.constants.DocGlobalConstants.NO_COMMENTS_FOUND;
 /**
  * @author yu 2019/12/21.
  */
-public interface IDocBuildTemplate {
+public interface IDocBuildTemplate<T> {
 
     default String createDocRenderHeaders(List<ApiReqHeader> headers, boolean isAdoc) {
         StringBuilder builder = new StringBuilder();
@@ -133,9 +133,9 @@ public interface IDocBuildTemplate {
         return null;
     }
 
-    List<ApiDoc> getApiData(ProjectDocConfigBuilder projectBuilder);
+    List<T> getApiData(ProjectDocConfigBuilder projectBuilder);
 
-    ApiDoc getSingleApiData(ProjectDocConfigBuilder projectBuilder, String apiClassName);
+    T getSingleApiData(ProjectDocConfigBuilder projectBuilder, String apiClassName);
 
     boolean ignoreReturnObject(String typeName);
 

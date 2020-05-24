@@ -54,7 +54,7 @@ import static com.power.doc.constants.DocTags.IGNORE;
 /**
  * @author yu 2019/12/21.
  */
-public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
+public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
 
     private List<ApiReqHeader> headers;
 
