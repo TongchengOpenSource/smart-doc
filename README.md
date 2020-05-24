@@ -17,6 +17,7 @@ Or a static html document. If you are tired of the numerous annotations and stro
 - Support for loading source code from outside the project to generate field comments (including the sources jar package).
 - Support for generating multiple formats of documents: Markdown, HTML5, Asciidoctor,Postman Collection json.
 - Support for exporting error codes and data dictionary codes to API documentation.
+- Support Apache Dubbo RPC。
 ## Getting started
 [Smart-doc Samples](https://github.com/shalousun/smart-doc-demo.git)。
 ```
@@ -87,6 +88,8 @@ When you need to use smart-doc to generate more API document information, you ca
   "md5EncryptedHtmlName": false, // only used if each controller generates an html file
   "projectName": "smart-doc", // Configure your own project name
   "skipTransientField": true, // Not currently implemented
+  "requestFieldToUnderline":true, //convert request field to underline
+  "responseFieldToUnderline":true,//convert response field to underline
   "dataDictionaries": [// Configure the data dictionary, no need to set
     {
       "title": "Order Status", // The name of the data dictionary
@@ -201,7 +204,7 @@ Thanks to the following people who have submitted major pull requests:
 ## Who is using
 These are only part of the companies using smart-doc, for reference only. If you are using smart-doc, please [add your company here](https://github.com/shalousun/smart-doc/issues/12) to tell us your scenario to make smart-doc better.
 
-![iFLYTEK](https://raw.githubusercontent.com/shalousun/smart-doc/dev/images/known-users/iflytek.png)
+![IFLYTEK](https://raw.githubusercontent.com/shalousun/smart-doc/dev/images/known-users/iflytek.png)
 &nbsp;&nbsp;<img src="https://raw.githubusercontent.com/shalousun/smart-doc/dev/images/known-users/oneplus.png" title="OnePlus" width="83px" height="83px"/>
 &nbsp;&nbsp;<img src="https://raw.githubusercontent.com/shalousun/smart-doc/dev/images/known-users/xiaomi.png" title="Xiaomi" width="170px" height="83px"/>
 <img src="https://raw.githubusercontent.com/shalousun/smart-doc/dev/images/known-users/yuanmengjiankang.png" title="yuanmengjiankang" width="260px" height="83px"/>

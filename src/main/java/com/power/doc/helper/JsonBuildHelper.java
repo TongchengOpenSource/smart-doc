@@ -152,6 +152,8 @@ public class JsonBuildHelper {
             data.append("{\"object\":\" any object\"},");
             // throw new RuntimeException("Please do not return java.lang.Object directly in api interface.");
         } else {
+            boolean requestFieldToUnderline = builder.getApiConfig().isRequestFieldToUnderline();
+            boolean responseFieldToUnderline = builder.getApiConfig().isResponseFieldToUnderline();
             List<DocJavaField> fields = JavaClassUtil.getFields(cls, 0);
             boolean isGenerics = JavaFieldUtil.checkGenerics(fields);
             int i = 0;
@@ -163,6 +165,9 @@ public class JsonBuildHelper {
                 if (field.isStatic() || "this$0".equals(fieldName) ||
                         JavaClassValidateUtil.isIgnoreFieldTypes(subTypeName)) {
                     continue;
+                }
+                if ((responseFieldToUnderline && isResp) || (requestFieldToUnderline && !isResp)) {
+                    fieldName = StringUtil.camelToUnderline(fieldName);
                 }
                 Map<String, String> tagsMap = DocUtil.getFieldTagsValue(field);
                 if (!isResp) {

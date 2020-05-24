@@ -19,6 +19,7 @@ smart-doc完全基于接口源码分析来生成接口文档，完全做到零�
 - 开放文档数据，可自由实现接入文档管理系统。
 - 支持导出错误码和定义在代码中的各种字典码到接口文档。
 - 支持maven、gradle插件式轻松集成。
+- 支持Apache Dubbo RPC接口文档生成。
 ## Getting started
 smart-doc使用和测试可参考[smart-doc demo](https://gitee.com/sunyurepository/api-doc-test.git)。
 ```
@@ -85,6 +86,8 @@ smart-doc官方目前已经开发完成maven 插件和gradle，你可以根据�
   "projectName": "smart-doc",//配置自己的项目名称
   "skipTransientField": true,//目前未实现
   "showAuthor":true,//是否显示接口作者名称，默认是true,不想显示可关闭
+  "requestFieldToUnderline":true,//自动将驼峰入参字段在文档中转为下划线格式,//@since 1.8.7版本开始
+  "responseFieldToUnderline":true,//自动将驼峰入参字段在文档中转为下划线格式,//@since 1.8.7版本开始
   "dataDictionaries": [ //配置数据字典，没有需求可以不设置
     {
       "title": "http状态码字典", //数据字典的名称
@@ -190,7 +193,7 @@ Smart-doc is under the Apache 2.0 license.  See the [LICENSE](https://gitee.com
 ## Who is using
 > 排名不分先后，更多接入公司，欢迎在[https://gitee.com/sunyurepository/smart-doc/issues/I1594T](https://gitee.com/sunyurepository/smart-doc/issues/I1594T)登记（仅供开源用户参考）
 
-![iFLYTEK](https://gitee.com/sunyurepository/smart-doc/raw/master/images/known-users/iflytek.png)
+![IFLYTEK](https://gitee.com/sunyurepository/smart-doc/raw/master/images/known-users/iflytek.png)
 &nbsp;&nbsp;<img src="https://gitee.com/sunyurepository/smart-doc/raw/master/images/known-users/oneplus.png" title="一加" width="83px" height="83px"/>
 &nbsp;&nbsp;<img src="https://gitee.com/sunyurepository/smart-doc/raw/master/images/known-users/xiaomi.png" title="小米" width="170px" height="83px"/>
 <img src="https://gitee.com/sunyurepository/smart-doc/raw/master/images/known-users/yuanmengjiankang.png" title="远盟健康" width="260px" height="83px"/>

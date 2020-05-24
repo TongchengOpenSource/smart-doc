@@ -193,6 +193,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         if (parameterList.size() < 1) {
             return ApiRequestExample.builder().setUrl(apiMethodDoc.getUrl());
         }
+        boolean requestFieldToUnderline = configBuilder.getApiConfig().isRequestFieldToUnderline();
         Map<String, String> replacementMap = configBuilder.getReplaceClassMap();
         Map<String, String> pathParamsMap = new LinkedHashMap<>();
         Map<String, String> paramsComments = DocUtil.getParamsComments(method, DocTags.PARAM, null);
@@ -238,6 +239,9 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 if (StringUtil.isEmpty(mockValue)) {
                     mockValue = DocUtil.getValByTypeAndFieldName(simpleTypeName, paramName, Boolean.TRUE);
                 }
+            }
+            if (requestFieldToUnderline) {
+                paramName = StringUtil.camelToUnderline(paramName);
             }
             List<JavaAnnotation> annotations = parameter.getAnnotations();
             boolean paramAdded = false;
@@ -395,6 +399,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         if (parameterList.size() < 1) {
             return null;
         }
+        boolean requestFieldToUnderline = builder.getApiConfig().isRequestFieldToUnderline();
         List<String> springMvcRequestAnnotations = SpringMvcRequestAnnotationsEnum.listSpringMvcRequestAnnotations();
         Set<String> jsonParamSet = this.jsonParamSet(parameterList);
         List<ApiParam> paramList = new ArrayList<>();
@@ -431,6 +436,9 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                         + paramName + "\" in method " + javaMethod.getName() + " from " + className);
             }
             String comment = this.paramCommentResolve(paramTagMap.get(paramName));
+            if (requestFieldToUnderline) {
+                paramName = StringUtil.camelToUnderline(paramName);
+            }
             //file upload
             if (typeName.contains(DocGlobalConstants.MULTIPART_FILE_FULLY)) {
                 ApiParam param = ApiParam.of().setField(paramName).setType("file")

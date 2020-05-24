@@ -153,6 +153,18 @@ public class ApiConfig {
      */
     private boolean showAuthor = true;
 
+    /**
+     * convert request field to underline
+     * @since 1.8.7
+     */
+    private boolean requestFieldToUnderline;
+
+    /**
+     * convert response field to underline
+     * @since 1.8.7
+     */
+    private boolean responseFieldToUnderline;
+
 
     public String getServerUrl() {
         return serverUrl;
@@ -324,5 +336,21 @@ public class ApiConfig {
 
     public void setShowAuthor(boolean showAuthor) {
         this.showAuthor = showAuthor;
+    }
+
+    public boolean isRequestFieldToUnderline() {
+        return requestFieldToUnderline;
+    }
+
+    public void setRequestFieldToUnderline(boolean requestFieldToUnderline) {
+        this.requestFieldToUnderline = requestFieldToUnderline;
+    }
+
+    public boolean isResponseFieldToUnderline() {
+        return responseFieldToUnderline;
+    }
+
+    public void setResponseFieldToUnderline(boolean responseFieldToUnderline) {
+        this.responseFieldToUnderline = responseFieldToUnderline;
     }
 }

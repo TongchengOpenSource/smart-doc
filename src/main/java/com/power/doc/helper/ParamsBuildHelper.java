@@ -59,6 +59,8 @@ public class ParamsBuildHelper {
         if (registryClasses.containsKey(className) && level > registryClasses.size()) {
             return paramList;
         }
+        boolean requestFieldToUnderline = projectBuilder.getApiConfig().isRequestFieldToUnderline();
+        boolean responseFieldToUnderline = projectBuilder.getApiConfig().isResponseFieldToUnderline();
         // Registry class
         registryClasses.put(className, className);
         String simpleName = DocClassUtil.getSimpleName(className);
@@ -98,6 +100,9 @@ public class ParamsBuildHelper {
                 if (field.isStatic() || "this$0".equals(fieldName) ||
                         JavaClassValidateUtil.isIgnoreFieldTypes(subTypeName)) {
                     continue;
+                }
+                if ((responseFieldToUnderline && isResp) || (requestFieldToUnderline && !isResp)) {
+                    fieldName = StringUtil.camelToUnderline(fieldName);
                 }
                 String typeSimpleName = field.getType().getSimpleName();
                 String fieldGicName = field.getType().getGenericCanonicalName();
