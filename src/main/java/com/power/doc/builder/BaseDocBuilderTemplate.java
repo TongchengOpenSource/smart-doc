@@ -101,7 +101,7 @@ public class BaseDocBuilderTemplate {
                     Class<?> clzz = dictionary.getEnumClass();
                     if (Objects.isNull(clzz)) {
                         if (StringUtil.isEmpty(dictionary.getEnumClassName())) {
-                            throw new RuntimeException(" enum class name can't be null.");
+                            throw new RuntimeException("Enum class name can't be null.");
                         }
                         clzz = Class.forName(dictionary.getEnumClassName());
                     }
