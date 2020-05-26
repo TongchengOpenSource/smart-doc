@@ -1,13 +1,15 @@
 package com.power.doc.model.rpc;
 
 import com.power.doc.model.JavaMethodDoc;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author yu 2020/5/16.
  */
-public class RpcApiDoc {
+public class RpcApiDoc implements Comparable<RpcApiDoc> {
     /**
      * Order of controller
      *
@@ -153,5 +155,13 @@ public class RpcApiDoc {
 
     public void setAuthor(String author) {
         this.author = author;
+    }
+
+    @Override
+    public int compareTo(@NotNull RpcApiDoc o) {
+        if (Objects.nonNull(o.getDesc())) {
+            return desc.compareTo(o.getDesc());
+        }
+        return name.compareTo(o.getName());
     }
 }

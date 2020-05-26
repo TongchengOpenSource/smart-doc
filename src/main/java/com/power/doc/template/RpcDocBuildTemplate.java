@@ -39,10 +39,7 @@ import com.power.doc.utils.JavaClassUtil;
 import com.power.doc.utils.JavaClassValidateUtil;
 import com.thoughtworks.qdox.model.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.power.doc.constants.DocTags.IGNORE;
 
@@ -70,6 +67,9 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
                 List<JavaMethodDoc> apiMethodDocs = buildServiceMethod(cls, apiConfig, projectBuilder);
                 this.handleJavaApiDoc(cls, apiDocList, apiMethodDocs, order, projectBuilder);
             }
+        }
+        if (apiConfig.isSortByTitle()) {
+            Collections.sort(apiDocList);
         }
         return apiDocList;
     }
@@ -228,7 +228,7 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
         apiDoc.setName(className);
         apiDoc.setShortName(cls.getName());
         apiDoc.setAlias(className);
-        apiDoc.setUri(builder.getServerUrl()+"/"+className);
+        apiDoc.setUri(builder.getServerUrl() + "/" + className);
         apiDoc.setProtocol("dubbo");
         if (builder.getApiConfig().isMd5EncryptedHtmlName()) {
             String name = DocUtil.generateId(apiDoc.getName());
@@ -248,7 +248,7 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
                 authorList.add(docletTag.getValue());
             }
         }
-        apiDoc.setAuthor(String.join(",",authorList));
+        apiDoc.setAuthor(String.join(",", authorList));
     }
 
     private String methodDefinition(JavaMethod method) {

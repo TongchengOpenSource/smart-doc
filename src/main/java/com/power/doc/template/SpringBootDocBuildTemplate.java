@@ -82,6 +82,10 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 this.handleApiDoc(cls, apiDocList, apiMethodDocs, order, apiConfig.isMd5EncryptedHtmlName());
             }
         }
+        // sort
+        if (apiConfig.isSortByTitle()) {
+            Collections.sort(apiDocList);
+        }
         return apiDocList;
     }
 

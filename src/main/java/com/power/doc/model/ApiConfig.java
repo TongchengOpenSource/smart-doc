@@ -165,6 +165,11 @@ public class ApiConfig {
      */
     private boolean responseFieldToUnderline;
 
+    /**
+     * sort by title
+     */
+    private boolean sortByTitle;
+
 
     public String getServerUrl() {
         return serverUrl;
@@ -352,5 +357,13 @@ public class ApiConfig {
 
     public void setResponseFieldToUnderline(boolean responseFieldToUnderline) {
         this.responseFieldToUnderline = responseFieldToUnderline;
+    }
+
+    public boolean isSortByTitle() {
+        return sortByTitle;
+    }
+
+    public void setSortByTitle(boolean sortByTitle) {
+        this.sortByTitle = sortByTitle;
     }
 }
