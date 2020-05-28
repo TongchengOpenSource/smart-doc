@@ -456,10 +456,6 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             String strRequired = "true";
             for (JavaAnnotation annotation : annotations) {
                 String annotationName = annotation.getType().getValue();
-                String fullName = annotation.getType().getSimpleName();
-                if (!springMvcRequestAnnotations.contains(fullName)) {
-                    continue out;
-                }
                 if (SpringMvcAnnotations.REQUEST_HERDER.equals(annotationName)) {
                     continue out;
                 }
