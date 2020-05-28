@@ -404,7 +404,6 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             return null;
         }
         boolean requestFieldToUnderline = builder.getApiConfig().isRequestFieldToUnderline();
-        List<String> springMvcRequestAnnotations = SpringMvcRequestAnnotationsEnum.listSpringMvcRequestAnnotations();
         Set<String> jsonParamSet = this.jsonParamSet(parameterList);
         List<ApiParam> paramList = new ArrayList<>();
         int requestBodyCounter = 0;
