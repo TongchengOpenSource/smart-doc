@@ -135,9 +135,10 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
     /**
      * build common_data doc
      *
-     * @param config         api config
-     * @param template       template
-     * @param outPutFileName output file
+     * @param config             api config
+     * @param javaProjectBuilder JavaProjectBuilder
+     * @param template           template
+     * @param outPutFileName     output file
      */
     public void buildDirectoryDataDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder, String template, String outPutFileName) {
         List<ApiDocDict> directoryList = buildDictionary(config, javaProjectBuilder);

@@ -155,20 +155,31 @@ public class ApiConfig {
 
     /**
      * convert request field to underline
+     *
      * @since 1.8.7
      */
     private boolean requestFieldToUnderline;
 
     /**
      * convert response field to underline
+     *
      * @since 1.8.7
      */
     private boolean responseFieldToUnderline;
 
     /**
      * sort by title
+     *
+     * @since 1.8.7
      */
     private boolean sortByTitle;
+
+    /**
+     * is rest api doc
+     *
+     * @since 1.8.7
+     */
+    private Boolean showJavaType = Boolean.FALSE;
 
 
     public String getServerUrl() {
@@ -365,5 +376,13 @@ public class ApiConfig {
 
     public void setSortByTitle(boolean sortByTitle) {
         this.sortByTitle = sortByTitle;
+    }
+
+    public Boolean getShowJavaType() {
+        return showJavaType;
+    }
+
+    public void setShowJavaType(Boolean showJavaType) {
+        this.showJavaType = showJavaType;
     }
 }

@@ -38,6 +38,7 @@ public class RpcApiDataBuilder {
      * @return List of ApiDoc
      */
     public static RpcApiAllData getApiData(ApiConfig config) {
+        config.setShowJavaType(true);
         RpcDocBuilderTemplate builderTemplate = new RpcDocBuilderTemplate();
         builderTemplate.checkAndInitForGetApiData(config);
         JavaProjectBuilder javaProjectBuilder = new JavaProjectBuilder();

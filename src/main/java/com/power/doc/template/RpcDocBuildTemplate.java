@@ -138,6 +138,7 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
 
     private List<ApiParam> requestParams(final JavaMethod javaMethod, final String tagName, ProjectDocConfigBuilder builder) {
         boolean isStrict = builder.getApiConfig().isStrict();
+        boolean isShowJavaType = builder.getApiConfig().getShowJavaType();
         Map<String, CustomRespField> responseFieldMap = new HashMap<>();
         String className = javaMethod.getDeclaringClass().getCanonicalName();
         Map<String, String> paramTagMap = DocUtil.getParamsComments(javaMethod, tagName, className);
@@ -171,15 +172,17 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
                     gicName = gicName.substring(0, gicName.indexOf("["));
                 }
                 if (JavaClassValidateUtil.isPrimitive(gicName)) {
+                    String processedType = isShowJavaType ?
+                            JavaClassUtil.getClassSimpleName(typeName) : DocClassUtil.processTypeNameForParams(simpleName);
                     ApiParam param = ApiParam.of().setField(paramName)
-                            .setType(DocClassUtil.processTypeNameForParams(simpleName));
+                            .setType(processedType);
                     paramList.add(param);
                 } else {
                     paramList.addAll(ParamsBuildHelper.buildParams(gicNameArr[0], paramPre, 0, "true", responseFieldMap, Boolean.FALSE, new HashMap<>(), builder, groupClasses));
                 }
             } else if (JavaClassValidateUtil.isPrimitive(simpleName)) {
                 ApiParam param = ApiParam.of().setField(paramName)
-                        .setType(typeName)
+                        .setType(JavaClassUtil.getClassSimpleName(typeName))
                         .setDesc(comment).setRequired(required).setVersion(DocGlobalConstants.DEFAULT_VERSION);
                 paramList.add(param);
             } else if (JavaClassValidateUtil.isMap(fullTypeName)) {
@@ -193,7 +196,7 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
                 paramList.addAll(ParamsBuildHelper.buildParams(gicNameArr[1], paramPre, 0, "true", responseFieldMap, Boolean.FALSE, new HashMap<>(), builder, groupClasses));
             } else if (javaClass.isEnum()) {
                 ApiParam param = ApiParam.of().setField(paramName)
-                        .setType("string").setDesc(comment).setRequired(required).setVersion(DocGlobalConstants.DEFAULT_VERSION);
+                        .setType("Enum").setDesc(comment).setRequired(required).setVersion(DocGlobalConstants.DEFAULT_VERSION);
                 paramList.add(param);
             } else {
                 paramList.addAll(ParamsBuildHelper.buildParams(typeName, paramPre, 0, "true", responseFieldMap, Boolean.FALSE, new HashMap<>(), builder, groupClasses));

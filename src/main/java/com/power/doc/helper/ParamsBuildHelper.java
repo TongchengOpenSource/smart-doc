@@ -59,6 +59,7 @@ public class ParamsBuildHelper {
         if (registryClasses.containsKey(className) && level > registryClasses.size()) {
             return paramList;
         }
+        boolean isShowJavaType = projectBuilder.getApiConfig().getShowJavaType();
         boolean requestFieldToUnderline = projectBuilder.getApiConfig().isRequestFieldToUnderline();
         boolean responseFieldToUnderline = projectBuilder.getApiConfig().isResponseFieldToUnderline();
         // Registry class
@@ -69,7 +70,8 @@ public class ParamsBuildHelper {
         List<DocJavaField> fields = JavaClassUtil.getFields(cls, 0);
         int n = 0;
         if (JavaClassValidateUtil.isPrimitive(simpleName)) {
-            paramList.addAll(primitiveReturnRespComment(DocClassUtil.processTypeNameForParams(simpleName)));
+            String processedType = isShowJavaType ? simpleName : DocClassUtil.processTypeNameForParams(simpleName.toLowerCase());
+            paramList.addAll(primitiveReturnRespComment(processedType));
         } else if (JavaClassValidateUtil.isCollection(simpleName) || JavaClassValidateUtil.isArray(simpleName)) {
             if (!JavaClassValidateUtil.isCollection(globGicName[0])) {
                 String gicName = globGicName[0];
@@ -188,7 +190,7 @@ public class ParamsBuildHelper {
                 }
                 if (JavaClassValidateUtil.isPrimitive(subTypeName)) {
                     ApiParam param = ApiParam.of().setField(pre + fieldName);
-                    String processedType = DocClassUtil.processTypeNameForParams(typeSimpleName.toLowerCase());
+                    String processedType = isShowJavaType ? typeSimpleName : DocClassUtil.processTypeNameForParams(typeSimpleName.toLowerCase());
                     param.setType(processedType);
                     if (StringUtil.isNotEmpty(comment)) {
                         commonHandleParam(paramList, param, isRequired, comment, since, strRequired);
@@ -203,7 +205,7 @@ public class ParamsBuildHelper {
                         enumComments = DocUtil.replaceNewLineToHtmlBr(enumComments);
                         comment = comment + "(See: " + enumComments + ")";
                     }
-                    String processedType = DocClassUtil.processTypeNameForParams(typeSimpleName.toLowerCase());
+                    String processedType = isShowJavaType ? typeSimpleName : DocClassUtil.processTypeNameForParams(typeSimpleName.toLowerCase());
                     param.setType(processedType);
                     if (!isResp && javaClass.isEnum()) {
                         List<JavaMethod> methods = javaClass.getMethods();

@@ -29,6 +29,7 @@ import com.power.doc.helper.ParamsBuildHelper;
 import com.power.doc.model.*;
 import com.power.doc.utils.DocClassUtil;
 import com.power.doc.utils.DocUtil;
+import com.power.doc.utils.JavaClassUtil;
 import com.power.doc.utils.JavaClassValidateUtil;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaMethod;
@@ -101,7 +102,9 @@ public interface IDocBuildTemplate<T> {
             return null;
         }
         if (JavaClassValidateUtil.isPrimitive(typeName)) {
-            return ParamsBuildHelper.primitiveReturnRespComment(DocClassUtil.processTypeNameForParams(typeName));
+            String processedName = projectBuilder.getApiConfig().getShowJavaType() ?
+                    JavaClassUtil.getClassSimpleName(typeName) : DocClassUtil.processTypeNameForParams(typeName);
+            return ParamsBuildHelper.primitiveReturnRespComment(processedName);
         }
         if (JavaClassValidateUtil.isCollection(typeName)) {
             if (returnType.contains("<")) {
