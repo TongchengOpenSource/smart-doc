@@ -28,7 +28,7 @@ for(doc in list){
 **Description:** ${doc.detail}
 
 <%if(isNotEmpty(doc.requestParams)){%>
-**Request-parameters:**
+**Invoke-parameters:**
 
 Parameter|Type|Description|Required|Since
 ---|---|---|---|---

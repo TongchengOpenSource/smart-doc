@@ -152,7 +152,7 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
             String typeName = parameter.getType().getGenericCanonicalName();
             String simpleName = parameter.getType().getValue().toLowerCase();
             String fullTypeName = parameter.getType().getFullyQualifiedName();
-
+            String paramPre = paramName + ".";
             if (!paramTagMap.containsKey(paramName) && JavaClassValidateUtil.isPrimitive(fullTypeName) && isStrict) {
                 throw new RuntimeException("ERROR: Unable to find javadoc @param for actual param \""
                         + paramName + "\" in method " + javaMethod.getName() + " from " + className);
@@ -175,7 +175,7 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
                             .setType(DocClassUtil.processTypeNameForParams(simpleName));
                     paramList.add(param);
                 } else {
-                    paramList.addAll(ParamsBuildHelper.buildParams(gicNameArr[0], DocGlobalConstants.EMPTY, 0, "true", responseFieldMap, Boolean.FALSE, new HashMap<>(), builder, groupClasses));
+                    paramList.addAll(ParamsBuildHelper.buildParams(gicNameArr[0], paramPre, 0, "true", responseFieldMap, Boolean.FALSE, new HashMap<>(), builder, groupClasses));
                 }
             } else if (JavaClassValidateUtil.isPrimitive(simpleName)) {
                 ApiParam param = ApiParam.of().setField(paramName)
@@ -190,13 +190,13 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
                     continue out;
                 }
                 String[] gicNameArr = DocClassUtil.getSimpleGicName(typeName);
-                paramList.addAll(ParamsBuildHelper.buildParams(gicNameArr[1], DocGlobalConstants.EMPTY, 0, "true", responseFieldMap, Boolean.FALSE, new HashMap<>(), builder, groupClasses));
+                paramList.addAll(ParamsBuildHelper.buildParams(gicNameArr[1], paramPre, 0, "true", responseFieldMap, Boolean.FALSE, new HashMap<>(), builder, groupClasses));
             } else if (javaClass.isEnum()) {
                 ApiParam param = ApiParam.of().setField(paramName)
                         .setType("string").setDesc(comment).setRequired(required).setVersion(DocGlobalConstants.DEFAULT_VERSION);
                 paramList.add(param);
             } else {
-                paramList.addAll(ParamsBuildHelper.buildParams(typeName, DocGlobalConstants.EMPTY, 0, "true", responseFieldMap, Boolean.FALSE, new HashMap<>(), builder, groupClasses));
+                paramList.addAll(ParamsBuildHelper.buildParams(typeName, paramPre, 0, "true", responseFieldMap, Boolean.FALSE, new HashMap<>(), builder, groupClasses));
             }
         }
         return paramList;
@@ -248,20 +248,20 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
                 authorList.add(docletTag.getValue());
             }
         }
-        apiDoc.setAuthor(String.join(",", authorList));
+        apiDoc.setAuthor(String.join(", ", authorList));
     }
 
     private String methodDefinition(JavaMethod method) {
         StringBuilder methodBuilder = new StringBuilder();
         String returnClass = method.getReturnType().getGenericCanonicalName();
-        methodBuilder.append(returnClass).append(" ");
+        methodBuilder.append(JavaClassUtil.getClassSimpleName(returnClass)).append(" ");
         List<String> params = new ArrayList<>();
         List<JavaParameter> parameters = method.getParameters();
         for (JavaParameter parameter : parameters) {
-            params.add(parameter.getType() + " " + parameter.getName());
+            params.add(JavaClassUtil.getClassSimpleName(parameter.getType().getValue()) + " " + JavaClassUtil.getClassSimpleName(parameter.getName()));
         }
         methodBuilder.append(method.getName()).append("(")
-                .append(String.join(",", params)).append(")");
+                .append(String.join(", ", params)).append(")");
         return methodBuilder.toString();
     }
 

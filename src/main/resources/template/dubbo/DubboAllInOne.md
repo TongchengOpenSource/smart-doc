@@ -61,7 +61,7 @@ for(doc in api.list){
 **Description:** ${doc.detail}
 
 <%if(isNotEmpty(doc.requestParams)){%>
-**Request-parameters:**
+**Invoke-parameters:**
 
 Parameter|Type|Description|Required|Since
 ---|---|---|---|---
