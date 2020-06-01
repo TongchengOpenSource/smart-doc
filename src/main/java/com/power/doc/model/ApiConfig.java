@@ -181,6 +181,12 @@ public class ApiConfig {
      */
     private Boolean showJavaType = Boolean.FALSE;
 
+    /**
+     * rpc config
+     * @since 1.8.7
+     */
+    private String rpcConsumerConfig;
+
 
     public String getServerUrl() {
         return serverUrl;
@@ -384,5 +390,13 @@ public class ApiConfig {
 
     public void setShowJavaType(Boolean showJavaType) {
         this.showJavaType = showJavaType;
+    }
+
+    public String getRpcConsumerConfig() {
+        return rpcConsumerConfig;
+    }
+
+    public void setRpcConsumerConfig(String rpcConsumerConfig) {
+        this.rpcConsumerConfig = rpcConsumerConfig;
     }
 }
