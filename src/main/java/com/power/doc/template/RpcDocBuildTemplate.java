@@ -226,6 +226,10 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
 
     private void handleJavaApiDoc(JavaClass cls, List<RpcApiDoc> apiDocList, List<JavaMethodDoc> apiMethodDocs, int order, ProjectDocConfigBuilder builder) {
         String className = cls.getCanonicalName();
+        List<JavaType> javaTypes = cls.getImplements();
+        if (javaTypes.size() >= 1 && !cls.isInterface()) {
+            className = javaTypes.get(0).getCanonicalName();
+        }
         RpcApiDoc apiDoc = new RpcApiDoc();
         apiDoc.setOrder(order);
         apiDoc.setName(className);
