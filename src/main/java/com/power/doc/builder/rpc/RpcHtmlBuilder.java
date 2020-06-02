@@ -39,6 +39,7 @@ import com.thoughtworks.qdox.JavaProjectBuilder;
 import org.beetl.core.Template;
 
 import java.util.List;
+import java.util.Objects;
 
 import static com.power.doc.constants.DocGlobalConstants.*;
 
@@ -85,7 +86,7 @@ public class RpcHtmlBuilder {
             copyCss(config.getOutPath());
             buildDoc(apiDocList, config.getOutPath());
             buildErrorCodeDoc(config.getErrorCodes(), config.getOutPath());
-            buildDependency(config.getRpcApiDependencies(), config.getOutPath());
+            buildDependency(config);
         }
     }
 
@@ -188,17 +189,24 @@ public class RpcHtmlBuilder {
      * @param apiDocDictList dictionary list
      * @param outPath
      */
-    private static void buildDependency(List<RpcApiDependency> apiDocDictList, String outPath) {
-        if (CollectionUtil.isNotEmpty(apiDocDictList)) {
+    private static void buildDependency(ApiConfig config) {
+        List<RpcApiDependency> apiDependencies = config.getRpcApiDependencies();
+        if (CollectionUtil.isNotEmpty(config.getRpcApiDependencies())) {
+            String rpcConfig = config.getRpcConsumerConfig();
+            String rpcConfigConfigContent = null;
+            if (Objects.nonNull(rpcConfig)) {
+                rpcConfigConfigContent = FileUtil.getFileContent(rpcConfig);
+            }
             Template template = BeetlTemplateUtil.getByName(RPC_DEPENDENCY_MD_TPL);
-            template.binding(TemplateVariable.DEPENDENCY_LIST.getVariable(), apiDocDictList);
+            template.binding(TemplateVariable.RPC_CONSUMER_CONFIG.getVariable(), rpcConfigConfigContent);
+            template.binding(TemplateVariable.DEPENDENCY_LIST.getVariable(), apiDependencies);
             String dictHtml = MarkDownUtil.toHtml(template.render());
             Template dictTpl = BeetlTemplateUtil.getByName(HTML_API_DOC_TPL);
             dictTpl.binding(TemplateVariable.VERSION.getVariable(), now);
             dictTpl.binding(TemplateVariable.TITLE.getVariable(), DICT_EN_TITLE);
             dictTpl.binding(TemplateVariable.HTML.getVariable(), dictHtml);
             dictTpl.binding(TemplateVariable.CREATE_TIME.getVariable(), DateTimeUtil.long2Str(now, DateTimeUtil.DATE_FORMAT_SECOND));
-            FileUtil.nioWriteFile(dictTpl.render(), outPath + FILE_SEPARATOR + "dependency.html");
+            FileUtil.nioWriteFile(dictTpl.render(), config.getOutPath() + FILE_SEPARATOR + "dependency.html");
         }
     }
 }

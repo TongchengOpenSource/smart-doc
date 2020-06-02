@@ -121,6 +121,12 @@ When you need to use smart-doc to generate more API document information, you ca
       "value": "00000" // Set the value of the response code
     }
   ],
+  "rpcApiDependencies":[{ //Your dubbo api denpendency
+        "artifactId":"SpringBoot2-Dubbo-Api",
+        "groupId":"com.demo",
+        "version":"1.0.0"
+  }],
+  "rpcConsumerConfig": "src/main/resources/consumer-example.conf",//dubbo consumer config example
   "apiObjectReplacements": [{ // Supports replacing specified objects with custom objects to complete document rendering
         "className": "org.springframework.data.domain.Pageable",
         "replacementClassName": "com.power.doc.model.PageRequestDto" //Use custom PageRequestDto instead of JPA Pageable for document rendering.
@@ -149,6 +155,14 @@ mvn -Dfile.encoding = UTF-8 smart-doc: markdown
 mvn -Dfile.encoding = UTF-8 smart-doc: adoc
 // Generate postman collection
 mvn -Dfile.encoding = UTF-8 smart-doc: postman
+
+// Apache Dubbo Rpc
+// Generate html
+mvn -Dfile.encoding = UTF-8 smart-doc:rpc-html
+// Generate markdown
+mvn -Dfile.encoding = UTF-8 smart-doc:rpc-markdown
+// Generate adoc
+mvn -Dfile.encoding = UTF-8 smart-doc:rpc-adoc
 ```
 **Note:** Under the window system, if you use the maven command line to perform document generation, 
 non-English characters may be garbled, so you need to specify `-Dfile.encoding = UTF-8` during execution.

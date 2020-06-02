@@ -27,6 +27,12 @@ for(dependency in dependencyList){
 
 <%}%>
 ```
+<%if(isNotEmpty(consumerConfigExample)){%>
+Consumer config
+```
+${consumerConfigExample}
+```
+<%}%>
 <%}%>
 
 <%

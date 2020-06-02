@@ -37,6 +37,11 @@ public class JavaMethodDoc {
     private String methodDefinition;
 
     /**
+     * escape method definition
+     */
+    private String escapeMethodDefinition;
+
+    /**
      * detailed introduction of the method
      */
     private String detail;
@@ -165,5 +170,13 @@ public class JavaMethodDoc {
 
     public void setMethodDefinition(String methodDefinition) {
         this.methodDefinition = methodDefinition;
+    }
+
+    public String getEscapeMethodDefinition() {
+        return escapeMethodDefinition;
+    }
+
+    public void setEscapeMethodDefinition(String escapeMethodDefinition) {
+        this.escapeMethodDefinition = escapeMethodDefinition;
     }
 }

@@ -128,6 +128,12 @@ smart-doc官方目前已经开发完成maven 插件和gradle，你可以根据�
       "since": "-"
     }
   ],
+  "rpcApiDependencies":[{ // 项目开放的dubbo api接口模块依赖，配置后输出到文档方便使用者集成
+        "artifactId":"SpringBoot2-Dubbo-Api",
+        "groupId":"com.demo",
+        "version":"1.0.0"
+   }],
+  "rpcConsumerConfig": "src/main/resources/consumer-example.conf",//文档中添加dubbo consumer集成配置，用于方便集成方可以快速集成
   "apiObjectReplacements": [{ // 自smart-doc 1.8.5开始你可以使用自定义类覆盖其他类做文档渲染，非必须
       "className": "org.springframework.data.domain.Pageable",
       "replacementClassName": "com.power.doc.model.PageRequestDto" //自定义的PageRequestDto替换Pageable做文档渲染
@@ -154,10 +160,18 @@ mvn -Dfile.encoding=UTF-8 smart-doc:markdown
 mvn -Dfile.encoding=UTF-8 smart-doc:adoc
 //生成postman json数据
 mvn -Dfile.encoding=UTF-8 smart-doc:postman
+
+// Apache Dubbo Rpc文档
+// Generate html
+mvn -Dfile.encoding = UTF-8 smart-doc:rpc-html
+// Generate markdown
+mvn -Dfile.encoding = UTF-8 smart-doc:rpc-markdown
+// Generate adoc
+mvn -Dfile.encoding = UTF-8 smart-doc:rpc-adoc
 ```
 **注意：** 尤其在window系统下，如果实际使用maven命令行执行文档生成，可能会出现乱码，因此需要在执行时指定`-Dfile.encoding=UTF-8`。
 #### Use Idea
-![idea中smart-doc-maven插件使用](https://images.gitee.com/uploads/images/2019/1215/004902_b0c153d6_144669.png "idea.png")
+![idea中smart-doc-maven插件使用](https://images.gitee.com/uploads/images/2020/0602/213139_739a4d41_144669.png "maven_plugin_tasks.png")
 
 ### Use gradle plugin
 如果你使用gradle来构建项目，你可以参考gradle插件的使用文档来集成，

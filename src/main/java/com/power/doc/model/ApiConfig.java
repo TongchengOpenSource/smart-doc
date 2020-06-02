@@ -182,7 +182,7 @@ public class ApiConfig {
     private Boolean showJavaType = Boolean.FALSE;
 
     /**
-     * rpc config
+     * rpc consumer config example
      * @since 1.8.7
      */
     private String rpcConsumerConfig;

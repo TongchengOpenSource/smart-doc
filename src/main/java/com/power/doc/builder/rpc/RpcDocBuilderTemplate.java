@@ -39,6 +39,7 @@ import com.thoughtworks.qdox.JavaProjectBuilder;
 import org.beetl.core.Template;
 
 import java.util.List;
+import java.util.Objects;
 
 import static com.power.doc.constants.DocGlobalConstants.FILE_SEPARATOR;
 
@@ -84,6 +85,11 @@ public class RpcDocBuilderTemplate extends BaseDocBuilderTemplate {
     public void buildAllInOne(List<RpcApiDoc> apiDocList, ApiConfig config, JavaProjectBuilder javaProjectBuilder, String template, String outPutFileName) {
         String outPath = config.getOutPath();
         String strTime = DateTimeUtil.long2Str(now, DateTimeUtil.DATE_FORMAT_SECOND);
+        String rpcConfig = config.getRpcConsumerConfig();
+        String rpcConfigConfigContent = null;
+        if (Objects.nonNull(rpcConfig)) {
+            rpcConfigConfigContent = FileUtil.getFileContent(rpcConfig);
+        }
         FileUtil.mkdirs(outPath);
         List<ApiErrorCode> errorCodeList = errorCodeDictToList(config);
         Template tpl = BeetlTemplateUtil.getByName(template);
@@ -94,6 +100,7 @@ public class RpcDocBuilderTemplate extends BaseDocBuilderTemplate {
         tpl.binding(TemplateVariable.VERSION.getVariable(), now);
         tpl.binding(TemplateVariable.CREATE_TIME.getVariable(), strTime);
         tpl.binding(TemplateVariable.PROJECT_NAME.getVariable(), config.getProjectName());
+        tpl.binding(TemplateVariable.RPC_CONSUMER_CONFIG.getVariable(), rpcConfigConfigContent);
         setDirectoryLanguageVariable(config, tpl);
         FileUtil.nioWriteFile(tpl.render(), outPath + FILE_SEPARATOR + outPutFileName);
     }

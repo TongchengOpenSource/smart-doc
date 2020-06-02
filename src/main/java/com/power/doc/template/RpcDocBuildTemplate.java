@@ -105,7 +105,11 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
             }
             methodOrder++;
             JavaMethodDoc apiMethodDoc = new JavaMethodDoc();
-            apiMethodDoc.setMethodDefinition(methodDefinition(method));
+            String methodDefine = methodDefinition(method);
+            String scapeMethod = methodDefine.replaceAll("<", "&lt;");
+            scapeMethod = scapeMethod.replaceAll(">", "&gt;");
+            apiMethodDoc.setMethodDefinition(methodDefine);
+            apiMethodDoc.setEscapeMethodDefinition(scapeMethod);
             apiMethodDoc.setOrder(methodOrder);
             apiMethodDoc.setDesc(method.getComment());
             apiMethodDoc.setName(method.getName());
@@ -120,7 +124,7 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
                 apiMethodDoc.setAuthor(authorValue);
             }
             apiMethodDoc.setDetail(apiNoteValue);
-            if (null != method.getTagByName(IGNORE)) {
+            if (Objects.nonNull(method.getTagByName(IGNORE))) {
                 continue;
             }
             apiMethodDoc.setDeprecated(deprecated);
@@ -159,7 +163,6 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
                         + paramName + "\" in method " + javaMethod.getName() + " from " + className);
             }
             String comment = this.paramCommentResolve(paramTagMap.get(paramName));
-
             JavaClass javaClass = builder.getJavaProjectBuilder().getClassByName(fullTypeName);
             List<JavaAnnotation> annotations = parameter.getAnnotations();
             List<String> groupClasses = JavaClassUtil.getParamGroupJavaClass(annotations);
@@ -268,7 +271,7 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
         for (String str : arrays) {
             returnClass = returnClass.replaceAll(str, JavaClassUtil.getClassSimpleName(str));
         }
-        methodBuilder.append(JavaClassUtil.getClassSimpleName(returnClass)).append(" ");
+        methodBuilder.append(returnClass).append(" ");
         List<String> params = new ArrayList<>();
         List<JavaParameter> parameters = method.getParameters();
         for (JavaParameter parameter : parameters) {

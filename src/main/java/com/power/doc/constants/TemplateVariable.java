@@ -45,7 +45,9 @@ public enum TemplateVariable {
     VERSION("version"),
     PROTOCOL("protocol"),
     AUTHOR("author"),
-    URI("uri"),;
+    URI("uri"),
+    RPC_CONSUMER_CONFIG("consumerConfigExample")
+    ;
 
 
     private String variable;

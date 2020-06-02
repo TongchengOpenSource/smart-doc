@@ -103,6 +103,17 @@
 </pre>
                 </div>
             </div>
+            <%if(isNotEmpty(consumerConfigExample)){%>
+            <div class="paragraph">
+                <p>Consumer config</p>
+            </div>
+            <div class="listingblock">
+                <div class="content">
+<pre>${consumerConfigExample}
+</pre>
+                </div>
+            </div>
+            <%}%>
         </div>
     </div>
     <%}%>
@@ -134,8 +145,7 @@
                     class="line-through">${doc.desc}</span></a><%}else{%><a class="link"
                                                                             href="#_${api.order+1}_${doc.order}_${doc.desc}">${api.order+1}.${doc.order}.&nbsp;${doc.desc}</a><%}%>
             </h3>
-                <div class="paragraph"><p><strong>Definition:</strong><a href="${doc.methodDefinition}" class="bare">&nbsp;${doc.methodDefinition}</a>
-                </p></div>
+                <div class="paragraph"><p><strong>Definition:</strong>&nbsp;${doc.escapeMethodDefinition}</p></div>
                 <div class="paragraph"><p><strong>Description:</strong>&nbsp;${doc.detail}</p></div>
                <%if(isNotEmpty(doc.requestParams)){%>
                 <div class="paragraph"><p><strong>Invoke-parameters:</strong></p></div>
