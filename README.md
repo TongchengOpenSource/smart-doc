@@ -3,7 +3,7 @@
 [中文文档](https://github.com/shalousun/smart-doc/blob/master/README_CN.md)
 
 ## Introduce
-Smart-doc is a java restful api document generation tool. Smart-doc is based on interface source code analysis to generate interface documents, and zero annotation intrusion.
+Smart-doc is a tool that supports both JAVA RESTFUL API and Apache Dubbo RPC interface document generation.. Smart-doc is based on interface source code analysis to generate interface documents, and zero annotation intrusion.
 You only need to write java standard comments when developing, smart-doc can help you generate a simple and clear markdown
 Or a static html document. If you are tired of the numerous annotations and strong intrusion code contamination of document tools like swagger, then hug smart-doc!
 ## Features
@@ -17,7 +17,7 @@ Or a static html document. If you are tired of the numerous annotations and stro
 - Support for loading source code from outside the project to generate field comments (including the sources jar package).
 - Support for generating multiple formats of documents: Markdown, HTML5, Asciidoctor,Postman Collection json.
 - Support for exporting error codes and data dictionary codes to API documentation.
-- Support Apache Dubbo RPC。
+- Support Apache Dubbo RPC.
 ## Getting started
 [Smart-doc Samples](https://github.com/shalousun/smart-doc-demo.git)。
 ```
