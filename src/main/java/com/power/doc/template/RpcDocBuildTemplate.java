@@ -260,7 +260,14 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
 
     private String methodDefinition(JavaMethod method) {
         StringBuilder methodBuilder = new StringBuilder();
-        String returnClass = method.getReturnType().getGenericCanonicalName();
+        JavaType returnType = method.getReturnType();
+        String simpleReturn = returnType.getCanonicalName();
+        String returnClass = returnType.getGenericCanonicalName();
+        returnClass = returnClass.replace(simpleReturn, JavaClassUtil.getClassSimpleName(simpleReturn));
+        String[] arrays = DocClassUtil.getSimpleGicName(returnClass);
+        for (String str : arrays) {
+            returnClass = returnClass.replaceAll(str, JavaClassUtil.getClassSimpleName(str));
+        }
         methodBuilder.append(JavaClassUtil.getClassSimpleName(returnClass)).append(" ");
         List<String> params = new ArrayList<>();
         List<JavaParameter> parameters = method.getParameters();
