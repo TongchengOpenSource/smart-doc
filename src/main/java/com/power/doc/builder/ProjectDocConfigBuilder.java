@@ -32,10 +32,7 @@ import com.thoughtworks.qdox.JavaProjectBuilder;
 import com.thoughtworks.qdox.model.JavaClass;
 
 import java.io.File;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static com.power.doc.constants.DocGlobalConstants.DEFAULT_SERVER_URL;
@@ -123,7 +120,7 @@ public class ProjectDocConfigBuilder {
 
     public JavaClass getClassByName(String simpleName) {
         JavaClass cls = javaProjectBuilder.getClassByName(simpleName);
-        List<DocJavaField> fieldList = JavaClassUtil.getFields(cls, 0);
+        List<DocJavaField> fieldList = JavaClassUtil.getFields(cls, 0,new HashSet<>());
         // handle inner class
         if (Objects.isNull(cls.getFields()) || fieldList.isEmpty()) {
             cls = classFilesMap.get(simpleName);

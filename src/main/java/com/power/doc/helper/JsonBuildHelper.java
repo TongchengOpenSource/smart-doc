@@ -38,6 +38,7 @@ import com.thoughtworks.qdox.model.JavaField;
 import com.thoughtworks.qdox.model.JavaMethod;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -154,7 +155,7 @@ public class JsonBuildHelper {
         } else {
             boolean requestFieldToUnderline = builder.getApiConfig().isRequestFieldToUnderline();
             boolean responseFieldToUnderline = builder.getApiConfig().isResponseFieldToUnderline();
-            List<DocJavaField> fields = JavaClassUtil.getFields(cls, 0);
+            List<DocJavaField> fields = JavaClassUtil.getFields(cls, 0,new HashSet<>());
             boolean isGenerics = JavaFieldUtil.checkGenerics(fields);
             int i = 0;
             out:

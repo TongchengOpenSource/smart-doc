@@ -36,6 +36,7 @@ import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaField;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -69,7 +70,7 @@ public class FormDataBuildHelper {
         String simpleName = DocClassUtil.getSimpleName(className);
         String[] globGicName = DocClassUtil.getSimpleGicName(className);
         JavaClass cls = builder.getJavaProjectBuilder().getClassByName(simpleName);
-        List<DocJavaField> fields = JavaClassUtil.getFields(cls, 0);
+        List<DocJavaField> fields = JavaClassUtil.getFields(cls, 0,new HashSet<>());
 
         if (JavaClassValidateUtil.isPrimitive(simpleName)) {
             FormData formData = new FormData();

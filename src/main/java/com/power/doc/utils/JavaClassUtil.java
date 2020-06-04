@@ -38,6 +38,7 @@ import com.thoughtworks.qdox.model.impl.DefaultJavaParameterizedType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * Handle JavaClass
@@ -49,11 +50,12 @@ public class JavaClassUtil {
     /**
      * Get fields
      *
-     * @param cls1 The JavaClass object
-     * @param i    Recursive counter
+     * @param cls1        The JavaClass object
+     * @param counter     Recursive counter
+     * @param addedFields added fields,Field deduplication
      * @return list of JavaField
      */
-    public static List<DocJavaField> getFields(JavaClass cls1, int i) {
+    public static List<DocJavaField> getFields(JavaClass cls1, int counter, Set<String> addedFields) {
         List<DocJavaField> fieldList = new ArrayList<>();
         if (null == cls1) {
             return fieldList;
@@ -80,6 +82,7 @@ public class JavaClassUtil {
                     if (!enable) {
                         continue;
                     }
+                    addedFields.add(methodName);
                     String comment = javaMethod.getComment();
                     JavaField javaField = new DefaultJavaField(javaMethod.getReturns(), methodName);
                     DocJavaField docJavaField = DocJavaField.builder().setJavaField(javaField).setComment(comment);
@@ -89,16 +92,21 @@ public class JavaClassUtil {
             // ignore enum parent class
             if (!cls1.isEnum()) {
                 JavaClass parentClass = cls1.getSuperJavaClass();
-                fieldList.addAll(getFields(parentClass, i));
+                fieldList.addAll(getFields(parentClass, counter, addedFields));
                 List<JavaType> implClasses = cls1.getImplements();
                 for (JavaType type : implClasses) {
                     JavaClass javaClass = (JavaClass) type;
-                    fieldList.addAll(getFields(javaClass, i));
+                    fieldList.addAll(getFields(javaClass, counter, addedFields));
                 }
 
             }
             List<DocJavaField> docJavaFields = new ArrayList<>();
             for (JavaField javaField : cls1.getFields()) {
+                String fieldName = javaField.getName();
+                if (addedFields.contains(fieldName)) {
+                    continue;
+                }
+                addedFields.add(fieldName);
                 docJavaFields.add(DocJavaField.builder().setComment(javaField.getComment()).setJavaField(javaField));
             }
             fieldList.addAll(docJavaFields);

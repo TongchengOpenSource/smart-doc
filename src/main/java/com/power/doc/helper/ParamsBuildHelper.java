@@ -36,6 +36,7 @@ import com.power.doc.utils.*;
 import com.thoughtworks.qdox.model.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -67,7 +68,7 @@ public class ParamsBuildHelper {
         String simpleName = DocClassUtil.getSimpleName(className);
         String[] globGicName = DocClassUtil.getSimpleGicName(className);
         JavaClass cls = projectBuilder.getClassByName(simpleName);
-        List<DocJavaField> fields = JavaClassUtil.getFields(cls, 0);
+        List<DocJavaField> fields = JavaClassUtil.getFields(cls, 0,new HashSet<>());
         int n = 0;
         if (JavaClassValidateUtil.isPrimitive(simpleName)) {
             String processedType = isShowJavaType ? simpleName : DocClassUtil.processTypeNameForParams(simpleName.toLowerCase());
