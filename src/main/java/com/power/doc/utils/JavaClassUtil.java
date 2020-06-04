@@ -61,7 +61,7 @@ public class JavaClassUtil {
             return fieldList;
         } else if ("Object".equals(cls1.getSimpleName()) || "Timestamp".equals(cls1.getSimpleName()) ||
                 "Date".equals(cls1.getSimpleName()) || "Locale".equals(cls1.getSimpleName())
-                || "ClassLoader".equals(cls1.getSimpleName())) {
+                || "ClassLoader".equals(cls1.getSimpleName()) || JavaClassValidateUtil.isMap(cls1.getFullyQualifiedName())) {
             return fieldList;
         } else {
             String className = cls1.getFullyQualifiedName();
@@ -98,7 +98,6 @@ public class JavaClassUtil {
                     JavaClass javaClass = (JavaClass) type;
                     fieldList.addAll(getFields(javaClass, counter, addedFields));
                 }
-
             }
             List<DocJavaField> docJavaFields = new ArrayList<>();
             for (JavaField javaField : cls1.getFields()) {
