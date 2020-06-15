@@ -182,6 +182,12 @@ public class ApiConfig {
     private Boolean showJavaType = Boolean.FALSE;
 
     /**
+     * is inline enum field comment
+     * @since 1.8.8
+     */
+    private Boolean inlineEnum = Boolean.FALSE;
+
+    /**
      * rpc consumer config example
      * @since 1.8.7
      */
@@ -304,6 +310,12 @@ public class ApiConfig {
         this.dataDictionaries = CollectionUtil.asList(dataDictConfigs);
     }
 
+    public ApiDataDictionary getDataDictionary(String enumClassSimpleName) {
+        return this.dataDictionaries.stream().filter((apiDataDictionary ->
+                enumClassSimpleName.equalsIgnoreCase(apiDataDictionary.getEnumClassName())))
+                .findFirst().orElse(new ApiDataDictionary());
+    }
+
     public List<ApiErrorCodeDictionary> getErrorCodeDictionaries() {
         return errorCodeDictionaries;
     }
@@ -398,5 +410,13 @@ public class ApiConfig {
 
     public void setRpcConsumerConfig(String rpcConsumerConfig) {
         this.rpcConsumerConfig = rpcConsumerConfig;
+    }
+
+    public Boolean getInlineEnum() {
+        return inlineEnum;
+    }
+
+    public void setInlineEnum(Boolean inlineEnum) {
+        this.inlineEnum = inlineEnum;
     }
 }
