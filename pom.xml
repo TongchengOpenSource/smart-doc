@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>smart-doc</artifactId>
     <packaging>jar</packaging>
-    <version>1.8.7-SNAPSHOT</version>
+    <version>1.8.7</version>
 
     <name>smart-doc</name>
     <url>https://github.com/shalousun/smart-doc.git</url>
-    <description>smart-doc is a java restful api document generation tool.</description>
+    <description>Smart-doc is a tool that supports both JAVA RESTFUL API and Apache Dubbo RPC interface document generation.</description>
 
     <licenses>
         <license>
@@ -32,7 +32,7 @@
     </developers>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <flexmark.version>0.60.2</flexmark.version>
+        <flexmark.version>0.61.32</flexmark.version>
     </properties>
     <dependencies>
         <dependency>
@@ -44,7 +44,7 @@
         <dependency>
             <groupId>com.ibeetl</groupId>
             <artifactId>beetl</artifactId>
-            <version>3.1.1.RELEASE</version>
+            <version>3.1.6.RELEASE</version>
         </dependency>
         <dependency>
             <groupId>com.thoughtworks.qdox</groupId>
@@ -165,26 +165,4 @@
             </distributionManagement>
         </profile>
     </profiles>
-
-    <distributionManagement>
-        <repository>
-            <id>nexus-releases</id>
-            <name>Nexus Release Repository</name>
-            <url>http://nexus.sjhh-inner.com/nexus/repository/maven-releases/</url>
-        </repository>
-        <snapshotRepository>
-            <id>nexus-snapshots</id>
-            <name>Nexus Snapshot Repository</name>
-            <url>http://nexus.sjhh-inner.com/nexus/repository/maven-snapshots/</url>
-        </snapshotRepository>
-    </distributionManagement>
-    <pluginRepositories>
-        <pluginRepository>
-            <id>maven-public</id>
-            <name>maven-public</name>
-            <url>http://nexus.sjhh-inner.com/nexus/repository/maven-public/</url>
-            <releases><enabled>true</enabled></releases>
-            <snapshots><enabled>true</enabled></snapshots>
-        </pluginRepository>
-    </pluginRepositories>
 </project>
