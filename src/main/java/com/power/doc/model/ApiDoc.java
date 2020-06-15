@@ -1,7 +1,7 @@
 /*
  * smart-doc
  *
- * Copyright (C) 2019-2020 smart-doc
+ * Copyright (C) 2018-2020 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -22,9 +22,12 @@
  */
 package com.power.doc.model;
 
-import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
-public class ApiDoc {
+import java.util.List;
+import java.util.Objects;
+
+public class ApiDoc implements Comparable<ApiDoc> {
 
     /**
      * Order of controller
@@ -93,5 +96,13 @@ public class ApiDoc {
 
     public void setAlias(String alias) {
         this.alias = alias;
+    }
+
+    @Override
+    public int compareTo(@NotNull ApiDoc o) {
+        if (Objects.nonNull(o.getDesc())) {
+            return desc.compareTo(o.getDesc());
+        }
+        return name.compareTo(o.getName());
     }
 }

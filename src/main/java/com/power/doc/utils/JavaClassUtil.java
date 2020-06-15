@@ -1,7 +1,7 @@
 /*
  * smart-doc
  *
- * Copyright (C) 2019-2020 smart-doc
+ * Copyright (C) 2018-2020 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -38,6 +38,7 @@ import com.thoughtworks.qdox.model.impl.DefaultJavaParameterizedType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * Handle JavaClass
@@ -49,17 +50,18 @@ public class JavaClassUtil {
     /**
      * Get fields
      *
-     * @param cls1 The JavaClass object
-     * @param i    Recursive counter
+     * @param cls1        The JavaClass object
+     * @param counter     Recursive counter
+     * @param addedFields added fields,Field deduplication
      * @return list of JavaField
      */
-    public static List<DocJavaField> getFields(JavaClass cls1, int i) {
+    public static List<DocJavaField> getFields(JavaClass cls1, int counter, Set<String> addedFields) {
         List<DocJavaField> fieldList = new ArrayList<>();
         if (null == cls1) {
             return fieldList;
         } else if ("Object".equals(cls1.getSimpleName()) || "Timestamp".equals(cls1.getSimpleName()) ||
                 "Date".equals(cls1.getSimpleName()) || "Locale".equals(cls1.getSimpleName())
-                || "ClassLoader".equals(cls1.getSimpleName())) {
+                || "ClassLoader".equals(cls1.getSimpleName()) || JavaClassValidateUtil.isMap(cls1.getFullyQualifiedName())) {
             return fieldList;
         } else {
             String className = cls1.getFullyQualifiedName();
@@ -69,10 +71,18 @@ public class JavaClassUtil {
                 List<JavaMethod> methods = cls1.getMethods();
                 for (JavaMethod javaMethod : methods) {
                     String methodName = javaMethod.getName();
-                    if (!methodName.startsWith("get")) {
+                    boolean enable = false;
+                    if (methodName.startsWith("get") && !"get".equals(methodName)) {
+                        methodName = StringUtil.firstToLowerCase(methodName.substring(3, methodName.length()));
+                        enable = true;
+                    } else if (methodName.startsWith("is") && !"is".equals(methodName)) {
+                        methodName = StringUtil.firstToLowerCase(methodName.substring(2, methodName.length()));
+                        enable = true;
+                    }
+                    if (!enable) {
                         continue;
                     }
-                    methodName = StringUtil.firstToLowerCase(methodName.substring(3, methodName.length()));
+                    addedFields.add(methodName);
                     String comment = javaMethod.getComment();
                     JavaField javaField = new DefaultJavaField(javaMethod.getReturns(), methodName);
                     DocJavaField docJavaField = DocJavaField.builder().setJavaField(javaField).setComment(comment);
@@ -82,10 +92,20 @@ public class JavaClassUtil {
             // ignore enum parent class
             if (!cls1.isEnum()) {
                 JavaClass parentClass = cls1.getSuperJavaClass();
-                fieldList.addAll(getFields(parentClass, i));
+                fieldList.addAll(getFields(parentClass, counter, addedFields));
+                List<JavaType> implClasses = cls1.getImplements();
+                for (JavaType type : implClasses) {
+                    JavaClass javaClass = (JavaClass) type;
+                    fieldList.addAll(getFields(javaClass, counter, addedFields));
+                }
             }
             List<DocJavaField> docJavaFields = new ArrayList<>();
             for (JavaField javaField : cls1.getFields()) {
+                String fieldName = javaField.getName();
+                if (addedFields.contains(fieldName)) {
+                    continue;
+                }
+                addedFields.add(fieldName);
                 docJavaFields.add(DocJavaField.builder().setComment(javaField.getComment()).setJavaField(javaField));
             }
             fieldList.addAll(docJavaFields);

@@ -1,7 +1,7 @@
 /*
  * smart-doc
  *
- * Copyright (C) 2019-2020 smart-doc
+ * Copyright (C) 2018-2020 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -89,7 +89,7 @@ public class DocClassUtil {
         for (int i = 0; i < length; i++) {
             if (classes.size() > 0) {
                 int index = classes.size() - 1;
-                if (!DocUtil.isClassName(classes.get(index))) {
+                if (!isClassName(classes.get(index))) {
                     globIndex = globIndex + 1;
                     if (globIndex < length) {
                         indexList.add(globIndex);
@@ -99,7 +99,7 @@ public class DocClassUtil {
                 } else {
                     globIndex = globIndex + 1;
                     if (globIndex < length) {
-                        if (DocUtil.isClassName(arr[globIndex]) || arr[i].length() == 1) {
+                        if (isClassName(arr[globIndex])) {
                             indexList.add(globIndex);
                             classes.add(arr[globIndex]);
                         } else {
@@ -113,7 +113,7 @@ public class DocClassUtil {
                     }
                 }
             } else {
-                if (DocUtil.isClassName(arr[i]) || arr[i].length() == 1) {
+                if (isClassName(arr[i])) {
                     indexList.add(i);
                     classes.add(arr[i]);
                 } else {
@@ -252,6 +252,19 @@ public class DocClassUtil {
                 return "org.springframework.data.domain.PageRequest";
             default:
                 return typeName;
+        }
+    }
+
+    private static boolean isClassName(String className) {
+        if (StringUtil.isEmpty(className)) {
+            return false;
+        }
+        if (className.contains("<") && !className.contains(">")) {
+            return false;
+        } else if (className.contains(">") && !className.contains("<")) {
+            return false;
+        } else {
+            return true;
         }
     }
 }

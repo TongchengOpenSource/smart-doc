@@ -3,7 +3,7 @@
 [中文文档](https://github.com/shalousun/smart-doc/blob/master/README_CN.md)
 
 ## Introduce
-Smart-doc is a java restful api document generation tool. Smart-doc is based on interface source code analysis to generate interface documents, and zero annotation intrusion.
+Smart-doc is a tool that supports both JAVA RESTFUL API and Apache Dubbo RPC interface document generation.. Smart-doc is based on interface source code analysis to generate interface documents, and zero annotation intrusion.
 You only need to write java standard comments when developing, smart-doc can help you generate a simple and clear markdown
 Or a static html document. If you are tired of the numerous annotations and strong intrusion code contamination of document tools like swagger, then hug smart-doc!
 ## Features
@@ -17,6 +17,7 @@ Or a static html document. If you are tired of the numerous annotations and stro
 - Support for loading source code from outside the project to generate field comments (including the sources jar package).
 - Support for generating multiple formats of documents: Markdown, HTML5, Asciidoctor,Postman Collection json.
 - Support for exporting error codes and data dictionary codes to API documentation.
+- Support Apache Dubbo RPC.
 ## Getting started
 [Smart-doc Samples](https://github.com/shalousun/smart-doc-demo.git)。
 ```
@@ -40,6 +41,12 @@ Add smart-doc-maven-plugin in your pom.xml.
             <!-The format is: groupId: artifactId; refer to the following->
             <exclude>com.google.guava:guava</exclude>
         </excludes>
+        <!--Since version 1.0.8, the plugin provides includes support-->
+        <!--smart-doc can automatically analyze the dependency tree to load all dependent source code. In principle, it will affect the efficiency of document construction, so you can use includes to let the plugin load the components you configure.-->
+        <includes>
+            <!-The format is: groupId: artifactId; refer to the following->
+            <include>com.alibaba:fastjson</include>
+        </includes>
     </configuration>
     <executions>
         <execution>
@@ -81,6 +88,8 @@ When you need to use smart-doc to generate more API document information, you ca
   "md5EncryptedHtmlName": false, // only used if each controller generates an html file
   "projectName": "smart-doc", // Configure your own project name
   "skipTransientField": true, // Not currently implemented
+  "requestFieldToUnderline":true, //convert request field to underline
+  "responseFieldToUnderline":true,//convert response field to underline
   "dataDictionaries": [// Configure the data dictionary, no need to set
     {
       "title": "Order Status", // The name of the data dictionary
@@ -112,6 +121,12 @@ When you need to use smart-doc to generate more API document information, you ca
       "value": "00000" // Set the value of the response code
     }
   ],
+  "rpcApiDependencies":[{ //Your dubbo api denpendency
+        "artifactId":"SpringBoot2-Dubbo-Api",
+        "groupId":"com.demo",
+        "version":"1.0.0"
+  }],
+  "rpcConsumerConfig": "src/main/resources/consumer-example.conf",//dubbo consumer config example
   "apiObjectReplacements": [{ // Supports replacing specified objects with custom objects to complete document rendering
         "className": "org.springframework.data.domain.Pageable",
         "replacementClassName": "com.power.doc.model.PageRequestDto" //Use custom PageRequestDto instead of JPA Pageable for document rendering.
@@ -140,6 +155,14 @@ mvn -Dfile.encoding = UTF-8 smart-doc: markdown
 mvn -Dfile.encoding = UTF-8 smart-doc: adoc
 // Generate postman collection
 mvn -Dfile.encoding = UTF-8 smart-doc: postman
+
+// Apache Dubbo Rpc
+// Generate html
+mvn -Dfile.encoding = UTF-8 smart-doc:rpc-html
+// Generate markdown
+mvn -Dfile.encoding = UTF-8 smart-doc:rpc-markdown
+// Generate adoc
+mvn -Dfile.encoding = UTF-8 smart-doc:rpc-adoc
 ```
 **Note:** Under the window system, if you use the maven command line to perform document generation, 
 non-English characters may be garbled, so you need to specify `-Dfile.encoding = UTF-8` during execution.
@@ -159,8 +182,10 @@ On Use IntelliJ IDE, if you have added smart-doc-maven-plugin to the project,
 you can directly find the plugin smart-doc plugin and click to generate API documentation.
 
 ![smart-doc-maven-plugin](https://raw.githubusercontent.com/shalousun/smart-doc-maven-plugin/master/images/idea.png)
-
-## Generated document example
+### Use gradle plugin
+If you use gradle to build the project, you can refer to the documentation of the gradle plugin to integrate,
+[smart-doc-gradle-plugin](https://github.com/smart-doc-group/smart-doc-gradle-plugin/blob/master/README.md)
+### Generated document example
 #### Interface header rendering
 ![header](https://images.gitee.com/uploads/images/2019/1231/223538_be45f8a9_144669.png "header.png")
 #### Request parameter example rendering
@@ -186,18 +211,20 @@ Thanks to the following people who have submitted major pull requests:
 - [@br7roy](https://github.com/br7roy)
 - [@caiqyxyx](https://gitee.com/cy-work)
 - [@lichoking](https://gitee.com/lichoking)
+- [@JtePromise](https://github.com/JtePromise)
 ## Other reference
 - [Smart-doc manual](https://github.com/shalousun/smart-doc/wiki)
 
 ## Who is using
 These are only part of the companies using smart-doc, for reference only. If you are using smart-doc, please [add your company here](https://github.com/shalousun/smart-doc/issues/12) to tell us your scenario to make smart-doc better.
 
-![iFLYTEK](https://raw.githubusercontent.com/shalousun/smart-doc/dev/images/known-users/iflytek.png)
+![IFLYTEK](https://raw.githubusercontent.com/shalousun/smart-doc/dev/images/known-users/iflytek.png)
 &nbsp;&nbsp;<img src="https://raw.githubusercontent.com/shalousun/smart-doc/dev/images/known-users/oneplus.png" title="OnePlus" width="83px" height="83px"/>
 &nbsp;&nbsp;<img src="https://raw.githubusercontent.com/shalousun/smart-doc/dev/images/known-users/xiaomi.png" title="Xiaomi" width="170px" height="83px"/>
 <img src="https://raw.githubusercontent.com/shalousun/smart-doc/dev/images/known-users/yuanmengjiankang.png" title="yuanmengjiankang" width="260px" height="83px"/>
 <img src="https://raw.githubusercontent.com/shalousun/smart-doc/dev/images/known-users/zhongkezhilian.png" title="zhongkezhilian" width="272px" height="83px"/>
 <img src="https://raw.githubusercontent.com/shalousun/smart-doc/dev/images/known-users/puqie_gaitubao_100x100.jpg" title="puqie" width="83px" height="83px"/>
+
 ## License
 Smart-doc is under the Apache 2.0 license.  See the [LICENSE](https://github.com/shalousun/smart-doc/blob/master/LICENSE) file for details.
 ## Contact

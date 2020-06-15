@@ -1,7 +1,7 @@
 /*
  * smart-doc https://github.com/shalousun/smart-doc
  *
- * Copyright (C) 2019-2020 smart-doc
+ * Copyright (C) 2018-2020 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -38,6 +38,7 @@ import com.thoughtworks.qdox.model.JavaField;
 import com.thoughtworks.qdox.model.JavaMethod;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -152,7 +153,9 @@ public class JsonBuildHelper {
             data.append("{\"object\":\" any object\"},");
             // throw new RuntimeException("Please do not return java.lang.Object directly in api interface.");
         } else {
-            List<DocJavaField> fields = JavaClassUtil.getFields(cls, 0);
+            boolean requestFieldToUnderline = builder.getApiConfig().isRequestFieldToUnderline();
+            boolean responseFieldToUnderline = builder.getApiConfig().isResponseFieldToUnderline();
+            List<DocJavaField> fields = JavaClassUtil.getFields(cls, 0,new HashSet<>());
             boolean isGenerics = JavaFieldUtil.checkGenerics(fields);
             int i = 0;
             out:
@@ -163,6 +166,9 @@ public class JsonBuildHelper {
                 if (field.isStatic() || "this$0".equals(fieldName) ||
                         JavaClassValidateUtil.isIgnoreFieldTypes(subTypeName)) {
                     continue;
+                }
+                if ((responseFieldToUnderline && isResp) || (requestFieldToUnderline && !isResp)) {
+                    fieldName = StringUtil.camelToUnderline(fieldName);
                 }
                 Map<String, String> tagsMap = DocUtil.getFieldTagsValue(field);
                 if (!isResp) {

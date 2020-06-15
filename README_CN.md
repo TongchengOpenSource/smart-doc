@@ -1,8 +1,8 @@
 <h1 align="center"><a href="https://github.com/shalousun/smart-doc" target="_blank">Smart-Doc Project</a></h1>
 
 ## Introduce
-smart-doc是一个java restful api文档生成工具，smart-doc颠覆了传统类似swagger这种大量采用注解侵入来生成文档的实现方法。
-smart-doc完全基于接口源码分析来生成接口文档，完全做到零注解侵入，你只需要按照java标准注释的写，smart-doc就能帮你生成一个简易明了的markdown
+smart-doc是一款同时支持JAVA RESTFUL API和Apache Dubbo RPC接口文档生成的工具，smart-doc颠覆了传统类似swagger这种大量采用注解侵入来生成文档的实现方法。
+smart-doc完全基于接口源码分析来生成接口文档，完全做到零注解侵入，你只需要按照java标准注释编写，smart-doc就能帮你生成一个简易明了的markdown
 或是一个像GitBook样式的静态html文档。如果你已经厌倦了swagger等文档工具的无数注解和强侵入污染，那请拥抱smart-doc吧！
 ## Features
 - 零注解、零学习成本、只需要写标准java注释。
@@ -18,7 +18,8 @@ smart-doc完全基于接口源码分析来生成接口文档，完全做到零�
 - 轻易实现在Spring Boot服务上在线查看静态HTML5 api文档。
 - 开放文档数据，可自由实现接入文档管理系统。
 - 支持导出错误码和定义在代码中的各种字典码到接口文档。
-- 支持插件式轻松集成。
+- 支持maven、gradle插件式轻松集成。
+- 支持Apache Dubbo RPC接口文档生成。
 ## Getting started
 smart-doc使用和测试可参考[smart-doc demo](https://gitee.com/sunyurepository/api-doc-test.git)。
 ```
@@ -26,7 +27,7 @@ smart-doc使用和测试可参考[smart-doc demo](https://gitee.com/sunyureposit
 ```
 你可以启动这个Spring Boot的项目，然后访问`http://localhost:8080/doc/api.html`来浏览smart-doc生成的接口文档。
 ### Add Maven plugin
-smart-doc官方目前由于人力有限仅实现了maven 插件，使用Gradle的请走单元测试方式集成smart-doc。
+smart-doc官方目前已经开发完成maven 插件和gradle，你可以根据自己的构建工具来选择使用maven插件或者是gradle插件。
 #### add plugin
 ```
 <plugin>
@@ -43,6 +44,12 @@ smart-doc官方目前由于人力有限仅实现了maven 插件，使用Gradle�
             <!--格式为：groupId:artifactId;参考如下-->
             <exclude>com.alibaba:fastjson</exclude>
         </excludes>
+        <!--自1.0.8版本开始，插件提供includes支持-->
+        <!--smart-doc能自动分析依赖树加载所有依赖源码，原则上会影响文档构建效率，因此你可以使用includes来让插件加载你配置的组件-->
+        <includes>
+            <!--格式为：groupId:artifactId;参考如下-->
+            <include>com.alibaba:fastjson</include>
+        </includes>
     </configuration>
     <executions>
         <execution>
@@ -79,6 +86,8 @@ smart-doc官方目前由于人力有限仅实现了maven 插件，使用Gradle�
   "projectName": "smart-doc",//配置自己的项目名称
   "skipTransientField": true,//目前未实现
   "showAuthor":true,//是否显示接口作者名称，默认是true,不想显示可关闭
+  "requestFieldToUnderline":true,//自动将驼峰入参字段在文档中转为下划线格式,//@since 1.8.7版本开始
+  "responseFieldToUnderline":true,//自动将驼峰入参字段在文档中转为下划线格式,//@since 1.8.7版本开始
   "dataDictionaries": [ //配置数据字典，没有需求可以不设置
     {
       "title": "http状态码字典", //数据字典的名称
@@ -119,6 +128,12 @@ smart-doc官方目前由于人力有限仅实现了maven 插件，使用Gradle�
       "since": "-"
     }
   ],
+  "rpcApiDependencies":[{ // 项目开放的dubbo api接口模块依赖，配置后输出到文档方便使用者集成
+        "artifactId":"SpringBoot2-Dubbo-Api",
+        "groupId":"com.demo",
+        "version":"1.0.0"
+   }],
+  "rpcConsumerConfig": "src/main/resources/consumer-example.conf",//文档中添加dubbo consumer集成配置，用于方便集成方可以快速集成
   "apiObjectReplacements": [{ // 自smart-doc 1.8.5开始你可以使用自定义类覆盖其他类做文档渲染，非必须
       "className": "org.springframework.data.domain.Pageable",
       "replacementClassName": "com.power.doc.model.PageRequestDto" //自定义的PageRequestDto替换Pageable做文档渲染
@@ -145,12 +160,22 @@ mvn -Dfile.encoding=UTF-8 smart-doc:markdown
 mvn -Dfile.encoding=UTF-8 smart-doc:adoc
 //生成postman json数据
 mvn -Dfile.encoding=UTF-8 smart-doc:postman
+
+// Apache Dubbo Rpc文档
+// Generate html
+mvn -Dfile.encoding = UTF-8 smart-doc:rpc-html
+// Generate markdown
+mvn -Dfile.encoding = UTF-8 smart-doc:rpc-markdown
+// Generate adoc
+mvn -Dfile.encoding = UTF-8 smart-doc:rpc-adoc
 ```
 **注意：** 尤其在window系统下，如果实际使用maven命令行执行文档生成，可能会出现乱码，因此需要在执行时指定`-Dfile.encoding=UTF-8`。
 #### Use Idea
-![idea中smart-doc-maven插件使用](https://images.gitee.com/uploads/images/2019/1215/004902_b0c153d6_144669.png "idea.png")
+![idea中smart-doc-maven插件使用](https://images.gitee.com/uploads/images/2020/0602/213139_739a4d41_144669.png "maven_plugin_tasks.png")
 
-
+### Use gradle plugin
+如果你使用gradle来构建项目，你可以参考gradle插件的使用文档来集成，
+[smart-doc-gradle-plugin](https://gitee.com/sunyurepository/smart-doc-gradle-plugin/blob/master/README_CN.md)
 ### Use Junit Test 
 从smart-doc 1.7.9开始，官方提供了maven插件，使用smart-doc的maven插件后不再需要创建单元测试。
 [单元测试生成文档](https://gitee.com/sunyurepository/smart-doc/wikis/单元测试集成smart-doc?sort_id=1990284)
@@ -171,6 +196,7 @@ mvn clean install -Dmaven.test.skip=true
 - [@br7roy](https://github.com/br7roy)
 - [@caiqyxyx](https://gitee.com/cy-work)
 - [@lichoking](https://gitee.com/lichoking)
+- [@JtePromise](https://github.com/JtePromise)
 ## Other reference
 - [smart-doc功能使用介绍](https://my.oschina.net/u/1760791/blog/2250962)
 - [smart-doc官方wiki](https://gitee.com/sunyurepository/smart-doc/wikis/Home?sort_id=1652800)
@@ -181,13 +207,12 @@ Smart-doc is under the Apache 2.0 license.  See the [LICENSE](https://gitee.com
 ## Who is using
 > 排名不分先后，更多接入公司，欢迎在[https://gitee.com/sunyurepository/smart-doc/issues/I1594T](https://gitee.com/sunyurepository/smart-doc/issues/I1594T)登记（仅供开源用户参考）
 
-![iFLYTEK](https://gitee.com/sunyurepository/smart-doc/raw/master/images/known-users/iflytek.png)
+![IFLYTEK](https://gitee.com/sunyurepository/smart-doc/raw/master/images/known-users/iflytek.png)
 &nbsp;&nbsp;<img src="https://gitee.com/sunyurepository/smart-doc/raw/master/images/known-users/oneplus.png" title="一加" width="83px" height="83px"/>
 &nbsp;&nbsp;<img src="https://gitee.com/sunyurepository/smart-doc/raw/master/images/known-users/xiaomi.png" title="小米" width="170px" height="83px"/>
 <img src="https://gitee.com/sunyurepository/smart-doc/raw/master/images/known-users/yuanmengjiankang.png" title="远盟健康" width="260px" height="83px"/>
 <img src="https://gitee.com/sunyurepository/smart-doc/raw/master/images/known-users/zhongkezhilian.png" title="中科智链" width="272px" height="83px"/>
 <img src="https://gitee.com/sunyurepository/smart-doc/raw/master/images/known-users/puqie_gaitubao_100x100.jpg" title="普切信息科技" width="83px" height="83px"/>
-
 ## Contact
 愿意参与构建smart-doc或者是需要交流问题可以加入qq群：
 

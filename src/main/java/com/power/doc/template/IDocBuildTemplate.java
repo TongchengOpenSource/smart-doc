@@ -1,7 +1,7 @@
 /*
  * smart-doc
  *
- * Copyright (C) 2019-2020 smart-doc
+ * Copyright (C) 2018-2020 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -29,6 +29,7 @@ import com.power.doc.helper.ParamsBuildHelper;
 import com.power.doc.model.*;
 import com.power.doc.utils.DocClassUtil;
 import com.power.doc.utils.DocUtil;
+import com.power.doc.utils.JavaClassUtil;
 import com.power.doc.utils.JavaClassValidateUtil;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaMethod;
@@ -42,7 +43,7 @@ import static com.power.doc.constants.DocGlobalConstants.NO_COMMENTS_FOUND;
 /**
  * @author yu 2019/12/21.
  */
-public interface IDocBuildTemplate {
+public interface IDocBuildTemplate<T> {
 
     default String createDocRenderHeaders(List<ApiReqHeader> headers, boolean isAdoc) {
         StringBuilder builder = new StringBuilder();
@@ -101,7 +102,9 @@ public interface IDocBuildTemplate {
             return null;
         }
         if (JavaClassValidateUtil.isPrimitive(typeName)) {
-            return ParamsBuildHelper.primitiveReturnRespComment(DocClassUtil.processTypeNameForParams(typeName));
+            String processedName = projectBuilder.getApiConfig().getShowJavaType() ?
+                    JavaClassUtil.getClassSimpleName(typeName) : DocClassUtil.processTypeNameForParams(typeName);
+            return ParamsBuildHelper.primitiveReturnRespComment(processedName);
         }
         if (JavaClassValidateUtil.isCollection(typeName)) {
             if (returnType.contains("<")) {
@@ -133,9 +136,9 @@ public interface IDocBuildTemplate {
         return null;
     }
 
-    List<ApiDoc> getApiData(ProjectDocConfigBuilder projectBuilder);
+    List<T> getApiData(ProjectDocConfigBuilder projectBuilder);
 
-    ApiDoc getSingleApiData(ProjectDocConfigBuilder projectBuilder, String apiClassName);
+    T getSingleApiData(ProjectDocConfigBuilder projectBuilder, String apiClassName);
 
     boolean ignoreReturnObject(String typeName);
 

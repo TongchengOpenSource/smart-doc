@@ -32,6 +32,16 @@ public class JavaMethodDoc {
     private String desc;
 
     /**
+     * method definition
+     */
+    private String methodDefinition;
+
+    /**
+     * escape method definition
+     */
+    private String escapeMethodDefinition;
+
+    /**
      * detailed introduction of the method
      */
     private String detail;
@@ -152,5 +162,21 @@ public class JavaMethodDoc {
 
     public void setRequestParams(List<ApiParam> requestParams) {
         this.requestParams = requestParams;
+    }
+
+    public String getMethodDefinition() {
+        return methodDefinition;
+    }
+
+    public void setMethodDefinition(String methodDefinition) {
+        this.methodDefinition = methodDefinition;
+    }
+
+    public String getEscapeMethodDefinition() {
+        return escapeMethodDefinition;
+    }
+
+    public void setEscapeMethodDefinition(String escapeMethodDefinition) {
+        this.escapeMethodDefinition = escapeMethodDefinition;
     }
 }

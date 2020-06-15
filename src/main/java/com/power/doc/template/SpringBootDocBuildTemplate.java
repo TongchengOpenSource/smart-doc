@@ -1,7 +1,7 @@
 /*
  * smart-doc
  *
- * Copyright (C) 2019-2020 smart-doc
+ * Copyright (C) 2018-2020 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -54,7 +54,7 @@ import static com.power.doc.constants.DocTags.IGNORE;
 /**
  * @author yu 2019/12/21.
  */
-public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
+public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
 
     private List<ApiReqHeader> headers;
 
@@ -81,6 +81,10 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
                 List<ApiMethodDoc> apiMethodDocs = buildControllerMethod(cls, apiConfig, projectBuilder);
                 this.handleApiDoc(cls, apiDocList, apiMethodDocs, order, apiConfig.isMd5EncryptedHtmlName());
             }
+        }
+        // sort
+        if (apiConfig.isSortByTitle()) {
+            Collections.sort(apiDocList);
         }
         return apiDocList;
     }
@@ -193,6 +197,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
         if (parameterList.size() < 1) {
             return ApiRequestExample.builder().setUrl(apiMethodDoc.getUrl());
         }
+        boolean requestFieldToUnderline = configBuilder.getApiConfig().isRequestFieldToUnderline();
         Map<String, String> replacementMap = configBuilder.getReplaceClassMap();
         Map<String, String> pathParamsMap = new LinkedHashMap<>();
         Map<String, String> paramsComments = DocUtil.getParamsComments(method, DocTags.PARAM, null);
@@ -238,6 +243,9 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
                 if (StringUtil.isEmpty(mockValue)) {
                     mockValue = DocUtil.getValByTypeAndFieldName(simpleTypeName, paramName, Boolean.TRUE);
                 }
+            }
+            if (requestFieldToUnderline) {
+                paramName = StringUtil.camelToUnderline(paramName);
             }
             List<JavaAnnotation> annotations = parameter.getAnnotations();
             boolean paramAdded = false;
@@ -335,7 +343,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
                 formData.setValue(strVal);
                 formDataList.add(formData);
             } else {
-                formDataList.addAll(FormDataBuildHelper.getFormData(gicTypeName, new HashMap<>(), 0, configBuilder, DocGlobalConstants.ENMPTY));
+                formDataList.addAll(FormDataBuildHelper.getFormData(gicTypeName, new HashMap<>(), 0, configBuilder, DocGlobalConstants.EMPTY));
             }
         }
         requestExample.setFormDataList(formDataList);
@@ -349,8 +357,8 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
                 .equals(methodType)) {
             //for post put
             path = DocUtil.formatAndRemove(path, pathParamsMap);
-            body = UrlUtil.urlJoin(DocGlobalConstants.ENMPTY, DocUtil.formDataToMap(formDataList))
-                    .replace("?", DocGlobalConstants.ENMPTY);
+            body = UrlUtil.urlJoin(DocGlobalConstants.EMPTY, DocUtil.formDataToMap(formDataList))
+                    .replace("?", DocGlobalConstants.EMPTY);
             body = StringUtil.removeQuotes(body);
             url = apiMethodDoc.getServerUrl() + "/" + path;
             url = UrlUtil.simplifyUrl(url);
@@ -379,7 +387,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
             url = UrlUtil.simplifyUrl(url);
             exampleBody = String.format(DocGlobalConstants.CURL_REQUEST_TYPE, methodType, url);
             requestExample.setExampleBody(exampleBody)
-                    .setJsonBody(DocGlobalConstants.ENMPTY)
+                    .setJsonBody(DocGlobalConstants.EMPTY)
                     .setUrl(url);
         }
         return requestExample;
@@ -395,11 +403,16 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
         if (parameterList.size() < 1) {
             return null;
         }
+        boolean requestFieldToUnderline = builder.getApiConfig().isRequestFieldToUnderline();
+        Set<String> jsonParamSet = this.jsonParamSet(parameterList);
         List<ApiParam> paramList = new ArrayList<>();
         int requestBodyCounter = 0;
         out:
         for (JavaParameter parameter : parameterList) {
             String paramName = parameter.getName();
+            if (jsonParamSet.size() > 0 && !jsonParamSet.contains(paramName)) {
+                continue;
+            }
             String typeName = parameter.getType().getGenericCanonicalName();
             String simpleName = parameter.getType().getValue().toLowerCase();
             String fullTypeName = parameter.getType().getFullyQualifiedName();
@@ -426,6 +439,9 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
                         + paramName + "\" in method " + javaMethod.getName() + " from " + className);
             }
             String comment = this.paramCommentResolve(paramTagMap.get(paramName));
+            if (requestFieldToUnderline) {
+                paramName = StringUtil.camelToUnderline(paramName);
+            }
             //file upload
             if (typeName.contains(DocGlobalConstants.MULTIPART_FILE_FULLY)) {
                 ApiParam param = ApiParam.of().setField(paramName).setType("file")
@@ -481,7 +497,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
                 } else {
                     if (requestBodyCounter > 0) {
                         //for json
-                        paramList.addAll(ParamsBuildHelper.buildParams(gicNameArr[0], DocGlobalConstants.ENMPTY, 0, "true", responseFieldMap, Boolean.FALSE, new HashMap<>(), builder, groupClasses));
+                        paramList.addAll(ParamsBuildHelper.buildParams(gicNameArr[0], DocGlobalConstants.EMPTY, 0, "true", responseFieldMap, Boolean.FALSE, new HashMap<>(), builder, groupClasses));
                     } else {
                         throw new RuntimeException("Spring MVC can't support binding Collection on method "
                                 + javaMethod.getName() + "Check it in " + javaMethod.getDeclaringClass().getCanonicalName());
@@ -500,13 +516,13 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
                     continue out;
                 }
                 String[] gicNameArr = DocClassUtil.getSimpleGicName(typeName);
-                paramList.addAll(ParamsBuildHelper.buildParams(gicNameArr[1], DocGlobalConstants.ENMPTY, 0, "true", responseFieldMap, Boolean.FALSE, new HashMap<>(), builder, groupClasses));
+                paramList.addAll(ParamsBuildHelper.buildParams(gicNameArr[1], DocGlobalConstants.EMPTY, 0, "true", responseFieldMap, Boolean.FALSE, new HashMap<>(), builder, groupClasses));
             } else if (javaClass.isEnum()) {
                 ApiParam param = ApiParam.of().setField(paramName)
                         .setType("string").setDesc(comment).setRequired(required).setVersion(DocGlobalConstants.DEFAULT_VERSION);
                 paramList.add(param);
             } else {
-                paramList.addAll(ParamsBuildHelper.buildParams(typeName, DocGlobalConstants.ENMPTY, 0, "true", responseFieldMap, Boolean.FALSE, new HashMap<>(), builder, groupClasses));
+                paramList.addAll(ParamsBuildHelper.buildParams(typeName, DocGlobalConstants.EMPTY, 0, "true", responseFieldMap, Boolean.FALSE, new HashMap<>(), builder, groupClasses));
             }
         }
         return paramList;
@@ -521,5 +537,20 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
             }
         }
         return false;
+    }
+
+    public Set<String> jsonParamSet(List<JavaParameter> parameterList) {
+        Set<String> jsonParamSet = new HashSet<>();
+        for (JavaParameter parameter : parameterList) {
+            String paramName = parameter.getName();
+            List<JavaAnnotation> annotations = parameter.getAnnotations();
+            for (JavaAnnotation annotation : annotations) {
+                String annotationName = annotation.getType().getValue();
+                if (SpringMvcAnnotations.REQUEST_BODY.equals(annotationName)) {
+                    jsonParamSet.add(paramName);
+                }
+            }
+        }
+        return jsonParamSet;
     }
 }

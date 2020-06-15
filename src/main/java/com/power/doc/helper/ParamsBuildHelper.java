@@ -1,7 +1,7 @@
 /*
  * smart-doc https://github.com/shalousun/smart-doc
  *
- * Copyright (C) 2019-2020 smart-doc
+ * Copyright (C) 2018-2020 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -36,6 +36,7 @@ import com.power.doc.utils.*;
 import com.thoughtworks.qdox.model.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -59,15 +60,19 @@ public class ParamsBuildHelper {
         if (registryClasses.containsKey(className) && level > registryClasses.size()) {
             return paramList;
         }
+        boolean isShowJavaType = projectBuilder.getApiConfig().getShowJavaType();
+        boolean requestFieldToUnderline = projectBuilder.getApiConfig().isRequestFieldToUnderline();
+        boolean responseFieldToUnderline = projectBuilder.getApiConfig().isResponseFieldToUnderline();
         // Registry class
         registryClasses.put(className, className);
         String simpleName = DocClassUtil.getSimpleName(className);
         String[] globGicName = DocClassUtil.getSimpleGicName(className);
         JavaClass cls = projectBuilder.getClassByName(simpleName);
-        List<DocJavaField> fields = JavaClassUtil.getFields(cls, 0);
+        List<DocJavaField> fields = JavaClassUtil.getFields(cls, 0,new HashSet<>());
         int n = 0;
         if (JavaClassValidateUtil.isPrimitive(simpleName)) {
-            paramList.addAll(primitiveReturnRespComment(DocClassUtil.processTypeNameForParams(simpleName)));
+            String processedType = isShowJavaType ? simpleName : DocClassUtil.processTypeNameForParams(simpleName.toLowerCase());
+            paramList.addAll(primitiveReturnRespComment(processedType));
         } else if (JavaClassValidateUtil.isCollection(simpleName) || JavaClassValidateUtil.isArray(simpleName)) {
             if (!JavaClassValidateUtil.isCollection(globGicName[0])) {
                 String gicName = globGicName[0];
@@ -98,6 +103,9 @@ public class ParamsBuildHelper {
                 if (field.isStatic() || "this$0".equals(fieldName) ||
                         JavaClassValidateUtil.isIgnoreFieldTypes(subTypeName)) {
                     continue;
+                }
+                if ((responseFieldToUnderline && isResp) || (requestFieldToUnderline && !isResp)) {
+                    fieldName = StringUtil.camelToUnderline(fieldName);
                 }
                 String typeSimpleName = field.getType().getSimpleName();
                 String fieldGicName = field.getType().getGenericCanonicalName();
@@ -183,7 +191,7 @@ public class ParamsBuildHelper {
                 }
                 if (JavaClassValidateUtil.isPrimitive(subTypeName)) {
                     ApiParam param = ApiParam.of().setField(pre + fieldName);
-                    String processedType = DocClassUtil.processTypeNameForParams(typeSimpleName.toLowerCase());
+                    String processedType = isShowJavaType ? typeSimpleName : DocClassUtil.processTypeNameForParams(typeSimpleName.toLowerCase());
                     param.setType(processedType);
                     if (StringUtil.isNotEmpty(comment)) {
                         commonHandleParam(paramList, param, isRequired, comment, since, strRequired);
@@ -198,7 +206,7 @@ public class ParamsBuildHelper {
                         enumComments = DocUtil.replaceNewLineToHtmlBr(enumComments);
                         comment = comment + "(See: " + enumComments + ")";
                     }
-                    String processedType = DocClassUtil.processTypeNameForParams(typeSimpleName.toLowerCase());
+                    String processedType = isShowJavaType ? typeSimpleName : DocClassUtil.processTypeNameForParams(typeSimpleName.toLowerCase());
                     param.setType(processedType);
                     if (!isResp && javaClass.isEnum()) {
                         List<JavaMethod> methods = javaClass.getMethods();

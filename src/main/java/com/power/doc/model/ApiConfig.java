@@ -1,7 +1,7 @@
 /*
  * smart-doc
  *
- * Copyright (C) 2019-2020 smart-doc
+ * Copyright (C) 2018-2020 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -24,6 +24,7 @@ package com.power.doc.model;
 
 import com.power.common.util.CollectionUtil;
 import com.power.doc.constants.DocLanguage;
+import com.power.doc.model.rpc.RpcApiDependency;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -131,6 +132,11 @@ public class ApiConfig {
     private List<ApiObjectReplacement> apiObjectReplacements;
 
     /**
+     * list of rpc api dependencies
+     */
+    private List<RpcApiDependency> rpcApiDependencies;
+
+    /**
      * @since 1.7.5
      * project name
      */
@@ -146,6 +152,40 @@ public class ApiConfig {
      * default show author
      */
     private boolean showAuthor = true;
+
+    /**
+     * convert request field to underline
+     *
+     * @since 1.8.7
+     */
+    private boolean requestFieldToUnderline;
+
+    /**
+     * convert response field to underline
+     *
+     * @since 1.8.7
+     */
+    private boolean responseFieldToUnderline;
+
+    /**
+     * sort by title
+     *
+     * @since 1.8.7
+     */
+    private boolean sortByTitle;
+
+    /**
+     * is rest api doc
+     *
+     * @since 1.8.7
+     */
+    private Boolean showJavaType = Boolean.FALSE;
+
+    /**
+     * rpc consumer config example
+     * @since 1.8.7
+     */
+    private String rpcConsumerConfig;
 
 
     public String getServerUrl() {
@@ -280,6 +320,14 @@ public class ApiConfig {
         this.apiObjectReplacements = CollectionUtil.asList(apiObjectReplaces);
     }
 
+    public List<RpcApiDependency> getRpcApiDependencies() {
+        return rpcApiDependencies;
+    }
+
+    public void setRpcApiDependencies(RpcApiDependency... rpcApiDependencies) {
+        this.rpcApiDependencies = CollectionUtil.asList(rpcApiDependencies);
+    }
+
     public boolean isCoverOld() {
         return coverOld;
     }
@@ -310,5 +358,45 @@ public class ApiConfig {
 
     public void setShowAuthor(boolean showAuthor) {
         this.showAuthor = showAuthor;
+    }
+
+    public boolean isRequestFieldToUnderline() {
+        return requestFieldToUnderline;
+    }
+
+    public void setRequestFieldToUnderline(boolean requestFieldToUnderline) {
+        this.requestFieldToUnderline = requestFieldToUnderline;
+    }
+
+    public boolean isResponseFieldToUnderline() {
+        return responseFieldToUnderline;
+    }
+
+    public void setResponseFieldToUnderline(boolean responseFieldToUnderline) {
+        this.responseFieldToUnderline = responseFieldToUnderline;
+    }
+
+    public boolean isSortByTitle() {
+        return sortByTitle;
+    }
+
+    public void setSortByTitle(boolean sortByTitle) {
+        this.sortByTitle = sortByTitle;
+    }
+
+    public Boolean getShowJavaType() {
+        return showJavaType;
+    }
+
+    public void setShowJavaType(Boolean showJavaType) {
+        this.showJavaType = showJavaType;
+    }
+
+    public String getRpcConsumerConfig() {
+        return rpcConsumerConfig;
+    }
+
+    public void setRpcConsumerConfig(String rpcConsumerConfig) {
+        this.rpcConsumerConfig = rpcConsumerConfig;
     }
 }
