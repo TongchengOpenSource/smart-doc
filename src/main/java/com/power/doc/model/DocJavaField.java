@@ -22,7 +22,12 @@
  */
 package com.power.doc.model;
 
+import com.thoughtworks.qdox.model.DocletTag;
+import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaField;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author yu 2020/3/19.
@@ -38,6 +43,16 @@ public class DocJavaField  {
      * comment
      */
     private String Comment;
+
+    /**
+     * tags
+     */
+    private List<DocletTag> docletTags;
+
+    /**
+     * annotations
+     */
+    private List<JavaAnnotation> annotations;
 
     public static DocJavaField builder() {
         return new DocJavaField();
@@ -58,6 +73,34 @@ public class DocJavaField  {
 
     public DocJavaField setComment(String comment) {
         Comment = comment;
+        return this;
+    }
+
+    public List<DocletTag> getDocletTags() {
+        if (docletTags == null) {
+            return new ArrayList<>();
+        }
+        return docletTags;
+    }
+
+    public DocJavaField setDocletTags(List<DocletTag> docletTags) {
+        this.docletTags = docletTags;
+        return this;
+    }
+
+    public List<JavaAnnotation> getAnnotations() {
+        List<JavaAnnotation> fieldAnnotations = javaField.getAnnotations();
+        if (fieldAnnotations != null && !fieldAnnotations.isEmpty()) {
+            return fieldAnnotations;
+        }
+        if (annotations == null) {
+            return new ArrayList<>();
+        }
+        return this.annotations;
+    }
+
+    public DocJavaField setAnnotations(List<JavaAnnotation> annotations) {
+        this.annotations = annotations;
         return this;
     }
 }

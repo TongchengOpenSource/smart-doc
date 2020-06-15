@@ -22,6 +22,7 @@
  */
 package com.power.doc.helper;
 
+import com.power.common.model.EnumDictionary;
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.StringUtil;
 import com.power.doc.builder.ProjectDocConfigBuilder;
@@ -29,6 +30,7 @@ import com.power.doc.constants.DocAnnotationConstants;
 import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.constants.DocTags;
 import com.power.doc.constants.ValidatorAnnotations;
+import com.power.doc.model.ApiDataDictionary;
 import com.power.doc.model.ApiParam;
 import com.power.doc.model.CustomRespField;
 import com.power.doc.model.DocJavaField;
@@ -39,6 +41,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.power.doc.constants.DocGlobalConstants.NO_COMMENTS_FOUND;
 
@@ -109,9 +112,9 @@ public class ParamsBuildHelper {
                 }
                 String typeSimpleName = field.getType().getSimpleName();
                 String fieldGicName = field.getType().getGenericCanonicalName();
-                List<JavaAnnotation> javaAnnotations = field.getAnnotations();
+                List<JavaAnnotation> javaAnnotations = docField.getAnnotations();
 
-                Map<String, String> tagsMap = DocUtil.getFieldTagsValue(field);
+                Map<String, String> tagsMap = DocUtil.getFieldTagsValue(field, docField);
                 String since = DocGlobalConstants.DEFAULT_VERSION;//since tag value
                 if (!isResp) {
                     pre:
@@ -203,8 +206,13 @@ public class ParamsBuildHelper {
                     JavaClass javaClass = projectBuilder.getJavaProjectBuilder().getClassByName(subTypeName);
                     String enumComments = javaClass.getComment();
                     if (StringUtil.isNotEmpty(enumComments) && javaClass.isEnum()) {
-                        enumComments = DocUtil.replaceNewLineToHtmlBr(enumComments);
-                        comment = comment + "(See: " + enumComments + ")";
+                        if (projectBuilder.getApiConfig().getInlineEnum()) {
+                            ApiDataDictionary dataDictionary = projectBuilder.getApiConfig().getDataDictionary(javaClass.getSimpleName());
+                            comment = comment + "(See: " + dictionaryListComment(dataDictionary) + ")";
+                        } else {
+                            enumComments = DocUtil.replaceNewLineToHtmlBr(enumComments);
+                            comment = comment + "(See: " + enumComments + ")";
+                        }
                     }
                     String processedType = isShowJavaType ? typeSimpleName : DocClassUtil.processTypeNameForParams(typeSimpleName.toLowerCase());
                     param.setType(processedType);
@@ -335,6 +343,13 @@ public class ParamsBuildHelper {
             }
         }
         return paramList;
+    }
+
+    public static String dictionaryListComment(ApiDataDictionary dictionary) {
+        List<EnumDictionary> enumDataDict = dictionary.getEnumDataDict();
+        return enumDataDict.stream().map(apiDataDictionary ->
+             apiDataDictionary.getValue() + ":" + apiDataDictionary.getDesc()
+        ).collect(Collectors.joining(","));
     }
 
     public static List<ApiParam> primitiveReturnRespComment(String typeName) {

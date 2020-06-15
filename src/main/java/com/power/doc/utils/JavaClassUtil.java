@@ -85,7 +85,12 @@ public class JavaClassUtil {
                     addedFields.add(methodName);
                     String comment = javaMethod.getComment();
                     JavaField javaField = new DefaultJavaField(javaMethod.getReturns(), methodName);
-                    DocJavaField docJavaField = DocJavaField.builder().setJavaField(javaField).setComment(comment);
+                    DocJavaField docJavaField = DocJavaField.builder()
+                            .setJavaField(javaField)
+                            .setComment(comment)
+                            .setDocletTags(javaMethod.getTags())
+                            .setAnnotations(javaMethod.getAnnotations());
+
                     fieldList.add(docJavaField);
                 }
             }

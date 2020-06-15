@@ -170,13 +170,13 @@ public class JsonBuildHelper {
                 if ((responseFieldToUnderline && isResp) || (requestFieldToUnderline && !isResp)) {
                     fieldName = StringUtil.camelToUnderline(fieldName);
                 }
-                Map<String, String> tagsMap = DocUtil.getFieldTagsValue(field);
+                Map<String, String> tagsMap = DocUtil.getFieldTagsValue(field, docField);
                 if (!isResp) {
                     if (tagsMap.containsKey(DocTags.IGNORE)) {
                         continue out;
                     }
                 }
-                List<JavaAnnotation> annotations = field.getAnnotations();
+                List<JavaAnnotation> annotations = docField.getAnnotations();
                 for (JavaAnnotation annotation : annotations) {
                     String annotationName = annotation.getType().getValue();
                     if (DocAnnotationConstants.SHORT_JSON_IGNORE.equals(annotationName) && isResp) {
