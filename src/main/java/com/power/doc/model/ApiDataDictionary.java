@@ -22,6 +22,13 @@
  */
 package com.power.doc.model;
 
+import com.power.common.model.EnumDictionary;
+import com.power.common.util.EnumUtil;
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author yu 2019/10/31.
  */
@@ -72,6 +79,9 @@ public class ApiDataDictionary {
 
     public ApiDataDictionary setEnumClass(Class enumClass) {
         this.enumClass = enumClass;
+        if (StringUtils.isBlank(this.enumClassName)) {
+            this.enumClassName = enumClass.getSimpleName();
+        }
         return this;
     }
 
@@ -101,4 +111,14 @@ public class ApiDataDictionary {
         this.enumClassName = enumClassName;
         return this;
     }
+
+    public List<EnumDictionary> getEnumDataDict() {
+        if (this.enumClass != null) {
+            return EnumUtil.getEnumInformation(this.enumClass, this.getCodeField(),
+                    this.getDescField());
+        } else {
+            return new ArrayList<>();
+        }
+    }
+
 }

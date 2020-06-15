@@ -26,6 +26,7 @@ import com.github.javafaker.Faker;
 import com.power.common.util.*;
 import com.power.doc.constants.DocAnnotationConstants;
 import com.power.doc.constants.DocGlobalConstants;
+import com.power.doc.model.DocJavaField;
 import com.power.doc.model.FormData;
 import com.thoughtworks.qdox.model.DocletTag;
 import com.thoughtworks.qdox.model.JavaAnnotation;
@@ -358,8 +359,11 @@ public class DocUtil {
      * @param field JavaField
      * @return map
      */
-    public static Map<String, String> getFieldTagsValue(final JavaField field) {
+    public static Map<String, String> getFieldTagsValue(final JavaField field, DocJavaField docJavaField) {
         List<DocletTag> paramTags = field.getTags();
+        if (CollectionUtil.isEmpty(paramTags) && Objects.nonNull(docJavaField)) {
+            paramTags = docJavaField.getDocletTags();
+        }
         return paramTags.stream().collect(Collectors.toMap(DocletTag::getName, DocletTag::getValue,
                 (key1, key2) -> key1 + "," + key2));
     }
