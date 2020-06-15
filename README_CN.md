@@ -212,7 +212,7 @@ Smart-doc is under the Apache 2.0 license.  See the [LICENSE](https://gitee.com
 &nbsp;&nbsp;<img src="https://gitee.com/sunyurepository/smart-doc/raw/master/images/known-users/xiaomi.png" title="小米" width="170px" height="83px"/>
 <img src="https://gitee.com/sunyurepository/smart-doc/raw/master/images/known-users/yuanmengjiankang.png" title="远盟健康" width="260px" height="83px"/>
 <img src="https://gitee.com/sunyurepository/smart-doc/raw/master/images/known-users/zhongkezhilian.png" title="中科智链" width="272px" height="83px"/>
-<img src="https://gitee.com/sunyurepository/smart-doc/raw/master/images/known-users/puqie_gaitubao_100x100.jpg" title="普切信息科技" width="83px" height="83px"/>&npsp;&npsp;&npsp;&npsp;
+<img src="https://gitee.com/sunyurepository/smart-doc/raw/master/images/known-users/puqie_gaitubao_100x100.jpg" title="普切信息科技" width="83px" height="83px"/>&nbsp;&nbsp;
 <img src="https://gitee.com/sunyurepository/smart-doc/raw/master/images/known-users/tianbo-tech.png" title="杭州天铂云科" width="127px" height="70px"/>
 ## Contact
 愿意参与构建smart-doc或者是需要交流问题可以加入qq群：
