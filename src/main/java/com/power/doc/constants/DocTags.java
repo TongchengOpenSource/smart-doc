@@ -46,7 +46,12 @@ public interface DocTags {
     String MOCK = "mock";
 
     /**
-     * custom dubbo tag
+     * custom @dubbo tag
      */
     String DUBBO = "dubbo";
+
+    /**
+     * custom @api tag
+     */
+    String REST_API = "restApi";
 }

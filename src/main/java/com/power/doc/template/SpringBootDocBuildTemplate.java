@@ -536,6 +536,14 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 return true;
             }
         }
+        // use custom doc tag to support Feign.
+        List<DocletTag> docletTags = cls.getTags();
+        for (DocletTag docletTag : docletTags) {
+            String value = docletTag.getName();
+            if (DocTags.REST_API.equals(value)) {
+                return true;
+            }
+        }
         return false;
     }
 
