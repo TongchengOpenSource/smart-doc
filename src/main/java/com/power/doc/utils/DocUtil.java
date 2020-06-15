@@ -361,7 +361,7 @@ public class DocUtil {
      */
     public static Map<String, String> getFieldTagsValue(final JavaField field, DocJavaField docJavaField) {
         List<DocletTag> paramTags = field.getTags();
-        if (paramTags == null || paramTags.isEmpty()) {
+        if (CollectionUtil.isEmpty(paramTags) && Objects.nonNull(docJavaField)) {
             paramTags = docJavaField.getDocletTags();
         }
         return paramTags.stream().collect(Collectors.toMap(DocletTag::getName, DocletTag::getValue,
