@@ -22,10 +22,7 @@
  */
 package com.power.doc.template;
 
-import com.power.common.util.JsonFormatUtil;
-import com.power.common.util.RandomUtil;
-import com.power.common.util.StringUtil;
-import com.power.common.util.UrlUtil;
+import com.power.common.util.*;
 import com.power.doc.builder.ProjectDocConfigBuilder;
 import com.power.doc.constants.*;
 import com.power.doc.handler.SpringMVCRequestHeaderHandler;
@@ -517,9 +514,13 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 }
                 String[] gicNameArr = DocClassUtil.getSimpleGicName(typeName);
                 paramList.addAll(ParamsBuildHelper.buildParams(gicNameArr[1], DocGlobalConstants.EMPTY, 0, "true", responseFieldMap, Boolean.FALSE, new HashMap<>(), builder, groupClasses));
-            } else if (javaClass.isEnum()) {
+            }
+            //参数列表 当为枚举时
+            else if (javaClass.isEnum()) {
+
+                String  o = JavaClassUtil.getEnumParams(javaClass);
                 ApiParam param = ApiParam.of().setField(paramName)
-                        .setType("string").setDesc(comment).setRequired(required).setVersion(DocGlobalConstants.DEFAULT_VERSION);
+                        .setType("enum").setDesc(StringUtil.removeQuotes(o)).setRequired(required).setVersion(DocGlobalConstants.DEFAULT_VERSION);
                 paramList.add(param);
             } else {
                 paramList.addAll(ParamsBuildHelper.buildParams(typeName, DocGlobalConstants.EMPTY, 0, "true", responseFieldMap, Boolean.FALSE, new HashMap<>(), builder, groupClasses));

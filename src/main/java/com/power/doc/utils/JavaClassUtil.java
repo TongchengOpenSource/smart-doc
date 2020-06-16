@@ -31,6 +31,7 @@ import com.power.doc.model.DocJavaField;
 import com.thoughtworks.qdox.model.*;
 import com.thoughtworks.qdox.model.expression.AnnotationValue;
 import com.thoughtworks.qdox.model.expression.AnnotationValueList;
+import com.thoughtworks.qdox.model.expression.Expression;
 import com.thoughtworks.qdox.model.expression.TypeRef;
 import com.thoughtworks.qdox.model.impl.DefaultJavaField;
 import com.thoughtworks.qdox.model.impl.DefaultJavaParameterizedType;
@@ -142,12 +143,8 @@ public class JavaClassUtil {
             String simpleName = javaField.getType().getSimpleName();
             StringBuilder valueBuilder = new StringBuilder();
             valueBuilder.append("\"").append(javaField.getName()).append("\"").toString();
-            if (formDataEnum) {
-                value = valueBuilder.toString();
-                return value;
-            }
             if (!JavaClassValidateUtil.isPrimitive(simpleName) && index < 1) {
-                if (null != javaField.getEnumConstantArguments() && annotation > 0) {
+                if (null != javaField.getEnumConstantArguments()) {
                     value = javaField.getEnumConstantArguments().get(0);
                 } else {
                     value = valueBuilder.toString();
@@ -156,6 +153,26 @@ public class JavaClassUtil {
             index++;
         }
         return value;
+    }
+
+    public static String getEnumParams(JavaClass javaClass) {
+
+        List<JavaField> javaFields = javaClass.getEnumConstants();
+        StringBuilder stringBuilder = new StringBuilder();
+        for (JavaField javaField : javaFields) {
+            List<Expression> exceptions = javaField.getEnumConstantArguments();
+            //如果枚举值不为空
+            if (!CollectionUtil.isEmpty(exceptions)) {
+                stringBuilder.append(exceptions.get(0));
+                //如果枚举的参数数量大于2 只取第二个
+                if (exceptions.size() >= 2) {
+                    stringBuilder.append(" : ")
+                            .append(exceptions.get(1));
+                }
+                stringBuilder.append("<br/>");
+            }
+        }
+        return stringBuilder.toString();
     }
 
 
