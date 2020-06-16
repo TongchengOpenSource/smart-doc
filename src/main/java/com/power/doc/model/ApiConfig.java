@@ -193,6 +193,12 @@ public class ApiConfig {
      */
     private String rpcConsumerConfig;
 
+    /**
+     * recursion limit
+     * @since 1.8.8
+     */
+    private int recursionLimit = 7;
+
 
     public String getServerUrl() {
         return serverUrl;
@@ -418,5 +424,13 @@ public class ApiConfig {
 
     public void setInlineEnum(Boolean inlineEnum) {
         this.inlineEnum = inlineEnum;
+    }
+
+    public int getRecursionLimit() {
+        return recursionLimit;
+    }
+
+    public void setRecursionLimit(int recursionLimit) {
+        this.recursionLimit = recursionLimit;
     }
 }

@@ -28,6 +28,7 @@ import com.power.doc.builder.ProjectDocConfigBuilder;
 import com.power.doc.constants.DocAnnotationConstants;
 import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.constants.DocTags;
+import com.power.doc.model.ApiConfig;
 import com.power.doc.model.ApiReturn;
 import com.power.doc.model.CustomRespField;
 import com.power.doc.model.DocJavaField;
@@ -76,6 +77,10 @@ public class JsonBuildHelper {
     public static String buildJson(String typeName, String genericCanonicalName,
                                    boolean isResp, int counter, Map<String, String> registryClasses, ProjectDocConfigBuilder builder) {
         JavaClass javaClass = builder.getJavaProjectBuilder().getClassByName(typeName);
+        ApiConfig apiConfig = builder.getApiConfig();
+        if (counter > apiConfig.getRecursionLimit()) {
+            return "{\"$ref\":\"...\"}";
+        }
         if (registryClasses.containsKey(typeName) && counter > registryClasses.size()) {
             return "{\"$ref\":\"...\"}";
         }
@@ -94,6 +99,7 @@ public class JsonBuildHelper {
         if (javaClass.isEnum()) {
             return String.valueOf(JavaClassUtil.getEnumValue(javaClass, Boolean.FALSE));
         }
+        boolean skipTransientField = apiConfig.isSkipTransientField();
         StringBuilder data0 = new StringBuilder();
         JavaClass cls = builder.getClassByName(typeName);
         data0.append("{");
@@ -155,7 +161,7 @@ public class JsonBuildHelper {
         } else {
             boolean requestFieldToUnderline = builder.getApiConfig().isRequestFieldToUnderline();
             boolean responseFieldToUnderline = builder.getApiConfig().isResponseFieldToUnderline();
-            List<DocJavaField> fields = JavaClassUtil.getFields(cls, 0,new HashSet<>());
+            List<DocJavaField> fields = JavaClassUtil.getFields(cls, 0, new HashSet<>());
             boolean isGenerics = JavaFieldUtil.checkGenerics(fields);
             int i = 0;
             out:
@@ -165,6 +171,9 @@ public class JsonBuildHelper {
                 String fieldName = field.getName();
                 if (field.isStatic() || "this$0".equals(fieldName) ||
                         JavaClassValidateUtil.isIgnoreFieldTypes(subTypeName)) {
+                    continue;
+                }
+                if (field.isTransient() && skipTransientField) {
                     continue;
                 }
                 if ((responseFieldToUnderline && isResp) || (requestFieldToUnderline && !isResp)) {

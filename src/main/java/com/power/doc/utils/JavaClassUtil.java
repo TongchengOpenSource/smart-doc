@@ -72,11 +72,12 @@ public class JavaClassUtil {
                 List<JavaMethod> methods = cls1.getMethods();
                 for (JavaMethod javaMethod : methods) {
                     String methodName = javaMethod.getName();
+                    int paramSize = javaMethod.getParameters().size();
                     boolean enable = false;
-                    if (methodName.startsWith("get") && !"get".equals(methodName)) {
+                    if (methodName.startsWith("get") && !"get".equals(methodName) && paramSize == 0) {
                         methodName = StringUtil.firstToLowerCase(methodName.substring(3, methodName.length()));
                         enable = true;
-                    } else if (methodName.startsWith("is") && !"is".equals(methodName)) {
+                    } else if (methodName.startsWith("is") && !"is".equals(methodName) && paramSize == 0) {
                         methodName = StringUtil.firstToLowerCase(methodName.substring(2, methodName.length()));
                         enable = true;
                     }

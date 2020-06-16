@@ -30,10 +30,7 @@ import com.power.doc.constants.DocAnnotationConstants;
 import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.constants.DocTags;
 import com.power.doc.constants.ValidatorAnnotations;
-import com.power.doc.model.ApiDataDictionary;
-import com.power.doc.model.ApiParam;
-import com.power.doc.model.CustomRespField;
-import com.power.doc.model.DocJavaField;
+import com.power.doc.model.*;
 import com.power.doc.utils.*;
 import com.thoughtworks.qdox.model.*;
 
@@ -57,12 +54,17 @@ public class ParamsBuildHelper {
         if (StringUtil.isEmpty(className)) {
             throw new RuntimeException("Class name can't be null or empty.");
         }
+        ApiConfig apiConfig = projectBuilder.getApiConfig();
         int nextLevel = level + 1;
         // Check circular reference
         List<ApiParam> paramList = new ArrayList<>();
+        if (level > apiConfig.getRecursionLimit()) {
+            return paramList;
+        }
         if (registryClasses.containsKey(className) && level > registryClasses.size()) {
             return paramList;
         }
+        boolean skipTransientField = apiConfig.isSkipTransientField();
         boolean isShowJavaType = projectBuilder.getApiConfig().getShowJavaType();
         boolean requestFieldToUnderline = projectBuilder.getApiConfig().isRequestFieldToUnderline();
         boolean responseFieldToUnderline = projectBuilder.getApiConfig().isResponseFieldToUnderline();
@@ -71,7 +73,7 @@ public class ParamsBuildHelper {
         String simpleName = DocClassUtil.getSimpleName(className);
         String[] globGicName = DocClassUtil.getSimpleGicName(className);
         JavaClass cls = projectBuilder.getClassByName(simpleName);
-        List<DocJavaField> fields = JavaClassUtil.getFields(cls, 0,new HashSet<>());
+        List<DocJavaField> fields = JavaClassUtil.getFields(cls, 0, new HashSet<>());
         int n = 0;
         if (JavaClassValidateUtil.isPrimitive(simpleName)) {
             String processedType = isShowJavaType ? simpleName : DocClassUtil.processTypeNameForParams(simpleName.toLowerCase());
@@ -105,6 +107,9 @@ public class ParamsBuildHelper {
                 String subTypeName = field.getType().getFullyQualifiedName();
                 if (field.isStatic() || "this$0".equals(fieldName) ||
                         JavaClassValidateUtil.isIgnoreFieldTypes(subTypeName)) {
+                    continue;
+                }
+                if (field.isTransient() && skipTransientField) {
                     continue;
                 }
                 if ((responseFieldToUnderline && isResp) || (requestFieldToUnderline && !isResp)) {
@@ -348,7 +353,7 @@ public class ParamsBuildHelper {
     public static String dictionaryListComment(ApiDataDictionary dictionary) {
         List<EnumDictionary> enumDataDict = dictionary.getEnumDataDict();
         return enumDataDict.stream().map(apiDataDictionary ->
-             apiDataDictionary.getValue() + ":" + apiDataDictionary.getDesc()
+                apiDataDictionary.getValue() + ":" + apiDataDictionary.getDesc()
         ).collect(Collectors.joining(","));
     }
 
