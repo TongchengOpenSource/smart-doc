@@ -26,6 +26,7 @@ import com.power.common.util.RandomUtil;
 import com.power.common.util.StringUtil;
 import com.power.doc.builder.ProjectDocConfigBuilder;
 import com.power.doc.constants.DocGlobalConstants;
+import com.power.doc.model.ApiConfig;
 import com.power.doc.model.DocJavaField;
 import com.power.doc.model.FormData;
 import com.power.doc.utils.DocClassUtil;
@@ -59,18 +60,23 @@ public class FormDataBuildHelper {
         if (StringUtil.isEmpty(className)) {
             throw new RuntimeException("Class name can't be null or empty.");
         }
-        // Check circular reference
+        ApiConfig apiConfig = builder.getApiConfig();
         List<FormData> formDataList = new ArrayList<>();
+        if (counter > apiConfig.getRecursionLimit()) {
+            return formDataList;
+        }
+        // Check circular reference
         if (registryClasses.containsKey(className) && counter > registryClasses.size()) {
             return formDataList;
         }
         // Registry class
         registryClasses.put(className, className);
         counter++;
+        boolean skipTransientField = apiConfig.isSkipTransientField();
         String simpleName = DocClassUtil.getSimpleName(className);
         String[] globGicName = DocClassUtil.getSimpleGicName(className);
         JavaClass cls = builder.getJavaProjectBuilder().getClassByName(simpleName);
-        List<DocJavaField> fields = JavaClassUtil.getFields(cls, 0,new HashSet<>());
+        List<DocJavaField> fields = JavaClassUtil.getFields(cls, 0, new HashSet<>());
 
         if (JavaClassValidateUtil.isPrimitive(simpleName)) {
             FormData formData = new FormData();
@@ -97,6 +103,9 @@ public class FormDataBuildHelper {
             JavaClass javaClass = builder.getJavaProjectBuilder().getClassByName(subTypeName);
             if (field.isStatic() || "this$0".equals(fieldName) ||
                     JavaClassValidateUtil.isIgnoreFieldTypes(subTypeName)) {
+                continue;
+            }
+            if (field.isTransient() && skipTransientField) {
                 continue;
             }
             String typeSimpleName = field.getType().getSimpleName();
