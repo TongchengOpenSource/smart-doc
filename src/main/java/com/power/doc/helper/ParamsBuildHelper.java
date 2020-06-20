@@ -213,7 +213,7 @@ public class ParamsBuildHelper {
                     if (StringUtil.isNotEmpty(enumComments) && javaClass.isEnum()) {
                         if (projectBuilder.getApiConfig().getInlineEnum()) {
                             ApiDataDictionary dataDictionary = projectBuilder.getApiConfig().getDataDictionary(javaClass.getSimpleName());
-                            comment = comment + "(See: " + dictionaryListComment(dataDictionary) + ")";
+                            comment = comment + "(enum:" + dictionaryListComment(dataDictionary) + ")";
                         } else {
                             enumComments = DocUtil.replaceNewLineToHtmlBr(enumComments);
                             comment = comment + "(See: " + enumComments + ")";
