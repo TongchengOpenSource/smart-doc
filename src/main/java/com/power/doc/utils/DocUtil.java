@@ -356,7 +356,8 @@ public class DocUtil {
     /**
      * Get field tags
      *
-     * @param field JavaField
+     * @param field        JavaField
+     * @param docJavaField DocJavaField
      * @return map
      */
     public static Map<String, String> getFieldTagsValue(final JavaField field, DocJavaField docJavaField) {

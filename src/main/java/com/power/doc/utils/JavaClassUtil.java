@@ -280,6 +280,9 @@ public class JavaClassUtil {
             StringBuilder result = new StringBuilder();
             List<DocletTag> tags = cls.getTags();
             for (int i = 0; i < tags.size(); i++) {
+                if (!tagName.equals(tags.get(i).getName())) {
+                    continue;
+                }
                 String value = tags.get(i).getValue();
                 if (StringUtil.isEmpty(value) && checkComments) {
                     throw new RuntimeException("ERROR: #" + cls.getName()

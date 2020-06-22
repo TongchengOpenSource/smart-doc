@@ -26,6 +26,7 @@ import com.power.common.util.RandomUtil;
 import com.power.common.util.StringUtil;
 import com.power.doc.builder.ProjectDocConfigBuilder;
 import com.power.doc.constants.DocGlobalConstants;
+import com.power.doc.constants.DocTags;
 import com.power.doc.model.ApiConfig;
 import com.power.doc.model.DocJavaField;
 import com.power.doc.model.FormData;
@@ -73,6 +74,8 @@ public class FormDataBuildHelper {
         registryClasses.put(className, className);
         counter++;
         boolean skipTransientField = apiConfig.isSkipTransientField();
+        boolean requestFieldToUnderline = apiConfig.isRequestFieldToUnderline();
+        boolean responseFieldToUnderline = apiConfig.isResponseFieldToUnderline();
         String simpleName = DocClassUtil.getSimpleName(className);
         String[] globGicName = DocClassUtil.getSimpleGicName(className);
         JavaClass cls = builder.getJavaProjectBuilder().getClassByName(simpleName);
@@ -108,6 +111,13 @@ public class FormDataBuildHelper {
             if (field.isTransient() && skipTransientField) {
                 continue;
             }
+            if (responseFieldToUnderline || requestFieldToUnderline) {
+                fieldName = StringUtil.camelToUnderline(fieldName);
+            }
+            Map<String, String> tagsMap = DocUtil.getFieldTagsValue(field, docField);
+            if (tagsMap.containsKey(DocTags.IGNORE)) {
+                continue out;
+            }
             String typeSimpleName = field.getType().getSimpleName();
             if (JavaClassValidateUtil.isMap(subTypeName)) {
                 continue;
@@ -124,7 +134,12 @@ public class FormDataBuildHelper {
                 formData.setValue("");
                 formDataList.add(formData);
             } else if (JavaClassValidateUtil.isPrimitive(subTypeName)) {
-                String fieldValue = DocUtil.getValByTypeAndFieldName(typeSimpleName, field.getName());
+                String fieldValue = "";
+                if (tagsMap.containsKey(DocTags.MOCK) && StringUtil.isNotEmpty(tagsMap.get(DocTags.MOCK))) {
+                    fieldValue = tagsMap.get(DocTags.MOCK);
+                } else {
+                    fieldValue = DocUtil.getValByTypeAndFieldName(typeSimpleName, field.getName());
+                }
                 FormData formData = new FormData();
                 formData.setKey(pre + fieldName);
                 formData.setType("text");
