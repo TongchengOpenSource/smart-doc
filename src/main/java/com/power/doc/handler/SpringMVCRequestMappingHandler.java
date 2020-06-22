@@ -27,6 +27,7 @@ import com.power.common.util.UrlUtil;
 import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.constants.Methods;
 import com.power.doc.constants.SpringMvcAnnotations;
+import com.power.doc.model.ApiConfig;
 import com.power.doc.model.request.RequestMapping;
 import com.power.doc.utils.DocUrlUtil;
 import com.power.doc.utils.DocUtil;
@@ -57,7 +58,7 @@ public class SpringMVCRequestMappingHandler {
         String methodType = null;
         String shortUrl = null;
         String mediaType = null;
-        int methodCounter = 0;
+
         boolean deprecated = false;
         for (JavaAnnotation annotation : annotations) {
             String annotationName = annotation.getType().getName();
@@ -77,30 +78,27 @@ public class SpringMVCRequestMappingHandler {
                 } else {
                     methodType = Methods.GET.getValue();
                 }
-                methodCounter++;
             } else if (SpringMvcAnnotations.GET_MAPPING.equals(annotationName) || DocGlobalConstants.GET_MAPPING_FULLY.equals(annotationName)) {
                 shortUrl = DocUtil.handleMappingValue(annotation);
                 methodType = Methods.GET.getValue();
-                methodCounter++;
             } else if (SpringMvcAnnotations.POST_MAPPING.equals(annotationName) || DocGlobalConstants.POST_MAPPING_FULLY.equals(annotationName)) {
                 shortUrl = DocUtil.handleMappingValue(annotation);
                 methodType = Methods.POST.getValue();
-                methodCounter++;
             } else if (SpringMvcAnnotations.PUT_MAPPING.equals(annotationName) || DocGlobalConstants.PUT_MAPPING_FULLY.equals(annotationName)) {
                 shortUrl = DocUtil.handleMappingValue(annotation);
                 methodType = Methods.PUT.getValue();
-                methodCounter++;
+
             } else if (SpringMvcAnnotations.PATCH_MAPPING.equals(annotationName) || DocGlobalConstants.PATCH_MAPPING_FULLY.equals(annotationName)) {
                 shortUrl = DocUtil.handleMappingValue(annotation);
                 methodType = Methods.PATCH.getValue();
-                methodCounter++;
+
             } else if (SpringMvcAnnotations.DELETE_MAPPING.equals(annotationName) || DocGlobalConstants.DELETE_MAPPING_FULLY.equals(annotationName)) {
                 shortUrl = DocUtil.handleMappingValue(annotation);
                 methodType = Methods.DELETE.getValue();
-                methodCounter++;
+
             }
         }
-        if (methodCounter > 0) {
+        if (shortUrl != null) {
             if (null != method.getTagByName(IGNORE)) {
                 return null;
             }
@@ -113,9 +111,8 @@ public class SpringMVCRequestMappingHandler {
                 url = UrlUtil.simplifyUrl(serverUrl + "/" + controllerBaseUrl + "/" + shortUrl);
                 shortUrl = UrlUtil.simplifyUrl("/" + controllerBaseUrl + "/" + shortUrl);
             }
-            RequestMapping requestMapping = RequestMapping.builder().setMediaType(mediaType).setMethodType(methodType)
+            return RequestMapping.builder().setMediaType(mediaType).setMethodType(methodType)
                     .setUrl(url).setShortUrl(shortUrl).setDeprecated(deprecated);
-            return requestMapping;
         }
         return null;
     }
