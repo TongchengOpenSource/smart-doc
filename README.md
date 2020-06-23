@@ -9,7 +9,7 @@ Or a static html document. If you are tired of the numerous annotations and stro
 ## Features
 - Zero annotation, zero learning cost, only need to write standard java document comments.
 - Automatic derivation based on source code interface definition, powerful return structure derivation support.
-- Support Spring MVC, Spring Boot, Spring Boot Web Flux (Controller mode writing).
+- Support Spring MVC, Spring Boot, Spring Boot Web Flux (Controller mode writing), Feign.
 - Supports the derivation of asynchronous interface returns such as Callable, Future, CompletableFuture.
 - Support JAVA's JSR303 parameter verification specification.
 - Support for automatic generation of request examples based on request parameters.

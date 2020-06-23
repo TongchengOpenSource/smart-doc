@@ -7,8 +7,8 @@ smart-doc完全基于接口源码分析来生成接口文档，完全做到零�
 ## Features
 - 零注解、零学习成本、只需要写标准java注释。
 - 基于源代码接口定义自动推导，强大的返回结构推导。
-- 支持Spring MVC,Spring Boot,Spring Boot Web Flux(controller书写方式)。
-- 支持Callable,Future,CompletableFuture等异步接口返回的推导。
+- 支持Spring MVC、Spring Boot、Spring Boot Web Flux(controller书写方式)、Feign。
+- 支持Callable、Future、CompletableFuture等异步接口返回的推导。
 - 支持JavaBean上的JSR303参数校验规范，包括分组验证。
 - 对json请求参数的接口能够自动生成模拟json参数。
 - 对一些常用字段定义能够生成有效的模拟值。
