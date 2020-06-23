@@ -145,7 +145,7 @@ public class JavaClassUtil {
             StringBuilder valueBuilder = new StringBuilder();
             valueBuilder.append("\"").append(javaField.getName()).append("\"").toString();
             if (!JavaClassValidateUtil.isPrimitive(simpleName) && index < 1) {
-                if (null != javaField.getEnumConstantArguments()) {
+                if (!CollectionUtil.isEmpty(javaField.getEnumConstantArguments())) {
                     value = javaField.getEnumConstantArguments().get(0);
                 } else {
                     value = valueBuilder.toString();
@@ -162,16 +162,20 @@ public class JavaClassUtil {
         StringBuilder stringBuilder = new StringBuilder();
         for (JavaField javaField : javaFields) {
             List<Expression> exceptions = javaField.getEnumConstantArguments();
+            stringBuilder.append(javaField.getName());
             //如果枚举值不为空
             if (!CollectionUtil.isEmpty(exceptions)) {
-                stringBuilder.append(exceptions.get(0));
-                //如果枚举的参数数量大于2 只取第二个
-                if (exceptions.size() >= 2) {
-                    stringBuilder.append(" : ")
-                            .append(exceptions.get(1));
+                stringBuilder.append(" -(");
+                for(int i=0 ;i<exceptions.size();i++){
+                    stringBuilder.append(exceptions.get(i));
+                    if(i != exceptions.size() - 1) {
+                            stringBuilder.append(",");
+                    }
                 }
-                stringBuilder.append("<br/>");
+
+                stringBuilder.append(")");
             }
+            stringBuilder.append("<br/>");
         }
         return stringBuilder.toString();
     }

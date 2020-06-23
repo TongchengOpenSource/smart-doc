@@ -210,25 +210,36 @@ public class ParamsBuildHelper {
                     ApiParam param = ApiParam.of().setField(pre + fieldName);
                     JavaClass javaClass = projectBuilder.getJavaProjectBuilder().getClassByName(subTypeName);
                     String enumComments = javaClass.getComment();
-                    if (StringUtil.isNotEmpty(enumComments) && javaClass.isEnum()) {
+                    if (javaClass.isEnum()) {
                         if (projectBuilder.getApiConfig().getInlineEnum()) {
                             ApiDataDictionary dataDictionary = projectBuilder.getApiConfig().getDataDictionary(javaClass.getSimpleName());
-                            comment = comment + "(enum:" + dictionaryListComment(dataDictionary) + ")";
+                            if (dataDictionary == null) {
+                                comment = comment + JavaClassUtil.getEnumParams(javaClass);
+                            } else {
+                                comment = comment + "(enum:" + dictionaryListComment(dataDictionary) + ")";
+                            }
                         } else {
                             enumComments = DocUtil.replaceNewLineToHtmlBr(enumComments);
-                            comment = comment + "(See: " + enumComments + ")";
+                            comment = comment + "<br/>" + JavaClassUtil.getEnumParams(javaClass) + "<br/>";
+                            if (enumComments != null) {
+                                comment = comment + "(See: " + enumComments + ")";
+                            }
+                            comment = StringUtil.removeQuotes(comment);
+
                         }
+                        param.setType(DocGlobalConstants.ENUM);
                     }
-                    String processedType = isShowJavaType ? typeSimpleName : DocClassUtil.processTypeNameForParams(typeSimpleName.toLowerCase());
-                    param.setType(processedType);
+                    //如果已经设置返回类型 不需要再次设置
+                    if(param.getType() == null) {
+                        String processedType = isShowJavaType ? typeSimpleName : DocClassUtil.processTypeNameForParams(typeSimpleName.toLowerCase());
+                        param.setType(processedType);
+                    }
                     if (!isResp && javaClass.isEnum()) {
                         List<JavaMethod> methods = javaClass.getMethods();
                         int index = 0;
-                        String reTypeName = "string";
+
                         enumOut:
                         for (JavaMethod method : methods) {
-                            JavaType type = method.getReturnType();
-                            reTypeName = type.getCanonicalName();
                             List<JavaAnnotation> javaAnnotationList = method.getAnnotations();
                             for (JavaAnnotation annotation : javaAnnotationList) {
                                 if (annotation.getType().getValue().contains("JsonValue")) {
@@ -240,7 +251,7 @@ public class ParamsBuildHelper {
                             }
                             index++;
                         }
-                        param.setType(DocClassUtil.processTypeNameForParams(reTypeName));
+                        param.setType(DocGlobalConstants.ENUM);
                     }
 
                     if (StringUtil.isNotEmpty(comment)) {
