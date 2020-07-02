@@ -22,6 +22,8 @@
  */
 package com.power.doc.utils;
 
+import java.util.Objects;
+
 /**
  * @author yu 2019/12/25.
  */
@@ -62,6 +64,9 @@ public class JavaClassValidateUtil {
      * @return boolean
      */
     public static boolean isPrimitive(String type0) {
+        if (Objects.isNull(type0)) {
+            return true;
+        }
         String type = type0.contains("java.lang") ? type0.substring(type0.lastIndexOf(".") + 1, type0.length()) : type0;
         type = type.toLowerCase();
         switch (type) {
@@ -232,6 +237,7 @@ public class JavaClassValidateUtil {
             case "org.springframework.web.context.request.WebRequest":
             case "javax.servlet.http.HttpSession":
             case "javax.servlet.http.HttpServletResponse":
+            case "org.springframework.web.reactive.function.server.ServerRequest":
                 return true;
             default:
                 return false;
