@@ -22,7 +22,10 @@
  */
 package com.power.doc.template;
 
-import com.power.common.util.*;
+import com.power.common.util.JsonFormatUtil;
+import com.power.common.util.RandomUtil;
+import com.power.common.util.StringUtil;
+import com.power.common.util.UrlUtil;
 import com.power.doc.builder.ProjectDocConfigBuilder;
 import com.power.doc.constants.*;
 import com.power.doc.handler.SpringMVCRequestHeaderHandler;
@@ -103,6 +106,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         String clazName = cls.getCanonicalName();
         String classAuthor = JavaClassUtil.getClassTagsValue(cls, DocTags.AUTHOR, Boolean.TRUE);
         List<JavaAnnotation> classAnnotations = cls.getAnnotations();
+        Map<String, String> constantsMap = projectBuilder.getConstantsMap();
         String baseUrl = "";
         for (JavaAnnotation annotation : classAnnotations) {
             String annotationName = annotation.getType().getValue();
@@ -144,7 +148,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             apiMethodDoc.setDetail(apiNoteValue);
             //handle request mapping
             RequestMapping requestMapping = new SpringMVCRequestMappingHandler()
-                    .handle(projectBuilder.getServerUrl(), baseUrl, method);
+                    .handle(projectBuilder.getServerUrl(), baseUrl, method, constantsMap);
             //handle headers
             List<ApiReqHeader> apiReqHeaders = new SpringMVCRequestHeaderHandler().handle(method);
             apiMethodDoc.setRequestHeaders(apiReqHeaders);
@@ -194,6 +198,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         if (parameterList.size() < 1) {
             return ApiRequestExample.builder().setUrl(apiMethodDoc.getUrl());
         }
+        Map<String, String> constantsMap = configBuilder.getConstantsMap();
         boolean requestFieldToUnderline = configBuilder.getApiConfig().isRequestFieldToUnderline();
         Map<String, String> replacementMap = configBuilder.getReplaceClassMap();
         Map<String, String> pathParamsMap = new LinkedHashMap<>();
@@ -266,6 +271,18 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 AnnotationValue annotationOfName = annotation.getProperty(DocAnnotationConstants.NAME_PROP);
                 if (null != annotationOfName) {
                     paramName = StringUtil.removeQuotes(annotationOfName.toString());
+                }
+                for (Map.Entry<String, String> entry : constantsMap.entrySet()) {
+                    String key = entry.getKey();
+                    String value = entry.getValue();
+                    // replace param
+                    if (paramName.contains(key)) {
+                        paramName = paramName.replace(key, value);
+                    }
+                    // replace mockValue
+                    if (mockValue.contains(entry.getKey())) {
+                        mockValue = mockValue.replace(key, value);
+                    }
                 }
                 if (SpringMvcAnnotations.REQUEST_BODY.equals(annotationName) || DocGlobalConstants.REQUEST_BODY_FULLY.equals(annotationName)) {
                     apiMethodDoc.setContentType(JSON_CONTENT_TYPE);
@@ -393,6 +410,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
     private List<ApiParam> requestParams(final JavaMethod javaMethod, final String tagName, ProjectDocConfigBuilder builder) {
         boolean isStrict = builder.getApiConfig().isStrict();
         Map<String, CustomRespField> responseFieldMap = new HashMap<>();
+
         Map<String, String> replacementMap = builder.getReplaceClassMap();
         String className = javaMethod.getDeclaringClass().getCanonicalName();
         Map<String, String> paramTagMap = DocUtil.getParamsComments(javaMethod, tagName, className);
@@ -400,6 +418,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         if (parameterList.size() < 1) {
             return null;
         }
+        Map<String, String> constantsMap = builder.getConstantsMap();
         boolean requestFieldToUnderline = builder.getApiConfig().isRequestFieldToUnderline();
         Set<String> jsonParamSet = this.jsonParamSet(parameterList);
         List<ApiParam> paramList = new ArrayList<>();
@@ -465,6 +484,13 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                     if (null != annotationOfName) {
                         paramName = StringUtil.removeQuotes(annotationOfName.toString());
                     }
+                    for (Map.Entry<String, String> entry : constantsMap.entrySet()) {
+                        String key = entry.getKey();
+                        String value = entry.getValue();
+                        if (paramName.contains(key)) {
+                            paramName = paramName.replace(key, value);
+                        }
+                    }
                     AnnotationValue annotationRequired = annotation.getProperty(DocAnnotationConstants.REQUIRED_PROP);
                     if (null != annotationRequired) {
                         strRequired = annotationRequired.toString();
@@ -518,7 +544,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             //参数列表 当为枚举时
             else if (javaClass.isEnum()) {
 
-                String  o = JavaClassUtil.getEnumParams(javaClass);
+                String o = JavaClassUtil.getEnumParams(javaClass);
                 ApiParam param = ApiParam.of().setField(paramName)
                         .setType("enum").setDesc(StringUtil.removeQuotes(o)).setRequired(required).setVersion(DocGlobalConstants.DEFAULT_VERSION);
                 paramList.add(param);

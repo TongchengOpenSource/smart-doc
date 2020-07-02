@@ -36,10 +36,9 @@ import com.thoughtworks.qdox.model.expression.TypeRef;
 import com.thoughtworks.qdox.model.impl.DefaultJavaField;
 import com.thoughtworks.qdox.model.impl.DefaultJavaParameterizedType;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.*;
 
 /**
  * Handle JavaClass
@@ -166,10 +165,10 @@ public class JavaClassUtil {
             //如果枚举值不为空
             if (!CollectionUtil.isEmpty(exceptions)) {
                 stringBuilder.append(" -(");
-                for(int i=0 ;i<exceptions.size();i++){
+                for (int i = 0; i < exceptions.size(); i++) {
                     stringBuilder.append(exceptions.get(i));
-                    if(i != exceptions.size() - 1) {
-                            stringBuilder.append(",");
+                    if (i != exceptions.size() - 1) {
+                        stringBuilder.append(",");
                     }
                 }
 
@@ -302,6 +301,26 @@ public class JavaClassUtil {
             return result.toString();
         }
         return null;
+    }
+
+    /**
+     * Get Map of final field and value
+     * @param clazz Java class
+     * @return Map
+     * @throws IllegalAccessException IllegalAccessException
+     */
+    public static Map<String, String> getFinalFieldValue(Class<?> clazz) throws IllegalAccessException {
+        String className = getClassSimpleName(clazz.getName());
+        Field[] fields = clazz.getDeclaredFields();
+        Map<String, String> constants = new HashMap<>();
+        for (Field field : fields) {
+            boolean isFinal = Modifier.isFinal(field.getModifiers());
+            if (isFinal) {
+                String name = field.getName();
+                constants.put(className + "." + name, String.valueOf(field.get(null)));
+            }
+        }
+        return constants;
     }
 
     private static void addGroupClass(List<AnnotationValue> annotationValueList, List<String> javaClassList) {

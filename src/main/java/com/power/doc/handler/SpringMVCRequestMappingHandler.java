@@ -27,7 +27,6 @@ import com.power.common.util.UrlUtil;
 import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.constants.Methods;
 import com.power.doc.constants.SpringMvcAnnotations;
-import com.power.doc.model.ApiConfig;
 import com.power.doc.model.request.RequestMapping;
 import com.power.doc.utils.DocUrlUtil;
 import com.power.doc.utils.DocUtil;
@@ -36,6 +35,7 @@ import com.thoughtworks.qdox.model.JavaMethod;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import static com.power.doc.constants.DocTags.IGNORE;
 
@@ -52,7 +52,7 @@ public class SpringMVCRequestMappingHandler {
      * @param method            JavaMethod
      * @return RequestMapping
      */
-    public RequestMapping handle(String serverUrl, String controllerBaseUrl, JavaMethod method) {
+    public RequestMapping handle(String serverUrl, String controllerBaseUrl, JavaMethod method, Map<String, String> constantsMap) {
         List<JavaAnnotation> annotations = method.getAnnotations();
         String url;
         String methodType = null;
@@ -87,15 +87,12 @@ public class SpringMVCRequestMappingHandler {
             } else if (SpringMvcAnnotations.PUT_MAPPING.equals(annotationName) || DocGlobalConstants.PUT_MAPPING_FULLY.equals(annotationName)) {
                 shortUrl = DocUtil.handleMappingValue(annotation);
                 methodType = Methods.PUT.getValue();
-
             } else if (SpringMvcAnnotations.PATCH_MAPPING.equals(annotationName) || DocGlobalConstants.PATCH_MAPPING_FULLY.equals(annotationName)) {
                 shortUrl = DocUtil.handleMappingValue(annotation);
                 methodType = Methods.PATCH.getValue();
-
             } else if (SpringMvcAnnotations.DELETE_MAPPING.equals(annotationName) || DocGlobalConstants.DELETE_MAPPING_FULLY.equals(annotationName)) {
                 shortUrl = DocUtil.handleMappingValue(annotation);
                 methodType = Methods.DELETE.getValue();
-
             }
         }
         if (shortUrl != null) {
@@ -110,6 +107,16 @@ public class SpringMVCRequestMappingHandler {
             } else {
                 url = UrlUtil.simplifyUrl(serverUrl + "/" + controllerBaseUrl + "/" + shortUrl);
                 shortUrl = UrlUtil.simplifyUrl("/" + controllerBaseUrl + "/" + shortUrl);
+            }
+            for (Map.Entry<String, String> entry : constantsMap.entrySet()) {
+                String key = entry.getKey();
+                String value = entry.getValue();
+                if (url.contains(key)) {
+                    url = url.replace(key, value);
+                }
+                if (shortUrl.contains(key)) {
+                    shortUrl = shortUrl.replace(key, value);
+                }
             }
             return RequestMapping.builder().setMediaType(mediaType).setMethodType(methodType)
                     .setUrl(url).setShortUrl(shortUrl).setDeprecated(deprecated);

@@ -137,6 +137,11 @@ public class ApiConfig {
     private List<RpcApiDependency> rpcApiDependencies;
 
     /**
+     * list of api constant
+     */
+    private List<ApiConstant> apiConstants;
+
+    /**
      * @since 1.7.5
      * project name
      */
@@ -346,6 +351,14 @@ public class ApiConfig {
         this.rpcApiDependencies = CollectionUtil.asList(rpcApiDependencies);
     }
 
+    public List<ApiConstant> getApiConstants() {
+        return apiConstants;
+    }
+
+    public void setApiConstants(ApiConstant... apiConstants) {
+        this.apiConstants = CollectionUtil.asList(apiConstants);
+    }
+
     public boolean isCoverOld() {
         return coverOld;
     }
@@ -433,4 +446,6 @@ public class ApiConfig {
     public void setRecursionLimit(int recursionLimit) {
         this.recursionLimit = recursionLimit;
     }
+
+
 }
