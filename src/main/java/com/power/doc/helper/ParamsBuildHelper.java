@@ -34,10 +34,7 @@ import com.power.doc.model.*;
 import com.power.doc.utils.*;
 import com.thoughtworks.qdox.model.*;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.power.doc.constants.DocGlobalConstants.NO_COMMENTS_FOUND;
@@ -51,6 +48,9 @@ public class ParamsBuildHelper {
                                              Map<String, CustomRespField> responseFieldMap, boolean isResp,
                                              Map<String, String> registryClasses, ProjectDocConfigBuilder projectBuilder,
                                              List<String> groupClasses) {
+        //存储泛型所对应的实体类
+        Map<String,String> genericMap = new HashMap<>(10);
+
         if (StringUtil.isEmpty(className)) {
             throw new RuntimeException("Class name can't be null or empty.");
         }
@@ -73,8 +73,14 @@ public class ParamsBuildHelper {
         String simpleName = DocClassUtil.getSimpleName(className);
         String[] globGicName = DocClassUtil.getSimpleGicName(className);
         JavaClass cls = projectBuilder.getClassByName(simpleName);
+        //如果存在泛型 则将泛型与类名的对应关系存起来
+        if(cls!=null && null != cls.getTypeParameters()){
+            List<JavaTypeVariable<JavaGenericDeclaration>> variables = cls.getTypeParameters();
+            for(int i=0;i<cls.getTypeParameters().size();i++){
+                genericMap.put(variables.get(i).getName(),globGicName[i]);
+            }
+        }
         List<DocJavaField> fields = JavaClassUtil.getFields(cls, 0, new HashSet<>());
-        int n = 0;
         if (JavaClassValidateUtil.isPrimitive(simpleName)) {
             String processedType = isShowJavaType ? simpleName : DocClassUtil.processTypeNameForParams(simpleName.toLowerCase());
             paramList.addAll(primitiveReturnRespComment(processedType));
@@ -275,8 +281,8 @@ public class ParamsBuildHelper {
                         String valType = DocClassUtil.getMapKeyValueType(gNameTemp)[1];
                         if (!JavaClassValidateUtil.isPrimitive(valType)) {
                             if (valType.length() == 1) {
-                                String gicName = (n < globGicName.length) ? globGicName[n] : globGicName[globGicName.length - 1];
-                                if (!JavaClassValidateUtil.isPrimitive(gicName) && !simpleName.equals(gicName)) {
+                                String gicName = genericMap.get(valType);
+                                    if (!JavaClassValidateUtil.isPrimitive(gicName) && !simpleName.equals(gicName)) {
                                     paramList.addAll(buildParams(gicName, preBuilder.toString(), nextLevel, isRequired, responseFieldMap, isResp, registryClasses, projectBuilder, groupClasses));
                                 }
                             } else {
@@ -298,7 +304,7 @@ public class ParamsBuildHelper {
                                 if (gName.length() == 1) {
                                     int len = globGicName.length;
                                     if (len > 0) {
-                                        String gicName = (n < len) ? globGicName[n] : globGicName[len - 1];
+                                        String gicName = genericMap.get(gName);
                                         if (!JavaClassValidateUtil.isPrimitive(gicName) && !simpleName.equals(gicName)) {
                                             paramList.addAll(buildParams(gicName, preBuilder.toString(), nextLevel, isRequired, responseFieldMap, isResp, registryClasses, projectBuilder, groupClasses));
                                         }
@@ -314,8 +320,8 @@ public class ParamsBuildHelper {
                                     .setType("object").setDesc(DocGlobalConstants.ANY_OBJECT_MSG).setVersion(DocGlobalConstants.DEFAULT_VERSION);
                             paramList.add(param1);
                         } else if (!simpleName.equals(className)) {
-                            if (n < globGicName.length) {
-                                String gicName = globGicName[n];
+                            if ( globGicName.length > 0) {
+                                String gicName = genericMap.get(subTypeName)  != null ? genericMap.get(subTypeName) : globGicName[0];
                                 String simple = DocClassUtil.getSimpleName(gicName);
                                 if (JavaClassValidateUtil.isPrimitive(simple)) {
                                     //do nothing
@@ -339,7 +345,6 @@ public class ParamsBuildHelper {
                             } else {
                                 paramList.addAll(buildParams(subTypeName, preBuilder.toString(), nextLevel, isRequired, responseFieldMap, isResp, registryClasses, projectBuilder, groupClasses));
                             }
-                            n++;
                         }
                     } else if (JavaClassValidateUtil.isArray(subTypeName)) {
                         fieldGicName = fieldGicName.substring(0, fieldGicName.indexOf("["));
