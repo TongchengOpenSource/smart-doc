@@ -232,6 +232,7 @@ public class JavaClassValidateUtil {
             case "org.springframework.web.context.request.WebRequest":
             case "javax.servlet.http.HttpSession":
             case "javax.servlet.http.HttpServletResponse":
+            case "org.springframework.web.reactive.function.server.ServerRequest":
                 return true;
             default:
                 return false;
