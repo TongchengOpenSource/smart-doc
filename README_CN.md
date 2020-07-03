@@ -140,6 +140,9 @@ smart-doc官方目前已经开发完成maven 插件和gradle，你可以根据�
       "className": "org.springframework.data.domain.Pageable",
       "replacementClassName": "com.power.doc.model.PageRequestDto" //自定义的PageRequestDto替换Pageable做文档渲染
   }],
+  "apiConstants": [{//从1.8.9开始配置自己的常量类，smart-doc在解析到常量时自动替换为具体的值
+        "constantsClassName": "com.power.doc.constants.RequestParamConstant"
+  }],
   "sourceCodePaths": [ //设置代码路径, 插件已经能够自动下载发布的源码包，没必要配置
     {
       "path": "src/main/java",

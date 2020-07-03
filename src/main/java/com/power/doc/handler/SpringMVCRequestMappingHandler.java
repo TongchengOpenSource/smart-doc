@@ -50,6 +50,7 @@ public class SpringMVCRequestMappingHandler {
      * @param serverUrl         server url
      * @param controllerBaseUrl spring mvc controller base url
      * @param method            JavaMethod
+     * @param constantsMap      project constant container
      * @return RequestMapping
      */
     public RequestMapping handle(String serverUrl, String controllerBaseUrl, JavaMethod method, Map<String, String> constantsMap) {
@@ -113,9 +114,11 @@ public class SpringMVCRequestMappingHandler {
                 String value = entry.getValue();
                 if (url.contains(key)) {
                     url = url.replace(key, value);
+                    url = url.replace("+", "");
                 }
                 if (shortUrl.contains(key)) {
                     shortUrl = shortUrl.replace(key, value);
+                    shortUrl = shortUrl.replace("+", "");
                 }
             }
             return RequestMapping.builder().setMediaType(mediaType).setMethodType(methodType)
