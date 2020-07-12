@@ -37,6 +37,7 @@ import com.power.doc.template.SpringBootDocBuildTemplate;
 import com.power.doc.utils.BeetlTemplateUtil;
 import com.power.doc.utils.MarkDownUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
+import org.apache.commons.lang3.StringUtils;
 import org.beetl.core.Template;
 
 import java.util.List;
@@ -79,6 +80,9 @@ public class HtmlApiDocBuilder {
         if (config.isAllInOne()) {
             Template indexCssTemplate = BeetlTemplateUtil.getByName(ALL_IN_ONE_CSS);
             FileUtil.nioWriteFile(indexCssTemplate.render(), config.getOutPath() + FILE_SEPARATOR + ALL_IN_ONE_CSS);
+            if(StringUtils.isNotEmpty(config.getIndexFileName())){
+                INDEX_HTML = config.getIndexFileName();
+            }
             builderTemplate.buildAllInOne(apiDocList, config, javaProjectBuilder, ALL_IN_ONE_HTML_TPL, INDEX_HTML);
         } else {
             List<ApiDocDict> apiDocDictList = builderTemplate.buildDictionary(config, javaProjectBuilder);

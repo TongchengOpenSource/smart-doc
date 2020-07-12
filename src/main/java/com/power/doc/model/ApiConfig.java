@@ -204,6 +204,19 @@ public class ApiConfig {
      */
     private int recursionLimit = 7;
 
+    /**
+     * name of index
+     */
+    private String indexFileName;
+
+
+    public String getIndexFileName() {
+        return indexFileName;
+    }
+
+    public void setIndexFileName(String indexFileName) {
+        this.indexFileName = indexFileName;
+    }
 
     public String getServerUrl() {
         return serverUrl;
