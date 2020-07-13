@@ -45,7 +45,7 @@ public class ApiConfig {
     /**
      * Set comments check mode
      */
-    private boolean isStrict;
+    private Boolean isStrict = Boolean.FALSE;
 
     /**
      * Merge all api doc into one document
@@ -224,11 +224,11 @@ public class ApiConfig {
         this.serverUrl = serverUrl;
     }
 
-    public boolean isStrict() {
+    public Boolean getStrict() {
         return isStrict;
     }
 
-    public void setStrict(boolean strict) {
+    public void setStrict(Boolean strict) {
         isStrict = strict;
     }
 
