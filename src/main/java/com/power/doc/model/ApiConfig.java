@@ -215,6 +215,20 @@ public class ApiConfig {
      * @since 1.9.0
      */
     private boolean responseExample = Boolean.TRUE;
+  
+     /**
+     * name of index
+     */
+    private String indexFileName;
+
+
+    public String getIndexFileName() {
+        return indexFileName;
+    }
+
+    public void setIndexFileName(String indexFileName) {
+        this.indexFileName = indexFileName;
+    }
 
     public String getServerUrl() {
         return serverUrl;
