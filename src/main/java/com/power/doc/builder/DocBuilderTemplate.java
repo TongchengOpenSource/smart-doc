@@ -106,6 +106,8 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
         tpl.binding(TemplateVariable.VERSION.getVariable(), now);
         tpl.binding(TemplateVariable.CREATE_TIME.getVariable(), strTime);
         tpl.binding(TemplateVariable.PROJECT_NAME.getVariable(), config.getProjectName());
+        tpl.binding(TemplateVariable.REQUEST_EXAMPLE.getVariable(), config.isRequestExample());
+        tpl.binding(TemplateVariable.RESPONSE_EXAMPLE.getVariable(), config.isResponseExample());
         if (CollectionUtil.isEmpty(errorCodeList)) {
             tpl.binding(TemplateVariable.DICT_ORDER.getVariable(), apiDocList.size() + 1);
         } else {
