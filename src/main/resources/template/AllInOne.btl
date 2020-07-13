@@ -57,7 +57,7 @@ ${param.field}|${param.type}|${param.desc}|${param.required}|${param.version}
 <%}%>
 <%}%>
 
-<%if(isNotEmpty(doc.requestUsage)){%>
+<%if(isNotEmpty(doc.requestUsage)&&isRequestExample){%>
 **Request-example:**
 ```
 ${doc.requestUsage}
@@ -75,7 +75,7 @@ ${param.field}|${param.type}|${param.desc}|${param.version}
 <%}%>
 <%}%>
 
-<%if(isNotEmpty(doc.responseUsage)){%>
+<%if(isNotEmpty(doc.responseUsage)&&isResponseExample){%>
 **Response-example:**
 ```
 ${doc.responseUsage}

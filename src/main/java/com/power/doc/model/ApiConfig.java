@@ -45,7 +45,7 @@ public class ApiConfig {
     /**
      * Set comments check mode
      */
-    private boolean isStrict;
+    private Boolean isStrict = Boolean.FALSE;
 
     /**
      * Merge all api doc into one document
@@ -205,6 +205,18 @@ public class ApiConfig {
     private int recursionLimit = 7;
 
     /**
+     * request example
+     * @since 1.9.0
+     */
+    private boolean requestExample = Boolean.TRUE;
+
+    /**
+     * response example
+     * @since 1.9.0
+     */
+    private boolean responseExample = Boolean.TRUE;
+  
+     /**
      * name of index
      */
     private String indexFileName;
@@ -226,11 +238,11 @@ public class ApiConfig {
         this.serverUrl = serverUrl;
     }
 
-    public boolean isStrict() {
+    public Boolean getStrict() {
         return isStrict;
     }
 
-    public void setStrict(boolean strict) {
+    public void setStrict(Boolean strict) {
         isStrict = strict;
     }
 
@@ -460,5 +472,19 @@ public class ApiConfig {
         this.recursionLimit = recursionLimit;
     }
 
+    public boolean isRequestExample() {
+        return requestExample;
+    }
 
+    public void setRequestExample(boolean requestExample) {
+        this.requestExample = requestExample;
+    }
+
+    public boolean isResponseExample() {
+        return responseExample;
+    }
+
+    public void setResponseExample(boolean responseExample) {
+        this.responseExample = responseExample;
+    }
 }
