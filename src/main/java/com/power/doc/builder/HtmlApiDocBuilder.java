@@ -80,8 +80,8 @@ public class HtmlApiDocBuilder {
         if (config.isAllInOne()) {
             Template indexCssTemplate = BeetlTemplateUtil.getByName(ALL_IN_ONE_CSS);
             FileUtil.nioWriteFile(indexCssTemplate.render(), config.getOutPath() + FILE_SEPARATOR + ALL_IN_ONE_CSS);
-            if(StringUtils.isNotEmpty(config.getIndexFileName())){
-                INDEX_HTML = config.getIndexFileName();
+            if(StringUtils.isNotEmpty(config.getAllInOneDocFileName())){
+                INDEX_HTML = config.getAllInOneDocFileName();
             }
             builderTemplate.buildAllInOne(apiDocList, config, javaProjectBuilder, ALL_IN_ONE_HTML_TPL, INDEX_HTML);
         } else {

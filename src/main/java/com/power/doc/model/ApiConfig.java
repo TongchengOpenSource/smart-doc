@@ -188,47 +188,45 @@ public class ApiConfig {
 
     /**
      * is inline enum field comment
+     *
      * @since 1.8.8
      */
     private Boolean inlineEnum = Boolean.FALSE;
 
     /**
      * rpc consumer config example
+     *
      * @since 1.8.7
      */
     private String rpcConsumerConfig;
 
     /**
      * recursion limit
+     *
      * @since 1.8.8
      */
     private int recursionLimit = 7;
 
     /**
      * request example
+     *
      * @since 1.9.0
      */
     private boolean requestExample = Boolean.TRUE;
 
     /**
      * response example
+     *
      * @since 1.9.0
      */
     private boolean responseExample = Boolean.TRUE;
-  
-     /**
-     * name of index
+
+    /**
+     * custom setting api document name
+     * @since 1.9.0
      */
-    private String indexFileName;
+    private String allInOneDocFileName;
 
-
-    public String getIndexFileName() {
-        return indexFileName;
-    }
-
-    public void setIndexFileName(String indexFileName) {
-        this.indexFileName = indexFileName;
-    }
 
     public String getServerUrl() {
         return serverUrl;
@@ -486,5 +484,13 @@ public class ApiConfig {
 
     public void setResponseExample(boolean responseExample) {
         this.responseExample = responseExample;
+    }
+
+    public String getAllInOneDocFileName() {
+        return allInOneDocFileName;
+    }
+
+    public void setAllInOneDocFileName(String allInOneDocFileName) {
+        this.allInOneDocFileName = allInOneDocFileName;
     }
 }
