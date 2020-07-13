@@ -204,7 +204,14 @@ public class ApiConfig {
      */
     private int recursionLimit = 7;
 
-
+    /**
+     * request example
+     */
+    private boolean isRequestExample;
+    /**
+     * response example
+     */
+    private boolean isResponseExample;
     public String getServerUrl() {
         return serverUrl;
     }
@@ -447,5 +454,19 @@ public class ApiConfig {
         this.recursionLimit = recursionLimit;
     }
 
+    public boolean isRequestExample() {
+        return isRequestExample;
+    }
 
+    public void setRequestExample(boolean requestExample) {
+        isRequestExample = requestExample;
+    }
+
+    public boolean isResponseExample() {
+        return isResponseExample;
+    }
+
+    public void setResponseExample(boolean responseExample) {
+        isResponseExample = responseExample;
+    }
 }

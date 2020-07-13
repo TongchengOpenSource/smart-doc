@@ -8,6 +8,8 @@
   "md5EncryptedHtmlName": false,
   "projectName": "smart-doc",
   "skipTransientField": true,
+  "isRequestExample": true,
+  "isResponseExample": true,
   "revisionLogs": [
     {
       "version": "1.0",
