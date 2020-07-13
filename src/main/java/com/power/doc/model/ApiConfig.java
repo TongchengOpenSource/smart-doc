@@ -206,12 +206,16 @@ public class ApiConfig {
 
     /**
      * request example
+     * @since 1.9.0
      */
-    private boolean isRequestExample;
+    private boolean requestExample = Boolean.TRUE;
+
     /**
      * response example
+     * @since 1.9.0
      */
-    private boolean isResponseExample;
+    private boolean responseExample = Boolean.TRUE;
+
     public String getServerUrl() {
         return serverUrl;
     }
@@ -455,18 +459,18 @@ public class ApiConfig {
     }
 
     public boolean isRequestExample() {
-        return isRequestExample;
+        return requestExample;
     }
 
     public void setRequestExample(boolean requestExample) {
-        isRequestExample = requestExample;
+        this.requestExample = requestExample;
     }
 
     public boolean isResponseExample() {
-        return isResponseExample;
+        return responseExample;
     }
 
     public void setResponseExample(boolean responseExample) {
-        isResponseExample = responseExample;
+        this.responseExample = responseExample;
     }
 }
