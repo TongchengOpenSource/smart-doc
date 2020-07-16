@@ -27,7 +27,8 @@ smart-doc使用和测试可参考[smart-doc demo](https://gitee.com/sunyureposit
 ```
 你可以启动这个Spring Boot的项目，然后访问`http://localhost:8080/doc/api.html`来浏览smart-doc生成的接口文档。
 ### Add Maven plugin
-smart-doc官方目前已经开发完成maven 插件和gradle，你可以根据自己的构建工具来选择使用maven插件或者是gradle插件。
+smart-doc官方目前已经开发完成[maven插件](https://gitee.com/sunyurepository/smart-doc-maven-plugin)
+和[gradle插件](https://gitee.com/sunyurepository/smart-doc-gradle-plugin)，你可以根据自己的构建工具来选择使用maven插件或者是gradle插件。
 #### add plugin
 ```
 <plugin>
@@ -202,6 +203,8 @@ mvn clean install -Dmaven.test.skip=true
 - [@caiqyxyx](https://gitee.com/cy-work)
 - [@lichoking](https://gitee.com/lichoking)
 - [@JtePromise](https://github.com/JtePromise)
+- [@lizhen789](https://github.com/lizhen789)
+- [@maliqiang](https://github.com/maliqiang)
 ## Other reference
 - [smart-doc功能使用介绍](https://my.oschina.net/u/1760791/blog/2250962)
 - [smart-doc官方wiki](https://gitee.com/sunyurepository/smart-doc/wikis/Home?sort_id=1652800)
