@@ -92,6 +92,9 @@ When you need to use smart-doc to generate more API document information, you ca
   "inlineEnum":true,// Set to true to display enumeration details in the parameter table
   "recursionLimit":7,// Set the number of recursive executions to avoid stack overflow, the default is 7
   "responseFieldToUnderline":true,//convert response field to underline
+  "allInOneDocFileName":"index.html",//Customize the output document name
+  "requestExample":"true",//Whether to display the request example in the document, the default value is true.
+  "responseExample":"true",//Whether to display the response example in the document, the default is true.
   "dataDictionaries": [// Configure the data dictionary, no need to set
     {
       "title": "Order Status", // The name of the data dictionary

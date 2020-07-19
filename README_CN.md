@@ -14,7 +14,7 @@ smart-doc完全基于接口源码分析来生成接口文档，完全做到零�
 - 对一些常用字段定义能够生成有效的模拟值。
 - 支持生成json返回值示例。
 - 支持从项目外部加载源代码来生成字段注释(包括标准规范发布的jar包)。
-- 支持生成多种格式文档：Markdown、HTML5、Asciidoctor、Postman json。
+- 支持生成多种格式文档：Markdown、HTML5、Asciidoctor、Postman Collection。
 - 轻易实现在Spring Boot服务上在线查看静态HTML5 api文档。
 - 开放文档数据，可自由实现接入文档管理系统。
 - 支持导出错误码和定义在代码中的各种字典码到接口文档。
@@ -91,6 +91,9 @@ smart-doc官方目前已经开发完成[maven插件](https://gitee.com/sunyurepo
   "responseFieldToUnderline":true,//自动将驼峰入参字段在文档中转为下划线格式,//@since 1.8.7版本开始
   "inlineEnum":true,//设置为true会将枚举详情展示到参数表中，默认关闭，//@since 1.8.8版本开始
   "recursionLimit":7,//设置允许递归执行的次数用于避免一些对象解析卡主，默认是7，正常为3次以内，//@since 1.8.8版本开始
+  "allInOneDocFileName":"index.html",//自定义设置输出文档名称, @since 1.9.0
+  "requestExample":"true",//是否将请求示例展示在文档中，默认true，@since 1.9.0
+  "responseExample":"true",//是否将响应示例展示在文档中，默认为true，@since 1.9.0
   "dataDictionaries": [ //配置数据字典，没有需求可以不设置
     {
       "title": "http状态码字典", //数据字典的名称
