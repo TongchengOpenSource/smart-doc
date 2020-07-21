@@ -24,6 +24,7 @@ package com.power.doc.template;
 
 import com.power.common.util.StringUtil;
 import com.power.doc.builder.ProjectDocConfigBuilder;
+import com.power.doc.constants.DocAnnotationConstants;
 import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.constants.DocTags;
 import com.power.doc.constants.DubboAnnotationConstants;
@@ -99,7 +100,7 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
             List<JavaAnnotation> annotations = method.getAnnotations();
             for (JavaAnnotation annotation : annotations) {
                 String annotationName = annotation.getType().getName();
-                if ("Deprecated".equals(annotationName)) {
+                if (DocAnnotationConstants.DEPRECATED.equals(annotationName)) {
                     deprecated = true;
                 }
             }
@@ -213,7 +214,7 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
         List<JavaAnnotation> classAnnotations = cls.getAnnotations();
         for (JavaAnnotation annotation : classAnnotations) {
             String name = annotation.getType().getCanonicalName();
-            if (DubboAnnotationConstants.SERVICE.equals(name)) {
+            if (DubboAnnotationConstants.SERVICE.equals(name) || DubboAnnotationConstants.DUBBO_SERVICE.equals(name)) {
                 return true;
             }
         }
@@ -227,7 +228,8 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
         return false;
     }
 
-    private void handleJavaApiDoc(JavaClass cls, List<RpcApiDoc> apiDocList, List<JavaMethodDoc> apiMethodDocs, int order, ProjectDocConfigBuilder builder) {
+    private void handleJavaApiDoc(JavaClass cls, List<RpcApiDoc> apiDocList, List<JavaMethodDoc> apiMethodDocs,
+                                  int order, ProjectDocConfigBuilder builder) {
         String className = cls.getCanonicalName();
         List<JavaType> javaTypes = cls.getImplements();
         if (javaTypes.size() >= 1 && !cls.isInterface()) {

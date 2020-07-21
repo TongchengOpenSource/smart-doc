@@ -5,5 +5,11 @@ package com.power.doc.constants;
  * @author yu 2020/1/29.
  */
 public interface DubboAnnotationConstants {
+
     String SERVICE = "org.apache.dubbo.config.annotation.Service";
+
+    /**
+     * @since dubbo 2.7.7
+     */
+    String DUBBO_SERVICE = "org.apache.dubbo.config.annotation.DubboService";
 }
