@@ -26,6 +26,7 @@ package com.power.doc.builder;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.power.common.util.FileUtil;
+import com.power.common.util.StringUtil;
 import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.model.ApiConfig;
 import com.power.doc.model.ApiDoc;
@@ -85,7 +86,7 @@ public class PostmanJsonBuilder {
      */
     private static ItemBean buildItemBean(ApiDoc apiDoc) {
         ItemBean itemBean = new ItemBean();
-        itemBean.setName(apiDoc.getDesc());
+        itemBean.setName(StringUtil.isEmpty(apiDoc.getDesc())?"未设置接口名称":apiDoc.getDesc() );
         List<ItemBean> itemBeans = new ArrayList<>();
         List<ApiMethodDoc> apiMethodDocs = apiDoc.getList();
         apiMethodDocs.forEach(
@@ -108,7 +109,7 @@ public class PostmanJsonBuilder {
         ItemBean item = new ItemBean();
         RequestBean requestBean = new RequestBean();
 
-        item.setName(apiMethodDoc.getDesc());
+        item.setName(StringUtil.isEmpty(apiMethodDoc.getDesc()) ?"未设置接口名称":apiMethodDoc.getDesc() );
         item.setDescription(apiMethodDoc.getDetail());
 
         requestBean.setDescription(apiMethodDoc.getDesc());
