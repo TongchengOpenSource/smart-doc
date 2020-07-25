@@ -201,6 +201,13 @@ public class JavaClassUtil {
             int index = className.lastIndexOf(".");
             className = className.substring(index + 1, className.length());
         }
+        if (className.contains("[")) {
+            int index = className.indexOf("[");
+            className = className.substring(0, index);
+        }
+        if (className.contains(">")) {
+            className = className.substring(0,className.length() - 1);
+        }
         return className;
     }
 

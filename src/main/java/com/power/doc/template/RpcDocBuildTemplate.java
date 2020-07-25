@@ -271,6 +271,9 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
         returnClass = returnClass.replace(simpleReturn, JavaClassUtil.getClassSimpleName(simpleReturn));
         String[] arrays = DocClassUtil.getSimpleGicName(returnClass);
         for (String str : arrays) {
+            if(str.contains("[")){
+                str = str.substring(0,str.indexOf("["));
+            }
             returnClass = returnClass.replaceAll(str, JavaClassUtil.getClassSimpleName(str));
         }
         methodBuilder.append(returnClass).append(" ");
