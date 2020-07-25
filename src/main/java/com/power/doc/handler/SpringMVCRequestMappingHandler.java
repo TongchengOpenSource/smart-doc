@@ -24,6 +24,7 @@ package com.power.doc.handler;
 
 import com.power.common.util.StringUtil;
 import com.power.common.util.UrlUtil;
+import com.power.doc.constants.DocAnnotationConstants;
 import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.constants.Methods;
 import com.power.doc.constants.SpringMvcAnnotations;
@@ -67,7 +68,7 @@ public class SpringMVCRequestMappingHandler {
             if (produces != null) {
                 mediaType = produces.toString();
             }
-            if ("Deprecated".equals(annotationName)) {
+            if (DocAnnotationConstants.DEPRECATED.equals(annotationName)) {
                 deprecated = true;
             }
             if (SpringMvcAnnotations.REQUEST_MAPPING.equals(annotationName) || DocGlobalConstants.REQUEST_MAPPING_FULLY.equals(annotationName)) {

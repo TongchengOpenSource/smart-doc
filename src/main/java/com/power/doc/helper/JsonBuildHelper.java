@@ -75,10 +75,7 @@ public class JsonBuildHelper {
                                    boolean isResp, int counter, Map<String, String> registryClasses, ProjectDocConfigBuilder builder) {
 
         //存储泛型所对应的实体类
-        Map<String,String> genericMap = new HashMap<>(10);
-
-
-
+        Map<String, String> genericMap = new HashMap<>(10);
         JavaClass javaClass = builder.getJavaProjectBuilder().getClassByName(typeName);
         ApiConfig apiConfig = builder.getApiConfig();
         if (counter > apiConfig.getRecursionLimit()) {
@@ -107,14 +104,13 @@ public class JsonBuildHelper {
         JavaClass cls = builder.getClassByName(typeName);
 
 
-
         data0.append("{");
         String[] globGicName = DocClassUtil.getSimpleGicName(genericCanonicalName);
         //添加泛型对应关系
-        if(cls!=null && null != cls.getTypeParameters()){
+        if (cls != null && null != cls.getTypeParameters()) {
             List<JavaTypeVariable<JavaGenericDeclaration>> variables = cls.getTypeParameters();
-            for(int i=0;i<cls.getTypeParameters().size();i++){
-                genericMap.put(variables.get(i).getName(),globGicName[i]);
+            for (int i = 0; i < cls.getTypeParameters().size(); i++) {
+                genericMap.put(variables.get(i).getName(), globGicName[i]);
             }
         }
         StringBuilder data = new StringBuilder();
@@ -200,9 +196,9 @@ public class JsonBuildHelper {
                 List<JavaAnnotation> annotations = docField.getAnnotations();
                 for (JavaAnnotation annotation : annotations) {
                     String annotationName = annotation.getType().getValue();
-                    if (DocAnnotationConstants.SHORT_JSON_IGNORE.equals(annotationName) && isResp) {
+                    if (DocAnnotationConstants.SHORT_JSON_IGNORE.equals(annotationName)) {
                         continue out;
-                    } else if (DocAnnotationConstants.SHORT_JSON_FIELD.equals(annotationName) && isResp) {
+                    } else if (DocAnnotationConstants.SHORT_JSON_FIELD.equals(annotationName)) {
                         if (null != annotation.getProperty(DocAnnotationConstants.SERIALIZE_PROP)) {
                             if (Boolean.FALSE.toString().equals(annotation.getProperty(DocAnnotationConstants.SERIALIZE_PROP).toString())) {
                                 continue out;
@@ -210,7 +206,7 @@ public class JsonBuildHelper {
                         } else if (null != annotation.getProperty(DocAnnotationConstants.NAME_PROP)) {
                             fieldName = StringUtil.removeQuotes(annotation.getProperty(DocAnnotationConstants.NAME_PROP).toString());
                         }
-                    } else if (DocAnnotationConstants.SHORT_JSON_PROPERTY.equals(annotationName) && isResp) {
+                    } else if (DocAnnotationConstants.SHORT_JSON_PROPERTY.equals(annotationName)) {
                         if (null != annotation.getProperty(DocAnnotationConstants.VALUE_PROP)) {
                             fieldName = StringUtil.removeQuotes(annotation.getProperty(DocAnnotationConstants.VALUE_PROP).toString());
                         }
@@ -267,7 +263,7 @@ public class JsonBuildHelper {
                                 data0.append("{\"object\":\"any object\"},");
                                 continue out;
                             }
-                            String gicName1 = genericMap.get(gicName)==null ? globGicName[0] : genericMap.get(gicName);
+                            String gicName1 = genericMap.get(gicName) == null ? globGicName[0] : genericMap.get(gicName);
                             if (DocGlobalConstants.JAVA_STRING_FULLY.equals(gicName1)) {
                                 data0.append("[").append("\"").append(buildJson(gicName1, gicName1, isResp, nextLevel, registryClasses, builder)).append("\"]").append(",");
                             } else {
@@ -295,7 +291,7 @@ public class JsonBuildHelper {
                         }
                         String gicName = fieldGicName.substring(fieldGicName.indexOf(",") + 1, fieldGicName.indexOf(">"));
                         if (gicName.length() == 1) {
-                            String gicName1 =  genericMap.get(gicName)==null ? globGicName[0] : genericMap.get(gicName);
+                            String gicName1 = genericMap.get(gicName) == null ? globGicName[0] : genericMap.get(gicName);
                             if (DocGlobalConstants.JAVA_STRING_FULLY.equals(gicName1)) {
                                 data0.append("{").append("\"mapKey\":\"").append(buildJson(gicName1, gicName1, isResp, nextLevel, registryClasses, builder)).append("\"},");
                             } else {
@@ -310,7 +306,7 @@ public class JsonBuildHelper {
                         }
                     } else if (subTypeName.length() == 1) {
                         if (!typeName.equals(genericCanonicalName)) {
-                            String gicName =  genericMap.get(subTypeName)==null ? globGicName[0] : genericMap.get(subTypeName);
+                            String gicName = genericMap.get(subTypeName) == null ? globGicName[0] : genericMap.get(subTypeName);
                             if (JavaClassValidateUtil.isPrimitive(gicName)) {
                                 data0.append(DocUtil.jsonValueByType(gicName)).append(",");
                             } else {
@@ -323,8 +319,8 @@ public class JsonBuildHelper {
                     } else if (DocGlobalConstants.JAVA_OBJECT_FULLY.equals(subTypeName)) {
                         if (isGenerics) {
                             data0.append("{\"object\":\"any object\"},");
-                        } else if ( globGicName.length > 0) {
-                            String gicName = genericMap.get(subTypeName)==null ? globGicName[0] : genericMap.get(subTypeName);
+                        } else if (globGicName.length > 0) {
+                            String gicName = genericMap.get(subTypeName) == null ? globGicName[0] : genericMap.get(subTypeName);
                             if (!typeName.equals(genericCanonicalName)) {
                                 if (JavaClassValidateUtil.isPrimitive(gicName)) {
                                     data0.append("\"").append(buildJson(gicName, genericCanonicalName, isResp, nextLevel, registryClasses, builder)).append("\",");

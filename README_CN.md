@@ -14,7 +14,7 @@ smart-doc完全基于接口源码分析来生成接口文档，完全做到零�
 - 对一些常用字段定义能够生成有效的模拟值。
 - 支持生成json返回值示例。
 - 支持从项目外部加载源代码来生成字段注释(包括标准规范发布的jar包)。
-- 支持生成多种格式文档：Markdown、HTML5、Asciidoctor、Postman json。
+- 支持生成多种格式文档：Markdown、HTML5、Asciidoctor、Postman Collection。
 - 轻易实现在Spring Boot服务上在线查看静态HTML5 api文档。
 - 开放文档数据，可自由实现接入文档管理系统。
 - 支持导出错误码和定义在代码中的各种字典码到接口文档。
@@ -27,7 +27,8 @@ smart-doc使用和测试可参考[smart-doc demo](https://gitee.com/sunyureposit
 ```
 你可以启动这个Spring Boot的项目，然后访问`http://localhost:8080/doc/api.html`来浏览smart-doc生成的接口文档。
 ### Add Maven plugin
-smart-doc官方目前已经开发完成maven 插件和gradle，你可以根据自己的构建工具来选择使用maven插件或者是gradle插件。
+smart-doc官方目前已经开发完成[maven插件](https://gitee.com/sunyurepository/smart-doc-maven-plugin)
+和[gradle插件](https://gitee.com/sunyurepository/smart-doc-gradle-plugin)，你可以根据自己的构建工具来选择使用maven插件或者是gradle插件。
 #### add plugin
 ```
 <plugin>
@@ -90,6 +91,9 @@ smart-doc官方目前已经开发完成maven 插件和gradle，你可以根据�
   "responseFieldToUnderline":true,//自动将驼峰入参字段在文档中转为下划线格式,//@since 1.8.7版本开始
   "inlineEnum":true,//设置为true会将枚举详情展示到参数表中，默认关闭，//@since 1.8.8版本开始
   "recursionLimit":7,//设置允许递归执行的次数用于避免一些对象解析卡主，默认是7，正常为3次以内，//@since 1.8.8版本开始
+  "allInOneDocFileName":"index.html",//自定义设置输出文档名称, @since 1.9.0
+  "requestExample":"true",//是否将请求示例展示在文档中，默认true，@since 1.9.0
+  "responseExample":"true",//是否将响应示例展示在文档中，默认为true，@since 1.9.0
   "dataDictionaries": [ //配置数据字典，没有需求可以不设置
     {
       "title": "http状态码字典", //数据字典的名称
@@ -202,6 +206,8 @@ mvn clean install -Dmaven.test.skip=true
 - [@caiqyxyx](https://gitee.com/cy-work)
 - [@lichoking](https://gitee.com/lichoking)
 - [@JtePromise](https://github.com/JtePromise)
+- [@lizhen789](https://github.com/lizhen789)
+- [@maliqiang](https://github.com/maliqiang)
 ## Other reference
 - [smart-doc功能使用介绍](https://my.oschina.net/u/1760791/blog/2250962)
 - [smart-doc官方wiki](https://gitee.com/sunyurepository/smart-doc/wikis/Home?sort_id=1652800)

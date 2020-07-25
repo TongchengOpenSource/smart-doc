@@ -4,10 +4,13 @@
   "allInOne": true,
   "outPath": "D://md2",
   "coverOld": true,
+  "allInOneDocFileName":"demoProject.html",
   "packageFilters": "",
   "md5EncryptedHtmlName": false,
   "projectName": "smart-doc",
   "skipTransientField": true,
+  "requestExample": true,
+  "responseExample": true,
   "revisionLogs": [
     {
       "version": "1.0",

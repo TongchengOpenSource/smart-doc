@@ -91,7 +91,7 @@
              </tbody>
              </table>
              <%}%>
-             <%if(isNotEmpty(doc.requestUsage)){%>
+             <%if(isNotEmpty(doc.requestUsage)&&isRequestExample){%>
              <p><strong>Request-example:</strong></p>
              <pre><code>${doc.requestUsage}
              </code></pre>
@@ -113,7 +113,7 @@
              </table>
              <%}%>
 
-             <%if(isNotEmpty(doc.responseUsage)){%>
+             <%if(isNotEmpty(doc.responseUsage)&&isResponseExample){%>
               <p><strong>Response-example:</strong></p>
               <pre><code>${doc.responseUsage}
               </code></pre>

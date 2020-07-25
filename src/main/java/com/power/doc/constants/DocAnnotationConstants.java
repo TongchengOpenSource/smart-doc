@@ -34,4 +34,6 @@ public interface DocAnnotationConstants {
     String DEFAULT_VALUE_PROP = "defaultValue";
 
     String REQUEST_MAPPING = "RequestMapping";
+
+    String DEPRECATED = "Deprecated";
 }
