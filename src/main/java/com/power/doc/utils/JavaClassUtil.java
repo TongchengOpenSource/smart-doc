@@ -205,9 +205,6 @@ public class JavaClassUtil {
             int index = className.indexOf("[");
             className = className.substring(0, index);
         }
-        if (className.contains(">")) {
-            className = className.substring(0,className.length() - 1);
-        }
         return className;
     }
 

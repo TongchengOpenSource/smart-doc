@@ -97,13 +97,14 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
                 throw new RuntimeException("Unable to find comment for method " + method.getName() + " in " + cls.getCanonicalName());
             }
             boolean deprecated = false;
-            List<JavaAnnotation> annotations = method.getAnnotations();
-            for (JavaAnnotation annotation : annotations) {
-                String annotationName = annotation.getType().getName();
-                if (DocAnnotationConstants.DEPRECATED.equals(annotationName)) {
-                    deprecated = true;
-                }
-            }
+            //RPC没有注解
+//            List<JavaAnnotation> annotations = method.getAnnotations();
+//            for (JavaAnnotation annotation : annotations) {
+//                String annotationName = annotation.getType().getName();
+//                if (DocAnnotationConstants.DEPRECATED.equals(annotationName)) {
+//                    deprecated = true;
+//                }
+//            }
             methodOrder++;
             JavaMethodDoc apiMethodDoc = new JavaMethodDoc();
             String methodDefine = methodDefinition(method);
@@ -184,7 +185,7 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
                 } else {
                     paramList.addAll(ParamsBuildHelper.buildParams(gicNameArr[0], paramPre, 0, "true", responseFieldMap, Boolean.FALSE, new HashMap<>(), builder, groupClasses));
                 }
-            } else if (JavaClassValidateUtil.isPrimitive(simpleName)) {
+            } else if (JavaClassValidateUtil.isPrimitive(fullTypeName)) {
                 ApiParam param = ApiParam.of().setField(paramName)
                         .setType(JavaClassUtil.getClassSimpleName(typeName))
                         .setDesc(comment).setRequired(required).setVersion(DocGlobalConstants.DEFAULT_VERSION);
@@ -274,7 +275,10 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
             if(str.contains("[")){
                 str = str.substring(0,str.indexOf("["));
             }
-            returnClass = returnClass.replaceAll(str, JavaClassUtil.getClassSimpleName(str));
+            String[] generics = str.split("<");
+            for (String generic : generics) {
+                returnClass = returnClass.replaceAll(generic, JavaClassUtil.getClassSimpleName(generic));
+            }
         }
         methodBuilder.append(returnClass).append(" ");
         List<String> params = new ArrayList<>();

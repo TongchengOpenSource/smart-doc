@@ -237,7 +237,12 @@ public class ParamsBuildHelper {
                     }
                     //如果已经设置返回类型 不需要再次设置
                     if (param.getType() == null) {
-                        String processedType = isShowJavaType ? typeSimpleName : DocClassUtil.processTypeNameForParams(typeSimpleName.toLowerCase());
+                        String processedType;
+                        if (typeSimpleName.length() == 1) {
+                            processedType = DocClassUtil.processTypeNameForParams(typeSimpleName.toLowerCase());
+                        } else {
+                            processedType = isShowJavaType ? typeSimpleName : DocClassUtil.processTypeNameForParams(typeSimpleName.toLowerCase());
+                        }
                         param.setType(processedType);
                     }
                     if (!isResp && javaClass.isEnum()) {
@@ -304,7 +309,7 @@ public class ParamsBuildHelper {
                                 if (gName.length() == 1) {
                                     int len = globGicName.length;
                                     if (len > 0) {
-                                        String gicName = genericMap.get(gName);
+                                        String gicName = genericMap.get(gName)!= null ? genericMap.get(gName) : globGicName[0];
                                         if (!JavaClassValidateUtil.isPrimitive(gicName) && !simpleName.equals(gicName)) {
                                             paramList.addAll(buildParams(gicName, preBuilder.toString(), nextLevel, isRequired, responseFieldMap, isResp, registryClasses, projectBuilder, groupClasses));
                                         }
