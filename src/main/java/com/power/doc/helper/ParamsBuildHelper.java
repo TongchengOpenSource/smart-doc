@@ -386,10 +386,9 @@ public class ParamsBuildHelper {
     private static void commonHandleParam(List<ApiParam> paramList, ApiParam param, String isRequired, String comment, String since, boolean strRequired) {
         if (StringUtil.isEmpty(isRequired)) {
             param.setDesc(comment).setVersion(since);
-            paramList.add(param);
         } else {
             param.setDesc(comment).setVersion(since).setRequired(strRequired);
-            paramList.add(param);
         }
+        paramList.add(param);
     }
 }

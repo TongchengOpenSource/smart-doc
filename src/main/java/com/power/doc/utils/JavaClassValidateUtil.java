@@ -107,23 +107,14 @@ public class JavaClassValidateUtil {
     public static boolean isCollection(String type) {
         switch (type) {
             case "java.util.List":
-                return true;
             case "java.util.LinkedList":
-                return true;
             case "java.util.ArrayList":
-                return true;
             case "java.util.Set":
-                return true;
             case "java.util.TreeSet":
-                return true;
             case "java.util.HashSet":
-                return true;
             case "java.util.SortedSet":
-                return true;
             case "java.util.Collection":
-                return true;
             case "java.util.ArrayDeque":
-                return true;
             case "java.util.PriorityQueue":
                 return true;
             default:
@@ -140,21 +131,13 @@ public class JavaClassValidateUtil {
     public static boolean isMap(String type) {
         switch (type) {
             case "java.util.Map":
-                return true;
             case "java.util.SortedMap":
-                return true;
             case "java.util.TreeMap":
-                return true;
             case "java.util.LinkedHashMap":
-                return true;
             case "java.util.HashMap":
-                return true;
             case "java.util.concurrent.ConcurrentHashMap":
-                return true;
             case "java.util.concurrent.ConcurrentMap":
-                return true;
             case "java.util.Properties":
-                return true;
             case "java.util.Hashtable":
                 return true;
             default:
@@ -253,7 +236,6 @@ public class JavaClassValidateUtil {
     public static boolean isIgnoreFieldTypes(String typeName) {
         switch (typeName) {
             case "org.slf4j.Logger":
-                return true;
             case "org.apache.ibatis.logging.Log":
                 return true;
             default:
