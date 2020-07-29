@@ -280,8 +280,6 @@ public class DocUtil {
         switch (method) {
             case "RequestMethod.POST":
                 return "POST";
-            case "RequestMethod.GET":
-                return "GET";
             case "RequestMethod.PUT":
                 return "PUT";
             case "RequestMethod.DELETE":

@@ -56,6 +56,6 @@ public class ReturnTypeProcessor {
                 return apiReturn;
             }
         }
-        return apiReturn;
+        return null;
     }
 }
