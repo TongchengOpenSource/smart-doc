@@ -76,7 +76,7 @@ public class ParamsBuildHelper {
         //如果存在泛型 则将泛型与类名的对应关系存起来
         if (cls != null && null != cls.getTypeParameters()) {
             List<JavaTypeVariable<JavaGenericDeclaration>> variables = cls.getTypeParameters();
-            for (int i = 0; i < cls.getTypeParameters().size(); i++) {
+            for (int i = 0; i < cls.getTypeParameters().size() && i<globGicName.length; i++) {
                 genericMap.put(variables.get(i).getName(), globGicName[i]);
             }
         }

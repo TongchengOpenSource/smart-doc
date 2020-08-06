@@ -109,7 +109,7 @@ public class JsonBuildHelper {
         //添加泛型对应关系
         if (cls != null && null != cls.getTypeParameters()) {
             List<JavaTypeVariable<JavaGenericDeclaration>> variables = cls.getTypeParameters();
-            for (int i = 0; i < cls.getTypeParameters().size(); i++) {
+            for (int i = 0; i < cls.getTypeParameters().size() && i<globGicName.length; i++) {
                 genericMap.put(variables.get(i).getName(), globGicName[i]);
             }
         }
