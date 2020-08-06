@@ -97,14 +97,14 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
                 throw new RuntimeException("Unable to find comment for method " + method.getName() + " in " + cls.getCanonicalName());
             }
             boolean deprecated = false;
-            //RPC没有注解
-//            List<JavaAnnotation> annotations = method.getAnnotations();
-//            for (JavaAnnotation annotation : annotations) {
-//                String annotationName = annotation.getType().getName();
-//                if (DocAnnotationConstants.DEPRECATED.equals(annotationName)) {
-//                    deprecated = true;
-//                }
-//            }
+            //设置当前接口是否过时
+            List<JavaAnnotation> annotations = method.getAnnotations();
+            for (JavaAnnotation annotation : annotations) {
+                String annotationName = annotation.getType().getName();
+                if (DocAnnotationConstants.DEPRECATED.equals(annotationName)) {
+                    deprecated = true;
+                }
+            }
             methodOrder++;
             JavaMethodDoc apiMethodDoc = new JavaMethodDoc();
             String methodDefine = methodDefinition(method);
