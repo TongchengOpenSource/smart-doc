@@ -28,6 +28,11 @@ package com.power.doc.model;
 public class ApiParam {
 
     /**
+     * field id
+     */
+    private int id;
+
+    /**
      * field
      */
     private String field;
@@ -51,6 +56,11 @@ public class ApiParam {
      * version
      */
     private String version;
+
+    /**
+     * field pid
+     */
+    private int pid;
 
     public static ApiParam of(){
         return new ApiParam();
@@ -98,6 +108,24 @@ public class ApiParam {
 
     public ApiParam setVersion(String version) {
         this.version = version;
+        return this;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public ApiParam setId(int id) {
+        this.id = id;
+        return this;
+    }
+
+    public int getPid() {
+        return pid;
+    }
+
+    public ApiParam setPid(int pid) {
+        this.pid = pid;
         return this;
     }
 }

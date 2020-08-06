@@ -113,7 +113,7 @@ public interface IDocBuildTemplate<T> {
                     return ParamsBuildHelper.primitiveReturnRespComment("array of " + DocClassUtil.processTypeNameForParams(gicName));
                 }
                 return ParamsBuildHelper.buildParams(gicName, "", 0, null, projectBuilder.getCustomRespFieldMap(),
-                        Boolean.TRUE, new HashMap<>(), projectBuilder, null);
+                        Boolean.TRUE, new HashMap<>(), projectBuilder, null,0);
             } else {
                 return null;
             }
@@ -127,11 +127,11 @@ public interface IDocBuildTemplate<T> {
                 return ParamsBuildHelper.primitiveReturnRespComment("key value");
             }
             return ParamsBuildHelper.buildParams(keyValue[1], "", 0, null, projectBuilder.getCustomRespFieldMap(),
-                    Boolean.TRUE, new HashMap<>(), projectBuilder, null);
+                    Boolean.TRUE, new HashMap<>(), projectBuilder, null,0);
         }
         if (StringUtil.isNotEmpty(returnType)) {
             return ParamsBuildHelper.buildParams(returnType, "", 0, null, projectBuilder.getCustomRespFieldMap(),
-                    Boolean.TRUE, new HashMap<>(), projectBuilder, null);
+                    Boolean.TRUE, new HashMap<>(), projectBuilder, null,0);
         }
         return null;
     }
