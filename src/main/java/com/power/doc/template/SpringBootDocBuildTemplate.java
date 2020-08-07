@@ -520,7 +520,8 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 } else {
                     if (requestBodyCounter > 0) {
                         //for json
-                        paramList.addAll(ParamsBuildHelper.buildParams(gicNameArr[0], DocGlobalConstants.EMPTY, 0, "true", responseFieldMap, Boolean.FALSE, new HashMap<>(), builder, groupClasses,0));
+                        paramList.addAll(ParamsBuildHelper.buildParams(gicNameArr[0], DocGlobalConstants.EMPTY, 0,
+                                "true", responseFieldMap, Boolean.FALSE, new HashMap<>(), builder, groupClasses,0));
                     } else {
                         throw new RuntimeException("Spring MVC can't support binding Collection on method "
                                 + javaMethod.getName() + "Check it in " + javaMethod.getDeclaringClass().getCanonicalName());

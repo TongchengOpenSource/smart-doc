@@ -181,7 +181,7 @@ public class ParamsBuildHelper {
                         }
                         if (hasGroup) {
                             strRequired = true;
-                        } else if (CollectionUtil.isEmpty(groupClassList) && CollectionUtil.isEmpty(groupClasses)) {
+                        } else if (CollectionUtil.isEmpty(groupClasses)) {
                             strRequired = true;
                         }
                         break an;
