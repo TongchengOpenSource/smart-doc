@@ -264,14 +264,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 if (null != annotationDefaultVal) {
                     mockValue = StringUtil.removeQuotes(annotationDefaultVal.toString());
                 }
-                AnnotationValue annotationValue = annotation.getProperty(DocAnnotationConstants.VALUE_PROP);
-                if (null != annotationValue) {
-                    paramName = StringUtil.removeQuotes(annotationValue.toString());
-                }
-                AnnotationValue annotationOfName = annotation.getProperty(DocAnnotationConstants.NAME_PROP);
-                if (null != annotationOfName) {
-                    paramName = StringUtil.removeQuotes(annotationOfName.toString());
-                }
+                paramName = getParamName(paramName, annotation);
                 for (Map.Entry<String, String> entry : constantsMap.entrySet()) {
                     String key = entry.getKey();
                     String value = entry.getValue();
@@ -476,14 +469,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 }
                 if (SpringMvcAnnotations.REQUEST_PARAM.equals(annotationName) ||
                         DocAnnotationConstants.SHORT_PATH_VARIABLE.equals(annotationName)) {
-                    AnnotationValue annotationValue = annotation.getProperty(DocAnnotationConstants.VALUE_PROP);
-                    if (null != annotationValue) {
-                        paramName = StringUtil.removeQuotes(annotationValue.toString());
-                    }
-                    AnnotationValue annotationOfName = annotation.getProperty(DocAnnotationConstants.NAME_PROP);
-                    if (null != annotationOfName) {
-                        paramName = StringUtil.removeQuotes(annotationOfName.toString());
-                    }
+                    paramName = getParamName(paramName, annotation);
                     for (Map.Entry<String, String> entry : constantsMap.entrySet()) {
                         String key = entry.getKey();
                         String value = entry.getValue();
@@ -558,6 +544,18 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             }
         }
         return paramList;
+    }
+
+    private String getParamName(String paramName, JavaAnnotation annotation) {
+        AnnotationValue annotationValue = annotation.getProperty(DocAnnotationConstants.VALUE_PROP);
+        if (null != annotationValue) {
+            paramName = StringUtil.removeQuotes(annotationValue.toString());
+        }
+        AnnotationValue annotationOfName = annotation.getProperty(DocAnnotationConstants.NAME_PROP);
+        if (null != annotationOfName) {
+            paramName = StringUtil.removeQuotes(annotationOfName.toString());
+        }
+        return paramName;
     }
 
     private boolean checkController(JavaClass cls) {
