@@ -30,7 +30,7 @@ public class ApiParam {
     /**
      * field id
      */
-    private int id;
+    private int id = 1;
 
     /**
      * field

@@ -294,12 +294,11 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                                 .append(DocUtil.handleJsonStr(mockValue))
                                 .append("}");
                         requestExample.setJsonBody(JsonFormatUtil.formatJson(builder.toString())).setJson(true);
-                        paramAdded = true;
                     } else {
                         String json = JsonBuildHelper.buildJson(typeName, gicTypeName, Boolean.FALSE, 0, new HashMap<>(), configBuilder);
                         requestExample.setJsonBody(JsonFormatUtil.formatJson(json)).setJson(true);
-                        paramAdded = true;
                     }
+                    paramAdded = true;
                 } else if (SpringMvcAnnotations.PATH_VARIABLE.contains(annotationName)) {
                     if (javaClass.isEnum()) {
                         Object value = JavaClassUtil.getEnumValue(javaClass, Boolean.TRUE);
@@ -461,6 +460,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             //file upload
             if (typeName.contains(DocGlobalConstants.MULTIPART_FILE_FULLY)) {
                 ApiParam param = ApiParam.of().setField(paramName).setType("file")
+                        .setId(paramList.size() + 1)
                         .setDesc(comment).setRequired(true).setVersion(DocGlobalConstants.DEFAULT_VERSION);
                 paramList.add(param);
                 continue out;
@@ -515,13 +515,14 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                     String shortSimple = DocClassUtil.processTypeNameForParams(gicName);
                     ApiParam param = ApiParam.of().setField(paramName).setDesc(comment + ",[array of " + shortSimple + "]")
                             .setRequired(required)
+                            .setId(paramList.size() + 1)
                             .setType("array");
                     paramList.add(param);
                 } else {
                     if (requestBodyCounter > 0) {
                         //for json
                         paramList.addAll(ParamsBuildHelper.buildParams(gicNameArr[0], DocGlobalConstants.EMPTY, 0,
-                                "true", responseFieldMap, Boolean.FALSE, new HashMap<>(), builder, groupClasses,0));
+                                "true", responseFieldMap, Boolean.FALSE, new HashMap<>(), builder, groupClasses, 0));
                     } else {
                         throw new RuntimeException("Spring MVC can't support binding Collection on method "
                                 + javaMethod.getName() + "Check it in " + javaMethod.getDeclaringClass().getCanonicalName());
@@ -530,27 +531,30 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             } else if (JavaClassValidateUtil.isPrimitive(fullTypeName)) {
                 ApiParam param = ApiParam.of().setField(paramName)
                         .setType(DocClassUtil.processTypeNameForParams(simpleName))
+                        .setId(paramList.size() + 1)
                         .setDesc(comment).setRequired(required).setVersion(DocGlobalConstants.DEFAULT_VERSION);
                 paramList.add(param);
             } else if (JavaClassValidateUtil.isMap(fullTypeName)) {
                 if (DocGlobalConstants.JAVA_MAP_FULLY.equals(typeName)) {
                     ApiParam apiParam = ApiParam.of().setField(paramName).setType("map")
+                            .setId(paramList.size() + 1)
                             .setDesc(comment).setRequired(required).setVersion(DocGlobalConstants.DEFAULT_VERSION);
                     paramList.add(apiParam);
                     continue out;
                 }
                 String[] gicNameArr = DocClassUtil.getSimpleGicName(typeName);
-                paramList.addAll(ParamsBuildHelper.buildParams(gicNameArr[1], DocGlobalConstants.EMPTY, 0, "true", responseFieldMap, Boolean.FALSE, new HashMap<>(), builder, groupClasses,0));
+                paramList.addAll(ParamsBuildHelper.buildParams(gicNameArr[1], DocGlobalConstants.EMPTY, 0, "true", responseFieldMap, Boolean.FALSE, new HashMap<>(), builder, groupClasses, 0));
             }
             //参数列表 当为枚举时
             else if (javaClass.isEnum()) {
 
                 String o = JavaClassUtil.getEnumParams(javaClass);
                 ApiParam param = ApiParam.of().setField(paramName)
+                        .setId(paramList.size() + 1)
                         .setType("enum").setDesc(StringUtil.removeQuotes(o)).setRequired(required).setVersion(DocGlobalConstants.DEFAULT_VERSION);
                 paramList.add(param);
             } else {
-                paramList.addAll(ParamsBuildHelper.buildParams(typeName, DocGlobalConstants.EMPTY, 0, "true", responseFieldMap, Boolean.FALSE, new HashMap<>(), builder, groupClasses,0));
+                paramList.addAll(ParamsBuildHelper.buildParams(typeName, DocGlobalConstants.EMPTY, 0, "true", responseFieldMap, Boolean.FALSE, new HashMap<>(), builder, groupClasses, 0));
             }
         }
         return paramList;
