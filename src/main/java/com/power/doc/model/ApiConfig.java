@@ -229,6 +229,10 @@ public class ApiConfig {
      */
     private String allInOneDocFileName;
 
+    /**
+     * convert param data to tree
+     */
+    private boolean paramsDataToTree;
 
     public String getServerUrl() {
         return serverUrl;
@@ -497,5 +501,13 @@ public class ApiConfig {
 
     public void setAllInOneDocFileName(String allInOneDocFileName) {
         this.allInOneDocFileName = allInOneDocFileName;
+    }
+
+    public boolean isParamsDataToTree() {
+        return paramsDataToTree;
+    }
+
+    public void setParamsDataToTree(boolean paramsDataToTree) {
+        this.paramsDataToTree = paramsDataToTree;
     }
 }

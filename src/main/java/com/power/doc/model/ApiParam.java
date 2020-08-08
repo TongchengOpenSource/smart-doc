@@ -22,6 +22,8 @@
  */
 package com.power.doc.model;
 
+import java.util.List;
+
 /**
  * @author yu 2019/9/27.
  */
@@ -61,6 +63,8 @@ public class ApiParam {
      * field pid
      */
     private int pid;
+
+    private List<ApiParam> children;
 
     public static ApiParam of(){
         return new ApiParam();
@@ -126,6 +130,15 @@ public class ApiParam {
 
     public ApiParam setPid(int pid) {
         this.pid = pid;
+        return this;
+    }
+
+    public List<ApiParam> getChildren() {
+        return children;
+    }
+
+    public ApiParam setChildren(List<ApiParam> children) {
+        this.children = children;
         return this;
     }
 }

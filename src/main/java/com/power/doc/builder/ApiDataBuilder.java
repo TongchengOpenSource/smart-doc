@@ -39,6 +39,21 @@ public class ApiDataBuilder {
      * @return List of ApiDoc
      */
     public static ApiAllData getApiData(ApiConfig config) {
+        return getApiData(config,false);
+    }
+
+    /**
+     * Get list of ApiDoc
+     *
+     * @param config ApiConfig
+     * @return List of ApiDoc
+     */
+    public static ApiAllData getApiDataTree(ApiConfig config) {
+        return getApiData(config,true);
+    }
+
+    private static ApiAllData getApiData(ApiConfig config,boolean toTree) {
+        config.setParamsDataToTree(toTree);
         DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
         builderTemplate.checkAndInitForGetApiData(config);
         JavaProjectBuilder javaProjectBuilder = new JavaProjectBuilder();

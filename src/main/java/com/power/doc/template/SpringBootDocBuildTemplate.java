@@ -36,10 +36,7 @@ import com.power.doc.helper.ParamsBuildHelper;
 import com.power.doc.model.*;
 import com.power.doc.model.request.ApiRequestExample;
 import com.power.doc.model.request.RequestMapping;
-import com.power.doc.utils.DocClassUtil;
-import com.power.doc.utils.DocUtil;
-import com.power.doc.utils.JavaClassUtil;
-import com.power.doc.utils.JavaClassValidateUtil;
+import com.power.doc.utils.*;
 import com.thoughtworks.qdox.model.*;
 import com.thoughtworks.qdox.model.expression.AnnotationValue;
 
@@ -102,15 +99,18 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         return false;
     }
 
-    private List<ApiMethodDoc> buildControllerMethod(final JavaClass cls, ApiConfig apiConfig, ProjectDocConfigBuilder projectBuilder) {
+    private List<ApiMethodDoc> buildControllerMethod(final JavaClass cls, ApiConfig apiConfig,
+                                                     ProjectDocConfigBuilder projectBuilder) {
         String clazName = cls.getCanonicalName();
+        boolean paramsDataToTree = projectBuilder.getApiConfig().isParamsDataToTree();
         String classAuthor = JavaClassUtil.getClassTagsValue(cls, DocTags.AUTHOR, Boolean.TRUE);
         List<JavaAnnotation> classAnnotations = cls.getAnnotations();
         Map<String, String> constantsMap = projectBuilder.getConstantsMap();
         String baseUrl = "";
         for (JavaAnnotation annotation : classAnnotations) {
             String annotationName = annotation.getType().getValue();
-            if (DocAnnotationConstants.REQUEST_MAPPING.equals(annotationName) || DocGlobalConstants.REQUEST_MAPPING_FULLY.equals(annotationName)) {
+            if (DocAnnotationConstants.REQUEST_MAPPING.equals(annotationName) ||
+                    DocGlobalConstants.REQUEST_MAPPING_FULLY.equals(annotationName)) {
                 if (annotation.getNamedParameter("value") != null) {
                     baseUrl = StringUtil.removeQuotes(annotation.getNamedParameter("value").toString());
                 }
@@ -163,6 +163,9 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 apiMethodDoc.setDeprecated(requestMapping.isDeprecated());
                 // build request params
                 List<ApiParam> requestParams = requestParams(method, DocTags.PARAM, projectBuilder);
+                if (paramsDataToTree) {
+                    requestParams = ApiParamTreeUtil.apiParamToTree(requestParams);
+                }
                 apiMethodDoc.setRequestParams(requestParams);
                 // build request json
                 ApiRequestExample requestExample = buildReqJson(method, apiMethodDoc, requestMapping.getMethodType(),
@@ -175,6 +178,9 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 apiMethodDoc.setResponseUsage(JsonBuildHelper.buildReturnJson(method, projectBuilder));
                 // build response params
                 List<ApiParam> responseParams = buildReturnApiParams(method, projectBuilder);
+                if (paramsDataToTree) {
+                    responseParams = ApiParamTreeUtil.apiParamToTree(responseParams);
+                }
                 apiMethodDoc.setResponseParams(responseParams);
                 List<ApiReqHeader> allApiReqHeaders;
                 if (this.headers != null) {
