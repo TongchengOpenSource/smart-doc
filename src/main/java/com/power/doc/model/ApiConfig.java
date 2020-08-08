@@ -27,6 +27,7 @@ import com.power.doc.constants.DocLanguage;
 import com.power.doc.model.rpc.RpcApiDependency;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -223,6 +224,7 @@ public class ApiConfig {
 
     /**
      * custom setting api document name
+     *
      * @since 1.9.0
      */
     private String allInOneDocFileName;
@@ -345,6 +347,9 @@ public class ApiConfig {
     }
 
     public ApiDataDictionary getDataDictionary(String enumClassSimpleName) {
+        if (Objects.isNull(this.dataDictionaries)) {
+            return null;
+        }
         return this.dataDictionaries.stream().filter((apiDataDictionary ->
                 enumClassSimpleName.equalsIgnoreCase(apiDataDictionary.getEnumClassName())))
                 .findFirst().orElse(new ApiDataDictionary());

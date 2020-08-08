@@ -531,7 +531,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 String[] gicNameArr = DocClassUtil.getSimpleGicName(typeName);
                 paramList.addAll(ParamsBuildHelper.buildParams(gicNameArr[1], DocGlobalConstants.EMPTY, 0, "true", responseFieldMap, Boolean.FALSE, new HashMap<>(), builder, groupClasses, 0));
             }
-            //参数列表 当为枚举时
+            // param is enum
             else if (javaClass.isEnum()) {
 
                 String o = JavaClassUtil.getEnumParams(javaClass);
