@@ -2,6 +2,7 @@ package com.power.doc;
 
 import com.power.common.util.DateTimeUtil;
 import com.power.doc.builder.HtmlApiDocBuilder;
+import com.power.doc.builder.OpenApiBuilder;
 import com.power.doc.builder.PostmanJsonBuilder;
 import com.power.doc.enums.OrderEnum;
 import com.power.doc.model.*;
@@ -65,6 +66,7 @@ public class ApiDocTest {
 
 
         long start = System.currentTimeMillis();
+        OpenApiBuilder.buildOpenApi(config);
         HtmlApiDocBuilder.buildApiDoc(config);
         long end = System.currentTimeMillis();
         DateTimeUtil.printRunTime(end, start);

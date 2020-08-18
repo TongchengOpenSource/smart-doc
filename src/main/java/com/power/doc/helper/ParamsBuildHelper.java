@@ -106,7 +106,14 @@ public class ParamsBuildHelper {
                 param.setDesc(DocGlobalConstants.ANY_OBJECT_MSG).setRequired(false).setVersion(DocGlobalConstants.DEFAULT_VERSION);
             }
             paramList.add(param);
-        } else {
+        }
+//        if (className.contains(DocGlobalConstants.MULTIPART_FILE_FULLY)) {
+//            ApiParam param = ApiParam.of().setField("").setType("file")
+//                    .setPid(pid)
+//                    .setDesc("comment").setRequired(true).setVersion(DocGlobalConstants.DEFAULT_VERSION);
+//            paramList.add(param);
+//        }
+        else {
             boolean isGenerics = JavaFieldUtil.checkGenerics(fields);
             out:
             for (DocJavaField docField : fields) {
@@ -238,6 +245,10 @@ public class ParamsBuildHelper {
                         }
                         param.setType(DocGlobalConstants.ENUM);
                     }
+                    //如果是文件
+                    if(typeSimpleName.contains(DocGlobalConstants.MULTIPART_FILE_FULLY)){
+                        param.setType("file");
+                    }
                     //如果已经设置返回类型 不需要再次设置
                     if (param.getType() == null) {
                         String processedType;
@@ -328,7 +339,8 @@ public class ParamsBuildHelper {
                                 }
                             }
                         }
-                    } else if (subTypeName.length() == 1 || DocGlobalConstants.JAVA_OBJECT_FULLY.equals(subTypeName)) {
+                    } else
+                        if (subTypeName.length() == 1 || DocGlobalConstants.JAVA_OBJECT_FULLY.equals(subTypeName)) {
                         if (isGenerics && DocGlobalConstants.JAVA_OBJECT_FULLY.equals(subTypeName)) {
                             ApiParam param1 = ApiParam.of().setField(preBuilder.toString() + "any object")
                                     .setId(paramList.size())
