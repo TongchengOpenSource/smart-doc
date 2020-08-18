@@ -458,4 +458,23 @@ public class DocUtil {
                 return false;
         }
     }
+
+    public static String javaTypeToOpenApiTypeConvert(String type){
+        switch (type) {
+            case "int32":
+            case "int16":
+            case "int64":
+                return "integer";
+            case "double":
+            case "float":
+            case "number":
+                return "number";
+            case "boolean":
+                return "boolean";
+            case "string":
+                return "string";
+            default:
+                return "object"; //array object file
+        }
+    }
 }

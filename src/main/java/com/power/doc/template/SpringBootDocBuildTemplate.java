@@ -468,6 +468,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             List<JavaAnnotation> annotations = parameter.getAnnotations();
             List<String> groupClasses = JavaClassUtil.getParamGroupJavaClass(annotations);
             String strRequired = "true";
+            boolean isPathVariable = false;
             for (JavaAnnotation annotation : annotations) {
                 String annotationName = annotation.getType().getValue();
                 if (SpringMvcAnnotations.REQUEST_HERDER.equals(annotationName)) {
@@ -475,6 +476,9 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 }
                 if (SpringMvcAnnotations.REQUEST_PARAM.equals(annotationName) ||
                         DocAnnotationConstants.SHORT_PATH_VARIABLE.equals(annotationName)) {
+                    if(DocAnnotationConstants.SHORT_PATH_VARIABLE.equals(annotationName)){
+                        isPathVariable = true;
+                    }
                     paramName = getParamName(paramName, annotation);
                     for (Map.Entry<String, String> entry : constantsMap.entrySet()) {
                         String key = entry.getKey();
@@ -483,6 +487,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                             paramName = paramName.replace(key, value);
                         }
                     }
+
                     AnnotationValue annotationRequired = annotation.getProperty(DocAnnotationConstants.REQUIRED_PROP);
                     if (null != annotationRequired) {
                         strRequired = annotationRequired.toString();
@@ -507,6 +512,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                     String shortSimple = DocClassUtil.processTypeNameForParams(gicName);
                     ApiParam param = ApiParam.of().setField(paramName).setDesc(comment + ",[array of " + shortSimple + "]")
                             .setRequired(required)
+                            .setPathParams(isPathVariable)
                             .setId(paramList.size() + 1)
                             .setType("array");
                     paramList.add(param);
@@ -524,12 +530,14 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 ApiParam param = ApiParam.of().setField(paramName)
                         .setType(DocClassUtil.processTypeNameForParams(simpleName))
                         .setId(paramList.size() + 1)
+                        .setPathParams(isPathVariable)
                         .setDesc(comment).setRequired(required).setVersion(DocGlobalConstants.DEFAULT_VERSION);
                 paramList.add(param);
             } else if (JavaClassValidateUtil.isMap(fullTypeName)) {
                 if (DocGlobalConstants.JAVA_MAP_FULLY.equals(typeName)) {
                     ApiParam apiParam = ApiParam.of().setField(paramName).setType("map")
                             .setId(paramList.size() + 1)
+                            .setPathParams(isPathVariable)
                             .setDesc(comment).setRequired(required).setVersion(DocGlobalConstants.DEFAULT_VERSION);
                     paramList.add(apiParam);
                     continue out;
@@ -543,6 +551,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 String o = JavaClassUtil.getEnumParams(javaClass);
                 ApiParam param = ApiParam.of().setField(paramName)
                         .setId(paramList.size() + 1)
+                        .setPathParams(isPathVariable)
                         .setType("enum").setDesc(StringUtil.removeQuotes(o)).setRequired(required).setVersion(DocGlobalConstants.DEFAULT_VERSION);
                 paramList.add(param);
             } else {

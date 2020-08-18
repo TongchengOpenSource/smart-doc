@@ -63,6 +63,10 @@ public class ApiParam {
      * field pid
      */
     private int pid;
+    /**
+     * PathVariableParams flag
+     */
+    private boolean isPathParams;
 
     private List<ApiParam> children;
 
@@ -135,6 +139,15 @@ public class ApiParam {
 
     public List<ApiParam> getChildren() {
         return children;
+    }
+
+    public boolean isPathParams() {
+        return isPathParams;
+    }
+
+    public ApiParam setPathParams(boolean pathParams) {
+        isPathParams = pathParams;
+        return this;
     }
 
     public ApiParam setChildren(List<ApiParam> children) {
