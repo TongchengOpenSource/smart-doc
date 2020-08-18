@@ -51,6 +51,7 @@ public class BeetlTemplateUtil {
         try {
             ClasspathResourceLoader resourceLoader = new ClasspathResourceLoader("/template/");
             Configuration cfg = Configuration.defaultConfiguration();
+            cfg.add("/smart-doc-beetl.properties");
             GroupTemplate gt = new GroupTemplate(resourceLoader, cfg);
             return gt.getTemplate(templateName);
         } catch (IOException e) {
