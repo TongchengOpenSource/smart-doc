@@ -52,7 +52,7 @@ public class OpenApiBuilder {
      * @param config 配置文件
      * @param configBuilder
      */
-    public static void openApiCreate(ApiConfig config, ProjectDocConfigBuilder configBuilder) {
+    private static void openApiCreate(ApiConfig config, ProjectDocConfigBuilder configBuilder) {
         config.setParamsDataToTree(true);
         SpringBootDocBuildTemplate docBuildTemplate = new SpringBootDocBuildTemplate();
         List<ApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder);
@@ -68,6 +68,8 @@ public class OpenApiBuilder {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String data = gson.toJson(json);
         FileUtil.nioWriteFile(data, filePath);
+
+
     }
 
     /**
@@ -75,7 +77,7 @@ public class OpenApiBuilder {
      * @param apiConfig 文档配置信息
      * @return
      */
-    public static Map<String, Object> buildInfo(ApiConfig apiConfig) {
+    private static Map<String, Object> buildInfo(ApiConfig apiConfig) {
         Map<String, Object> infoMap = new HashMap<>(8);
         infoMap.put("title", apiConfig.getProjectName() == null ? "未设置项目名称" : apiConfig.getProjectName());
         infoMap.put("version", "1.0.0");
@@ -86,7 +88,7 @@ public class OpenApiBuilder {
      * @param config 文档配置信息
      * @return
      */
-    public static List<Map<String, Object>> buildServers(ApiConfig config) {
+    private static List<Map<String, Object>> buildServers(ApiConfig config) {
         List<Map<String, Object>> serverList = new ArrayList<>();
         Map<String, Object> serverMap = new HashMap<>(8);
         serverMap.put("url", config.getServerUrl() == null ? "http://127.0.0.1" : config.getServerUrl());
@@ -98,7 +100,7 @@ public class OpenApiBuilder {
      * @param apiDocList api列表
      * @return
      */
-    public static Map<String, Object> buildPaths(List<ApiDoc> apiDocList) {
+    private static Map<String, Object> buildPaths(List<ApiDoc> apiDocList) {
         Map<String, Object> pathMap = new HashMap<>(500);
         apiDocList.forEach(
                 a -> {
@@ -119,7 +121,7 @@ public class OpenApiBuilder {
      * @param apiDoc 类参数
      * @return
      */
-    public static Map<String, Object> buildPathUrls(ApiMethodDoc apiMethodDoc, ApiDoc apiDoc) {
+    private static Map<String, Object> buildPathUrls(ApiMethodDoc apiMethodDoc, ApiDoc apiDoc) {
         Map<String, Object> request = new HashMap<>(4);
         request.put(apiMethodDoc.getType().toLowerCase(), buildPathUrlsRequest(apiMethodDoc, apiDoc));
         return request;
@@ -130,7 +132,7 @@ public class OpenApiBuilder {
      * @param apiDoc 类参数
      * @return
      */
-    public static Map<String, Object> buildPathUrlsRequest(ApiMethodDoc apiMethodDoc, ApiDoc apiDoc) {
+    private static Map<String, Object> buildPathUrlsRequest(ApiMethodDoc apiMethodDoc, ApiDoc apiDoc) {
         Map<String, Object> request = new HashMap<>(20);
         request.put("summary", apiMethodDoc.getDesc());
         request.put("description", apiMethodDoc.getDetail());
@@ -145,7 +147,7 @@ public class OpenApiBuilder {
      * @param apiMethodDoc 方法参数
      * @return
      */
-    public static Map<String, Object> buildRequestBody(ApiMethodDoc apiMethodDoc) {
+    private static Map<String, Object> buildRequestBody(ApiMethodDoc apiMethodDoc) {
         int size = 0;
         Map<String, Object> requestBody = new HashMap<>(8);
         //判断请求体去除pathVariable参数后是否为null
@@ -171,7 +173,7 @@ public class OpenApiBuilder {
      * @param isRep 是否是返回数据
      * @return
      */
-    public static Map<String, Object> buildContent(ApiMethodDoc apiMethodDoc, boolean isRep) {
+    private static Map<String, Object> buildContent(ApiMethodDoc apiMethodDoc, boolean isRep) {
         Map<String, Object> content = new HashMap<>(8);
         content.put(apiMethodDoc.getContentType(), buildContentBody(apiMethodDoc, isRep));
         return content;
@@ -183,7 +185,7 @@ public class OpenApiBuilder {
      * @param isRep 是否是返回数据
      * @return
      */
-    public static Map<String, Object> buildContentBody(ApiMethodDoc apiMethodDoc, boolean isRep) {
+    private static Map<String, Object> buildContentBody(ApiMethodDoc apiMethodDoc, boolean isRep) {
         Map<String, Object> content = new HashMap<>(8);
         content.put("schema", buildBodySchema(apiMethodDoc.getPath(), isRep));
         content.put("examples", buildBodyExample(apiMethodDoc, isRep));
@@ -212,7 +214,7 @@ public class OpenApiBuilder {
      * @param isRep 是否是返回数据
      * @return
      */
-    public static Map<String, Object> buildBodyExample(ApiMethodDoc apiMethodDoc, boolean isRep) {
+    private static Map<String, Object> buildBodyExample(ApiMethodDoc apiMethodDoc, boolean isRep) {
         Map<String, Object> content = new HashMap<>(8);
         content.put("json", buildExampleData(apiMethodDoc, isRep));
         return content;
@@ -224,7 +226,7 @@ public class OpenApiBuilder {
      * @param isRep 是否为返回数据
      * @return
      */
-    public static Map<String, Object> buildExampleData(ApiMethodDoc apiMethodDoc, boolean isRep) {
+    private static Map<String, Object> buildExampleData(ApiMethodDoc apiMethodDoc, boolean isRep) {
         Map<String, Object> content = new HashMap<>(8);
         content.put("summary", "test data");
         if (!isRep) {
@@ -243,7 +245,7 @@ public class OpenApiBuilder {
      * @param apiMethodDoc 方法体
      * @return
      */
-    public static List<Map<String, Object>> buildParameters(ApiMethodDoc apiMethodDoc) {
+    private static List<Map<String, Object>> buildParameters(ApiMethodDoc apiMethodDoc) {
         Map<String, Object> parameters;
         List<Map<String, Object>> parametersList = new ArrayList<>();
         //如果是get请求 或 包含@pathvariable
@@ -338,7 +340,7 @@ public class OpenApiBuilder {
      * @param apiDocs 请求列表
      * @return
      */
-    public static Map<String, Object> buildComponentsSchema(List<ApiDoc> apiDocs) {
+    private static Map<String, Object> buildComponentsSchema(List<ApiDoc> apiDocs) {
         Map<String, Object> schemas = new HashMap<>(4);
         Map<String, Object> component = new HashMap<>();
         apiDocs.forEach(
@@ -365,7 +367,7 @@ public class OpenApiBuilder {
      * @param apiParam 参数列表
      * @return
      */
-    public static Map<String, Object> buildProperties(List<ApiParam> apiParam) {
+    private static Map<String, Object> buildProperties(List<ApiParam> apiParam) {
 
         Map<String, Object> component = new HashMap<>();
         Map<String, Object> propertiesData = new HashMap<>();
@@ -378,6 +380,7 @@ public class OpenApiBuilder {
                 String field = param.getField();
                 //去除filed的前缀
                 field = field.replaceAll("└─", "").replaceAll("&nbsp;", "");
+
                 propertiesData.put(field, buildPropertiesData(param));
             }
             component.put("properties", propertiesData);
@@ -395,7 +398,7 @@ public class OpenApiBuilder {
      * @param apiParam 参数基本信息
      * @return
      */
-    public static Map<String, Object> buildPropertiesData(ApiParam apiParam) {
+    private static Map<String, Object> buildPropertiesData(ApiParam apiParam) {
         Map<String, Object> propertiesData = new HashMap<>();
         String openApiType = DocUtil.javaTypeToOpenApiTypeConvert(apiParam.getType());
         //array object file map
@@ -411,7 +414,10 @@ public class OpenApiBuilder {
         }
         if ("object".equals(apiParam.getType())) {
             if (apiParam.getChildren() != null) {
-                buildProperties(apiParam.getChildren());
+                propertiesData.put("type", "object");
+                propertiesData.put("description", apiParam.getDesc() + "(object)");
+                propertiesData.put("properties",buildProperties(apiParam.getChildren()).get("properties"));
+                propertiesData.put("requires",buildProperties(apiParam.getChildren()).get("requires"));
             }
         }
         if ("array".equals(apiParam.getType())) {
@@ -427,33 +433,4 @@ public class OpenApiBuilder {
         }
         return propertiesData;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
