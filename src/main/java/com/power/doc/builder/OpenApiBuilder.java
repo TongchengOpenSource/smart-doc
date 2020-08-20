@@ -378,8 +378,6 @@ public class OpenApiBuilder {
                     requiredList.add(param.getField());
                 }
                 String field = param.getField();
-                //去除filed的前缀
-                field = field.replaceAll("└─", "").replaceAll("&nbsp;", "");
 
                 propertiesData.put(field, buildPropertiesData(param));
             }

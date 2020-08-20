@@ -66,7 +66,7 @@ public class ApiDocTest {
 
 
         long start = System.currentTimeMillis();
-        OpenApiBuilder.buildOpenApi(config);
+       // OpenApiBuilder.buildOpenApi(config);
         HtmlApiDocBuilder.buildApiDoc(config);
         long end = System.currentTimeMillis();
         DateTimeUtil.printRunTime(end, start);

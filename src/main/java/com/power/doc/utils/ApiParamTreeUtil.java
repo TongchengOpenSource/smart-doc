@@ -18,12 +18,15 @@ public class ApiParamTreeUtil {
         List<ApiParam> params = new ArrayList<>();
         // find root
         for (ApiParam apiParam : apiParamList) {
+            //去除filed的前缀
+            apiParam.setField(apiParam.getField().replaceAll("└─", "").replaceAll("&nbsp;", ""));
             // pid == 0
             if (apiParam.getPid() == 0) {
                 params.add(apiParam);
             }
         }
         for (ApiParam apiParam : params) {
+            //去除filed的前缀
             apiParam.setChildren(getChild(apiParam.getId(), apiParamList));
         }
         return params;

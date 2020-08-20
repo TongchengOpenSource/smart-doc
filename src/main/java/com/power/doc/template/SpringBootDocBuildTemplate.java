@@ -47,6 +47,7 @@ import java.util.stream.Stream;
 import static com.power.doc.constants.DocGlobalConstants.FILE_CONTENT_TYPE;
 import static com.power.doc.constants.DocGlobalConstants.JSON_CONTENT_TYPE;
 import static com.power.doc.constants.DocTags.IGNORE;
+import static com.power.doc.constants.DocTags.PARAM;
 
 /**
  * @author yu 2019/12/21.
@@ -214,12 +215,18 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         ApiRequestExample requestExample = ApiRequestExample.builder();
         out:
         for (JavaParameter parameter : parameterList) {
+
             JavaType javaType = parameter.getType();
             String paramName = parameter.getName();
             String typeName = javaType.getFullyQualifiedName();
             String gicTypeName = javaType.getGenericCanonicalName();
             String rewriteClassName = null;
+
             String commentClass = paramsComments.get(paramName);
+            //过滤请求参数
+            if(Objects.nonNull(commentClass) && commentClass.contains(IGNORE)){
+                continue;
+            }
             if (Objects.nonNull(commentClass) && !DocGlobalConstants.NO_COMMENTS_FOUND.equals(commentClass)) {
                 String[] comments = commentClass.split("\\|");
                 rewriteClassName = comments[comments.length - 1];
@@ -424,6 +431,9 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         out:
         for (JavaParameter parameter : parameterList) {
             String paramName = parameter.getName();
+            if(Objects.nonNull(paramTagMap.get(paramName)) && paramTagMap.get(paramName).contains(IGNORE)){
+                continue;
+            }
             if (jsonParamSet.size() > 0 && !jsonParamSet.contains(paramName)) {
                 continue;
             }
