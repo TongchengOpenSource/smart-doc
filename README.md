@@ -15,7 +15,7 @@ Or a static html document. If you are tired of the numerous annotations and stro
 - Support for automatic generation of request examples based on request parameters.
 - Support for generating json return value examples.
 - Support for loading source code from outside the project to generate field comments (including the sources jar package).
-- Support for generating multiple formats of documents: Markdown, HTML5, Asciidoctor,Postman Collection json.
+- Support for generating multiple formats of documents: Markdown, HTML5, Asciidoctor,Postman Collection json,Open Api 3.0.
 - Support for exporting error codes and data dictionary codes to API documentation.
 - Support Apache Dubbo RPC.
 ## Getting started
