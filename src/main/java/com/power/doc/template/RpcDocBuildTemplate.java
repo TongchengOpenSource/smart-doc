@@ -79,7 +79,7 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
         return null;
     }
 
-    public boolean ignoreReturnObject(String typeName) {
+    public boolean ignoreReturnObject(String typeName,List<String> ignoreParams) {
         return false;
     }
 

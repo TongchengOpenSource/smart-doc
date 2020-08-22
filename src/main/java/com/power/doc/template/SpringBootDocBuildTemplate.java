@@ -90,8 +90,8 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
     }
 
     @Override
-    public boolean ignoreReturnObject(String typeName) {
-        if (JavaClassValidateUtil.isMvcIgnoreParams(typeName)) {
+    public boolean ignoreReturnObject(String typeName,List<String> ignoreParams) {
+        if (JavaClassValidateUtil.isMvcIgnoreParams(typeName,ignoreParams)) {
             return DocGlobalConstants.MODE_AND_VIEW_FULLY.equals(typeName);
         }
         return false;
@@ -198,7 +198,6 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
 
     private ApiRequestExample buildReqJson(JavaMethod method, ApiMethodDoc apiMethodDoc, String methodType,
                                            ProjectDocConfigBuilder configBuilder) {
-        List<String> ignoreParam = configBuilder.getApiConfig().getIgnoreParam();
         List<JavaParameter> parameterList = method.getParameters();
         if (parameterList.size() < 1) {
             return ApiRequestExample.builder().setUrl(apiMethodDoc.getUrl());
@@ -211,7 +210,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         List<String> springMvcRequestAnnotations = SpringMvcRequestAnnotationsEnum.listSpringMvcRequestAnnotations();
         List<FormData> formDataList = new ArrayList<>();
         ApiRequestExample requestExample = ApiRequestExample.builder();
-        Set<String> jsonParamSet = this.jsonParamSet(parameterList,ignoreParam);
+        Set<String> jsonParamSet = this.jsonParamSet(parameterList);
         out:
         for (JavaParameter parameter : parameterList) {
             JavaType javaType = parameter.getType();
@@ -238,7 +237,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 gicTypeName = rewriteClassName;
                 typeName = DocClassUtil.getSimpleName(rewriteClassName);
             }
-            if (JavaClassValidateUtil.isMvcIgnoreParams(typeName)) {
+            if (JavaClassValidateUtil.isMvcIgnoreParams(typeName,configBuilder.getApiConfig().getIgnoreParam())) {
                 continue;
             }
             String simpleTypeName = javaType.getValue().toLowerCase();
@@ -414,7 +413,6 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
 
     private List<ApiParam> requestParams(final JavaMethod javaMethod, final String tagName, ProjectDocConfigBuilder builder) {
         boolean isStrict = builder.getApiConfig().isStrict();
-        List<String> ignoreParam = builder.getApiConfig().getIgnoreParam();
         Map<String, CustomRespField> responseFieldMap = new HashMap<>();
 
         Map<String, String> replacementMap = builder.getReplaceClassMap();
@@ -426,7 +424,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         }
         Map<String, String> constantsMap = builder.getConstantsMap();
         boolean requestFieldToUnderline = builder.getApiConfig().isRequestFieldToUnderline();
-        Set<String> jsonParamSet = this.jsonParamSet(parameterList,ignoreParam);
+        Set<String> jsonParamSet = this.jsonParamSet(parameterList);
         List<ApiParam> paramList = new ArrayList<>();
         int requestBodyCounter = 0;
         out:
@@ -451,7 +449,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 typeName = rewriteClassName;
                 fullTypeName = DocClassUtil.getSimpleName(rewriteClassName);
             }
-            if (JavaClassValidateUtil.isMvcIgnoreParams(typeName)) {
+            if (JavaClassValidateUtil.isMvcIgnoreParams(typeName,builder.getApiConfig().getIgnoreParam())) {
                 continue out;
             }
             fullTypeName = DocClassUtil.rewriteRequestParam(fullTypeName);
@@ -600,7 +598,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         return false;
     }
 
-    public Set<String> jsonParamSet(List<JavaParameter> parameterList,List<String> ignoreParams) {
+    public Set<String> jsonParamSet(List<JavaParameter> parameterList) {
         Set<String> jsonParamSet = new HashSet<>();
         for (JavaParameter parameter : parameterList) {
             String paramName = parameter.getName();
@@ -611,9 +609,6 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                     jsonParamSet.add(paramName);
                 }
             }
-        }
-        if(CollectionUtil.isNotEmpty(ignoreParams)) {
-            jsonParamSet.addAll(ignoreParams);
         }
         return jsonParamSet;
     }

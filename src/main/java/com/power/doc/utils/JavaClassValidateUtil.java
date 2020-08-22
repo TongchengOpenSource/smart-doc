@@ -22,6 +22,9 @@
  */
 package com.power.doc.utils;
 
+import com.power.common.util.CollectionUtil;
+
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -210,7 +213,10 @@ public class JavaClassValidateUtil {
      * @param paramType param type name
      * @return boolean
      */
-    public static boolean isMvcIgnoreParams(String paramType) {
+    public static boolean isMvcIgnoreParams(String paramType,List<String> ignoreParams) {
+        if(CollectionUtil.isNotEmpty(ignoreParams) && ignoreParams.contains(paramType)){
+            return true;
+        }
         switch (paramType) {
             case "org.springframework.ui.Model":
             case "org.springframework.ui.ModelMap":

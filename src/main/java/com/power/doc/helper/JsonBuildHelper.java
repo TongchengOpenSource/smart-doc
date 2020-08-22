@@ -86,7 +86,7 @@ public class JsonBuildHelper {
         }
         int nextLevel = counter + 1;
         registryClasses.put(typeName, typeName);
-        if (JavaClassValidateUtil.isMvcIgnoreParams(typeName)) {
+        if (JavaClassValidateUtil.isMvcIgnoreParams(typeName,builder.getApiConfig().getIgnoreParam())) {
             if (DocGlobalConstants.MODE_AND_VIEW_FULLY.equals(typeName)) {
                 return "Forward or redirect to a page view.";
             } else {
