@@ -213,8 +213,8 @@ public class JavaClassValidateUtil {
      * @param paramType param type name
      * @return boolean
      */
-    public static boolean isMvcIgnoreParams(String paramType,List<String> ignoreParams) {
-        if(CollectionUtil.isNotEmpty(ignoreParams) && ignoreParams.contains(paramType)){
+    public static boolean isMvcIgnoreParams(String paramType, List<String> ignoreParams) {
+        if (CollectionUtil.isNotEmpty(ignoreParams) && ignoreParams.contains(paramType)) {
             return true;
         }
         switch (paramType) {
@@ -227,6 +227,7 @@ public class JavaClassValidateUtil {
             case "javax.servlet.http.HttpSession":
             case "javax.servlet.http.HttpServletResponse":
             case "org.springframework.web.reactive.function.server.ServerRequest":
+            case "org.springframework.web.multipart.MultipartHttpServletRequest":
                 return true;
             default:
                 return false;

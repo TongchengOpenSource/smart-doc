@@ -95,6 +95,9 @@ smart-doc官方目前已经开发完成[maven插件](https://gitee.com/sunyurepo
   "allInOneDocFileName":"index.html",//自定义设置输出文档名称, @since 1.9.0
   "requestExample":"true",//是否将请求示例展示在文档中，默认true，@since 1.9.0
   "responseExample":"true",//是否将响应示例展示在文档中，默认为true，@since 1.9.0
+  "ignoreRequestParams":[ //忽略请求参数对象，把不想生成文档的参数对象屏蔽掉，@since 1.9.2
+     "org.springframework.ui.ModelMap"
+   ],
   "dataDictionaries": [ //配置数据字典，没有需求可以不设置
     {
       "title": "http状态码字典", //数据字典的名称
