@@ -198,7 +198,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
 
     private ApiRequestExample buildReqJson(JavaMethod method, ApiMethodDoc apiMethodDoc, String methodType,
                                            ProjectDocConfigBuilder configBuilder) {
-        List<String> ignoreParam = configBuilder.getApiConfig().getIgnoreParam();
+        List<String> ignoreParam = configBuilder.getApiConfig().getIgnoreRequestParams();
         List<JavaParameter> parameterList = method.getParameters();
         if (parameterList.size() < 1) {
             return ApiRequestExample.builder().setUrl(apiMethodDoc.getUrl());
@@ -223,7 +223,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 continue;
             }
             String commentClass = paramsComments.get(paramName);
-            //过滤请求参数
+            //ignore request params
             if(Objects.nonNull(commentClass) && commentClass.contains(IGNORE)){
                 continue;
             }
@@ -251,7 +251,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             if (JavaClassValidateUtil.isPrimitive(typeName)) {
                 mockValue = paramsComments.get(paramName);
                 if (Objects.nonNull(mockValue) && mockValue.contains("|")) {
-                    mockValue = mockValue.substring(mockValue.lastIndexOf("|") + 1, mockValue.length());
+                    mockValue = mockValue.substring(mockValue.lastIndexOf("|") + 1);
                 } else {
                     mockValue = "";
                 }
@@ -414,7 +414,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
 
     private List<ApiParam> requestParams(final JavaMethod javaMethod, final String tagName, ProjectDocConfigBuilder builder) {
         boolean isStrict = builder.getApiConfig().isStrict();
-        List<String> ignoreParam = builder.getApiConfig().getIgnoreParam();
+        List<String> ignoreParam = builder.getApiConfig().getIgnoreRequestParams();
         Map<String, CustomRespField> responseFieldMap = new HashMap<>();
 
         Map<String, String> replacementMap = builder.getReplaceClassMap();
@@ -510,6 +510,9 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 }
             }
             Boolean required = Boolean.parseBoolean(strRequired);
+            if(isPathVariable){
+                comment = comment +" (This is path param)";
+            }
             if (JavaClassValidateUtil.isCollection(fullTypeName) || JavaClassValidateUtil.isArray(fullTypeName)) {
                 String[] gicNameArr = DocClassUtil.getSimpleGicName(typeName);
                 String gicName = gicNameArr[0];

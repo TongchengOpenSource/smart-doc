@@ -238,7 +238,7 @@ public class ApiConfig {
      * request ignore param
      * @return
      */
-    private List<String> ignoreParam;
+    private List<String> ignoreRequestParams;
 
 
     public String getServerUrl() {
@@ -518,11 +518,11 @@ public class ApiConfig {
         this.paramsDataToTree = paramsDataToTree;
     }
 
-    public List<String> getIgnoreParam() {
-        return ignoreParam;
+    public List<String> getIgnoreRequestParams() {
+        return ignoreRequestParams;
     }
 
-    public void setIgnoreParam(List<String> ignoreParam) {
-        this.ignoreParam = ignoreParam;
+    public void setIgnoreRequestParams(List<String> ignoreRequestParams) {
+        this.ignoreRequestParams = ignoreRequestParams;
     }
 }
