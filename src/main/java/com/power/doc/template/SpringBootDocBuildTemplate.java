@@ -222,7 +222,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 continue;
             }
             String commentClass = paramsComments.get(paramName);
-            //过滤请求参数
+            //ignore request params
             if(Objects.nonNull(commentClass) && commentClass.contains(IGNORE)){
                 continue;
             }
@@ -237,7 +237,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 gicTypeName = rewriteClassName;
                 typeName = DocClassUtil.getSimpleName(rewriteClassName);
             }
-            if (JavaClassValidateUtil.isMvcIgnoreParams(typeName,configBuilder.getApiConfig().getIgnoreParam())) {
+            if (JavaClassValidateUtil.isMvcIgnoreParams(typeName,configBuilder.getApiConfig().getIgnoreRequestParams())) {
                 continue;
             }
             String simpleTypeName = javaType.getValue().toLowerCase();
@@ -250,7 +250,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             if (JavaClassValidateUtil.isPrimitive(typeName)) {
                 mockValue = paramsComments.get(paramName);
                 if (Objects.nonNull(mockValue) && mockValue.contains("|")) {
-                    mockValue = mockValue.substring(mockValue.lastIndexOf("|") + 1, mockValue.length());
+                    mockValue = mockValue.substring(mockValue.lastIndexOf("|") + 1);
                 } else {
                     mockValue = "";
                 }
@@ -449,7 +449,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 typeName = rewriteClassName;
                 fullTypeName = DocClassUtil.getSimpleName(rewriteClassName);
             }
-            if (JavaClassValidateUtil.isMvcIgnoreParams(typeName,builder.getApiConfig().getIgnoreParam())) {
+            if (JavaClassValidateUtil.isMvcIgnoreParams(typeName,builder.getApiConfig().getIgnoreRequestParams())) {
                 continue out;
             }
             fullTypeName = DocClassUtil.rewriteRequestParam(fullTypeName);
@@ -508,6 +508,9 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 }
             }
             Boolean required = Boolean.parseBoolean(strRequired);
+            if(isPathVariable){
+                comment = comment +" (This is path param)";
+            }
             if (JavaClassValidateUtil.isCollection(fullTypeName) || JavaClassValidateUtil.isArray(fullTypeName)) {
                 String[] gicNameArr = DocClassUtil.getSimpleGicName(typeName);
                 String gicName = gicNameArr[0];

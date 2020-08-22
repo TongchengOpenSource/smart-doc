@@ -98,7 +98,7 @@ public interface IDocBuildTemplate<T> {
         ApiReturn apiReturn = DocClassUtil.processReturnType(method.getReturnType().getGenericCanonicalName());
         String returnType = apiReturn.getGenericCanonicalName();
         String typeName = apiReturn.getSimpleName();
-        if (this.ignoreReturnObject(typeName,projectBuilder.getApiConfig().getIgnoreParam())) {
+        if (this.ignoreReturnObject(typeName,projectBuilder.getApiConfig().getIgnoreRequestParams())) {
             return null;
         }
         if (JavaClassValidateUtil.isPrimitive(typeName)) {

@@ -51,6 +51,7 @@ import java.util.List;
  */
 public class PostmanJsonBuilder {
 
+    private static final String MSG = "Interface name is not set.";
 
     /**
      * 构建postman json
@@ -74,6 +75,7 @@ public class PostmanJsonBuilder {
     public static void buildPostmanCollection(ApiConfig config, JavaProjectBuilder projectBuilder) {
         DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
         builderTemplate.checkAndInit(config);
+        config.setParamsDataToTree(false);
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, projectBuilder);
         postManCreate(config, configBuilder);
     }
@@ -86,7 +88,7 @@ public class PostmanJsonBuilder {
      */
     private static ItemBean buildItemBean(ApiDoc apiDoc) {
         ItemBean itemBean = new ItemBean();
-        itemBean.setName(StringUtil.isEmpty(apiDoc.getDesc())?"未设置接口名称":apiDoc.getDesc() );
+        itemBean.setName(StringUtil.isEmpty(apiDoc.getDesc()) ? MSG : apiDoc.getDesc());
         List<ItemBean> itemBeans = new ArrayList<>();
         List<ApiMethodDoc> apiMethodDocs = apiDoc.getList();
         apiMethodDocs.forEach(
@@ -109,7 +111,7 @@ public class PostmanJsonBuilder {
         ItemBean item = new ItemBean();
         RequestBean requestBean = new RequestBean();
 
-        item.setName(StringUtil.isEmpty(apiMethodDoc.getDesc()) ?"未设置接口名称":apiMethodDoc.getDesc() );
+        item.setName(StringUtil.isEmpty(apiMethodDoc.getDesc()) ? MSG : apiMethodDoc.getDesc());
         item.setDescription(apiMethodDoc.getDetail());
 
         requestBean.setDescription(apiMethodDoc.getDesc());
@@ -131,20 +133,19 @@ public class PostmanJsonBuilder {
      * @return
      */
     private static BodyBean buildBodyBean(ApiMethodDoc apiMethodDoc) {
-
+        BodyBean bodyBean;
         if (apiMethodDoc.getContentType().contains(DocGlobalConstants.JSON_CONTENT_TYPE)) {
-            BodyBean bodyBean = new BodyBean(false);
+            bodyBean = new BodyBean(false);
             bodyBean.setMode(DocGlobalConstants.POSTMAN_MODE_RAW);
             if (apiMethodDoc.getRequestExample() != null) {
                 bodyBean.setRaw(apiMethodDoc.getRequestExample().getJsonBody());
             }
-            return bodyBean;
         } else {
-            BodyBean bodyBean = new BodyBean(true);
+            bodyBean = new BodyBean(true);
             bodyBean.setMode(DocGlobalConstants.POSTMAN_MODE_FORMDATA);
             bodyBean.setFormdata(apiMethodDoc.getRequestExample().getFormDataList());
-            return bodyBean;
         }
+        return bodyBean;
 
     }
 
