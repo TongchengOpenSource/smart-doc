@@ -106,14 +106,12 @@ smart-doc官方目前已经开发完成[maven插件](https://gitee.com/sunyurepo
       "descField": "message"//数据字典对象的描述信息字典
     }
   ],
-
   "errorCodeDictionaries": [{ //错误码列表，没有需求可以不设置
     "title": "title",
     "enumClassName": "com.power.common.enums.HttpCodeEnum", //错误码枚举类
     "codeField": "code",//错误码的code码字段名称
     "descField": "message"//错误码的描述信息对应的字段名
   }],
-
   "revisionLogs": [ //设置文档变更记录，没有需求可以不设置
     {
       "version": "1.0", //文档版本号
@@ -184,7 +182,7 @@ mvn -Dfile.encoding = UTF-8 smart-doc:rpc-adoc
 ```
 **注意：** 尤其在window系统下，如果实际使用maven命令行执行文档生成，可能会出现乱码，因此需要在执行时指定`-Dfile.encoding=UTF-8`。
 #### Use Idea
-![idea中smart-doc-maven插件使用](https://images.gitee.com/uploads/images/2020/0602/213139_739a4d41_144669.png "maven_plugin_tasks.png")
+![idea中smart-doc-maven插件使用](https://gitee.com/sunyurepository/smart-doc-maven-plugin/raw/master/images/idea.png "maven_plugin_tasks.png")
 
 ### Use gradle plugin
 如果你使用gradle来构建项目，你可以参考gradle插件的使用文档来集成，

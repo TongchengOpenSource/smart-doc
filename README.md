@@ -97,7 +97,7 @@ When you need to use smart-doc to generate more API document information, you ca
   "responseExample":"true",//Whether to display the response example in the document, the default is true.
   "ignoreRequestParams":[ //The request parameter object will be discarded when generating the document.@since 1.9.2
         "org.springframework.ui.ModelMap"
-   ],
+  ],
   "dataDictionaries": [// Configure the data dictionary, no need to set
     {
       "title": "Order Status", // The name of the data dictionary
