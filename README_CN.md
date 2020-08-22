@@ -15,7 +15,7 @@ smart-doc就能帮你生成一个简易明了的markdown、html5文档，甚至�
 - 对一些常用字段定义能够生成有效的模拟值。
 - 支持生成json返回值示例。
 - 支持从项目外部加载源代码来生成字段注释(包括标准规范发布的jar包)。
-- 支持生成多种格式文档：Markdown、HTML5、Asciidoctor、Postman Collection。
+- 支持生成多种格式文档：Markdown、HTML5、Asciidoctor、Postman Collection、Open Api 3.0。
 - 轻易实现在Spring Boot服务上在线查看静态HTML5 api文档。
 - 开放文档数据，可自由实现接入文档管理系统。
 - 支持导出错误码和定义在代码中的各种字典码到接口文档。
