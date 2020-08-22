@@ -22,10 +22,7 @@
  */
 package com.power.doc.template;
 
-import com.power.common.util.JsonFormatUtil;
-import com.power.common.util.RandomUtil;
-import com.power.common.util.StringUtil;
-import com.power.common.util.UrlUtil;
+import com.power.common.util.*;
 import com.power.doc.builder.ProjectDocConfigBuilder;
 import com.power.doc.constants.*;
 import com.power.doc.handler.SpringMVCRequestHeaderHandler;
@@ -201,6 +198,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
 
     private ApiRequestExample buildReqJson(JavaMethod method, ApiMethodDoc apiMethodDoc, String methodType,
                                            ProjectDocConfigBuilder configBuilder) {
+        List<String> ignoreParam = configBuilder.getApiConfig().getIgnoreParam();
         List<JavaParameter> parameterList = method.getParameters();
         if (parameterList.size() < 1) {
             return ApiRequestExample.builder().setUrl(apiMethodDoc.getUrl());
@@ -213,15 +211,17 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         List<String> springMvcRequestAnnotations = SpringMvcRequestAnnotationsEnum.listSpringMvcRequestAnnotations();
         List<FormData> formDataList = new ArrayList<>();
         ApiRequestExample requestExample = ApiRequestExample.builder();
+        Set<String> jsonParamSet = this.jsonParamSet(parameterList,ignoreParam);
         out:
         for (JavaParameter parameter : parameterList) {
-
             JavaType javaType = parameter.getType();
             String paramName = parameter.getName();
             String typeName = javaType.getFullyQualifiedName();
             String gicTypeName = javaType.getGenericCanonicalName();
             String rewriteClassName = null;
-
+            if (jsonParamSet.size() > 0 && !jsonParamSet.contains(paramName)) {
+                continue;
+            }
             String commentClass = paramsComments.get(paramName);
             //过滤请求参数
             if(Objects.nonNull(commentClass) && commentClass.contains(IGNORE)){
@@ -414,6 +414,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
 
     private List<ApiParam> requestParams(final JavaMethod javaMethod, final String tagName, ProjectDocConfigBuilder builder) {
         boolean isStrict = builder.getApiConfig().isStrict();
+        List<String> ignoreParam = builder.getApiConfig().getIgnoreParam();
         Map<String, CustomRespField> responseFieldMap = new HashMap<>();
 
         Map<String, String> replacementMap = builder.getReplaceClassMap();
@@ -425,15 +426,12 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         }
         Map<String, String> constantsMap = builder.getConstantsMap();
         boolean requestFieldToUnderline = builder.getApiConfig().isRequestFieldToUnderline();
-        Set<String> jsonParamSet = this.jsonParamSet(parameterList);
+        Set<String> jsonParamSet = this.jsonParamSet(parameterList,ignoreParam);
         List<ApiParam> paramList = new ArrayList<>();
         int requestBodyCounter = 0;
         out:
         for (JavaParameter parameter : parameterList) {
             String paramName = parameter.getName();
-            if(Objects.nonNull(paramTagMap.get(paramName)) && paramTagMap.get(paramName).contains(IGNORE)){
-                continue;
-            }
             if (jsonParamSet.size() > 0 && !jsonParamSet.contains(paramName)) {
                 continue;
             }
@@ -602,7 +600,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         return false;
     }
 
-    public Set<String> jsonParamSet(List<JavaParameter> parameterList) {
+    public Set<String> jsonParamSet(List<JavaParameter> parameterList,List<String> ignoreParams) {
         Set<String> jsonParamSet = new HashSet<>();
         for (JavaParameter parameter : parameterList) {
             String paramName = parameter.getName();
@@ -613,6 +611,9 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                     jsonParamSet.add(paramName);
                 }
             }
+        }
+        if(CollectionUtil.isNotEmpty(ignoreParams)) {
+            jsonParamSet.addAll(ignoreParams);
         }
         return jsonParamSet;
     }

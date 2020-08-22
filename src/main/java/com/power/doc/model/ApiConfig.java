@@ -234,6 +234,13 @@ public class ApiConfig {
      */
     private boolean paramsDataToTree;
 
+    /**
+     * request ignore param
+     * @return
+     */
+    private List<String> ignoreParam;
+
+
     public String getServerUrl() {
         return serverUrl;
     }
@@ -509,5 +516,13 @@ public class ApiConfig {
 
     public void setParamsDataToTree(boolean paramsDataToTree) {
         this.paramsDataToTree = paramsDataToTree;
+    }
+
+    public List<String> getIgnoreParam() {
+        return ignoreParam;
+    }
+
+    public void setIgnoreParam(List<String> ignoreParam) {
+        this.ignoreParam = ignoreParam;
     }
 }
