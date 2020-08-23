@@ -108,11 +108,6 @@ public class DocClassUtil {
                                 classes.add(arr[globIndex] + "," + arr[globIndex + 1]);
                                 globIndex = globIndex + 1;
                                 indexList.add(globIndex);
-                                if (arr.length > globIndex + 1) {
-                                    classes.add(arr[globIndex] + "," + arr[globIndex + 1]);
-                                    globIndex = globIndex + 1;
-                                    indexList.add(globIndex);
-                                }
                             }
                         }
                     }
@@ -127,11 +122,6 @@ public class DocClassUtil {
                         classes.add(arr[i] + "," + arr[globIndex]);
                         indexList.add(i);
                         indexList.add(i + 1);
-                        if (arr.length > globIndex) {
-                            classes.add(arr[i] + "," + arr[globIndex]);
-                            indexList.add(i);
-                            indexList.add(i + 1);
-                        }
                     }
                 }
             }
