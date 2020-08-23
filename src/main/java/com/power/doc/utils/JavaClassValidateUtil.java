@@ -211,6 +211,7 @@ public class JavaClassValidateUtil {
      * ignore param of spring mvc
      *
      * @param paramType param type name
+     * @param ignoreParams ignore param list
      * @return boolean
      */
     public static boolean isMvcIgnoreParams(String paramType, List<String> ignoreParams) {
