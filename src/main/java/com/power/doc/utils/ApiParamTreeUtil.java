@@ -46,6 +46,9 @@ public class ApiParamTreeUtil {
                 childList.add(param);
             }
         }
+        for (ApiParam param : childList) {
+            param.setChildren(getChild(param.getId(), apiParamList));
+        }
         if (childList.size() == 0) {
             return null;
         }

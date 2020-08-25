@@ -223,7 +223,7 @@ public class ParamsBuildHelper {
                         commonHandleParam(paramList, param, isRequired, NO_COMMENTS_FOUND, since, strRequired);
                     }
                 } else {
-                    ApiParam param = ApiParam.of().setField(pre + fieldName);
+                    ApiParam param = ApiParam.of().setField(pre + fieldName).setPid(pid);
                     JavaClass javaClass = projectBuilder.getJavaProjectBuilder().getClassByName(subTypeName);
                     String enumComments = javaClass.getComment();
                     if (javaClass.isEnum()) {
@@ -289,7 +289,7 @@ public class ParamsBuildHelper {
                         preBuilder.append(DocGlobalConstants.FIELD_SPACE);
                     }
                     preBuilder.append("└─");
-                    int fieldPid = paramList.size();
+                    int fieldPid = paramList.size()+pid;
                     if (JavaClassValidateUtil.isMap(subTypeName)) {
                         String gNameTemp = field.getType().getGenericCanonicalName();
                         if (JavaClassValidateUtil.isMap(gNameTemp)) {
