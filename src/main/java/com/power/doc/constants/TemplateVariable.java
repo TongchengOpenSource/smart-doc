@@ -48,7 +48,8 @@ public enum TemplateVariable {
     URI("uri"),
     RPC_CONSUMER_CONFIG("consumerConfigExample"),
     REQUEST_EXAMPLE("isRequestExample"),
-    RESPONSE_EXAMPLE("isResponseExample");
+    RESPONSE_EXAMPLE("isResponseExample"),
+    RESPONSELIST("respList");
 
     private String variable;
 

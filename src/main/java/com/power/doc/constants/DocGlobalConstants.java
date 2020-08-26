@@ -146,4 +146,6 @@ public interface DocGlobalConstants {
     String EMPTY = "";
 
     String ENUM = "enum";
+    String YAPI_RESULT_TPL = "yapiJson.btl";
+    String YAPI_JSON="/yapi.json";
 }
