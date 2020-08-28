@@ -85,7 +85,12 @@ public interface IDocBuildTemplate<T> {
             String name = DocUtil.generateId(apiDoc.getName());
             apiDoc.setAlias(name);
         }
-        apiDoc.setDesc(cls.getComment());
+        String desc = "";
+        if(StringUtil.isNotEmpty(cls.getComment())){
+            desc = cls.getComment().replaceAll("<", "&lt;");
+            desc = desc.replaceAll(">", "&gt;");
+        }
+        apiDoc.setDesc(desc);
         apiDoc.setList(apiMethodDocs);
         apiDocList.add(apiDoc);
     }
