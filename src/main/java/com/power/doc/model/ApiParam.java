@@ -22,6 +22,7 @@
  */
 package com.power.doc.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -63,11 +64,15 @@ public class ApiParam {
      * field pid
      */
     private int pid;
+
     /**
      * PathVariableParams flag
      */
     private boolean isPathParams;
 
+    /**
+     * children params
+     */
     private List<ApiParam> children;
 
     public static ApiParam of(){

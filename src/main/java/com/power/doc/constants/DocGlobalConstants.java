@@ -137,13 +137,15 @@ public interface DocGlobalConstants {
 
     String SHORT_REQUEST_BODY = "RequestBody";
 
-    String CURL_REQUEST_TYPE = "curl -X %s -i %s";
+    String CURL_REQUEST_TYPE = "curl -X %s %s -i %s";
 
-    String CURL_REQUEST_TYPE_DATA = "curl -X %s -i %s  --data '%s'";
+    String CURL_REQUEST_TYPE_DATA = "curl -X %s %s -i %s --data '%s'";
 
-    String CURL_POST_PUT_JSON = "curl -X %s -H 'Content-Type: application/json; charset=utf-8' -i %s --data '%s'";
+    String CURL_POST_PUT_JSON = "curl -X %s -H 'Content-Type: application/json; charset=utf-8' %s -i %s --data '%s'";
 
     String EMPTY = "";
 
     String ENUM = "enum";
+    String YAPI_RESULT_TPL = "yapiJson.btl";
+    String YAPI_JSON="/yapi.json";
 }

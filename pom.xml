@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>smart-doc</artifactId>
     <packaging>jar</packaging>
-    <version>1.9.1</version>
+    <version>1.9.2.1</version>
 
     <name>smart-doc</name>
     <url>https://github.com/shalousun/smart-doc.git</url>
@@ -65,7 +65,7 @@
         <dependency>
             <groupId>com.github.shalousun</groupId>
             <artifactId>common-util</artifactId>
-            <version>1.9.6</version>
+            <version>1.9.7</version>
         </dependency>
         <!--markdown to html-->
         <dependency>

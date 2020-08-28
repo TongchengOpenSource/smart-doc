@@ -93,7 +93,7 @@ public class HtmlApiDocBuilder {
             List<ApiDocDict> apiDocDictList = builderTemplate.buildDictionary(config, javaProjectBuilder);
             buildIndex(apiDocList, config);
             copyCss(config.getOutPath());
-            buildDoc(apiDocList, config.getOutPath());
+            buildDoc(apiDocList, config);
             buildErrorCodeDoc(config.getErrorCodes(), config.getOutPath());
             buildDictionary(apiDocDictList, config.getOutPath());
         }
@@ -149,20 +149,22 @@ public class HtmlApiDocBuilder {
      * build ever controller api
      *
      * @param apiDocList list of api doc
-     * @param outPath    output path
+     * @param config    ApiConfig
      */
-    private static void buildDoc(List<ApiDoc> apiDocList, String outPath) {
-        FileUtil.mkdirs(outPath);
+    private static void buildDoc(List<ApiDoc> apiDocList, ApiConfig config) {
+        FileUtil.mkdirs(config.getOutPath());
         Template htmlApiDoc;
         for (ApiDoc doc : apiDocList) {
             Template apiTemplate = BeetlTemplateUtil.getByName(API_DOC_MD_TPL);
+            apiTemplate.binding(TemplateVariable.REQUEST_EXAMPLE.getVariable(), config.isRequestExample());
+            apiTemplate.binding(TemplateVariable.RESPONSE_EXAMPLE.getVariable(), config.isResponseExample());
             apiTemplate.binding(TemplateVariable.DESC.getVariable(), doc.getDesc());
             apiTemplate.binding(TemplateVariable.NAME.getVariable(), doc.getName());
             apiTemplate.binding(TemplateVariable.LIST.getVariable(), doc.getList());//类名
             Map<String, Object> templateVariables = new HashMap<>();
             templateVariables.put(TemplateVariable.TITLE.getVariable(), doc.getDesc());
             htmlApiDoc = initTemplate(apiTemplate, HTML_API_DOC_TPL, templateVariables);
-            FileUtil.nioWriteFile(htmlApiDoc.render(), outPath + FILE_SEPARATOR + doc.getAlias() + ".html");
+            FileUtil.nioWriteFile(htmlApiDoc.render(), config.getOutPath() + FILE_SEPARATOR + doc.getAlias() + ".html");
         }
     }
 

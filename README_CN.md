@@ -4,7 +4,8 @@
 smart-doc是一款同时支持JAVA RESTFUL API和Apache Dubbo RPC接口文档生成的工具，smart-doc在业内率先提出基于java泛型定义推导的理念，
 完全基于接口源码来分析生成接口文档，不采用任何注解侵入到业务代码中。你只需要按照java-doc标准编写注释，
 smart-doc就能帮你生成一个简易明了的markdown、html5文档，甚至可以直接生成postman collection导入到postman做api接口调试。
-如果你已经厌倦了swagger等文档工具的无数注解和强侵入污染，那请拥抱smart-doc吧！
+
+$\color{red}{我因不将就而诞生，用了无数个日日夜夜来成长，无论现在还是将来也不会为了将就全世界!—smart-doc}$
 ## Features
 - 零注解、零学习成本、只需要写标准java注释。
 - 基于源代码接口定义自动推导，强大的返回结构推导。
@@ -95,6 +96,9 @@ smart-doc官方目前已经开发完成[maven插件](https://gitee.com/sunyurepo
   "allInOneDocFileName":"index.html",//自定义设置输出文档名称, @since 1.9.0
   "requestExample":"true",//是否将请求示例展示在文档中，默认true，@since 1.9.0
   "responseExample":"true",//是否将响应示例展示在文档中，默认为true，@since 1.9.0
+  "ignoreRequestParams":[ //忽略请求参数对象，把不想生成文档的参数对象屏蔽掉，@since 1.9.2
+     "org.springframework.ui.ModelMap"
+   ],
   "dataDictionaries": [ //配置数据字典，没有需求可以不设置
     {
       "title": "http状态码字典", //数据字典的名称
@@ -103,14 +107,12 @@ smart-doc官方目前已经开发完成[maven插件](https://gitee.com/sunyurepo
       "descField": "message"//数据字典对象的描述信息字典
     }
   ],
-
   "errorCodeDictionaries": [{ //错误码列表，没有需求可以不设置
     "title": "title",
     "enumClassName": "com.power.common.enums.HttpCodeEnum", //错误码枚举类
     "codeField": "code",//错误码的code码字段名称
     "descField": "message"//错误码的描述信息对应的字段名
   }],
-
   "revisionLogs": [ //设置文档变更记录，没有需求可以不设置
     {
       "version": "1.0", //文档版本号
@@ -181,7 +183,7 @@ mvn -Dfile.encoding = UTF-8 smart-doc:rpc-adoc
 ```
 **注意：** 尤其在window系统下，如果实际使用maven命令行执行文档生成，可能会出现乱码，因此需要在执行时指定`-Dfile.encoding=UTF-8`。
 #### Use Idea
-![idea中smart-doc-maven插件使用](https://images.gitee.com/uploads/images/2020/0602/213139_739a4d41_144669.png "maven_plugin_tasks.png")
+![idea中smart-doc-maven插件使用](https://gitee.com/sunyurepository/smart-doc-maven-plugin/raw/master/images/idea.png "maven_plugin_tasks.png")
 
 ### Use gradle plugin
 如果你使用gradle来构建项目，你可以参考gradle插件的使用文档来集成，

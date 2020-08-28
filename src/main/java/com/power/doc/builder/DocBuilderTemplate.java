@@ -80,6 +80,8 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
             mapper.binding(TemplateVariable.DESC.getVariable(), doc.getDesc());
             mapper.binding(TemplateVariable.NAME.getVariable(), doc.getName());
             mapper.binding(TemplateVariable.LIST.getVariable(), doc.getList());
+            mapper.binding(TemplateVariable.REQUEST_EXAMPLE.getVariable(), config.isRequestExample());
+            mapper.binding(TemplateVariable.RESPONSE_EXAMPLE.getVariable(), config.isResponseExample());
             FileUtil.nioWriteFile(mapper.render(), config.getOutPath() + FILE_SEPARATOR + doc.getName() + fileExtension);
         }
     }
