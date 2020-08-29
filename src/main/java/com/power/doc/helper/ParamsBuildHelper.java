@@ -107,12 +107,7 @@ public class ParamsBuildHelper {
             }
             paramList.add(param);
         }
-//        if (className.contains(DocGlobalConstants.MULTIPART_FILE_FULLY)) {
-//            ApiParam param = ApiParam.of().setField("").setType("file")
-//                    .setPid(pid)
-//                    .setDesc("comment").setRequired(true).setVersion(DocGlobalConstants.DEFAULT_VERSION);
-//            paramList.add(param);
-//        }
+
         else {
             boolean isGenerics = JavaFieldUtil.checkGenerics(fields);
             out:
@@ -127,6 +122,7 @@ public class ParamsBuildHelper {
                 if (field.isTransient() && skipTransientField) {
                     continue;
                 }
+
                 if ((responseFieldToUnderline && isResp) || (requestFieldToUnderline && !isResp)) {
                     fieldName = StringUtil.camelToUnderline(fieldName);
                 }
@@ -212,6 +208,14 @@ public class ParamsBuildHelper {
                 if (StringUtil.isNotEmpty(comment)) {
                     comment = DocUtil.replaceNewLineToHtmlBr(comment);
                 }
+                // file
+                if (fieldGicName.contains(DocGlobalConstants.MULTIPART_FILE_FULLY)) {
+                    ApiParam param = ApiParam.of().setField(pre + fieldName).setType("file")
+                            .setPid(pid).setId(paramList.size() + pid + 1)
+                            .setDesc(comment).setRequired(Boolean.valueOf(isRequired)).setVersion(since);
+                    paramList.add(param);
+                    continue;
+                }
                 if (JavaClassValidateUtil.isPrimitive(subTypeName)) {
                     ApiParam param = ApiParam.of().setField(pre + fieldName);
                     param.setPid(pid);
@@ -244,10 +248,6 @@ public class ParamsBuildHelper {
 
                         }
                         param.setType(DocGlobalConstants.ENUM);
-                    }
-                    //如果是文件
-                    if(typeSimpleName.contains(DocGlobalConstants.MULTIPART_FILE_FULLY)){
-                        param.setType("file");
                     }
                     //如果已经设置返回类型 不需要再次设置
                     if (param.getType() == null) {
