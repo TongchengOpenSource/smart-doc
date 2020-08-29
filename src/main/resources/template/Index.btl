@@ -58,7 +58,7 @@
                  </li>
                  <%}%>
                 <li class="divider"></li>
-                <li class="footer_link"><a href="https://github.com/shalousun/smart-doc" target="_blank" class="gitbook-link">Created by smart-doc</a>
+                <li class="footer_link"><a href="https://github.com/smart-doc-group/smart-doc" target="_blank" class="gitbook-link">Created by smart-doc</a>
                 </li>
             </ul>
         </nav>

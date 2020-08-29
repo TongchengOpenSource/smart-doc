@@ -1,5 +1,4 @@
 <h1 align="center"><a href="https://github.com/shalousun/smart-doc" target="_blank">Smart-Doc Project</a></h1>
-
 ## Introduce
 smart-doc是一款同时支持JAVA RESTFUL API和Apache Dubbo RPC接口文档生成的工具，smart-doc在业内率先提出基于java泛型定义推导的理念，
 完全基于接口源码来分析生成接口文档，不采用任何注解侵入到业务代码中。你只需要按照java-doc标准编写注释，
@@ -88,6 +87,7 @@ smart-doc官方目前已经开发完成[maven插件](https://gitee.com/sunyurepo
   "md5EncryptedHtmlName": false,//只有每个controller生成一个html文件是才使用
   "projectName": "smart-doc",//配置自己的项目名称
   "skipTransientField": true,//目前未实现
+  "sortByTitle":false,//接口标题排序，默认为false,@since 1.8.7版本开始
   "showAuthor":true,//是否显示接口作者名称，默认是true,不想显示可关闭
   "requestFieldToUnderline":true,//自动将驼峰入参字段在文档中转为下划线格式,//@since 1.8.7版本开始
   "responseFieldToUnderline":true,//自动将驼峰入参字段在文档中转为下划线格式,//@since 1.8.7版本开始

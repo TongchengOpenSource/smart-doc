@@ -1,6 +1,10 @@
 <h1 align="center">Smart-Doc Project</h1>
-
-[中文文档](https://github.com/shalousun/smart-doc/blob/master/README_CN.md)
+![maven](https://img.shields.io/maven-central/v/com.github.shalousun/smart-doc)
+[![License](https://img.shields.io/badge/license-Apache%202-green.svg)](https://www.apache.org/licenses/LICENSE-2.0)
+![number of issues closed](https://img.shields.io/github/issues-closed-raw/shalousun/smart-doc)
+![closed pull requests](https://img.shields.io/github/issues-pr-closed/shalousun/smart-doc)
+![java version](https://img.shields.io/badge/JAVA-1.8+-green.svg)
+[![chinese](https://img.shields.io/badge/chinese-中文文档-brightgreen)](https://github.com/shalousun/smart-doc/blob/master/README_CN.md)
 
 ## Introduce
 Smart-doc is a tool that supports both JAVA RESTFUL API and Apache Dubbo RPC interface document generation.. Smart-doc is based on interface source code analysis to generate interface documents, and zero annotation intrusion.
@@ -88,6 +92,7 @@ When you need to use smart-doc to generate more API document information, you ca
   "md5EncryptedHtmlName": false, // only used if each controller generates an html file
   "projectName": "smart-doc", // Configure your own project name
   "skipTransientField": true, // Not currently implemented
+  "sortByTitle":false,//Sort by interface title, the default value is false
   "requestFieldToUnderline":true, //convert request field to underline
   "inlineEnum":true,// Set to true to display enumeration details in the parameter table
   "recursionLimit":7,// Set the number of recursive executions to avoid stack overflow, the default is 7
