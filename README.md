@@ -4,6 +4,8 @@
 [![License](https://img.shields.io/badge/license-Apache%202-green.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 ![number of issues closed](https://img.shields.io/github/issues-closed-raw/shalousun/smart-doc)
 ![closed pull requests](https://img.shields.io/github/issues-pr-closed/shalousun/smart-doc)
+![java version]https://img.shields.io/badge/JAVA-1.8+-green.svg
+[![chinese](https://img.shields.io/badge/chinese-中文文档-brightgreen)](https://github.com/shalousun/smart-doc/blob/master/README_CN.md)
 
 [中文文档](https://github.com/shalousun/smart-doc/blob/master/README_CN.md)
 
