@@ -1,5 +1,8 @@
 <h1 align="center">Smart-Doc Project</h1>
 
+![maven](https://img.shields.io/maven-central/v/com.github.shalousun/smart-doc)
+[![License](http://img.shields.io/:license-apache-brightgreen.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
+
 [中文文档](https://github.com/shalousun/smart-doc/blob/master/README_CN.md)
 
 ## Introduce
