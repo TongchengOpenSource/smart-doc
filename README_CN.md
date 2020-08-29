@@ -1,4 +1,10 @@
 <h1 align="center"><a href="https://github.com/shalousun/smart-doc" target="_blank">Smart-Doc Project</a></h1>
+
+![maven](https://img.shields.io/maven-central/v/com.github.shalousun/smart-doc)
+[![License](https://img.shields.io/badge/license-Apache%202-green.svg)](https://www.apache.org/licenses/LICENSE-2.0)
+![closed pull requests](https://img.shields.io/github/issues-pr-closed/shalousun/smart-doc)
+![java version](https://img.shields.io/badge/JAVA-1.8+-green.svg)
+
 ## Introduce
 smart-doc是一款同时支持JAVA RESTFUL API和Apache Dubbo RPC接口文档生成的工具，smart-doc在业内率先提出基于java泛型定义推导的理念，
 完全基于接口源码来分析生成接口文档，不采用任何注解侵入到业务代码中。你只需要按照java-doc标准编写注释，
