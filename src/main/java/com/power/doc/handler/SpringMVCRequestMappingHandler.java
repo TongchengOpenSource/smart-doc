@@ -123,7 +123,7 @@ public class SpringMVCRequestMappingHandler {
                 }
             }
             return RequestMapping.builder().setMediaType(mediaType).setMethodType(methodType)
-                    .setUrl(url).setShortUrl(shortUrl).setDeprecated(deprecated);
+                    .setUrl(StringUtil.trim(url)).setShortUrl(StringUtil.trim(shortUrl)).setDeprecated(deprecated);
         }
         return null;
     }
