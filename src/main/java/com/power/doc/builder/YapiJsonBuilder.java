@@ -67,6 +67,19 @@ public class YapiJsonBuilder {
         yapiJsonCreate(config, configBuilder);
     }
 
+    /**
+     * Only for smart-doc maven plugin and gradle plugin.
+     *
+     * @param config         ApiConfig Object
+     * @param projectBuilder QDOX avaProjectBuilder
+     */
+    public static void buildYapiCollection(ApiConfig config, JavaProjectBuilder projectBuilder) {
+        DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
+        builderTemplate.checkAndInit(config);
+        ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, projectBuilder);
+        yapiJsonCreate(config, configBuilder);
+    }
+
 
     private static Set<String> getUrl(String url, String patter) {
         Pattern pattern = Pattern.compile(patter);
@@ -204,7 +217,7 @@ public class YapiJsonBuilder {
      * @param type java type
      * @return String
      */
-    public static String changeType(String type) {
+    private static String changeType(String type) {
         switch (type) {
             case "boolean":
                 return "boolean";
@@ -223,7 +236,7 @@ public class YapiJsonBuilder {
      * @param param ApiParam
      * @return String
      */
-    public static String getTypeAndPropertiesJson(ApiParam param) {
+    private static String getTypeAndPropertiesJson(ApiParam param) {
         StringBuffer resultJson = new StringBuffer();
 
         resultJson.append("\"" + param.getField() + "\":{");
