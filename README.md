@@ -23,11 +23,6 @@ Or a static html document. If you are tired of the numerous annotations and stro
 - Support for generating multiple formats of documents: Markdown, HTML5, Asciidoctor,Postman Collection json,Open Api 3.0.
 - Support for exporting error codes and data dictionary codes to API documentation.
 - Support Apache Dubbo RPC.
-## Version
-```$xslt
-last vertion ： smart-doc 1.9.3 
-plugin       ： smart-doc-maven-plugin 1.1.7
-```
 ## Getting started
 [Smart-doc Samples](https://github.com/shalousun/smart-doc-demo.git)。
 ```
