@@ -79,7 +79,7 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
         return null;
     }
 
-    public boolean ignoreReturnObject(String typeName,List<String> ignoreParams) {
+    public boolean ignoreReturnObject(String typeName, List<String> ignoreParams) {
         return false;
     }
 
@@ -131,7 +131,7 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
             }
             apiMethodDoc.setDeprecated(deprecated);
             // build request params
-            List<ApiParam> requestParams = requestParams(method, DocTags.PARAM, projectBuilder);
+            List<ApiParam> requestParams = requestParams(method, projectBuilder);
             apiMethodDoc.setRequestParams(requestParams);
             // build response params
             List<ApiParam> responseParams = buildReturnApiParams(method, projectBuilder);
@@ -142,18 +142,17 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
         return methodDocList;
     }
 
-    private List<ApiParam> requestParams(final JavaMethod javaMethod, final String tagName, ProjectDocConfigBuilder builder) {
+    private List<ApiParam> requestParams(final JavaMethod javaMethod, ProjectDocConfigBuilder builder) {
         boolean isStrict = builder.getApiConfig().isStrict();
         boolean isShowJavaType = builder.getApiConfig().getShowJavaType();
         Map<String, CustomRespField> responseFieldMap = new HashMap<>();
         String className = javaMethod.getDeclaringClass().getCanonicalName();
-        Map<String, String> paramTagMap = DocUtil.getParamsComments(javaMethod, tagName, className);
+        Map<String, String> paramTagMap = DocUtil.getParamsComments(javaMethod, DocTags.PARAM, className);
         List<JavaParameter> parameterList = javaMethod.getParameters();
         if (parameterList.size() < 1) {
             return null;
         }
         List<ApiParam> paramList = new ArrayList<>();
-        out:
         for (JavaParameter parameter : parameterList) {
             String paramName = parameter.getName();
             String typeName = parameter.getType().getGenericCanonicalName();
@@ -168,8 +167,6 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
             JavaClass javaClass = builder.getJavaProjectBuilder().getClassByName(fullTypeName);
             List<JavaAnnotation> annotations = parameter.getAnnotations();
             List<String> groupClasses = JavaClassUtil.getParamGroupJavaClass(annotations);
-            String strRequired = "true";
-            Boolean required = Boolean.parseBoolean(strRequired);
             if (JavaClassValidateUtil.isCollection(fullTypeName) || JavaClassValidateUtil.isArray(fullTypeName)) {
                 String[] gicNameArr = DocClassUtil.getSimpleGicName(typeName);
                 String gicName = gicNameArr[0];
@@ -183,28 +180,28 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
                             .setType(processedType);
                     paramList.add(param);
                 } else {
-                    paramList.addAll(ParamsBuildHelper.buildParams(gicNameArr[0], paramPre, 0, "true", responseFieldMap, Boolean.FALSE, new HashMap<>(), builder, groupClasses,0));
+                    paramList.addAll(ParamsBuildHelper.buildParams(gicNameArr[0], paramPre, 0, "true", responseFieldMap, Boolean.FALSE, new HashMap<>(), builder, groupClasses, 0));
                 }
             } else if (JavaClassValidateUtil.isPrimitive(fullTypeName)) {
                 ApiParam param = ApiParam.of().setField(paramName)
                         .setType(JavaClassUtil.getClassSimpleName(typeName))
-                        .setDesc(comment).setRequired(required).setVersion(DocGlobalConstants.DEFAULT_VERSION);
+                        .setDesc(comment).setRequired(true).setVersion(DocGlobalConstants.DEFAULT_VERSION);
                 paramList.add(param);
             } else if (JavaClassValidateUtil.isMap(fullTypeName)) {
                 if (DocGlobalConstants.JAVA_MAP_FULLY.equals(typeName)) {
                     ApiParam apiParam = ApiParam.of().setField(paramName).setType(typeName)
-                            .setDesc(comment).setRequired(required).setVersion(DocGlobalConstants.DEFAULT_VERSION);
+                            .setDesc(comment).setRequired(true).setVersion(DocGlobalConstants.DEFAULT_VERSION);
                     paramList.add(apiParam);
-                    continue out;
+                    continue;
                 }
                 String[] gicNameArr = DocClassUtil.getSimpleGicName(typeName);
-                paramList.addAll(ParamsBuildHelper.buildParams(gicNameArr[1], paramPre, 0, "true", responseFieldMap, Boolean.FALSE, new HashMap<>(), builder, groupClasses,0));
+                paramList.addAll(ParamsBuildHelper.buildParams(gicNameArr[1], paramPre, 0, "true", responseFieldMap, Boolean.FALSE, new HashMap<>(), builder, groupClasses, 0));
             } else if (javaClass.isEnum()) {
                 ApiParam param = ApiParam.of().setField(paramName)
-                        .setType("Enum").setDesc(comment).setRequired(required).setVersion(DocGlobalConstants.DEFAULT_VERSION);
+                        .setType("Enum").setDesc(comment).setRequired(true).setVersion(DocGlobalConstants.DEFAULT_VERSION);
                 paramList.add(param);
             } else {
-                paramList.addAll(ParamsBuildHelper.buildParams(typeName, paramPre, 0, "true", responseFieldMap, Boolean.FALSE, new HashMap<>(), builder, groupClasses,0));
+                paramList.addAll(ParamsBuildHelper.buildParams(typeName, paramPre, 0, "true", responseFieldMap, Boolean.FALSE, new HashMap<>(), builder, groupClasses, 0));
             }
         }
         return paramList;
@@ -272,8 +269,8 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
         returnClass = returnClass.replace(simpleReturn, JavaClassUtil.getClassSimpleName(simpleReturn));
         String[] arrays = DocClassUtil.getSimpleGicName(returnClass);
         for (String str : arrays) {
-            if(str.contains("[")){
-                str = str.substring(0,str.indexOf("["));
+            if (str.contains("[")) {
+                str = str.substring(0, str.indexOf("["));
             }
             String[] generics = str.split("<");
             for (String generic : generics) {
