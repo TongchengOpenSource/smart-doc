@@ -136,11 +136,12 @@ smart-doc官方目前已经开发完成[maven插件](https://gitee.com/smart-doc
   ],
   "requestHeaders": [ //设置请求头，没有需求可以不设置
     {
-      "name": "token",
-      "type": "string",
-      "desc": "desc",
-      "required": false,
-      "since": "-"
+      "name": "token",//请求头名称
+      "type": "string",//请求头类型
+      "desc": "desc",//请求头描述信息
+      "value":"token请求头的值",//不设置默认null
+      "required": false,//是否必须
+      "since": "-"//什么版本添加的改请求头
     }
   ],
   "rpcApiDependencies":[{ // 项目开放的dubbo api接口模块依赖，配置后输出到文档方便使用者集成

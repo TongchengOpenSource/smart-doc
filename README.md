@@ -150,10 +150,11 @@ When you need to use smart-doc to generate more API document information, you ca
   }],
   "requestHeaders": [// Set global request headers, no need to set
     {
-      "name": "token",
-      "type": "string",
-      "desc": "desc",
+      "name": "token",//header name
+      "type": "string",//header type
+      "desc": "description of this header.",
       "required": false,
+                        "value":"your header value",
       "since": "-"
     }
   ]
