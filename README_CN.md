@@ -28,14 +28,14 @@ $\color{red}{我因不将就而诞生，用了无数个日日夜夜来成长，�
 - 支持maven、gradle插件式轻松集成。
 - 支持Apache Dubbo RPC接口文档生成。
 ## Getting started
-smart-doc使用和测试可参考[smart-doc demo](https://gitee.com/sunyurepository/api-doc-test.git)。
+smart-doc使用和测试可参考[smart-doc demo](https://gitee.com/smart-doc-team/api-doc-test.git)。
 ```
-# git clone https://gitee.com/sunyurepository/api-doc-test.git
+# git clone https://gitee.com/smart-doc-team/api-doc-test.git
 ```
 你可以启动这个Spring Boot的项目，然后访问`http://localhost:8080/doc/api.html`来浏览smart-doc生成的接口文档。
 ### Add Maven plugin
-smart-doc官方目前已经开发完成[maven插件](https://gitee.com/sunyurepository/smart-doc-maven-plugin)
-和[gradle插件](https://gitee.com/sunyurepository/smart-doc-gradle-plugin)，你可以根据自己的构建工具来选择使用maven插件或者是gradle插件。
+smart-doc官方目前已经开发完成[maven插件](https://gitee.com/smart-doc-team/smart-doc-maven-plugin)
+和[gradle插件](https://gitee.com/smart-doc-team/smart-doc-gradle-plugin)，你可以根据自己的构建工具来选择使用maven插件或者是gradle插件。
 #### add plugin
 ```
 <plugin>
@@ -189,17 +189,17 @@ mvn -Dfile.encoding = UTF-8 smart-doc:rpc-adoc
 ```
 **注意：** 尤其在window系统下，如果实际使用maven命令行执行文档生成，可能会出现乱码，因此需要在执行时指定`-Dfile.encoding=UTF-8`。
 #### Use Idea
-![idea中smart-doc-maven插件使用](https://gitee.com/sunyurepository/smart-doc-maven-plugin/raw/master/images/idea.png "maven_plugin_tasks.png")
+![idea中smart-doc-maven插件使用](https://gitee.com/smart-doc-team/smart-doc-maven-plugin/raw/master/images/idea.png "maven_plugin_tasks.png")
 
 ### Use gradle plugin
 如果你使用gradle来构建项目，你可以参考gradle插件的使用文档来集成，
-[smart-doc-gradle-plugin](https://gitee.com/sunyurepository/smart-doc-gradle-plugin/blob/master/README_CN.md)
+[smart-doc-gradle-plugin](https://gitee.com/smart-doc-team/smart-doc-gradle-plugin/blob/master/README_CN.md)
 ### Use Junit Test 
 从smart-doc 1.7.9开始，官方提供了maven插件，使用smart-doc的maven插件后不再需要创建单元测试。
-[单元测试生成文档](https://gitee.com/sunyurepository/smart-doc/wikis/单元测试集成smart-doc?sort_id=1990284)
+[单元测试生成文档](https://gitee.com/smart-doc-team/smart-doc/wikis/单元测试集成smart-doc?sort_id=1990284)
 
 ### Generated document example
-[点击查看文档生成文档效果图](https://gitee.com/sunyurepository/smart-doc/wikis/文档效果图?sort_id=1652819)
+[点击查看文档生成文档效果图](https://gitee.com/smart-doc-team/smart-doc/wikis/文档效果图?sort_id=1652819)
 ## Building
 如果你需要自己构建smart-doc，那可以使用下面命令，构建需要依赖Java 1.8。
 ```
@@ -219,22 +219,22 @@ mvn clean install -Dmaven.test.skip=true
 - [@maliqiang](https://github.com/maliqiang)
 ## Other reference
 - [smart-doc功能使用介绍](https://my.oschina.net/u/1760791/blog/2250962)
-- [smart-doc官方wiki](https://gitee.com/sunyurepository/smart-doc/wikis/Home?sort_id=1652800)
+- [smart-doc官方wiki](https://gitee.com/smart-doc-team/smart-doc/wikis/Home?sort_id=1652800)
 ## License
-Smart-doc is under the Apache 2.0 license.  See the [LICENSE](https://gitee.com/sunyurepository/smart-doc/blob/master/LICENSE) file for details.
+Smart-doc is under the Apache 2.0 license.  See the [LICENSE](https://gitee.com/smart-doc-team/smart-doc/blob/master/LICENSE) file for details.
 
 **注意：** smart-doc源代码文件全部带有版权注释，使用关键代码二次开源请保留原始版权，否则后果自负！
 ## Who is using
-> 排名不分先后，更多接入公司，欢迎在[https://gitee.com/sunyurepository/smart-doc/issues/I1594T](https://gitee.com/sunyurepository/smart-doc/issues/I1594T)登记（仅供开源用户参考）
+> 排名不分先后，更多接入公司，欢迎在[https://gitee.com/smart-doc-team/smart-doc/issues/I1594T](https://gitee.com/smart-doc-team/smart-doc/issues/I1594T)登记（仅供开源用户参考）
 
-![IFLYTEK](https://gitee.com/sunyurepository/smart-doc/raw/master/images/known-users/iflytek.png)
-&nbsp;&nbsp;<img src="https://gitee.com/sunyurepository/smart-doc/raw/master/images/known-users/oneplus.png" title="一加" width="83px" height="83px"/>
-&nbsp;&nbsp;<img src="https://gitee.com/sunyurepository/smart-doc/raw/master/images/known-users/xiaomi.png" title="小米" width="170px" height="83px"/>
-<img src="https://gitee.com/sunyurepository/smart-doc/raw/master/images/known-users/yuanmengjiankang.png" title="远盟健康" width="260px" height="83px"/>
-<img src="https://gitee.com/sunyurepository/smart-doc/raw/master/images/known-users/zhongkezhilian.png" title="中科智链" width="272px" height="83px"/>
-<img src="https://gitee.com/sunyurepository/smart-doc/raw/master/images/known-users/puqie_gaitubao_100x100.jpg" title="普切信息科技" width="83px" height="83px"/>&nbsp;&nbsp;
-<img src="https://gitee.com/sunyurepository/smart-doc/raw/master/images/known-users/tianbo-tech.png" title="杭州天铂云科" width="127px" height="70px"/>
+![IFLYTEK](https://gitee.com/smart-doc-team/smart-doc/raw/master/images/known-users/iflytek.png)
+&nbsp;&nbsp;<img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/known-users/oneplus.png" title="一加" width="83px" height="83px"/>
+&nbsp;&nbsp;<img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/known-users/xiaomi.png" title="小米" width="170px" height="83px"/>
+<img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/known-users/yuanmengjiankang.png" title="远盟健康" width="260px" height="83px"/>
+<img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/known-users/zhongkezhilian.png" title="中科智链" width="272px" height="83px"/>
+<img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/known-users/puqie_gaitubao_100x100.jpg" title="普切信息科技" width="83px" height="83px"/>&nbsp;&nbsp;
+<img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/known-users/tianbo-tech.png" title="杭州天铂云科" width="127px" height="70px"/>
 ## Contact
 愿意参与构建smart-doc或者是需要交流问题可以加入qq群：
 
-<img src="https://gitee.com/sunyurepository/smart-doc/raw/master/images/smart-doc-qq.png" title="qq群" width="200px" height="200px"/>
+<img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/smart-doc-qq.png" title="qq群" width="200px" height="200px"/>

@@ -129,8 +129,8 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             methodOrder++;
             ApiMethodDoc apiMethodDoc = new ApiMethodDoc();
             apiMethodDoc.setOrder(methodOrder);
-            apiMethodDoc.setDesc(method.getComment());
             apiMethodDoc.setName(method.getName());
+            apiMethodDoc.setDesc(method.getComment());
             String methodUid = DocUtil.generateId(clazName + method.getName());
             apiMethodDoc.setMethodId(methodUid);
             String apiNoteValue = DocUtil.getNormalTagComments(method, DocTags.API_NOTE, cls.getName());
@@ -162,7 +162,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 apiMethodDoc.setPath(requestMapping.getShortUrl());
                 apiMethodDoc.setDeprecated(requestMapping.isDeprecated());
                 // build request params
-                List<ApiParam> requestParams = requestParams(method, DocTags.PARAM, projectBuilder);
+                List<ApiParam> requestParams = requestParams(method, projectBuilder);
                 if (paramsDataToTree) {
                     requestParams = ApiParamTreeUtil.apiParamToTree(requestParams);
                 }
@@ -228,18 +228,13 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             String paramName = parameter.getName();
             String typeName = javaType.getFullyQualifiedName();
             String gicTypeName = javaType.getGenericCanonicalName();
-            String rewriteClassName = null;
+
             String commentClass = paramsComments.get(paramName);
             //ignore request params
             if (Objects.nonNull(commentClass) && commentClass.contains(IGNORE)) {
                 continue;
             }
-            if (Objects.nonNull(commentClass) && !DocGlobalConstants.NO_COMMENTS_FOUND.equals(commentClass)) {
-                String[] comments = commentClass.split("\\|");
-                rewriteClassName = comments[comments.length - 1];
-            } else {
-                rewriteClassName = replacementMap.get(typeName);
-            }
+            String rewriteClassName = this.getRewriteClassName(replacementMap, typeName, commentClass);
             // rewrite class
             if (DocUtil.isClassName(rewriteClassName)) {
                 gicTypeName = rewriteClassName;
@@ -391,14 +386,14 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             String format = String.format(DocGlobalConstants.CURL_REQUEST_TYPE, methodType, header.toString(), url);
             if (requestExample.isJson()) {
                 if (StringUtil.isNotEmpty(requestExample.getJsonBody())) {
-                    exampleBody = String.format(DocGlobalConstants.CURL_POST_PUT_JSON, methodType,header.toString(), url,
+                    exampleBody = String.format(DocGlobalConstants.CURL_POST_PUT_JSON, methodType, header.toString(), url,
                             requestExample.getJsonBody());
                 } else {
                     exampleBody = format;
                 }
             } else {
                 if (StringUtil.isNotEmpty(body)) {
-                    exampleBody = String.format(DocGlobalConstants.CURL_REQUEST_TYPE_DATA, methodType,header.toString(), url, body);
+                    exampleBody = String.format(DocGlobalConstants.CURL_REQUEST_TYPE_DATA, methodType, header.toString(), url, body);
                 } else {
                     exampleBody = format;
                 }
@@ -412,7 +407,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             url = StringUtil.removeQuotes(url);
             url = apiMethodDoc.getServerUrl() + "/" + url;
             url = UrlUtil.simplifyUrl(url);
-            exampleBody = String.format(DocGlobalConstants.CURL_REQUEST_TYPE, methodType,header.toString(), url);
+            exampleBody = String.format(DocGlobalConstants.CURL_REQUEST_TYPE, methodType, header.toString(), url);
             requestExample.setExampleBody(exampleBody)
                     .setJsonBody(DocGlobalConstants.EMPTY)
                     .setUrl(url);
@@ -420,13 +415,12 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         return requestExample;
     }
 
-    private List<ApiParam> requestParams(final JavaMethod javaMethod, final String tagName, ProjectDocConfigBuilder builder) {
+    private List<ApiParam> requestParams(final JavaMethod javaMethod, ProjectDocConfigBuilder builder) {
         boolean isStrict = builder.getApiConfig().isStrict();
         Map<String, CustomRespField> responseFieldMap = new HashMap<>();
-
-        Map<String, String> replacementMap = builder.getReplaceClassMap();
         String className = javaMethod.getDeclaringClass().getCanonicalName();
-        Map<String, String> paramTagMap = DocUtil.getParamsComments(javaMethod, tagName, className);
+        Map<String, String> replacementMap = builder.getReplaceClassMap();
+        Map<String, String> paramTagMap = DocUtil.getParamsComments(javaMethod, DocTags.PARAM, className);
         List<JavaParameter> parameterList = javaMethod.getParameters();
         if (parameterList.size() < 1) {
             return null;
@@ -441,21 +435,16 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             String typeName = parameter.getType().getGenericCanonicalName();
             String simpleName = parameter.getType().getValue().toLowerCase();
             String fullTypeName = parameter.getType().getFullyQualifiedName();
-            String rewriteClassName = null;
+
             String commentClass = paramTagMap.get(paramName);
-            if (Objects.nonNull(commentClass) && !DocGlobalConstants.NO_COMMENTS_FOUND.equals(commentClass)) {
-                String[] comments = commentClass.split("\\|");
-                rewriteClassName = comments[comments.length - 1];
-            } else {
-                rewriteClassName = replacementMap.get(fullTypeName);
-            }
+            String rewriteClassName = getRewriteClassName(replacementMap, fullTypeName, commentClass);
             // rewrite class
             if (DocUtil.isClassName(rewriteClassName)) {
                 typeName = rewriteClassName;
                 fullTypeName = DocClassUtil.getSimpleName(rewriteClassName);
             }
             if (JavaClassValidateUtil.isMvcIgnoreParams(typeName, builder.getApiConfig().getIgnoreRequestParams())) {
-                continue out;
+                continue;
             }
             fullTypeName = DocClassUtil.rewriteRequestParam(fullTypeName);
             typeName = DocClassUtil.rewriteRequestParam(typeName);
@@ -473,7 +462,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                         .setId(paramList.size() + 1)
                         .setDesc(comment).setRequired(true).setVersion(DocGlobalConstants.DEFAULT_VERSION);
                 paramList.add(param);
-                continue out;
+                continue;
             }
             JavaClass javaClass = builder.getJavaProjectBuilder().getClassByName(fullTypeName);
             List<JavaAnnotation> annotations = parameter.getAnnotations();
@@ -512,7 +501,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                     requestBodyCounter++;
                 }
             }
-            Boolean required = Boolean.parseBoolean(strRequired);
+            boolean required = Boolean.parseBoolean(strRequired);
             if (isPathVariable) {
                 comment = comment + " (This is path param)";
             }
@@ -554,7 +543,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                             .setPathParams(isPathVariable)
                             .setDesc(comment).setRequired(required).setVersion(DocGlobalConstants.DEFAULT_VERSION);
                     paramList.add(apiParam);
-                    continue out;
+                    continue;
                 }
                 String[] gicNameArr = DocClassUtil.getSimpleGicName(typeName);
                 paramList.addAll(ParamsBuildHelper.buildParams(gicNameArr[1], DocGlobalConstants.EMPTY, 0, "true", responseFieldMap, Boolean.FALSE, new HashMap<>(), builder, groupClasses, 0));
@@ -604,5 +593,16 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             }
         }
         return false;
+    }
+
+    private String getRewriteClassName(Map<String, String> replacementMap, String fullTypeName, String commentClass) {
+        String rewriteClassName;
+        if (Objects.nonNull(commentClass) && !DocGlobalConstants.NO_COMMENTS_FOUND.equals(commentClass)) {
+            String[] comments = commentClass.split("\\|");
+            rewriteClassName = comments[comments.length - 1];
+        } else {
+            rewriteClassName = replacementMap.get(fullTypeName);
+        }
+        return rewriteClassName;
     }
 }
