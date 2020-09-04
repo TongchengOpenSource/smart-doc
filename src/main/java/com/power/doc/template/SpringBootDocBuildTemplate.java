@@ -22,10 +22,7 @@
  */
 package com.power.doc.template;
 
-import com.power.common.util.JsonFormatUtil;
-import com.power.common.util.RandomUtil;
-import com.power.common.util.StringUtil;
-import com.power.common.util.UrlUtil;
+import com.power.common.util.*;
 import com.power.doc.builder.ProjectDocConfigBuilder;
 import com.power.doc.constants.*;
 import com.power.doc.handler.SpringMVCRequestHeaderHandler;
@@ -41,6 +38,7 @@ import com.thoughtworks.qdox.model.*;
 import com.thoughtworks.qdox.model.expression.AnnotationValue;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -55,6 +53,11 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
 
     private List<ApiReqHeader> headers;
 
+    /**
+     * api index
+     */
+    private AtomicInteger atomicInteger = new AtomicInteger(1);
+
     @Override
     public List<ApiDoc> getApiData(ProjectDocConfigBuilder projectBuilder) {
         ApiConfig apiConfig = projectBuilder.getApiConfig();
@@ -62,26 +65,38 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         List<ApiDoc> apiDocList = new ArrayList<>();
         int order = 0;
         Collection<JavaClass> classes = projectBuilder.getJavaProjectBuilder().getClasses();
+        boolean setCustomOrder = false;
         for (JavaClass cls : classes) {
             String ignoreTag = JavaClassUtil.getClassTagsValue(cls, DocTags.IGNORE, Boolean.FALSE);
             if (!checkController(cls) || StringUtil.isNotEmpty(ignoreTag)) {
                 continue;
             }
             if (StringUtil.isNotEmpty(apiConfig.getPackageFilters())) {
-                if (DocUtil.isMatch(apiConfig.getPackageFilters(), cls.getCanonicalName())) {
-                    order++;
-                    List<ApiMethodDoc> apiMethodDocs = buildControllerMethod(cls, apiConfig, projectBuilder);
-                    this.handleApiDoc(cls, apiDocList, apiMethodDocs, order, apiConfig.isMd5EncryptedHtmlName());
+                if (!DocUtil.isMatch(apiConfig.getPackageFilters(), cls.getCanonicalName())) {
+                    continue;
                 }
-            } else {
-                order++;
-                List<ApiMethodDoc> apiMethodDocs = buildControllerMethod(cls, apiConfig, projectBuilder);
-                this.handleApiDoc(cls, apiDocList, apiMethodDocs, order, apiConfig.isMd5EncryptedHtmlName());
             }
+            String strOrder = JavaClassUtil.getClassTagsValue(cls, DocTags.ORDER, Boolean.TRUE);
+            order++;
+            if (ValidateUtil.isNonnegativeInteger(strOrder)) {
+                setCustomOrder = true;
+                order = Integer.parseInt(strOrder);
+            }
+            List<ApiMethodDoc> apiMethodDocs = buildControllerMethod(cls, apiConfig, projectBuilder);
+            this.handleApiDoc(cls, apiDocList, apiMethodDocs, order, apiConfig.isMd5EncryptedHtmlName());
         }
         // sort
         if (apiConfig.isSortByTitle()) {
             Collections.sort(apiDocList);
+        } else if (setCustomOrder) {
+            // while set custom oder
+            List<ApiDoc> sortedApiDoc = apiDocList.stream()
+                    .sorted(Comparator.comparing(ApiDoc::getOrder))
+                    .map(p -> {
+                        p.setOrder(atomicInteger.getAndAdd(1));
+                        return p;
+                    }).collect(Collectors.toList());
+            return sortedApiDoc;
         }
         return apiDocList;
     }

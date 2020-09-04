@@ -28,9 +28,9 @@ $\color{red}{我因不将就而诞生，用了无数个日日夜夜来成长，�
 - 支持maven、gradle插件式轻松集成。
 - 支持Apache Dubbo RPC接口文档生成。
 ## Getting started
-smart-doc使用和测试可参考[smart-doc demo](https://gitee.com/smart-doc-team/api-doc-test.git)。
+smart-doc使用和测试可参考[smart-doc demo](https://gitee.com/sunyurepository/api-doc-test.git)。
 ```
-# git clone https://gitee.com/smart-doc-team/api-doc-test.git
+# git clone https://gitee.com/sunyurepository/api-doc-test.git
 ```
 你可以启动这个Spring Boot的项目，然后访问`http://localhost:8080/doc/api.html`来浏览smart-doc生成的接口文档。
 ### Add Maven plugin
@@ -76,7 +76,7 @@ smart-doc官方目前已经开发完成[maven插件](https://gitee.com/smart-doc
  **最小配置单元：** 
 ```
 {
-   "outPath": "D://md2" //指定文档的输出路径
+   "outPath": "D://md2" //指定文档的输出路径,相对路径时请用./开头，eg:./src/main/resources/static/doc
 }
 ```
 仅仅需要上面一行配置就能启动smart-doc-maven-plugin插件，根据自己项目情况更多详细的配置参考下面。
@@ -179,6 +179,8 @@ mvn -Dfile.encoding=UTF-8 smart-doc:markdown
 mvn -Dfile.encoding=UTF-8 smart-doc:adoc
 //生成postman json数据
 mvn -Dfile.encoding=UTF-8 smart-doc:postman
+// 生成 Open Api 3.0+,Since smart-doc-maven-plugin 1.1.5
+mvn -Dfile.encoding = UTF-8 smart-doc:openapi
 
 // Apache Dubbo Rpc文档
 // Generate html

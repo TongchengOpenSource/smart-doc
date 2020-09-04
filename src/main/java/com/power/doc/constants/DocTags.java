@@ -54,4 +54,9 @@ public interface DocTags {
      * custom @api tag
      */
     String REST_API = "restApi";
+
+    /**
+     * custom @order tag
+     */
+    String ORDER = "order";
 }
