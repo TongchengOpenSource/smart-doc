@@ -56,7 +56,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
     /**
      * api index
      */
-    private AtomicInteger atomicInteger = new AtomicInteger(1);
+    private final AtomicInteger atomicInteger = new AtomicInteger(1);
 
     @Override
     public List<ApiDoc> getApiData(ProjectDocConfigBuilder projectBuilder) {
@@ -90,13 +90,9 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             Collections.sort(apiDocList);
         } else if (setCustomOrder) {
             // while set custom oder
-            List<ApiDoc> sortedApiDoc = apiDocList.stream()
+           return apiDocList.stream()
                     .sorted(Comparator.comparing(ApiDoc::getOrder))
-                    .map(p -> {
-                        p.setOrder(atomicInteger.getAndAdd(1));
-                        return p;
-                    }).collect(Collectors.toList());
-            return sortedApiDoc;
+                    .peek(p -> p.setOrder(atomicInteger.getAndAdd(1))).collect(Collectors.toList());
         }
         return apiDocList;
     }

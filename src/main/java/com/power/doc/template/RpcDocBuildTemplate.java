@@ -23,6 +23,7 @@
 package com.power.doc.template;
 
 import com.power.common.util.StringUtil;
+import com.power.common.util.ValidateUtil;
 import com.power.doc.builder.ProjectDocConfigBuilder;
 import com.power.doc.constants.DocAnnotationConstants;
 import com.power.doc.constants.DocGlobalConstants;
@@ -41,6 +42,8 @@ import com.power.doc.utils.JavaClassValidateUtil;
 import com.thoughtworks.qdox.model.*;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 import static com.power.doc.constants.DocTags.IGNORE;
 
@@ -49,28 +52,42 @@ import static com.power.doc.constants.DocTags.IGNORE;
  */
 public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
 
+    /**
+     * api index
+     */
+    private final AtomicInteger atomicInteger = new AtomicInteger(1);
+
     public List<RpcApiDoc> getApiData(ProjectDocConfigBuilder projectBuilder) {
         ApiConfig apiConfig = projectBuilder.getApiConfig();
         List<RpcApiDoc> apiDocList = new ArrayList<>();
         int order = 0;
+        boolean setCustomOrder = false;
         for (JavaClass cls : projectBuilder.getJavaProjectBuilder().getClasses()) {
             if (!checkDubboInterface(cls)) {
                 continue;
             }
             if (StringUtil.isNotEmpty(apiConfig.getPackageFilters())) {
-                if (DocUtil.isMatch(apiConfig.getPackageFilters(), cls.getCanonicalName())) {
-                    order++;
-                    List<JavaMethodDoc> apiMethodDocs = buildServiceMethod(cls, apiConfig, projectBuilder);
-                    this.handleJavaApiDoc(cls, apiDocList, apiMethodDocs, order, projectBuilder);
+                if (!DocUtil.isMatch(apiConfig.getPackageFilters(), cls.getCanonicalName())) {
+                    continue;
                 }
-            } else {
-                order++;
-                List<JavaMethodDoc> apiMethodDocs = buildServiceMethod(cls, apiConfig, projectBuilder);
-                this.handleJavaApiDoc(cls, apiDocList, apiMethodDocs, order, projectBuilder);
             }
+            String strOrder = JavaClassUtil.getClassTagsValue(cls, DocTags.ORDER, Boolean.TRUE);
+            order++;
+            if (ValidateUtil.isNonnegativeInteger(strOrder)) {
+                order = Integer.parseInt(strOrder);
+                setCustomOrder = true;
+            }
+            List<JavaMethodDoc> apiMethodDocs = buildServiceMethod(cls, apiConfig, projectBuilder);
+            this.handleJavaApiDoc(cls, apiDocList, apiMethodDocs, order, projectBuilder);
         }
+        // sort
         if (apiConfig.isSortByTitle()) {
             Collections.sort(apiDocList);
+        } else if (setCustomOrder) {
+            // while set custom oder
+            return apiDocList.stream()
+                    .sorted(Comparator.comparing(RpcApiDoc::getOrder))
+                    .peek(p -> p.setOrder(atomicInteger.getAndAdd(1))).collect(Collectors.toList());
         }
         return apiDocList;
     }
@@ -97,7 +114,7 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
                 throw new RuntimeException("Unable to find comment for method " + method.getName() + " in " + cls.getCanonicalName());
             }
             boolean deprecated = false;
-            //设置当前接口是否过时
+            //Deprecated
             List<JavaAnnotation> annotations = method.getAnnotations();
             for (JavaAnnotation annotation : annotations) {
                 String annotationName = annotation.getType().getName();
