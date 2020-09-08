@@ -64,7 +64,7 @@
         </nav>
     </div>
     <div id="book-body" class="book-body" height="100%">
-        <iframe src="${homePage}.html?v=${version}" frameborder="0" id="book_iframe" name="book_iframe" width="100%"></iframe>
+        <iframe src="${homePage}.html?v=${version}" frameborder="0" id="book_iframe" name="book_iframe" width="100%" height="100%"></iframe>
     </div>
 </div>
 
