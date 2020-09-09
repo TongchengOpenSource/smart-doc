@@ -90,7 +90,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             Collections.sort(apiDocList);
         } else if (setCustomOrder) {
             // while set custom oder
-           return apiDocList.stream()
+            return apiDocList.stream()
                     .sorted(Comparator.comparing(ApiDoc::getOrder))
                     .peek(p -> p.setOrder(atomicInteger.getAndAdd(1))).collect(Collectors.toList());
         }
@@ -141,7 +141,8 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             ApiMethodDoc apiMethodDoc = new ApiMethodDoc();
             apiMethodDoc.setOrder(methodOrder);
             apiMethodDoc.setName(method.getName());
-            apiMethodDoc.setDesc(method.getComment());
+            String comment = DocUtil.getEscapeAndCleanComment(method.getComment());
+            apiMethodDoc.setDesc(comment);
             String methodUid = DocUtil.generateId(clazName + method.getName());
             apiMethodDoc.setMethodId(methodUid);
             String apiNoteValue = DocUtil.getNormalTagComments(method, DocTags.API_NOTE, cls.getName());

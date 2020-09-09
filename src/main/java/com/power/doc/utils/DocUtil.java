@@ -478,4 +478,19 @@ public class DocUtil {
                 return "object"; //array object file
         }
     }
+
+    /**
+     * Gets escape and clean comment.
+     *
+     * @param comment the comment
+     * @return the escape and clean comment
+     */
+    public static String getEscapeAndCleanComment(String comment) {
+        if (StringUtil.isEmpty(comment)) {
+            return "";
+        }
+        return comment.replaceAll("<", "&lt;")
+                .replaceAll(">", "&gt;")
+                .replaceAll(System.lineSeparator(), "");
+    }
 }
