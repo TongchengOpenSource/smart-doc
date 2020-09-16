@@ -180,15 +180,15 @@ mvn -Dfile.encoding=UTF-8 smart-doc:adoc
 //生成postman json数据
 mvn -Dfile.encoding=UTF-8 smart-doc:postman
 // 生成 Open Api 3.0+,Since smart-doc-maven-plugin 1.1.5
-mvn -Dfile.encoding = UTF-8 smart-doc:openapi
+mvn -Dfile.encoding=UTF-8 smart-doc:openapi
 
-// Apache Dubbo Rpc文档
+// Apache Dubbo RPC文档
 // Generate html
-mvn -Dfile.encoding = UTF-8 smart-doc:rpc-html
+mvn -Dfile.encoding=UTF-8 smart-doc:rpc-html
 // Generate markdown
-mvn -Dfile.encoding = UTF-8 smart-doc:rpc-markdown
+mvn -Dfile.encoding=UTF-8 smart-doc:rpc-markdown
 // Generate adoc
-mvn -Dfile.encoding = UTF-8 smart-doc:rpc-adoc
+mvn -Dfile.encoding=UTF-8 smart-doc:rpc-adoc
 ```
 **注意：** 尤其在window系统下，如果实际使用maven命令行执行文档生成，可能会出现乱码，因此需要在执行时指定`-Dfile.encoding=UTF-8`。
 #### Use Idea

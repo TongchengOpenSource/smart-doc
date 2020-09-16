@@ -166,21 +166,21 @@ So the project configuration can also refer to the introduction of smart-doc.
 #### Run plugin with maven command
 ```
 // Generate html
-mvn -Dfile.encoding = UTF-8 smart-doc: html
+mvn -Dfile.encoding=UTF-8 smart-doc: html
 // Generate markdown
-mvn -Dfile.encoding = UTF-8 smart-doc: markdown
+mvn -Dfile.encoding=UTF-8 smart-doc: markdown
 // Generate adoc
-mvn -Dfile.encoding = UTF-8 smart-doc: adoc
+mvn -Dfile.encoding=UTF-8 smart-doc: adoc
 // Generate postman collection
-mvn -Dfile.encoding = UTF-8 smart-doc: postman
+mvn -Dfile.encoding=UTF-8 smart-doc: postman
 
-// Apache Dubbo Rpc
+// Apache Dubbo RPC
 // Generate html
-mvn -Dfile.encoding = UTF-8 smart-doc:rpc-html
+mvn -Dfile.encoding=UTF-8 smart-doc:rpc-html
 // Generate markdown
-mvn -Dfile.encoding = UTF-8 smart-doc:rpc-markdown
+mvn -Dfile.encoding=UTF-8 smart-doc:rpc-markdown
 // Generate adoc
-mvn -Dfile.encoding = UTF-8 smart-doc:rpc-adoc
+mvn -Dfile.encoding=UTF-8 smart-doc:rpc-adoc
 ```
 **Note:** Under the window system, if you use the maven command line to perform document generation, 
 non-English characters may be garbled, so you need to specify `-Dfile.encoding = UTF-8` during execution.
