@@ -41,10 +41,12 @@ public class ApiReqHeader {
      * Request header type
      */
     private String type;
+
     /**
      * request header defaultValue
      */
     private String value;
+
     /**
      * Request header description
      */
