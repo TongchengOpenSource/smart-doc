@@ -240,6 +240,11 @@ public class ApiConfig {
      */
     private List<String> ignoreRequestParams;
 
+    /**
+     * display actual type of generic
+     * @since 1.9.6
+     */
+    private boolean displayActualType;
 
     public String getServerUrl() {
         return serverUrl;
@@ -524,5 +529,13 @@ public class ApiConfig {
 
     public void setIgnoreRequestParams(List<String> ignoreRequestParams) {
         this.ignoreRequestParams = ignoreRequestParams;
+    }
+
+    public boolean isDisplayActualType() {
+        return displayActualType;
+    }
+
+    public void setDisplayActualType(boolean displayActualType) {
+        this.displayActualType = displayActualType;
     }
 }

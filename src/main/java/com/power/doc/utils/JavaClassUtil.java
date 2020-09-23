@@ -38,6 +38,8 @@ import com.thoughtworks.qdox.model.impl.DefaultJavaParameterizedType;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.*;
 
 /**
@@ -105,14 +107,25 @@ public class JavaClassUtil {
                     fieldList.addAll(getFields(javaClass, counter, addedFields));
                 }
             }
+            Map<String, JavaType> javaTypes = getActualTypesMap(cls1);
             List<DocJavaField> docJavaFields = new ArrayList<>();
+            List<JavaTypeVariable<JavaGenericDeclaration>> variables = cls1.getTypeParameters();
             for (JavaField javaField : cls1.getFields()) {
                 String fieldName = javaField.getName();
                 if (addedFields.contains(fieldName)) {
                     continue;
                 }
+                String gicName = javaField.getType().getGenericCanonicalName();
+                String subTypeName = javaField.getType().getFullyQualifiedName();
+                if (subTypeName.length() == 1) {
+                    JavaType type = javaTypes.get(subTypeName);
+                    subTypeName = type.getFullyQualifiedName();
+                    gicName = type.getGenericCanonicalName();
+                }
                 addedFields.add(fieldName);
-                docJavaFields.add(DocJavaField.builder().setComment(javaField.getComment()).setJavaField(javaField));
+                docJavaFields.add(DocJavaField.builder().setComment(javaField.getComment())
+                        .setJavaField(javaField).setFullyQualifiedName(subTypeName)
+                        .setGenericCanonicalName(gicName));
             }
             fieldList.addAll(docJavaFields);
         }
@@ -156,7 +169,6 @@ public class JavaClassUtil {
     }
 
     public static String getEnumParams(JavaClass javaClass) {
-
         List<JavaField> javaFields = javaClass.getEnumConstants();
         StringBuilder stringBuilder = new StringBuilder();
         for (JavaField javaField : javaFields) {
@@ -171,7 +183,6 @@ public class JavaClassUtil {
                         stringBuilder.append(",");
                     }
                 }
-
                 stringBuilder.append(")");
             }
             stringBuilder.append("<br/>");
@@ -199,7 +210,7 @@ public class JavaClassUtil {
     public static String getClassSimpleName(String className) {
         if (className.contains(".")) {
             int index = className.lastIndexOf(".");
-            className = className.substring(index + 1, className.length());
+            className = className.substring(index + 1);
         }
         if (className.contains("[")) {
             int index = className.indexOf("[");
@@ -214,27 +225,47 @@ public class JavaClassUtil {
      * @param javaClass JavaClass
      * @return JavaClass
      */
-    public static JavaClass getActualType(JavaClass javaClass) {
+    public static JavaType getActualType(JavaClass javaClass) {
         return getActualTypes(javaClass).get(0);
     }
 
     /**
      * get Actual type list
      *
-     * @param javaClass JavaClass
+     * @param javaType JavaClass
      * @return JavaClass
      */
-    public static List<JavaClass> getActualTypes(JavaClass javaClass) {
-        if (null == javaClass) {
+    public static List<JavaType> getActualTypes(JavaType javaType) {
+        if (null == javaType) {
             return new ArrayList<>(0);
         }
-        List<JavaClass> javaClassList = new ArrayList<>();
-        List<JavaType> actualTypes = ((DefaultJavaParameterizedType) javaClass).getActualTypeArguments();
-        actualTypes.forEach(javaType -> {
-            JavaClass actualClass = (JavaClass) javaType;
-            javaClassList.add(actualClass);
-        });
-        return javaClassList;
+        String typeName = javaType.getGenericFullyQualifiedName();
+        if (typeName.contains("<")) {
+            return ((JavaParameterizedType) javaType).getActualTypeArguments();
+        }
+        return new ArrayList<>(0);
+
+    }
+
+    /**
+     * get Actual type map
+     *
+     * @param javaClass JavaClass
+     * @return Map
+     */
+    public static Map<String, JavaType> getActualTypesMap(JavaClass javaClass) {
+        Map<String, JavaType> genericMap = new HashMap<>(10);
+        List<JavaTypeVariable<JavaGenericDeclaration>> variables = javaClass.getTypeParameters();
+        if (variables.size() < 1) {
+            return genericMap;
+        }
+        List<JavaType> javaTypes = getActualTypes(javaClass);
+        for (int i = 0; i < variables.size(); i++) {
+            if (javaTypes.size() > 0) {
+                genericMap.put(variables.get(i).getName(), javaTypes.get(i));
+            }
+        }
+        return genericMap;
     }
 
     /**
@@ -371,5 +402,13 @@ public class JavaClassUtil {
             }
         }
         return annotationValueList;
+    }
+    public static void genericParamMap(Map<String, String> genericMap, JavaClass cls, String[] globGicName) {
+        if (cls != null && null != cls.getTypeParameters()) {
+            List<JavaTypeVariable<JavaGenericDeclaration>> variables = cls.getTypeParameters();
+            for (int i = 0; i < cls.getTypeParameters().size() && i<globGicName.length; i++) {
+                genericMap.put(variables.get(i).getName(), globGicName[i]);
+            }
+        }
     }
 }

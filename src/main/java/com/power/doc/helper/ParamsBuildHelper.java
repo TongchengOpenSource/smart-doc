@@ -68,18 +68,14 @@ public class ParamsBuildHelper {
         boolean isShowJavaType = projectBuilder.getApiConfig().getShowJavaType();
         boolean requestFieldToUnderline = projectBuilder.getApiConfig().isRequestFieldToUnderline();
         boolean responseFieldToUnderline = projectBuilder.getApiConfig().isResponseFieldToUnderline();
+        boolean displayActualType = projectBuilder.getApiConfig().isDisplayActualType();
         // Registry class
         registryClasses.put(className, className);
         String simpleName = DocClassUtil.getSimpleName(className);
         String[] globGicName = DocClassUtil.getSimpleGicName(className);
         JavaClass cls = projectBuilder.getClassByName(simpleName);
         //如果存在泛型 则将泛型与类名的对应关系存起来
-        if (cls != null && null != cls.getTypeParameters()) {
-            List<JavaTypeVariable<JavaGenericDeclaration>> variables = cls.getTypeParameters();
-            for (int i = 0; i < cls.getTypeParameters().size() && i<globGicName.length; i++) {
-                genericMap.put(variables.get(i).getName(), globGicName[i]);
-            }
-        }
+        JavaClassUtil.genericParamMap(genericMap, cls, globGicName);
         List<DocJavaField> fields = JavaClassUtil.getFields(cls, 0, new HashSet<>());
         if (JavaClassValidateUtil.isPrimitive(simpleName)) {
             String processedType = isShowJavaType ? simpleName : DocClassUtil.processTypeNameForParams(simpleName.toLowerCase());
@@ -106,15 +102,13 @@ public class ParamsBuildHelper {
                 param.setDesc(DocGlobalConstants.ANY_OBJECT_MSG).setRequired(false).setVersion(DocGlobalConstants.DEFAULT_VERSION);
             }
             paramList.add(param);
-        }
-
-        else {
+        } else {
             boolean isGenerics = JavaFieldUtil.checkGenerics(fields);
             out:
             for (DocJavaField docField : fields) {
                 JavaField field = docField.getJavaField();
                 String fieldName = field.getName();
-                String subTypeName = field.getType().getFullyQualifiedName();
+                String subTypeName = docField.getFullyQualifiedName();
                 if (field.isStatic() || "this$0".equals(fieldName) ||
                         JavaClassValidateUtil.isIgnoreFieldTypes(subTypeName)) {
                     continue;
@@ -127,7 +121,7 @@ public class ParamsBuildHelper {
                     fieldName = StringUtil.camelToUnderline(fieldName);
                 }
                 String typeSimpleName = field.getType().getSimpleName();
-                String fieldGicName = field.getType().getGenericCanonicalName();
+                String fieldGicName = docField.getGenericCanonicalName();
                 List<JavaAnnotation> javaAnnotations = docField.getAnnotations();
 
                 Map<String, String> tagsMap = DocUtil.getFieldTagsValue(field, docField);
@@ -249,6 +243,9 @@ public class ParamsBuildHelper {
                         }
                         param.setType(DocGlobalConstants.ENUM);
                     }
+                    if (typeSimpleName.length() == 1 && displayActualType) {
+                        comment = comment + "(" + JavaClassUtil.getClassSimpleName(subTypeName) + ")";
+                    }
                     //如果已经设置返回类型 不需要再次设置
                     if (param.getType() == null) {
                         String processedType;
@@ -289,12 +286,12 @@ public class ParamsBuildHelper {
                         preBuilder.append(DocGlobalConstants.FIELD_SPACE);
                     }
                     preBuilder.append("└─");
-                    int fieldPid = paramList.size()+pid;
+                    int fieldPid = paramList.size() + pid;
                     if (JavaClassValidateUtil.isMap(subTypeName)) {
                         String gNameTemp = field.getType().getGenericCanonicalName();
                         if (JavaClassValidateUtil.isMap(gNameTemp)) {
                             ApiParam param1 = ApiParam.of().setField(preBuilder.toString() + "any object")
-                                    .setId(paramList.size()+1).setPid(fieldPid)
+                                    .setId(paramList.size() + 1).setPid(fieldPid)
                                     .setType("object").setDesc(DocGlobalConstants.ANY_OBJECT_MSG).setVersion(DocGlobalConstants.DEFAULT_VERSION);
                             paramList.add(param1);
                             continue;
@@ -339,8 +336,7 @@ public class ParamsBuildHelper {
                                 }
                             }
                         }
-                    } else
-                        if (subTypeName.length() == 1 || DocGlobalConstants.JAVA_OBJECT_FULLY.equals(subTypeName)) {
+                    } else if (subTypeName.length() == 1 || DocGlobalConstants.JAVA_OBJECT_FULLY.equals(subTypeName)) {
                         if (isGenerics && DocGlobalConstants.JAVA_OBJECT_FULLY.equals(subTypeName)) {
                             ApiParam param1 = ApiParam.of().setField(preBuilder.toString() + "any object")
                                     .setId(paramList.size())

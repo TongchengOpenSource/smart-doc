@@ -40,6 +40,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+
+
 /**
  * @author yu 2019/12/21.
  */
@@ -107,12 +109,7 @@ public class JsonBuildHelper {
         data0.append("{");
         String[] globGicName = DocClassUtil.getSimpleGicName(genericCanonicalName);
         //添加泛型对应关系
-        if (cls != null && null != cls.getTypeParameters()) {
-            List<JavaTypeVariable<JavaGenericDeclaration>> variables = cls.getTypeParameters();
-            for (int i = 0; i < cls.getTypeParameters().size() && i<globGicName.length; i++) {
-                genericMap.put(variables.get(i).getName(), globGicName[i]);
-            }
-        }
+        JavaClassUtil.genericParamMap(genericMap, cls, globGicName);
         StringBuilder data = new StringBuilder();
         if (JavaClassValidateUtil.isCollection(typeName) || JavaClassValidateUtil.isArray(typeName)) {
             data.append("[");
@@ -175,7 +172,7 @@ public class JsonBuildHelper {
             out:
             for (DocJavaField docField : fields) {
                 JavaField field = docField.getJavaField();
-                String subTypeName = field.getType().getFullyQualifiedName();
+                String subTypeName = docField.getFullyQualifiedName();
                 String fieldName = field.getName();
                 if (field.isStatic() || "this$0".equals(fieldName) ||
                         JavaClassValidateUtil.isIgnoreFieldTypes(subTypeName)) {
@@ -214,7 +211,7 @@ public class JsonBuildHelper {
                 }
                 String typeSimpleName = field.getType().getSimpleName();
 
-                String fieldGicName = field.getType().getGenericCanonicalName();
+                String fieldGicName = docField.getGenericCanonicalName();
                 data0.append("\"").append(fieldName).append("\":");
                 if (JavaClassValidateUtil.isPrimitive(subTypeName)) {
                     String fieldValue = "";
@@ -354,4 +351,6 @@ public class JsonBuildHelper {
         data0.append("}");
         return data0.toString();
     }
+
+
 }

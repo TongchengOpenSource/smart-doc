@@ -54,6 +54,16 @@ public class DocJavaField  {
      */
     private List<JavaAnnotation> annotations;
 
+    /**
+     * field fullyQualifiedName
+     */
+    private String fullyQualifiedName;
+
+    /**
+     * field genericCanonicalName
+     */
+    private String genericCanonicalName;
+
     public static DocJavaField builder() {
         return new DocJavaField();
     }
@@ -73,6 +83,24 @@ public class DocJavaField  {
 
     public DocJavaField setComment(String comment) {
         Comment = comment;
+        return this;
+    }
+
+    public String getFullyQualifiedName() {
+        return fullyQualifiedName;
+    }
+
+    public DocJavaField setFullyQualifiedName(String fullyQualifiedName) {
+        this.fullyQualifiedName = fullyQualifiedName;
+        return this;
+    }
+
+    public String getGenericCanonicalName() {
+        return genericCanonicalName;
+    }
+
+    public DocJavaField setGenericCanonicalName(String genericCanonicalName) {
+        this.genericCanonicalName = genericCanonicalName;
         return this;
     }
 
