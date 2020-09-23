@@ -236,6 +236,7 @@ public class ApiConfig {
 
     /**
      * request ignore param
+     * @since 1.9.2
      * @return
      */
     private List<String> ignoreRequestParams;

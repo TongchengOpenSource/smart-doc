@@ -243,8 +243,9 @@ public class ParamsBuildHelper {
                         }
                         param.setType(DocGlobalConstants.ENUM);
                     }
+                    String appendComment = "";
                     if (typeSimpleName.length() == 1 && displayActualType) {
-                        comment = comment + "(" + JavaClassUtil.getClassSimpleName(subTypeName) + ")";
+                        appendComment = " (ActualType: " + JavaClassUtil.getClassSimpleName(subTypeName) + ")";
                     }
                     //如果已经设置返回类型 不需要再次设置
                     if (param.getType() == null) {
@@ -277,9 +278,9 @@ public class ParamsBuildHelper {
                     }
 
                     if (StringUtil.isNotEmpty(comment)) {
-                        commonHandleParam(paramList, param, isRequired, comment, since, strRequired);
+                        commonHandleParam(paramList, param, isRequired, comment + appendComment, since, strRequired);
                     } else {
-                        commonHandleParam(paramList, param, isRequired, NO_COMMENTS_FOUND, since, strRequired);
+                        commonHandleParam(paramList, param, isRequired, NO_COMMENTS_FOUND + appendComment, since, strRequired);
                     }
                     StringBuilder preBuilder = new StringBuilder();
                     for (int j = 0; j < level; j++) {
