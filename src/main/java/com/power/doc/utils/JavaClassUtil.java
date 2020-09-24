@@ -38,8 +38,6 @@ import com.thoughtworks.qdox.model.impl.DefaultJavaParameterizedType;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.*;
 
 /**
@@ -92,7 +90,9 @@ public class JavaClassUtil {
                             .setJavaField(javaField)
                             .setComment(comment)
                             .setDocletTags(javaMethod.getTags())
-                            .setAnnotations(javaMethod.getAnnotations());
+                            .setAnnotations(javaMethod.getAnnotations())
+                            .setFullyQualifiedName(javaField.getType().getFullyQualifiedName())
+                            .setGenericCanonicalName(javaField.getType().getGenericCanonicalName());
 
                     fieldList.add(docJavaField);
                 }
@@ -107,9 +107,8 @@ public class JavaClassUtil {
                     fieldList.addAll(getFields(javaClass, counter, addedFields));
                 }
             }
-            Map<String, JavaType> javaTypes = getActualTypesMap(cls1);
+            Map<String, JavaType> actualJavaTypes = getActualTypesMap(cls1);
             List<DocJavaField> docJavaFields = new ArrayList<>();
-            List<JavaTypeVariable<JavaGenericDeclaration>> variables = cls1.getTypeParameters();
             for (JavaField javaField : cls1.getFields()) {
                 String fieldName = javaField.getName();
                 if (addedFields.contains(fieldName)) {
@@ -117,15 +116,20 @@ public class JavaClassUtil {
                 }
                 String gicName = javaField.getType().getGenericCanonicalName();
                 String subTypeName = javaField.getType().getFullyQualifiedName();
-                if (subTypeName.length() == 1) {
-                    JavaType type = javaTypes.get(subTypeName);
-                    subTypeName = type.getFullyQualifiedName();
-                    gicName = type.getGenericCanonicalName();
+                String actualType = null;
+                for (Map.Entry<String, JavaType> entry : actualJavaTypes.entrySet()) {
+                    String key = entry.getKey();
+                    JavaType value = entry.getValue();
+                    if (gicName.contains(key)) {
+                        subTypeName = subTypeName.replaceAll(key, value.getFullyQualifiedName());
+                        gicName = gicName.replaceAll(key, value.getGenericCanonicalName());
+                        actualType = value.getFullyQualifiedName();
+                    }
                 }
                 addedFields.add(fieldName);
                 docJavaFields.add(DocJavaField.builder().setComment(javaField.getComment())
                         .setJavaField(javaField).setFullyQualifiedName(subTypeName)
-                        .setGenericCanonicalName(gicName));
+                        .setGenericCanonicalName(gicName).setActualJavaType(actualType));
             }
             fieldList.addAll(docJavaFields);
         }
@@ -403,10 +407,11 @@ public class JavaClassUtil {
         }
         return annotationValueList;
     }
+
     public static void genericParamMap(Map<String, String> genericMap, JavaClass cls, String[] globGicName) {
         if (cls != null && null != cls.getTypeParameters()) {
             List<JavaTypeVariable<JavaGenericDeclaration>> variables = cls.getTypeParameters();
-            for (int i = 0; i < cls.getTypeParameters().size() && i<globGicName.length; i++) {
+            for (int i = 0; i < cls.getTypeParameters().size() && i < globGicName.length; i++) {
                 genericMap.put(variables.get(i).getName(), globGicName[i]);
             }
         }

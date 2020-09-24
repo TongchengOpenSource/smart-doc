@@ -64,6 +64,11 @@ public class DocJavaField  {
      */
     private String genericCanonicalName;
 
+    /**
+     * field generic actualJavaType;
+     */
+    private String actualJavaType;
+
     public static DocJavaField builder() {
         return new DocJavaField();
     }
@@ -101,6 +106,15 @@ public class DocJavaField  {
 
     public DocJavaField setGenericCanonicalName(String genericCanonicalName) {
         this.genericCanonicalName = genericCanonicalName;
+        return this;
+    }
+
+    public String getActualJavaType() {
+        return actualJavaType;
+    }
+
+    public DocJavaField setActualJavaType(String actualJavaType) {
+        this.actualJavaType = actualJavaType;
         return this;
     }
 

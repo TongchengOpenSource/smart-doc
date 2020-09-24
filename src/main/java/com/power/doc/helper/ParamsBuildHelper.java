@@ -32,7 +32,10 @@ import com.power.doc.constants.DocTags;
 import com.power.doc.constants.ValidatorAnnotations;
 import com.power.doc.model.*;
 import com.power.doc.utils.*;
-import com.thoughtworks.qdox.model.*;
+import com.thoughtworks.qdox.model.JavaAnnotation;
+import com.thoughtworks.qdox.model.JavaClass;
+import com.thoughtworks.qdox.model.JavaField;
+import com.thoughtworks.qdox.model.JavaMethod;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -244,8 +247,14 @@ public class ParamsBuildHelper {
                         param.setType(DocGlobalConstants.ENUM);
                     }
                     String appendComment = "";
-                    if (typeSimpleName.length() == 1 && displayActualType) {
-                        appendComment = " (ActualType: " + JavaClassUtil.getClassSimpleName(subTypeName) + ")";
+                    if (displayActualType) {
+                        if (globGicName.length > 0) {
+                            String gicName = genericMap.get(subTypeName) != null ? genericMap.get(subTypeName) : globGicName[0];
+                            appendComment = " (ActualType: " + JavaClassUtil.getClassSimpleName(gicName) + ")";
+                        }
+                        if (Objects.nonNull(docField.getActualJavaType())) {
+                            appendComment = " (ActualType: " + JavaClassUtil.getClassSimpleName(docField.getActualJavaType()) + ")";
+                        }
                     }
                     //如果已经设置返回类型 不需要再次设置
                     if (param.getType() == null) {
@@ -289,7 +298,7 @@ public class ParamsBuildHelper {
                     preBuilder.append("└─");
                     int fieldPid = paramList.size() + pid;
                     if (JavaClassValidateUtil.isMap(subTypeName)) {
-                        String gNameTemp = field.getType().getGenericCanonicalName();
+                        String gNameTemp = fieldGicName;
                         if (JavaClassValidateUtil.isMap(gNameTemp)) {
                             ApiParam param1 = ApiParam.of().setField(preBuilder.toString() + "any object")
                                     .setId(paramList.size() + 1).setPid(fieldPid)
@@ -311,7 +320,7 @@ public class ParamsBuildHelper {
                             }
                         }
                     } else if (JavaClassValidateUtil.isCollection(subTypeName)) {
-                        String gNameTemp = field.getType().getGenericCanonicalName();
+                        String gNameTemp = fieldGicName;
                         if (globGicName.length > 0 && "java.util.List".equals(gNameTemp)) {
                             gNameTemp = gNameTemp + "<T>";
                         }
