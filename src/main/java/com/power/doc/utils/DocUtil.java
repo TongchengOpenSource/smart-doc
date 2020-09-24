@@ -151,14 +151,12 @@ public class DocUtil {
         for (Map.Entry<String, String> entry : fieldValue.entrySet()) {
             if (key.contains(entry.getKey())) {
                 value = new StringBuilder(entry.getValue());
-                if (!isArray) {
-                    break;
-                } else {
+                if (isArray) {
                     for (int i = 0; i < 2; i++) {
                         value.append(",").append(entry.getValue());
                     }
-                    break;
                 }
+                break;
             }
         }
         if (null == value) {

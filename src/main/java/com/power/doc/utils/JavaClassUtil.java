@@ -178,7 +178,7 @@ public class JavaClassUtil {
         for (JavaField javaField : javaFields) {
             List<Expression> exceptions = javaField.getEnumConstantArguments();
             stringBuilder.append(javaField.getName());
-            //如果枚举值不为空
+            //enum value is not empty
             if (!CollectionUtil.isEmpty(exceptions)) {
                 stringBuilder.append(" -(");
                 for (int i = 0; i < exceptions.size(); i++) {

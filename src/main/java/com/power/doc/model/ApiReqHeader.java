@@ -66,7 +66,12 @@ public class ApiReqHeader {
      */
     private String since = "-";
 
+    @Deprecated
     public static ApiReqHeader header() {
+        return new ApiReqHeader();
+    }
+
+    public static ApiReqHeader builder() {
         return new ApiReqHeader();
     }
 

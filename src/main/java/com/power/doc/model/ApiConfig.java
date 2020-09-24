@@ -539,4 +539,45 @@ public class ApiConfig {
     public void setDisplayActualType(boolean displayActualType) {
         this.displayActualType = displayActualType;
     }
+
+    @Override
+    public String toString() {
+        return "ApiConfig{" +
+                "serverUrl='" + serverUrl + '\'' +
+                ", isStrict=" + isStrict +
+                ", allInOne=" + allInOne +
+                ", outPath='" + outPath + '\'' +
+                ", sourceCodePaths=" + sourceCodePaths +
+                ", requestHeaders=" + requestHeaders +
+                ", coverOld=" + coverOld +
+                ", customResponseFields=" + customResponseFields +
+                ", errorCodes=" + errorCodes +
+                ", packageFilters='" + packageFilters + '\'' +
+                ", revisionLogs=" + revisionLogs +
+                ", md5EncryptedHtmlName=" + md5EncryptedHtmlName +
+                ", language=" + language +
+                ", adoc=" + adoc +
+                ", dataDictionaries=" + dataDictionaries +
+                ", errorCodeDictionaries=" + errorCodeDictionaries +
+                ", apiObjectReplacements=" + apiObjectReplacements +
+                ", rpcApiDependencies=" + rpcApiDependencies +
+                ", apiConstants=" + apiConstants +
+                ", projectName='" + projectName + '\'' +
+                ", skipTransientField=" + skipTransientField +
+                ", showAuthor=" + showAuthor +
+                ", requestFieldToUnderline=" + requestFieldToUnderline +
+                ", responseFieldToUnderline=" + responseFieldToUnderline +
+                ", sortByTitle=" + sortByTitle +
+                ", showJavaType=" + showJavaType +
+                ", inlineEnum=" + inlineEnum +
+                ", rpcConsumerConfig='" + rpcConsumerConfig + '\'' +
+                ", recursionLimit=" + recursionLimit +
+                ", requestExample=" + requestExample +
+                ", responseExample=" + responseExample +
+                ", allInOneDocFileName='" + allInOneDocFileName + '\'' +
+                ", paramsDataToTree=" + paramsDataToTree +
+                ", ignoreRequestParams=" + ignoreRequestParams +
+                ", displayActualType=" + displayActualType +
+                '}';
+    }
 }

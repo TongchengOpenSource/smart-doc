@@ -47,7 +47,12 @@ public class ApiErrorCodeDictionary {
      */
     private String descField;
 
+    @Deprecated
     public static ApiErrorCodeDictionary dict() {
+        return new ApiErrorCodeDictionary();
+    }
+
+    public static ApiErrorCodeDictionary builder(){
         return new ApiErrorCodeDictionary();
     }
 
