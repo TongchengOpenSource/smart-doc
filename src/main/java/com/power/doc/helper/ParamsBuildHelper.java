@@ -250,7 +250,9 @@ public class ParamsBuildHelper {
                     if (displayActualType) {
                         if (globGicName.length > 0) {
                             String gicName = genericMap.get(subTypeName) != null ? genericMap.get(subTypeName) : globGicName[0];
-                            appendComment = " (ActualType: " + JavaClassUtil.getClassSimpleName(gicName) + ")";
+                            if(!simpleName.equals(gicName)){
+                                appendComment = " (ActualType: " + JavaClassUtil.getClassSimpleName(gicName) + ")";
+                            }
                         }
                         if (Objects.nonNull(docField.getActualJavaType())) {
                             appendComment = " (ActualType: " + JavaClassUtil.getClassSimpleName(docField.getActualJavaType()) + ")";

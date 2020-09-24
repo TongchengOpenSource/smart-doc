@@ -213,6 +213,9 @@ public class JavaClassUtil {
      */
     public static String getClassSimpleName(String className) {
         if (className.contains(".")) {
+            if (className.contains("<")) {
+                className = className.substring(0, className.indexOf("<"));
+            }
             int index = className.lastIndexOf(".");
             className = className.substring(index + 1);
         }
