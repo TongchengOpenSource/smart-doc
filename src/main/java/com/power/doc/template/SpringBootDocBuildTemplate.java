@@ -515,7 +515,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             }
             boolean required = Boolean.parseBoolean(strRequired);
             if (isPathVariable) {
-                comment = comment + " (This is path param)";
+                comment = comment + " (This is path parameter.)";
             }
             if (JavaClassValidateUtil.isCollection(fullTypeName) || JavaClassValidateUtil.isArray(fullTypeName)) {
                 String[] gicNameArr = DocClassUtil.getSimpleGicName(typeName);

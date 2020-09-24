@@ -40,6 +40,7 @@ import com.thoughtworks.qdox.model.JavaMethod;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.power.doc.constants.DocGlobalConstants.JAVA_LIST_FULLY;
 import static com.power.doc.constants.DocGlobalConstants.NO_COMMENTS_FOUND;
 
 /**
@@ -323,7 +324,7 @@ public class ParamsBuildHelper {
                         }
                     } else if (JavaClassValidateUtil.isCollection(subTypeName)) {
                         String gNameTemp = fieldGicName;
-                        if (globGicName.length > 0 && "java.util.List".equals(gNameTemp)) {
+                        if (globGicName.length > 0 && JAVA_LIST_FULLY.equals(gNameTemp)) {
                             gNameTemp = gNameTemp + "<T>";
                         }
                         String[] gNameArr = DocClassUtil.getSimpleGicName(gNameTemp);
@@ -334,6 +335,7 @@ public class ParamsBuildHelper {
                         if (!JavaClassValidateUtil.isPrimitive(gName)) {
                             if (!simpleName.equals(gName) && !gName.equals(simpleName)) {
                                 if (gName.length() == 1) {
+                                    // handle generic
                                     int len = globGicName.length;
                                     if (len > 0) {
                                         String gicName = genericMap.get(gName) != null ? genericMap.get(gName) : globGicName[0];
@@ -349,6 +351,7 @@ public class ParamsBuildHelper {
                             }
                         }
                     } else if (subTypeName.length() == 1 || DocGlobalConstants.JAVA_OBJECT_FULLY.equals(subTypeName)) {
+                        // handle java generic or object
                         if (isGenerics && DocGlobalConstants.JAVA_OBJECT_FULLY.equals(subTypeName)) {
                             ApiParam param1 = ApiParam.of().setField(preBuilder.toString() + "any object")
                                     .setId(paramList.size())
@@ -417,8 +420,8 @@ public class ParamsBuildHelper {
 
     public static List<ApiParam> primitiveReturnRespComment(String typeName) {
         StringBuilder comments = new StringBuilder();
-        comments.append("The api directly returns the ").append(typeName).append(" type value.");
-        ApiParam apiParam = ApiParam.of().setField("No field")
+        comments.append("Return ").append(typeName).append(".");
+        ApiParam apiParam = ApiParam.of().setField("-")
                 .setType(typeName).setDesc(comments.toString()).setVersion(DocGlobalConstants.DEFAULT_VERSION);
         List<ApiParam> paramList = new ArrayList<>();
         paramList.add(apiParam);
