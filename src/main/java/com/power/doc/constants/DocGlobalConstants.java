@@ -133,7 +133,7 @@ public interface DocGlobalConstants {
 
     String SHORT_MULTIPART_FILE_FULLY = "MultipartFile";
 
-    String DEFAULT_SERVER_URL = "http://{server}";
+    String DEFAULT_SERVER_URL = "";
 
     String SHORT_REQUEST_BODY = "RequestBody";
 

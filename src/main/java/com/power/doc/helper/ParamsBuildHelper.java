@@ -198,7 +198,8 @@ public class ParamsBuildHelper {
                 //cover comment
                 CustomRespField customResponseField = responseFieldMap.get(field.getName());
                 String comment;
-                if (null != customResponseField && StringUtil.isNotEmpty(customResponseField.getDesc())) {
+                if (null != customResponseField && StringUtil.isNotEmpty(customResponseField.getDesc())
+                        && simpleName.equals(customResponseField.getOwnerClassName())) {
                     comment = customResponseField.getDesc();
                 } else {
                     comment = docField.getComment();
@@ -251,7 +252,7 @@ public class ParamsBuildHelper {
                     if (displayActualType) {
                         if (globGicName.length > 0) {
                             String gicName = genericMap.get(subTypeName) != null ? genericMap.get(subTypeName) : globGicName[0];
-                            if(!simpleName.equals(gicName)){
+                            if (!simpleName.equals(gicName)) {
                                 appendComment = " (ActualType: " + JavaClassUtil.getClassSimpleName(gicName) + ")";
                             }
                         }
@@ -428,7 +429,8 @@ public class ParamsBuildHelper {
         return paramList;
     }
 
-    private static void commonHandleParam(List<ApiParam> paramList, ApiParam param, String isRequired, String comment, String since, boolean strRequired) {
+    private static void commonHandleParam(List<ApiParam> paramList, ApiParam param, String isRequired,
+                                          String comment, String since, boolean strRequired) {
         if (StringUtil.isEmpty(isRequired)) {
             param.setDesc(comment).setVersion(since);
         } else {
