@@ -61,7 +61,8 @@ public class JavaClassUtil {
             return fieldList;
         } else if ("Object".equals(cls1.getSimpleName()) || "Timestamp".equals(cls1.getSimpleName()) ||
                 "Date".equals(cls1.getSimpleName()) || "Locale".equals(cls1.getSimpleName())
-                || "ClassLoader".equals(cls1.getSimpleName()) || JavaClassValidateUtil.isMap(cls1.getFullyQualifiedName())) {
+                || "ClassLoader".equals(cls1.getSimpleName()) || JavaClassValidateUtil.isMap(cls1.getFullyQualifiedName())
+                ||cls1.isEnum()) {
             return fieldList;
         } else {
             String className = cls1.getFullyQualifiedName();
@@ -109,14 +110,35 @@ public class JavaClassUtil {
             }
             Map<String, JavaType> actualJavaTypes = getActualTypesMap(cls1);
             List<DocJavaField> docJavaFields = new ArrayList<>();
+
             for (JavaField javaField : cls1.getFields()) {
                 String fieldName = javaField.getName();
                 if (addedFields.contains(fieldName)) {
                     continue;
                 }
+                boolean typeChecked = false;
+                DocJavaField docJavaField = DocJavaField.builder();
                 String gicName = javaField.getType().getGenericCanonicalName();
                 String subTypeName = javaField.getType().getFullyQualifiedName();
                 String actualType = null;
+                if (JavaClassValidateUtil.isCollection(subTypeName) &&
+                        !JavaClassValidateUtil.isCollection(gicName)) {
+                    String[] gNameArr = DocClassUtil.getSimpleGicName(gicName);
+                    actualType = JavaClassUtil.getClassSimpleName(gNameArr[0]);
+                    docJavaField.setArray(true);
+                    typeChecked = true;
+                }
+                if (JavaClassValidateUtil.isPrimitive(subTypeName) && !typeChecked) {
+                    docJavaField.setPrimitive(true);
+                    typeChecked = true;
+                }
+                if (JavaClassValidateUtil.isFile(subTypeName) && !typeChecked) {
+                    docJavaField.setFile(true);
+                    typeChecked = true;
+                }
+                if (javaField.getType().isEnum() && !typeChecked) {
+                    docJavaField.setEnum(true);
+                }
                 for (Map.Entry<String, JavaType> entry : actualJavaTypes.entrySet()) {
                     String key = entry.getKey();
                     JavaType value = entry.getValue();
@@ -127,7 +149,7 @@ public class JavaClassUtil {
                     }
                 }
                 addedFields.add(fieldName);
-                docJavaFields.add(DocJavaField.builder().setComment(javaField.getComment())
+                docJavaFields.add(docJavaField.setComment(javaField.getComment())
                         .setJavaField(javaField).setFullyQualifiedName(subTypeName)
                         .setGenericCanonicalName(gicName).setActualJavaType(actualType));
             }

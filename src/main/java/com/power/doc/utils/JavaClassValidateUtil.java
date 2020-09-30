@@ -250,4 +250,18 @@ public class JavaClassValidateUtil {
                 return false;
         }
     }
+
+    /**
+     * check file
+     * @param typeName type name
+     * @return boolean
+     */
+    public static boolean isFile(String typeName){
+        switch (typeName) {
+            case "org.springframework.web.multipart.MultipartFile":
+                return true;
+            default:
+                return false;
+        }
+    }
 }

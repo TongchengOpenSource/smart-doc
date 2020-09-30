@@ -69,6 +69,16 @@ public class DocJavaField  {
      */
     private String actualJavaType;
 
+    private boolean array;
+
+    private boolean primitive;
+
+    private boolean collection;
+
+    private boolean file;
+
+    private boolean isEnum;
+
     public static DocJavaField builder() {
         return new DocJavaField();
     }
@@ -144,5 +154,49 @@ public class DocJavaField  {
     public DocJavaField setAnnotations(List<JavaAnnotation> annotations) {
         this.annotations = annotations;
         return this;
+    }
+
+    public boolean isArray() {
+        return array;
+    }
+
+    public DocJavaField setArray(boolean array) {
+        this.array = array;
+        return this;
+    }
+
+    public boolean isPrimitive() {
+        return primitive;
+    }
+
+    public DocJavaField setPrimitive(boolean primitive) {
+        this.primitive = primitive;
+        return this;
+    }
+
+    public boolean isCollection() {
+        return collection;
+    }
+
+    public DocJavaField setCollection(boolean collection) {
+        this.collection = collection;
+        return this;
+    }
+
+    public boolean isFile() {
+        return file;
+    }
+
+    public DocJavaField setFile(boolean file) {
+        this.file = file;
+        return this;
+    }
+
+    public boolean isEnum() {
+        return isEnum;
+    }
+
+    public void setEnum(boolean anEnum) {
+        isEnum = anEnum;
     }
 }
