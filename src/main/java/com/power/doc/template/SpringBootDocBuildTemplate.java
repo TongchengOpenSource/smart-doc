@@ -501,8 +501,8 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                     }
 
                     AnnotationValue annotationRequired = annotation.getProperty(DocAnnotationConstants.REQUIRED_PROP);
-                    if (null != annotationRequired) {
-                        strRequired = annotationRequired.toString();
+                    if (null == annotationRequired) {
+                        strRequired = "true";
                     }
                 }
                 if (SpringMvcAnnotations.REQUEST_BODY.equals(annotationName)) {
