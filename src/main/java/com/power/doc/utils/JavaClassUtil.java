@@ -419,4 +419,13 @@ public class JavaClassUtil {
             }
         }
     }
+
+    public static String javaTypeFormat(String returnType){
+        if(returnType.contains("?")) {
+            return returnType.replaceAll("[?\\s]", "").replaceAll("extends", "");
+        }
+        else {
+            return returnType;
+        }
+    }
 }

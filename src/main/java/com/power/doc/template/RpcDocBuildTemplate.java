@@ -22,6 +22,7 @@
  */
 package com.power.doc.template;
 
+import com.google.gson.Gson;
 import com.power.common.util.StringUtil;
 import com.power.common.util.ValidateUtil;
 import com.power.doc.builder.ProjectDocConfigBuilder;
@@ -282,14 +283,14 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
         StringBuilder methodBuilder = new StringBuilder();
         JavaType returnType = method.getReturnType();
         String simpleReturn = returnType.getCanonicalName();
-        String returnClass = returnType.getGenericCanonicalName();
+        String returnClass = JavaClassUtil.javaTypeFormat(returnType.getGenericCanonicalName());
         returnClass = returnClass.replace(simpleReturn, JavaClassUtil.getClassSimpleName(simpleReturn));
         String[] arrays = DocClassUtil.getSimpleGicName(returnClass);
         for (String str : arrays) {
             if (str.contains("[")) {
                 str = str.substring(0, str.indexOf("["));
             }
-            String[] generics = str.split("<");
+            String[] generics = str.split("[<,]");
             for (String generic : generics) {
                 returnClass = returnClass.replaceAll(generic, JavaClassUtil.getClassSimpleName(generic));
             }
@@ -304,5 +305,4 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
                 .append(String.join(", ", params)).append(")");
         return methodBuilder.toString();
     }
-
 }
