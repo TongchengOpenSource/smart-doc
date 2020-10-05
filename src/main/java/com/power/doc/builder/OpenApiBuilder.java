@@ -108,7 +108,15 @@ public class OpenApiBuilder {
                     apiMethodDocs.forEach(
                             method -> {
                                 //设置paths的请求url 将双斜杠替换成单斜杠
-                                pathMap.put(method.getPath().replace("//", "/"), buildPathUrls(method, a));
+                                String url = method.getPath().replace("//", "/");
+                                Map<String, Object> request = buildPathUrls(method, a);
+                                //pathMap.put(method.getPath().replace("//", "/"), buildPathUrls(method, a));
+                                if (!pathMap.containsKey(url)) {
+                                    pathMap.put(url, request);
+                                } else {
+                                    Map<String, Object> oldRequest = (Map<String, Object>) pathMap.get(url);
+                                    oldRequest.putAll(request);
+                                }
                             }
                     );
                 }
