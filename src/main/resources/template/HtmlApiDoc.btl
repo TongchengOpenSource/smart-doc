@@ -6,7 +6,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
-    <link rel="stylesheet" href="https://gitee.com/smart-doc-team/smart-doc/raw/master/css/markdown.css?v=1.9.6"/>
+    <link rel="stylesheet" href="markdown.css?v=${version}"/>
     <title>${title}</title>
 </head>
 <body>
