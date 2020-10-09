@@ -83,6 +83,7 @@ public class JavaClassValidateUtil {
             case "bigdecimal":
             case "char":
             case "string":
+            case "number":
             case "boolean":
             case "byte":
             case "java.sql.timestamp":

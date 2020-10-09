@@ -239,7 +239,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             JavaType javaType = parameter.getType();
             String paramName = parameter.getName();
             String typeName = javaType.getFullyQualifiedName();
-            String gicTypeName = javaType.getGenericCanonicalName();
+            String gicTypeName = JavaClassUtil.javaTypeFormat(javaType.getGenericCanonicalName());
 
             String commentClass = paramsComments.get(paramName);
             //ignore request params
@@ -501,8 +501,8 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                     }
 
                     AnnotationValue annotationRequired = annotation.getProperty(DocAnnotationConstants.REQUIRED_PROP);
-                    if (null != annotationRequired) {
-                        strRequired = annotationRequired.toString();
+                    if (null == annotationRequired) {
+                        strRequired = "true";
                     }
                 }
                 if (SpringMvcAnnotations.REQUEST_BODY.equals(annotationName)) {

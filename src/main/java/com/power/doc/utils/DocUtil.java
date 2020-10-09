@@ -444,6 +444,7 @@ public class DocUtil {
             case "Double":
             case "double":
             case "Float":
+            case "Number":
             case "float":
             case "Boolean":
             case "boolean":
