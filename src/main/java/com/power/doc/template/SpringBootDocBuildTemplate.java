@@ -481,6 +481,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             List<String> groupClasses = JavaClassUtil.getParamGroupJavaClass(annotations);
             String strRequired = "false";
             boolean isPathVariable = false;
+            boolean isRequestBody = false;
             for (JavaAnnotation annotation : annotations) {
                 String annotationName = annotation.getType().getValue();
                 if (SpringMvcAnnotations.REQUEST_HERDER.equals(annotationName)) {
@@ -511,11 +512,14 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                                 + javaMethod.getName() + " in " + className + ",@RequestBody annotation could only bind one variables.");
                     }
                     requestBodyCounter++;
+                    isRequestBody = true;
                 }
             }
             boolean required = Boolean.parseBoolean(strRequired);
             if (isPathVariable) {
                 comment = comment + " (This is path parameter.)";
+            } else if (!isRequestBody && requestBodyCounter > 0) {
+                comment = comment + " (This is query parameter.)";
             }
             if (JavaClassValidateUtil.isCollection(fullTypeName) || JavaClassValidateUtil.isArray(fullTypeName)) {
                 String[] gicNameArr = DocClassUtil.getSimpleGicName(typeName);
@@ -562,7 +566,6 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             }
             // param is enum
             else if (javaClass.isEnum()) {
-
                 String o = JavaClassUtil.getEnumParams(javaClass);
                 ApiParam param = ApiParam.of().setField(paramName)
                         .setId(paramList.size() + 1)
