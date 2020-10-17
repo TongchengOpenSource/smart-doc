@@ -22,7 +22,6 @@
  */
 package com.power.doc.template;
 
-import com.google.gson.Gson;
 import com.power.common.util.StringUtil;
 import com.power.common.util.ValidateUtil;
 import com.power.doc.builder.ProjectDocConfigBuilder;
@@ -283,7 +282,7 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
         StringBuilder methodBuilder = new StringBuilder();
         JavaType returnType = method.getReturnType();
         String simpleReturn = returnType.getCanonicalName();
-        String returnClass = JavaClassUtil.javaTypeFormat(returnType.getGenericCanonicalName());
+        String returnClass = returnType.getGenericCanonicalName();
         returnClass = returnClass.replace(simpleReturn, JavaClassUtil.getClassSimpleName(simpleReturn));
         String[] arrays = DocClassUtil.getSimpleGicName(returnClass);
         for (String str : arrays) {
@@ -292,7 +291,14 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
             }
             String[] generics = str.split("[<,]");
             for (String generic : generics) {
-                returnClass = returnClass.replaceAll(generic, JavaClassUtil.getClassSimpleName(generic));
+                if (generic.contains("extends")) {
+                    String className = generic.substring(generic.lastIndexOf(" ")+1);
+                    returnClass = returnClass.replace(className, JavaClassUtil.getClassSimpleName(className));
+                }
+                if (generic.length() != 1 && !generic.contains("extends")) {
+                    returnClass = returnClass.replaceAll(generic, JavaClassUtil.getClassSimpleName(generic));
+                }
+
             }
         }
         methodBuilder.append(returnClass).append(" ");

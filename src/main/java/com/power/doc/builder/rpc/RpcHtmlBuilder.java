@@ -148,10 +148,10 @@ public class RpcHtmlBuilder {
             apiTemplate.binding(TemplateVariable.DESC.getVariable(), rpcDoc.getDesc());
             apiTemplate.binding(TemplateVariable.NAME.getVariable(), rpcDoc.getName());
             apiTemplate.binding(TemplateVariable.LIST.getVariable(), rpcDoc.getList());
-            apiTemplate.binding(TemplateVariable.PROTOCOL.getVariable(),rpcDoc.getProtocol());
-            apiTemplate.binding(TemplateVariable.AUTHOR.getVariable(),rpcDoc.getAuthor());
-            apiTemplate.binding(TemplateVariable.VERSION.getVariable(),rpcDoc.getVersion());
-            apiTemplate.binding(TemplateVariable.URI.getVariable(),rpcDoc.getUri());
+            apiTemplate.binding(TemplateVariable.PROTOCOL.getVariable(), rpcDoc.getProtocol());
+            apiTemplate.binding(TemplateVariable.AUTHOR.getVariable(), rpcDoc.getAuthor());
+            apiTemplate.binding(TemplateVariable.VERSION.getVariable(), rpcDoc.getVersion());
+            apiTemplate.binding(TemplateVariable.URI.getVariable(), rpcDoc.getUri());
 
             String html = MarkDownUtil.toHtml(apiTemplate.render());
             htmlApiDoc = BeetlTemplateUtil.getByName(HTML_API_DOC_TPL);
@@ -159,7 +159,7 @@ public class RpcHtmlBuilder {
             htmlApiDoc.binding(TemplateVariable.TITLE.getVariable(), rpcDoc.getDesc());
             htmlApiDoc.binding(TemplateVariable.CREATE_TIME.getVariable(), strTime);
             htmlApiDoc.binding(TemplateVariable.VERSION.getVariable(), now);
-            FileUtil.nioWriteFile(htmlApiDoc.render(), outPath + FILE_SEPARATOR + rpcDoc.getAlias() + ".html");
+            FileUtil.nioWriteFile(htmlApiDoc.render(), outPath + FILE_SEPARATOR + rpcDoc.getShortName() + ".html");
         }
     }
 
@@ -191,22 +191,25 @@ public class RpcHtmlBuilder {
      */
     private static void buildDependency(ApiConfig config) {
         List<RpcApiDependency> apiDependencies = config.getRpcApiDependencies();
+        Template template;
         if (CollectionUtil.isNotEmpty(config.getRpcApiDependencies())) {
             String rpcConfig = config.getRpcConsumerConfig();
             String rpcConfigConfigContent = null;
             if (Objects.nonNull(rpcConfig)) {
                 rpcConfigConfigContent = FileUtil.getFileContent(rpcConfig);
             }
-            Template template = BeetlTemplateUtil.getByName(RPC_DEPENDENCY_MD_TPL);
+            template = BeetlTemplateUtil.getByName(RPC_DEPENDENCY_MD_TPL);
             template.binding(TemplateVariable.RPC_CONSUMER_CONFIG.getVariable(), rpcConfigConfigContent);
             template.binding(TemplateVariable.DEPENDENCY_LIST.getVariable(), apiDependencies);
-            String dictHtml = MarkDownUtil.toHtml(template.render());
-            Template dictTpl = BeetlTemplateUtil.getByName(HTML_API_DOC_TPL);
-            dictTpl.binding(TemplateVariable.VERSION.getVariable(), now);
-            dictTpl.binding(TemplateVariable.TITLE.getVariable(), DICT_EN_TITLE);
-            dictTpl.binding(TemplateVariable.HTML.getVariable(), dictHtml);
-            dictTpl.binding(TemplateVariable.CREATE_TIME.getVariable(), DateTimeUtil.long2Str(now, DateTimeUtil.DATE_FORMAT_SECOND));
-            FileUtil.nioWriteFile(dictTpl.render(), config.getOutPath() + FILE_SEPARATOR + "dependency.html");
+        } else {
+            template = BeetlTemplateUtil.getByName(RPC_DEPENDENCY_EMPTY_MD_TPL);
         }
+        String dictHtml = MarkDownUtil.toHtml(template.render());
+        Template dictTpl = BeetlTemplateUtil.getByName(HTML_API_DOC_TPL);
+        dictTpl.binding(TemplateVariable.VERSION.getVariable(), now);
+        dictTpl.binding(TemplateVariable.TITLE.getVariable(), DICT_EN_TITLE);
+        dictTpl.binding(TemplateVariable.HTML.getVariable(), dictHtml);
+        dictTpl.binding(TemplateVariable.CREATE_TIME.getVariable(), DateTimeUtil.long2Str(now, DateTimeUtil.DATE_FORMAT_SECOND));
+        FileUtil.nioWriteFile(dictTpl.render(), config.getOutPath() + FILE_SEPARATOR + "dependency.html");
     }
 }

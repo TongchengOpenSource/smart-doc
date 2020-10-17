@@ -24,17 +24,17 @@
                  <%
                    for(api in apiDocList){
                    %>
-                    <li class="chapter " data-level="${api.alias}" data-path="${api.alias}.html">
-                       <a href="javascript:void(0)" onclick="go('${api.alias}', '${api.desc}');">${api.order+1} ${api.desc}</a>
+                    <li class="chapter " data-level="${api.shortName}" data-path="${api.shortName}.html">
+                       <a href="javascript:void(0)" onclick="go('${api.shortName}', '${api.desc}');">${api.order+1} ${api.desc}</a>
                         <ul class="articles">
                             <%
                             for(doc in api.list){
                             %>
-                            <li class="chapter " data-level="${api.alias}" data-path="${api.alias}.html">
+                            <li class="chapter " data-level="${api.shortName}" data-path="${api.shortName}.html">
                             <%if(doc.deprecated){%>
-                              <a href="javascript:void(0)" onclick="go('${api.alias}', '${doc.desc}');">${api.order+1}.${doc.order}&nbsp;<span class="line-through">${doc.desc}</span></a></li>
+                              <a href="javascript:void(0)" onclick="go('${api.shortName}', '${doc.desc}');">${api.order+1}.${doc.order}&nbsp;<span class="line-through">${doc.desc}</span></a></li>
                             <%}else{%>
-                              <a href="javascript:void(0)" onclick="go('${api.alias}', '${doc.desc}');">${api.order+1}.${doc.order}&nbsp;${doc.desc}</a></li>
+                              <a href="javascript:void(0)" onclick="go('${api.shortName}', '${doc.desc}');">${api.order+1}.${doc.order}&nbsp;${doc.desc}</a></li>
                             <%}%>
                             <%}%>
                         </ul>

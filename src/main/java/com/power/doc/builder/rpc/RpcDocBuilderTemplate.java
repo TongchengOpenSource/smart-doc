@@ -65,8 +65,8 @@ public class RpcDocBuilderTemplate extends BaseDocBuilderTemplate {
             mapper.binding(TemplateVariable.DESC.getVariable(), rpcDoc.getDesc());
             mapper.binding(TemplateVariable.NAME.getVariable(), rpcDoc.getName());
             mapper.binding(TemplateVariable.LIST.getVariable(), rpcDoc.getList());
-            mapper.binding(TemplateVariable.PROTOCOL.getVariable(), rpcDoc.getProtocol());
             mapper.binding(TemplateVariable.AUTHOR.getVariable(), rpcDoc.getAuthor());
+            mapper.binding(TemplateVariable.PROTOCOL.getVariable(), rpcDoc.getProtocol());
             mapper.binding(TemplateVariable.VERSION.getVariable(), rpcDoc.getVersion());
             mapper.binding(TemplateVariable.URI.getVariable(), rpcDoc.getUri());
             FileUtil.nioWriteFile(mapper.render(), config.getOutPath() + FILE_SEPARATOR + rpcDoc.getShortName() + fileExtension);
@@ -128,9 +128,9 @@ public class RpcDocBuilderTemplate extends BaseDocBuilderTemplate {
      */
     public RpcApiAllData getApiData(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
         RpcApiAllData apiAllData = new RpcApiAllData();
+        apiAllData.setLanguage(config.getLanguage().getCode());
         apiAllData.setProjectName(config.getProjectName());
         apiAllData.setProjectId(DocUtil.generateId(config.getProjectName()));
-        apiAllData.setLanguage(config.getLanguage().getCode());
         apiAllData.setApiDocList(listOfApiData(config, javaProjectBuilder));
         apiAllData.setErrorCodeList(errorCodeDictToList(config));
         apiAllData.setRevisionLogs(config.getRevisionLogs());

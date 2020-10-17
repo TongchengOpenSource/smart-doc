@@ -59,7 +59,7 @@ public class JsonBuildHelper {
             return "This api return nothing.";
         }
         ApiReturn apiReturn = DocClassUtil.processReturnType(method.getReturnType().getGenericCanonicalName());
-        String returnType = JavaClassUtil.javaTypeFormat(apiReturn.getGenericCanonicalName());
+        String returnType = apiReturn.getGenericCanonicalName();
         String typeName = apiReturn.getSimpleName();
         return JsonFormatUtil.formatJson(buildJson(typeName, returnType, Boolean.TRUE, 0, new HashMap<>(), builder));
     }

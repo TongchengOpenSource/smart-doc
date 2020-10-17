@@ -61,6 +61,8 @@ public interface DocGlobalConstants {
 
     String RPC_DEPENDENCY_MD_TPL = "dubbo/DubboApiDependency.md";
 
+    String RPC_DEPENDENCY_EMPTY_MD_TPL = "dubbo/DubboApiDependencyEmpty.md";
+
     String RPC_API_DOC_MD_TPL = "dubbo/Dubbo.md";
 
     String RPC_ALL_IN_ONE_MD_TPL = "dubbo/DubboAllInOne.md";
