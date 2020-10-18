@@ -6,26 +6,26 @@
 ![java version](https://img.shields.io/badge/JAVA-1.8+-green.svg)
 
 ## Introduce
-smart-doc是一款同时支持JAVA RESTFUL API和Apache Dubbo RPC接口文档生成的工具，smart-doc在业内率先提出基于java泛型定义推导的理念，
+smart-doc是一款同时支持JAVA REST API和Apache Dubbo RPC接口文档生成的工具，smart-doc在业内率先提出基于JAVA泛型定义推导的理念，
 完全基于接口源码来分析生成接口文档，不采用任何注解侵入到业务代码中。你只需要按照java-doc标准编写注释，
-smart-doc就能帮你生成一个简易明了的markdown、html5文档，甚至可以直接生成postman collection导入到postman做api接口调试。
+smart-doc就能帮你生成一个简易明了的Markdown、HTML5文档，甚至可以直接生成Postman Collection导入到Postman做API接口调试。
 
 $\color{red}{我因不将就而诞生，用了无数个日日夜夜来成长，无论现在还是将来也不会为了将就全世界!—smart-doc}$
 ## Features
-- 零注解、零学习成本、只需要写标准java注释。
+- 零注解、零学习成本、只需要写标准JAVA注释。
 - 基于源代码接口定义自动推导，强大的返回结构推导。
 - 支持Spring MVC、Spring Boot、Spring Boot Web Flux(controller书写方式)、Feign。
 - 支持Callable、Future、CompletableFuture等异步接口返回的推导。
 - 支持JavaBean上的JSR303参数校验规范，包括分组验证。
-- 对json请求参数的接口能够自动生成模拟json参数。
+- 对JSON请求参数的接口能够自动生成模拟JSON参数。
 - 对一些常用字段定义能够生成有效的模拟值。
-- 支持生成json返回值示例。
+- 支持生成JSON返回值示例。
 - 支持从项目外部加载源代码来生成字段注释(包括标准规范发布的jar包)。
-- 支持生成多种格式文档：Markdown、HTML5、Asciidoctor、Postman Collection、Open Api 3.0。
+- 支持生成多种格式文档：Markdown、HTML5、Asciidoctor、Postman Collection、OpenAPI 3.0。
 - 轻易实现在Spring Boot服务上在线查看静态HTML5 api文档。
 - 开放文档数据，可自由实现接入文档管理系统。
 - 支持导出错误码和定义在代码中的各种字典码到接口文档。
-- 支持maven、gradle插件式轻松集成。
+- 支持Maven、Gradle插件式轻松集成。
 - 支持Apache Dubbo RPC接口文档生成。
 ## Getting started
 smart-doc使用和测试可参考[smart-doc demo](https://gitee.com/sunyurepository/api-doc-test.git)。
@@ -35,7 +35,8 @@ smart-doc使用和测试可参考[smart-doc demo](https://gitee.com/sunyureposit
 你可以启动这个Spring Boot的项目，然后访问`http://localhost:8080/doc/api.html`来浏览smart-doc生成的接口文档。
 ### Add Maven plugin
 smart-doc官方目前已经开发完成[maven插件](https://gitee.com/smart-doc-team/smart-doc-maven-plugin)
-和[gradle插件](https://gitee.com/smart-doc-team/smart-doc-gradle-plugin)，你可以根据自己的构建工具来选择使用maven插件或者是gradle插件。
+和[gradle插件](https://gitee.com/smart-doc-team/smart-doc-gradle-plugin)，
+你可以根据自己的构建工具来选择使用Maven插件或者是Gradle插件。
 #### add plugin
 ```
 <plugin>
@@ -71,7 +72,8 @@ smart-doc官方目前已经开发完成[maven插件](https://gitee.com/smart-doc
 </plugin>
 ```
 #### Add Config
-在项目中添加创建一个`smart-doc.json`配置文件，插件读取这个配置来生成项目的文档，这个配置内容实际上就是以前采用单元测试编写的`ApiConfig`转成json后的结果，因此关于配置项说明可以参考原来单元测试的配置。
+在项目中添加创建一个`smart-doc.json`配置文件，插件读取这个配置来生成项目的文档，
+这个配置内容实际上就是以前采用单元测试编写的`ApiConfig`转成json后的结果，因此关于配置项说明可以参考原来单元测试的配置。
 
  **最小配置单元：** 
 ```
@@ -166,11 +168,11 @@ smart-doc官方目前已经开发完成[maven插件](https://gitee.com/smart-doc
   ]
 }
 ```
-上面的json配置实例中只有"outPath"是必填项。
+上面的JSON配置实例中只有"outPath"是必填项。
 
-**注意：** 对于老用户完全可以通过`Fastjson`或者是`Gson`库将`ApiConfig`转化成json配置。
+**注意：** 对于老用户完全可以通过`Fastjson`或者是`Gson`库将`ApiConfig`转化成JSON配置。
 #### Use Maven Command
-添加好插件和配置文件后可以直接运行maven命令生成文档。
+添加好插件和配置文件后可以直接运行Maven命令生成文档。
 ```
 //生成html
 mvn -Dfile.encoding=UTF-8 smart-doc:html
@@ -191,15 +193,15 @@ mvn -Dfile.encoding=UTF-8 smart-doc:rpc-markdown
 // Generate adoc
 mvn -Dfile.encoding=UTF-8 smart-doc:rpc-adoc
 ```
-**注意：** 尤其在window系统下，如果实际使用maven命令行执行文档生成，可能会出现乱码，因此需要在执行时指定`-Dfile.encoding=UTF-8`。
+**注意：** 尤其在window系统下，如果实际使用Maven命令行执行文档生成，可能会出现乱码，因此需要在执行时指定`-Dfile.encoding=UTF-8`。
 #### Use Idea
 ![idea中smart-doc-maven插件使用](https://gitee.com/smart-doc-team/smart-doc-maven-plugin/raw/master/images/idea.png "maven_plugin_tasks.png")
 
 ### Use gradle plugin
-如果你使用gradle来构建项目，你可以参考gradle插件的使用文档来集成，
+如果你使用Gradle来构建项目，你可以参考Gradle插件的使用文档来集成，
 [smart-doc-gradle-plugin](https://gitee.com/smart-doc-team/smart-doc-gradle-plugin/blob/master/README_CN.md)
 ### Use Junit Test 
-从smart-doc 1.7.9开始，官方提供了maven插件，使用smart-doc的maven插件后不再需要创建单元测试。
+从smart-doc 1.7.9开始，官方提供了Maven插件，使用smart-doc的Maven插件后不再需要创建单元测试。
 [单元测试生成文档](https://gitee.com/smart-doc-team/smart-doc/wikis/单元测试集成smart-doc?sort_id=1990284)
 
 ### Generated document example

@@ -8,19 +8,19 @@
 [![chinese](https://img.shields.io/badge/chinese-中文文档-brightgreen)](https://github.com/shalousun/smart-doc/blob/master/README_CN.md)
 
 ## Introduce
-Smart-doc is a tool that supports both JAVA RESTFUL API and Apache Dubbo RPC interface document generation.. Smart-doc is based on interface source code analysis to generate interface documents, and zero annotation intrusion.
-You only need to write java standard comments when developing, smart-doc can help you generate a simple and clear markdown
-Or a static html document. If you are tired of the numerous annotations and strong intrusion code contamination of document tools like swagger, then hug smart-doc!
+smart-doc is a tool that supports both JAVA REST API and Apache Dubbo RPC interface document generation. Smart-doc is based on interface source code analysis to generate interface documents, and zero annotation intrusion.
+You only need to write Javadoc comments when developing, smart-doc can help you generate Markdown or HTML5 document. 
+smart-doc does not need to inject annotations into the code like Swagger.
 ## Features
-- Zero annotation, zero learning cost, only need to write standard java document comments.
+- Zero annotation, zero learning cost, only need to write standard JAVA document comments.
 - Automatic derivation based on source code interface definition, powerful return structure derivation support.
-- Support Spring MVC, Spring Boot, Spring Boot Web Flux (Controller mode writing), Feign.
+- Support Spring MVC, Spring Boot, Spring Boot Web Flux (Not support endpoint), Feign.
 - Supports the derivation of asynchronous interface returns such as Callable, Future, CompletableFuture.
-- Support JAVA's JSR303 parameter verification specification.
+- Support JSR-303 parameter verification specification.
 - Support for automatic generation of request examples based on request parameters.
-- Support for generating json return value examples.
+- Support for generating JSON return value examples.
 - Support for loading source code from outside the project to generate field comments (including the sources jar package).
-- Support for generating multiple formats of documents: Markdown, HTML5, Asciidoctor,Postman Collection json,Open Api 3.0.
+- Support for generating multiple formats of documents: Markdown, HTML5, Asciidoctor,Postman Collection json,OpenAPI 3.0.
 - Support for exporting error codes and data dictionary codes to API documentation.
 - Support Apache Dubbo RPC.
 ## Getting started
@@ -65,7 +65,7 @@ Add [smart-doc-maven-plugin](https://github.com/smart-doc-group/smart-doc-maven-
 </plugin>
 ```
 ### Create a json config 
-Create a json configuration file in your project. The smart-doc-maven-plugin plugin will use this configuration information.
+Create a JSON configuration file in your project. The smart-doc-maven-plugin plugin will use this configuration information.
 For example, create `/src/main/resources/smart-doc.json` in the project. 
 The configuration contents are as follows.
 
@@ -77,7 +77,8 @@ The configuration contents are as follows.
    "outPath": "/src/main/resources" //Set the api document output path.
 }
 ```
-Only three configuration items are required to use the smart-doc-maven-plugin to generate API documentation. In fact, only outPath must be configured.
+Only the above three simple configuration items can make smart-doc-maven-plugin work. 
+In fact, only the outPath configuration item is necessary.
 
 **Detailed configuration content:**
 
@@ -161,7 +162,7 @@ When you need to use smart-doc to generate more API document information, you ca
   ]
 }
 ```
-**Note:** The above json configuration is completely converted into json using the smart-doc's ApiConfig. 
+**Note:** This JSON configuration can be converted into JSON using smart-doc's ApiConfig Object. 
 So the project configuration can also refer to the introduction of smart-doc.
 ### Generated document
 #### Run plugin with maven command
@@ -213,11 +214,11 @@ If you use gradle to build the project, you can refer to the documentation of th
 ![response-fields](https://images.gitee.com/uploads/images/2019/1231/223817_32bea6dc_144669.png "response.png")
 ## Integration through unit tests 
 You can generate documentation by adding smart-doc dependencies directly to your project and then writing unit tests to start smart-doc. 
-But we still recommend that you use the smart-doc-maven-plugin plugin.
+we still recommend that you use the smart-doc-maven-plugin plugin.
 
 [Use smart-doc by junit test](https://github.com/smart-doc-group/smart-doc/wiki/Use-smart-doc-by-junit-test)
 ## Building
-you can build with the following commands. (Java 1.8 is required to build the master branch)
+You could build with the following commands. (Java 1.8 is required to build the master branch)
 ```
 mvn clean install -Dmaven.test.skip=true
 ```
