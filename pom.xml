@@ -44,7 +44,7 @@
         <dependency>
             <groupId>com.ibeetl</groupId>
             <artifactId>beetl</artifactId>
-            <version>3.2.1.RELEASE</version>
+            <version>3.2.2.RELEASE</version>
         </dependency>
         <dependency>
             <groupId>com.thoughtworks.qdox</groupId>
@@ -65,7 +65,7 @@
         <dependency>
             <groupId>com.github.shalousun</groupId>
             <artifactId>common-util</artifactId>
-            <version>1.9.8</version>
+            <version>1.9.9</version>
         </dependency>
         <!--markdown to html-->
         <dependency>
