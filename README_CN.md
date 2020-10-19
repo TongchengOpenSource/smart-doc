@@ -27,17 +27,17 @@ $\color{red}{我因不将就而诞生，用了无数个日日夜夜来成长，�
 - 支持导出错误码和定义在代码中的各种字典码到接口文档。
 - 支持Maven、Gradle插件式轻松集成。
 - 支持Apache Dubbo RPC接口文档生成。
-## Getting started
+## Getting Started
 smart-doc使用和测试可参考[smart-doc demo](https://gitee.com/sunyurepository/api-doc-test.git)。
 ```
 # git clone https://gitee.com/sunyurepository/api-doc-test.git
 ```
 你可以启动这个Spring Boot的项目，然后访问`http://localhost:8080/doc/api.html`来浏览smart-doc生成的接口文档。
-### Add Maven plugin
-smart-doc官方目前已经开发完成[maven插件](https://gitee.com/smart-doc-team/smart-doc-maven-plugin)
-和[gradle插件](https://gitee.com/smart-doc-team/smart-doc-gradle-plugin)，
+### Add Maven Plugin
+smart-doc官方目前已经开发完成[Maven插件](https://gitee.com/smart-doc-team/smart-doc-maven-plugin)
+和[Gradle插件](https://gitee.com/smart-doc-team/smart-doc-gradle-plugin)，
 你可以根据自己的构建工具来选择使用Maven插件或者是Gradle插件。
-#### add plugin
+#### Add Plugin
 ```
 <plugin>
     <groupId>com.github.shalousun</groupId>
@@ -71,7 +71,7 @@ smart-doc官方目前已经开发完成[maven插件](https://gitee.com/smart-doc
     </executions>
 </plugin>
 ```
-#### Add Config
+#### Configuration
 在项目中添加创建一个`smart-doc.json`配置文件，插件读取这个配置来生成项目的文档，
 这个配置内容实际上就是以前采用单元测试编写的`ApiConfig`转成json后的结果，因此关于配置项说明可以参考原来单元测试的配置。
 
@@ -194,7 +194,7 @@ mvn -Dfile.encoding=UTF-8 smart-doc:rpc-markdown
 mvn -Dfile.encoding=UTF-8 smart-doc:rpc-adoc
 ```
 **注意：** 尤其在window系统下，如果实际使用Maven命令行执行文档生成，可能会出现乱码，因此需要在执行时指定`-Dfile.encoding=UTF-8`。
-#### Use Idea
+#### Use in IDEA
 ![idea中smart-doc-maven插件使用](https://gitee.com/smart-doc-team/smart-doc-maven-plugin/raw/master/images/idea.png "maven_plugin_tasks.png")
 
 ### Use gradle plugin
@@ -227,7 +227,7 @@ mvn clean install -Dmaven.test.skip=true
 - [smart-doc功能使用介绍](https://my.oschina.net/u/1760791/blog/2250962)
 - [smart-doc官方wiki](https://gitee.com/smart-doc-team/smart-doc/wikis/Home?sort_id=1652800)
 ## License
-Smart-doc is under the Apache 2.0 license.  See the [LICENSE](https://gitee.com/smart-doc-team/smart-doc/blob/master/LICENSE) file for details.
+smart-doc is under the Apache 2.0 license.  See the [LICENSE](https://gitee.com/smart-doc-team/smart-doc/blob/master/LICENSE) file for details.
 
 **注意：** smart-doc源代码文件全部带有版权注释，使用关键代码二次开源请保留原始版权，否则后果自负！
 ## Who is using
