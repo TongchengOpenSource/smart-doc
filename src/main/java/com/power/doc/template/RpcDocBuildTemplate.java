@@ -229,7 +229,9 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
         List<JavaAnnotation> classAnnotations = cls.getAnnotations();
         for (JavaAnnotation annotation : classAnnotations) {
             String name = annotation.getType().getCanonicalName();
-            if (DubboAnnotationConstants.SERVICE.equals(name) || DubboAnnotationConstants.DUBBO_SERVICE.equals(name)) {
+            if (DubboAnnotationConstants.SERVICE.equals(name)
+                    || DubboAnnotationConstants.DUBBO_SERVICE.equals(name)
+                    || DubboAnnotationConstants.ALI_DUBBO_SERVICE.equals(name)) {
                 return true;
             }
         }
@@ -292,7 +294,7 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
             String[] generics = str.split("[<,]");
             for (String generic : generics) {
                 if (generic.contains("extends")) {
-                    String className = generic.substring(generic.lastIndexOf(" ")+1);
+                    String className = generic.substring(generic.lastIndexOf(" ") + 1);
                     returnClass = returnClass.replace(className, JavaClassUtil.getClassSimpleName(className));
                 }
                 if (generic.length() != 1 && !generic.contains("extends")) {

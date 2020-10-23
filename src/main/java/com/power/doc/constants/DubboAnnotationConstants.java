@@ -12,4 +12,9 @@ public interface DubboAnnotationConstants {
      * @since dubbo 2.7.7
      */
     String DUBBO_SERVICE = "org.apache.dubbo.config.annotation.DubboService";
+
+    /**
+     * support ali dubbo
+     */
+    String ALI_DUBBO_SERVICE= "comm.alibaba.dubbo.config.annotation.Service";
 }

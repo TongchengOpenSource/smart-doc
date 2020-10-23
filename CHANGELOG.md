@@ -6,6 +6,7 @@
     1. 修复restful接口泛型中使用?时的解析错误。
     2. 优化rpc html非all in one的问题。
     3. 对rest query参数自动添加描述，增加可读性。
+    4. support ali dubbo,#I22CF7 .
 #### 版本号：1.9.6
 - 更新日期: 2020-10-09
 - 更新内容：
