@@ -23,19 +23,18 @@
 package com.power.doc.handler;
 
 import com.power.common.util.StringUtil;
-import com.power.doc.constants.DocAnnotationConstants;
-import com.power.doc.constants.DocTags;
-import com.power.doc.constants.SpringMvcAnnotations;
+import com.power.doc.constants.*;
 import com.power.doc.model.ApiReqHeader;
 import com.power.doc.utils.DocClassUtil;
 import com.power.doc.utils.DocUtil;
 import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaMethod;
 import com.thoughtworks.qdox.model.JavaParameter;
+import com.thoughtworks.qdox.model.expression.AnnotationValue;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author yu 2019/12/22.
@@ -49,7 +48,42 @@ public class SpringMVCRequestHeaderHandler {
      * @return list of ApiReqHeader
      */
     public List<ApiReqHeader> handle(JavaMethod method) {
-        List<ApiReqHeader> apiReqHeaders = new ArrayList<>();
+        List<ApiReqHeader> mappingHeaders = new ArrayList<>();
+        List<JavaAnnotation> annotations = method.getAnnotations();
+        for (JavaAnnotation annotation : annotations) {
+            String annotationName = annotation.getType().getName();
+            if (!isMapping(annotationName)) {
+                continue;
+            }
+            Object headersObject = annotation.getNamedParameter("headers");
+            List<String> headers = (LinkedList) headersObject;
+            for (String str : headers) {
+                String header = StringUtil.removeQuotes(str);
+                if (header.startsWith("!")) {
+                    continue;
+                }
+                if (header.contains("!=")) {
+                    String headerName = header.substring(0, header.indexOf("!"));
+                    ApiReqHeader apiReqHeader = ApiReqHeader.builder().setName(headerName)
+                            .setRequired(true).setValue(null).setDesc(header).setType("string");
+                    mappingHeaders.add(apiReqHeader);
+                } else {
+                    String headerName;
+                    String headerValue = null;
+                    if (header.contains("=")) {
+                        int index = header.indexOf("=");
+                        headerName = header.substring(0, header.indexOf("="));
+                        headerValue = header.substring(index + 1);
+                    } else {
+                        headerName = header;
+                    }
+                    ApiReqHeader apiReqHeader = ApiReqHeader.builder().setName(headerName)
+                            .setRequired(true).setValue(headerValue).setDesc(header).setType("string");
+                    mappingHeaders.add(apiReqHeader);
+                }
+            }
+        }
+        List<ApiReqHeader> reqHeaders = new ArrayList<>();
         for (JavaParameter javaParameter : method.getParameters()) {
             List<JavaAnnotation> javaAnnotations = javaParameter.getAnnotations();
             String className = method.getDeclaringClass().getCanonicalName();
@@ -84,11 +118,27 @@ public class SpringMVCRequestHeaderHandler {
                     }
                     String typeName = javaParameter.getType().getValue().toLowerCase();
                     apiReqHeader.setType(DocClassUtil.processTypeNameForParams(typeName));
-                    apiReqHeaders.add(apiReqHeader);
+                    reqHeaders.add(apiReqHeader);
                     break;
                 }
             }
         }
-        return apiReqHeaders;
+        List<ApiReqHeader> allApiReqHeaders = Stream.of(mappingHeaders, reqHeaders)
+                .flatMap(Collection::stream).distinct().collect(Collectors.toList());
+        return allApiReqHeaders;
+    }
+
+    private boolean isMapping(String annotationName) {
+        switch (annotationName) {
+            case "GetMapping":
+            case "RequestMapping":
+            case "PostMapping":
+            case "PutMapping":
+            case "PatchMapping":
+            case "DeleteMapping":
+                return true;
+            default:
+                return false;
+        }
     }
 }

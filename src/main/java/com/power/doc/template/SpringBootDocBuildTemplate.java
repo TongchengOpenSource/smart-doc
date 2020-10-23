@@ -163,7 +163,6 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                     .handle(projectBuilder.getServerUrl(), baseUrl, method, constantsMap);
             //handle headers
             List<ApiReqHeader> apiReqHeaders = new SpringMVCRequestHeaderHandler().handle(method);
-            apiMethodDoc.setRequestHeaders(apiReqHeaders);
             if (Objects.nonNull(requestMapping)) {
                 if (null != method.getTagByName(IGNORE)) {
                     continue;
