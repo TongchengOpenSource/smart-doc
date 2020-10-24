@@ -23,14 +23,15 @@
 package com.power.doc.handler;
 
 import com.power.common.util.StringUtil;
-import com.power.doc.constants.*;
+import com.power.doc.constants.DocAnnotationConstants;
+import com.power.doc.constants.DocTags;
+import com.power.doc.constants.SpringMvcAnnotations;
 import com.power.doc.model.ApiReqHeader;
 import com.power.doc.utils.DocClassUtil;
 import com.power.doc.utils.DocUtil;
 import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaMethod;
 import com.thoughtworks.qdox.model.JavaParameter;
-import com.thoughtworks.qdox.model.expression.AnnotationValue;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -51,11 +52,11 @@ public class SpringMVCRequestHeaderHandler {
         List<ApiReqHeader> mappingHeaders = new ArrayList<>();
         List<JavaAnnotation> annotations = method.getAnnotations();
         for (JavaAnnotation annotation : annotations) {
-            String annotationName = annotation.getType().getName();
-            if (!isMapping(annotationName)) {
+            String annotationName = annotation.getType().getValue();
+            Object headersObject = annotation.getNamedParameter("headers");
+            if (!isMapping(annotationName) || Objects.isNull(headersObject)) {
                 continue;
             }
-            Object headersObject = annotation.getNamedParameter("headers");
             List<String> headers = (LinkedList) headersObject;
             for (String str : headers) {
                 String header = StringUtil.removeQuotes(str);
