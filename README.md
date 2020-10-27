@@ -134,6 +134,7 @@ When you need to use smart-doc to generate more API document information, you ca
     {
       "name": "code", // Override the response code field
       "desc": "Response code", // Override field comment of response code
+      "ownerClassName": "org.springframework.data.domain.Pageable", // class
       "value": "00000" // Set the value of the response code
     }
   ],

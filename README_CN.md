@@ -134,6 +134,7 @@ smart-doc官方目前已经开发完成[Maven插件](https://gitee.com/smart-doc
     {
       "name": "code",//覆盖响应码字段
       "desc": "响应代码",//覆盖响应码的字段注释
+      "ownerClassName": "org.springframework.data.domain.Pageable", //指定你要添加注释的类名
       "value": "00000"//设置响应码的值
     }
   ],
