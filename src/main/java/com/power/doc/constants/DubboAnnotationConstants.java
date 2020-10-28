@@ -16,5 +16,5 @@ public interface DubboAnnotationConstants {
     /**
      * support ali dubbo
      */
-    String ALI_DUBBO_SERVICE= "comm.alibaba.dubbo.config.annotation.Service";
+    String ALI_DUBBO_SERVICE= "com.alibaba.dubbo.config.annotation.Service";
 }
