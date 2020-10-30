@@ -30,10 +30,7 @@ import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.constants.DocTags;
 import com.power.doc.constants.DubboAnnotationConstants;
 import com.power.doc.helper.ParamsBuildHelper;
-import com.power.doc.model.ApiConfig;
-import com.power.doc.model.ApiParam;
-import com.power.doc.model.CustomRespField;
-import com.power.doc.model.JavaMethodDoc;
+import com.power.doc.model.*;
 import com.power.doc.model.rpc.RpcApiDoc;
 import com.power.doc.utils.DocClassUtil;
 import com.power.doc.utils.DocUtil;
@@ -151,7 +148,7 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
             List<ApiParam> requestParams = requestParams(method, projectBuilder);
             apiMethodDoc.setRequestParams(requestParams);
             // build response params
-            List<ApiParam> responseParams = buildReturnApiParams(method, projectBuilder);
+            List<ApiParam> responseParams = buildReturnApiParams(DocJavaMethod.builder().setJavaMethod(method), projectBuilder);
             apiMethodDoc.setResponseParams(responseParams);
             methodDocList.add(apiMethodDoc);
 

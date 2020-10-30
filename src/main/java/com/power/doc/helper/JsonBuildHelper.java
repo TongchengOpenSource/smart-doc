@@ -28,18 +28,11 @@ import com.power.doc.builder.ProjectDocConfigBuilder;
 import com.power.doc.constants.DocAnnotationConstants;
 import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.constants.DocTags;
-import com.power.doc.model.ApiConfig;
-import com.power.doc.model.ApiReturn;
-import com.power.doc.model.CustomRespField;
-import com.power.doc.model.DocJavaField;
+import com.power.doc.model.*;
 import com.power.doc.utils.*;
 import com.thoughtworks.qdox.model.*;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-
+import java.util.*;
 
 
 /**
@@ -50,17 +43,25 @@ public class JsonBuildHelper {
     /**
      * build return json
      *
-     * @param method  The JavaMethod object
+     * @param docJavaMethod  The JavaMethod object
      * @param builder ProjectDocConfigBuilder builder
      * @return String
      */
-    public static String buildReturnJson(JavaMethod method, ProjectDocConfigBuilder builder) {
+    public static String buildReturnJson(DocJavaMethod docJavaMethod, ProjectDocConfigBuilder builder) {
+        JavaMethod method = docJavaMethod.getJavaMethod();
         if (method.getReturns().isVoid()) {
             return "This api return nothing.";
         }
         ApiReturn apiReturn = DocClassUtil.processReturnType(method.getReturnType().getGenericCanonicalName());
-        String returnType = apiReturn.getGenericCanonicalName();
         String typeName = apiReturn.getSimpleName();
+        Map<String, JavaType> actualTypesMap = docJavaMethod.getActualTypesMap();
+        String returnType = apiReturn.getGenericCanonicalName();
+        if (Objects.nonNull(actualTypesMap)) {
+            for (Map.Entry<String, JavaType> entry : actualTypesMap.entrySet()) {
+                typeName = typeName.replace(entry.getKey(), entry.getValue().getCanonicalName());
+                returnType = returnType.replace(entry.getKey(), entry.getValue().getCanonicalName());
+            }
+        }
         return JsonFormatUtil.formatJson(buildJson(typeName, returnType, Boolean.TRUE, 0, new HashMap<>(), builder));
     }
 

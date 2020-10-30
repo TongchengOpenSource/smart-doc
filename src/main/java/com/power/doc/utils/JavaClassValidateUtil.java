@@ -246,6 +246,7 @@ public class JavaClassValidateUtil {
         switch (typeName) {
             case "org.slf4j.Logger":
             case "org.apache.ibatis.logging.Log":
+            case "java.lang.Class":
                 return true;
             default:
                 return false;

@@ -128,9 +128,22 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             }
         }
         List<JavaMethod> methods = cls.getMethods();
+        List<DocJavaMethod> docJavaMethods = new ArrayList<>(methods.size());
+        for (JavaMethod method : methods) {
+            docJavaMethods.add(DocJavaMethod.builder().setJavaMethod(method));
+        }
+        JavaClass parentClass = cls.getSuperJavaClass();
+        if (Objects.nonNull(parentClass)) {
+            Map<String, JavaType> actualTypesMap = JavaClassUtil.getActualTypesMap(parentClass);
+            List<JavaMethod> parentMethodList = parentClass.getMethods();
+            for (JavaMethod method : parentMethodList) {
+                docJavaMethods.add(DocJavaMethod.builder().setJavaMethod(method).setActualTypesMap(actualTypesMap));
+            }
+        }
         List<ApiMethodDoc> methodDocList = new ArrayList<>(methods.size());
         int methodOrder = 0;
-        for (JavaMethod method : methods) {
+        for (DocJavaMethod docJavaMethod : docJavaMethods) {
+            JavaMethod method = docJavaMethod.getJavaMethod();
             if (method.isPrivate()) {
                 continue;
             }
@@ -173,7 +186,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 apiMethodDoc.setPath(requestMapping.getShortUrl());
                 apiMethodDoc.setDeprecated(requestMapping.isDeprecated());
                 // build request params
-                List<ApiParam> requestParams = requestParams(method, projectBuilder);
+                List<ApiParam> requestParams = requestParams(docJavaMethod, projectBuilder);
                 if (paramsDataToTree) {
                     requestParams = ApiParamTreeUtil.apiParamToTree(requestParams);
                 }
@@ -190,16 +203,16 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 apiMethodDoc.setRequestHeaders(allApiReqHeaders);
 
                 // build request json
-                ApiRequestExample requestExample = buildReqJson(method, apiMethodDoc, requestMapping.getMethodType(),
+                ApiRequestExample requestExample = buildReqJson(docJavaMethod, apiMethodDoc, requestMapping.getMethodType(),
                         projectBuilder);
                 String requestJson = requestExample.getExampleBody();
                 // set request example detail
                 apiMethodDoc.setRequestExample(requestExample);
                 apiMethodDoc.setRequestUsage(requestJson == null ? requestExample.getUrl() : requestJson);
                 // build response usage
-                apiMethodDoc.setResponseUsage(JsonBuildHelper.buildReturnJson(method, projectBuilder));
+                apiMethodDoc.setResponseUsage(JsonBuildHelper.buildReturnJson(docJavaMethod, projectBuilder));
                 // build response params
-                List<ApiParam> responseParams = buildReturnApiParams(method, projectBuilder);
+                List<ApiParam> responseParams = buildReturnApiParams(docJavaMethod, projectBuilder);
                 if (paramsDataToTree) {
                     responseParams = ApiParamTreeUtil.apiParamToTree(responseParams);
                 }
@@ -210,8 +223,10 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         return methodDocList;
     }
 
-    private ApiRequestExample buildReqJson(JavaMethod method, ApiMethodDoc apiMethodDoc, String methodType,
+    private ApiRequestExample buildReqJson(DocJavaMethod javaMethod, ApiMethodDoc apiMethodDoc, String methodType,
                                            ProjectDocConfigBuilder configBuilder) {
+        JavaMethod method = javaMethod.getJavaMethod();
+
         List<JavaParameter> parameterList = method.getParameters();
         List<ApiReqHeader> reqHeaderList = apiMethodDoc.getRequestHeaders();
         StringBuilder header = new StringBuilder(reqHeaderList.size());
@@ -224,7 +239,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                     header.toString(), apiMethodDoc.getUrl());
             return ApiRequestExample.builder().setUrl(apiMethodDoc.getUrl()).setExampleBody(format);
         }
-
+        Map<String, JavaType> actualTypesMap = javaMethod.getActualTypesMap();
         Map<String, String> constantsMap = configBuilder.getConstantsMap();
         boolean requestFieldToUnderline = configBuilder.getApiConfig().isRequestFieldToUnderline();
         Map<String, String> replacementMap = configBuilder.getReplaceClassMap();
@@ -236,6 +251,9 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         out:
         for (JavaParameter parameter : parameterList) {
             JavaType javaType = parameter.getType();
+            if (Objects.nonNull(actualTypesMap) && Objects.nonNull(actualTypesMap.get(javaType.getCanonicalName()))) {
+                javaType = actualTypesMap.get(javaType.getCanonicalName());
+            }
             String paramName = parameter.getName();
             String typeName = javaType.getFullyQualifiedName();
             String gicTypeName = javaType.getGenericCanonicalName();
@@ -426,7 +444,8 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         return requestExample;
     }
 
-    private List<ApiParam> requestParams(final JavaMethod javaMethod, ProjectDocConfigBuilder builder) {
+    private List<ApiParam> requestParams(final DocJavaMethod docJavaMethod, ProjectDocConfigBuilder builder) {
+        JavaMethod javaMethod = docJavaMethod.getJavaMethod();
         boolean isStrict = builder.getApiConfig().isStrict();
         Map<String, CustomRespField> responseFieldMap = new HashMap<>();
         String className = javaMethod.getDeclaringClass().getCanonicalName();
@@ -439,13 +458,18 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         Map<String, String> constantsMap = builder.getConstantsMap();
         boolean requestFieldToUnderline = builder.getApiConfig().isRequestFieldToUnderline();
         List<ApiParam> paramList = new ArrayList<>();
+        Map<String, JavaType> actualTypesMap = docJavaMethod.getActualTypesMap();
         int requestBodyCounter = 0;
         out:
         for (JavaParameter parameter : parameterList) {
             String paramName = parameter.getName();
-            String typeName = parameter.getType().getGenericCanonicalName();
-            String simpleName = parameter.getType().getValue().toLowerCase();
-            String fullTypeName = parameter.getType().getFullyQualifiedName();
+            JavaType javaType = parameter.getType();
+            if (Objects.nonNull(actualTypesMap) && Objects.nonNull(actualTypesMap.get(javaType.getCanonicalName()))) {
+                javaType = actualTypesMap.get(javaType.getCanonicalName());
+            }
+            String typeName = javaType.getGenericCanonicalName();
+            String simpleName = javaType.getValue().toLowerCase();
+            String fullTypeName = javaType.getFullyQualifiedName();
 
             String commentClass = paramTagMap.get(paramName);
             String rewriteClassName = getRewriteClassName(replacementMap, fullTypeName, commentClass);

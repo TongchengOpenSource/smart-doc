@@ -33,10 +33,9 @@ import com.power.doc.utils.JavaClassUtil;
 import com.power.doc.utils.JavaClassValidateUtil;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaMethod;
+import com.thoughtworks.qdox.model.JavaType;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 import static com.power.doc.constants.DocGlobalConstants.NO_COMMENTS_FOUND;
 
@@ -92,14 +91,23 @@ public interface IDocBuildTemplate<T> {
     }
 
 
-    default List<ApiParam> buildReturnApiParams(JavaMethod method, ProjectDocConfigBuilder projectBuilder) {
+    default List<ApiParam> buildReturnApiParams(DocJavaMethod docJavaMethod, ProjectDocConfigBuilder projectBuilder) {
+        JavaMethod method = docJavaMethod.getJavaMethod();
         if (method.getReturns().isVoid()) {
             return null;
         }
+        Map<String, JavaType> actualTypesMap = docJavaMethod.getActualTypesMap();
+
         ApiReturn apiReturn = DocClassUtil.processReturnType(method.getReturnType().getGenericCanonicalName());
         String returnType = apiReturn.getGenericCanonicalName();
+        if (Objects.nonNull(actualTypesMap)) {
+            for (Map.Entry<String, JavaType> entry : actualTypesMap.entrySet()) {
+                returnType = returnType.replace(entry.getKey(), entry.getValue().getCanonicalName());
+            }
+        }
+
         String typeName = apiReturn.getSimpleName();
-        if (this.ignoreReturnObject(typeName,projectBuilder.getApiConfig().getIgnoreRequestParams())) {
+        if (this.ignoreReturnObject(typeName, projectBuilder.getApiConfig().getIgnoreRequestParams())) {
             return null;
         }
         if (JavaClassValidateUtil.isPrimitive(typeName)) {
@@ -114,7 +122,7 @@ public interface IDocBuildTemplate<T> {
                     return ParamsBuildHelper.primitiveReturnRespComment("array of " + DocClassUtil.processTypeNameForParams(gicName));
                 }
                 return ParamsBuildHelper.buildParams(gicName, "", 0, null, projectBuilder.getCustomRespFieldMap(),
-                        Boolean.TRUE, new HashMap<>(), projectBuilder, null,0);
+                        Boolean.TRUE, new HashMap<>(), projectBuilder, null, 0);
             } else {
                 return null;
             }
@@ -128,11 +136,11 @@ public interface IDocBuildTemplate<T> {
                 return ParamsBuildHelper.primitiveReturnRespComment("key value");
             }
             return ParamsBuildHelper.buildParams(keyValue[1], "", 0, null, projectBuilder.getCustomRespFieldMap(),
-                    Boolean.TRUE, new HashMap<>(), projectBuilder, null,0);
+                    Boolean.TRUE, new HashMap<>(), projectBuilder, null, 0);
         }
         if (StringUtil.isNotEmpty(returnType)) {
             return ParamsBuildHelper.buildParams(returnType, "", 0, null, projectBuilder.getCustomRespFieldMap(),
-                    Boolean.TRUE, new HashMap<>(), projectBuilder, null,0);
+                    Boolean.TRUE, new HashMap<>(), projectBuilder, null, 0);
         }
         return null;
     }
@@ -141,6 +149,6 @@ public interface IDocBuildTemplate<T> {
 
     T getSingleApiData(ProjectDocConfigBuilder projectBuilder, String apiClassName);
 
-    boolean ignoreReturnObject(String typeName,List<String> ignoreParams);
+    boolean ignoreReturnObject(String typeName, List<String> ignoreParams);
 
 }
