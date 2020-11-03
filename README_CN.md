@@ -10,7 +10,7 @@ smart-doc是一款同时支持JAVA REST API和Apache Dubbo RPC接口文档生成
 完全基于接口源码来分析生成接口文档，不采用任何注解侵入到业务代码中。你只需要按照java-doc标准编写注释，
 smart-doc就能帮你生成一个简易明了的Markdown、HTML5文档，甚至可以直接生成Postman Collection导入到Postman做API接口调试。
 
-$\color{red}{我因不将就而诞生，用了无数个日日夜夜来成长，无论现在还是将来也不会为了将就全世界!—smart-doc}$
+$\color{red}{你给我的star，胜过所有读过的诗—smart-doc}$
 ## Features
 - 零注解、零学习成本、只需要写标准JAVA注释。
 - 基于源代码接口定义自动推导，强大的返回结构推导。
@@ -205,7 +205,7 @@ mvn -Dfile.encoding=UTF-8 smart-doc:rpc-adoc
 从smart-doc 1.7.9开始，官方提供了Maven插件，使用smart-doc的Maven插件后不再需要创建单元测试。
 [单元测试生成文档](https://gitee.com/smart-doc-team/smart-doc/wikis/单元测试集成smart-doc?sort_id=1990284)
 
-$\color{red}{单元测试集成存在很多绝限性，请使用插件，注意市面上基于JAVA源码生成文档的工具，<br/>未采用插件分析依赖加载源码的都是不成熟的工具}$
+$\color{red}{注意:}$ 单元测试集成存在很多绝限性，请使用插件，注意市面上基于JAVA源码生成文档的工具，<br/>未采用插件分析依赖加载源码的都是不成熟的工具
 ### Generated document example
 [点击查看文档生成文档效果图](https://gitee.com/smart-doc-team/smart-doc/wikis/文档效果图?sort_id=1652819)
 ## Building
