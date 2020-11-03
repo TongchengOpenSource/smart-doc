@@ -205,6 +205,7 @@ mvn -Dfile.encoding=UTF-8 smart-doc:rpc-adoc
 从smart-doc 1.7.9开始，官方提供了Maven插件，使用smart-doc的Maven插件后不再需要创建单元测试。
 [单元测试生成文档](https://gitee.com/smart-doc-team/smart-doc/wikis/单元测试集成smart-doc?sort_id=1990284)
 
+$\color{red}{单元测试集成存在很多绝限性，请使用插件，注意市面上基于JAVA源码生成文档的工具，<br/>未采用插件分析依赖加载源码的都是不成熟的工具}$
 ### Generated document example
 [点击查看文档生成文档效果图](https://gitee.com/smart-doc-team/smart-doc/wikis/文档效果图?sort_id=1652819)
 ## Building
