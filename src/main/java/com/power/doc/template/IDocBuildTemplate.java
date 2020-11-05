@@ -38,6 +38,7 @@ import com.thoughtworks.qdox.model.JavaType;
 import java.util.*;
 
 import static com.power.doc.constants.DocGlobalConstants.NO_COMMENTS_FOUND;
+import static com.power.doc.constants.DocTags.IGNORE_RESPONSE_BODY_ADVICE;
 
 /**
  * @author yu 2019/12/21.
@@ -96,9 +97,17 @@ public interface IDocBuildTemplate<T> {
         if (method.getReturns().isVoid()) {
             return null;
         }
+        String returnTypeGenericCanonicalName = method.getReturnType().getGenericCanonicalName();
+        if (Objects.nonNull(projectBuilder.getApiConfig().getResponseBodyAdvice())
+                && Objects.isNull(method.getTagByName(IGNORE_RESPONSE_BODY_ADVICE))) {
+            String responseBodyAdvice = projectBuilder.getApiConfig().getResponseBodyAdvice().getClassName();
+            returnTypeGenericCanonicalName = new StringBuffer()
+                    .append(responseBodyAdvice)
+                    .append("<")
+                    .append(returnTypeGenericCanonicalName).append(">").toString();
+        }
         Map<String, JavaType> actualTypesMap = docJavaMethod.getActualTypesMap();
-
-        ApiReturn apiReturn = DocClassUtil.processReturnType(method.getReturnType().getGenericCanonicalName());
+        ApiReturn apiReturn = DocClassUtil.processReturnType(returnTypeGenericCanonicalName);
         String returnType = apiReturn.getGenericCanonicalName();
         if (Objects.nonNull(actualTypesMap)) {
             for (Map.Entry<String, JavaType> entry : actualTypesMap.entrySet()) {

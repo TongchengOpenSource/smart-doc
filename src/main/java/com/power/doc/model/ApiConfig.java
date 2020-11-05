@@ -247,6 +247,12 @@ public class ApiConfig {
      */
     private boolean displayActualType;
 
+    /**
+     * Support Spring MVC ResponseBodyAdvice
+     * @since 1.9.8
+     */
+    private ResponseBodyAdvice responseBodyAdvice;
+
     public String getServerUrl() {
         return serverUrl;
     }
@@ -540,44 +546,90 @@ public class ApiConfig {
         this.displayActualType = displayActualType;
     }
 
+    public ResponseBodyAdvice getResponseBodyAdvice() {
+        return responseBodyAdvice;
+    }
+
+    public void setResponseBodyAdvice(ResponseBodyAdvice responseBodyAdvice) {
+        this.responseBodyAdvice = responseBodyAdvice;
+    }
+
     @Override
     public String toString() {
-        return "ApiConfig{" +
-                "serverUrl='" + serverUrl + '\'' +
-                ", isStrict=" + isStrict +
-                ", allInOne=" + allInOne +
-                ", outPath='" + outPath + '\'' +
-                ", sourceCodePaths=" + sourceCodePaths +
-                ", requestHeaders=" + requestHeaders +
-                ", coverOld=" + coverOld +
-                ", customResponseFields=" + customResponseFields +
-                ", errorCodes=" + errorCodes +
-                ", packageFilters='" + packageFilters + '\'' +
-                ", revisionLogs=" + revisionLogs +
-                ", md5EncryptedHtmlName=" + md5EncryptedHtmlName +
-                ", language=" + language +
-                ", adoc=" + adoc +
-                ", dataDictionaries=" + dataDictionaries +
-                ", errorCodeDictionaries=" + errorCodeDictionaries +
-                ", apiObjectReplacements=" + apiObjectReplacements +
-                ", rpcApiDependencies=" + rpcApiDependencies +
-                ", apiConstants=" + apiConstants +
-                ", projectName='" + projectName + '\'' +
-                ", skipTransientField=" + skipTransientField +
-                ", showAuthor=" + showAuthor +
-                ", requestFieldToUnderline=" + requestFieldToUnderline +
-                ", responseFieldToUnderline=" + responseFieldToUnderline +
-                ", sortByTitle=" + sortByTitle +
-                ", showJavaType=" + showJavaType +
-                ", inlineEnum=" + inlineEnum +
-                ", rpcConsumerConfig='" + rpcConsumerConfig + '\'' +
-                ", recursionLimit=" + recursionLimit +
-                ", requestExample=" + requestExample +
-                ", responseExample=" + responseExample +
-                ", allInOneDocFileName='" + allInOneDocFileName + '\'' +
-                ", paramsDataToTree=" + paramsDataToTree +
-                ", ignoreRequestParams=" + ignoreRequestParams +
-                ", displayActualType=" + displayActualType +
-                '}';
+        final StringBuilder sb = new StringBuilder("{");
+        sb.append("\"serverUrl\":\"")
+                .append(serverUrl).append('\"');
+        sb.append(",\"isStrict\":")
+                .append(isStrict);
+        sb.append(",\"allInOne\":")
+                .append(allInOne);
+        sb.append(",\"outPath\":\"")
+                .append(outPath).append('\"');
+        sb.append(",\"sourceCodePaths\":")
+                .append(sourceCodePaths);
+        sb.append(",\"requestHeaders\":")
+                .append(requestHeaders);
+        sb.append(",\"coverOld\":")
+                .append(coverOld);
+        sb.append(",\"customResponseFields\":")
+                .append(customResponseFields);
+        sb.append(",\"errorCodes\":")
+                .append(errorCodes);
+        sb.append(",\"packageFilters\":\"")
+                .append(packageFilters).append('\"');
+        sb.append(",\"revisionLogs\":")
+                .append(revisionLogs);
+        sb.append(",\"md5EncryptedHtmlName\":")
+                .append(md5EncryptedHtmlName);
+        sb.append(",\"language\":")
+                .append(language);
+        sb.append(",\"adoc\":")
+                .append(adoc);
+        sb.append(",\"dataDictionaries\":")
+                .append(dataDictionaries);
+        sb.append(",\"errorCodeDictionaries\":")
+                .append(errorCodeDictionaries);
+        sb.append(",\"apiObjectReplacements\":")
+                .append(apiObjectReplacements);
+        sb.append(",\"rpcApiDependencies\":")
+                .append(rpcApiDependencies);
+        sb.append(",\"apiConstants\":")
+                .append(apiConstants);
+        sb.append(",\"projectName\":\"")
+                .append(projectName).append('\"');
+        sb.append(",\"skipTransientField\":")
+                .append(skipTransientField);
+        sb.append(",\"showAuthor\":")
+                .append(showAuthor);
+        sb.append(",\"requestFieldToUnderline\":")
+                .append(requestFieldToUnderline);
+        sb.append(",\"responseFieldToUnderline\":")
+                .append(responseFieldToUnderline);
+        sb.append(",\"sortByTitle\":")
+                .append(sortByTitle);
+        sb.append(",\"showJavaType\":")
+                .append(showJavaType);
+        sb.append(",\"inlineEnum\":")
+                .append(inlineEnum);
+        sb.append(",\"rpcConsumerConfig\":\"")
+                .append(rpcConsumerConfig).append('\"');
+        sb.append(",\"recursionLimit\":")
+                .append(recursionLimit);
+        sb.append(",\"requestExample\":")
+                .append(requestExample);
+        sb.append(",\"responseExample\":")
+                .append(responseExample);
+        sb.append(",\"allInOneDocFileName\":\"")
+                .append(allInOneDocFileName).append('\"');
+        sb.append(",\"paramsDataToTree\":")
+                .append(paramsDataToTree);
+        sb.append(",\"ignoreRequestParams\":")
+                .append(ignoreRequestParams);
+        sb.append(",\"displayActualType\":")
+                .append(displayActualType);
+        sb.append(",\"responseBodyAdvice\":")
+                .append(responseBodyAdvice);
+        sb.append('}');
+        return sb.toString();
     }
 }

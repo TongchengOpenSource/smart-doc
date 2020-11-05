@@ -148,9 +148,12 @@ When you need to use smart-doc to generate more API document information, you ca
         "className": "org.springframework.data.domain.Pageable",
         "replacementClassName": "com.power.doc.model.PageRequestDto" //Use custom PageRequestDto instead of JPA Pageable for document rendering.
   }],
-  "apiConstants": [{////Configure your own constant class, smart-doc automatically replaces with a specific value when parsing to a constant
+  "apiConstants": [{//Configure your own constant class, smart-doc automatically replaces with a specific value when parsing to a constant
         "constantsClassName": "com.power.doc.constants.RequestParamConstant"
   }],
+  "responseBodyAdvice":{ //Support ResponseBodyAdvice
+    	"className":"com.power.common.model.CommonResult" // Standard POJO for Response
+  },
   "requestHeaders": [// Set global request headers, no need to set
     {
       "name": "token",//header name

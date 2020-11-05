@@ -78,6 +78,7 @@ public class ProjectDocConfigBuilder {
         this.initCustomResponseFieldsMap(apiConfig);
         this.initReplaceClassMap(apiConfig);
         this.initConstants(apiConfig);
+        this.checkResponseBodyAdvice(apiConfig);
     }
 
     public JavaClass getClassByName(String simpleName) {
@@ -155,6 +156,17 @@ public class ProjectDocConfigBuilder {
             }
         } catch (ClassNotFoundException | IllegalAccessException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void checkResponseBodyAdvice(ApiConfig config) {
+        ResponseBodyAdvice responseBodyAdvice = config.getResponseBodyAdvice();
+        if (Objects.nonNull(responseBodyAdvice) && StringUtil.isNotEmpty(responseBodyAdvice.getClassName())) {
+            try {
+                Class.forName(responseBodyAdvice.getClassName());
+            }catch (ClassNotFoundException e){
+                throw new RuntimeException("Can't find class "+responseBodyAdvice.getClassName()+" for ResponseBodyAdvice.");
+            }
         }
     }
 

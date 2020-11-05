@@ -34,6 +34,8 @@ import com.thoughtworks.qdox.model.*;
 
 import java.util.*;
 
+import static com.power.doc.constants.DocTags.IGNORE_RESPONSE_BODY_ADVICE;
+
 
 /**
  * @author yu 2019/12/21.
@@ -43,8 +45,8 @@ public class JsonBuildHelper {
     /**
      * build return json
      *
-     * @param docJavaMethod  The JavaMethod object
-     * @param builder ProjectDocConfigBuilder builder
+     * @param docJavaMethod The JavaMethod object
+     * @param builder       ProjectDocConfigBuilder builder
      * @return String
      */
     public static String buildReturnJson(DocJavaMethod docJavaMethod, ProjectDocConfigBuilder builder) {
@@ -52,7 +54,17 @@ public class JsonBuildHelper {
         if (method.getReturns().isVoid()) {
             return "This api return nothing.";
         }
-        ApiReturn apiReturn = DocClassUtil.processReturnType(method.getReturnType().getGenericCanonicalName());
+        String returnTypeGenericCanonicalName = method.getReturnType().getGenericCanonicalName();
+        if (Objects.nonNull(builder.getApiConfig().getResponseBodyAdvice())
+                && Objects.isNull(method.getTagByName(IGNORE_RESPONSE_BODY_ADVICE))) {
+            String responseBodyAdvice = builder.getApiConfig().getResponseBodyAdvice().getClassName();
+            StringBuilder sb = new StringBuilder();
+            sb.append(responseBodyAdvice)
+                    .append("<")
+                    .append(returnTypeGenericCanonicalName).append(">");
+            returnTypeGenericCanonicalName = sb.toString();
+        }
+        ApiReturn apiReturn = DocClassUtil.processReturnType(returnTypeGenericCanonicalName);
         String typeName = apiReturn.getSimpleName();
         Map<String, JavaType> actualTypesMap = docJavaMethod.getActualTypesMap();
         String returnType = apiReturn.getGenericCanonicalName();
@@ -89,7 +101,7 @@ public class JsonBuildHelper {
         }
         int nextLevel = counter + 1;
         registryClasses.put(typeName, typeName);
-        if (JavaClassValidateUtil.isMvcIgnoreParams(typeName,builder.getApiConfig().getIgnoreRequestParams())) {
+        if (JavaClassValidateUtil.isMvcIgnoreParams(typeName, builder.getApiConfig().getIgnoreRequestParams())) {
             if (DocGlobalConstants.MODE_AND_VIEW_FULLY.equals(typeName)) {
                 return "Forward or redirect to a page view.";
             } else {

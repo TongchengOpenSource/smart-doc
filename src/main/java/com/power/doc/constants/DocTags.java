@@ -59,4 +59,9 @@ public interface DocTags {
      * custom @order tag
      */
     String ORDER = "order";
+
+    /**
+     * Ignore ResponseBodyAdvice
+     */
+    String IGNORE_RESPONSE_BODY_ADVICE = "ignoreResponseBodyAdvice";
 }

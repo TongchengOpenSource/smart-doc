@@ -161,6 +161,9 @@ smart-doc官方目前已经开发完成[Maven插件](https://gitee.com/smart-doc
   "apiConstants": [{//从1.8.9开始配置自己的常量类，smart-doc在解析到常量时自动替换为具体的值
         "constantsClassName": "com.power.doc.constants.RequestParamConstant"
   }],
+  "responseBodyAdvice":{ //自smart-doc 1.9.8起，ResponseBodyAdvice统一返回设置，可用ignoreResponseBodyAdvice tag来忽略
+  		"className":"com.power.common.model.CommonResult" //通用响应体
+  },
   "sourceCodePaths": [ //设置代码路径, 插件已经能够自动下载发布的源码包，没必要配置
     {
       "path": "src/main/java",
