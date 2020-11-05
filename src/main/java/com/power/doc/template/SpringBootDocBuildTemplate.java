@@ -272,7 +272,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             if (JavaClassValidateUtil.isMvcIgnoreParams(typeName, configBuilder.getApiConfig().getIgnoreRequestParams())) {
                 continue;
             }
-            String simpleTypeName = javaType.getValue().toLowerCase();
+            String simpleTypeName = javaType.getValue();
             typeName = DocClassUtil.rewriteRequestParam(typeName);
             gicTypeName = DocClassUtil.rewriteRequestParam(gicTypeName);
             JavaClass javaClass = configBuilder.getJavaProjectBuilder().getClassByName(typeName);
