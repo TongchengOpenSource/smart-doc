@@ -62,7 +62,7 @@ public class JavaClassUtil {
         } else if ("Object".equals(cls1.getSimpleName()) || "Timestamp".equals(cls1.getSimpleName()) ||
                 "Date".equals(cls1.getSimpleName()) || "Locale".equals(cls1.getSimpleName())
                 || "ClassLoader".equals(cls1.getSimpleName()) || JavaClassValidateUtil.isMap(cls1.getFullyQualifiedName())
-                ||cls1.isEnum()) {
+                || cls1.isEnum()) {
             return fieldList;
         } else {
             String className = cls1.getFullyQualifiedName();
@@ -81,7 +81,7 @@ public class JavaClassUtil {
                         methodName = StringUtil.firstToLowerCase(methodName.substring(2, methodName.length()));
                         enable = true;
                     }
-                    if (!enable) {
+                    if (!enable || addedFields.contains(methodName)) {
                         continue;
                     }
                     addedFields.add(methodName);
@@ -442,11 +442,10 @@ public class JavaClassUtil {
         }
     }
 
-    public static String javaTypeFormat(String returnType){
-        if(returnType.contains("?")) {
+    public static String javaTypeFormat(String returnType) {
+        if (returnType.contains("?")) {
             return returnType.replaceAll("[?\\s]", "").replaceAll("extends", "");
-        }
-        else {
+        } else {
             return returnType;
         }
     }
