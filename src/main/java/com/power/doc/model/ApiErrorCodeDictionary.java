@@ -91,4 +91,19 @@ public class ApiErrorCodeDictionary {
         this.enumClassName = enumClassName;
         return this;
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("{");
+        sb.append("\"enumClass\":")
+                .append(enumClass);
+        sb.append(",\"enumClassName\":\"")
+                .append(enumClassName).append('\"');
+        sb.append(",\"codeField\":\"")
+                .append(codeField).append('\"');
+        sb.append(",\"descField\":\"")
+                .append(descField).append('\"');
+        sb.append('}');
+        return sb.toString();
+    }
 }

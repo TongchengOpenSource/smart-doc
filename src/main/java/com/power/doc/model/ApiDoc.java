@@ -105,4 +105,21 @@ public class ApiDoc implements Comparable<ApiDoc> {
         }
         return name.compareTo(o.getName());
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("{");
+        sb.append("\"order\":")
+                .append(order);
+        sb.append(",\"name\":\"")
+                .append(name).append('\"');
+        sb.append(",\"alias\":\"")
+                .append(alias).append('\"');
+        sb.append(",\"list\":")
+                .append(list);
+        sb.append(",\"desc\":\"")
+                .append(desc).append('\"');
+        sb.append('}');
+        return sb.toString();
+    }
 }

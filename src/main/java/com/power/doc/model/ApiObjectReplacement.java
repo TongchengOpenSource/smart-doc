@@ -52,4 +52,15 @@ public class ApiObjectReplacement {
         this.replacementClassName = replacementClassName;
         return this;
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("{");
+        sb.append("\"className\":\"")
+                .append(className).append('\"');
+        sb.append(",\"replacementClassName\":\"")
+                .append(replacementClassName).append('\"');
+        sb.append('}');
+        return sb.toString();
+    }
 }

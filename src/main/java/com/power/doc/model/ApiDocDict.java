@@ -68,4 +68,17 @@ public class ApiDocDict {
     public void setDataDictList(List<DataDict> dataDictList) {
         this.dataDictList = dataDictList;
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("{");
+        sb.append("\"order\":")
+                .append(order);
+        sb.append(",\"title\":\"")
+                .append(title).append('\"');
+        sb.append(",\"dataDictList\":")
+                .append(dataDictList);
+        sb.append('}');
+        return sb.toString();
+    }
 }

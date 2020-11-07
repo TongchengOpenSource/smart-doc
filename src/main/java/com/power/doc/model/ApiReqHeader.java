@@ -139,7 +139,25 @@ public class ApiReqHeader {
 
     @Override
     public int hashCode() {
-
         return Objects.hash(name);
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("{");
+        sb.append("\"name\":\"")
+                .append(name).append('\"');
+        sb.append(",\"type\":\"")
+                .append(type).append('\"');
+        sb.append(",\"value\":\"")
+                .append(value).append('\"');
+        sb.append(",\"desc\":\"")
+                .append(desc).append('\"');
+        sb.append(",\"required\":")
+                .append(required);
+        sb.append(",\"since\":\"")
+                .append(since).append('\"');
+        sb.append('}');
+        return sb.toString();
     }
 }

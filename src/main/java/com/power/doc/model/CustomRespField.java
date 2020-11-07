@@ -95,4 +95,19 @@ public class CustomRespField {
         this.value = value;
         return this;
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("{");
+        sb.append("\"name\":\"")
+                .append(name).append('\"');
+        sb.append(",\"desc\":\"")
+                .append(desc).append('\"');
+        sb.append(",\"ownerClassName\":\"")
+                .append(ownerClassName).append('\"');
+        sb.append(",\"value\":")
+                .append(value);
+        sb.append('}');
+        return sb.toString();
+    }
 }

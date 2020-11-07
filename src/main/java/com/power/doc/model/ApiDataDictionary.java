@@ -127,4 +127,20 @@ public class ApiDataDictionary {
         }
     }
 
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("{");
+        sb.append("\"title\":\"")
+                .append(title).append('\"');
+        sb.append(",\"enumClass\":")
+                .append(enumClass);
+        sb.append(",\"enumClassName\":\"")
+                .append(enumClassName).append('\"');
+        sb.append(",\"codeField\":\"")
+                .append(codeField).append('\"');
+        sb.append(",\"descField\":\"")
+                .append(descField).append('\"');
+        sb.append('}');
+        return sb.toString();
+    }
 }

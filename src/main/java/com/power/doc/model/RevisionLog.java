@@ -107,4 +107,21 @@ public class RevisionLog {
         this.remarks = remarks;
         return this;
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("{");
+        sb.append("\"version\":\"")
+                .append(version).append('\"');
+        sb.append(",\"status\":\"")
+                .append(status).append('\"');
+        sb.append(",\"author\":\"")
+                .append(author).append('\"');
+        sb.append(",\"revisionTime\":\"")
+                .append(revisionTime).append('\"');
+        sb.append(",\"remarks\":\"")
+                .append(remarks).append('\"');
+        sb.append('}');
+        return sb.toString();
+    }
 }

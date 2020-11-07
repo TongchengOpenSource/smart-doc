@@ -291,4 +291,49 @@ public class ApiMethodDoc implements Serializable {
     public void setDeprecated(boolean deprecated) {
         this.deprecated = deprecated;
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("{");
+        sb.append("\"methodId\":\"")
+                .append(methodId).append('\"');
+        sb.append(",\"name\":\"")
+                .append(name).append('\"');
+        sb.append(",\"order\":")
+                .append(order);
+        sb.append(",\"desc\":\"")
+                .append(desc).append('\"');
+        sb.append(",\"detail\":\"")
+                .append(detail).append('\"');
+        sb.append(",\"serverUrl\":\"")
+                .append(serverUrl).append('\"');
+        sb.append(",\"url\":\"")
+                .append(url).append('\"');
+        sb.append(",\"path\":\"")
+                .append(path).append('\"');
+        sb.append(",\"type\":\"")
+                .append(type).append('\"');
+        sb.append(",\"author\":\"")
+                .append(author).append('\"');
+        sb.append(",\"headers\":\"")
+                .append(headers).append('\"');
+        sb.append(",\"contentType\":\"")
+                .append(contentType).append('\"');
+        sb.append(",\"requestHeaders\":")
+                .append(requestHeaders);
+        sb.append(",\"requestParams\":")
+                .append(requestParams);
+        sb.append(",\"requestUsage\":\"")
+                .append(requestUsage).append('\"');
+        sb.append(",\"requestExample\":")
+                .append(requestExample);
+        sb.append(",\"responseUsage\":\"")
+                .append(responseUsage).append('\"');
+        sb.append(",\"responseParams\":")
+                .append(responseParams);
+        sb.append(",\"deprecated\":")
+                .append(deprecated);
+        sb.append('}');
+        return sb.toString();
+    }
 }

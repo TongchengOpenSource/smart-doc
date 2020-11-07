@@ -50,4 +50,17 @@ public class ApiConstant {
         this.description = description;
         return this;
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("{");
+        sb.append("\"constantsClass\":")
+                .append(constantsClass);
+        sb.append(",\"constantsClassName\":\"")
+                .append(constantsClassName).append('\"');
+        sb.append(",\"description\":\"")
+                .append(description).append('\"');
+        sb.append('}');
+        return sb.toString();
+    }
 }

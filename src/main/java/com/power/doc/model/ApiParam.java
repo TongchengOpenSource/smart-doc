@@ -22,7 +22,6 @@
  */
 package com.power.doc.model;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -158,5 +157,30 @@ public class ApiParam {
     public ApiParam setChildren(List<ApiParam> children) {
         this.children = children;
         return this;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("{");
+        sb.append("\"id\":")
+                .append(id);
+        sb.append(",\"field\":\"")
+                .append(field).append('\"');
+        sb.append(",\"type\":\"")
+                .append(type).append('\"');
+        sb.append(",\"desc\":\"")
+                .append(desc).append('\"');
+        sb.append(",\"required\":")
+                .append(required);
+        sb.append(",\"version\":\"")
+                .append(version).append('\"');
+        sb.append(",\"pid\":")
+                .append(pid);
+        sb.append(",\"isPathParams\":")
+                .append(isPathParams);
+        sb.append(",\"children\":")
+                .append(children);
+        sb.append('}');
+        return sb.toString();
     }
 }
