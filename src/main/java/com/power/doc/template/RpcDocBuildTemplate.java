@@ -304,7 +304,7 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
         List<String> params = new ArrayList<>();
         List<JavaParameter> parameters = method.getParameters();
         for (JavaParameter parameter : parameters) {
-            params.add(JavaClassUtil.getClassSimpleName(parameter.getType().getValue()) + " " + JavaClassUtil.getClassSimpleName(parameter.getName()));
+            params.add(parameter.getType().getGenericValue() + " " + parameter.getName());
         }
         methodBuilder.append(method.getName()).append("(")
                 .append(String.join(", ", params)).append(")");

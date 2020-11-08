@@ -317,7 +317,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                         paramName = paramName.replace(key, value);
                     }
                     // replace mockValue
-                    if (mockValue.contains(entry.getKey())) {
+                    if (mockValue.contains(key)) {
                         mockValue = mockValue.replace(key, value);
                     }
                 }

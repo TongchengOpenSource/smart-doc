@@ -132,7 +132,7 @@ public class JsonBuildHelper {
                 return data.toString();
             }
             String gNameTemp = globGicName[0];
-            String gName = JavaClassValidateUtil.isArray(typeName) ? gNameTemp.substring(0, gNameTemp.indexOf("[")) : globGicName[0];
+            String gName = JavaClassValidateUtil.isArray(gNameTemp) ? gNameTemp.substring(0, gNameTemp.indexOf("[")) : globGicName[0];
             if (DocGlobalConstants.JAVA_OBJECT_FULLY.equals(gName)) {
                 data.append("{\"waring\":\"You may use java.util.Object instead of display generics in the List\"}");
             } else if (JavaClassValidateUtil.isPrimitive(gName)) {
