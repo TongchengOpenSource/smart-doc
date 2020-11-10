@@ -130,10 +130,13 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         List<JavaMethod> methods = cls.getMethods();
         List<DocJavaMethod> docJavaMethods = new ArrayList<>(methods.size());
         for (JavaMethod method : methods) {
+            if (method.isPrivate()) {
+                continue;
+            }
             docJavaMethods.add(DocJavaMethod.builder().setJavaMethod(method));
         }
         JavaClass parentClass = cls.getSuperJavaClass();
-        if (Objects.nonNull(parentClass)) {
+        if (Objects.nonNull(parentClass) && !"Object".equals(parentClass.getSimpleName())) {
             Map<String, JavaType> actualTypesMap = JavaClassUtil.getActualTypesMap(parentClass);
             List<JavaMethod> parentMethodList = parentClass.getMethods();
             for (JavaMethod method : parentMethodList) {
