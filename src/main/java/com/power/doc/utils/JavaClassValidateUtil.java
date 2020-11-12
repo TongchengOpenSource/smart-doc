@@ -156,7 +156,7 @@ public class JavaClassValidateUtil {
      * @return boolean
      */
     public static boolean isArray(String type) {
-        return type.contains("[]");
+        return type.endsWith("[]");
     }
 
     /**
