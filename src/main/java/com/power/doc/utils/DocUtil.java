@@ -34,6 +34,7 @@ import com.thoughtworks.qdox.model.JavaField;
 import com.thoughtworks.qdox.model.JavaMethod;
 import org.apache.commons.codec.digest.DigestUtils;
 
+import java.nio.file.attribute.UserDefinedFileAttributeView;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -296,11 +297,16 @@ public class DocUtil {
      * @return String
      */
     public static String handleMappingValue(JavaAnnotation annotation) {
-        if (null == annotation.getNamedParameter(DocAnnotationConstants.VALUE_PROP)) {
-            return "/";
-        } else {
-            return StringUtil.trimBlank(String.valueOf(annotation.getNamedParameter(DocAnnotationConstants.VALUE_PROP)));
+        Object url = annotation.getNamedParameter(DocAnnotationConstants.VALUE_PROP);
+
+        if (null == url) {
+            url = annotation.getNamedParameter(DocAnnotationConstants.PATH_PROP);
+            if (null == url) {
+                return "/";
+            }
         }
+
+        return StringUtil.trimBlank(String.valueOf(url));
     }
 
     /**
