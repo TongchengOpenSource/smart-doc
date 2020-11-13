@@ -122,9 +122,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             String annotationName = annotation.getType().getValue();
             if (DocAnnotationConstants.REQUEST_MAPPING.equals(annotationName) ||
                     DocGlobalConstants.REQUEST_MAPPING_FULLY.equals(annotationName)) {
-                if (annotation.getNamedParameter("value") != null) {
-                    baseUrl = StringUtil.removeQuotes(annotation.getNamedParameter("value").toString());
-                }
+                baseUrl = StringUtil.removeQuotes(DocUtil.getRequestMappingUrl(annotation));
             }
         }
         List<JavaMethod> methods = cls.getMethods();
