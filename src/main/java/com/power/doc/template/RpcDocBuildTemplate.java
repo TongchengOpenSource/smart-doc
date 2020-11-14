@@ -54,6 +54,7 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
      */
     private final AtomicInteger atomicInteger = new AtomicInteger(1);
 
+    @Override
     public List<RpcApiDoc> getApiData(ProjectDocConfigBuilder projectBuilder) {
         ApiConfig apiConfig = projectBuilder.getApiConfig();
         List<RpcApiDoc> apiDocList = new ArrayList<>();
