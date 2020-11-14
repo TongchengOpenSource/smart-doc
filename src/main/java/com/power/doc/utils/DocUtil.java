@@ -296,10 +296,11 @@ public class DocUtil {
      * @return String
      */
     public static String handleMappingValue(JavaAnnotation annotation) {
-        if (null == annotation.getNamedParameter(DocAnnotationConstants.VALUE_PROP)) {
+        String url = getRequestMappingUrl(annotation);
+        if (StringUtil.isEmpty(url)) {
             return "/";
         } else {
-            return StringUtil.trimBlank(String.valueOf(annotation.getNamedParameter(DocAnnotationConstants.VALUE_PROP)));
+            return StringUtil.trimBlank(url);
         }
     }
 
@@ -491,5 +492,22 @@ public class DocUtil {
         return comment.replaceAll("<", "&lt;")
                 .replaceAll(">", "&gt;")
                 .replaceAll(System.lineSeparator(), "");
+    }
+
+    /**
+     * Get the url from 'value' or 'path' attribute
+     *
+     * @param annotation RequestMapping GetMapping PostMapping etc.
+     * @return the url
+     */
+    public static String getRequestMappingUrl(JavaAnnotation annotation) {
+        Object url = annotation.getNamedParameter(DocAnnotationConstants.VALUE_PROP);
+
+        if (null != url) {
+            return url.toString();
+        } else {
+            url = annotation.getNamedParameter(DocAnnotationConstants.PATH_PROP);
+            return null == url ? StringUtil.ENMPTY : url.toString();
+        }
     }
 }
