@@ -83,8 +83,6 @@ public class HtmlApiDocBuilder {
         IDocBuildTemplate docBuildTemplate = new SpringBootDocBuildTemplate();
         List<ApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder);
         if (config.isAllInOne()) {
-            Template indexCssTemplate = BeetlTemplateUtil.getByName(ALL_IN_ONE_CSS);
-            FileUtil.nioWriteFile(indexCssTemplate.render(), config.getOutPath() + FILE_SEPARATOR + ALL_IN_ONE_CSS);
             if (StringUtils.isNotEmpty(config.getAllInOneDocFileName())) {
                 INDEX_HTML = config.getAllInOneDocFileName();
             }
@@ -149,7 +147,7 @@ public class HtmlApiDocBuilder {
      * build ever controller api
      *
      * @param apiDocList list of api doc
-     * @param config    ApiConfig
+     * @param config     ApiConfig
      */
     private static void buildDoc(List<ApiDoc> apiDocList, ApiConfig config) {
         FileUtil.mkdirs(config.getOutPath());
