@@ -67,7 +67,17 @@ public class ApiParam {
     /**
      * PathVariableParams flag
      */
-    private boolean isPathParams;
+    private boolean pathParam;
+
+    /**
+     * query params flag
+     */
+    private boolean queryParam;
+
+    /**
+     *
+     */
+    private String value;
 
     /**
      * children params
@@ -145,17 +155,35 @@ public class ApiParam {
         return children;
     }
 
-    public boolean isPathParams() {
-        return isPathParams;
+    public boolean isPathParam() {
+        return pathParam;
     }
 
-    public ApiParam setPathParams(boolean pathParams) {
-        isPathParams = pathParams;
+    public ApiParam setPathParam(boolean pathParam) {
+        this.pathParam = pathParam;
+        return this;
+    }
+
+    public boolean isQueryParam() {
+        return queryParam;
+    }
+
+    public ApiParam setQueryParam(boolean queryParam) {
+        this.queryParam = queryParam;
         return this;
     }
 
     public ApiParam setChildren(List<ApiParam> children) {
         this.children = children;
+        return this;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public ApiParam setValue(String value) {
+        this.value = value;
         return this;
     }
 
@@ -176,8 +204,10 @@ public class ApiParam {
                 .append(version).append('\"');
         sb.append(",\"pid\":")
                 .append(pid);
-        sb.append(",\"isPathParams\":")
-                .append(isPathParams);
+        sb.append(",\"pathParam\":")
+                .append(pathParam);
+        sb.append(",\"queryParam\":")
+                .append(queryParam);
         sb.append(",\"children\":")
                 .append(children);
         sb.append('}');

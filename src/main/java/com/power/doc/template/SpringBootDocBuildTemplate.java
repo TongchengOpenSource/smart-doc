@@ -491,7 +491,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             //file upload
             if (typeName.contains(DocGlobalConstants.MULTIPART_FILE_FULLY)) {
                 ApiParam param = ApiParam.of().setField(paramName).setType("file")
-                        .setId(paramList.size() + 1)
+                        .setId(paramList.size() + 1).setQueryParam(true)
                         .setDesc(comment).setRequired(true).setVersion(DocGlobalConstants.DEFAULT_VERSION);
                 paramList.add(param);
                 continue;
@@ -536,10 +536,12 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 }
             }
             boolean required = Boolean.parseBoolean(strRequired);
+            boolean queryParam = false;
             if (isPathVariable) {
                 comment = comment + " (This is path parameter.)";
             } else if (!isRequestBody && requestBodyCounter > 0) {
                 comment = comment + " (This is query parameter.)";
+                queryParam = true;
             }
             if (JavaClassValidateUtil.isCollection(fullTypeName) || JavaClassValidateUtil.isArray(fullTypeName)) {
                 String[] gicNameArr = DocClassUtil.getSimpleGicName(typeName);
@@ -551,7 +553,8 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                     String shortSimple = DocClassUtil.processTypeNameForParams(gicName);
                     ApiParam param = ApiParam.of().setField(paramName).setDesc(comment + ",[array of " + shortSimple + "]")
                             .setRequired(required)
-                            .setPathParams(isPathVariable)
+                            .setPathParam(isPathVariable)
+                            .setQueryParam(queryParam)
                             .setId(paramList.size() + 1)
                             .setType("array");
                     paramList.add(param);
@@ -566,17 +569,21 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                     }
                 }
             } else if (JavaClassValidateUtil.isPrimitive(fullTypeName)) {
+                String typeSimpleName = DocClassUtil.processTypeNameForParams(simpleName);
+                String value = DocUtil.getValByTypeAndFieldName(typeSimpleName, paramName);
                 ApiParam param = ApiParam.of().setField(paramName)
                         .setType(DocClassUtil.processTypeNameForParams(simpleName))
                         .setId(paramList.size() + 1)
-                        .setPathParams(isPathVariable)
+                        .setPathParam(isPathVariable)
+                        .setQueryParam(queryParam).setValue(value)
                         .setDesc(comment).setRequired(required).setVersion(DocGlobalConstants.DEFAULT_VERSION);
                 paramList.add(param);
             } else if (JavaClassValidateUtil.isMap(fullTypeName)) {
                 if (DocGlobalConstants.JAVA_MAP_FULLY.equals(typeName)) {
                     ApiParam apiParam = ApiParam.of().setField(paramName).setType("map")
                             .setId(paramList.size() + 1)
-                            .setPathParams(isPathVariable)
+                            .setPathParam(isPathVariable)
+                            .setQueryParam(queryParam)
                             .setDesc(comment).setRequired(required).setVersion(DocGlobalConstants.DEFAULT_VERSION);
                     paramList.add(apiParam);
                     continue;
@@ -587,9 +594,11 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             // param is enum
             else if (javaClass.isEnum()) {
                 String o = JavaClassUtil.getEnumParams(javaClass);
+                Object value = JavaClassUtil.getEnumValue(javaClass, Boolean.FALSE);
                 ApiParam param = ApiParam.of().setField(paramName)
                         .setId(paramList.size() + 1)
-                        .setPathParams(isPathVariable)
+                        .setPathParam(isPathVariable)
+                        .setQueryParam(queryParam).setValue(String.valueOf(value))
                         .setType("enum").setDesc(StringUtil.removeQuotes(o)).setRequired(required).setVersion(DocGlobalConstants.DEFAULT_VERSION);
                 paramList.add(param);
             } else {

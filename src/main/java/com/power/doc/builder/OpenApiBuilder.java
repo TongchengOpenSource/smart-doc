@@ -163,7 +163,7 @@ public class OpenApiBuilder {
             List<ApiParam> apiParams = apiMethodDoc.getRequestParams();
             //去除pathVariable参数
             size = (int) apiParams.stream()
-                    .filter(apiParam -> !apiParam.isPathParams()).count();
+                    .filter(apiParam -> !apiParam.isPathParam()).count();
         }
         boolean isPost = (apiMethodDoc.getType().equals(Methods.POST.getValue()) || apiMethodDoc.getType().equals(Methods.PUT.getValue()) ||
                 apiMethodDoc.getType().equals(Methods.PATCH.getValue())) && size > 0;
@@ -267,7 +267,7 @@ public class OpenApiBuilder {
                 parameters.put("description", apiParam.getDesc());
                 parameters.put("required", apiParam.isRequired());
                 parameters.put("schema", buildParametersSchema(apiParam));
-                if (apiParam.isPathParams()) {
+                if (apiParam.isPathParam()) {
                     parameters.put("in", "path");
                 } else {
                     parameters.put("in", "query");
