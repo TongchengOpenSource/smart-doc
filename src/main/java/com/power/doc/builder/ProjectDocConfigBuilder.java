@@ -72,7 +72,7 @@ public class ProjectDocConfigBuilder {
         } else {
             this.serverUrl = apiConfig.getServerUrl();
         }
-        this.setHightlightStyle();
+        this.setHighlightStyle();
         javaProjectBuilder.setEncoding(Charset.DEFAULT_CHARSET);
         this.javaProjectBuilder = javaProjectBuilder;
         this.loadJavaSource(apiConfig.getSourceCodePaths(), this.javaProjectBuilder);
@@ -175,7 +175,7 @@ public class ProjectDocConfigBuilder {
     /**
      * 设置高亮样式
      */
-    private void setHightlightStyle() {
+    private void setHighlightStyle() {
         String style = apiConfig.getStyle();
         if (HighlightStyle.containStyle(style)) {
             return;
