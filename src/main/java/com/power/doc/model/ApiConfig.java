@@ -253,6 +253,8 @@ public class ApiConfig {
      */
     private ResponseBodyAdvice responseBodyAdvice;
 
+    private String style;
+
     public String getServerUrl() {
         return serverUrl;
     }
@@ -554,6 +556,14 @@ public class ApiConfig {
         this.responseBodyAdvice = responseBodyAdvice;
     }
 
+    public String getStyle() {
+        return style;
+    }
+
+    public void setStyle(String style) {
+        this.style = style;
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("{");
@@ -629,6 +639,8 @@ public class ApiConfig {
                 .append(displayActualType);
         sb.append(",\"responseBodyAdvice\":")
                 .append(responseBodyAdvice);
+        sb.append(",\"style\":")
+                .append(style);
         sb.append('}');
         return sb.toString();
     }
