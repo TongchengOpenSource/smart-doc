@@ -109,6 +109,16 @@ public class ApiMethodDoc implements Serializable {
     private List<ApiReqHeader> requestHeaders;
 
     /**
+     * path params
+     */
+    private List<ApiParam> pathParams;
+
+    /**
+     * query params
+     */
+    private List<ApiParam> queryParams;
+
+    /**
      * http request params
      */
     private List<ApiParam> requestParams;
@@ -292,6 +302,22 @@ public class ApiMethodDoc implements Serializable {
         this.deprecated = deprecated;
     }
 
+    public List<ApiParam> getPathParams() {
+        return pathParams;
+    }
+
+    public void setPathParams(List<ApiParam> pathParams) {
+        this.pathParams = pathParams;
+    }
+
+    public List<ApiParam> getQueryParams() {
+        return queryParams;
+    }
+
+    public void setQueryParams(List<ApiParam> queryParams) {
+        this.queryParams = queryParams;
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("{");
@@ -321,6 +347,10 @@ public class ApiMethodDoc implements Serializable {
                 .append(contentType).append('\"');
         sb.append(",\"requestHeaders\":")
                 .append(requestHeaders);
+        sb.append(",\"pathParams\":")
+                .append(pathParams);
+        sb.append(",\"queryParams\":")
+                .append(queryParams);
         sb.append(",\"requestParams\":")
                 .append(requestParams);
         sb.append(",\"requestUsage\":\"")
