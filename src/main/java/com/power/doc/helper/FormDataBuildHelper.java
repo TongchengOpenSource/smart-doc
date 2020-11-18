@@ -130,7 +130,7 @@ public class FormDataBuildHelper {
                 FormData formData = new FormData();
                 formData.setKey(pre + fieldName);
                 formData.setType("file");
-                formData.setDesc(comment);
+                formData.setDescription(comment);
                 formData.setValue("");
                 formDataList.add(formData);
             } else if (JavaClassValidateUtil.isPrimitive(subTypeName)) {
@@ -144,7 +144,7 @@ public class FormDataBuildHelper {
                 formData.setKey(pre + fieldName);
                 formData.setType("text");
                 formData.setValue(StringUtil.removeQuotes(fieldValue));
-                formData.setDesc(comment);
+                formData.setDescription(comment);
                 formDataList.add(formData);
             } else if (javaClass.isEnum()) {
                 Object value = JavaClassUtil.getEnumValue(javaClass, Boolean.TRUE);
@@ -152,7 +152,7 @@ public class FormDataBuildHelper {
                 formData.setKey(pre + fieldName);
                 formData.setType("text");
                 formData.setValue(StringUtil.removeQuotes(String.valueOf(value)));
-                formData.setDesc(comment);
+                formData.setDescription(comment);
                 formDataList.add(formData);
             } else if (JavaClassValidateUtil.isCollection(subTypeName)) {
                 String gNameTemp = field.getType().getGenericCanonicalName();

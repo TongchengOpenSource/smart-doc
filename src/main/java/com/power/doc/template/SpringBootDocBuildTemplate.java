@@ -351,13 +351,13 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 FormData formData = new FormData();
                 formData.setKey(paramName);
                 formData.setType("file");
-                formData.setDesc(comment);
+                formData.setDescription(comment);
                 formData.setValue(mockValue);
                 formDataList.add(formData);
             } else if (JavaClassValidateUtil.isPrimitive(typeName)) {
                 FormData formData = new FormData();
                 formData.setKey(paramName);
-                formData.setDesc(comment);
+                formData.setDescription(comment);
                 formData.setType("text");
                 formData.setValue(mockValue);
                 formDataList.add(formData);
@@ -375,7 +375,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 if (!paramName.contains("[]")) {
                     formData.setKey(paramName + "[]");
                 }
-                formData.setDesc(comment);
+                formData.setDescription(comment);
                 formData.setType("text");
                 formData.setValue(RandomUtil.randomValueByType(gicName));
                 formDataList.add(formData);
@@ -386,7 +386,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 FormData formData = new FormData();
                 formData.setKey(paramName);
                 formData.setType("text");
-                formData.setDesc(comment);
+                formData.setDescription(comment);
                 formData.setValue(strVal);
                 formDataList.add(formData);
             } else {
