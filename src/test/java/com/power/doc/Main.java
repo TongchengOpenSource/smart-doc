@@ -1,7 +1,9 @@
 package com.power.doc;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Main {
     private final static Set<String> PREFIX_LIST = new HashSet<>();
@@ -23,6 +25,9 @@ public class Main {
 
     public static void main(String[] args) {
         String artifactId = "ksharding-jdbc";
+        new HashMap<>();
+        ConcurrentHashMap<String,String> map = new ConcurrentHashMap<>();
+        map.size();
         System.out.println(ignoreArtifactById(artifactId));
     }
 

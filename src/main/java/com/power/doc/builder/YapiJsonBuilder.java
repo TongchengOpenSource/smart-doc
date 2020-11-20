@@ -174,7 +174,7 @@ public class YapiJsonBuilder {
 
                 Template apiTemplate = BeetlTemplateUtil.getByName(YAPI_RESULT_TPL);
 
-                apiTemplate.binding(TemplateVariable.RESPONSELIST.getVariable(), generateJson(apiMethodDoc.getResponseParams()));
+                apiTemplate.binding(TemplateVariable.RESPONSE_LIST.getVariable(), generateJson(apiMethodDoc.getResponseParams()));
                 String json = apiTemplate.render();
                 method.put("res_body", json);
 

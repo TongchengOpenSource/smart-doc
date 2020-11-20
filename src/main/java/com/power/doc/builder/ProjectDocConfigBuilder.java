@@ -177,18 +177,23 @@ public class ProjectDocConfigBuilder {
      */
     private void setHighlightStyle() {
         String style = apiConfig.getStyle();
-        if (HighlightStyle.containStyle(style)) {
+        if (HighlightStyle.containsStyle(style)) {
             return;
         }
         Random random = new Random();
         if ("randomLight".equals(style)) {
-            apiConfig.setStyle(HighlightStyle.randomLight(random));
+            // Eliminate styles that do not match the template
+            style = HighlightStyle.randomLight(random);
+            if(HighlightStyle.containsStyle(style)){
+                apiConfig.setStyle(style);
+            } else {
+                apiConfig.setStyle("null");
+            }
         } else if ("randomDark".equals(style)) {
             apiConfig.setStyle(HighlightStyle.randomDark(random));
-        } else if ("random".equals(style)) {
-            apiConfig.setStyle(HighlightStyle.randomAll(random));
         } else {
-            apiConfig.setStyle(HighlightStyle.DEFAULT_STYLE);
+            // Eliminate styles that do not match the template
+            apiConfig.setStyle("null");
         }
     }
 

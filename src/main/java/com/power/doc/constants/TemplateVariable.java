@@ -37,6 +37,7 @@ public enum TemplateVariable {
     HTML("html"),
     TITLE("title"),
     STYLE("style"),
+    BACKGROUND("background"),
     ERROR_LIST_TITLE("errorListTitle"),
     CREATE_TIME("createTime"),
     PROJECT_NAME("projectName"),
@@ -50,7 +51,7 @@ public enum TemplateVariable {
     RPC_CONSUMER_CONFIG("consumerConfigExample"),
     REQUEST_EXAMPLE("isRequestExample"),
     RESPONSE_EXAMPLE("isResponseExample"),
-    RESPONSELIST("respList");
+    RESPONSE_LIST("respList");
 
     private String variable;
 

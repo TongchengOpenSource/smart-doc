@@ -8,6 +8,8 @@
     3. 修复ResponseEntity中的数组解析错误。
     4. 修复controller方法标注ignore后文档序号错误。
     5. 增加对@RequestMapping注解的path属性的解析支持
+    6. 修复postman中formdata表单不显示描述信息的问题
+    7. html5 allInOne模板支持代码高亮。
 #### 版本号：1.9.8
 - 更新日期: 2020-11-10
 - 更新内容：
