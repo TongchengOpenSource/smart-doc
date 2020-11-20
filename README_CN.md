@@ -93,7 +93,7 @@ smart-doc官方目前已经开发完成[Maven插件](https://gitee.com/smart-doc
   "coverOld": true,  //是否覆盖旧的文件，主要用于mardown文件覆盖
   "packageFilters": "",//controller包过滤，多个包用英文逗号隔开
   "md5EncryptedHtmlName": false,//只有每个controller生成一个html文件是才使用
-  "style":"xt256", //基于highlight.js的代码高亮设置，不需要高亮可以不用设置
+  "style":"xt256", //基于highlight.js的代码高亮设置，喜欢配色统一简洁的同学可以不设置
   "projectName": "smart-doc",//配置自己的项目名称
   "skipTransientField": true,//目前未实现
   "sortByTitle":false,//接口标题排序，默认为false,@since 1.8.7版本开始
