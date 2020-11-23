@@ -151,6 +151,12 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             if (StringUtil.isEmpty(method.getComment()) && apiConfig.isStrict()) {
                 throw new RuntimeException("Unable to find comment for method " + method.getName() + " in " + cls.getCanonicalName());
             }
+            //handle request mapping
+            RequestMapping requestMapping = new SpringMVCRequestMappingHandler()
+                    .handle(projectBuilder.getServerUrl(), baseUrl, method, constantsMap);
+            if (Objects.isNull(requestMapping)) {
+                continue;
+            }
             methodOrder++;
             ApiMethodDoc apiMethodDoc = new ApiMethodDoc();
             apiMethodDoc.setName(method.getName());
@@ -172,12 +178,6 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 apiMethodDoc.setAuthor(classAuthor);
             }
             apiMethodDoc.setDetail(apiNoteValue);
-            //handle request mapping
-            RequestMapping requestMapping = new SpringMVCRequestMappingHandler()
-                    .handle(projectBuilder.getServerUrl(), baseUrl, method, constantsMap);
-            if (Objects.isNull(requestMapping)) {
-                continue;
-            }
             //handle headers
             List<ApiReqHeader> apiReqHeaders = new SpringMVCRequestHeaderHandler().handle(method);
 
@@ -523,11 +523,13 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                             paramName = paramName.replace(key, value);
                         }
                     }
-
                     AnnotationValue annotationRequired = annotation.getProperty(DocAnnotationConstants.REQUIRED_PROP);
                     if (null == annotationRequired) {
                         strRequired = "true";
                     }
+                }
+                if (JavaClassValidateUtil.isJSR303Required(annotationName)) {
+                    strRequired = "true";
                 }
                 if (SpringMvcAnnotations.REQUEST_BODY.equals(annotationName)) {
                     if (requestBodyCounter > 0) {
