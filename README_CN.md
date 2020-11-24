@@ -11,6 +11,9 @@ smart-doc是一款同时支持JAVA REST API和Apache Dubbo RPC接口文档生成
 smart-doc就能帮你生成一个简易明了的Markdown、HTML5文档，甚至可以直接生成Postman Collection导入到Postman做API接口调试。
 
 $\color{red}{你给我的star，胜过所有读过的诗—smart-doc}$
+
+> 无论你是很有经验的大佬、还是刚入行的萌新。遇到使用疑惑时，我们希望你能仔细阅读smart-doc官方码云的wiki文档。我们将smart-doc及其插件的
+每一个配置项和可能在日常中遇到的问题都整理到了文档中。仔细阅读文档就是对开源项目最大的支持。
 ## Features
 - 零注解、零学习成本、只需要写标准JAVA注释。
 - 基于源代码接口定义自动推导，强大的返回结构推导。
