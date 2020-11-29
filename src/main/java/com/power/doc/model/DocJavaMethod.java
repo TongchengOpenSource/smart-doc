@@ -13,6 +13,10 @@ public class DocJavaMethod {
 
     private JavaMethod javaMethod;
 
+    private Map<String,Object> returnSchema;
+
+    private Map<String,Object> requestSchema;
+
     private Map<String, JavaType> actualTypesMap;
 
     public static DocJavaMethod builder(){
@@ -34,6 +38,24 @@ public class DocJavaMethod {
 
     public DocJavaMethod setActualTypesMap(Map<String, JavaType> actualTypesMap) {
         this.actualTypesMap = actualTypesMap;
+        return this;
+    }
+
+    public Map<String,Object> getReturnSchema() {
+        return returnSchema;
+    }
+
+    public DocJavaMethod setReturnSchema(Map<String,Object> returnSchema) {
+        this.returnSchema = returnSchema;
+        return this;
+    }
+
+    public Map<String, Object> getRequestSchema() {
+        return requestSchema;
+    }
+
+    public DocJavaMethod setRequestSchema(Map<String, Object> requestSchema) {
+        this.requestSchema = requestSchema;
         return this;
     }
 }

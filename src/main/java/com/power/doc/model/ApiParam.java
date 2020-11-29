@@ -23,6 +23,7 @@
 package com.power.doc.model;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author yu 2019/9/27.
@@ -75,7 +76,7 @@ public class ApiParam {
     private boolean queryParam;
 
     /**
-     *
+     * param mock value
      */
     private String value;
 
@@ -83,6 +84,11 @@ public class ApiParam {
      * children params
      */
     private List<ApiParam> children;
+
+    /**
+     * openapi items
+     */
+    private boolean hasItems;
 
     public static ApiParam of(){
         return new ApiParam();
@@ -184,6 +190,15 @@ public class ApiParam {
 
     public ApiParam setValue(String value) {
         this.value = value;
+        return this;
+    }
+
+    public boolean isHasItems() {
+        return hasItems;
+    }
+
+    public ApiParam setHasItems(boolean hasItems) {
+        this.hasItems = hasItems;
         return this;
     }
 

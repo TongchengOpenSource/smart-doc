@@ -22,6 +22,7 @@
  */
 package com.power.doc.model.postman.request;
 
+import com.power.doc.model.postman.UrlBean;
 import com.power.doc.model.postman.request.body.BodyBean;
 import com.power.doc.model.postman.request.header.HeaderBean;
 
@@ -33,7 +34,7 @@ import java.util.List;
 public class RequestBean {
     private String method;
     private BodyBean body;
-    private String url;
+    private UrlBean url;
     private String description;
     private List<HeaderBean> header;
 
@@ -53,11 +54,11 @@ public class RequestBean {
         this.body = body;
     }
 
-    public String getUrl() {
+    public UrlBean getUrl() {
         return url;
     }
 
-    public void setUrl(String url) {
+    public void setUrl(UrlBean url) {
         this.url = url;
     }
 

@@ -216,8 +216,14 @@ public class ParamsBuildHelper {
                     continue;
                 }
                 if (JavaClassValidateUtil.isPrimitive(subTypeName)) {
+                    String fieldValue = "";
+                    if (tagsMap.containsKey(DocTags.MOCK) && StringUtil.isNotEmpty(tagsMap.get(DocTags.MOCK))) {
+                        fieldValue = tagsMap.get(DocTags.MOCK);
+                    } else {
+                        fieldValue = DocUtil.getValByTypeAndFieldName(typeSimpleName, field.getName());
+                    }
                     ApiParam param = ApiParam.of().setField(pre + fieldName);
-                    param.setPid(pid);
+                    param.setPid(pid).setValue(fieldValue);
                     String processedType = isShowJavaType ? typeSimpleName : DocClassUtil.processTypeNameForParams(typeSimpleName.toLowerCase());
                     param.setType(processedType);
                     if (StringUtil.isNotEmpty(comment)) {

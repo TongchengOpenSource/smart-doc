@@ -31,6 +31,36 @@ ${doc.headers}
 <%}%>
 |====================
 
+<%if(isNotEmpty(doc.pathParams)){%>
+*Path-parameters:*
+
+[width="100%",options="header"]
+[stripes=even]
+|====================
+|Parameter | Type|Description|Required|Since
+<%
+for(param in doc.pathParams){
+%>
+|${param.field}|${param.type}|${param.desc}|${param.required}|${param.version}
+<%}%>
+|====================
+<%}%>
+
+<%if(isNotEmpty(doc.queryParams)){%>
+*Query-parameters:*
+
+[width="100%",options="header"]
+[stripes=even]
+|====================
+|Parameter | Type|Description|Required|Since
+<%
+for(param in doc.queryParams){
+%>
+|${param.field}|${param.type}|${param.desc}|${param.required}|${param.version}
+<%}%>
+|====================
+<%}%>
+
 <%if(isNotEmpty(doc.requestParams)){%>
 *Request-parameters:*
 
@@ -43,8 +73,9 @@ for(param in doc.requestParams){
 %>
 |${param.field}|${param.type}|${param.desc}|${param.required}|${param.version}
 <%}%>
-<%}%>
 |====================
+<%}%>
+
 
 <%if(isNotEmpty(doc.requestUsage)&&isRequestExample){%>
 *Request-example:*
@@ -64,8 +95,9 @@ for(param in doc.responseParams){
 %>
 |${param.field}|${param.type}|${param.desc}|${param.version}
 <%}%>
-<%}%>
 |====================
+<%}%>
+
 
 <%if(isNotEmpty(doc.responseUsage)&&isResponseExample){%>
 *Response-example:*

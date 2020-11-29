@@ -26,6 +26,7 @@ import com.power.doc.model.request.ApiRequestExample;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 /**
  * java api method info model.
@@ -148,6 +149,16 @@ public class ApiMethodDoc implements Serializable {
      * method deprecated
      */
     private boolean deprecated;
+
+    /**
+     * return schema
+     */
+    private Map<String,Object> returnSchema;
+
+    /**
+     * request schema
+     */
+    private Map<String,Object> requestSchema;
 
 
     public String getMethodId() {
@@ -316,6 +327,23 @@ public class ApiMethodDoc implements Serializable {
 
     public void setQueryParams(List<ApiParam> queryParams) {
         this.queryParams = queryParams;
+    }
+
+
+    public Map<String, Object> getReturnSchema() {
+        return returnSchema;
+    }
+
+    public void setReturnSchema(Map<String, Object> returnSchema) {
+        this.returnSchema = returnSchema;
+    }
+
+    public Map<String, Object> getRequestSchema() {
+        return requestSchema;
+    }
+
+    public void setRequestSchema(Map<String, Object> requestSchema) {
+        this.requestSchema = requestSchema;
     }
 
     @Override

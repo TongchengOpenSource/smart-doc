@@ -46,4 +46,18 @@ public class PathUtil {
         className = className.replaceAll("\\.", "\\" + File.separator);
         return parentDir + className + ".java";
     }
+
+    /**
+     * to postman path
+     * @param path path
+     * @return String
+     */
+    public static String toPostmanPath(String path){
+        if(StringUtil.isNotEmpty(path)){
+            path = path.replace("{",":");
+            path = path.replace("}","");
+            return path;
+        }
+        return null;
+    }
 }

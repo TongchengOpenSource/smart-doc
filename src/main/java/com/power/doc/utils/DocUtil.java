@@ -463,9 +463,8 @@ public class DocUtil {
         switch (type) {
             case "int32":
             case "int16":
-                return "integer";
             case "int64":
-                return "long";
+                return "integer";
             case "double":
             case "float":
             case "number":

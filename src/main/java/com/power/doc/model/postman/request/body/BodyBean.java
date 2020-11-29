@@ -37,9 +37,7 @@ public class BodyBean {
     private BodyOptions options;
 
     public BodyBean(boolean isFormData) {
-        if (isFormData) {
-
-        } else {
+        if (!isFormData) {
             this.options = new BodyOptions();
         }
     }

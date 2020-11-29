@@ -109,6 +109,9 @@ public class JsonBuildHelper {
             }
         }
         if (JavaClassValidateUtil.isPrimitive(typeName)) {
+            if(DocGlobalConstants.JAVA_STRING_FULLY.equals(typeName)){
+                return "string";
+            }
             return StringUtil.removeQuotes(DocUtil.jsonValueByType(typeName));
         }
         if (javaClass.isEnum()) {

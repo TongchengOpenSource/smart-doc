@@ -71,7 +71,7 @@ public interface DocGlobalConstants {
 
     String POSTMAN_JSON = "/postman.json";
 
-    String OPEN_API_JSON = "/openApi3.0.json";
+    String OPEN_API_JSON = "/openapi.json";
 
     String CONTROLLER_FULLY = "org.springframework.stereotype.Controller";
 

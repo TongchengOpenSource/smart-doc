@@ -28,20 +28,22 @@ import com.google.gson.GsonBuilder;
 import com.power.common.util.FileUtil;
 import com.power.common.util.StringUtil;
 import com.power.doc.constants.DocGlobalConstants;
-import com.power.doc.model.ApiConfig;
-import com.power.doc.model.ApiDoc;
-import com.power.doc.model.ApiMethodDoc;
-import com.power.doc.model.ApiReqHeader;
+import com.power.doc.model.*;
 import com.power.doc.model.postman.InfoBean;
 import com.power.doc.model.postman.ItemBean;
 import com.power.doc.model.postman.RequestItem;
+import com.power.doc.model.postman.UrlBean;
+import com.power.doc.model.postman.request.ParamBean;
 import com.power.doc.model.postman.request.RequestBean;
 import com.power.doc.model.postman.request.body.BodyBean;
 import com.power.doc.model.postman.request.header.HeaderBean;
 import com.power.doc.template.IDocBuildTemplate;
 import com.power.doc.template.SpringBootDocBuildTemplate;
+import com.power.doc.utils.PathUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -119,11 +121,57 @@ public class PostmanJsonBuilder {
         requestBean.setHeader(buildHeaderBeanList(apiMethodDoc));
 
         requestBean.setBody(buildBodyBean(apiMethodDoc));
-        requestBean.setUrl(apiMethodDoc.getRequestExample().getUrl() == null ? apiMethodDoc.getUrl() : apiMethodDoc.getRequestExample().getUrl());
+        requestBean.setUrl(buildUrlBean(apiMethodDoc));
 
         item.setRequest(requestBean);
         return item;
 
+    }
+
+    private static UrlBean buildUrlBean(ApiMethodDoc apiMethodDoc) {
+        UrlBean urlBean = new UrlBean();
+        String url = apiMethodDoc.getRequestExample().getUrl() == null ? apiMethodDoc.getUrl() : apiMethodDoc.getRequestExample().getUrl();
+        urlBean.setRaw(PathUtil.toPostmanPath(url));
+        try {
+            URL url1 = new java.net.URL(apiMethodDoc.getServerUrl());
+            urlBean.setPort(String.valueOf(url1.getPort()));
+            List<String> hosts = new ArrayList<>();
+            hosts.add(url1.getHost());
+            urlBean.setHost(hosts);
+        } catch (MalformedURLException e) {
+        }
+        String shortUrl = PathUtil.toPostmanPath(apiMethodDoc.getPath());
+        String[] paths = shortUrl.split("/");
+        List<String> pathList = new ArrayList<>();
+        for (String str : paths) {
+            if (StringUtil.isNotEmpty(str)) {
+                pathList.add(str);
+            }
+        }
+        if (shortUrl.endsWith("/")) {
+            pathList.add("");
+        }
+
+        urlBean.setPath(pathList);
+        List<ParamBean> queryParams = new ArrayList<>();
+        for (ApiParam apiParam : apiMethodDoc.getQueryParams()) {
+            ParamBean queryParam = new ParamBean();
+            queryParam.setDescription(apiParam.getDesc());
+            queryParam.setKey(apiParam.getField());
+            queryParam.setValue(apiParam.getValue());
+            queryParams.add(queryParam);
+        }
+        List<ParamBean> variables = new ArrayList<>();
+        for (ApiParam apiParam : apiMethodDoc.getPathParams()) {
+            ParamBean queryParam = new ParamBean();
+            queryParam.setDescription(apiParam.getDesc());
+            queryParam.setKey(apiParam.getField());
+            queryParam.setValue(apiParam.getValue());
+            variables.add(queryParam);
+        }
+        urlBean.setVariable(variables);
+        urlBean.setQuery(queryParams);
+        return urlBean;
     }
 
     /**

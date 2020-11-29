@@ -29,8 +29,8 @@ import com.power.doc.helper.ParamsBuildHelper;
 import com.power.doc.model.*;
 import com.power.doc.utils.DocClassUtil;
 import com.power.doc.utils.DocUtil;
-import com.power.doc.utils.JavaClassUtil;
 import com.power.doc.utils.JavaClassValidateUtil;
+import com.power.doc.utils.OpenApiSchemaUtil;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaMethod;
 import com.thoughtworks.qdox.model.JavaType;
@@ -120,15 +120,15 @@ public interface IDocBuildTemplate<T> {
             return null;
         }
         if (JavaClassValidateUtil.isPrimitive(typeName)) {
-            String processedName = projectBuilder.getApiConfig().getShowJavaType() ?
-                    JavaClassUtil.getClassSimpleName(typeName) : DocClassUtil.processTypeNameForParams(typeName);
-            return ParamsBuildHelper.primitiveReturnRespComment(processedName);
+            docJavaMethod.setReturnSchema(OpenApiSchemaUtil.primaryTypeSchema(typeName));
+            return null;
         }
         if (JavaClassValidateUtil.isCollection(typeName)) {
             if (returnType.contains("<")) {
                 String gicName = returnType.substring(returnType.indexOf("<") + 1, returnType.lastIndexOf(">"));
                 if (JavaClassValidateUtil.isPrimitive(gicName)) {
-                    return ParamsBuildHelper.primitiveReturnRespComment("array of " + DocClassUtil.processTypeNameForParams(gicName));
+                    docJavaMethod.setReturnSchema(OpenApiSchemaUtil.arrayTypeSchema(gicName));
+                    return null;
                 }
                 return ParamsBuildHelper.buildParams(gicName, "", 0, null, projectBuilder.getCustomRespFieldMap(),
                         Boolean.TRUE, new HashMap<>(), projectBuilder, null, 0);
@@ -142,7 +142,8 @@ public interface IDocBuildTemplate<T> {
                 return null;
             }
             if (JavaClassValidateUtil.isPrimitive(keyValue[1])) {
-                return ParamsBuildHelper.primitiveReturnRespComment("key value");
+                docJavaMethod.setReturnSchema(OpenApiSchemaUtil.mapTypeSchema(keyValue[1]));
+                return null;
             }
             return ParamsBuildHelper.buildParams(keyValue[1], "", 0, null, projectBuilder.getCustomRespFieldMap(),
                     Boolean.TRUE, new HashMap<>(), projectBuilder, null, 0);

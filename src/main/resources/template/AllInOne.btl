@@ -44,9 +44,33 @@ Header | Type|Description|Required|Since
 ---|---|---|---|----
 ${doc.headers}
 <%}%>
+<%if(isNotEmpty(doc.pathParams)){%>
+
+**Path-parameters:**
+
+Parameter | Type|Description|Required|Since
+---|---|---|---|---
+<%
+for(param in doc.pathParams){
+%>
+${param.field}|${param.type}|${param.desc}|${param.required}|${param.version}
+<%}%>
+<%}%>
+<%if(isNotEmpty(doc.queryParams)){%>
+
+**Query-parameters:**
+
+Parameter | Type|Description|Required|Since
+---|---|---|---|---
+<%
+for(param in doc.queryParams){
+%>
+${param.field}|${param.type}|${param.desc}|${param.required}|${param.version}
+<%}%>
+<%}%>
 <%if(isNotEmpty(doc.requestParams)){%>
 
-**Request-parameters:**
+**Body-parameters:**
 
 Parameter | Type|Description|Required|Since
 ---|---|---|---|---
