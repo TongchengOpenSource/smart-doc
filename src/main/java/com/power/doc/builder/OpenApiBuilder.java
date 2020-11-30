@@ -156,7 +156,11 @@ public class OpenApiBuilder {
         Map<String, Object> request = new HashMap<>(20);
         request.put("summary", apiMethodDoc.getDesc());
         request.put("description", apiMethodDoc.getDetail());
-        request.put("tags", new String[]{apiDoc.getDesc()});
+        if (StringUtil.isNotEmpty(apiMethodDoc.getGroup())) {
+            request.put("tags", new String[]{apiMethodDoc.getGroup()});
+        } else {
+            request.put("tags", new String[]{apiDoc.getDesc()});
+        }
         request.put("requestBody", buildRequestBody(apiMethodDoc));
         request.put("parameters", buildParameters(apiMethodDoc));
         request.put("responses", buildResponses(apiMethodDoc));

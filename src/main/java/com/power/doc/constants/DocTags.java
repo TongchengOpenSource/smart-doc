@@ -31,7 +31,7 @@ public interface DocTags {
     String AUTHOR = "author";
 
     /**
-     * java verion tag
+     * java version tag
      */
     String VERSION = "version";
 
@@ -59,6 +59,11 @@ public interface DocTags {
      * custom @order tag
      */
     String ORDER = "order";
+
+    /**
+     * custom @group tag
+     */
+    String GROUP = "group";
 
     /**
      * Ignore ResponseBodyAdvice

@@ -115,6 +115,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                                                      ProjectDocConfigBuilder projectBuilder) {
         String clazName = cls.getCanonicalName();
         boolean paramsDataToTree = projectBuilder.getApiConfig().isParamsDataToTree();
+        String group = JavaClassUtil.getClassTagsValue(cls, DocTags.GROUP, Boolean.TRUE);
         String classAuthor = JavaClassUtil.getClassTagsValue(cls, DocTags.AUTHOR, Boolean.TRUE);
         List<JavaAnnotation> classAnnotations = cls.getAnnotations();
         Map<String, String> constantsMap = projectBuilder.getConstantsMap();
@@ -158,9 +159,14 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             if (StringUtil.isEmpty(method.getComment()) && apiConfig.isStrict()) {
                 throw new RuntimeException("Unable to find comment for method " + method.getName() + " in " + cls.getCanonicalName());
             }
-
-            methodOrder++;
             ApiMethodDoc apiMethodDoc = new ApiMethodDoc();
+            DocletTag docletTag = method.getTagByName(DocTags.GROUP);
+            if (Objects.nonNull(docletTag)) {
+                apiMethodDoc.setGroup(docletTag.getValue());
+            } else {
+                apiMethodDoc.setGroup(group);
+            }
+            methodOrder++;
             apiMethodDoc.setName(method.getName());
             apiMethodDoc.setOrder(methodOrder);
             String comment = DocUtil.getEscapeAndCleanComment(method.getComment());
@@ -509,8 +515,8 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 ApiParam param = ApiParam.of().setField(paramName).setType("file")
                         .setId(paramList.size() + 1).setQueryParam(true)
                         .setRequired(true).setVersion(DocGlobalConstants.DEFAULT_VERSION);
-                if(typeName.contains("[]")){
-                    comment = comment+"(array of file)";
+                if (typeName.contains("[]")) {
+                    comment = comment + "(array of file)";
                     param.setDesc(comment);
                     param.setHasItems(true);
                 }
@@ -608,7 +614,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 }
             } else if (JavaClassValidateUtil.isMap(fullTypeName)) {
                 log.warning("When using smart-doc, it is not recommended to use Map to receive parameters, Check it in "
-                        + javaMethod.getDeclaringClass().getCanonicalName()+"#"+javaMethod.getName());
+                        + javaMethod.getDeclaringClass().getCanonicalName() + "#" + javaMethod.getName());
 
                 if (DocGlobalConstants.JAVA_MAP_FULLY.equals(typeName)) {
                     ApiParam apiParam = ApiParam.of().setField(paramName).setType("map")
@@ -624,7 +630,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                     continue;
                 }
                 String[] gicNameArr = DocClassUtil.getSimpleGicName(typeName);
-                if(JavaClassValidateUtil.isPrimitive(gicNameArr[1])){
+                if (JavaClassValidateUtil.isPrimitive(gicNameArr[1])) {
                     ApiParam apiParam = ApiParam.of().setField(paramName).setType("map")
                             .setId(paramList.size() + 1)
                             .setPathParam(isPathVariable)

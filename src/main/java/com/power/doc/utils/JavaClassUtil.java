@@ -369,7 +369,7 @@ public class JavaClassUtil {
             }
             return result.toString();
         }
-        return null;
+        return "";
     }
 
     /**

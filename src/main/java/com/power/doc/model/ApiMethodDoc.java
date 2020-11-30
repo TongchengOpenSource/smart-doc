@@ -160,6 +160,10 @@ public class ApiMethodDoc implements Serializable {
      */
     private Map<String,Object> requestSchema;
 
+    /**
+     * api group
+     */
+    private String group;
 
     public String getMethodId() {
         return methodId;
@@ -344,6 +348,14 @@ public class ApiMethodDoc implements Serializable {
 
     public void setRequestSchema(Map<String, Object> requestSchema) {
         this.requestSchema = requestSchema;
+    }
+
+    public String getGroup() {
+        return group;
+    }
+
+    public void setGroup(String group) {
+        this.group = group;
     }
 
     @Override
