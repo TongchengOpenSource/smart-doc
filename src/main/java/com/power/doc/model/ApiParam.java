@@ -90,6 +90,11 @@ public class ApiParam {
      */
     private boolean hasItems;
 
+    /**
+     * enum values
+     */
+    private List<String> enumValues;
+
     public static ApiParam of(){
         return new ApiParam();
     }
@@ -199,6 +204,15 @@ public class ApiParam {
 
     public ApiParam setHasItems(boolean hasItems) {
         this.hasItems = hasItems;
+        return this;
+    }
+
+    public List<String> getEnumValues() {
+        return enumValues;
+    }
+
+    public ApiParam setEnumValues(List<String> enumValues) {
+        this.enumValues = enumValues;
         return this;
     }
 

@@ -195,8 +195,6 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             apiMethodDoc.setPath(requestMapping.getShortUrl());
             apiMethodDoc.setDeprecated(requestMapping.isDeprecated());
             ApiMethodReqParam apiMethodReqParam = requestParams(docJavaMethod, projectBuilder);
-            apiMethodDoc.setPathParams(apiMethodReqParam.getPathParams());
-            apiMethodDoc.setQueryParams(apiMethodReqParam.getQueryParams());
             // build request params
             if (paramsDataToTree) {
                 apiMethodDoc.setPathParams(ApiParamTreeUtil.apiParamToTree(apiMethodReqParam.getPathParams()));
@@ -654,8 +652,12 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 ApiParam param = ApiParam.of().setField(paramName)
                         .setId(paramList.size() + 1)
                         .setPathParam(isPathVariable)
-                        .setQueryParam(queryParam).setValue(String.valueOf(value))
-                        .setType("enum").setDesc(StringUtil.removeQuotes(o)).setRequired(required).setVersion(DocGlobalConstants.DEFAULT_VERSION);
+                        .setQueryParam(queryParam)
+                        .setValue(String.valueOf(value))
+                        .setType("enum").setDesc(StringUtil.removeQuotes(o))
+                        .setRequired(required)
+                        .setVersion(DocGlobalConstants.DEFAULT_VERSION)
+                        .setEnumValues(JavaClassUtil.getEnumValues(javaClass));
                 paramList.add(param);
             } else {
                 paramList.addAll(ParamsBuildHelper.buildParams(typeName, DocGlobalConstants.EMPTY, 0, "true", responseFieldMap, Boolean.FALSE, new HashMap<>(), builder, groupClasses, 0));
@@ -685,11 +687,11 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
 
     private String getParamName(String paramName, JavaAnnotation annotation) {
         AnnotationValue annotationValue = annotation.getProperty(DocAnnotationConstants.VALUE_PROP);
-        if (null != annotationValue) {
+        if (Objects.nonNull(annotationValue)) {
             paramName = StringUtil.removeQuotes(annotationValue.toString());
         }
         AnnotationValue annotationOfName = annotation.getProperty(DocAnnotationConstants.NAME_PROP);
-        if (null != annotationOfName) {
+        if (Objects.nonNull(annotationOfName)) {
             paramName = StringUtil.removeQuotes(annotationOfName.toString());
         }
         return paramName;

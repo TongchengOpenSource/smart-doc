@@ -471,6 +471,7 @@ public class DocUtil {
                 return "number";
             case "boolean":
                 return "boolean";
+            case "enum":
             case "string":
                 return "string";
             default:

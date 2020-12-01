@@ -293,6 +293,9 @@ public class ParamsBuildHelper {
                             }
                             index++;
                         }
+                        Object value = JavaClassUtil.getEnumValue(javaClass, Boolean.FALSE);
+                        param.setValue(String.valueOf(value));
+                        param.setEnumValues(JavaClassUtil.getEnumValues(javaClass));
                         param.setType(DocGlobalConstants.ENUM);
                     }
 
@@ -417,7 +420,7 @@ public class ParamsBuildHelper {
         }
         return paramList;
     }
-
+    @Deprecated
     public static String dictionaryListComment(ApiDataDictionary dictionary) {
         List<EnumDictionary> enumDataDict = dictionary.getEnumDataDict();
         return enumDataDict.stream().map(apiDataDictionary ->

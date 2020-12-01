@@ -16,6 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 /**
+ *
  * @author xingzi
  */
 public class OpenApiBuilder {
@@ -25,9 +26,9 @@ public class OpenApiBuilder {
 
     /**
      * 构建postman json
-     *
      * @param config 配置文件
      */
+
     public static void buildOpenApi(ApiConfig config) {
         DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
         builderTemplate.checkAndInit(config);
@@ -378,6 +379,8 @@ public class OpenApiBuilder {
         if ("object".equals(openApiType) || "string".equals(openApiType)) {
             if ("file".equals(apiParam.getType())) {
                 schema.put("format", "binary");
+            } else if("enum".equals(apiParam.getType())){
+                schema.put("enum",apiParam.getEnumValues());
             }
         } else {
             schema.put("format", "int16".equals(apiParam.getType()) ? "int32" : apiParam.getType());
@@ -445,6 +448,8 @@ public class OpenApiBuilder {
                                     if (Objects.nonNull(prop) && prop.size() > 0) {
                                         component.put(method.getPath().replaceAll(PATH_REGEX, "_") + "request", buildProperties(requestParams));
                                     }
+                                } else {
+                                    component.put(method.getPath().replaceAll(PATH_REGEX, "_") + "request", new HashMap<>(0));
                                 }
                                 //response components
                                 List<ApiParam> responseParams = method.getResponseParams();

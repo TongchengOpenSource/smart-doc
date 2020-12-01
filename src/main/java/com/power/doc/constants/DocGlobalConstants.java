@@ -129,6 +129,8 @@ public interface DocGlobalConstants {
 
     String JSON_CONTENT_TYPE = "application/json; charset=utf-8";
 
+    String URL_CONTENT_TYPE = "application/x-www-form-urlencoded;charset=utf-8";
+
     String POSTMAN_MODE_FORMDATA = "formdata";
 
     String POSTMAN_MODE_RAW = "raw";

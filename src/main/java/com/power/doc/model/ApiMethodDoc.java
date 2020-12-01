@@ -22,6 +22,7 @@
  */
 package com.power.doc.model;
 
+import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.model.request.ApiRequestExample;
 
 import java.io.Serializable;
@@ -102,7 +103,7 @@ public class ApiMethodDoc implements Serializable {
     /**
      * http contentType
      */
-    private String contentType = "application/x-www-form-urlencoded;charset=utf-8";
+    private String contentType = DocGlobalConstants.URL_CONTENT_TYPE;
 
     /**
      * http request headers

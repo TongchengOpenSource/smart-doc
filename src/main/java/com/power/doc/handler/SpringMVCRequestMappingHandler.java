@@ -37,7 +37,9 @@ import com.thoughtworks.qdox.model.JavaMethod;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
+import static com.power.doc.constants.DocTags.DEPRECATED;
 import static com.power.doc.constants.DocTags.IGNORE;
 
 /**
@@ -65,7 +67,7 @@ public class SpringMVCRequestMappingHandler {
         for (JavaAnnotation annotation : annotations) {
             String annotationName = annotation.getType().getName();
             Object produces = annotation.getNamedParameter("produces");
-            if (produces != null) {
+            if (Objects.nonNull(produces)) {
                 mediaType = produces.toString();
             }
             if (DocAnnotationConstants.DEPRECATED.equals(annotationName)) {
@@ -74,7 +76,7 @@ public class SpringMVCRequestMappingHandler {
             if (SpringMvcAnnotations.REQUEST_MAPPING.equals(annotationName) || DocGlobalConstants.REQUEST_MAPPING_FULLY.equals(annotationName)) {
                 shortUrl = DocUtil.handleMappingValue(annotation);
                 Object nameParam = annotation.getNamedParameter("method");
-                if (null != nameParam) {
+                if (Objects.nonNull(nameParam)) {
                     methodType = nameParam.toString();
                     methodType = DocUtil.handleHttpMethod(methodType);
                 } else {
@@ -97,8 +99,11 @@ public class SpringMVCRequestMappingHandler {
                 methodType = Methods.DELETE.getValue();
             }
         }
-        if (shortUrl != null) {
-            if (null != method.getTagByName(IGNORE)) {
+        if (Objects.nonNull(method.getTagByName(DEPRECATED))) {
+            deprecated = true;
+        }
+        if (Objects.nonNull(shortUrl)) {
+            if (Objects.nonNull(method.getTagByName(IGNORE))) {
                 return null;
             }
             shortUrl = StringUtil.removeQuotes(shortUrl);

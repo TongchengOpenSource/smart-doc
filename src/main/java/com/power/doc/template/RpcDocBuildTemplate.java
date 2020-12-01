@@ -42,6 +42,7 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+import static com.power.doc.constants.DocTags.DEPRECATED;
 import static com.power.doc.constants.DocTags.IGNORE;
 
 /**
@@ -119,6 +120,9 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
                 if (DocAnnotationConstants.DEPRECATED.equals(annotationName)) {
                     deprecated = true;
                 }
+            }
+            if (Objects.nonNull(method.getTagByName(DEPRECATED))) {
+                deprecated = true;
             }
             methodOrder++;
             JavaMethodDoc apiMethodDoc = new JavaMethodDoc();

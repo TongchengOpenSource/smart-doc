@@ -36,6 +36,11 @@ public interface DocTags {
     String VERSION = "version";
 
     /**
+     * java deprecated tag
+     */
+    String DEPRECATED= "deprecated";
+
+    /**
      * custom ignore tag
      */
     String IGNORE = "ignore";
@@ -64,6 +69,7 @@ public interface DocTags {
      * custom @group tag
      */
     String GROUP = "group";
+
 
     /**
      * Ignore ResponseBodyAdvice

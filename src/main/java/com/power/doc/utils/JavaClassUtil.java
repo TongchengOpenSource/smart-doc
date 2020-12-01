@@ -216,6 +216,15 @@ public class JavaClassUtil {
         return stringBuilder.toString();
     }
 
+    public static List<String> getEnumValues(JavaClass javaClass) {
+        List<JavaField> javaFields = javaClass.getEnumConstants();
+        List<String> enums = new ArrayList<>();
+        for (JavaField javaField : javaFields) {
+            enums.add(javaField.getName());
+        }
+        return enums;
+    }
+
 
     /**
      * Get annotation simpleName
