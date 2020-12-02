@@ -159,13 +159,13 @@ public class DocUtil {
                 break;
             }
         }
-        if (null == value) {
+        if (Objects.isNull(value)) {
             return jsonValueByType(typeName);
         } else {
-            if ("string".equals(type.toLowerCase())) {
-                return handleJsonStr(value.toString());
-            } else {
+            if (javaPrimaryType(type)) {
                 return value.toString();
+            } else {
+                return handleJsonStr(value.toString());
             }
         }
     }
