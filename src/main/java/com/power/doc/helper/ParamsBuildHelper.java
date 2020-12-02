@@ -234,8 +234,8 @@ public class ParamsBuildHelper {
                 } else {
                     ApiParam param = ApiParam.of().setField(pre + fieldName).setPid(pid);
                     JavaClass javaClass = projectBuilder.getJavaProjectBuilder().getClassByName(subTypeName);
-                    String enumComments = javaClass.getComment();
                     if (javaClass.isEnum()) {
+                        String enumComments = javaClass.getComment();
                         if (projectBuilder.getApiConfig().getInlineEnum()) {
                             ApiDataDictionary dataDictionary = projectBuilder.getApiConfig().getDataDictionary(javaClass.getSimpleName());
                             if (dataDictionary == null) {
@@ -420,7 +420,7 @@ public class ParamsBuildHelper {
         }
         return paramList;
     }
-    @Deprecated
+
     public static String dictionaryListComment(ApiDataDictionary dictionary) {
         List<EnumDictionary> enumDataDict = dictionary.getEnumDataDict();
         return enumDataDict.stream().map(apiDataDictionary ->
