@@ -39,11 +39,6 @@ public class SourceCodePath {
      */
     private String desc;
 
-    @Deprecated
-    public static SourceCodePath path() {
-        return new SourceCodePath();
-    }
-
     public static SourceCodePath builder() {
         return new SourceCodePath();
     }

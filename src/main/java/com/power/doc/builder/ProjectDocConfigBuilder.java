@@ -164,6 +164,9 @@ public class ProjectDocConfigBuilder {
     private void checkResponseBodyAdvice(ApiConfig config) {
         ResponseBodyAdvice responseBodyAdvice = config.getResponseBodyAdvice();
         if (Objects.nonNull(responseBodyAdvice) && StringUtil.isNotEmpty(responseBodyAdvice.getClassName())) {
+            if (Objects.nonNull(responseBodyAdvice.getWrapperClass())) {
+                return;
+            }
             try {
                 Class.forName(responseBodyAdvice.getClassName());
             } catch (ClassNotFoundException e) {
@@ -184,7 +187,7 @@ public class ProjectDocConfigBuilder {
         if ("randomLight".equals(style)) {
             // Eliminate styles that do not match the template
             style = HighlightStyle.randomLight(random);
-            if(HighlightStyle.containsStyle(style)){
+            if (HighlightStyle.containsStyle(style)) {
                 apiConfig.setStyle(style);
             } else {
                 apiConfig.setStyle("null");

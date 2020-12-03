@@ -54,11 +54,6 @@ public class RevisionLog {
      */
     private String remarks;
 
-    @Deprecated
-    public static RevisionLog getLog() {
-        return new RevisionLog();
-    }
-
     public static RevisionLog builder() {
         return new RevisionLog();
     }
