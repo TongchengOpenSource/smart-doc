@@ -59,12 +59,6 @@ public class ApiDataDictionary {
      */
     private String descField;
 
-
-    @Deprecated
-    public static ApiDataDictionary dict() {
-        return new ApiDataDictionary();
-    }
-
     public static ApiDataDictionary builder() {
         return new ApiDataDictionary();
     }

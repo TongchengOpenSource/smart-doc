@@ -51,11 +51,6 @@ public class CustomRespField {
      */
     private Object value;
 
-    @Deprecated
-    public static CustomRespField field() {
-        return new CustomRespField();
-    }
-
     public static CustomRespField builder() {
         return new CustomRespField();
     }

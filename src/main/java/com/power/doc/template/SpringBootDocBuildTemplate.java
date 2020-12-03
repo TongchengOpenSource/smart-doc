@@ -431,14 +431,16 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             String format = String.format(DocGlobalConstants.CURL_REQUEST_TYPE, methodType, header.toString(), url);
             if (requestExample.isJson()) {
                 if (StringUtil.isNotEmpty(requestExample.getJsonBody())) {
-                    exampleBody = String.format(DocGlobalConstants.CURL_POST_PUT_JSON, methodType, header.toString(), url,
-                            requestExample.getJsonBody());
+                    String tempUrl = url + "?" + body;
+                    exampleBody = String.format(DocGlobalConstants.CURL_POST_PUT_JSON, methodType, header.toString(),
+                            tempUrl, requestExample.getJsonBody());
                 } else {
                     exampleBody = format;
                 }
             } else {
                 if (StringUtil.isNotEmpty(body)) {
-                    exampleBody = String.format(DocGlobalConstants.CURL_REQUEST_TYPE_DATA, methodType, header.toString(), url, body);
+                    exampleBody = String.format(DocGlobalConstants.CURL_REQUEST_TYPE_DATA, methodType,
+                            header.toString(), url, body);
                 } else {
                     exampleBody = format;
                 }
