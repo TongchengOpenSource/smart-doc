@@ -1,6 +1,10 @@
-### 当前使用版本(必须填写清楚，否则不予处理)
-注意：请自行从maven仓库或者是[github](https://github.com/smart-doc-group/smart-doc) tag确认你当前使用的是最新版的smart-doc或者相关插件，
-历史版本的问题官方将拒绝处理。
+### 您的使用环境(必填,不填写官方直接关闭issue)
+maven和gradle版本信息根据个人使用情况填写
+
+- maven版本号：xxx
+- smart-doc-maven-plugin版本号：xxx
+- gradle版本号：xxx
+- smart-doc-gradle-plugin版本号：xxx
 
 ### 该问题是怎么引起的(如果最新版本已经修复的，会直接关闭)？
 编写关于整个issue描述前注意阅读下面的注意事项，尤其是萌新的同学：
@@ -13,7 +17,7 @@
    文档把调试步骤都写了，不要说你不懂。
    
   最后、祝你使用愉快！
-### 重现步骤
+### 重现步骤(必填,不填写官方直接关闭issue)
 
 
-### 报错信息
+### 报错信息(必填,不填写官方直接关闭issue)

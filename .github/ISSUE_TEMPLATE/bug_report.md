@@ -5,6 +5,12 @@ title: ''
 labels: bug
 assignees: ''
 ---
+## Your Environment(您的使用环境)
+<!--- Include as many relevant details about the environment you experienced the bug in -->
+* smart-doc version:
+* plugin version (e.g. smart-doc-maven-plugin or smart-doc-gradle-plugin):
+* build tool version(maven or gradle):
+
 ## Expected Behavior(您期望的结果)
 <!--- If you're describing a bug, tell us what should happen -->
 <!--- If you're suggesting a change/improvement, tell us how it should work -->
@@ -29,9 +35,5 @@ assignees: ''
 <!--- How has this issue affected you? What are you trying to accomplish? -->
 <!--- Providing context helps us come up with a solution that is most useful in the real world -->
 
-## Your Environment(您的使用环境)
-<!--- Include as many relevant details about the environment you experienced the bug in -->
-* smart-doc version:
-* plugin version (e.g. smart-doc-maven-plugin or smart-doc-gradle-plugin):
-* build tool version(maven or gradle):
+
 
