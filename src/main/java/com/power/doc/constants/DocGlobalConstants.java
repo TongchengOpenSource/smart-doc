@@ -51,6 +51,8 @@ public interface DocGlobalConstants {
 
     String MARKDOWN_CSS_TPL = "markdown.css";
 
+    String DEBUG_PAGE_TPL = "mock.html";
+
     String ALL_IN_ONE_CSS = "AllInOne.css";
 
     String RPC_API_DOC_ADOC_TPL = "dubbo/Dubbo.adoc";

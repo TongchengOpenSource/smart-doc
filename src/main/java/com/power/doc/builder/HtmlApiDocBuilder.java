@@ -88,7 +88,11 @@ public class HtmlApiDocBuilder {
             if (StringUtils.isNotEmpty(config.getAllInOneDocFileName())) {
                 INDEX_HTML = config.getAllInOneDocFileName();
             }
-            builderTemplate.buildAllInOne(apiDocList, config, javaProjectBuilder, ALL_IN_ONE_HTML_TPL, INDEX_HTML);
+            if(config.isCreateDebugPage()){
+                builderTemplate.buildAllInOne(apiDocList, config, javaProjectBuilder, DEBUG_PAGE_TPL, DEBUG_PAGE_TPL);
+            } else {
+                builderTemplate.buildAllInOne(apiDocList, config, javaProjectBuilder, ALL_IN_ONE_HTML_TPL, INDEX_HTML);
+            }
         } else {
             List<ApiDocDict> apiDocDictList = builderTemplate.buildDictionary(config, javaProjectBuilder);
             buildIndex(apiDocList, config);

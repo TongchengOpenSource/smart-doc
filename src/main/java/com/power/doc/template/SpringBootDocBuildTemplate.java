@@ -669,6 +669,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         List<ApiParam> queryParams = new ArrayList<>();
         List<ApiParam> bodyParams = new ArrayList<>();
         for (ApiParam param : paramList) {
+            param.setValue(StringUtil.removeQuotes(param.getValue()));
             if (param.isPathParam()) {
                 param.setId(pathParams.size() + 1);
                 pathParams.add(param);

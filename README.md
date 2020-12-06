@@ -95,6 +95,7 @@ When you need to use smart-doc to generate more API document information, you ca
   "projectName": "smart-doc", // Configure your own project name
   "skipTransientField": true, // Not currently implemented
   "style":"xt256", //set highlight
+  "createDebugPage": true,
   "sortByTitle":false,//Sort by interface title, the default value is false
   "requestFieldToUnderline":true, //convert request field to underline
   "inlineEnum":true,// Set to true to display enumeration details in the parameter table

@@ -255,6 +255,11 @@ public class ApiConfig {
 
     private String style;
 
+    /**
+     * create debug page
+     */
+    private boolean createDebugPage;
+
     public String getServerUrl() {
         return serverUrl;
     }
@@ -564,6 +569,14 @@ public class ApiConfig {
         this.style = style;
     }
 
+    public boolean isCreateDebugPage() {
+        return createDebugPage;
+    }
+
+    public void setCreateDebugPage(boolean createDebugPage) {
+        this.createDebugPage = createDebugPage;
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("{");
@@ -639,8 +652,10 @@ public class ApiConfig {
                 .append(displayActualType);
         sb.append(",\"responseBodyAdvice\":")
                 .append(responseBodyAdvice);
-        sb.append(",\"style\":")
-                .append(style);
+        sb.append(",\"style\":\"")
+                .append(style).append('\"');
+        sb.append(",\"createDebugPage\":")
+                .append(createDebugPage);
         sb.append('}');
         return sb.toString();
     }

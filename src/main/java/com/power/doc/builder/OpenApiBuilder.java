@@ -72,8 +72,6 @@ public class OpenApiBuilder {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String data = gson.toJson(json);
         FileUtil.nioWriteFile(data, filePath);
-
-
     }
 
     /**
@@ -230,7 +228,7 @@ public class OpenApiBuilder {
                     detail = new HashMap<>();
                     detail.put("type", apiParam.getType());
                     detail.put("description", apiParam.getDesc());
-                    detail.put("example", apiParam.getValue());
+                    detail.put("example", DocUtil.handleJsonStr(apiParam.getValue()));
                     if ("file".equals(apiParam.getType())) {
                         if (apiParam.isHasItems()) {
                             detail.put("type", "array");
@@ -346,6 +344,7 @@ public class OpenApiBuilder {
                 parameters.put("name", header.getName());
                 parameters.put("description", header.getDesc());
                 parameters.put("required", header.isRequired());
+                parameters.put("example",header.getValue());
                 parameters.put("schema", buildParametersSchema(header));
                 parameters.put("in", "header");
                 parametersList.add(parameters);

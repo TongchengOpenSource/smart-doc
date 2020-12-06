@@ -94,6 +94,7 @@ smart-doc官方目前已经开发完成[Maven插件](https://gitee.com/smart-doc
   "allInOne": true,  //是否将文档合并到一个文件中，一般推荐为true
   "outPath": "D://md2", //指定文档的输出路径
   "coverOld": true,  //是否覆盖旧的文件，主要用于mardown文件覆盖
+  "createDebugPage": true,//@since 2.0.0 smart-doc支持创建可以测试的html页面
   "packageFilters": "",//controller包过滤，多个包用英文逗号隔开
   "md5EncryptedHtmlName": false,//只有每个controller生成一个html文件是才使用
   "style":"xt256", //基于highlight.js的代码高设置,可选值很多可查看码云wiki，喜欢配色统一简洁的同学可以不设置
@@ -112,46 +113,39 @@ smart-doc官方目前已经开发完成[Maven插件](https://gitee.com/smart-doc
   "ignoreRequestParams":[ //忽略请求参数对象，把不想生成文档的参数对象屏蔽掉，@since 1.9.2
      "org.springframework.ui.ModelMap"
    ],
-  "dataDictionaries": [ //配置数据字典，没有需求可以不设置
-    {
+  "dataDictionaries": [{ //配置数据字典，没有需求可以不设置
       "title": "http状态码字典", //数据字典的名称
       "enumClassName": "com.power.common.enums.HttpCodeEnum", //数据字典枚举类名称
       "codeField": "code",//数据字典字典码对应的字段名称
       "descField": "message"//数据字典对象的描述信息字典
-    }
-  ],
+  }],
   "errorCodeDictionaries": [{ //错误码列表，没有需求可以不设置
     "title": "title",
     "enumClassName": "com.power.common.enums.HttpCodeEnum", //错误码枚举类
     "codeField": "code",//错误码的code码字段名称
     "descField": "message"//错误码的描述信息对应的字段名
   }],
-  "revisionLogs": [ //设置文档变更记录，没有需求可以不设置
-    {
+  "revisionLogs": [{
       "version": "1.0", //文档版本号
       "status": "update", //变更操作状态，一般为：创建、更新等
       "author": "author", //文档变更作者
       "remarks": "desc" //变更描述
     }
   ],
-  "customResponseFields": [ //自定义添加字段和注释，api-doc后期遇到同名字段则直接给相应字段加注释，非必须
-    {
+  "customResponseFields": [{ //自定义添加字段和注释，api-doc后期遇到同名字段则直接给相应字段加注释，非必须
       "name": "code",//覆盖响应码字段
       "desc": "响应代码",//覆盖响应码的字段注释
       "ownerClassName": "org.springframework.data.domain.Pageable", //指定你要添加注释的类名
       "value": "00000"//设置响应码的值
-    }
-  ],
-  "requestHeaders": [ //设置请求头，没有需求可以不设置
-    {
+  }],
+  "requestHeaders": [{ //设置请求头，没有需求可以不设置
       "name": "token",//请求头名称
       "type": "string",//请求头类型
       "desc": "desc",//请求头描述信息
       "value":"token请求头的值",//不设置默认null
       "required": false,//是否必须
       "since": "-"//什么版本添加的改请求头
-    }
-  ],
+  }],
   "rpcApiDependencies":[{ // 项目开放的dubbo api接口模块依赖，配置后输出到文档方便使用者集成
         "artifactId":"SpringBoot2-Dubbo-Api",
         "groupId":"com.demo",
@@ -168,12 +162,10 @@ smart-doc官方目前已经开发完成[Maven插件](https://gitee.com/smart-doc
   "responseBodyAdvice":{ //自smart-doc 1.9.8起，ResponseBodyAdvice统一返回设置，可用ignoreResponseBodyAdvice tag来忽略
   		"className":"com.power.common.model.CommonResult" //通用响应体
   },
-  "sourceCodePaths": [ //设置代码路径, 插件已经能够自动下载发布的源码包，没必要配置
-    {
+  "sourceCodePaths": [{ //设置代码路径, 插件已经能够自动下载发布的源码包，没必要配置
       "path": "src/main/java",
       "desc": "测试"
-    }
-  ]
+  }]
 }
 ```
 上面的JSON配置实例中只有"outPath"是必填项。
