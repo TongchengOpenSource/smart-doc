@@ -25,7 +25,7 @@ $\color{red}{你给我的star，胜过所有读过的诗—smart-doc}$
 - 支持生成JSON返回值示例。
 - 支持从项目外部加载源代码来生成字段注释(包括标准规范发布的jar包)。
 - 支持生成多种格式文档：Markdown、HTML5、Asciidoctor、Postman Collection、OpenAPI 3.0。
-- 轻易实现在Spring Boot服务上在线查看静态HTML5 api文档。
+- 轻易实现在Spring Boot服务上在线查看静态HTML5 api文档，支持生成在线debug页面。
 - 开放文档数据，可自由实现接入文档管理系统。
 - 支持导出错误码和定义在代码中的各种字典码到接口文档。
 - 支持Maven、Gradle插件式轻松集成。
@@ -94,7 +94,7 @@ smart-doc官方目前已经开发完成[Maven插件](https://gitee.com/smart-doc
   "allInOne": true,  //是否将文档合并到一个文件中，一般推荐为true
   "outPath": "D://md2", //指定文档的输出路径
   "coverOld": true,  //是否覆盖旧的文件，主要用于mardown文件覆盖
-  "createDebugPage": true,//@since 2.0.0 smart-doc支持创建可以测试的html页面
+  "createDebugPage": true,//@since 2.0.0 smart-doc支持创建可以测试的html页面，仅在AllInOne模式中起作用。
   "packageFilters": "",//controller包过滤，多个包用英文逗号隔开
   "md5EncryptedHtmlName": false,//只有每个controller生成一个html文件是才使用
   "style":"xt256", //基于highlight.js的代码高设置,可选值很多可查看码云wiki，喜欢配色统一简洁的同学可以不设置

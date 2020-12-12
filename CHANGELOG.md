@@ -5,9 +5,9 @@
 - 更新内容：
     1. 优化了文档的显示，将query和path单独提出来做了展示
     2. 优化openapi 3.0文档规范的支持，可集成swagger ui等ui使用。
-    3. 使用postman collection 2.0的支持。
+    3. 优化postman collection 2.0的支持。
     4. 添加分组支持group。
-    5. 修改mock的依稀bug和增强使用
+    5. 修改mock的一些bug和增强使用
     6. 支出创建debug页面
 #### 版本号：1.9.9.1
 - 更新日期: 2020-11-23
