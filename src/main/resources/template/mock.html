@@ -481,7 +481,7 @@
         const id = $this.data("id");
         console.log("method-id=>" + id);
 
-        const body = $("#" + id + "-body").val();
+        let body = $("#" + id + "-body").val();
 
         // header
         const $headerElement = $("#" + id + "-header");
@@ -489,7 +489,7 @@
 
         // body param
         const $paramElement = $("#" + id + "-param");
-        const bodyParamData = getInputData($paramElement)
+        let bodyParamData = getInputData($paramElement)
 
         // path param
         const $pathElement = $("#" + id + "-path-params")
@@ -497,24 +497,38 @@
 
         // query param
         const $queryElement = $("#" + id + "-query-params")
-        const queryParamData = getInputData($queryElement)
+
 
         const url = $("#" + id + "-url").data("url");
         const method = $("#" + id + "-method").data("method");
         console.log("request-headers=>" + JSON.stringify(headersData))
         console.log("path-params=>" + JSON.stringify(pathParamData))
-        console.log("query-params=>" + JSON.stringify(queryParamData));
+
         console.log("body-params=>" + JSON.stringify(bodyParamData))
         console.log("json-body=>" + body);
-        const finalUrl = castToGetUri(url, pathParamData, queryParamData);
-        console.log("url=>" + finalUrl)
-        const contentType = $("#" + id + "-content-type").data("content-type");
+
         const ajaxOptions = {};
+        const contentType = $("#" + id + "-content-type").data("content-type");
+        let queryParamData = "";
+        let finalUrl = "";
+        if ("multipart/form-data" == contentType) {
+            finalUrl = castToGetUri(url, pathParamData);
+            queryParamData = getInputData($queryElement,true)
+            body = queryParamData;
+            ajaxOptions.processData= false;
+            ajaxOptions.contentType = false;
+        } else {
+            queryParamData = getInputData($queryElement)
+            finalUrl = castToGetUri(url, pathParamData, queryParamData)
+            ajaxOptions.contentType = contentType;
+        }
+        console.log("query-params=>" + JSON.stringify(queryParamData));
+        console.log("url=>" + finalUrl)
         ajaxOptions.headers = headersData
         ajaxOptions.url = finalUrl
         ajaxOptions.type = method
         ajaxOptions.data = body;
-        ajaxOptions.contentType = contentType;
+
         const ajaxTime = new Date().getTime();
         $.ajax(ajaxOptions).done(function (result, textStatus, jqXHR) {
             $this.css("background", "#5cb85c");
@@ -571,18 +585,23 @@
         }
     }
 
-    function getInputData(element, returnFormDate) {
+    function getInputData(element,returnFormDate) {
         const formData = new FormData();
         $(element).find("tr").each(function (i) {
             const checked = $(this).find('td:eq(0)').children(".checkbox").children("input").is(':checked');
             if (checked) {
                 const input = $(this).find('td:eq(2) input');
-                const val = $(input).val();
+                console.log("input type:" + $(input).attr("type"))
                 const name = $(input).attr("name");
-                formData.append(name, val);
+                if ($(input).attr("type") == "file") {
+                    formData.append(name, $(input)[0].files[0]);
+                } else {
+                    const val = $(input).val();
+                    formData.append(name, val);
+                }
             }
         });
-        if (returnFormDate) {
+        if(returnFormDate){
             return formData;
         }
         const headersData = {};
