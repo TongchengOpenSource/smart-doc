@@ -599,8 +599,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                     }
                 }
             } else if (JavaClassValidateUtil.isPrimitive(fullTypeName)) {
-                String typeSimpleName = DocClassUtil.processTypeNameForParams(simpleName);
-                String value = DocUtil.getValByTypeAndFieldName(typeSimpleName, paramName);
+                String value = DocUtil.getValByTypeAndFieldName(javaType.getValue(), paramName);
                 ApiParam param = ApiParam.of().setField(paramName)
                         .setType(DocClassUtil.processTypeNameForParams(simpleName))
                         .setId(paramList.size() + 1)
