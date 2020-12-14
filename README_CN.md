@@ -30,6 +30,7 @@ $\color{red}{你给我的star，胜过所有读过的诗—smart-doc}$
 - 支持导出错误码和定义在代码中的各种字典码到接口文档。
 - 支持Maven、Gradle插件式轻松集成。
 - 支持Apache Dubbo RPC接口文档生成。
+- debug接口调试html5页面完全支持文件上传下载测试。
 ## Getting Started
 smart-doc使用和测试可参考[smart-doc demo](https://gitee.com/sunyurepository/api-doc-test.git)。
 ```

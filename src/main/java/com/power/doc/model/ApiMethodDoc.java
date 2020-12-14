@@ -166,6 +166,11 @@ public class ApiMethodDoc implements Serializable {
      */
     private String group;
 
+    /**
+     * marking download
+     */
+    private boolean download;
+
     public String getMethodId() {
         return methodId;
     }
@@ -357,6 +362,14 @@ public class ApiMethodDoc implements Serializable {
 
     public void setGroup(String group) {
         this.group = group;
+    }
+
+    public boolean isDownload() {
+        return download;
+    }
+
+    public void setDownload(boolean download) {
+        this.download = download;
     }
 
     @Override

@@ -160,6 +160,10 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 throw new RuntimeException("Unable to find comment for method " + method.getName() + " in " + cls.getCanonicalName());
             }
             ApiMethodDoc apiMethodDoc = new ApiMethodDoc();
+            DocletTag downloadTag = method.getTagByName(DocTags.DOWNLOAD);
+            if (Objects.nonNull(downloadTag)) {
+                apiMethodDoc.setDownload(true);
+            }
             DocletTag docletTag = method.getTagByName(DocTags.GROUP);
             if (Objects.nonNull(docletTag)) {
                 apiMethodDoc.setGroup(docletTag.getValue());

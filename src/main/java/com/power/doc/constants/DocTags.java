@@ -70,6 +70,11 @@ public interface DocTags {
      */
     String GROUP = "group";
 
+    /**
+     * custom @download tag
+     */
+    String DOWNLOAD = "download";
+
 
     /**
      * Ignore ResponseBodyAdvice
