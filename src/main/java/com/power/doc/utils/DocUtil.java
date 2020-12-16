@@ -507,7 +507,7 @@ public class DocUtil {
             return url.toString();
         } else {
             url = annotation.getNamedParameter(DocAnnotationConstants.PATH_PROP);
-            return null == url ? StringUtil.ENMPTY : url.toString();
+            return null == url ? StringUtil.EMPTY : url.toString();
         }
     }
 }

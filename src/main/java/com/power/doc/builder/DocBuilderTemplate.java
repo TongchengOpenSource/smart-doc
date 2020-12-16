@@ -96,20 +96,36 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
      * @param template           template
      * @param outPutFileName     output file
      */
-    public void buildAllInOne(List<ApiDoc> apiDocList, ApiConfig config, JavaProjectBuilder javaProjectBuilder, String template, String outPutFileName) {
+    public void buildAllInOne(List<ApiDoc> apiDocList, ApiConfig config, JavaProjectBuilder javaProjectBuilder,
+                              String template, String outPutFileName) {
+        buildDoc(apiDocList, config, javaProjectBuilder, template, outPutFileName, null);
+    }
+
+    /**
+     * Merge all api doc into one document
+     *
+     * @param apiDocList         list  data of Api doc
+     * @param config             api config
+     * @param javaProjectBuilder JavaProjectBuilder
+     * @param template           template
+     * @param outPutFileName     output file
+     * @param apiDoc             apiDoc
+     */
+    public void buildDoc(List<ApiDoc> apiDocList, ApiConfig config, JavaProjectBuilder javaProjectBuilder,
+                         String template, String outPutFileName, ApiDoc apiDoc) {
         String outPath = config.getOutPath();
         String strTime = DateTimeUtil.long2Str(now, DateTimeUtil.DATE_FORMAT_SECOND);
         FileUtil.mkdirs(outPath);
         List<ApiErrorCode> errorCodeList = errorCodeDictToList(config);
-
         Template tpl = BeetlTemplateUtil.getByName(template);
         String style = config.getStyle();
-        tpl.binding(TemplateVariable.STYLE.getVariable(),style);
+        tpl.binding(TemplateVariable.STYLE.getVariable(), style);
         tpl.binding(TemplateVariable.BACKGROUND.getVariable(), HighlightStyle.getBackgroundColor(style));
         tpl.binding(TemplateVariable.API_DOC_LIST.getVariable(), apiDocList);
         tpl.binding(TemplateVariable.ERROR_CODE_LIST.getVariable(), errorCodeList);
         tpl.binding(TemplateVariable.VERSION_LIST.getVariable(), config.getRevisionLogs());
         tpl.binding(TemplateVariable.VERSION.getVariable(), now);
+
         tpl.binding(TemplateVariable.CREATE_TIME.getVariable(), strTime);
         tpl.binding(TemplateVariable.PROJECT_NAME.getVariable(), config.getProjectName());
         tpl.binding(TemplateVariable.REQUEST_EXAMPLE.getVariable(), config.isRequestExample());
@@ -118,6 +134,11 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
             tpl.binding(TemplateVariable.DICT_ORDER.getVariable(), apiDocList.size() + 1);
         } else {
             tpl.binding(TemplateVariable.DICT_ORDER.getVariable(), apiDocList.size() + 2);
+        }
+        if (Objects.nonNull(apiDoc)) {
+            tpl.binding(TemplateVariable.DESC.getVariable(), apiDoc.getDesc());
+            tpl.binding(TemplateVariable.ORDER.getVariable(), apiDoc.order);
+            tpl.binding(TemplateVariable.LIST.getVariable(), apiDoc.getList());//类名
         }
         setDirectoryLanguageVariable(config, tpl);
         List<ApiDocDict> apiDocDictList = buildDictionary(config, javaProjectBuilder);
@@ -137,6 +158,65 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
         List<ApiErrorCode> errorCodeList = errorCodeDictToList(config);
         Template mapper = BeetlTemplateUtil.getByName(template);
         mapper.binding(TemplateVariable.LIST.getVariable(), errorCodeList);
+        FileUtil.nioWriteFile(mapper.render(), config.getOutPath() + FILE_SEPARATOR + outPutFileName);
+    }
+
+    /**
+     * build error_code html
+     *
+     * @param config         api config
+     * @param apiDocList     list  data of Api doc
+     * @param template       template
+     * @param outPutFileName output file
+     */
+    public void buildErrorCodeDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder,
+                                  List<ApiDoc> apiDocList, String template, String outPutFileName) {
+        List<ApiErrorCode> errorCodeList = errorCodeDictToList(config);
+        Template errorTemplate = BeetlTemplateUtil.getByName(template);
+        errorTemplate.binding(TemplateVariable.PROJECT_NAME.getVariable(), config.getProjectName());
+        String style = config.getStyle();
+        errorTemplate.binding(TemplateVariable.STYLE.getVariable(), style);
+        if (CollectionUtil.isEmpty(errorCodeList)) {
+            errorTemplate.binding(TemplateVariable.DICT_ORDER.getVariable(), apiDocList.size() + 1);
+        } else {
+            errorTemplate.binding(TemplateVariable.DICT_ORDER.getVariable(), apiDocList.size() + 2);
+        }
+        List<ApiDocDict> apiDocDictList = buildDictionary(config, javaProjectBuilder);
+        errorTemplate.binding(TemplateVariable.DICT_LIST.getVariable(), apiDocDictList);
+        errorTemplate.binding(TemplateVariable.API_DOC_LIST.getVariable(), apiDocList);
+        errorTemplate.binding(TemplateVariable.BACKGROUND.getVariable(), HighlightStyle.getBackgroundColor(style));
+        errorTemplate.binding(TemplateVariable.ERROR_CODE_LIST.getVariable(), errorCodeList);
+        setDirectoryLanguageVariable(config, errorTemplate);
+        FileUtil.nioWriteFile(errorTemplate.render(), config.getOutPath() + FILE_SEPARATOR + outPutFileName);
+
+    }
+
+    /**
+     * build common_data doc
+     *
+     * @param config             api config
+     * @param javaProjectBuilder JavaProjectBuilder
+     * @param apiDocList         list  data of Api doc
+     * @param template           template
+     * @param outPutFileName     output file
+     */
+    public void buildDirectoryDataDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder, List<ApiDoc> apiDocList, String template, String outPutFileName) {
+        List<ApiDocDict> directoryList = buildDictionary(config, javaProjectBuilder);
+        Template mapper = BeetlTemplateUtil.getByName(template);
+        mapper.binding(TemplateVariable.PROJECT_NAME.getVariable(), config.getProjectName());
+        String style = config.getStyle();
+        mapper.binding(TemplateVariable.STYLE.getVariable(), style);
+        List<ApiErrorCode> errorCodeList = errorCodeDictToList(config);
+        if (CollectionUtil.isEmpty(errorCodeList)) {
+            mapper.binding(TemplateVariable.DICT_ORDER.getVariable(), apiDocList.size() + 1);
+        } else {
+            mapper.binding(TemplateVariable.DICT_ORDER.getVariable(), apiDocList.size() + 2);
+        }
+        mapper.binding(TemplateVariable.API_DOC_LIST.getVariable(), apiDocList);
+        mapper.binding(TemplateVariable.BACKGROUND.getVariable(), HighlightStyle.getBackgroundColor(style));
+        mapper.binding(TemplateVariable.ERROR_CODE_LIST.getVariable(), errorCodeList);
+        setDirectoryLanguageVariable(config, mapper);
+        mapper.binding(TemplateVariable.DICT_LIST.getVariable(), directoryList);
         FileUtil.nioWriteFile(mapper.render(), config.getOutPath() + FILE_SEPARATOR + outPutFileName);
     }
 

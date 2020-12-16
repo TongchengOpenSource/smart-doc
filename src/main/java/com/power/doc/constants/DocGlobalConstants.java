@@ -5,6 +5,7 @@ package com.power.doc.constants;
  */
 public interface DocGlobalConstants {
 
+    int API_ORDER = 0;
     String FILE_SEPARATOR = System.getProperty("file.separator");
 
     String HTML_DOC_OUT_PATH = "src/main/resources/static/doc";

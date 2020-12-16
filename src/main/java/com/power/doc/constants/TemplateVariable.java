@@ -51,7 +51,8 @@ public enum TemplateVariable {
     RPC_CONSUMER_CONFIG("consumerConfigExample"),
     REQUEST_EXAMPLE("isRequestExample"),
     RESPONSE_EXAMPLE("isResponseExample"),
-    RESPONSE_LIST("respList");
+    RESPONSE_LIST("respList"),
+    ORDER("order");
 
     private String variable;
 
