@@ -22,7 +22,6 @@
  */
 package com.power.doc.model;
 
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Objects;
@@ -99,7 +98,7 @@ public class ApiDoc implements Comparable<ApiDoc> {
     }
 
     @Override
-    public int compareTo(@NotNull ApiDoc o) {
+    public int compareTo(ApiDoc o) {
         if (Objects.nonNull(o.getDesc())) {
             return desc.compareTo(o.getDesc());
         }

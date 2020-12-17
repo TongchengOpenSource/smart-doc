@@ -11,7 +11,7 @@ import com.power.doc.model.*;
 import com.power.doc.template.SpringBootDocBuildTemplate;
 import com.power.doc.utils.DocUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
-import org.jetbrains.annotations.NotNull;
+
 
 import java.util.*;
 
@@ -353,7 +353,6 @@ public class OpenApiBuilder {
         return parametersList;
     }
 
-    @NotNull
     private static Map<String, Object> getStringParams(ApiParam apiParam) {
         Map<String, Object> parameters;
         parameters = new HashMap<>(20);

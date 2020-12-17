@@ -1,7 +1,6 @@
 package com.power.doc.util;
 
-import com.power.common.util.FileUtil;
-import com.power.doc.utils.MarkDownUtil;
+
 import org.junit.Test;
 
 /**
@@ -13,8 +12,5 @@ public class MarkDownUtilTest {
     @Test
     public void testToHtml() {
 
-        String file = FileUtil.getFileContent("D:\\md\\AllInOne-V201909272232.md");
-        String html = MarkDownUtil.toHtml(file);
-        System.out.println(html);
     }
 }

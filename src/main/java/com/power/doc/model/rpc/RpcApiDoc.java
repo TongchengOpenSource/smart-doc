@@ -1,7 +1,6 @@
 package com.power.doc.model.rpc;
 
 import com.power.doc.model.JavaMethodDoc;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Objects;
@@ -158,7 +157,7 @@ public class RpcApiDoc implements Comparable<RpcApiDoc> {
     }
 
     @Override
-    public int compareTo(@NotNull RpcApiDoc o) {
+    public int compareTo(RpcApiDoc o) {
         if (Objects.nonNull(o.getDesc())) {
             return desc.compareTo(o.getDesc());
         }
