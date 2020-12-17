@@ -24,6 +24,7 @@ package com.power.doc.builder;
 
 import com.power.common.util.DateTimeUtil;
 import com.power.common.util.FileUtil;
+import com.power.doc.constants.TemplateVariable;
 import com.power.doc.model.ApiConfig;
 import com.power.doc.model.ApiDoc;
 import com.power.doc.template.IDocBuildTemplate;
@@ -80,25 +81,31 @@ public class HtmlApiDocBuilder {
                 INDEX_HTML = config.getAllInOneDocFileName();
             }
             if (config.isCreateDebugPage()) {
-                builderTemplate.buildAllInOne(apiDocList, config, javaProjectBuilder, DEBUG_PAGE_TPL, DEBUG_PAGE_ALL_TPL);
+                builderTemplate.buildAllInOne(apiDocList, config, javaProjectBuilder, DEBUG_PAGE_ALL_TPL, DEBUG_PAGE_ALL_TPL);
+                Template mockJs = BeetlTemplateUtil.getByName("js/mock.js");
+                FileUtil.nioWriteFile(mockJs.render(), config.getOutPath() + FILE_SEPARATOR + "mock.js");
             } else {
                 builderTemplate.buildAllInOne(apiDocList, config, javaProjectBuilder, ALL_IN_ONE_HTML_TPL, INDEX_HTML);
             }
+            buildSearchJs(apiDocList, config,"js/search_all.js.btl");
         } else {
             String indexAlias;
             if (config.isCreateDebugPage()) {
                 indexAlias = "mock";
                 buildDoc(builderTemplate, apiDocList, config, javaProjectBuilder, DEBUG_PAGE_SINGLE_TPL, indexAlias);
+                Template mockJs = BeetlTemplateUtil.getByName("js/mock.js");
+                FileUtil.nioWriteFile(mockJs.render(), config.getOutPath() + FILE_SEPARATOR + "mock.js");
             } else {
                 indexAlias = "api";
                 buildDoc(builderTemplate, apiDocList, config, javaProjectBuilder, SINGLE_INDEX_HTML_TPL, indexAlias);
             }
             builderTemplate.buildErrorCodeDoc(config, javaProjectBuilder, apiDocList, SINGLE_ERROR_HTML_TPL,
-                    "error.html",indexAlias);
+                    "error.html", indexAlias);
             builderTemplate.buildDirectoryDataDoc(config, javaProjectBuilder, apiDocList,
-                    SINGLE_DICT_HTML_TPL, "dict.html",indexAlias);
-
+                    SINGLE_DICT_HTML_TPL, "dict.html", indexAlias);
+            buildSearchJs(apiDocList, config,"js/search.js.btl");
         }
+
     }
 
     /**
@@ -124,5 +131,11 @@ public class HtmlApiDocBuilder {
                     doc.getAlias() + ".html", doc);
             index++;
         }
+    }
+
+    private static void buildSearchJs(List<ApiDoc> apiDocList, ApiConfig config, String template) {
+        Template tpl = BeetlTemplateUtil.getByName(template);
+        tpl.binding(TemplateVariable.API_DOC_LIST.getVariable(), apiDocList);
+        FileUtil.nioWriteFile(tpl.render(), config.getOutPath() + FILE_SEPARATOR + "search.js");
     }
 }

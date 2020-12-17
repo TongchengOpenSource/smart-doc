@@ -1,0 +1,76 @@
+let api = [];
+document.onkeydown = keyDownSearch;
+
+function keyDownSearch(e) {
+    let j;
+    let m;
+    let doc;
+    let html;
+    const theEvent = e || window.event;
+    const code = theEvent.keyCode || theEvent.which || theEvent.charCode;
+    if (code == 13) {
+        const search = document.getElementById('search');
+        const searchArr = [];
+        <%for(api in apiDocList){%>
+        searchArr.push({
+        alias: '${api.alias}',
+        order: '${api.order}',
+        desc: '${api.desc}',
+        list: []
+        })
+        api.push({
+        alias: '${api.alias}',
+        order: '${api.order}',
+        desc: '${api.desc}',
+        list: []
+        })
+
+    <%for (doc in api.list) {%>
+        api[${apiLP.dataIndex}].list.push({
+            order: '${doc.order}',
+            desc: '${doc.desc}',
+        });
+        if ('${doc.desc}'.indexOf(search.value) > -1) {
+            searchArr[${apiLP.dataIndex}].list.push({
+                order: '${doc.order}',
+                desc: '${doc.desc}',
+            });
+        }
+        <%}%>
+        <%}%>
+        const searchResult = searchArr.filter(obj => obj.list.length > 0);
+        if (searchResult.length > 0) {
+            html = '';
+            for (j = 0; j < searchResult.length; j++) {
+                html += '<li class="open">';
+                html += ' <a class="dd" href="#_' + searchResult[j].desc + '">' + searchResult[j].order + '.&nbsp;' + searchResult[j].desc + '</a>';
+                html += '    <ul class="sectlevel2" style="display: block">';
+                doc = searchResult[j].list;
+                for (m = 0; m < doc.length; m++) {
+                    html += '<li><a href="#_' + searchResult[j].order + '_' + doc[m].order + '_' + doc[m].desc + '">' + searchResult[j].order + '.' + doc[m].order + '.&nbsp;' + doc[m].desc + '</a> </li>';
+                }
+                html += '</ul>';
+                html += '</li>';
+            }
+            document.getElementById('accordion').innerHTML = html;
+        } else {
+            if (search.value == '') {
+                html = '';
+                for (j = 0; j < api.length; j++) {
+                    html += '<li class="open">';
+                    html += ' <a class="dd" href="#_' + api[j].desc + '">' + api[j].order + '.&nbsp;' + api[j].desc + '</a>';
+                    html += '    <ul class="sectlevel2" style="display: block">';
+                    doc = api[j].list;
+                    for (m = 0; m < doc.length; m++) {
+                        html += '<li><a href="#_' + searchResult[j].order + '_' + doc[m].order + '_' + doc[m].desc + '">' + searchResult[j].order + '.' + doc[m].order + '.&nbsp;' + doc[m].desc + '</a> </li>';
+                    }
+                    html += '</ul>';
+                    html += '</li>';
+                }
+                document.getElementById('accordion').innerHTML = html;
+            } else {
+                document.getElementById('accordion').innerHTML = '';
+            }
+        }
+    }
+}

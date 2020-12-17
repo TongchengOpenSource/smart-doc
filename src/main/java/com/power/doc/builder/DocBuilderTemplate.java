@@ -125,7 +125,7 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
         tpl.binding(TemplateVariable.ERROR_CODE_LIST.getVariable(), errorCodeList);
         tpl.binding(TemplateVariable.VERSION_LIST.getVariable(), config.getRevisionLogs());
         tpl.binding(TemplateVariable.VERSION.getVariable(), now);
-        tpl.binding(TemplateVariable.INDEX_ALIAS.getVariable(), apiDoc.getAlias());
+
         tpl.binding(TemplateVariable.CREATE_TIME.getVariable(), strTime);
         tpl.binding(TemplateVariable.PROJECT_NAME.getVariable(), config.getProjectName());
         tpl.binding(TemplateVariable.REQUEST_EXAMPLE.getVariable(), config.isRequestExample());
@@ -136,6 +136,7 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
             tpl.binding(TemplateVariable.DICT_ORDER.getVariable(), apiDocList.size() + 2);
         }
         if (Objects.nonNull(apiDoc)) {
+            tpl.binding(TemplateVariable.INDEX_ALIAS.getVariable(), apiDoc.getAlias());
             tpl.binding(TemplateVariable.DESC.getVariable(), apiDoc.getDesc());
             tpl.binding(TemplateVariable.ORDER.getVariable(), apiDoc.order);
             tpl.binding(TemplateVariable.LIST.getVariable(), apiDoc.getList());//类名
@@ -184,6 +185,7 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
             errorTemplate.binding(TemplateVariable.DICT_ORDER.getVariable(), apiDocList.size() + 2);
         }
         List<ApiDocDict> apiDocDictList = buildDictionary(config, javaProjectBuilder);
+        errorTemplate.binding(TemplateVariable.VERSION.getVariable(), now);
         errorTemplate.binding(TemplateVariable.DICT_LIST.getVariable(), apiDocDictList);
         errorTemplate.binding(TemplateVariable.INDEX_ALIAS.getVariable(), indexAlias);
         errorTemplate.binding(TemplateVariable.API_DOC_LIST.getVariable(), apiDocList);
@@ -217,6 +219,7 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
         } else {
             mapper.binding(TemplateVariable.DICT_ORDER.getVariable(), apiDocList.size() + 2);
         }
+        mapper.binding(TemplateVariable.VERSION.getVariable(), now);
         mapper.binding(TemplateVariable.API_DOC_LIST.getVariable(), apiDocList);
         mapper.binding(TemplateVariable.INDEX_ALIAS.getVariable(), indexAlias);
         mapper.binding(TemplateVariable.BACKGROUND.getVariable(), HighlightStyle.getBackgroundColor(style));
