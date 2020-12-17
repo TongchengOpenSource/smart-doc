@@ -52,7 +52,8 @@ public enum TemplateVariable {
     REQUEST_EXAMPLE("isRequestExample"),
     RESPONSE_EXAMPLE("isResponseExample"),
     RESPONSE_LIST("respList"),
-    ORDER("order");
+    ORDER("order"),
+    INDEX_ALIAS("alias");
 
     private String variable;
 

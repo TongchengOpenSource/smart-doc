@@ -73,45 +73,56 @@ public class HtmlApiDocBuilder {
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
         IDocBuildTemplate docBuildTemplate = new SpringBootDocBuildTemplate();
         List<ApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder);
+        Template indexCssTemplate = BeetlTemplateUtil.getByName(ALL_IN_ONE_CSS);
+        FileUtil.nioWriteFile(indexCssTemplate.render(), config.getOutPath() + FILE_SEPARATOR + ALL_IN_ONE_CSS);
         if (config.isAllInOne()) {
-            Template indexCssTemplate = BeetlTemplateUtil.getByName(ALL_IN_ONE_CSS);
-            FileUtil.nioWriteFile(indexCssTemplate.render(), config.getOutPath() + FILE_SEPARATOR + ALL_IN_ONE_CSS);
             if (StringUtils.isNotEmpty(config.getAllInOneDocFileName())) {
                 INDEX_HTML = config.getAllInOneDocFileName();
             }
-            if(config.isCreateDebugPage()){
-                builderTemplate.buildAllInOne(apiDocList, config, javaProjectBuilder, DEBUG_PAGE_TPL, DEBUG_PAGE_TPL);
+            if (config.isCreateDebugPage()) {
+                builderTemplate.buildAllInOne(apiDocList, config, javaProjectBuilder, DEBUG_PAGE_TPL, DEBUG_PAGE_ALL_TPL);
             } else {
                 builderTemplate.buildAllInOne(apiDocList, config, javaProjectBuilder, ALL_IN_ONE_HTML_TPL, INDEX_HTML);
             }
         } else {
-            Template indexCssTemplate = BeetlTemplateUtil.getByName(ALL_IN_ONE_CSS);
-            FileUtil.nioWriteFile(indexCssTemplate.render(), config.getOutPath() + FILE_SEPARATOR + ALL_IN_ONE_CSS);
-            buildDoc(builderTemplate,apiDocList,config,javaProjectBuilder);
-            builderTemplate.buildErrorCodeDoc(config,javaProjectBuilder,apiDocList,
-                    "html/error.html","error.html");
-            builderTemplate.buildDirectoryDataDoc(config,javaProjectBuilder,apiDocList,
-                    "html/dict.html","dict.html");
+            String indexAlias;
+            if (config.isCreateDebugPage()) {
+                indexAlias = "mock";
+                buildDoc(builderTemplate, apiDocList, config, javaProjectBuilder, DEBUG_PAGE_SINGLE_TPL, indexAlias);
+            } else {
+                indexAlias = "api";
+                buildDoc(builderTemplate, apiDocList, config, javaProjectBuilder, SINGLE_INDEX_HTML_TPL, indexAlias);
+            }
+            builderTemplate.buildErrorCodeDoc(config, javaProjectBuilder, apiDocList, SINGLE_ERROR_HTML_TPL,
+                    "error.html",indexAlias);
+            builderTemplate.buildDirectoryDataDoc(config, javaProjectBuilder, apiDocList,
+                    SINGLE_DICT_HTML_TPL, "dict.html",indexAlias);
+
         }
     }
 
     /**
      * build ever controller api
      *
-     * @param apiDocList list of api doc
-     * @param config    ApiConfig
+     * @param builderTemplate    DocBuilderTemplate
+     * @param apiDocList         list of api doc
+     * @param config             ApiConfig
+     * @param javaProjectBuilder ProjectDocConfigBuilder
+     * @param template           template
+     * @param outName            outName
      */
-    private static void buildDoc(DocBuilderTemplate builderTemplate,List<ApiDoc> apiDocList,
-                                 ApiConfig config,JavaProjectBuilder javaProjectBuilder) {
+    private static void buildDoc(DocBuilderTemplate builderTemplate, List<ApiDoc> apiDocList,
+                                 ApiConfig config, JavaProjectBuilder javaProjectBuilder,
+                                 String template, String outName) {
         FileUtil.mkdirs(config.getOutPath());
         int index = 0;
         for (ApiDoc doc : apiDocList) {
-            if(index == 0){
-                doc.setAlias("api");
+            if (index == 0) {
+                doc.setAlias(outName);
             }
-            builderTemplate.buildDoc(apiDocList,config,javaProjectBuilder,"html/index.html",
-                    doc.getAlias() + ".html",doc);
-            index ++;
+            builderTemplate.buildDoc(apiDocList, config, javaProjectBuilder, template,
+                    doc.getAlias() + ".html", doc);
+            index++;
         }
     }
 }

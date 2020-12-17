@@ -11,35 +11,51 @@
     <script src="https://cdn.bootcss.com/jquery/1.12.2/jquery.js"></script>
 </head>
 <body class="book toc2 toc-left">
-<div id="header"><%if(isNotEmpty(projectName)){%><h1>${projectName}</h1><%}%>
+<div id="header">
+    <%if(isNotEmpty(projectName)){%><h1>${projectName}</h1><%}%>
     <div id="toc" class="toc2">
+        <div id="book-search-input"><input id="search" type="text" placeholder="Type to search"></div>
         <div id="toctitle"><span>API Reference</span></div>
-        <ul id="accordion" class="sectlevel1"><%for(api in apiDocList){%><%if(apiLP.first){%>
-            <li class="open"><a class="dd" href="#_${api.desc}">${api.order}.&nbsp;${api.desc}</a>
-                <ul class="sectlevel2" style="display: block"><%for(doc in api.list){%>
-                    <li><%if(doc.deprecated){%><a href="#_${api.order}_${doc.order}_${doc.desc}">${api.order}.${doc.order}.&nbsp;<span
+        <ul id="accordion" class="sectlevel1">
+            <%for(api in apiDocList){%>
+            <%
+            var myStyle = "display: none";
+            var liClass = "";
+            if(api.order==order){
+            myStyle= "display: block";
+            liClass = "open";
+            }%>
+            <%if(apiLP.first){%>
+            <li class="${liClass}">
+                <a class="dd" href="${api.alias}.html#header">${api.order}.&nbsp;${api.desc}</a>
+                <ul class="sectlevel2" style="${myStyle}">
+                    <%for(doc in api.list){%>
+                    <li><%if(doc.deprecated){%><a href="${api.alias}.html#_${api.order}_${doc.order}_${doc.desc}">${api.order}.${doc.order}.&nbsp;<span
                                     class="line-through">${doc.desc}</span></a><%}else{%><a
-                                href="#_${api.order}_${doc.order}_${doc.desc}">${api.order}.${doc.order}.&nbsp;${doc.desc}</a><%}%>
+                                href="${api.alias}.html#_${api.order}_${doc.order}_${doc.desc}">${api.order}.${doc.order}.&nbsp;${doc.desc}</a><%}%>
                     </li>
                     <%}%>
                 </ul>
             </li>
             <%}else{%>
-            <li><a class="dd" href="#_${api.desc}">${api.order}.&nbsp;${api.desc}</a>
-                <ul class="sectlevel2"><%for(doc in api.list){%>
-                    <li><%if(doc.deprecated){%><a href="#_${api.order}_${doc.order}_${doc.desc}">${api.order}.${doc.order}.&nbsp;<span
+            <li class="${liClass}">
+                <a class="dd" href="${api.alias}.html#header">${api.order}.&nbsp;${api.desc}</a>
+                <ul class="sectlevel2" style="${myStyle}">
+                    <%for(doc in api.list){%>
+                    <li><%if(doc.deprecated){%>
+                        <a href="${api.alias}.html#_${api.order}_${doc.order}_${doc.desc}">${api.order}.${doc.order}.&nbsp;<span
                                     class="line-through">${doc.desc}</span></a><%}else{%><a
-                                href="#_${api.order}_${doc.order}_${doc.desc}">${api.order}.${doc.order}.&nbsp;${doc.desc}</a><%}%>
+                                href="${api.alias}.html#_${api.order}_${doc.order}_${doc.desc}">${api.order}.${doc.order}.&nbsp;${doc.desc}</a><%}%>
                     </li>
                     <%}%>
                 </ul>
             </li>
             <%}%><%}%><%if(isNotEmpty(errorCodeList)){%>
-            <li><a href="#_error_code_list">${apiDocList.~size+1}.${errorListTitle}</a></li>
+            <li><a href="error.html#header">${apiDocList.~size+1}.${errorListTitle}</a></li>
             <%}%><%if(isNotEmpty(dictList)){%>
-            <li><a class="dd" href="#_dict_list">${dictListOrder}.&nbsp;${dictListTitle}</a>
+            <li><a class="dd" href="dict.html#header">${dictListOrder}.&nbsp;${dictListTitle}</a>
                 <ul class="sectlevel2"><%for(dict in dictList){%>
-                    <li><a href="#_${dictListOrder}_${dict.order}_${dict.title}">${dictListOrder}.${dict.order}.&nbsp;${dict.title}</a>
+                    <li><a href="dict.html#_${dictListOrder}_${dict.order}_${dict.title}">${dictListOrder}.${dict.order}.&nbsp;${dict.title}</a>
                     </li>
                     <%}%>
                 </ul>
@@ -48,60 +64,24 @@
         </ul>
     </div>
 </div>
-<div id="content"><%if(isNotEmpty(revisionLogList)){%>
-    <div id="preamble">
-        <div class="sectionbody">
-            <table class="tableblock frame-all grid-all spread">
-                <colgroup>
-                    <col style="width: 20%;">
-                    <col style="width: 20%;">
-                    <col style="width: 20%;">
-                    <col style="width: 20%;">
-                    <col style="width: 20%;">
-                </colgroup>
-                <thead>
-                <tr>
-                    <th class="tableblock halign-left valign-top">Version</th>
-                    <th class="tableblock halign-left valign-top">Update Time</th>
-                    <th class="tableblock halign-left valign-top">Status</th>
-                    <th class="tableblock halign-left valign-top">Author</th>
-                    <th class="tableblock halign-left valign-top">Description</th>
-                </tr>
-                </thead>
-                <tbody><%for(revisionLog in revisionLogList){%>
-                <tr>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock">${revisionLog.version}</p></td>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock">${revisionLog.revisionTime}</p>
-                    </td>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock">${revisionLog.status}</p></td>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock">${revisionLog.author}</p></td>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock">${revisionLog.remarks}</p></td>
-                </tr>
-                <%}%>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <%}%><%for(api in apiDocList){%>
-    <div class="sect1"><h2 id="_${api.desc}"><a class="anchor" href="#_${api.desc}"></a><a class="link"
-                                                                                           href="#_${api.desc}">${api.order}.&nbsp;${api.desc}</a>
+<div id="content">
+    <div class="sect1"><h2 id="_${desc}"><a class="anchor" href="#_${desc}"></a><a class="link" href="#_${desc}">${order}.&nbsp;${desc}</a>
         </h2>
-        <div class="sectionbody"><%for(doc in api.list){%>
-            <div class="sect2"><h3 id="_${api.order}_${doc.order}_${doc.desc}"><a class="anchor"
-                                                                                  href="#_${api.order}_${doc.order}_${doc.desc}"></a><%if(doc.deprecated){%><a
-                            class="link" href="#_${api.order}_${doc.order}_${doc.desc}">${api.order}.${doc.order}.&nbsp;<span
+        <div class="sectionbody">
+            <%for(doc in list){%>
+            <div class="sect2"><h3 id="_${order}_${doc.order}_${doc.desc}"><a class="anchor"
+                                                                              href="#_${order}_${doc.order}_${doc.desc}"></a><%if(doc.deprecated){%><a
+                            class="link" href="#_${order}_${doc.order}_${doc.desc}">${order}.${doc.order}.&nbsp;<span
                                 class="line-through">${doc.desc}</span></a><%}else{%><a class="link"
-                                                                                        href="#_${api.order}_${doc.order}_${doc.desc}">${api.order}.${doc.order}.&nbsp;${doc.desc}</a><%}%>
+                                                                                        href="#_${order}_${doc.order}_${doc.desc}">${order}.${doc.order}.&nbsp;${doc.desc}</a><%}%>
                 </h3>
-                <div class="paragraph" id="${doc.methodId}-url" data-url="${doc.url}" data-download="${doc.download}">
-                    <p><strong>URL:</strong><a href="${doc.url}" class="bare">&nbsp;${doc.url}</a></p></div>
-                <div class="paragraph" id="${doc.methodId}-method" data-method="${doc.type}"><p><strong>Type:</strong>&nbsp;${doc.type}
+                <div class="paragraph" id="${doc.methodId}-url" data-url="${doc.url}" data-download="${doc.download}"><p><strong>URL:</strong><a href="${doc.url}" class="bare">&nbsp;${doc.url}</a>
                     </p></div>
+                <div class="paragraph" id="${doc.methodId}-method" data-method="${doc.type}"><p><strong>Type:</strong>&nbsp;${doc.type}</p></div>
                 <%if(isNotEmpty(doc.author)){%>
                 <div class="paragraph"><p><strong>Author:</strong>&nbsp;${doc.author}</p></div>
                 <%}%>
-                <div class="paragraph" id="${doc.methodId}-content-type" data-content-type="${doc.contentType}"><p>
-                        <strong>Content-Type:</strong>&nbsp;${doc.contentType}</p></div>
+                <div class="paragraph" id="${doc.methodId}-content-type" data-content-type="${doc.contentType}"><p><strong>Content-Type:</strong>&nbsp;${doc.contentType}</p></div>
                 <div class="paragraph"><p><strong>Description:</strong>&nbsp;${doc.detail}</p></div>
                 <%if(isNotEmpty(doc.requestHeaders)){%>
                 <div class="paragraph"><p><strong>Request-headers:</strong></p></div>
@@ -327,68 +307,7 @@
             <%}%>
         </div>
     </div>
-    <%}%><%if(isNotEmpty(errorCodeList)){%>
-    <div class="sect1"><h2 id="_error_code_list"><a class="anchor" href="#_error_code_list"></a><a class="link"
-                                                                                                   href="#_error_code_list">${apiDocList.~size+1}.&nbsp;${errorListTitle}</a>
-        </h2>
-        <div class="sectionbody">
-            <table class="tableblock frame-all grid-all spread">
-                <colgroup>
-                    <col style="width: 50%;">
-                    <col style="width: 50%;">
-                </colgroup>
-                <thead>
-                <tr>
-                    <th class="tableblock halign-left valign-top">Error code</th>
-                    <th class="tableblock halign-left valign-top">Description</th>
-                </tr>
-                </thead>
-                <tbody><%for(error in errorCodeList){%>
-                <tr>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock">${error.value}</p></td>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock">${error.desc}</p></td>
-                </tr>
-                <%}%>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <%}%><%if(isNotEmpty(dictList)){%>
-    <div class="sect1"><h2 id="_dict_list"><a class="anchor" href="#_dict_list"></a><a class="link" href="#_dict_list">${dictListOrder}.&nbsp;${dictListTitle}</a>
-        </h2>
-        <div class="sectionbody"><% for(dict in dictList){ %>
-            <div class="sect2"><h3 id="_${dictListOrder}_${dict.order}_${dict.title}"><a class="anchor"
-                                                                                         href="#_${dictListOrder}_${dict.order}_${dict.title}"></a><a
-                            class="link" href="#_${dictListOrder}_${dict.order}_${dict.title}">${dictListOrder}.${dict.order}.&nbsp;${dict.title}</a>
-                </h3>
-                <table class="tableblock frame-all grid-all spread">
-                    <colgroup>
-                        <col style="width: 33%;">
-                        <col style="width: 33%;">
-                        <col style="width: 33%;">
-                    </colgroup>
-                    <thead>
-                    <tr>
-                        <th class="tableblock halign-left valign-top">Code</th>
-                        <th class="tableblock halign-left valign-top">Type</th>
-                        <th class="tableblock halign-left valign-top">Description</th>
-                    </tr>
-                    </thead>
-                    <tbody><%for(dataDict in dict.dataDictList){%>
-                    <tr>
-                        <td class="tableblock halign-left valign-top"><p class="tableblock">${dataDict.value}</p></td>
-                        <td class="tableblock halign-left valign-top"><p class="tableblock">${dataDict.type}</p></td>
-                        <td class="tableblock halign-left valign-top"><p class="tableblock">${dataDict.desc}</p></td>
-                    </tr>
-                    <%}%>
-                    </tbody>
-                </table>
-            </div>
-            <%}%>
-        </div>
-    </div>
-    <%}%>
-    <footer class="page-footer"><span class="copyright">Generated by smart-doc at ${createTime}</span><span
+    <footer class="page-footer"><span class="copyright">Generated by smart-doc at 2020-12-15 00:22:14</span><span
                 class="footer-modification">Suggestions,contact,support and error reporting on<a
                     href="https://gitee.com/smart-doc-team/smart-doc" target="_blank">&nbsp;Gitee</a>&nbsp;or<a
                     href="https://github.com/smart-doc-group/smart-doc.git" target="_blank">&nbsp;Github</a></span>

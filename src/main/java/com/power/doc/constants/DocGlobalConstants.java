@@ -54,6 +54,16 @@ public interface DocGlobalConstants {
 
     String DEBUG_PAGE_TPL = "mock.html";
 
+    String DEBUG_PAGE_ALL_TPL = "mock-all.html";
+
+    String DEBUG_PAGE_SINGLE_TPL = "html/mock.html";
+
+    String SINGLE_INDEX_HTML_TPL = "html/index.html";
+
+    String SINGLE_ERROR_HTML_TPL = "html/error.html";
+
+    String SINGLE_DICT_HTML_TPL = "html/dict.html";
+
     String ALL_IN_ONE_CSS = "AllInOne.css";
 
     String RPC_API_DOC_ADOC_TPL = "dubbo/Dubbo.adoc";

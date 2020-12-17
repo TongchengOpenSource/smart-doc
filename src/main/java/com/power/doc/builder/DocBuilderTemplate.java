@@ -125,7 +125,7 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
         tpl.binding(TemplateVariable.ERROR_CODE_LIST.getVariable(), errorCodeList);
         tpl.binding(TemplateVariable.VERSION_LIST.getVariable(), config.getRevisionLogs());
         tpl.binding(TemplateVariable.VERSION.getVariable(), now);
-
+        tpl.binding(TemplateVariable.INDEX_ALIAS.getVariable(), apiDoc.getAlias());
         tpl.binding(TemplateVariable.CREATE_TIME.getVariable(), strTime);
         tpl.binding(TemplateVariable.PROJECT_NAME.getVariable(), config.getProjectName());
         tpl.binding(TemplateVariable.REQUEST_EXAMPLE.getVariable(), config.isRequestExample());
@@ -164,13 +164,15 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
     /**
      * build error_code html
      *
-     * @param config         api config
-     * @param apiDocList     list  data of Api doc
-     * @param template       template
-     * @param outPutFileName output file
+     * @param config             api config
+     * @param javaProjectBuilder javaProjectBuilder
+     * @param apiDocList         list data of Api doc
+     * @param template           template
+     * @param outPutFileName     output file
+     * @param indexAlias         index alias
      */
     public void buildErrorCodeDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder,
-                                  List<ApiDoc> apiDocList, String template, String outPutFileName) {
+                                  List<ApiDoc> apiDocList, String template, String outPutFileName, String indexAlias) {
         List<ApiErrorCode> errorCodeList = errorCodeDictToList(config);
         Template errorTemplate = BeetlTemplateUtil.getByName(template);
         errorTemplate.binding(TemplateVariable.PROJECT_NAME.getVariable(), config.getProjectName());
@@ -183,6 +185,7 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
         }
         List<ApiDocDict> apiDocDictList = buildDictionary(config, javaProjectBuilder);
         errorTemplate.binding(TemplateVariable.DICT_LIST.getVariable(), apiDocDictList);
+        errorTemplate.binding(TemplateVariable.INDEX_ALIAS.getVariable(), indexAlias);
         errorTemplate.binding(TemplateVariable.API_DOC_LIST.getVariable(), apiDocList);
         errorTemplate.binding(TemplateVariable.BACKGROUND.getVariable(), HighlightStyle.getBackgroundColor(style));
         errorTemplate.binding(TemplateVariable.ERROR_CODE_LIST.getVariable(), errorCodeList);
@@ -199,8 +202,10 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
      * @param apiDocList         list  data of Api doc
      * @param template           template
      * @param outPutFileName     output file
+     * @param indexAlias         index alias
      */
-    public void buildDirectoryDataDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder, List<ApiDoc> apiDocList, String template, String outPutFileName) {
+    public void buildDirectoryDataDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder, List<ApiDoc> apiDocList,
+                                      String template, String outPutFileName, String indexAlias) {
         List<ApiDocDict> directoryList = buildDictionary(config, javaProjectBuilder);
         Template mapper = BeetlTemplateUtil.getByName(template);
         mapper.binding(TemplateVariable.PROJECT_NAME.getVariable(), config.getProjectName());
@@ -213,6 +218,7 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
             mapper.binding(TemplateVariable.DICT_ORDER.getVariable(), apiDocList.size() + 2);
         }
         mapper.binding(TemplateVariable.API_DOC_LIST.getVariable(), apiDocList);
+        mapper.binding(TemplateVariable.INDEX_ALIAS.getVariable(), indexAlias);
         mapper.binding(TemplateVariable.BACKGROUND.getVariable(), HighlightStyle.getBackgroundColor(style));
         mapper.binding(TemplateVariable.ERROR_CODE_LIST.getVariable(), errorCodeList);
         setDirectoryLanguageVariable(config, mapper);

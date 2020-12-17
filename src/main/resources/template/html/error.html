@@ -29,12 +29,12 @@
             <%for(api in apiDocList){%>
             <%if(apiLP.first){%>
             <li>
-                <a class="dd" href="api.html#header">${api.order}.&nbsp;${api.desc}</a>
+                <a class="dd" href="${alias}.html#header">${api.order}.&nbsp;${api.desc}</a>
                 <ul class="sectlevel2" style="display: none">
                     <%for(doc in api.list){%>
-                    <li><%if(doc.deprecated){%><a href="api.html#_${api.order}_${doc.order}_${doc.desc}">${api.order}.${doc.order}.&nbsp;<span
+                    <li><%if(doc.deprecated){%><a href="${alias}.html#_${api.order}_${doc.order}_${doc.desc}">${api.order}.${doc.order}.&nbsp;<span
                                     class="line-through">${doc.desc}</span></a><%}else{%><a
-                                href="api.html#_${api.order}_${doc.order}_${doc.desc}">${api.order}.${doc.order}.&nbsp;${doc.desc}</a><%}%>
+                                href="${alias}.html#_${api.order}_${doc.order}_${doc.desc}">${api.order}.${doc.order}.&nbsp;${doc.desc}</a><%}%>
                     </li>
                     <%}%>
                 </ul>
