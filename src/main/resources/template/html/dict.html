@@ -29,50 +29,52 @@
             <%for(api in apiDocList){%>
             <%if(apiLP.first){%>
             <li><a class="dd" href="api.html#header">${api.order}.&nbsp;${api.desc}</a>
-                    <ul class="sectlevel2" style="display: none">
-                        <%for(doc in api.list){%>
-                        <li><%if(doc.deprecated){%><a href="api.html#_${api.order}_${doc.order}_${doc.desc}">${api.order}.${doc.order}.&nbsp;<span
-                                        class="line-through">${doc.desc}</span></a><%}else{%><a
-                                    href="api.html#_${api.order}_${doc.order}_${doc.desc}">${api.order}.${doc.order}.&nbsp;${doc.desc}</a><%}%>
-                        </li>
-                        <%}%>
-                    </ul>
+                <ul class="sectlevel2" style="display: none">
+                    <%for(doc in api.list){%>
+                    <li><%if(doc.deprecated){%><a href="api.html#_${api.order}_${doc.order}_${doc.desc}">${api.order}.${doc.order}.&nbsp;<span
+                                    class="line-through">${doc.desc}</span></a><%}else{%><a
+                                href="api.html#_${api.order}_${doc.order}_${doc.desc}">${api.order}.${doc.order}.&nbsp;${doc.desc}</a><%}%>
                     </li>
-                    <%}else{%>
-                    <li>
-                        <a class="dd" href="${api.alias}.html#header">${api.order}.&nbsp;${api.desc}</a>
-                            <ul class="sectlevel2" style="display: none">
-                                <%for(doc in api.list){%>
-                                <li><%if(doc.deprecated){%>
-                                    <a href="${api.alias}.html#_${api.order}_${doc.order}_${doc.desc}">${api.order}.${doc.order}.&nbsp;<span
-                                                class="line-through">${doc.desc}</span></a><%}else{%><a
-                                            href="${api.alias}.html#_${api.order}_${doc.order}_${doc.desc}">${api.order}.${doc.order}.&nbsp;${doc.desc}</a><%}%>
-                                </li>
-                                <%}%>
-                            </ul>
-                            </li>
-                            <%}%><%}%><%if(isNotEmpty(errorCodeList)){%>
-                            <li><a href="error.html#_error_code_list">${apiDocList.~size+1}.${errorListTitle}</a></li>
-                            <%}%><%if(isNotEmpty(dictList)){%>
-                            <li class="open"><a class="dd" href="dict.html#_dict_list">${dictListOrder}.&nbsp;${dictListTitle}</a>
-                                <ul class="sectlevel2" style="display: block"><%for(dict in dictList){%>
-                                    <li><a href="dict.html#_${dictListOrder}_${dict.order}_${dict.title}">${dictListOrder}.${dict.order}.&nbsp;${dict.title}</a>
-                                    </li>
-                                    <%}%>
-                                </ul>
-                            </li>
-                            <%}%>
-                        </ul>
+                    <%}%>
+                </ul>
+            </li>
+            <%}else{%>
+            <li>
+                <a class="dd" href="${api.alias}.html#header">${api.order}.&nbsp;${api.desc}</a>
+                <ul class="sectlevel2" style="display: none">
+                    <%for(doc in api.list){%>
+                    <li><%if(doc.deprecated){%>
+                        <a href="${api.alias}.html#_${api.order}_${doc.order}_${doc.desc}">${api.order}.${doc.order}.&nbsp;<span
+                                    class="line-through">${doc.desc}</span></a><%}else{%><a
+                                href="${api.alias}.html#_${api.order}_${doc.order}_${doc.desc}">${api.order}.${doc.order}.&nbsp;${doc.desc}</a><%}%>
+                    </li>
+                    <%}%>
+                </ul>
+            </li>
+            <%}%><%}%><%if(isNotEmpty(errorCodeList)){%>
+            <li><a href="error.html#_error_code_list">${apiDocList.~size+1}.${errorListTitle}</a></li>
+            <%}%><%if(isNotEmpty(dictList)){%>
+            <li class="open"><a class="dd" href="dict.html#_dict_list">${dictListOrder}.&nbsp;${dictListTitle}</a>
+                <ul class="sectlevel2" style="display: block"><%for(dict in dictList){%>
+                    <li><a href="dict.html#_${dictListOrder}_${dict.order}_${dict.title}">${dictListOrder}.${dict.order}.&nbsp;${dict.title}</a>
+                    </li>
+                    <%}%>
+                </ul>
+            </li>
+            <%}%>
+        </ul>
     </div>
 </div>
 <div id="content">
     <%if(isNotEmpty(dictList)){%>
     <div class="sect1"><h2 id="_dict_list"><a class="anchor" href="#_dict_list"></a><a class="link" href="#_dict_list">${dictListOrder}.&nbsp;${dictListTitle}</a>
         </h2>
-        <div class="sectionbody"><% for(dict in dictList){ %>
-            <div class="sect2"><h3 id="_${dictListOrder}_${dict.order}_${dict.title}"><a class="anchor"
-                                                                                         href="#_${dictListOrder}_${dict.order}_${dict.title}"></a><a
-                            class="link" href="#_${dictListOrder}_${dict.order}_${dict.title}">${dictListOrder}.${dict.order}.&nbsp;${dict.title}</a>
+        <div class="sectionbody">
+            <% for(dict in dictList){ %>
+            <div class="sect2">
+                <h3 id="_${dictListOrder}_${dict.order}_${dict.title}">
+                    <a class="anchor" href="#_${dictListOrder}_${dict.order}_${dict.title}"></a>
+                    <a class="link" href="#_${dictListOrder}_${dict.order}_${dict.title}">${dictListOrder}.${dict.order}.&nbsp;${dict.title}</a>
                 </h3>
                 <table class="tableblock frame-all grid-all spread">
                     <colgroup>
@@ -104,7 +106,8 @@
     <footer class="page-footer"><span class="copyright">Generated by smart-doc at 2020-12-15 00:22:14</span><span
                 class="footer-modification">Suggestions,contact,support and error reporting on<a
                     href="https://gitee.com/smart-doc-team/smart-doc" target="_blank">&nbsp;Gitee</a>&nbsp;or<a
-                    href="https://github.com/smart-doc-group/smart-doc.git" target="_blank">&nbsp;Github</a></span></footer>
+                    href="https://github.com/smart-doc-group/smart-doc.git" target="_blank">&nbsp;Github</a></span>
+    </footer>
 </div>
 <script>
     $(function () {
