@@ -29,7 +29,15 @@
         <ul id="accordion" class="sectlevel1">
             <%for(api in apiDocList){%>
             <%if(apiLP.first){%>
-            <%if(api.order==order){%>
+            <%
+            var myStyle = "display: none";
+            var liClass = "open";
+            if(api.order==order){
+            myStyle= "display: block";
+            liClass = "";
+            }%>
+            <%if(api.order==order){ %>
+
             <li class="open">
                 <%}else{%>
             <li>
