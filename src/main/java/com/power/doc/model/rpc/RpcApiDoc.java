@@ -1,5 +1,6 @@
 package com.power.doc.model.rpc;
 
+import com.power.common.util.StringUtil;
 import com.power.doc.model.JavaMethodDoc;
 
 import java.util.List;
@@ -62,6 +63,11 @@ public class RpcApiDoc implements Comparable<RpcApiDoc> {
      * interface version
      */
     private String version;
+
+    /**
+     * link
+     */
+    private String link;
 
     /**
      * List of method doc
@@ -154,6 +160,14 @@ public class RpcApiDoc implements Comparable<RpcApiDoc> {
 
     public void setAuthor(String author) {
         this.author = author;
+    }
+
+    public String getLink() {
+        return desc.replace(" ","_").toLowerCase();
+    }
+
+    public void setLink(String link) {
+        this.link = link;
     }
 
     @Override

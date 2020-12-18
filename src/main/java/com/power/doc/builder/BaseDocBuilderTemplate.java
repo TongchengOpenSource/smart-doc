@@ -33,9 +33,7 @@ import com.power.doc.model.ApiErrorCode;
 import com.power.doc.model.ApiErrorCodeDictionary;
 import org.beetl.core.Template;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * @author yu 2020/5/16.
@@ -72,19 +70,27 @@ public class BaseDocBuilderTemplate {
         }
     }
 
-    public void setDirectoryLanguageVariable(ApiConfig config, Template mapper) {
-        if (null != config.getLanguage()) {
+    public Map<String, String> setDirectoryLanguageVariable(ApiConfig config, Template mapper) {
+        Map<String, String> titleMap = new HashMap<>();
+        if (Objects.nonNull(config.getLanguage())) {
             if (DocLanguage.CHINESE.code.equals(config.getLanguage().getCode())) {
                 mapper.binding(TemplateVariable.ERROR_LIST_TITLE.getVariable(), DocGlobalConstants.ERROR_CODE_LIST_CN_TITLE);
                 mapper.binding(TemplateVariable.DICT_LIST_TITLE.getVariable(), DocGlobalConstants.DICT_CN_TITLE);
+                titleMap.put(TemplateVariable.ERROR_LIST_TITLE.getVariable(), DocGlobalConstants.ERROR_CODE_LIST_CN_TITLE);
+                titleMap.put(TemplateVariable.DICT_LIST_TITLE.getVariable(), DocGlobalConstants.DICT_CN_TITLE);
             } else {
                 mapper.binding(TemplateVariable.ERROR_LIST_TITLE.getVariable(), DocGlobalConstants.ERROR_CODE_LIST_EN_TITLE);
                 mapper.binding(TemplateVariable.DICT_LIST_TITLE.getVariable(), DocGlobalConstants.DICT_EN_TITLE);
+                titleMap.put(TemplateVariable.ERROR_LIST_TITLE.getVariable(), DocGlobalConstants.ERROR_CODE_LIST_EN_TITLE);
+                titleMap.put(TemplateVariable.DICT_LIST_TITLE.getVariable(), DocGlobalConstants.DICT_EN_TITLE);
             }
         } else {
             mapper.binding(TemplateVariable.ERROR_LIST_TITLE.getVariable(), DocGlobalConstants.ERROR_CODE_LIST_CN_TITLE);
             mapper.binding(TemplateVariable.DICT_LIST_TITLE.getVariable(), DocGlobalConstants.DICT_CN_TITLE);
+            titleMap.put(TemplateVariable.ERROR_LIST_TITLE.getVariable(), DocGlobalConstants.ERROR_CODE_LIST_CN_TITLE);
+            titleMap.put(TemplateVariable.DICT_LIST_TITLE.getVariable(), DocGlobalConstants.DICT_CN_TITLE);
         }
+        return titleMap;
     }
 
     public List<ApiErrorCode> errorCodeDictToList(ApiConfig config) {

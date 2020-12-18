@@ -22,6 +22,7 @@
  */
 package com.power.doc.builder.rpc;
 
+import com.power.common.util.CollectionUtil;
 import com.power.common.util.DateTimeUtil;
 import com.power.common.util.FileUtil;
 import com.power.doc.builder.BaseDocBuilderTemplate;
@@ -38,7 +39,9 @@ import com.power.doc.utils.DocUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import org.beetl.core.Template;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import static com.power.doc.constants.DocGlobalConstants.FILE_SEPARATOR;
@@ -49,6 +52,8 @@ import static com.power.doc.constants.DocGlobalConstants.FILE_SEPARATOR;
 public class RpcDocBuilderTemplate extends BaseDocBuilderTemplate {
 
     private static long now = System.currentTimeMillis();
+
+    private static final String DEPENDENCY_TITLE = "Add dependency";
 
     /**
      * Generate api documentation for all controllers.
@@ -101,8 +106,44 @@ public class RpcDocBuilderTemplate extends BaseDocBuilderTemplate {
         tpl.binding(TemplateVariable.CREATE_TIME.getVariable(), strTime);
         tpl.binding(TemplateVariable.PROJECT_NAME.getVariable(), config.getProjectName());
         tpl.binding(TemplateVariable.RPC_CONSUMER_CONFIG.getVariable(), rpcConfigConfigContent);
-        setDirectoryLanguageVariable(config, tpl);
+
         FileUtil.nioWriteFile(tpl.render(), outPath + FILE_SEPARATOR + outPutFileName);
+    }
+
+    /**
+     * Build search js
+     *
+     * @param apiDocList     list  data of Api doc
+     * @param config         api config
+     * @param template       template
+     * @param outPutFileName output file
+     */
+    public void buildSearchJs(List<RpcApiDoc> apiDocList, ApiConfig config, String template, String outPutFileName) {
+        List<ApiErrorCode> errorCodeList = errorCodeDictToList(config);
+        Template tpl = BeetlTemplateUtil.getByName(template);
+        // directory tree
+        List<RpcApiDoc> apiDocs = new ArrayList<>();
+        RpcApiDoc apiDoc = new RpcApiDoc();
+        apiDoc.setAlias(DEPENDENCY_TITLE);
+        apiDoc.setOrder(1);
+        apiDoc.setDesc(DEPENDENCY_TITLE);
+        apiDoc.setList(new ArrayList<>(0));
+        apiDocs.add(apiDoc);
+        List<RpcApiDoc> apiDocs1 = apiDocList;
+        for (RpcApiDoc apiDoc1 : apiDocs1) {
+            apiDoc1.setOrder(apiDocs.size() + 1);
+            apiDocs.add(apiDoc1);
+        }
+        Map<String, String> titleMap = setDirectoryLanguageVariable(config, tpl);
+        if (CollectionUtil.isNotEmpty(errorCodeList)) {
+            RpcApiDoc apiDoc1 = new RpcApiDoc();
+            apiDoc1.setOrder(apiDocs.size() + 1);
+            apiDoc1.setDesc(titleMap.get(TemplateVariable.ERROR_LIST_TITLE.getVariable()));
+            apiDoc1.setList(new ArrayList<>(0));
+            apiDocs.add(apiDoc1);
+        }
+        tpl.binding(TemplateVariable.DIRECTORY_TREE.getVariable(), apiDocs);
+        FileUtil.nioWriteFile(tpl.render(), config.getOutPath() + FILE_SEPARATOR + outPutFileName);
     }
 
     /**
