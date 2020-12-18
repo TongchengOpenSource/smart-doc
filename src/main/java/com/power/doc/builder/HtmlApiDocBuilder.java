@@ -24,7 +24,6 @@ package com.power.doc.builder;
 
 import com.power.common.util.DateTimeUtil;
 import com.power.common.util.FileUtil;
-import com.power.doc.constants.TemplateVariable;
 import com.power.doc.model.ApiConfig;
 import com.power.doc.model.ApiDoc;
 import com.power.doc.template.IDocBuildTemplate;
@@ -87,7 +86,7 @@ public class HtmlApiDocBuilder {
             } else {
                 builderTemplate.buildAllInOne(apiDocList, config, javaProjectBuilder, ALL_IN_ONE_HTML_TPL, INDEX_HTML);
             }
-            builderTemplate.buildSearchJs(config,javaProjectBuilder,apiDocList, "js/search_all.js.btl");
+            builderTemplate.buildSearchJs(config, javaProjectBuilder, apiDocList, "js/search_all.js.btl");
         } else {
             String indexAlias;
             if (config.isCreateDebugPage()) {
@@ -103,7 +102,7 @@ public class HtmlApiDocBuilder {
                     "error.html", indexAlias);
             builderTemplate.buildDirectoryDataDoc(config, javaProjectBuilder, apiDocList,
                     SINGLE_DICT_HTML_TPL, "dict.html", indexAlias);
-            builderTemplate.buildSearchJs(config,javaProjectBuilder,apiDocList, "js/search.js.btl");
+            builderTemplate.buildSearchJs(config, javaProjectBuilder, apiDocList, "js/search.js.btl");
         }
 
     }
@@ -116,19 +115,19 @@ public class HtmlApiDocBuilder {
      * @param config             ApiConfig
      * @param javaProjectBuilder ProjectDocConfigBuilder
      * @param template           template
-     * @param outName            outName
+     * @param indexHtml          indexHtml
      */
     private static void buildDoc(DocBuilderTemplate builderTemplate, List<ApiDoc> apiDocList,
                                  ApiConfig config, JavaProjectBuilder javaProjectBuilder,
-                                 String template, String outName) {
+                                 String template, String indexHtml) {
         FileUtil.mkdirs(config.getOutPath());
         int index = 0;
         for (ApiDoc doc : apiDocList) {
             if (index == 0) {
-                doc.setAlias(outName);
+                doc.setAlias(indexHtml);
             }
             builderTemplate.buildDoc(apiDocList, config, javaProjectBuilder, template,
-                    doc.getAlias() + ".html", doc);
+                    doc.getAlias() + ".html", doc, indexHtml);
             index++;
         }
     }

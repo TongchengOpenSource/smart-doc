@@ -100,7 +100,7 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
      */
     public void buildAllInOne(List<ApiDoc> apiDocList, ApiConfig config, JavaProjectBuilder javaProjectBuilder,
                               String template, String outPutFileName) {
-        buildDoc(apiDocList, config, javaProjectBuilder, template, outPutFileName, null);
+        buildDoc(apiDocList, config, javaProjectBuilder, template, outPutFileName, null,null);
     }
 
     /**
@@ -114,7 +114,7 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
      * @param apiDoc             apiDoc
      */
     public void buildDoc(List<ApiDoc> apiDocList, ApiConfig config, JavaProjectBuilder javaProjectBuilder,
-                         String template, String outPutFileName, ApiDoc apiDoc) {
+                         String template, String outPutFileName, ApiDoc apiDoc,String index) {
         String outPath = config.getOutPath();
         String strTime = DateTimeUtil.long2Str(now, DateTimeUtil.DATE_FORMAT_SECOND);
         FileUtil.mkdirs(outPath);
@@ -127,7 +127,7 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
         tpl.binding(TemplateVariable.ERROR_CODE_LIST.getVariable(), errorCodeList);
         tpl.binding(TemplateVariable.VERSION_LIST.getVariable(), config.getRevisionLogs());
         tpl.binding(TemplateVariable.VERSION.getVariable(), now);
-
+        tpl.binding(TemplateVariable.INDEX_ALIAS.getVariable(), index);
         tpl.binding(TemplateVariable.CREATE_TIME.getVariable(), strTime);
         tpl.binding(TemplateVariable.PROJECT_NAME.getVariable(), config.getProjectName());
         tpl.binding(TemplateVariable.REQUEST_EXAMPLE.getVariable(), config.isRequestExample());
@@ -138,7 +138,6 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
             tpl.binding(TemplateVariable.DICT_ORDER.getVariable(), apiDocList.size() + 2);
         }
         if (Objects.nonNull(apiDoc)) {
-            tpl.binding(TemplateVariable.INDEX_ALIAS.getVariable(), apiDoc.getAlias());
             tpl.binding(TemplateVariable.DESC.getVariable(), apiDoc.getDesc());
             tpl.binding(TemplateVariable.ORDER.getVariable(), apiDoc.order);
             tpl.binding(TemplateVariable.LIST.getVariable(), apiDoc.getList());//类名
@@ -199,7 +198,9 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
      */
     public void buildErrorCodeDoc(ApiConfig config, String template, String outPutFileName) {
         List<ApiErrorCode> errorCodeList = errorCodeDictToList(config);
+        String strTime = DateTimeUtil.long2Str(now, DateTimeUtil.DATE_FORMAT_SECOND);
         Template mapper = BeetlTemplateUtil.getByName(template);
+        mapper.binding(TemplateVariable.CREATE_TIME.getVariable(), strTime);
         mapper.binding(TemplateVariable.LIST.getVariable(), errorCodeList);
         FileUtil.nioWriteFile(mapper.render(), config.getOutPath() + FILE_SEPARATOR + outPutFileName);
     }
@@ -217,6 +218,7 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
     public void buildErrorCodeDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder,
                                   List<ApiDoc> apiDocList, String template, String outPutFileName, String indexAlias) {
         List<ApiErrorCode> errorCodeList = errorCodeDictToList(config);
+        String strTime = DateTimeUtil.long2Str(now, DateTimeUtil.DATE_FORMAT_SECOND);
         Template errorTemplate = BeetlTemplateUtil.getByName(template);
         errorTemplate.binding(TemplateVariable.PROJECT_NAME.getVariable(), config.getProjectName());
         String style = config.getStyle();
@@ -227,6 +229,7 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
             errorTemplate.binding(TemplateVariable.DICT_ORDER.getVariable(), apiDocList.size() + 2);
         }
         List<ApiDocDict> apiDocDictList = buildDictionary(config, javaProjectBuilder);
+        errorTemplate.binding(TemplateVariable.CREATE_TIME.getVariable(), strTime);
         errorTemplate.binding(TemplateVariable.VERSION.getVariable(), now);
         errorTemplate.binding(TemplateVariable.DICT_LIST.getVariable(), apiDocDictList);
         errorTemplate.binding(TemplateVariable.INDEX_ALIAS.getVariable(), indexAlias);
@@ -252,6 +255,7 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
                                       String template, String outPutFileName, String indexAlias) {
         List<ApiDocDict> directoryList = buildDictionary(config, javaProjectBuilder);
         Template mapper = BeetlTemplateUtil.getByName(template);
+        String strTime = DateTimeUtil.long2Str(now, DateTimeUtil.DATE_FORMAT_SECOND);
         mapper.binding(TemplateVariable.PROJECT_NAME.getVariable(), config.getProjectName());
         String style = config.getStyle();
         mapper.binding(TemplateVariable.STYLE.getVariable(), style);
@@ -261,6 +265,7 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
         } else {
             mapper.binding(TemplateVariable.DICT_ORDER.getVariable(), apiDocList.size() + 2);
         }
+        mapper.binding(TemplateVariable.CREATE_TIME.getVariable(), strTime);
         mapper.binding(TemplateVariable.VERSION.getVariable(), now);
         mapper.binding(TemplateVariable.API_DOC_LIST.getVariable(), apiDocList);
         mapper.binding(TemplateVariable.INDEX_ALIAS.getVariable(), indexAlias);
@@ -283,6 +288,8 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
         List<ApiDocDict> directoryList = buildDictionary(config, javaProjectBuilder);
         Template mapper = BeetlTemplateUtil.getByName(template);
         setDirectoryLanguageVariable(config, mapper);
+        String strTime = DateTimeUtil.long2Str(now, DateTimeUtil.DATE_FORMAT_SECOND);
+        mapper.binding(TemplateVariable.CREATE_TIME.getVariable(), strTime);
         mapper.binding(TemplateVariable.DICT_LIST.getVariable(), directoryList);
         FileUtil.nioWriteFile(mapper.render(), config.getOutPath() + FILE_SEPARATOR + outPutFileName);
     }
