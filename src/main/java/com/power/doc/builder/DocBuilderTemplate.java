@@ -100,7 +100,7 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
      */
     public void buildAllInOne(List<ApiDoc> apiDocList, ApiConfig config, JavaProjectBuilder javaProjectBuilder,
                               String template, String outPutFileName) {
-        buildDoc(apiDocList, config, javaProjectBuilder, template, outPutFileName, null,null);
+        buildDoc(apiDocList, config, javaProjectBuilder, template, outPutFileName, null, null);
     }
 
     /**
@@ -112,9 +112,10 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
      * @param template           template
      * @param outPutFileName     output file
      * @param apiDoc             apiDoc
+     * @param index              index html
      */
     public void buildDoc(List<ApiDoc> apiDocList, ApiConfig config, JavaProjectBuilder javaProjectBuilder,
-                         String template, String outPutFileName, ApiDoc apiDoc,String index) {
+                         String template, String outPutFileName, ApiDoc apiDoc, String index) {
         String outPath = config.getOutPath();
         String strTime = DateTimeUtil.long2Str(now, DateTimeUtil.DATE_FORMAT_SECOND);
         FileUtil.mkdirs(outPath);
