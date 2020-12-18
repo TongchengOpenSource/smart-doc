@@ -22,6 +22,7 @@
  */
 package com.power.doc.model;
 
+import com.power.common.util.StringUtil;
 import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.model.request.ApiRequestExample;
 
@@ -154,12 +155,12 @@ public class ApiMethodDoc implements Serializable {
     /**
      * return schema
      */
-    private Map<String,Object> returnSchema;
+    private Map<String, Object> returnSchema;
 
     /**
      * request schema
      */
-    private Map<String,Object> requestSchema;
+    private Map<String, Object> requestSchema;
 
     /**
      * api group
@@ -170,6 +171,11 @@ public class ApiMethodDoc implements Serializable {
      * marking download
      */
     private boolean download;
+
+    /**
+     * link
+     */
+    private String link;
 
     public String getMethodId() {
         return methodId;
@@ -370,6 +376,17 @@ public class ApiMethodDoc implements Serializable {
 
     public void setDownload(boolean download) {
         this.download = download;
+    }
+
+    public String getLink() {
+        if (StringUtil.isNotEmpty(link)) {
+            return link;
+        }
+        return desc.replace(" ", "_").toLowerCase();
+    }
+
+    public void setLink(String link) {
+        this.link = link;
     }
 
     @Override

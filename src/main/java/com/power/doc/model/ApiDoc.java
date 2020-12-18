@@ -23,6 +23,8 @@
 package com.power.doc.model;
 
 
+import com.power.common.util.StringUtil;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -56,6 +58,11 @@ public class ApiDoc implements Comparable<ApiDoc> {
      * method description
      */
     private String desc;
+
+    /**
+     * link
+     */
+    private String link;
 
     public String getName() {
         return name;
@@ -97,6 +104,17 @@ public class ApiDoc implements Comparable<ApiDoc> {
         this.alias = alias;
     }
 
+    public String getLink() {
+        if (StringUtil.isNotEmpty(link)) {
+            return link;
+        }
+        return desc.replace(" ", "_").toLowerCase();
+    }
+
+    public void setLink(String link) {
+        this.link = link;
+    }
+
     @Override
     public int compareTo(ApiDoc o) {
         if (Objects.nonNull(o.getDesc())) {
@@ -104,6 +122,7 @@ public class ApiDoc implements Comparable<ApiDoc> {
         }
         return name.compareTo(o.getName());
     }
+
 
     @Override
     public String toString() {

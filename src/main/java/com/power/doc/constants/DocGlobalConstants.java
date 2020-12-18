@@ -52,7 +52,10 @@ public interface DocGlobalConstants {
 
     String MARKDOWN_CSS_TPL = "markdown.css";
 
+    String SEARCH_JS = "search.js";
+
     String DEBUG_PAGE_TPL = "mock.html";
+
 
     String DEBUG_PAGE_ALL_TPL = "mock-all.html";
 

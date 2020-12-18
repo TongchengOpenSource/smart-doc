@@ -36,9 +36,11 @@ import org.beetl.core.Template;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import static com.power.doc.constants.DocGlobalConstants.FILE_SEPARATOR;
+import static com.power.doc.constants.DocGlobalConstants.SEARCH_JS;
 
 /**
  * @author yu 2019/9/26.
@@ -145,6 +147,46 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
         List<ApiDocDict> apiDocDictList = buildDictionary(config, javaProjectBuilder);
         tpl.binding(TemplateVariable.DICT_LIST.getVariable(), apiDocDictList);
         FileUtil.nioWriteFile(tpl.render(), outPath + FILE_SEPARATOR + outPutFileName);
+    }
+
+    public void buildSearchJs(ApiConfig config, JavaProjectBuilder javaProjectBuilder, List<ApiDoc> apiDocList, String template) {
+        List<ApiErrorCode> errorCodeList = errorCodeDictToList(config);
+        Template tpl = BeetlTemplateUtil.getByName(template);
+        // directory tree
+        List<ApiDoc> apiDocs = new ArrayList<>();
+        for (ApiDoc apiDoc1 : apiDocList) {
+            apiDoc1.setOrder(apiDocs.size() + 1);
+            apiDocs.add(apiDoc1);
+        }
+        Map<String, String> titleMap = setDirectoryLanguageVariable(config, tpl);
+        // set error code
+        if (CollectionUtil.isNotEmpty(errorCodeList)) {
+            ApiDoc apiDoc1 = new ApiDoc();
+            apiDoc1.setOrder(apiDocs.size() + 1);
+            apiDoc1.setDesc(titleMap.get(TemplateVariable.ERROR_LIST_TITLE.getVariable()));
+            apiDoc1.setList(new ArrayList<>(0));
+            apiDoc1.setLink("error_code_list");
+            apiDoc1.setAlias("error");
+            apiDocs.add(apiDoc1);
+        }
+        // set dict list
+        List<ApiDocDict> apiDocDictList = buildDictionary(config, javaProjectBuilder);
+        ApiDoc apiDoc1 = new ApiDoc();
+        apiDoc1.setOrder(apiDocs.size() + 1);
+        apiDoc1.setLink("dict_list");
+        apiDoc1.setAlias("dict");
+        apiDoc1.setDesc(titleMap.get(TemplateVariable.DICT_LIST_TITLE.getVariable()));
+        List<ApiMethodDoc> methodDocs = new ArrayList<>();
+        for (ApiDocDict apiDocDict : apiDocDictList) {
+            ApiMethodDoc methodDoc = new ApiMethodDoc();
+            methodDoc.setOrder(apiDocDict.getOrder());
+            methodDoc.setDesc(apiDocDict.getTitle());
+            methodDocs.add(methodDoc);
+        }
+        apiDoc1.setList(methodDocs);
+        apiDocs.add(apiDoc1);
+        tpl.binding(TemplateVariable.API_DOC_LIST.getVariable(), apiDocs);
+        FileUtil.nioWriteFile(tpl.render(), config.getOutPath() + FILE_SEPARATOR + SEARCH_JS);
     }
 
 

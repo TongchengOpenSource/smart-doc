@@ -87,7 +87,7 @@ public class HtmlApiDocBuilder {
             } else {
                 builderTemplate.buildAllInOne(apiDocList, config, javaProjectBuilder, ALL_IN_ONE_HTML_TPL, INDEX_HTML);
             }
-            buildSearchJs(apiDocList, config,"js/search_all.js.btl");
+            builderTemplate.buildSearchJs(config,javaProjectBuilder,apiDocList, "js/search_all.js.btl");
         } else {
             String indexAlias;
             if (config.isCreateDebugPage()) {
@@ -103,7 +103,7 @@ public class HtmlApiDocBuilder {
                     "error.html", indexAlias);
             builderTemplate.buildDirectoryDataDoc(config, javaProjectBuilder, apiDocList,
                     SINGLE_DICT_HTML_TPL, "dict.html", indexAlias);
-            buildSearchJs(apiDocList, config,"js/search.js.btl");
+            builderTemplate.buildSearchJs(config,javaProjectBuilder,apiDocList, "js/search.js.btl");
         }
 
     }
@@ -131,11 +131,5 @@ public class HtmlApiDocBuilder {
                     doc.getAlias() + ".html", doc);
             index++;
         }
-    }
-
-    private static void buildSearchJs(List<ApiDoc> apiDocList, ApiConfig config, String template) {
-        Template tpl = BeetlTemplateUtil.getByName(template);
-        tpl.binding(TemplateVariable.API_DOC_LIST.getVariable(), apiDocList);
-        FileUtil.nioWriteFile(tpl.render(), config.getOutPath() + FILE_SEPARATOR + "search.js");
     }
 }
