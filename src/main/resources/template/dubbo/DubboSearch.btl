@@ -85,14 +85,14 @@ function keyDownSearch(e) {
     }
 }
 
-function buildAccordion(apiData) {
+function buildAccordion(apiData, liClass, display) {
     let html = "";
     let doc;
     if (apiData.length > 0) {
         for (let j = 0; j < apiData.length; j++) {
-            html += '<li>';
-            html += ' <a class="dd" href="#_' + apiData[j].link + '">' + apiData[j].order + '.&nbsp;' + apiData[j].desc + '</a>';
-            html += '    <ul class="sectlevel2" style="display: none">';
+            html += '<li class="'+liClass+'">';
+            html += '<a class="dd" href="#_' + apiData[j].link + '">' + apiData[j].order + '.&nbsp;' + apiData[j].desc + '</a>';
+            html += '<ul class="sectlevel2" style="'+display+'">';
             doc = apiData[j].list;
             for (let m = 0; m < doc.length; m++) {
                 html += '<li><a href="#_' + apiData[j].order + '_' + doc[m].order + '_' + doc[m].desc + '">' + apiData[j].order + '.' + doc[m].order + '.&nbsp;' + doc[m].desc + '</a> </li>';
