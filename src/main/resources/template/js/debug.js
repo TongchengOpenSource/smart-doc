@@ -43,8 +43,6 @@ $("button").on("click", function () {
 
     // query param
     const $queryElement = $("#" + id + "-query-params")
-
-
     const url = $("#" + id + "-url").data("url");
     const isDownload = $("#" + id + "-url").data("download");
     const method = $("#" + id + "-method").data("method");
@@ -62,8 +60,6 @@ $("button").on("click", function () {
         return;
     }
     const ajaxOptions = {};
-
-
     let finalUrl = "";
     if ("multipart/form-data" == contentType) {
         finalUrl = castToGetUri(url, pathParamData);
