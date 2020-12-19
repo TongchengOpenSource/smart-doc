@@ -475,7 +475,10 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         Map<String, String> paramTagMap = DocUtil.getParamsComments(javaMethod, DocTags.PARAM, className);
         List<JavaParameter> parameterList = javaMethod.getParameters();
         if (parameterList.size() < 1) {
-            return new ApiMethodReqParam();
+            return ApiMethodReqParam.builder()
+                    .setPathParams(new ArrayList<>(0))
+                    .setQueryParams(new ArrayList<>(0))
+                    .setRequestParams(new ArrayList<>(0));
         }
         List<ApiParam> paramList = new ArrayList<>();
         Map<String, String> constantsMap = builder.getConstantsMap();
