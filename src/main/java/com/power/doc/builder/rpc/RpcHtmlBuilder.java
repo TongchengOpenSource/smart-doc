@@ -67,7 +67,6 @@ public class RpcHtmlBuilder {
         config.setShowJavaType(true);
         RpcDocBuilderTemplate builderTemplate = new RpcDocBuilderTemplate();
         builderTemplate.checkAndInit(config);
-        builderTemplate.checkAndInit(config);
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
         RpcDocBuildTemplate docBuildTemplate = new RpcDocBuildTemplate();
         List<RpcApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder);

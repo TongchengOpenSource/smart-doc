@@ -45,6 +45,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import static com.power.doc.constants.DocGlobalConstants.FILE_SEPARATOR;
+import static com.power.doc.constants.DocGlobalConstants.RPC_OUT_DIR;
 
 /**
  * @author yu 2020/5/16.
@@ -54,6 +55,12 @@ public class RpcDocBuilderTemplate extends BaseDocBuilderTemplate {
     private static long now = System.currentTimeMillis();
 
     private static final String DEPENDENCY_TITLE = "Add dependency";
+
+
+    public void checkAndInit(ApiConfig config) {
+        super.checkAndInit(config);
+        config.setOutPath(config.getOutPath() + FILE_SEPARATOR + RPC_OUT_DIR);
+    }
 
     /**
      * Generate api documentation for all controllers.
@@ -106,7 +113,7 @@ public class RpcDocBuilderTemplate extends BaseDocBuilderTemplate {
         tpl.binding(TemplateVariable.CREATE_TIME.getVariable(), strTime);
         tpl.binding(TemplateVariable.PROJECT_NAME.getVariable(), config.getProjectName());
         tpl.binding(TemplateVariable.RPC_CONSUMER_CONFIG.getVariable(), rpcConfigConfigContent);
-
+        setDirectoryLanguageVariable(config, tpl);
         FileUtil.nioWriteFile(tpl.render(), outPath + FILE_SEPARATOR + outPutFileName);
     }
 

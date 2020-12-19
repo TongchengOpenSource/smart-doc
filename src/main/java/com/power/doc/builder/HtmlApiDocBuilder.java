@@ -45,9 +45,11 @@ public class HtmlApiDocBuilder {
 
     private static long now = System.currentTimeMillis();
 
-    private static final String STR_TIME = DateTimeUtil.long2Str(now, DateTimeUtil.DATE_FORMAT_SECOND);
-
     private static String INDEX_HTML = "index.html";
+
+    private static final String ERROR_CODE_HTML = "error.html";
+
+    private static final String DICT_HTML = "dict.html";
 
 
     /**
@@ -81,28 +83,28 @@ public class HtmlApiDocBuilder {
             }
             if (config.isCreateDebugPage()) {
                 builderTemplate.buildAllInOne(apiDocList, config, javaProjectBuilder, DEBUG_PAGE_ALL_TPL, DEBUG_PAGE_ALL_TPL);
-                Template mockJs = BeetlTemplateUtil.getByName("js/mock.js");
-                FileUtil.nioWriteFile(mockJs.render(), config.getOutPath() + FILE_SEPARATOR + "mock.js");
+                Template mockJs = BeetlTemplateUtil.getByName(DEBUG_JS_TPL);
+                FileUtil.nioWriteFile(mockJs.render(), config.getOutPath() + FILE_SEPARATOR + DEBUG_JS_OUT);
             } else {
                 builderTemplate.buildAllInOne(apiDocList, config, javaProjectBuilder, ALL_IN_ONE_HTML_TPL, INDEX_HTML);
             }
-            builderTemplate.buildSearchJs(config, javaProjectBuilder, apiDocList, "js/search_all.js.btl");
+            builderTemplate.buildSearchJs(config, javaProjectBuilder, apiDocList, SEARCH_ALL_JS_TPL);
         } else {
             String indexAlias;
             if (config.isCreateDebugPage()) {
-                indexAlias = "mock";
+                indexAlias = "debug";
                 buildDoc(builderTemplate, apiDocList, config, javaProjectBuilder, DEBUG_PAGE_SINGLE_TPL, indexAlias);
-                Template mockJs = BeetlTemplateUtil.getByName("js/mock.js");
-                FileUtil.nioWriteFile(mockJs.render(), config.getOutPath() + FILE_SEPARATOR + "mock.js");
+                Template mockJs = BeetlTemplateUtil.getByName(DEBUG_JS_TPL);
+                FileUtil.nioWriteFile(mockJs.render(), config.getOutPath() + FILE_SEPARATOR + DEBUG_JS_OUT);
             } else {
                 indexAlias = "api";
                 buildDoc(builderTemplate, apiDocList, config, javaProjectBuilder, SINGLE_INDEX_HTML_TPL, indexAlias);
             }
             builderTemplate.buildErrorCodeDoc(config, javaProjectBuilder, apiDocList, SINGLE_ERROR_HTML_TPL,
-                    "error.html", indexAlias);
+                    ERROR_CODE_HTML, indexAlias);
             builderTemplate.buildDirectoryDataDoc(config, javaProjectBuilder, apiDocList,
-                    SINGLE_DICT_HTML_TPL, "dict.html", indexAlias);
-            builderTemplate.buildSearchJs(config, javaProjectBuilder, apiDocList, "js/search.js.btl");
+                    SINGLE_DICT_HTML_TPL, DICT_HTML, indexAlias);
+            builderTemplate.buildSearchJs(config, javaProjectBuilder, apiDocList, SEARCH_JS_TPL);
         }
 
     }

@@ -16,7 +16,7 @@ api[${apiLP.dataIndex}].list.push({
 <%}%>
 document.onkeydown = keyDownSearch;
 function keyDownSearch(e) {
-    const theEvent = e || window.event;
+    const theEvent = e;
     const code = theEvent.keyCode || theEvent.which || theEvent.charCode;
     if (code == 13) {
         const search = document.getElementById('search');
@@ -58,11 +58,14 @@ function keyDownSearch(e) {
         }
         let html;
         if (searchValue == '') {
-            html = buildAccordion(api);
-            console.log(html);
+            const liClass = "";
+            const display = "display: none";
+            html = buildAccordion(api,liClass,display);
             document.getElementById('accordion').innerHTML = html;
         } else {
-            html = buildAccordion(searchArr);
+            const liClass = "open";
+            const display = "display: block";
+            html = buildAccordion(searchArr,liClass,display);
             document.getElementById('accordion').innerHTML = html;
         }
         const Accordion = function (el, multiple) {
@@ -84,16 +87,16 @@ function keyDownSearch(e) {
     }
 }
 
-function buildAccordion(apiData) {
+function buildAccordion(apiData, liClass, display) {
     let html = "";
     let doc;
     if (apiData.length > 0) {
          for (let j = 0; j < apiData.length; j++) {
-            html += '<li class="open">';
+            html += '<li class="'+liClass+'">';
             html += ' <a class="dd" href="' + apiData[j].alias + '.html#header">' + apiData[j].order + '.&nbsp;' + apiData[j].desc + '</a>';
-            html += '    <ul class="sectlevel2" style="display: block">';
+            html += '    <ul class="sectlevel2" style="'+display+'">';
             doc = apiData[j].list;
-            for (m = 0; m < doc.length; m++) {
+            for (let m = 0; m < doc.length; m++) {
                 html += '<li><a href="' + apiData[j].alias + '.html#_' + apiData[j].order + '_' + doc[m].order + '_' + doc[m].desc + '">' + apiData[j].order + '.' + doc[m].order + '.&nbsp;' + doc[m].desc + '</a> </li>';
             }
             html += '</ul>';

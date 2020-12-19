@@ -6,6 +6,7 @@ package com.power.doc.constants;
 public interface DocGlobalConstants {
 
     int API_ORDER = 0;
+
     String FILE_SEPARATOR = System.getProperty("file.separator");
 
     String HTML_DOC_OUT_PATH = "src/main/resources/static/doc";
@@ -46,20 +47,21 @@ public interface DocGlobalConstants {
 
     String DICT_LIST_ADOC_TPL = "Dictionary.btl";
 
-    String INDEX_TPL = "Index.btl";
+    String SEARCH_ALL_JS_TPL = "js/search_all.js.btl";
 
-    String INDEX_CSS_TPL = "index.css";
+    String SEARCH_JS_TPL = "js/search.js.btl";
 
-    String MARKDOWN_CSS_TPL = "markdown.css";
+    String SEARCH_JS_OUT = "search.js";
 
-    String SEARCH_JS = "search.js";
+    String DEBUG_JS_TPL = "js/debug.js";
+
+    String DEBUG_JS_OUT = "debug.js";
 
     String DEBUG_PAGE_TPL = "mock.html";
 
+    String DEBUG_PAGE_ALL_TPL = "debug-all.html";
 
-    String DEBUG_PAGE_ALL_TPL = "mock-all.html";
-
-    String DEBUG_PAGE_SINGLE_TPL = "html/mock.html";
+    String DEBUG_PAGE_SINGLE_TPL = "html/debug.html";
 
     String SINGLE_INDEX_HTML_TPL = "html/index.html";
 
@@ -68,6 +70,8 @@ public interface DocGlobalConstants {
     String SINGLE_DICT_HTML_TPL = "html/dict.html";
 
     String ALL_IN_ONE_CSS = "AllInOne.css";
+
+    String RPC_OUT_DIR = "rpc";
 
     String RPC_API_DOC_ADOC_TPL = "dubbo/Dubbo.adoc";
 
@@ -168,6 +172,8 @@ public interface DocGlobalConstants {
     String EMPTY = "";
 
     String ENUM = "enum";
+
     String YAPI_RESULT_TPL = "yapiJson.btl";
+
     String YAPI_JSON="/yapi.json";
 }

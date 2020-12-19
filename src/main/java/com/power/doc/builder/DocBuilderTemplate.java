@@ -40,7 +40,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import static com.power.doc.constants.DocGlobalConstants.FILE_SEPARATOR;
-import static com.power.doc.constants.DocGlobalConstants.SEARCH_JS;
+import static com.power.doc.constants.DocGlobalConstants.SEARCH_JS_OUT;
 
 /**
  * @author yu 2019/9/26.
@@ -186,7 +186,7 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
         apiDoc1.setList(methodDocs);
         apiDocs.add(apiDoc1);
         tpl.binding(TemplateVariable.API_DOC_LIST.getVariable(), apiDocs);
-        FileUtil.nioWriteFile(tpl.render(), config.getOutPath() + FILE_SEPARATOR + SEARCH_JS);
+        FileUtil.nioWriteFile(tpl.render(), config.getOutPath() + FILE_SEPARATOR + SEARCH_JS_OUT);
     }
 
 
