@@ -1,7 +1,7 @@
 /*
  * smart-doc https://github.com/shalousun/smart-doc
  *
- * Copyright (C) 2018-2020 smart-doc
+ * Copyright (C) 2018-2021 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -22,7 +22,6 @@
  */
 package com.power.doc.builder;
 
-import com.power.common.util.DateTimeUtil;
 import com.power.common.util.FileUtil;
 import com.power.doc.model.ApiConfig;
 import com.power.doc.model.ApiDoc;

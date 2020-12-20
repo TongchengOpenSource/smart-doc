@@ -1,7 +1,7 @@
 /*
  * smart-doc
  *
- * Copyright (C) 2018-2020 smart-doc
+ * Copyright (C) 2018-2021 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -473,6 +473,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         String className = javaMethod.getDeclaringClass().getCanonicalName();
         Map<String, String> replacementMap = builder.getReplaceClassMap();
         Map<String, String> paramTagMap = DocUtil.getParamsComments(javaMethod, DocTags.PARAM, className);
+        Map<String, String> paramsComments = DocUtil.getParamsComments(javaMethod, DocTags.PARAM, null);
         List<JavaParameter> parameterList = javaMethod.getParameters();
         if (parameterList.size() < 1) {
             return ApiMethodReqParam.builder()
@@ -496,7 +497,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             String typeName = javaType.getGenericCanonicalName();
             String simpleName = javaType.getValue().toLowerCase();
             String fullTypeName = javaType.getFullyQualifiedName();
-
+            String simpleTypeName = javaType.getValue();
             String commentClass = paramTagMap.get(paramName);
             String rewriteClassName = getRewriteClassName(replacementMap, fullTypeName, commentClass);
             // rewrite class
@@ -530,6 +531,18 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 paramList.add(param);
                 continue;
             }
+            String mockValue = "";
+            if (JavaClassValidateUtil.isPrimitive(typeName)) {
+                mockValue = paramsComments.get(paramName);
+                if (Objects.nonNull(mockValue) && mockValue.contains("|")) {
+                    mockValue = mockValue.substring(mockValue.lastIndexOf("|") + 1);
+                } else {
+                    mockValue = "";
+                }
+                if (StringUtil.isEmpty(mockValue)) {
+                    mockValue = DocUtil.getValByTypeAndFieldName(simpleTypeName, paramName, Boolean.TRUE);
+                }
+            }
             JavaClass javaClass = builder.getJavaProjectBuilder().getClassByName(fullTypeName);
             List<JavaAnnotation> annotations = parameter.getAnnotations();
             List<String> groupClasses = JavaClassUtil.getParamGroupJavaClass(annotations);
@@ -546,12 +559,20 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                     if (DocAnnotationConstants.SHORT_PATH_VARIABLE.equals(annotationName)) {
                         isPathVariable = true;
                     }
+                    AnnotationValue annotationDefaultVal = annotation.getProperty(DocAnnotationConstants.DEFAULT_VALUE_PROP);
+                    if (Objects.nonNull(annotationDefaultVal)) {
+                        mockValue = StringUtil.removeQuotes(annotationDefaultVal.toString());
+                    }
                     paramName = getParamName(paramName, annotation);
                     for (Map.Entry<String, String> entry : constantsMap.entrySet()) {
                         String key = entry.getKey();
                         String value = entry.getValue();
                         if (paramName.contains(key)) {
                             paramName = paramName.replace(key, value);
+                        }
+                        // replace mockValue
+                        if (mockValue.contains(key)) {
+                            mockValue = mockValue.replace(key, value);
                         }
                     }
                     AnnotationValue annotationRequired = annotation.getProperty(DocAnnotationConstants.REQUIRED_PROP);
@@ -606,12 +627,11 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                     }
                 }
             } else if (JavaClassValidateUtil.isPrimitive(fullTypeName)) {
-                String value = DocUtil.getValByTypeAndFieldName(javaType.getValue(), paramName);
                 ApiParam param = ApiParam.of().setField(paramName)
                         .setType(DocClassUtil.processTypeNameForParams(simpleName))
                         .setId(paramList.size() + 1)
                         .setPathParam(isPathVariable)
-                        .setQueryParam(queryParam).setValue(value)
+                        .setQueryParam(queryParam).setValue(mockValue)
                         .setDesc(comment).setRequired(required).setVersion(DocGlobalConstants.DEFAULT_VERSION);
                 paramList.add(param);
                 if (requestBodyCounter > 0) {
