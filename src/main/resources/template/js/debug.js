@@ -93,6 +93,8 @@ $("button").on("click", function () {
     }).always(function () {
 
     });
+    const curlCmd = toCurl(ajaxOptions);
+    $("#" + id + "-curl").find("pre").text(curlCmd);
 })
 $(".check-all").on("click", function () {
     const checkboxName = $(this).prop("name");
@@ -222,4 +224,51 @@ function download(url, headersData, pathParamData, queryParamData, bodyParamData
     } catch (e) {
         console.error("Failed to send data", e);
     }
+}
+
+function toCurl(request) {
+    if (typeof request !== 'object') {
+        throw "Request is not an object";
+    }
+    // default is a GET request
+    const cmd = ['curl', '-X', request.type || 'GET'];
+
+    if (request.url.indexOf('https') == 0) {
+        cmd.push('-k');
+    }
+
+    if (request.data && request.data.length > 0){
+        cmd.push('-H');
+        cmd.push("'Content-Type: application/json; charset=utf-8'");
+    }
+        // append request headers
+    let headerValue;
+    if (typeof request.headers == 'object') {
+        for (let key in request.headers) {
+            if (Object.prototype.hasOwnProperty.call(request.headers, key)) {
+                cmd.push('-H');
+                headerValue = request.headers[key];
+                if (headerValue.value == '') {
+                    cmd.push("'"+key+"'");
+                } else {
+                    cmd.push("'"+key + ':' + headerValue+"'");
+                }
+            }
+        }
+    }
+
+    // display the response headers
+    cmd.push('-i');
+    // append request url
+    cmd.push(request.url);
+    if (request.data && request.data.length > 0) {
+        cmd.push('--data');
+        cmd.push("'"+request.data+"'");
+    }
+    let curlCmd = "";
+    cmd.forEach(function (item){
+        curlCmd += item + " ";
+    });
+    console.log(curlCmd);
+    return curlCmd;
 }
