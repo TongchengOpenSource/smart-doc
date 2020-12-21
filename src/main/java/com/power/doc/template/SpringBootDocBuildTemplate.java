@@ -32,6 +32,7 @@ import com.power.doc.helper.JsonBuildHelper;
 import com.power.doc.helper.ParamsBuildHelper;
 import com.power.doc.model.*;
 import com.power.doc.model.request.ApiRequestExample;
+import com.power.doc.model.request.CurlRequest;
 import com.power.doc.model.request.RequestMapping;
 import com.power.doc.utils.*;
 import com.thoughtworks.qdox.model.*;
@@ -249,14 +250,13 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
 
         List<JavaParameter> parameterList = method.getParameters();
         List<ApiReqHeader> reqHeaderList = apiMethodDoc.getRequestHeaders();
-        StringBuilder header = new StringBuilder(reqHeaderList.size());
-        for (ApiReqHeader reqHeader : reqHeaderList) {
-            header.append(" -H ").append("'").append(reqHeader.getName())
-                    .append(":").append(reqHeader.getValue()).append("'");
-        }
         if (parameterList.size() < 1) {
-            String format = String.format(DocGlobalConstants.CURL_REQUEST_TYPE, methodType,
-                    header.toString(), apiMethodDoc.getUrl());
+            CurlRequest curlRequest = CurlRequest.builder()
+                    .setContentType(apiMethodDoc.getContentType())
+                    .setType(methodType)
+                    .setReqHeaders(reqHeaderList)
+                    .setUrl(apiMethodDoc.getUrl());
+            String format = CurlUtil.toCurl(curlRequest);
             return ApiRequestExample.builder().setUrl(apiMethodDoc.getUrl()).setExampleBody(format);
         }
         Map<String, JavaType> actualTypesMap = javaMethod.getActualTypesMap();
@@ -432,22 +432,36 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             body = StringUtil.removeQuotes(body);
             url = apiMethodDoc.getServerUrl() + "/" + path;
             url = UrlUtil.simplifyUrl(url);
-            String format = String.format(DocGlobalConstants.CURL_REQUEST_TYPE, methodType, header.toString(), url);
+
             if (requestExample.isJson()) {
                 if (StringUtil.isNotEmpty(requestExample.getJsonBody())) {
-                    String tempUrl = url + "?" + body;
-                    exampleBody = String.format(DocGlobalConstants.CURL_POST_PUT_JSON, methodType, header.toString(),
-                            tempUrl, requestExample.getJsonBody());
-                } else {
-                    exampleBody = format;
+                    url = url + "?" + body;
                 }
+                CurlRequest curlRequest = CurlRequest.builder()
+                        .setBody(requestExample.getJsonBody())
+                        .setContentType(apiMethodDoc.getContentType())
+                        .setType(methodType)
+                        .setReqHeaders(reqHeaderList)
+                        .setUrl(url);
+                exampleBody = CurlUtil.toCurl(curlRequest);
             } else {
+                CurlRequest curlRequest;
                 if (StringUtil.isNotEmpty(body)) {
-                    exampleBody = String.format(DocGlobalConstants.CURL_REQUEST_TYPE_DATA, methodType,
-                            header.toString(), url, body);
+                    curlRequest = CurlRequest.builder()
+                            .setBody(body)
+                            .setContentType(apiMethodDoc.getContentType())
+                            .setType(methodType)
+                            .setReqHeaders(reqHeaderList)
+                            .setUrl(url);
                 } else {
-                    exampleBody = format;
+                    curlRequest = CurlRequest.builder()
+                            .setBody(requestExample.getJsonBody())
+                            .setContentType(apiMethodDoc.getContentType())
+                            .setType(methodType)
+                            .setReqHeaders(reqHeaderList)
+                            .setUrl(url);
                 }
+                exampleBody = CurlUtil.toCurl(curlRequest);
             }
             requestExample.setExampleBody(exampleBody).setUrl(url);
         } else {
@@ -458,7 +472,13 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             url = StringUtil.removeQuotes(url);
             url = apiMethodDoc.getServerUrl() + "/" + url;
             url = UrlUtil.simplifyUrl(url);
-            exampleBody = String.format(DocGlobalConstants.CURL_REQUEST_TYPE, methodType, header.toString(), url);
+            CurlRequest curlRequest = CurlRequest.builder()
+                    .setBody(requestExample.getJsonBody())
+                    .setContentType(apiMethodDoc.getContentType())
+                    .setType(methodType)
+                    .setReqHeaders(reqHeaderList)
+                    .setUrl(url);
+            exampleBody = CurlUtil.toCurl(curlRequest);
             requestExample.setExampleBody(exampleBody)
                     .setJsonBody(DocGlobalConstants.EMPTY)
                     .setUrl(url);
