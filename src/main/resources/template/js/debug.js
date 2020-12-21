@@ -197,8 +197,16 @@ function download(url, headersData, pathParamData, queryParamData, bodyParamData
     xmlRequest.responseType = "blob";
     xmlRequest.onload = function () {
         if (this.status === 200) {
-            let fileName = decodeURI(xmlRequest.getResponseHeader('filename'));
-            console.log(fileName);
+            let fileName = "";
+            const disposition = xmlRequest.getResponseHeader('Content-Disposition');
+            if (disposition && disposition.indexOf('attachment') !== -1) {
+                const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+                const matches = filenameRegex.exec(disposition);
+                if (matches != null && matches[1]) {
+                    fileName = decodeURI(matches[1].replace(/['"]/g, ''));
+                }
+            }
+            console.log("download filename:" + fileName);
             const blob = this.response;
             if (navigator.msSaveBlob) {
                 // IE10 can't do a[download], only Blobs:
@@ -237,11 +245,11 @@ function toCurl(request) {
         cmd.push('-k');
     }
 
-    if (request.data && request.data.length > 0){
+    if (request.data && request.data.length > 0) {
         cmd.push('-H');
         cmd.push("'Content-Type: application/json; charset=utf-8'");
     }
-        // append request headers
+    // append request headers
     let headerValue;
     if (typeof request.headers == 'object') {
         for (let key in request.headers) {
@@ -249,9 +257,9 @@ function toCurl(request) {
                 cmd.push('-H');
                 headerValue = request.headers[key];
                 if (headerValue.value == '') {
-                    cmd.push("'"+key+"'");
+                    cmd.push("'" + key + "'");
                 } else {
-                    cmd.push("'"+key + ':' + headerValue+"'");
+                    cmd.push("'" + key + ':' + headerValue + "'");
                 }
             }
         }
@@ -263,10 +271,10 @@ function toCurl(request) {
     cmd.push(request.url);
     if (request.data && request.data.length > 0) {
         cmd.push('--data');
-        cmd.push("'"+request.data+"'");
+        cmd.push("'" + request.data + "'");
     }
     let curlCmd = "";
-    cmd.forEach(function (item){
+    cmd.forEach(function (item) {
         curlCmd += item + " ";
     });
     console.log(curlCmd);
