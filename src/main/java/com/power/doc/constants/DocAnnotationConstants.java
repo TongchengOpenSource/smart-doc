@@ -60,4 +60,8 @@ public interface DocAnnotationConstants {
     String REQUEST_MAPPING = "RequestMapping";
 
     String DEPRECATED = "Deprecated";
+
+    String JSON_VALUE = "JsonValue";
+
+    String JSON_CREATOR = "JsonCreator";
 }

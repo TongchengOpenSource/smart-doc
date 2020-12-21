@@ -169,11 +169,17 @@ public class JavaClassUtil {
     public static Object getEnumValue(JavaClass javaClass, boolean formDataEnum) {
         List<JavaField> javaFields = javaClass.getEnumConstants();
         List<JavaMethod> methodList = javaClass.getMethods();
-        int annotation = 0;
+        String methodName = null;
         for (JavaMethod method : methodList) {
-            if (method.getAnnotations().size() > 0) {
-                annotation = 1;
-                break;
+            List<JavaAnnotation> annotations = method.getAnnotations();
+            for (JavaAnnotation annotation : annotations) {
+                String annotationName = annotation.getType().getValue();
+                // enum serialize while use JsonValue and JsonCreator annotation
+                if (DocAnnotationConstants.JSON_VALUE.equals(annotationName)
+                        || DocAnnotationConstants.JSON_CREATOR.equals(annotationName)) {
+                    methodName = method.getName();
+                    break;
+                }
             }
         }
         Object value = null;
@@ -182,8 +188,13 @@ public class JavaClassUtil {
             String simpleName = javaField.getType().getSimpleName();
             StringBuilder valueBuilder = new StringBuilder();
             valueBuilder.append("\"").append(javaField.getName()).append("\"").toString();
+            if (formDataEnum) {
+                value = valueBuilder.toString();
+                return value;
+            }
             if (!JavaClassValidateUtil.isPrimitive(simpleName) && index < 1) {
-                if (!CollectionUtil.isEmpty(javaField.getEnumConstantArguments())) {
+                if (CollectionUtil.isNotEmpty(javaField.getEnumConstantArguments()) && Objects.nonNull(methodName)) {
+                    // enum serialize while use JsonValue
                     value = javaField.getEnumConstantArguments().get(0);
                 } else {
                     value = valueBuilder.toString();
@@ -201,7 +212,7 @@ public class JavaClassUtil {
             List<Expression> exceptions = javaField.getEnumConstantArguments();
             stringBuilder.append(javaField.getName());
             //enum value is not empty
-            if (!CollectionUtil.isEmpty(exceptions)) {
+            if (CollectionUtil.isNotEmpty(exceptions)) {
                 stringBuilder.append(" -(");
                 for (int i = 0; i < exceptions.size(); i++) {
                     stringBuilder.append(exceptions.get(i));

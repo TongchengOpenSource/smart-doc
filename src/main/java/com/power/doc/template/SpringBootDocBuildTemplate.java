@@ -676,7 +676,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             // param is enum
             else if (javaClass.isEnum()) {
                 String o = JavaClassUtil.getEnumParams(javaClass);
-                Object value = JavaClassUtil.getEnumValue(javaClass, Boolean.FALSE);
+                Object value = JavaClassUtil.getEnumValue(javaClass, isPathVariable || queryParam);
                 ApiParam param = ApiParam.of().setField(paramName)
                         .setId(paramList.size() + 1)
                         .setPathParam(isPathVariable)
