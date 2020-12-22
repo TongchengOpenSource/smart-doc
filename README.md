@@ -75,7 +75,7 @@ The configuration contents are as follows.
 {
    "allInOne": true, // whether to merge documents into one file, generally recommended as true
    "isStrict": false,//If the strict mode is set to true, Smart-doc forces that the public method in each interface in the code has a comment.
-   "outPath": "/src/main/resources" //Set the api document output path.
+   "outPath": "src/main/resources/static/doc" //Set the api document output path.
 }
 ```
 Only the above three simple configuration items can make smart-doc-maven-plugin work. 
@@ -89,7 +89,7 @@ When you need to use smart-doc to generate more API document information, you ca
   "serverUrl": "http://127.0.0.1", // Set the server address, not required
   "isStrict": false, // whether to enable strict mode
   "allInOne": true, // whether to merge documents into one file, generally recommended as true
-  "outPath": "D: // md2", // Specify the output path of the document
+  "outPath": "src/main/resources/static/doc", // Specify the output path of the document
   "coverOld": true, // Whether to overwrite old files, mainly used for mardown file overwrite
   "packageFilters": "", // controller package filtering, multiple package names separated by commas
   "md5EncryptedHtmlName": false, // only used if each controller generates an html file

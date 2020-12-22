@@ -86,8 +86,9 @@ smart-doc官方目前已经开发完成[Maven插件](https://gitee.com/smart-doc
    "outPath": "D://md2" //指定文档的输出路径,相对路径时请用./开头，eg:./src/main/resources/static/doc
 }
 ```
-仅仅需要上面一行配置就能启动smart-doc-maven-plugin插件，根据自己项目情况更多详细的配置参考下面。
+>如果你想把html文档也打包到应用中一起访问，则建议你配置路径为：src/main/resources/static/doc
 
+仅仅需要上面一行配置就能启动smart-doc-maven-plugin插件，根据自己项目情况更多详细的配置参考下面。
  **详细配置说明** 
 ```
 {
