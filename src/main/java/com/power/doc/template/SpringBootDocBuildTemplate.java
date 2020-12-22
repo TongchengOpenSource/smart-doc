@@ -165,6 +165,11 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             if (Objects.nonNull(downloadTag)) {
                 apiMethodDoc.setDownload(true);
             }
+            DocletTag pageTag = method.getTagByName(DocTags.PAGE);
+            if (Objects.nonNull(pageTag)) {
+                String pageUrl = "/" + projectBuilder.getServerUrl() + "/" + pageTag.getValue();
+                apiMethodDoc.setPage(UrlUtil.simplifyUrl(pageUrl));
+            }
             DocletTag docletTag = method.getTagByName(DocTags.GROUP);
             if (Objects.nonNull(docletTag)) {
                 apiMethodDoc.setGroup(docletTag.getValue());

@@ -97,6 +97,11 @@ public interface DocTags {
      */
     String DOWNLOAD = "download";
 
+    /**
+     * custom @page tag
+     */
+    String PAGE = "page";
+
 
     /**
      * Ignore ResponseBodyAdvice

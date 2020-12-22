@@ -177,6 +177,11 @@ public class ApiMethodDoc implements Serializable {
      */
     private String link;
 
+    /**
+     * mark page
+     */
+    private String page = "";
+
     public String getMethodId() {
         return methodId;
     }
@@ -387,6 +392,14 @@ public class ApiMethodDoc implements Serializable {
 
     public void setLink(String link) {
         this.link = link;
+    }
+
+    public String getPage() {
+        return page;
+    }
+
+    public void setPage(String page) {
+        this.page = page;
     }
 
     @Override

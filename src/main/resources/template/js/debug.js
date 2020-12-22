@@ -45,6 +45,7 @@ $("button").on("click", function () {
     const $queryElement = $("#" + id + "-query-params")
     const url = $("#" + id + "-url").data("url");
     const isDownload = $("#" + id + "-url").data("download");
+    const page = $("#" + id + "-url").data("page");
     const method = $("#" + id + "-method").data("method");
     const contentType = $("#" + id + "-content-type").data("content-type");
     console.log("request-headers=>" + JSON.stringify(headersData))
@@ -52,15 +53,21 @@ $("button").on("click", function () {
 
     console.log("body-params=>" + JSON.stringify(bodyParamData))
     console.log("json-body=>" + body);
-
+    let finalUrl = "";
     let queryParamData = "";
+    if (page != "" || page != null) {
+        queryParamData = getInputData($queryElement)
+        finalUrl = castToGetUri(page, pathParamData, queryParamData)
+        window.open(finalUrl, "_blank");
+        return;
+    }
     if (isDownload) {
         queryParamData = getInputData($queryElement);
         download(url, headersData, pathParamData, queryParamData, bodyParamData, method, contentType);
         return;
     }
     const ajaxOptions = {};
-    let finalUrl = "";
+
     if ("multipart/form-data" == contentType) {
         finalUrl = castToGetUri(url, pathParamData);
         queryParamData = getInputData($queryElement, true)
