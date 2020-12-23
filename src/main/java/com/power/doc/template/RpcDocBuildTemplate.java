@@ -62,13 +62,13 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
         int order = 0;
         boolean setCustomOrder = false;
         for (JavaClass cls : projectBuilder.getJavaProjectBuilder().getClasses()) {
-            if (!checkDubboInterface(cls)) {
-                continue;
-            }
             if (StringUtil.isNotEmpty(apiConfig.getPackageFilters())) {
                 if (!DocUtil.isMatch(apiConfig.getPackageFilters(), cls.getCanonicalName())) {
                     continue;
                 }
+            }
+            if (!checkDubboInterface(cls)) {
+                continue;
             }
             String strOrder = JavaClassUtil.getClassTagsValue(cls, DocTags.ORDER, Boolean.TRUE);
             order++;
