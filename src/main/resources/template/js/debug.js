@@ -55,7 +55,7 @@ $("button").on("click", function () {
     console.log("json-body=>" + body);
     let finalUrl = "";
     let queryParamData = "";
-    if (page != "" || page != null) {
+    if (!isEmpty(page)) {
         queryParamData = getInputData($queryElement)
         finalUrl = castToGetUri(page, pathParamData, queryParamData)
         window.open(finalUrl, "_blank");
@@ -286,4 +286,8 @@ function toCurl(request) {
     });
     console.log(curlCmd);
     return curlCmd;
+}
+
+function isEmpty(obj){
+    return obj === undefined || obj === null || new String(obj).trim() === '';
 }
