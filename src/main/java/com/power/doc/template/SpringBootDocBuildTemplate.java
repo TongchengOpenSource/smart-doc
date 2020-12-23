@@ -69,14 +69,14 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         Collection<JavaClass> classes = projectBuilder.getJavaProjectBuilder().getClasses();
         boolean setCustomOrder = false;
         for (JavaClass cls : classes) {
-            String ignoreTag = JavaClassUtil.getClassTagsValue(cls, DocTags.IGNORE, Boolean.FALSE);
-            if (!checkController(cls) || StringUtil.isNotEmpty(ignoreTag)) {
-                continue;
-            }
             if (StringUtil.isNotEmpty(apiConfig.getPackageFilters())) {
                 if (!DocUtil.isMatch(apiConfig.getPackageFilters(), cls.getCanonicalName())) {
                     continue;
                 }
+            }
+            String ignoreTag = JavaClassUtil.getClassTagsValue(cls, DocTags.IGNORE, Boolean.FALSE);
+            if (!checkController(cls) || StringUtil.isNotEmpty(ignoreTag)) {
+                continue;
             }
             String strOrder = JavaClassUtil.getClassTagsValue(cls, DocTags.ORDER, Boolean.TRUE);
             order++;
