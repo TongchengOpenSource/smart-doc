@@ -52,7 +52,9 @@ import static com.power.doc.constants.DocTags.IGNORE;
  * @author yu 2019/12/21.
  */
 public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
+
     private static Logger log = Logger.getLogger(SpringBootDocBuildTemplate.class.getName());
+
     private List<ApiReqHeader> headers;
 
     /**
@@ -601,7 +603,9 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                         }
                     }
                     AnnotationValue annotationRequired = annotation.getProperty(DocAnnotationConstants.REQUIRED_PROP);
-                    if (null == annotationRequired) {
+                    if (Objects.nonNull(annotationRequired)) {
+                        strRequired = annotationRequired.toString();
+                    } else {
                         strRequired = "true";
                     }
                 }

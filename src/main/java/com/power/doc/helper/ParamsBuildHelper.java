@@ -235,24 +235,20 @@ public class ParamsBuildHelper {
                     ApiParam param = ApiParam.of().setField(pre + fieldName).setPid(pid);
                     JavaClass javaClass = projectBuilder.getJavaProjectBuilder().getClassByName(subTypeName);
                     if (javaClass.isEnum()) {
-                        String enumComments = javaClass.getComment();
-                        if (projectBuilder.getApiConfig().getInlineEnum()) {
-                            ApiDataDictionary dataDictionary = projectBuilder.getApiConfig().getDataDictionary(javaClass.getSimpleName());
-                            if (dataDictionary == null) {
-                                comment = comment + JavaClassUtil.getEnumParams(javaClass);
-                            } else {
-                                comment = comment + "(enum:" + dictionaryListComment(dataDictionary) + ")";
-                            }
-                        } else {
-                            enumComments = DocUtil.replaceNewLineToHtmlBr(enumComments);
-                            comment = comment + "<br/>" + JavaClassUtil.getEnumParams(javaClass) + "<br/>";
-                            if (enumComments != null) {
-                                comment = comment + "(See: " + enumComments + ")";
-                            }
-                            comment = StringUtil.removeQuotes(comment);
-
-                        }
+                        comment = comment + handleEnumComment(javaClass, projectBuilder);
                         param.setType(DocGlobalConstants.ENUM);
+                    }
+                    if (JavaClassValidateUtil.isCollection(subTypeName)) {
+                        String gNameTemp = fieldGicName;
+                        if (globGicName.length > 0 && JAVA_LIST_FULLY.equals(gNameTemp)) {
+                            gNameTemp = gNameTemp + "<T>";
+                        }
+                        String[] gNameArr = DocClassUtil.getSimpleGicName(gNameTemp);
+                        if (gNameArr.length >= 0) {
+                            String gName = DocClassUtil.getSimpleGicName(gNameTemp)[0];
+                            JavaClass javaClass1 = projectBuilder.getJavaProjectBuilder().getClassByName(gName);
+                            comment = comment + handleEnumComment(javaClass1, projectBuilder);
+                        }
                     }
                     String appendComment = "";
                     if (displayActualType) {
@@ -424,7 +420,8 @@ public class ParamsBuildHelper {
     public static String dictionaryListComment(ApiDataDictionary dictionary) {
         List<EnumDictionary> enumDataDict = dictionary.getEnumDataDict();
         return enumDataDict.stream().map(apiDataDictionary ->
-                apiDataDictionary.getValue() + ":" + apiDataDictionary.getDesc()
+                apiDataDictionary.getName() + "-(\"" + apiDataDictionary.getValue() + "\",\""
+                        + apiDataDictionary.getDesc() + "\")"
         ).collect(Collectors.joining(","));
     }
 
@@ -447,5 +444,29 @@ public class ParamsBuildHelper {
         }
         param.setId(paramList.size() + param.getPid() + 1);
         paramList.add(param);
+    }
+
+    private static String handleEnumComment(JavaClass javaClass, ProjectDocConfigBuilder projectBuilder) {
+        String comment = "";
+        if (!javaClass.isEnum()) {
+            return comment;
+        }
+        String enumComments = javaClass.getComment();
+        if (projectBuilder.getApiConfig().getInlineEnum()) {
+            ApiDataDictionary dataDictionary = projectBuilder.getApiConfig().getDataDictionary(javaClass.getSimpleName());
+            if (dataDictionary == null) {
+                comment = comment + "<br/>" + JavaClassUtil.getEnumParams(javaClass);
+            } else {
+                comment = comment + "[enum:" + dictionaryListComment(dataDictionary) + "]";
+            }
+        } else {
+            enumComments = DocUtil.replaceNewLineToHtmlBr(enumComments);
+            comment = comment + "<br/>" + JavaClassUtil.getEnumParams(javaClass) + "<br/>";
+            if (enumComments != null) {
+                comment = comment + "(See: " + enumComments + ")";
+            }
+            comment = StringUtil.removeQuotes(comment);
+        }
+        return comment;
     }
 }

@@ -35,6 +35,7 @@ import com.thoughtworks.qdox.model.JavaClass;
 import java.io.File;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Logger;
 
 import static com.power.doc.constants.DocGlobalConstants.DEFAULT_SERVER_URL;
 
@@ -42,6 +43,8 @@ import static com.power.doc.constants.DocGlobalConstants.DEFAULT_SERVER_URL;
  * @author yu 2019/12/21.
  */
 public class ProjectDocConfigBuilder {
+
+    private static Logger log = Logger.getLogger(ProjectDocConfigBuilder.class.getName());
 
     private JavaProjectBuilder javaProjectBuilder;
 
@@ -75,7 +78,11 @@ public class ProjectDocConfigBuilder {
         this.setHighlightStyle();
         javaProjectBuilder.setEncoding(Charset.DEFAULT_CHARSET);
         this.javaProjectBuilder = javaProjectBuilder;
-        this.loadJavaSource(apiConfig.getSourceCodePaths(), this.javaProjectBuilder);
+        try {
+            this.loadJavaSource(apiConfig.getSourceCodePaths(), this.javaProjectBuilder);
+        } catch (Exception e) {
+            log.warning(e.getMessage());
+        }
         this.initClassFilesMap();
         this.initCustomResponseFieldsMap(apiConfig);
         this.initReplaceClassMap(apiConfig);

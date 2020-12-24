@@ -184,6 +184,14 @@ public class DocClassUtil {
                 return "string";
             case "java.util.List":
             case "list":
+            case "java.util.Set":
+            case "set":
+            case "java.util.LinkedList":
+            case "linkedlist":
+            case "java.util.ArrayList":
+            case "arraylist":
+            case "java.util.TreeSet":
+            case "treeset":
                 return "array";
             case "java.lang.Integer":
             case "integer":

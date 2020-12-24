@@ -246,14 +246,14 @@ function toCurl(request) {
         throw "Request is not an object";
     }
     // default is a GET request
-    const cmd = ['curl', '-X', request.type || 'GET'];
+    const cmd = ["curl", "-X", request.type || "GET"];
 
     if (request.url.indexOf('https') == 0) {
-        cmd.push('-k');
+        cmd.push("-k");
     }
 
     if (request.data && request.data.length > 0) {
-        cmd.push('-H');
+        cmd.push("-H");
         cmd.push("'Content-Type: application/json; charset=utf-8'");
     }
     // append request headers
@@ -261,7 +261,7 @@ function toCurl(request) {
     if (typeof request.headers == 'object') {
         for (let key in request.headers) {
             if (Object.prototype.hasOwnProperty.call(request.headers, key)) {
-                cmd.push('-H');
+                cmd.push("H");
                 headerValue = request.headers[key];
                 if (headerValue.value == '') {
                     cmd.push("'" + key + "'");
@@ -273,11 +273,19 @@ function toCurl(request) {
     }
 
     // display the response headers
-    cmd.push('-i');
+    cmd.push("-i");
     // append request url
-    cmd.push(request.url);
+    let url = request.url;
+    if (!url.startsWith("http")) {
+        const protocol = window.document.location.protocol;
+        const domain = window.document.location.hostname;
+        const port = window.document.location.port;
+        url = protocol + "//" + domain + ":" + port + url;
+    }
+    cmd.push(url);
+    // append data
     if (request.data && request.data.length > 0) {
-        cmd.push('--data');
+        cmd.push("--data");
         cmd.push("'" + request.data + "'");
     }
     let curlCmd = "";

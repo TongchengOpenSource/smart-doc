@@ -299,6 +299,12 @@ public class JsonBuildHelper {
                                     data0.append("[{\"mapKey\":{}}],");
                                     continue out;
                                 }
+                                JavaClass arraySubClass = builder.getJavaProjectBuilder().getClassByName(gicName);
+                                if (arraySubClass.isEnum()) {
+                                    Object value = JavaClassUtil.getEnumValue(arraySubClass, Boolean.FALSE);
+                                    data0.append("[").append(value).append("],");
+                                    continue out;
+                                }
                                 data0.append("[").append(buildJson(gicName, fieldGicName, isResp, nextLevel, registryClasses, builder)).append("]").append(",");
                             } else {
                                 data0.append("[{\"$ref\":\"..\"}]").append(",");
