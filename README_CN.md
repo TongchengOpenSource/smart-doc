@@ -70,6 +70,7 @@ smart-doc官方目前已经开发完成[Maven插件](https://gitee.com/smart-doc
             <!--如果不需要在执行编译时启动smart-doc，则将phase注释掉-->
             <phase>compile</phase>
             <goals>
+                <!--smart-doc提供了html、openapi、markdown等goal，可按需配置-->
                 <goal>html</goal>
             </goals>
         </execution>
@@ -244,6 +245,8 @@ smart-doc is under the Apache 2.0 license.  See the [LICENSE](https://gitee.com
 <img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/known-users/zhongkezhilian.png" title="中科智链" width="272px" height="83px"/>
 <img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/known-users/puqie_gaitubao_100x100.jpg" title="普切信息科技" width="83px" height="83px"/>&nbsp;&nbsp;
 <img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/known-users/tianbo-tech.png" title="杭州天铂云科" width="127px" height="70px"/>
+## Award situation
+- 2020 年度 OSC 中国开源项目评选”活动中获得「最积极运营项目」
 ## Contact
 愿意参与构建smart-doc或者是需要交流问题可以加入qq群：
 
