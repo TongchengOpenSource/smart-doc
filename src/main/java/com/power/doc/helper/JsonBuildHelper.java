@@ -52,7 +52,7 @@ public class JsonBuildHelper {
     public static String buildReturnJson(DocJavaMethod docJavaMethod, ProjectDocConfigBuilder builder) {
         JavaMethod method = docJavaMethod.getJavaMethod();
         if (method.getReturns().isVoid()) {
-            return "This api return nothing.";
+            return "void";
         }
         String returnTypeGenericCanonicalName = method.getReturnType().getGenericCanonicalName();
         if (Objects.nonNull(builder.getApiConfig().getResponseBodyAdvice())
@@ -73,6 +73,12 @@ public class JsonBuildHelper {
                 typeName = typeName.replace(entry.getKey(), entry.getValue().getCanonicalName());
                 returnType = returnType.replace(entry.getKey(), entry.getValue().getCanonicalName());
             }
+        }
+        if (JavaClassValidateUtil.isPrimitive(typeName)) {
+            if (DocGlobalConstants.JAVA_STRING_FULLY.equals(typeName)) {
+                return "string";
+            }
+            return StringUtil.removeQuotes(DocUtil.jsonValueByType(typeName));
         }
         return JsonFormatUtil.formatJson(buildJson(typeName, returnType, Boolean.TRUE, 0, new HashMap<>(), builder));
     }
@@ -109,9 +115,6 @@ public class JsonBuildHelper {
             }
         }
         if (JavaClassValidateUtil.isPrimitive(typeName)) {
-            if (DocGlobalConstants.JAVA_STRING_FULLY.equals(typeName)) {
-                return "string";
-            }
             return StringUtil.removeQuotes(DocUtil.jsonValueByType(typeName));
         }
         if (javaClass.isEnum()) {
@@ -275,7 +278,7 @@ public class JsonBuildHelper {
                         String gicName = DocClassUtil.getSimpleGicName(fieldGicName)[0];
 
                         if (DocGlobalConstants.JAVA_STRING_FULLY.equals(gicName)) {
-                            data0.append("[").append("\"").append(buildJson(gicName, fieldGicName, isResp, nextLevel, registryClasses, builder)).append("\"]").append(",");
+                            data0.append("[").append(DocUtil.jsonValueByType(gicName)).append("]").append(",");
                         } else if (DocGlobalConstants.JAVA_LIST_FULLY.equals(gicName)) {
                             data0.append("[{\"object\":\"any object\"}],");
                         } else if (gicName.length() == 1) {
@@ -285,7 +288,7 @@ public class JsonBuildHelper {
                             }
                             String gicName1 = genericMap.get(gicName) == null ? globGicName[0] : genericMap.get(gicName);
                             if (DocGlobalConstants.JAVA_STRING_FULLY.equals(gicName1)) {
-                                data0.append("[").append("\"").append(buildJson(gicName1, gicName1, isResp, nextLevel, registryClasses, builder)).append("\"]").append(",");
+                                data0.append("[").append(DocUtil.jsonValueByType(gicName1)).append("]").append(",");
                             } else {
                                 if (!typeName.equals(gicName1)) {
                                     data0.append("[").append(buildJson(DocClassUtil.getSimpleName(gicName1), gicName1, isResp, nextLevel, registryClasses, builder)).append("]").append(",");
@@ -323,7 +326,7 @@ public class JsonBuildHelper {
                         if (gicName.length() == 1) {
                             String gicName1 = genericMap.get(gicName) == null ? globGicName[0] : genericMap.get(gicName);
                             if (DocGlobalConstants.JAVA_STRING_FULLY.equals(gicName1)) {
-                                data0.append("{").append("\"mapKey\":\"").append(buildJson(gicName1, gicName1, isResp, nextLevel, registryClasses, builder)).append("\"},");
+                                data0.append("{").append("\"mapKey\":").append(DocUtil.jsonValueByType(gicName1)).append("},");
                             } else {
                                 if (!typeName.equals(gicName1)) {
                                     data0.append("{").append("\"mapKey\":").append(buildJson(DocClassUtil.getSimpleName(gicName1), gicName1, isResp, nextLevel, registryClasses, builder)).append("},");

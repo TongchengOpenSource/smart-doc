@@ -240,11 +240,12 @@ public class ParamsBuildHelper {
                     }
                     if (JavaClassValidateUtil.isCollection(subTypeName)) {
                         String gNameTemp = fieldGicName;
+                        // like Student<T>, Student class has a field List<T> lists.
                         if (globGicName.length > 0 && JAVA_LIST_FULLY.equals(gNameTemp)) {
                             gNameTemp = gNameTemp + "<T>";
                         }
                         String[] gNameArr = DocClassUtil.getSimpleGicName(gNameTemp);
-                        if (gNameArr.length >= 0) {
+                        if (gNameArr.length > 0) {
                             String gName = DocClassUtil.getSimpleGicName(gNameTemp)[0];
                             JavaClass javaClass1 = projectBuilder.getJavaProjectBuilder().getClassByName(gName);
                             comment = comment + handleEnumComment(javaClass1, projectBuilder);
@@ -294,7 +295,6 @@ public class ParamsBuildHelper {
                         param.setEnumValues(JavaClassUtil.getEnumValues(javaClass));
                         param.setType(DocGlobalConstants.ENUM);
                     }
-
                     if (StringUtil.isNotEmpty(comment)) {
                         commonHandleParam(paramList, param, isRequired, comment + appendComment, since, strRequired);
                     } else {
