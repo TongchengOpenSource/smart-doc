@@ -305,18 +305,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             JavaClass javaClass = configBuilder.getJavaProjectBuilder().getClassByName(typeName);
             String[] globGicName = DocClassUtil.getSimpleGicName(gicTypeName);
             String comment = this.paramCommentResolve(paramsComments.get(paramName));
-            String mockValue = "";
-            if (JavaClassValidateUtil.isPrimitive(typeName)) {
-                mockValue = paramsComments.get(paramName);
-                if (Objects.nonNull(mockValue) && mockValue.contains("|")) {
-                    mockValue = mockValue.substring(mockValue.lastIndexOf("|") + 1);
-                } else {
-                    mockValue = "";
-                }
-                if (StringUtil.isEmpty(mockValue)) {
-                    mockValue = DocUtil.getValByTypeAndFieldName(simpleTypeName, paramName, Boolean.TRUE);
-                }
-            }
+            String mockValue = createMockValue(paramsComments, paramName, typeName, simpleTypeName);;
             if (requestFieldToUnderline) {
                 paramName = StringUtil.camelToUnderline(paramName);
             }
@@ -493,6 +482,8 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         return requestExample;
     }
 
+
+
     private ApiMethodReqParam requestParams(final DocJavaMethod docJavaMethod, ProjectDocConfigBuilder builder) {
         JavaMethod javaMethod = docJavaMethod.getJavaMethod();
         boolean isStrict = builder.getApiConfig().isStrict();
@@ -558,18 +549,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 paramList.add(param);
                 continue;
             }
-            String mockValue = "";
-            if (JavaClassValidateUtil.isPrimitive(typeName)) {
-                mockValue = paramsComments.get(paramName);
-                if (Objects.nonNull(mockValue) && mockValue.contains("|")) {
-                    mockValue = mockValue.substring(mockValue.lastIndexOf("|") + 1);
-                } else {
-                    mockValue = "";
-                }
-                if (StringUtil.isEmpty(mockValue)) {
-                    mockValue = DocUtil.getValByTypeAndFieldName(simpleTypeName, paramName, Boolean.TRUE);
-                }
-            }
+            String mockValue = createMockValue(paramsComments, paramName, typeName, simpleTypeName);
             JavaClass javaClass = builder.getJavaProjectBuilder().getClassByName(fullTypeName);
             List<JavaAnnotation> annotations = parameter.getAnnotations();
             List<String> groupClasses = JavaClassUtil.getParamGroupJavaClass(annotations);
@@ -783,5 +763,21 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             rewriteClassName = replacementMap.get(fullTypeName);
         }
         return rewriteClassName;
+    }
+
+    private String createMockValue(Map<String, String> paramsComments, String paramName, String typeName, String simpleTypeName) {
+        String mockValue = "";
+        if (JavaClassValidateUtil.isPrimitive(typeName)) {
+            mockValue = paramsComments.get(paramName);
+            if (Objects.nonNull(mockValue) && mockValue.contains("|")) {
+                mockValue = mockValue.substring(mockValue.lastIndexOf("|") + 1);
+            } else {
+                mockValue = "";
+            }
+            if (StringUtil.isEmpty(mockValue)) {
+                mockValue = DocUtil.getValByTypeAndFieldName(simpleTypeName, paramName, Boolean.TRUE);
+            }
+        }
+        return mockValue;
     }
 }
