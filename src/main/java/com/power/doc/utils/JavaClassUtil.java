@@ -57,12 +57,12 @@ public class JavaClassUtil {
      */
     public static List<DocJavaField> getFields(JavaClass cls1, int counter, Set<String> addedFields) {
         List<DocJavaField> fieldList = new ArrayList<>();
-        if (null == cls1) {
+        if (Objects.isNull(cls1)) {
             return fieldList;
         } else if ("Object".equals(cls1.getSimpleName()) || "Timestamp".equals(cls1.getSimpleName()) ||
                 "Date".equals(cls1.getSimpleName()) || "Locale".equals(cls1.getSimpleName())
                 || "ClassLoader".equals(cls1.getSimpleName()) || JavaClassValidateUtil.isMap(cls1.getFullyQualifiedName())
-                || cls1.isEnum()) {
+                || cls1.isEnum() || "Serializable".equals(cls1.getSimpleName())) {
             return fieldList;
         } else {
             String className = cls1.getFullyQualifiedName();
@@ -285,7 +285,7 @@ public class JavaClassUtil {
      * @return JavaClass
      */
     public static List<JavaType> getActualTypes(JavaType javaType) {
-        if (null == javaType) {
+        if (Objects.isNull(javaType)) {
             return new ArrayList<>(0);
         }
         String typeName = javaType.getGenericFullyQualifiedName();
@@ -454,7 +454,7 @@ public class JavaClassUtil {
     }
 
     public static void genericParamMap(Map<String, String> genericMap, JavaClass cls, String[] globGicName) {
-        if (cls != null && null != cls.getTypeParameters()) {
+        if (Objects.nonNull(cls) && Objects.nonNull(cls.getTypeParameters())) {
             List<JavaTypeVariable<JavaGenericDeclaration>> variables = cls.getTypeParameters();
             for (int i = 0; i < cls.getTypeParameters().size() && i < globGicName.length; i++) {
                 genericMap.put(variables.get(i).getName(), globGicName[i]);

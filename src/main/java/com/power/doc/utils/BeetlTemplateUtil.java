@@ -32,6 +32,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Beetl template handle util
@@ -75,7 +76,7 @@ public class BeetlTemplateUtil {
             if (f.isFile()) {
                 String fileName = f.getName();
                 Template tp = gt.getTemplate(fileName);
-                if (null != params) {
+                if (Objects.nonNull(params)) {
                     tp.binding(params);
                 }
                 templateMap.put(fileName, tp.render());
@@ -95,7 +96,7 @@ public class BeetlTemplateUtil {
             GroupTemplate gt = new GroupTemplate(resourceLoader, cfg);
             return gt;
         } catch (IOException e) {
-            throw new RuntimeException("Can't get Beetl template.");
+            throw new RuntimeException("Can't found Beetl template.");
         }
     }
 }

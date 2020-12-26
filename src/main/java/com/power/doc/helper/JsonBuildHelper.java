@@ -52,7 +52,7 @@ public class JsonBuildHelper {
     public static String buildReturnJson(DocJavaMethod docJavaMethod, ProjectDocConfigBuilder builder) {
         JavaMethod method = docJavaMethod.getJavaMethod();
         if (method.getReturns().isVoid()) {
-            return "void";
+            return "Doesn't return a value.";
         }
         String returnTypeGenericCanonicalName = method.getReturnType().getGenericCanonicalName();
         if (Objects.nonNull(builder.getApiConfig().getResponseBodyAdvice())

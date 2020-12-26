@@ -95,7 +95,7 @@ public interface IDocBuildTemplate<T> {
     default List<ApiParam> buildReturnApiParams(DocJavaMethod docJavaMethod, ProjectDocConfigBuilder projectBuilder) {
         JavaMethod method = docJavaMethod.getJavaMethod();
         if (method.getReturns().isVoid()) {
-            return null;
+            return new ArrayList<>(0);
         }
         String returnTypeGenericCanonicalName = method.getReturnType().getGenericCanonicalName();
         if (Objects.nonNull(projectBuilder.getApiConfig().getResponseBodyAdvice())
@@ -117,33 +117,33 @@ public interface IDocBuildTemplate<T> {
 
         String typeName = apiReturn.getSimpleName();
         if (this.ignoreReturnObject(typeName, projectBuilder.getApiConfig().getIgnoreRequestParams())) {
-            return null;
+            return new ArrayList<>(0);
         }
         if (JavaClassValidateUtil.isPrimitive(typeName)) {
             docJavaMethod.setReturnSchema(OpenApiSchemaUtil.primaryTypeSchema(typeName));
-            return null;
+            return new ArrayList<>(0);
         }
         if (JavaClassValidateUtil.isCollection(typeName)) {
             if (returnType.contains("<")) {
                 String gicName = returnType.substring(returnType.indexOf("<") + 1, returnType.lastIndexOf(">"));
                 if (JavaClassValidateUtil.isPrimitive(gicName)) {
                     docJavaMethod.setReturnSchema(OpenApiSchemaUtil.arrayTypeSchema(gicName));
-                    return null;
+                    return new ArrayList<>(0);
                 }
                 return ParamsBuildHelper.buildParams(gicName, "", 0, null, projectBuilder.getCustomRespFieldMap(),
                         Boolean.TRUE, new HashMap<>(), projectBuilder, null, 0);
             } else {
-                return null;
+                return new ArrayList<>(0);
             }
         }
         if (JavaClassValidateUtil.isMap(typeName)) {
             String[] keyValue = DocClassUtil.getMapKeyValueType(returnType);
             if (keyValue.length == 0) {
-                return null;
+                return new ArrayList<>(0);
             }
             if (JavaClassValidateUtil.isPrimitive(keyValue[1])) {
                 docJavaMethod.setReturnSchema(OpenApiSchemaUtil.mapTypeSchema(keyValue[1]));
-                return null;
+                return new ArrayList<>(0);
             }
             return ParamsBuildHelper.buildParams(keyValue[1], "", 0, null, projectBuilder.getCustomRespFieldMap(),
                     Boolean.TRUE, new HashMap<>(), projectBuilder, null, 0);
@@ -152,7 +152,7 @@ public interface IDocBuildTemplate<T> {
             return ParamsBuildHelper.buildParams(returnType, "", 0, null, projectBuilder.getCustomRespFieldMap(),
                     Boolean.TRUE, new HashMap<>(), projectBuilder, null, 0);
         }
-        return null;
+        return new ArrayList<>(0);
     }
 
     List<T> getApiData(ProjectDocConfigBuilder projectBuilder);

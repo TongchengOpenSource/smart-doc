@@ -35,12 +35,12 @@ public class ApiParamTreeUtil {
 
     public static List<ApiParam> apiParamToTree(List<ApiParam> apiParamList) {
         if (Objects.isNull(apiParamList)) {
-            return null;
+            return new ArrayList<>(0);
         }
         List<ApiParam> params = new ArrayList<>();
         // find root
         for (ApiParam apiParam : apiParamList) {
-            //去除filed的前缀
+            // remove pre of field
             apiParam.setField(apiParam.getField().replaceAll("└─", "").replaceAll("&nbsp;", ""));
             // pid == 0
             if (apiParam.getPid() == 0) {
@@ -48,7 +48,7 @@ public class ApiParamTreeUtil {
             }
         }
         for (ApiParam apiParam : params) {
-            //去除filed的前缀
+            // remove pre of field
             apiParam.setChildren(getChild(apiParam.getId(), apiParamList));
         }
         return params;
@@ -72,7 +72,7 @@ public class ApiParamTreeUtil {
             param.setChildren(getChild(param.getId(), apiParamList));
         }
         if (childList.size() == 0) {
-            return null;
+            return new ArrayList<>(0);
         }
         return childList;
     }

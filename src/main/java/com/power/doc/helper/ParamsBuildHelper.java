@@ -343,12 +343,13 @@ public class ParamsBuildHelper {
                                 if (gName.length() == 1) {
                                     // handle generic
                                     int len = globGicName.length;
-                                    if (len > 0) {
-                                        String gicName = genericMap.get(gName) != null ? genericMap.get(gName) : globGicName[0];
-                                        if (!JavaClassValidateUtil.isPrimitive(gicName) && !simpleName.equals(gicName)) {
-                                            paramList.addAll(buildParams(gicName, preBuilder.toString(), nextLevel, isRequired,
-                                                    responseFieldMap, isResp, registryClasses, projectBuilder, groupClasses, fieldPid));
-                                        }
+                                    if (len < 1) {
+                                        continue out;
+                                    }
+                                    String gicName = genericMap.get(gName) != null ? genericMap.get(gName) : globGicName[0];
+                                    if (!JavaClassValidateUtil.isPrimitive(gicName) && !simpleName.equals(gicName)) {
+                                        paramList.addAll(buildParams(gicName, preBuilder.toString(), nextLevel, isRequired,
+                                                responseFieldMap, isResp, registryClasses, projectBuilder, groupClasses, fieldPid));
                                     }
                                 } else {
                                     paramList.addAll(buildParams(gName, preBuilder.toString(), nextLevel, isRequired,
@@ -412,7 +413,7 @@ public class ParamsBuildHelper {
                         }
                     }
                 }
-            }
+            }//end field
         }
         return paramList;
     }
@@ -454,7 +455,7 @@ public class ParamsBuildHelper {
         String enumComments = javaClass.getComment();
         if (projectBuilder.getApiConfig().getInlineEnum()) {
             ApiDataDictionary dataDictionary = projectBuilder.getApiConfig().getDataDictionary(javaClass.getSimpleName());
-            if (dataDictionary == null) {
+            if (Objects.isNull(dataDictionary)) {
                 comment = comment + "<br/>" + JavaClassUtil.getEnumParams(javaClass);
             } else {
                 comment = comment + "[enum:" + dictionaryListComment(dataDictionary) + "]";
@@ -462,7 +463,7 @@ public class ParamsBuildHelper {
         } else {
             enumComments = DocUtil.replaceNewLineToHtmlBr(enumComments);
             comment = comment + "<br/>" + JavaClassUtil.getEnumParams(javaClass) + "<br/>";
-            if (enumComments != null) {
+            if (StringUtil.isNotEmpty(enumComments)) {
                 comment = comment + "(See: " + enumComments + ")";
             }
             comment = StringUtil.removeQuotes(comment);
