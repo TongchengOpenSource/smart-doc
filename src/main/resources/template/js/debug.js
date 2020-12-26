@@ -15,19 +15,29 @@ $(function () {
         }
     };
     new Accordion($('#accordion'), false);
+    hljs.initHighlightingOnLoad();
 });
-$('textarea').each(function () {
-    this.setAttribute('style', 'height:' + (this.scrollHeight) + 'px;overflow-y:hidden;');
-}).on('input', function () {
-    this.style.height = '80px';
-    this.style.height = (this.scrollHeight) + 'px';
-});
+
+$("[contenteditable=true]").on('paste blur', function (e) {
+    e.preventDefault();
+    const $this = $(this);
+    const data = $this.text();
+    let content = "";
+    if (undefined === e.originalEvent.clipboardData) {
+        content = data;
+    } else {
+        content = e.originalEvent.clipboardData.getData('text/plain')
+    }
+    content = JSON.stringify(JSON.parse(content), null, 4);
+    const highlightedCode = hljs.highlight('json', content).value;
+    $this.html(highlightedCode);
+})
 $("button").on("click", function () {
     const $this = $(this);
     const id = $this.data("id");
     console.log("method-id=>" + id);
 
-    let body = $("#" + id + "-body").val();
+    let body = $("#" + id + "-body").text();
 
     // header
     const $headerElement = $("#" + id + "-header");
@@ -86,22 +96,33 @@ $("button").on("click", function () {
     ajaxOptions.type = method
     ajaxOptions.data = body;
 
+    const $responseEle = $("#" + id + "-response").find("pre code");
     const ajaxTime = new Date().getTime();
     $.ajax(ajaxOptions).done(function (result, textStatus, jqXHR) {
+        const totalTime = new Date().getTime() - ajaxTime;
         $this.css("background", "#5cb85c");
-        $("#" + id + "-response").find("pre").text(JSON.stringify(result, null, 4));
-        const totalTime = new Date().getTime() - ajaxTime;
-        $("#" + id + "-resp-status").html("&nbsp;Status:&nbsp;" + jqXHR.status + "&nbsp;&nbsp;" + jqXHR.statusText + "&nbsp;&nbsp;&nbsp;&nbsp;Time:&nbsp;" + totalTime + "&nbsp;ms")
+        $("#" + id + "-resp-status").html("&nbsp;Status:&nbsp;" + jqXHR.status + "&nbsp;&nbsp;" + jqXHR.statusText + "&nbsp;&nbsp;&nbsp;&nbsp;Time:&nbsp;" + totalTime + "&nbsp;ms");
+        const highlightedCode = hljs.highlight('json', JSON.stringify(result, null, 4)).value;
+        $responseEle.html(highlightedCode);
     }).fail(function (jqXHR) {
-        $this.css("background", "#D44B47");
-        $("#" + id + "-response").find("pre").text(JSON.stringify(jqXHR.responseJSON, null, 4));
         const totalTime = new Date().getTime() - ajaxTime;
-        $("#" + id + "-resp-status").html("&nbsp;Status:&nbsp;" + jqXHR.status + "&nbsp;&nbsp;" + jqXHR.statusText + "&nbsp;&nbsp;&nbsp;&nbsp;Time:&nbsp;" + totalTime + "&nbsp;ms")
+        $this.css("background", "#D44B47");
+        if (jqXHR.status === 0 && jqXHR.readyState === 0) {
+            $("#" + id + "-resp-status").html("Connection refused, please check the server.");
+        } else {
+            $("#" + id + "-resp-status").html("&nbsp;Status:&nbsp;" + jqXHR.status + "&nbsp;&nbsp;" + jqXHR.statusText + "&nbsp;&nbsp;&nbsp;&nbsp;Time:&nbsp;" + totalTime + "&nbsp;ms");
+        }
+        if (undefined !== jqXHR.responseJSON) {
+            const highlightedCode = hljs.highlight('json', JSON.stringify(jqXHR.responseJSON, null, 4)).value;
+            $responseEle.html(highlightedCode);
+        }
     }).always(function () {
+
 
     });
     const curlCmd = toCurl(ajaxOptions);
-    $("#" + id + "-curl").find("pre").text(curlCmd);
+    const highlightedCode = hljs.highlight('bash', curlCmd).value;
+    $("#" + id + "-curl").find("pre code").html(highlightedCode);
 })
 $(".check-all").on("click", function () {
     const checkboxName = $(this).prop("name");
@@ -296,6 +317,6 @@ function toCurl(request) {
     return curlCmd;
 }
 
-function isEmpty(obj){
+function isEmpty(obj) {
     return obj === undefined || obj === null || new String(obj).trim() === '';
 }
