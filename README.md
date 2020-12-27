@@ -59,6 +59,7 @@ Add [smart-doc-maven-plugin](https://github.com/smart-doc-group/smart-doc-maven-
             <!--Comment out phase if you don't need to start smart-doc when compiling-->
             <phase>compile</phase>
             <goals>
+                <!--smart-doc provides html, openapi, markdown, adoc and other goals-->
                 <goal>html</goal>
             </goals>
         </execution>
@@ -96,7 +97,7 @@ When you need to use smart-doc to generate more API document information, you ca
   "projectName": "smart-doc", // Configure your own project name
   "skipTransientField": true, // Not currently implemented
   "style":"xt256", //set highlight
-  "createDebugPage": true,
+  "createDebugPage": true,//Create a page that can be used to test your APIs like swagger
   "language":"ENGLISH",//support ENGLISH and CHINESE
   "sortByTitle":false,//Sort by interface title, the default value is false
   "requestFieldToUnderline":true, //convert request field to underline
