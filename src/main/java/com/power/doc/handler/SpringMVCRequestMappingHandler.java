@@ -112,8 +112,8 @@ public class SpringMVCRequestMappingHandler {
                 url = DocUrlUtil.getMvcUrls(serverUrl, controllerBaseUrl, Arrays.asList(urls));
                 shortUrl = DocUrlUtil.getMvcUrls("", controllerBaseUrl, Arrays.asList(urls));
             } else {
-                url = UrlUtil.simplifyUrl(serverUrl + "/" + controllerBaseUrl + "/" + shortUrl);
-                shortUrl = UrlUtil.simplifyUrl("/" + controllerBaseUrl + "/" + shortUrl);
+                url = serverUrl + "/" + controllerBaseUrl + "/" + shortUrl;
+                shortUrl = "/" + controllerBaseUrl + "/" + shortUrl;
             }
             for (Map.Entry<String, String> entry : constantsMap.entrySet()) {
                 String key = entry.getKey();
@@ -127,6 +127,8 @@ public class SpringMVCRequestMappingHandler {
                     shortUrl = shortUrl.replace("+", "");
                 }
             }
+            url = UrlUtil.simplifyUrl(url);
+            shortUrl = UrlUtil.simplifyUrl(shortUrl);
             return RequestMapping.builder().setMediaType(mediaType).setMethodType(methodType)
                     .setUrl(StringUtil.trim(url)).setShortUrl(StringUtil.trim(shortUrl)).setDeprecated(deprecated);
         }
