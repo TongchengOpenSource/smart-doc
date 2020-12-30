@@ -18,7 +18,7 @@ $(function () {
     hljs.initHighlightingOnLoad();
 });
 
-$("[contenteditable=true]").on('paste blur', function (e) {
+$("[contenteditable=plaintext-only]").on('blur', function (e) {
     e.preventDefault();
     const $this = $(this);
     const data = $this.text();
@@ -272,7 +272,7 @@ function toCurl(request) {
     if (request.url.indexOf('https') == 0) {
         cmd.push("-k");
     }
-
+    // append Content-Type
     if (request.data && request.data.length > 0) {
         cmd.push("-H");
         cmd.push("'Content-Type: application/json; charset=utf-8'");
@@ -282,7 +282,7 @@ function toCurl(request) {
     if (typeof request.headers == 'object') {
         for (let key in request.headers) {
             if (Object.prototype.hasOwnProperty.call(request.headers, key)) {
-                cmd.push("H");
+                cmd.push("-H");
                 headerValue = request.headers[key];
                 if (headerValue.value == '') {
                     cmd.push("'" + key + "'");
