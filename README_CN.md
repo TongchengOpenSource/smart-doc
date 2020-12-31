@@ -131,6 +131,7 @@ smart-doc官方目前已经开发完成[Maven插件](https://gitee.com/smart-doc
   }],
   "revisionLogs": [{ //文档变更记录
       "version": "1.0", //文档版本号
+      "revisionTime":"2020-12-31 10:30", //文档修订时间
       "status": "update", //变更操作状态，一般为：创建、更新等
       "author": "author", //文档变更作者
       "remarks": "desc" //变更描述
