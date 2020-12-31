@@ -132,7 +132,7 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
             apiMethodDoc.setMethodDefinition(methodDefine);
             apiMethodDoc.setEscapeMethodDefinition(scapeMethod);
             apiMethodDoc.setOrder(methodOrder);
-            apiMethodDoc.setDesc(method.getComment());
+            apiMethodDoc.setDesc(DocUtil.getEscapeAndCleanComment(method.getComment()));
             apiMethodDoc.setName(method.getName());
             String methodUid = DocUtil.generateId(clazName + method.getName());
             apiMethodDoc.setMethodId(methodUid);
@@ -228,6 +228,10 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
 
 
     private boolean checkDubboInterface(JavaClass cls) {
+        // Exclude DubboSwaggerService from dubbo 2.7.x
+        if (DocGlobalConstants.DUBBO_SWAGGER.equals(cls.getCanonicalName())) {
+            return false;
+        }
         List<JavaAnnotation> classAnnotations = cls.getAnnotations();
         for (JavaAnnotation annotation : classAnnotations) {
             String name = annotation.getType().getCanonicalName();
@@ -250,14 +254,22 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
     private void handleJavaApiDoc(JavaClass cls, List<RpcApiDoc> apiDocList, List<JavaMethodDoc> apiMethodDocs,
                                   int order, ProjectDocConfigBuilder builder) {
         String className = cls.getCanonicalName();
+        String shortName = cls.getName();
+        String comment = cls.getComment();
         List<JavaType> javaTypes = cls.getImplements();
         if (javaTypes.size() >= 1 && !cls.isInterface()) {
-            className = javaTypes.get(0).getCanonicalName();
+            JavaType javaType = javaTypes.get(0);
+            className = javaType.getCanonicalName();
+            shortName = className;
+            JavaClass javaClass = builder.getClassByName(className);
+            if (StringUtil.isEmpty(comment) && Objects.nonNull(javaClass)) {
+                comment = javaClass.getComment();
+            }
         }
         RpcApiDoc apiDoc = new RpcApiDoc();
         apiDoc.setOrder(order);
         apiDoc.setName(className);
-        apiDoc.setShortName(cls.getName());
+        apiDoc.setShortName(shortName);
         apiDoc.setAlias(className);
         apiDoc.setUri(builder.getServerUrl() + "/" + className);
         apiDoc.setProtocol("dubbo");
@@ -265,9 +277,8 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
             String name = DocUtil.generateId(apiDoc.getName());
             apiDoc.setAlias(name);
         }
-        apiDoc.setDesc(cls.getComment());
+        apiDoc.setDesc(DocUtil.getEscapeAndCleanComment(comment));
         apiDoc.setList(apiMethodDocs);
-        apiDocList.add(apiDoc);
         List<DocletTag> docletTags = cls.getTags();
         List<String> authorList = new ArrayList<>();
         for (DocletTag docletTag : docletTags) {
@@ -280,6 +291,7 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
             }
         }
         apiDoc.setAuthor(String.join(", ", authorList));
+        apiDocList.add(apiDoc);
     }
 
     private String methodDefinition(JavaMethod method) {

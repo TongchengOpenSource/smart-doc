@@ -197,5 +197,7 @@ public interface DocGlobalConstants {
 
     String YAPI_RESULT_TPL = "yapiJson.btl";
 
-    String YAPI_JSON="/yapi.json";
+    String YAPI_JSON = "/yapi.json";
+
+    String DUBBO_SWAGGER = "org.apache.dubbo.rpc.protocol.rest.integration.swagger.DubboSwaggerApiListingResource";
 }
