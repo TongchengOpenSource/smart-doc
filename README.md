@@ -87,89 +87,76 @@ In fact, only the outPath configuration item is necessary.
 When you need to use smart-doc to generate more API document information, you can add detailed configuration content.
 ```
 {
-  "serverUrl": "http://127.0.0.1", // Set the server address, not required
-  "isStrict": false, // whether to enable strict mode
-  "allInOne": true, // whether to merge documents into one file, generally recommended as true
-  "outPath": "src/main/resources/static/doc", // Specify the output path of the document
-  "coverOld": true, // Whether to overwrite old files, mainly used for mardown file overwrite
-  "packageFilters": "", // controller package filtering, multiple package names separated by commas
-  "md5EncryptedHtmlName": false, // only used if each controller generates an html file
-  "projectName": "smart-doc", // Configure your own project name
-  "skipTransientField": true, // Not currently implemented
+  "serverUrl": "http://127.0.0.1", // Set the server address, not required
+  "isStrict": false, // whether to enable strict mode
+  "allInOne": true, // whether to merge documents into one file, generally recommended as true
+  "outPath": "D: // md2", // Specify the output path of the document
+  "coverOld": true, // Whether to overwrite old files, mainly used for mardown file overwrite
   "style":"xt256", //set highlight
   "createDebugPage": true,//Create a page that can be used to test your APIs like swagger
   "language":"ENGLISH",//support ENGLISH and CHINESE
-  "sortByTitle":false,//Sort by interface title, the default value is false
+  "packageFilters": "", // controller package filtering, multiple package names separated by commas
+  "md5EncryptedHtmlName": false, // only used if each controller generates an html file
+  "projectName": "smart-doc", // Configure your own project name
+  "skipTransientField": true, // Not currently implemented
   "requestFieldToUnderline":true, //convert request field to underline
+  "responseFieldToUnderline":true,//convert response field to underline
+  "sortByTitle":false,//Sort by interface title, the default value is false
   "inlineEnum":true,// Set to true to display enumeration details in the parameter table
   "recursionLimit":7,// Set the number of recursive executions to avoid stack overflow, the default is 7
-  "responseFieldToUnderline":true,//convert response field to underline
   "allInOneDocFileName":"index.html",//Customize the output document name
-  "displayActualType":false,//display actual type of generic,
   "requestExample":"true",//Whether to display the request example in the document, the default value is true.
   "responseExample":"true",//Whether to display the response example in the document, the default is true.
+  "displayActualType":false,//display actual type of generic,
   "ignoreRequestParams":[ //The request parameter object will be discarded when generating the document.@since 1.9.2
-        "org.springframework.ui.ModelMap"
+       "org.springframework.ui.ModelMap"
   ],
-  "dataDictionaries": [// Configure the data dictionary, no need to set
-    {
-      "title": "Order Status", // The name of the data dictionary
-      "enumClassName": "com.power.doc.enums.OrderEnum", // Data dictionary enumeration class name
-      "codeField": "code", // The field name corresponding to the data dictionary dictionary code
-      "descField": "desc" // Data dictionary object description information dictionary
-    }
-  ],
-
-  "errorCodeDictionaries": [{// error code list, no need to set
-    "title": "title",
-    "enumClassName": "com.power.doc.enums.ErrorCodeEnum", // Error code enumeration class
-    "codeField": "code", // Code field name of the error code
-    "descField": "desc" // Field name corresponding to the error code description
-  }],
-
-  "revisionLogs": [// Set document change records, no need to set
-    {
-      "version": "1.0", // Document version number
-                        "revisionTime": "2020-12-31 10:30", //revision time
-      "status": "update", // Change operation status, generally: create, update, etc.
-      "author": "author", // Document change author
-      "remarks": "desc" // Change description
-    }
-  ],
-  "customResponseFields": [// Customly add fields and comments. If api-doc encounters a field with the same name later, directly add a comment to the corresponding field. It is not necessary.
-    {
-      "name": "code", // Override the response code field
-      "desc": "Response code", // Override field comment of response code
-      "ownerClassName": "org.springframework.data.domain.Pageable", // class
-      "value": "00000" // Set the value of the response code
-    }
-  ],
-  "rpcApiDependencies":[{ //Your dubbo api denpendency
-        "artifactId":"SpringBoot2-Dubbo-Api",
-        "groupId":"com.demo",
-        "version":"1.0.0"
+  "dataDictionaries": [{// Configure the data dictionary, no need to set
+       "title": "Order Status", // The name of the data dictionary
+       "enumClassName": "com.power.doc.enums.OrderEnum", // Data dictionary enumeration class name
+       "codeField": "code", // The field name corresponding to the data dictionary dictionary code
+       "descField": "desc" // Data dictionary object description information dictionary
   }],
-  "rpcConsumerConfig": "src/main/resources/consumer-example.conf",//dubbo consumer config example
+  "errorCodeDictionaries": [{// error code list, no need to set
+       "title": "title",
+       "enumClassName": "com.power.doc.enums.ErrorCodeEnum", // Error code enumeration class
+       "codeField": "code", // Code field name of the error code
+       "descField": "desc" // Field name corresponding to the error code description
+  }],
+  "revisionLogs": [{// Set document change records, no need to set
+       "version": "1.0", // Document version number
+       "revisionTime": "2020-12-31 10:30", //revision time
+       "status": "update", // Change operation status, generally: create, update, etc.
+       "remarks": "desc" // Change description
+  }],
+  "customResponseFields": [{// Customly add fields and comments. If api-doc encounters a field with the same name later, directly add a comment to the corresponding field. It is not necessary.
+       "name": "code", // Override the response code field
+       "desc": "Response code", // Override field comment of response code
+       "value": "00000" // Set the value of the response code
+  }],
   "apiObjectReplacements": [{ // Supports replacing specified objects with custom objects to complete document rendering
-        "className": "org.springframework.data.domain.Pageable",
-        "replacementClassName": "com.power.doc.model.PageRequestDto" //Use custom PageRequestDto instead of JPA Pageable for document rendering.
+       "className": "org.springframework.data.domain.Pageable",
+       "replacementClassName": "com.power.doc.model.PageRequestDto" //Use custom PageRequestDto instead of JPA Pageable for document rendering.
+  }],
+  "rpcApiDependencies":[{ // Your Apache Dubbo api interface module dependency description.
+       "artifactId":"SpringBoot2-Dubbo-Api",
+       "groupId":"com.demo",
+       "version":"1.0.0"
   }],
   "apiConstants": [{//Configure your own constant class, smart-doc automatically replaces with a specific value when parsing to a constant
-        "constantsClassName": "com.power.doc.constants.RequestParamConstant"
-  }],
+       "constantsClassName": "com.power.doc.constants.RequestParamConstant"
+   }],
   "responseBodyAdvice":{ //Support ResponseBodyAdvice
-    	"className":"com.power.common.model.CommonResult" // Standard POJO for Response
+       "className":"com.power.common.model.CommonResult" // Standard POJO for Response
   },
-  "requestHeaders": [// Set global request headers, no need to set
-    {
-      "name": "token",//header name
-      "type": "string",//header type
-      "desc": "description of this header.",
-      "required": false,
-                        "value":"your header value",
-      "since": "-"
-    }
-  ]
+  "rpcConsumerConfig": "src/main/resources/consumer-example.conf",//dubbo consumer config example
+  "requestHeaders": [{// Set global request headers, no need to set
+       "name": "token",
+       "type": "string",
+       "desc": "desc",
+       "required": false,
+       "since": "-"
+  }]
 }
 ```
 **Note:** This JSON configuration can be converted into JSON using smart-doc's ApiConfig Object. 
