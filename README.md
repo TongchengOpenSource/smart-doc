@@ -126,6 +126,7 @@ When you need to use smart-doc to generate more API document information, you ca
   "revisionLogs": [{// Set document change records, no need to set
        "version": "1.0", // Document version number
        "revisionTime": "2020-12-31 10:30", //revision time
+       "author": "author", // Document change author
        "status": "update", // Change operation status, generally: create, update, etc.
        "remarks": "desc" // Change description
   }],
