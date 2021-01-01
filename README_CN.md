@@ -217,18 +217,8 @@ mvn -Dfile.encoding=UTF-8 smart-doc:rpc-adoc
 ```
 mvn clean install -Dmaven.test.skip=true
 ```
-## Contributors
-感谢下列提交者
-
-- [@zuonidelaowang](https://github.com/zuonidelaowang)
-- [@su-qiu](https://github.com/su-qiu)
-- [@qinkangdeid](https://github.com/qinkangdeid)
-- [@br7roy](https://github.com/br7roy)
-- [@caiqyxyx](https://gitee.com/cy-work)
-- [@lichoking](https://gitee.com/lichoking)
-- [@JtePromise](https://github.com/JtePromise)
-- [@lizhen789](https://github.com/lizhen789)
-- [@maliqiang](https://github.com/maliqiang)
+## TODO
+- Jakarta RS-API 2.x
 ## Other reference
 - [smart-doc功能使用介绍](https://my.oschina.net/u/1760791/blog/2250962)
 - [smart-doc官方wiki](https://gitee.com/smart-doc-team/smart-doc/wikis/Home?sort_id=1652800)

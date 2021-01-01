@@ -232,18 +232,8 @@ You could build with the following commands. (Java 1.8 is required to build the 
 ```
 mvn clean install -Dmaven.test.skip=true
 ```
-## Contributors
-Thanks to the following people who have submitted major pull requests:
-
-- [@zuonidelaowang](https://github.com/zuonidelaowang)
-- [@su-qiu](https://github.com/su-qiu)
-- [@qinkangdeid](https://github.com/qinkangdeid)
-- [@br7roy](https://github.com/br7roy)
-- [@caiqyxyx](https://gitee.com/cy-work)
-- [@lichoking](https://gitee.com/lichoking)
-- [@JtePromise](https://github.com/JtePromise)
-- [@lizhen789](https://github.com/lizhen789)
-- [@maliqiang](https://github.com/maliqiang)
+## TODO
+- Jakarta RS-API 2.x
 ## Other reference
 - [Smart-doc manual](https://github.com/shalousun/smart-doc/wiki)
 
