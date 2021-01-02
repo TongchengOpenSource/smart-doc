@@ -27,6 +27,7 @@ import org.beetl.core.Configuration;
 import org.beetl.core.GroupTemplate;
 import org.beetl.core.Template;
 import org.beetl.core.resource.ClasspathResourceLoader;
+import org.beetl.core.resource.FileResourceLoader;
 
 import java.io.File;
 import java.io.IOException;
@@ -57,6 +58,23 @@ public class BeetlTemplateUtil {
             return gt.getTemplate(templateName);
         } catch (IOException e) {
             throw new RuntimeException("Can't get Beetl template.");
+        }
+    }
+
+    /**
+     * Get Beetl template by file path(relative to the root path of your project)
+     *
+     * @param templatePath template path
+     * @return Beetl Template Object
+     */
+    public static Template getByPath(String templatePath) {
+        FileResourceLoader resourceLoader = new FileResourceLoader();
+        try {
+            Configuration cfg = Configuration.defaultConfiguration();
+            GroupTemplate gt = new GroupTemplate(resourceLoader, cfg);
+            return gt.getTemplate(templatePath);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't found Beetl template: " + resourceLoader.getRoot() + templatePath);
         }
     }
 
@@ -99,4 +117,5 @@ public class BeetlTemplateUtil {
             throw new RuntimeException("Can't found Beetl template.");
         }
     }
+
 }

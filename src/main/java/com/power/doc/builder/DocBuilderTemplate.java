@@ -120,7 +120,12 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
         String strTime = DateTimeUtil.long2Str(now, DateTimeUtil.DATE_FORMAT_SECOND);
         FileUtil.mkdirs(outPath);
         List<ApiErrorCode> errorCodeList = errorCodeDictToList(config);
-        Template tpl = BeetlTemplateUtil.getByName(template);
+        Template tpl;
+        if (StringUtil.isEmpty(config.getCustomHtml())) {
+            tpl = BeetlTemplateUtil.getByName(template);
+        } else {
+            tpl = BeetlTemplateUtil.getByPath(config.getCustomHtml());
+        }
         String style = config.getStyle();
         tpl.binding(TemplateVariable.STYLE.getVariable(), style);
         tpl.binding(TemplateVariable.BACKGROUND.getVariable(), HighlightStyle.getBackgroundColor(style));

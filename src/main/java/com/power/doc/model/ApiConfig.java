@@ -236,19 +236,22 @@ public class ApiConfig {
 
     /**
      * request ignore param
-     * @since 1.9.2
+     *
      * @return
+     * @since 1.9.2
      */
     private List<String> ignoreRequestParams;
 
     /**
      * display actual type of generic
+     *
      * @since 1.9.6
      */
     private boolean displayActualType;
 
     /**
      * Support Spring MVC ResponseBodyAdvice
+     *
      * @since 1.9.8
      */
     private ResponseBodyAdvice responseBodyAdvice;
@@ -259,6 +262,16 @@ public class ApiConfig {
      * create debug page
      */
     private boolean createDebugPage;
+
+    /**
+     * custom setting html template
+     */
+    private String customHtml;
+
+    /**
+     * custom setting css template
+     */
+    private String customCss;
 
     public String getServerUrl() {
         return serverUrl;
@@ -577,6 +590,22 @@ public class ApiConfig {
         this.createDebugPage = createDebugPage;
     }
 
+    public String getCustomHtml() {
+        return customHtml;
+    }
+
+    public void setCustomHtml(String customHtml) {
+        this.customHtml = customHtml;
+    }
+
+    public String getCustomCss() {
+        return customCss;
+    }
+
+    public void setCustomCss(String customCss) {
+        this.customCss = customCss;
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("{");
@@ -656,6 +685,10 @@ public class ApiConfig {
                 .append(style).append('\"');
         sb.append(",\"createDebugPage\":")
                 .append(createDebugPage);
+        sb.append(",\"customHtml\":\"")
+                .append(customHtml).append('\"');
+        sb.append(",\"customCss\":")
+                .append(customCss);
         sb.append('}');
         return sb.toString();
     }

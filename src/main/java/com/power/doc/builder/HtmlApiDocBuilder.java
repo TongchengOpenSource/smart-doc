@@ -23,6 +23,7 @@
 package com.power.doc.builder;
 
 import com.power.common.util.FileUtil;
+import com.power.common.util.StringUtil;
 import com.power.doc.model.ApiConfig;
 import com.power.doc.model.ApiDoc;
 import com.power.doc.template.IDocBuildTemplate;
@@ -74,8 +75,9 @@ public class HtmlApiDocBuilder {
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
         IDocBuildTemplate docBuildTemplate = new SpringBootDocBuildTemplate();
         List<ApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder);
-        Template indexCssTemplate = BeetlTemplateUtil.getByName(ALL_IN_ONE_CSS);
-        FileUtil.nioWriteFile(indexCssTemplate.render(), config.getOutPath() + FILE_SEPARATOR + ALL_IN_ONE_CSS);
+
+        buildIndexCss(config.getCustomCss(), config.getOutPath());
+
         if (config.isAllInOne()) {
             if (StringUtils.isNotEmpty(config.getAllInOneDocFileName())) {
                 INDEX_HTML = config.getAllInOneDocFileName();
@@ -132,4 +134,22 @@ public class HtmlApiDocBuilder {
             index++;
         }
     }
+
+
+    /**
+     * build css
+     *
+     * @param customCss
+     * @param outPath
+     */
+    private static void buildIndexCss(String customCss, String outPath) {
+        Template indexCssTemplate;
+        if (StringUtil.isEmpty(customCss)) {
+            indexCssTemplate = BeetlTemplateUtil.getByName(ALL_IN_ONE_CSS);
+        } else {
+            indexCssTemplate = BeetlTemplateUtil.getByPath(customCss);
+        }
+        FileUtil.nioWriteFile(indexCssTemplate.render(), outPath + FILE_SEPARATOR + ALL_IN_ONE_CSS);
+    }
+
 }
