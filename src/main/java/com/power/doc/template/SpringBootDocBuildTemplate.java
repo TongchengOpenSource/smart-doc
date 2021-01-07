@@ -607,6 +607,9 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 queryParam = true;
             }
             if (JavaClassValidateUtil.isCollection(fullTypeName) || JavaClassValidateUtil.isArray(fullTypeName)) {
+                 if(JavaClassValidateUtil.isCollection(typeName)){
+                    typeName = typeName + "<T>";
+                }
                 String[] gicNameArr = DocClassUtil.getSimpleGicName(typeName);
                 String gicName = gicNameArr[0];
                 if (JavaClassValidateUtil.isArray(gicName)) {
@@ -650,8 +653,8 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             } else if (JavaClassValidateUtil.isMap(fullTypeName)) {
                 log.warning("When using smart-doc, it is not recommended to use Map to receive parameters, Check it in "
                         + javaMethod.getDeclaringClass().getCanonicalName() + "#" + javaMethod.getName());
-
-                if (DocGlobalConstants.JAVA_MAP_FULLY.equals(typeName)) {
+                //如果typeName 是 map 但没加泛型 java.util.HashMap
+                if (JavaClassValidateUtil.isMap(typeName)) {
                     ApiParam apiParam = ApiParam.of().setField(paramName).setType("map")
                             .setId(paramList.size() + 1)
                             .setPathParam(isPathVariable)
