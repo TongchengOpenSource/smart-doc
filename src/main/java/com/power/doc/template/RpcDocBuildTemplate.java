@@ -42,7 +42,6 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
-import static com.power.doc.constants.DocGlobalConstants.JAVA_LIST_FULLY;
 import static com.power.doc.constants.DocTags.DEPRECATED;
 import static com.power.doc.constants.DocTags.IGNORE;
 
@@ -188,7 +187,7 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
             List<JavaAnnotation> annotations = parameter.getAnnotations();
             List<String> groupClasses = JavaClassUtil.getParamGroupJavaClass(annotations);
             if (JavaClassValidateUtil.isCollection(fullTypeName) || JavaClassValidateUtil.isArray(fullTypeName)) {
-                if(JavaClassValidateUtil.isCollection(typeName)){
+                if (JavaClassValidateUtil.isCollection(typeName)) {
                     typeName = typeName + "<T>";
                 }
                 String[] gicNameArr = DocClassUtil.getSimpleGicName(typeName);

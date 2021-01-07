@@ -305,7 +305,8 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             JavaClass javaClass = configBuilder.getJavaProjectBuilder().getClassByName(typeName);
             String[] globGicName = DocClassUtil.getSimpleGicName(gicTypeName);
             String comment = this.paramCommentResolve(paramsComments.get(paramName));
-            String mockValue = createMockValue(paramsComments, paramName, typeName, simpleTypeName);;
+            String mockValue = createMockValue(paramsComments, paramName, typeName, simpleTypeName);
+            ;
             if (requestFieldToUnderline) {
                 paramName = StringUtil.camelToUnderline(paramName);
             }
@@ -483,7 +484,6 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
     }
 
 
-
     private ApiMethodReqParam requestParams(final DocJavaMethod docJavaMethod, ProjectDocConfigBuilder builder) {
         JavaMethod javaMethod = docJavaMethod.getJavaMethod();
         boolean isStrict = builder.getApiConfig().isStrict();
@@ -607,7 +607,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 queryParam = true;
             }
             if (JavaClassValidateUtil.isCollection(fullTypeName) || JavaClassValidateUtil.isArray(fullTypeName)) {
-                 if(JavaClassValidateUtil.isCollection(typeName)){
+                if (JavaClassValidateUtil.isCollection(typeName)) {
                     typeName = typeName + "<T>";
                 }
                 String[] gicNameArr = DocClassUtil.getSimpleGicName(typeName);
