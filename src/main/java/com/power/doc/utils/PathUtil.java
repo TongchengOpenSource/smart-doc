@@ -49,13 +49,14 @@ public class PathUtil {
 
     /**
      * to postman path
+     *
      * @param path path
      * @return String
      */
-    public static String toPostmanPath(String path){
-        if(StringUtil.isNotEmpty(path)){
-            path = path.replace("{",":");
-            path = path.replace("}","");
+    public static String toPostmanPath(String path) {
+        if (StringUtil.isNotEmpty(path)) {
+            path = path.replace("{", ":");
+            path = path.replace("}", "");
             return path;
         }
         return null;
