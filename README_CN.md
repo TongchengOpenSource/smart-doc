@@ -33,9 +33,9 @@ $\color{red}{你给我的star，胜过所有读过的诗—smart-doc}$
 - 支持Apache Dubbo RPC接口文档生成。
 - debug接口调试html5页面完全支持文件上传，下载(@download tag标记下载方法)测试。
 ## Getting Started
-smart-doc使用和测试可参考[smart-doc demo](https://gitee.com/sunyurepository/api-doc-test.git)。
+smart-doc使用和测试可参考[smart-doc demo](https://gitee.com/devin-alan/api-doc-test.git)。
 ```
-# git clone https://gitee.com/sunyurepository/api-doc-test.git
+# git clone https://gitee.com/devin-alan/api-doc-test.git
 ```
 你可以启动这个Spring Boot的项目，然后访问`http://localhost:8080/doc/api.html`来浏览smart-doc生成的接口文档。
 ### Add Maven Plugin
