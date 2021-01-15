@@ -66,4 +66,14 @@ public class ItemBean {
     public void setItem(List<ItemBean> item) {
         this.item = item;
     }
+
+    @Override
+    public String toString() {
+        return "ItemBean{" +
+                "name='" + name + '\'' +
+                ", request=" + request +
+                ", item=" + item +
+                ", description='" + description + '\'' +
+                '}';
+    }
 }

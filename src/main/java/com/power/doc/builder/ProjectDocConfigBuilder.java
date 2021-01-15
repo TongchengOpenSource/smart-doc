@@ -125,6 +125,7 @@ public class ProjectDocConfigBuilder {
     private void initClassFilesMap() {
         Collection<JavaClass> javaClasses = javaProjectBuilder.getClasses();
         for (JavaClass cls : javaClasses) {
+//            log.info("cls: " + cls.getFullyQualifiedName());
             classFilesMap.put(cls.getFullyQualifiedName(), cls);
         }
     }
@@ -132,6 +133,7 @@ public class ProjectDocConfigBuilder {
     private void initCustomResponseFieldsMap(ApiConfig config) {
         if (CollectionUtil.isNotEmpty(config.getCustomResponseFields())) {
             for (CustomRespField field : config.getCustomResponseFields()) {
+                log.info("field: " + field.getName());
                 customRespFieldMap.put(field.getName(), field);
             }
         }
@@ -140,6 +142,7 @@ public class ProjectDocConfigBuilder {
     private void initReplaceClassMap(ApiConfig config) {
         if (CollectionUtil.isNotEmpty(config.getApiObjectReplacements())) {
             for (ApiObjectReplacement replace : config.getApiObjectReplacements()) {
+                log.info("ClassName: " + replace.getClassName() + " ReplacementClassName: " + replace.getReplacementClassName());
                 replaceClassMap.put(replace.getClassName(), replace.getReplacementClassName());
             }
         }
@@ -159,6 +162,7 @@ public class ProjectDocConfigBuilder {
                     if (StringUtil.isEmpty(apiConstant.getConstantsClassName())) {
                         throw new RuntimeException("Enum class name can't be null.");
                     }
+                    log.info("apiConstant: " + apiConstant.getConstantsClassName());
                     clzz = Class.forName(apiConstant.getConstantsClassName());
                 }
                 constantsMap.putAll(JavaClassUtil.getFinalFieldValue(clzz));
@@ -175,6 +179,7 @@ public class ProjectDocConfigBuilder {
                 return;
             }
             try {
+                log.info("responseBodyAdvice: " + responseBodyAdvice.getClassName());
                 Class.forName(responseBodyAdvice.getClassName());
             } catch (ClassNotFoundException e) {
                 throw new RuntimeException("Can't find class " + responseBodyAdvice.getClassName() + " for ResponseBodyAdvice.");

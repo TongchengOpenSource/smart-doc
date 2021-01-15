@@ -46,12 +46,15 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 
 /**
  * @author yu 2019/11/21.
  */
 public class PostmanJsonBuilder {
+
+    private static Logger log = Logger.getLogger(PostmanJsonBuilder.class.getName());
 
     private static final String MSG = "Interface name is not set.";
 
@@ -75,6 +78,7 @@ public class PostmanJsonBuilder {
      * @param projectBuilder QDOX avaProjectBuilder
      */
     public static void buildPostmanCollection(ApiConfig config, JavaProjectBuilder projectBuilder) {
+        log.info("config: " + config.toString());
         DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
         builderTemplate.checkAndInit(config);
         config.setParamsDataToTree(false);
@@ -100,6 +104,7 @@ public class PostmanJsonBuilder {
                 }
         );
         itemBean.setItem(itemBeans);
+//        log.info("第一层的Item: " + itemBean);
         return itemBean;
     }
 
@@ -124,6 +129,7 @@ public class PostmanJsonBuilder {
         requestBean.setUrl(buildUrlBean(apiMethodDoc));
 
         item.setRequest(requestBean);
+//        log.info("构建第二层的item: " + item);
         return item;
 
     }
@@ -143,6 +149,7 @@ public class PostmanJsonBuilder {
         String shortUrl = PathUtil.toPostmanPath(apiMethodDoc.getPath());
         String[] paths = shortUrl.split("/");
         List<String> pathList = new ArrayList<>();
+        pathList.add("machine_manage");
         for (String str : paths) {
             if (StringUtil.isNotEmpty(str)) {
                 pathList.add(str);
@@ -235,10 +242,12 @@ public class PostmanJsonBuilder {
                 }
         );
         requestItem.setItem(itemBeans);
+//        log.info("postManCreate: "+ requestItem);
         String filePath = config.getOutPath();
         filePath = filePath + DocGlobalConstants.POSTMAN_JSON;
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String data = gson.toJson(requestItem);
+//        log.info("data: "+ data);
         FileUtil.nioWriteFile(data, filePath);
     }
 

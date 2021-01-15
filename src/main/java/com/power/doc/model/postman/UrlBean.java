@@ -88,4 +88,16 @@ public class UrlBean {
     public void setPort(String port) {
         this.port = port;
     }
+
+    @Override
+    public String toString() {
+        return "UrlBean{" +
+                "raw='" + raw + '\'' +
+                ", path=" + path +
+                ", host=" + host +
+                ", port='" + port + '\'' +
+                ", query=" + query +
+                ", variable=" + variable +
+                '}';
+    }
 }

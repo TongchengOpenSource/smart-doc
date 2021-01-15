@@ -46,13 +46,9 @@ public class DocClassUtil {
      * @return array of string
      */
     public static String[] getSimpleGicName(String returnType) {
-        if (JavaClassValidateUtil.isCollection(returnType)) {
-            returnType = returnType + "<T>";
-        } else if (JavaClassValidateUtil.isArray(returnType)) {
+        if (JavaClassValidateUtil.isArray(returnType)) {
             returnType = returnType.substring(0, returnType.lastIndexOf("["));
             returnType = "java.util.List<" + returnType + ">";
-        } else if (JavaClassValidateUtil.isMap(returnType)) {
-            returnType = returnType + "<String,T>";
         }
         if (returnType.contains("<")) {
             String pre = returnType.substring(0, returnType.indexOf("<"));

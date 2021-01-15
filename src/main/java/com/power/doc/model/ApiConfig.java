@@ -260,6 +260,16 @@ public class ApiConfig {
      */
     private boolean createDebugPage;
 
+    private String uploadUrl;
+
+    public String getUploadUrl() {
+        return uploadUrl;
+    }
+
+    public void setUploadUrl(String uploadUrl) {
+        this.uploadUrl = uploadUrl;
+    }
+
     public String getServerUrl() {
         return serverUrl;
     }

@@ -22,10 +22,21 @@
  */
 package com.power.doc.builder;
 
-import com.power.common.util.*;
+import com.power.common.util.CollectionUtil;
+import com.power.common.util.DateTimeUtil;
+import com.power.common.util.EnumUtil;
+import com.power.common.util.FileUtil;
+import com.power.common.util.StringUtil;
 import com.power.doc.constants.HighlightStyle;
 import com.power.doc.constants.TemplateVariable;
-import com.power.doc.model.*;
+import com.power.doc.model.ApiAllData;
+import com.power.doc.model.ApiConfig;
+import com.power.doc.model.ApiDataDictionary;
+import com.power.doc.model.ApiDoc;
+import com.power.doc.model.ApiDocDict;
+import com.power.doc.model.ApiErrorCode;
+import com.power.doc.model.ApiMethodDoc;
+import com.power.doc.model.DataDict;
 import com.power.doc.template.IDocBuildTemplate;
 import com.power.doc.template.SpringBootDocBuildTemplate;
 import com.power.doc.utils.BeetlTemplateUtil;
@@ -38,6 +49,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.logging.Logger;
 
 import static com.power.doc.constants.DocGlobalConstants.FILE_SEPARATOR;
 import static com.power.doc.constants.DocGlobalConstants.SEARCH_JS_OUT;
@@ -48,6 +60,8 @@ import static com.power.doc.constants.DocGlobalConstants.SEARCH_JS_OUT;
 public class DocBuilderTemplate extends BaseDocBuilderTemplate {
 
     private static long now = System.currentTimeMillis();
+
+    private static Logger log = Logger.getLogger(DocBuilderTemplate.class.getName());
 
     /**
      * get all api data
@@ -146,6 +160,8 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
         setDirectoryLanguageVariable(config, tpl);
         List<ApiDocDict> apiDocDictList = buildDictionary(config, javaProjectBuilder);
         tpl.binding(TemplateVariable.DICT_LIST.getVariable(), apiDocDictList);
+        log.info("outPath: " + outPath + FILE_SEPARATOR + outPutFileName);
+        log.info("uploadUrl: "+config.getUploadUrl());
         FileUtil.nioWriteFile(tpl.render(), outPath + FILE_SEPARATOR + outPutFileName);
     }
 

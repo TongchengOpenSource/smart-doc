@@ -82,5 +82,13 @@ public class BodyBean {
         }
     }
 
-
+    @Override
+    public String toString() {
+        return "BodyBean{" +
+                "mode='" + mode + '\'' +
+                ", raw='" + raw + '\'' +
+                ", formdata=" + formdata +
+                ", options=" + options +
+                '}';
+    }
 }

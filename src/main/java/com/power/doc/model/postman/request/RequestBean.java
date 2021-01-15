@@ -77,4 +77,15 @@ public class RequestBean {
     public void setHeader(List<HeaderBean> header) {
         this.header = header;
     }
+
+    @Override
+    public String toString() {
+        return "RequestBean{" +
+                "method='" + method + '\'' +
+                ", body=" + body +
+                ", url=" + url +
+                ", description='" + description + '\'' +
+                ", header=" + header +
+                '}';
+    }
 }

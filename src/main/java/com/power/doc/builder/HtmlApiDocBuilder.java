@@ -28,19 +28,35 @@ import com.power.doc.model.ApiDoc;
 import com.power.doc.template.IDocBuildTemplate;
 import com.power.doc.template.SpringBootDocBuildTemplate;
 import com.power.doc.utils.BeetlTemplateUtil;
+import com.power.doc.utils.ClientUploadUtils;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.beetl.core.Template;
 
+import java.io.File;
 import java.util.List;
+import java.util.logging.Logger;
 
-import static com.power.doc.constants.DocGlobalConstants.*;
+import static com.power.doc.constants.DocGlobalConstants.ALL_IN_ONE_CSS;
+import static com.power.doc.constants.DocGlobalConstants.ALL_IN_ONE_HTML_TPL;
+import static com.power.doc.constants.DocGlobalConstants.DEBUG_JS_OUT;
+import static com.power.doc.constants.DocGlobalConstants.DEBUG_JS_TPL;
+import static com.power.doc.constants.DocGlobalConstants.DEBUG_PAGE_ALL_TPL;
+import static com.power.doc.constants.DocGlobalConstants.DEBUG_PAGE_SINGLE_TPL;
+import static com.power.doc.constants.DocGlobalConstants.FILE_SEPARATOR;
+import static com.power.doc.constants.DocGlobalConstants.SEARCH_ALL_JS_TPL;
+import static com.power.doc.constants.DocGlobalConstants.SEARCH_JS_TPL;
+import static com.power.doc.constants.DocGlobalConstants.SINGLE_DICT_HTML_TPL;
+import static com.power.doc.constants.DocGlobalConstants.SINGLE_ERROR_HTML_TPL;
+import static com.power.doc.constants.DocGlobalConstants.SINGLE_INDEX_HTML_TPL;
 
 /**
  * @author yu 2019/9/20.
  * @since 1.7+
  */
 public class HtmlApiDocBuilder {
+
+    private static Logger log = Logger.getLogger(HtmlApiDocBuilder.class.getName());
 
     private static long now = System.currentTimeMillis();
 
@@ -76,6 +92,7 @@ public class HtmlApiDocBuilder {
         List<ApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder);
         Template indexCssTemplate = BeetlTemplateUtil.getByName(ALL_IN_ONE_CSS);
         FileUtil.nioWriteFile(indexCssTemplate.render(), config.getOutPath() + FILE_SEPARATOR + ALL_IN_ONE_CSS);
+        log.info("buildApiDoc...");
         if (config.isAllInOne()) {
             if (StringUtils.isNotEmpty(config.getAllInOneDocFileName())) {
                 INDEX_HTML = config.getAllInOneDocFileName();
@@ -106,6 +123,19 @@ public class HtmlApiDocBuilder {
             builderTemplate.buildSearchJs(config, javaProjectBuilder, apiDocList, SEARCH_JS_TPL);
         }
 
+        PostmanJsonBuilder.buildPostmanCollection(config, javaProjectBuilder);
+
+        try {
+
+            log.info(ClientUploadUtils.upload(config.getUploadUrl(), config.getOutPath()+File.separator+"index.html", config.getProjectName()+"_index.html", config.getProjectName()).string());
+            log.info(ClientUploadUtils.upload(config.getUploadUrl(), config.getOutPath()+File.separator+"AllInOne.css", "AllInOne.css", "").string());
+            log.info(ClientUploadUtils.upload(config.getUploadUrl(), config.getOutPath()+File.separator+"search.js", "search.js", "").string());
+
+            log.info(ClientUploadUtils.upload(config.getUploadUrl(), config.getOutPath()+File.separator+"postman.json", config.getProjectName()+"_postman.json", config.getProjectName()).string());
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.info(e.toString());
+        }
     }
 
     /**
@@ -124,6 +154,7 @@ public class HtmlApiDocBuilder {
         FileUtil.mkdirs(config.getOutPath());
         int index = 0;
         for (ApiDoc doc : apiDocList) {
+            log.info("doc: " + doc.toString());
             if (index == 0) {
                 doc.setAlias(indexHtml);
             }

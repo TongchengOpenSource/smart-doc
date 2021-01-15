@@ -47,4 +47,12 @@ public class RequestItem {
     public void setItem(List<ItemBean> item) {
         this.item = item;
     }
+
+    @Override
+    public String toString() {
+        return "RequestItem{" +
+                "info=" + info +
+                ", item=" + item +
+                '}';
+    }
 }
