@@ -42,7 +42,7 @@ public class HtmlApiDocTest {
 
         //不指定SourcePaths默认加载代码为项目src/main/java下的
         config.setSourceCodePaths(
-                SourceCodePath.builder().setDesc("加载项目外代码").setPath("D:\\workspace\\cipher-service-platform-new\\cipher_machine_manage\\src\\main\\java\\com\\aolian\\platform\\cipher\\machine\\modules\\controller\\ApplicationController.java")
+                SourceCodePath.builder().setDesc("加载项目外代码").setPath("D:\\workspace\\cipher-service-platform-new\\cipher_machine_manage\\src\\main\\java\\com\\aolian\\platform\\cipher\\machine\\modules\\controller\\test")
 
                 //SourcePath.path().setPath("F:\\Personal\\project\\smart\\src\\main\\java")
                 //SourcePath.path().setDesc("加载项目外代码").setPath("E:\\ApplicationPower\\ApplicationPower\\Common-util\\src\\main\\java")

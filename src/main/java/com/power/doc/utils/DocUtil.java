@@ -250,26 +250,24 @@ public class DocUtil {
      * @return formatted string
      */
     public static String formatAndRemove(String str, Map<String, String> values) {
-
         // /detail/{id:[a-zA-Z0-9]{3}}/{name:[a-zA-Z0-9]{3}}
-        if(str.indexOf(":") >= 0) {
+        if (str.indexOf(":") >= 0) {
             String[] strArr = str.split("/");
-            for (int i=0; i<strArr.length; i++) {
-                if(strArr[i].indexOf(":")>=0) {
-                    String reg = strArr[i].substring(strArr[i].indexOf(":")+1, strArr[i].length()-1);
+            for (int i = 0; i < strArr.length; i++) {
+                if (strArr[i].indexOf(":") >= 0) {
+                    String reg = strArr[i].substring(strArr[i].indexOf(":") + 1, strArr[i].length() - 1);
                     Generex generex = new Generex(reg);
                     // Generate random String
                     String randomStr = generex.random();
                     String key = strArr[i].substring(1, strArr[i].indexOf(":"));
-                    if(values.containsKey(key)) {
+                    if (values.containsKey(key)) {
                         values.put(key, randomStr);
                     }
-                    strArr[i] = strArr[i].substring(0, strArr[i].indexOf(":"))+"}";
+                    strArr[i] = strArr[i].substring(0, strArr[i].indexOf(":")) + "}";
                 }
             }
             str = StringUtils.join(Arrays.asList(strArr), '/');
         }
-
         StringBuilder builder = new StringBuilder(str);
         Set<Map.Entry<String, String>> entries = values.entrySet();
         Iterator<Map.Entry<String, String>> iteratorMap = entries.iterator();
@@ -481,7 +479,7 @@ public class DocUtil {
         }
     }
 
-    public static String javaTypeToOpenApiTypeConvert(String type){
+    public static String javaTypeToOpenApiTypeConvert(String type) {
         switch (type) {
             case "int32":
             case "int16":
