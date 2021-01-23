@@ -92,7 +92,7 @@ public class ProjectDocConfigBuilder {
 
     public JavaClass getClassByName(String simpleName) {
         JavaClass cls = javaProjectBuilder.getClassByName(simpleName);
-        List<DocJavaField> fieldList = JavaClassUtil.getFields(cls, 0, new HashSet<>());
+        List<DocJavaField> fieldList = JavaClassUtil.getFields(cls, 0, new LinkedHashMap<>());
         // handle inner class
         if (Objects.isNull(cls.getFields()) || fieldList.isEmpty()) {
             cls = classFilesMap.get(simpleName);

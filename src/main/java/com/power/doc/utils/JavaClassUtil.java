@@ -39,6 +39,7 @@ import com.thoughtworks.qdox.model.impl.DefaultJavaParameterizedType;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Handle JavaClass
@@ -55,9 +56,9 @@ public class JavaClassUtil {
      * @param addedFields added fields,Field deduplication
      * @return list of JavaField
      */
-    public static List<DocJavaField> getFields(JavaClass cls1, int counter, Set<String> addedFields) {
+    public static List<DocJavaField> getFields(JavaClass cls1, int counter, Map<String, DocJavaField> addedFields) {
         List<DocJavaField> fieldList = new ArrayList<>();
-        if (Objects.isNull(cls1)) {
+        if (null == cls1) {
             return fieldList;
         } else if ("Object".equals(cls1.getSimpleName()) || "Timestamp".equals(cls1.getSimpleName()) ||
                 "Date".equals(cls1.getSimpleName()) || "Locale".equals(cls1.getSimpleName())
@@ -75,16 +76,15 @@ public class JavaClassUtil {
                     int paramSize = javaMethod.getParameters().size();
                     boolean enable = false;
                     if (methodName.startsWith("get") && !"get".equals(methodName) && paramSize == 0) {
-                        methodName = StringUtil.firstToLowerCase(methodName.substring(3, methodName.length()));
+                        methodName = StringUtil.firstToLowerCase(methodName.substring(3));
                         enable = true;
                     } else if (methodName.startsWith("is") && !"is".equals(methodName) && paramSize == 0) {
-                        methodName = StringUtil.firstToLowerCase(methodName.substring(2, methodName.length()));
+                        methodName = StringUtil.firstToLowerCase(methodName.substring(2));
                         enable = true;
                     }
-                    if (!enable || addedFields.contains(methodName)) {
+                    if (!enable || addedFields.containsKey(methodName)) {
                         continue;
                     }
-                    addedFields.add(methodName);
                     String comment = javaMethod.getComment();
                     JavaField javaField = new DefaultJavaField(javaMethod.getReturns(), methodName);
                     DocJavaField docJavaField = DocJavaField.builder()
@@ -94,30 +94,41 @@ public class JavaClassUtil {
                             .setAnnotations(javaMethod.getAnnotations())
                             .setFullyQualifiedName(javaField.getType().getFullyQualifiedName())
                             .setGenericCanonicalName(javaField.getType().getGenericCanonicalName());
-
-                    fieldList.add(docJavaField);
+                    addedFields.put(methodName, docJavaField);
                 }
             }
             // ignore enum parent class
             if (!cls1.isEnum()) {
                 JavaClass parentClass = cls1.getSuperJavaClass();
-                fieldList.addAll(getFields(parentClass, counter, addedFields));
+                getFields(parentClass, counter, addedFields);
                 List<JavaType> implClasses = cls1.getImplements();
                 for (JavaType type : implClasses) {
                     JavaClass javaClass = (JavaClass) type;
-                    fieldList.addAll(getFields(javaClass, counter, addedFields));
+                    getFields(javaClass, counter, addedFields);
                 }
             }
             Map<String, JavaType> actualJavaTypes = getActualTypesMap(cls1);
-            List<DocJavaField> docJavaFields = new ArrayList<>();
-
+            List<JavaMethod> javaMethods = cls1.getMethods();
+            for (JavaMethod method : javaMethods) {
+                String methodName = method.getName();
+                int paramSize = method.getParameters().size();
+                if (methodName.startsWith("get") && !"get".equals(methodName) && paramSize == 0) {
+                    methodName = StringUtil.firstToLowerCase(methodName.substring(3));
+                } else if (methodName.startsWith("is") && !"is".equals(methodName) && paramSize == 0) {
+                    methodName = StringUtil.firstToLowerCase(methodName.substring(2));
+                }
+                if (addedFields.containsKey(methodName)) {
+                    String comment = method.getComment();
+                    DocJavaField docJavaField = addedFields.get(methodName);
+                    docJavaField.setAnnotations(method.getAnnotations());
+                    docJavaField.setComment(comment);
+                    addedFields.put(methodName, docJavaField);
+                }
+            }
             for (JavaField javaField : cls1.getFields()) {
                 String fieldName = javaField.getName();
-                if (addedFields.contains(fieldName)) {
-                    continue;
-                }
-                boolean typeChecked = false;
                 DocJavaField docJavaField = DocJavaField.builder();
+                boolean typeChecked = false;
                 String gicName = javaField.getType().getGenericCanonicalName();
                 String subTypeName = javaField.getType().getFullyQualifiedName();
                 String actualType = null;
@@ -148,15 +159,23 @@ public class JavaClassUtil {
                         actualType = value.getFullyQualifiedName();
                     }
                 }
-                addedFields.add(fieldName);
-                docJavaFields.add(docJavaField.setComment(javaField.getComment())
+                docJavaField.setComment(javaField.getComment())
                         .setJavaField(javaField).setFullyQualifiedName(subTypeName)
-                        .setGenericCanonicalName(gicName).setActualJavaType(actualType));
+                        .setGenericCanonicalName(gicName).setActualJavaType(actualType)
+                        .setAnnotations(javaField.getAnnotations());
+                if (addedFields.containsKey(fieldName)) {
+                    addedFields.put(fieldName, docJavaField);
+                    continue;
+                }
+                addedFields.put(fieldName, docJavaField);
             }
-            fieldList.addAll(docJavaFields);
+            List<DocJavaField> parentFieldList = addedFields.values().stream()
+                    .filter(v -> Objects.nonNull(v)).collect(Collectors.toList());
+            fieldList.addAll(parentFieldList);
         }
         return fieldList;
     }
+
 
 
     /**
