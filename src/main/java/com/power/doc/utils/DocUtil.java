@@ -254,16 +254,21 @@ public class DocUtil {
         if (str.indexOf(":") >= 0) {
             String[] strArr = str.split("/");
             for (int i = 0; i < strArr.length; i++) {
-                if (strArr[i].indexOf(":") >= 0) {
-                    String reg = strArr[i].substring(strArr[i].indexOf(":") + 1, strArr[i].length() - 1);
+                String pathParam = strArr[i];
+                if (pathParam.indexOf(":") >= 0) {
+                    int length = pathParam.length();
+                    if (length < 1) {
+                        length = 1;
+                    }
+                    String reg = pathParam.substring(pathParam.indexOf(":") + 1, length - 1);
                     Generex generex = new Generex(reg);
                     // Generate random String
                     String randomStr = generex.random();
-                    String key = strArr[i].substring(1, strArr[i].indexOf(":"));
+                    String key = pathParam.substring(1, pathParam.indexOf(":"));
                     if (values.containsKey(key)) {
                         values.put(key, randomStr);
                     }
-                    strArr[i] = strArr[i].substring(0, strArr[i].indexOf(":")) + "}";
+                    strArr[i] = pathParam.substring(0, pathParam.indexOf(":")) + "}";
                 }
             }
             str = StringUtils.join(Arrays.asList(strArr), '/');
