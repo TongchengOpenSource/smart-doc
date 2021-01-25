@@ -30,7 +30,7 @@ public class HtmlApiDocTest {
         list.add("aa");
         list.contains("aa");
         ApiConfig config = new ApiConfig();
-        config.setServerUrl("http://localhost:8080");
+        config.setServerUrl("http://localhost:8888/anobody/");
         config.setUploadUrl("http://localhost:8888/anobody/manage/doc/upload");
         config.setStrict(false);
         config.setAllInOne(true);

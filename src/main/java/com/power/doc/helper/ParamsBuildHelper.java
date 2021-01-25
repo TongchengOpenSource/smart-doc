@@ -80,7 +80,7 @@ public class ParamsBuildHelper {
         JavaClass cls = projectBuilder.getClassByName(simpleName);
         //如果存在泛型 则将泛型与类名的对应关系存起来
         JavaClassUtil.genericParamMap(genericMap, cls, globGicName);
-        List<DocJavaField> fields = JavaClassUtil.getFields(cls, 0, new HashSet<>());
+        List<DocJavaField> fields = JavaClassUtil.getFields(cls, 0, new LinkedHashMap<>());
         if (JavaClassValidateUtil.isPrimitive(simpleName)) {
             String processedType = isShowJavaType ? simpleName : DocClassUtil.processTypeNameForParams(simpleName.toLowerCase());
             paramList.addAll(primitiveReturnRespComment(processedType));

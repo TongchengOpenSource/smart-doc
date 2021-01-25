@@ -30,7 +30,9 @@ import java.util.List;
  * @author yu 2020/11/28.
  */
 public class UrlBean {
+
     private String raw;
+
     private List<String> path;
 
     private List<String> host;

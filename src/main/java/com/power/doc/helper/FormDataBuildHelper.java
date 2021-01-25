@@ -37,10 +37,7 @@ import com.power.doc.utils.JavaClassValidateUtil;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaField;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author yu 2019/12/25.
@@ -79,7 +76,7 @@ public class FormDataBuildHelper {
         String simpleName = DocClassUtil.getSimpleName(className);
         String[] globGicName = DocClassUtil.getSimpleGicName(className);
         JavaClass cls = builder.getJavaProjectBuilder().getClassByName(simpleName);
-        List<DocJavaField> fields = JavaClassUtil.getFields(cls, 0, new HashSet<>());
+        List<DocJavaField> fields = JavaClassUtil.getFields(cls, 0, new LinkedHashMap<>());
 
         if (JavaClassValidateUtil.isPrimitive(simpleName)) {
             FormData formData = new FormData();

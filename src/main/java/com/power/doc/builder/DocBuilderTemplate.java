@@ -160,8 +160,8 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
         setDirectoryLanguageVariable(config, tpl);
         List<ApiDocDict> apiDocDictList = buildDictionary(config, javaProjectBuilder);
         tpl.binding(TemplateVariable.DICT_LIST.getVariable(), apiDocDictList);
-        log.info("outPath: " + outPath + FILE_SEPARATOR + outPutFileName);
-        log.info("uploadUrl: "+config.getUploadUrl());
+//        log.info("outPath: " + outPath + FILE_SEPARATOR + outPutFileName);
+//        log.info("uploadUrl: "+config.getUploadUrl());
         FileUtil.nioWriteFile(tpl.render(), outPath + FILE_SEPARATOR + outPutFileName);
     }
 

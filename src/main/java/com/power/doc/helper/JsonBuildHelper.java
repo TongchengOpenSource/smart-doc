@@ -186,7 +186,7 @@ public class JsonBuildHelper {
         } else {
             boolean requestFieldToUnderline = builder.getApiConfig().isRequestFieldToUnderline();
             boolean responseFieldToUnderline = builder.getApiConfig().isResponseFieldToUnderline();
-            List<DocJavaField> fields = JavaClassUtil.getFields(cls, 0, new HashSet<>());
+            List<DocJavaField> fields = JavaClassUtil.getFields(cls, 0, new LinkedHashMap<>());
             boolean isGenerics = JavaFieldUtil.checkGenerics(fields);
             out:
             for (DocJavaField docField : fields) {
@@ -236,8 +236,9 @@ public class JsonBuildHelper {
                 if (tagsMap.containsKey(DocTags.MOCK) && StringUtil.isNotEmpty(tagsMap.get(DocTags.MOCK))) {
                     fieldValue = tagsMap.get(DocTags.MOCK);
                     if (!DocUtil.javaPrimaryType(typeSimpleName)
-                            && !JavaClassValidateUtil.isCollection(fieldGicName)
-                            && !JavaClassValidateUtil.isMap(fieldGicName)) {
+                            && !JavaClassValidateUtil.isCollection(subTypeName)
+                            && !JavaClassValidateUtil.isMap(subTypeName)
+                    && !JavaClassValidateUtil.isArray(subTypeName)) {
                         fieldValue = DocUtil.handleJsonStr(fieldValue);
                     }
                 }

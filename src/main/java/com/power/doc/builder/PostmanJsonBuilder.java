@@ -25,6 +25,7 @@ package com.power.doc.builder;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.power.common.util.CollectionUtil;
 import com.power.common.util.FileUtil;
 import com.power.common.util.StringUtil;
 import com.power.doc.constants.DocGlobalConstants;
@@ -141,15 +142,22 @@ public class PostmanJsonBuilder {
         try {
             URL url1 = new java.net.URL(apiMethodDoc.getServerUrl());
             urlBean.setPort(String.valueOf(url1.getPort()));
+
             List<String> hosts = new ArrayList<>();
             hosts.add(url1.getHost());
             urlBean.setHost(hosts);
+
+            List<String> paths = new ArrayList<>();
+            paths.add(url1.getPath());
+            urlBean.setPath(paths);
         } catch (MalformedURLException e) {
         }
         String shortUrl = PathUtil.toPostmanPath(apiMethodDoc.getPath());
         String[] paths = shortUrl.split("/");
         List<String> pathList = new ArrayList<>();
-        pathList.add("machine_manage");
+        if (CollectionUtil.isNotEmpty(urlBean.getPath()) && shortUrl.indexOf(urlBean.getPath().get(0)) < 0) {
+            pathList.add(urlBean.getPath().get(0).replaceAll("/", ""));
+        }
         for (String str : paths) {
             if (StringUtil.isNotEmpty(str)) {
                 pathList.add(str);
