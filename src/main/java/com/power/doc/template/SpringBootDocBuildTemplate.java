@@ -254,7 +254,26 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
     private ApiRequestExample buildReqJson(DocJavaMethod javaMethod, ApiMethodDoc apiMethodDoc, String methodType,
                                            ProjectDocConfigBuilder configBuilder) {
         JavaMethod method = javaMethod.getJavaMethod();
-
+        Map<String, String> pathParamsMap = new LinkedHashMap<>();
+        List<JavaAnnotation> methodAnnotations = method.getAnnotations();
+        for (JavaAnnotation annotation : methodAnnotations) {
+            String annotationName = annotation.getType().getName();
+            if (annotationName.contains("Mapping")) {
+                Object paramsObjects = annotation.getNamedParameter("params");
+                if (Objects.isNull(paramsObjects)) {
+                    continue;
+                }
+                String params = StringUtil.removeQuotes(paramsObjects.toString());
+                if (!params.startsWith("[")) {
+                    mappingParamProcess(paramsObjects.toString(), pathParamsMap);
+                    continue;
+                }
+                List<String> headers = (LinkedList) paramsObjects;
+                for (String str : headers) {
+                    mappingParamProcess(str, pathParamsMap);
+                }
+            }
+        }
         List<JavaParameter> parameterList = method.getParameters();
         List<ApiReqHeader> reqHeaderList = apiMethodDoc.getRequestHeaders();
         if (parameterList.size() < 1) {
@@ -270,7 +289,6 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         Map<String, String> constantsMap = configBuilder.getConstantsMap();
         boolean requestFieldToUnderline = configBuilder.getApiConfig().isRequestFieldToUnderline();
         Map<String, String> replacementMap = configBuilder.getReplaceClassMap();
-        Map<String, String> pathParamsMap = new LinkedHashMap<>();
         Map<String, String> paramsComments = DocUtil.getParamsComments(method, DocTags.PARAM, null);
         List<String> springMvcRequestAnnotations = SpringMvcRequestAnnotationsEnum.listSpringMvcRequestAnnotations();
         List<FormData> formDataList = new ArrayList<>();
@@ -492,14 +510,34 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         Map<String, String> replacementMap = builder.getReplaceClassMap();
         Map<String, String> paramTagMap = DocUtil.getParamsComments(javaMethod, DocTags.PARAM, className);
         Map<String, String> paramsComments = DocUtil.getParamsComments(javaMethod, DocTags.PARAM, null);
+        List<ApiParam> paramList = new ArrayList<>();
+        Map<String, String> mappingParams = new HashMap<>();
+        List<JavaAnnotation> methodAnnotations = javaMethod.getAnnotations();
+        for (JavaAnnotation annotation : methodAnnotations) {
+            String annotationName = annotation.getType().getName();
+            if (annotationName.contains("Mapping")) {
+                Object paramsObjects = annotation.getNamedParameter("params");
+                if (Objects.isNull(paramsObjects)) {
+                    continue;
+                }
+                String params = StringUtil.removeQuotes(paramsObjects.toString());
+                if (!params.startsWith("[")) {
+                    mappingParamToApiParam(paramsObjects.toString(), paramList, mappingParams);
+                    continue;
+                }
+                List<String> headers = (LinkedList) paramsObjects;
+                for (String str : headers) {
+                    mappingParamToApiParam(str, paramList, mappingParams);
+                }
+            }
+        }
         List<JavaParameter> parameterList = javaMethod.getParameters();
         if (parameterList.size() < 1) {
             return ApiMethodReqParam.builder()
                     .setPathParams(new ArrayList<>(0))
-                    .setQueryParams(new ArrayList<>(0))
+                    .setQueryParams(paramList)
                     .setRequestParams(new ArrayList<>(0));
         }
-        List<ApiParam> paramList = new ArrayList<>();
         Map<String, String> constantsMap = builder.getConstantsMap();
         boolean requestFieldToUnderline = builder.getApiConfig().isRequestFieldToUnderline();
 
@@ -508,6 +546,9 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         out:
         for (JavaParameter parameter : parameterList) {
             String paramName = parameter.getName();
+            if (mappingParams.containsKey(paramName)) {
+                continue;
+            }
             JavaType javaType = parameter.getType();
             if (Objects.nonNull(actualTypesMap) && Objects.nonNull(actualTypesMap.get(javaType.getCanonicalName()))) {
                 javaType = actualTypesMap.get(javaType.getCanonicalName());
@@ -782,5 +823,45 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             }
         }
         return mockValue;
+    }
+
+    private void mappingParamProcess(String str, Map<String, String> pathParamsMap) {
+        String param = StringUtil.removeQuotes(str);
+        String paramName;
+        String paramValue;
+        if (param.contains("=")) {
+            int index = param.indexOf("=");
+            paramName = param.substring(0, index);
+            paramValue = param.substring(index + 1);
+            pathParamsMap.put(paramName, paramValue);
+        } else {
+            paramName = param;
+            pathParamsMap.put(paramName, DocUtil.getValByTypeAndFieldName("string", paramName, Boolean.TRUE));
+        }
+    }
+
+    private void mappingParamToApiParam(String str, List<ApiParam> paramList, Map<String, String> mappingParams) {
+        String param = StringUtil.removeQuotes(str);
+        String paramName;
+        String paramValue;
+
+        if (param.contains("=")) {
+            int index = param.indexOf("=");
+            paramName = param.substring(0, index);
+            paramValue = param.substring(index + 1);
+        } else {
+            paramName = param;
+            paramValue = DocUtil.getValByTypeAndFieldName("string", paramName, Boolean.TRUE);
+        }
+        String type = ValidateUtil.isPositiveInteger(paramValue) ? "int32" : "string";
+        ApiParam apiParam = ApiParam.of().setField(paramName)
+                .setId(paramList.size() + 1)
+                .setQueryParam(true)
+                .setValue(paramValue)
+                .setType(type).setDesc("parameter condition")
+                .setRequired(true)
+                .setVersion(DocGlobalConstants.DEFAULT_VERSION);
+        paramList.add(apiParam);
+        mappingParams.put(paramName, null);
     }
 }
