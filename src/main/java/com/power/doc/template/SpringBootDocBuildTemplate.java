@@ -581,7 +581,8 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             if (typeName.contains(DocGlobalConstants.MULTIPART_FILE_FULLY)) {
                 ApiParam param = ApiParam.of().setField(paramName).setType("file")
                         .setId(paramList.size() + 1).setQueryParam(true)
-                        .setRequired(true).setVersion(DocGlobalConstants.DEFAULT_VERSION);
+                        .setRequired(true).setVersion(DocGlobalConstants.DEFAULT_VERSION)
+                        .setDesc(comment);
                 if (typeName.contains("[]")) {
                     comment = comment + "(array of file)";
                     param.setDesc(comment);
