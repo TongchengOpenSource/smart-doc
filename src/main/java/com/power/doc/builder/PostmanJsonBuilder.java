@@ -47,6 +47,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Logger;
 
 
@@ -137,11 +138,15 @@ public class PostmanJsonBuilder {
 
     private static UrlBean buildUrlBean(ApiMethodDoc apiMethodDoc) {
         UrlBean urlBean = new UrlBean();
-        String url = apiMethodDoc.getRequestExample().getUrl() == null ? apiMethodDoc.getUrl() : apiMethodDoc.getRequestExample().getUrl();
+        String url = Optional.ofNullable(apiMethodDoc.getRequestExample().getUrl()).orElse(apiMethodDoc.getUrl());
         urlBean.setRaw(PathUtil.toPostmanPath(url));
         try {
             URL url1 = new java.net.URL(apiMethodDoc.getServerUrl());
-            urlBean.setPort(String.valueOf(url1.getPort()));
+            if (url1.getPort() == -1) {
+                urlBean.setPort(null);
+            } else {
+                urlBean.setPort(String.valueOf(url1.getPort()));
+            }
 
             List<String> hosts = new ArrayList<>();
             hosts.add(url1.getHost());

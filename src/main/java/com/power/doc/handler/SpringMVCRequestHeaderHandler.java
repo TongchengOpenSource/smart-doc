@@ -57,31 +57,18 @@ public class SpringMVCRequestHeaderHandler {
             if (!isMapping(annotationName) || Objects.isNull(headersObject)) {
                 continue;
             }
+            String mappingHeader = StringUtil.removeQuotes(headersObject.toString());
+            if (!mappingHeader.startsWith("[")) {
+                processMappingHeaders(mappingHeader, mappingHeaders);
+                continue;
+            }
             List<String> headers = (LinkedList) headersObject;
             for (String str : headers) {
                 String header = StringUtil.removeQuotes(str);
                 if (header.startsWith("!")) {
                     continue;
                 }
-                if (header.contains("!=")) {
-                    String headerName = header.substring(0, header.indexOf("!"));
-                    ApiReqHeader apiReqHeader = ApiReqHeader.builder().setName(headerName)
-                            .setRequired(true).setValue(null).setDesc(header).setType("string");
-                    mappingHeaders.add(apiReqHeader);
-                } else {
-                    String headerName;
-                    String headerValue = null;
-                    if (header.contains("=")) {
-                        int index = header.indexOf("=");
-                        headerName = header.substring(0, header.indexOf("="));
-                        headerValue = header.substring(index + 1);
-                    } else {
-                        headerName = header;
-                    }
-                    ApiReqHeader apiReqHeader = ApiReqHeader.builder().setName(headerName)
-                            .setRequired(true).setValue(headerValue).setDesc(header).setType("string");
-                    mappingHeaders.add(apiReqHeader);
-                }
+                processMappingHeaders(header, mappingHeaders);
             }
         }
         List<ApiReqHeader> reqHeaders = new ArrayList<>();
@@ -140,6 +127,28 @@ public class SpringMVCRequestHeaderHandler {
                 return true;
             default:
                 return false;
+        }
+    }
+
+    public void processMappingHeaders(String header, List<ApiReqHeader> mappingHeaders) {
+        if (header.contains("!=")) {
+            String headerName = header.substring(0, header.indexOf("!"));
+            ApiReqHeader apiReqHeader = ApiReqHeader.builder().setName(headerName)
+                    .setRequired(true).setValue(null).setDesc("header condition").setType("string");
+            mappingHeaders.add(apiReqHeader);
+        } else {
+            String headerName;
+            String headerValue = null;
+            if (header.contains("=")) {
+                int index = header.indexOf("=");
+                headerName = header.substring(0, index);
+                headerValue = header.substring(index + 1);
+            } else {
+                headerName = header;
+            }
+            ApiReqHeader apiReqHeader = ApiReqHeader.builder().setName(headerName)
+                    .setRequired(true).setValue(headerValue).setDesc("header condition").setType("string");
+            mappingHeaders.add(apiReqHeader);
         }
     }
 }

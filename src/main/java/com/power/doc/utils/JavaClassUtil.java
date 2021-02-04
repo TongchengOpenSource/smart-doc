@@ -111,6 +111,9 @@ public class JavaClassUtil {
             List<JavaMethod> javaMethods = cls1.getMethods();
             for (JavaMethod method : javaMethods) {
                 String methodName = method.getName();
+                if (method.getAnnotations().size() < 1) {
+                    continue;
+                }
                 int paramSize = method.getParameters().size();
                 if (methodName.startsWith("get") && !"get".equals(methodName) && paramSize == 0) {
                     methodName = StringUtil.firstToLowerCase(methodName.substring(3));
@@ -119,6 +122,9 @@ public class JavaClassUtil {
                 }
                 if (addedFields.containsKey(methodName)) {
                     String comment = method.getComment();
+                    if (Objects.isNull(comment)) {
+                        comment = addedFields.get(methodName).getComment();
+                    }
                     DocJavaField docJavaField = addedFields.get(methodName);
                     docJavaField.setAnnotations(method.getAnnotations());
                     docJavaField.setComment(comment);
