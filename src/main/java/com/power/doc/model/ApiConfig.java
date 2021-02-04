@@ -147,6 +147,11 @@ public class ApiConfig {
      * project name
      */
     private String projectName;
+    /**
+     * @since 2.0.7
+     * project  cn name
+     */
+    private String projectCName;
 
     /**
      * Skip Transient Field
@@ -433,6 +438,14 @@ public class ApiConfig {
         this.projectName = projectName;
     }
 
+    public String getProjectCName() {
+        return projectCName;
+    }
+
+    public void setProjectCName(String projectCName) {
+        this.projectCName = projectCName;
+    }
+
     public boolean isSkipTransientField() {
         return skipTransientField;
     }
@@ -620,6 +633,8 @@ public class ApiConfig {
                 .append(apiConstants);
         sb.append(",\"projectName\":\"")
                 .append(projectName).append('\"');
+        sb.append(",\"projectCName\":\"")
+                .append(projectCName).append('\"');
         sb.append(",\"skipTransientField\":")
                 .append(skipTransientField);
         sb.append(",\"showAuthor\":")
