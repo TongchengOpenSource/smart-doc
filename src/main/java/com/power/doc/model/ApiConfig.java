@@ -143,10 +143,20 @@ public class ApiConfig {
     private List<ApiConstant> apiConstants;
 
     /**
+     * @since 2.0.7
+     * project  group
+     */
+    private String group;
+    /**
      * @since 1.7.5
      * project name
      */
     private String projectName;
+    /**
+     * @since 2.0.7
+     * project  cn name
+     */
+    private String projectCName;
 
     /**
      * Skip Transient Field
@@ -443,6 +453,22 @@ public class ApiConfig {
         this.projectName = projectName;
     }
 
+    public String getProjectCName() {
+        return projectCName;
+    }
+
+    public void setProjectCName(String projectCName) {
+        this.projectCName = projectCName;
+    }
+
+    public String getGroup() {
+        return group;
+    }
+
+    public void setGroup(String group) {
+        this.group = group;
+    }
+
     public boolean isSkipTransientField() {
         return skipTransientField;
     }
@@ -628,8 +654,12 @@ public class ApiConfig {
                 .append(rpcApiDependencies);
         sb.append(",\"apiConstants\":")
                 .append(apiConstants);
+        sb.append(",\"group\":\"")
+                .append(group).append('\"');
         sb.append(",\"projectName\":\"")
                 .append(projectName).append('\"');
+        sb.append(",\"projectCName\":\"")
+                .append(projectCName).append('\"');
         sb.append(",\"skipTransientField\":")
                 .append(skipTransientField);
         sb.append(",\"showAuthor\":")
