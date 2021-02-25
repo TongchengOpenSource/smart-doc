@@ -178,8 +178,6 @@ public class DocClassUtil {
             case "java.lang.String":
             case "string":
             case "char":
-            case "java.util.Byte":
-            case "byte":
             case "date":
             case "localdatetime":
             case "localdate":
@@ -197,6 +195,9 @@ public class DocClassUtil {
             case "java.util.TreeSet":
             case "treeset":
                 return "array";
+            case "java.util.Byte":
+            case "byte":
+                return "int8";
             case "java.lang.Integer":
             case "integer":
             case "int":
