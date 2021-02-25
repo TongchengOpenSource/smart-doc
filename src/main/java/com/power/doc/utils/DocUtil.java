@@ -478,6 +478,7 @@ public class DocUtil {
             case "short":
             case "BigDecimal":
             case "BigInteger":
+            case "Byte":
                 return true;
             default:
                 return false;
@@ -486,6 +487,7 @@ public class DocUtil {
 
     public static String javaTypeToOpenApiTypeConvert(String type) {
         switch (type) {
+            case "int8":
             case "int32":
             case "int16":
             case "int64":
