@@ -179,10 +179,15 @@ public class DocClassUtil {
             case "string":
             case "char":
             case "date":
+            case "java.util.UUID":
+            case "uuid":
             case "localdatetime":
             case "localdate":
             case "localtime":
             case "timestamp":
+            case "zoneddatetime":
+            case "java.time.zoneddatetime":
+            case "java.time.ZonedDateTime":
                 return "string";
             case "java.util.List":
             case "list":
