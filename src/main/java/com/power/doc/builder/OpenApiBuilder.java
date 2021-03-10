@@ -29,10 +29,12 @@ import com.power.common.util.FileUtil;
 import com.power.common.util.StringUtil;
 import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.constants.Methods;
+import com.power.doc.constants.TornaConstants;
 import com.power.doc.model.*;
 import com.power.doc.template.SpringBootDocBuildTemplate;
 import com.power.doc.utils.DocUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
+import jdk.nashorn.internal.runtime.GlobalConstants;
 
 
 import java.util.*;
@@ -270,7 +272,7 @@ public class OpenApiBuilder {
             } else if (!isRep && Objects.nonNull(apiMethodDoc.getRequestSchema())) {
                 content.put("schema", apiMethodDoc.getRequestSchema());
             } else {
-                content.put("schema", buildBodySchema(apiMethodDoc.getPath(), isRep));
+                content.put("schema", buildBodySchema(apiMethodDoc, isRep));
             }
         }
         content.put("examples", buildBodyExample(apiMethodDoc, isRep));
@@ -281,18 +283,37 @@ public class OpenApiBuilder {
     /**
      * content body 的schema 信息
      *
-     * @param url   请求的url 去除server
+     * @param apiMethodDoc   请求方法参数
      * @param isRep 是否是返回数据
      * @return
      */
-    private static Map<String, Object> buildBodySchema(String url, boolean isRep) {
+    private static Map<String, Object> buildBodySchema(ApiMethodDoc apiMethodDoc, boolean isRep) {
         Map<String, Object> schema = new HashMap<>(10);
+        //当类型为数组时使用
+        Map<String, Object> innerScheme  = new HashMap<>(10);
+
         //去除url中的特殊字符
-        if (isRep) {
-            schema.put("$ref", "#/components/schemas/" + url.replaceAll(PATH_REGEX, "_") + "response");
-        } else {
-            schema.put("$ref", "#/components/schemas/" + url.replaceAll(PATH_REGEX, "_") + "request");
+        String responseRef =  "#/components/schemas/" + apiMethodDoc.getPath().replaceAll(PATH_REGEX, "_") + "response";
+        String requestRef = "#/components/schemas/" + apiMethodDoc.getPath().replaceAll(PATH_REGEX, "_") + "request";
+
+        //如果是数组类型
+        if(TornaConstants.ARRAY.equals(apiMethodDoc.getType())){
+            schema.put("type",TornaConstants.ARRAY);
+            if (isRep) {
+                innerScheme.put("$ref", responseRef);
+            } else {
+                innerScheme.put("$ref", requestRef);
+            }
+            schema.put("items",innerScheme);
         }
+        else {
+            if (isRep) {
+                schema.put("$ref", responseRef);
+            } else {
+                schema.put("$ref", requestRef);
+            }
+        }
+
         return schema;
     }
 
