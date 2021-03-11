@@ -29,12 +29,10 @@ import com.power.common.util.FileUtil;
 import com.power.common.util.StringUtil;
 import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.constants.Methods;
-import com.power.doc.constants.TornaConstants;
 import com.power.doc.model.*;
 import com.power.doc.template.SpringBootDocBuildTemplate;
 import com.power.doc.utils.DocUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
-import jdk.nashorn.internal.runtime.GlobalConstants;
 
 
 import java.util.*;
@@ -283,7 +281,7 @@ public class OpenApiBuilder {
     /**
      * content body 的schema 信息
      *
-     * @param apiMethodDoc   请求方法参数
+     * @param apiMethodDoc  请求方法参数 去除server
      * @param isRep 是否是返回数据
      * @return
      */
@@ -297,8 +295,8 @@ public class OpenApiBuilder {
         String requestRef = "#/components/schemas/" + apiMethodDoc.getPath().replaceAll(PATH_REGEX, "_") + "request";
 
         //如果是数组类型
-        if(TornaConstants.ARRAY.equals(apiMethodDoc.getType())){
-            schema.put("type",TornaConstants.ARRAY);
+        if(DocGlobalConstants.ARRAY.equals(apiMethodDoc.getType())){
+            schema.put("type",DocGlobalConstants.ARRAY);
             if (isRep) {
                 innerScheme.put("$ref", responseRef);
             } else {

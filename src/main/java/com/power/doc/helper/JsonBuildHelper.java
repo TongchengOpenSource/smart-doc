@@ -163,7 +163,7 @@ public class JsonBuildHelper {
                 data.append("{\"mapKey\":{}}");
                 return data.toString();
             }
-            if (!DocGlobalConstants.JAVA_STRING_FULLY.equals(getKeyValType[0])) {
+            if ((!DocGlobalConstants.JAVA_STRING_FULLY.equals(getKeyValType[0])) && apiConfig.isStrict()) {
                 throw new RuntimeException("Map's key can only use String for json,but you use " + getKeyValType[0]);
             }
             String gicName = gNameTemp.substring(gNameTemp.indexOf(",") + 1, gNameTemp.lastIndexOf(">"));

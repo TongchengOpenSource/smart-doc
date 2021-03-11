@@ -200,4 +200,6 @@ public interface DocGlobalConstants {
     String YAPI_JSON = "/yapi.json";
 
     String DUBBO_SWAGGER = "org.apache.dubbo.rpc.protocol.rest.integration.swagger.DubboSwaggerApiListingResource";
+
+    String ARRAY = "array";
 }
