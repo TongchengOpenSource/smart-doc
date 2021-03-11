@@ -1,3 +1,25 @@
+/*
+ * smart-doc https://github.com/shalousun/smart-doc
+ *
+ * Copyright (C) 2018-2021 smart-doc
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package com.power.doc.constants;
 
 import com.power.doc.model.ApiConfig;
@@ -10,8 +32,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
- * @author xingzi
- * @date 2020/2/2
+ * @author xingzi 2020/2/2
  */
 public class TornaConstants {
 
@@ -25,7 +46,7 @@ public class TornaConstants {
 
     public static final String YES = "1";
     public static final String NO = "0";
-    public static final String ARRAY ="array";
+    public static final String ARRAY = "array";
 
     public static final String CATEGORY_CREATE = "doc.category.create";
     public static final String PUSH = "doc.push";
@@ -33,21 +54,23 @@ public class TornaConstants {
 
     /**
      * build torna params
-     * @param name interface name
-     * @param data json
-     * @return
+     *
+     * @param name   interface name
+     * @param data   json
+     * @param config ApiConfig
+     * @return Map
      */
     public static Map<String, String> buildParams(String name, String data, ApiConfig config) {
         Map<String, String> param = new HashMap<>(8);
         try {
-            if(StringUtils.isNotBlank(data)) {
+            if (StringUtils.isNotBlank(data)) {
                 data = URLEncoder.encode(data, "utf-8");
             }
             // 公共参数
             param.put("name", name);
             param.put("app_key", config.getAppKey());
             param.put("data", data);
-            param.put("timestamp",getTime());
+            param.put("timestamp", getTime());
             param.put("version", "1.0");
             param.put("access_token", config.getAppToken());
             String sign = buildSign(param, config.getSecret());
@@ -64,11 +87,11 @@ public class TornaConstants {
      *
      * @param paramsMap 参数
      * @param secret    密钥
-     * @return
+     * @return String
      */
     public static String buildSign(Map<String, ?> paramsMap, String secret) {
         Set<String> keySet = paramsMap.keySet();
-        List<String> paramNames = new ArrayList<String>(keySet);
+        List<String> paramNames = new ArrayList<>(keySet);
 
         Collections.sort(paramNames);
         StringBuilder paramNameValue = new StringBuilder();
@@ -85,8 +108,8 @@ public class TornaConstants {
     /**
      * 生成md5,全部大写
      *
-     * @param message
-     * @return
+     * @param message 消息
+     * @return String
      */
     public static String md5(String message) {
         try {
@@ -109,8 +132,8 @@ public class TornaConstants {
     /**
      * 二进制转十六进制字符串
      *
-     * @param bytes
-     * @return
+     * @param bytes byte array
+     * @return String
      */
     private static String byte2hex(byte[] bytes) {
         StringBuilder sign = new StringBuilder();

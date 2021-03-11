@@ -1,3 +1,25 @@
+/*
+ * smart-doc https://github.com/shalousun/smart-doc
+ *
+ * Copyright (C) 2018-2021 smart-doc
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package com.power.doc.builder;
 
 import com.google.gson.Gson;
@@ -22,10 +44,7 @@ import static com.power.doc.constants.TornaConstants.PUSH;
 
 
 /**
- * @program: smart-doc
- * @description: torna对接
- * @author: xingzi
- * @create: 2021/2/2 18:05
+ * @author xingzi 2021/2/2 18:05
  **/
 public class TornaBuilder {
 
@@ -38,7 +57,6 @@ public class TornaBuilder {
     public static void buildApiDoc(ApiConfig config) {
         JavaProjectBuilder javaProjectBuilder = new JavaProjectBuilder();
         buildApiDoc(config, javaProjectBuilder);
-
 
 
     }
@@ -55,34 +73,37 @@ public class TornaBuilder {
         builderTemplate.checkAndInit(config);
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
         List<ApiDoc> apiDocList = new SpringBootDocBuildTemplate().getApiData(configBuilder);
-        buildTorna(apiDocList,config);
+        buildTorna(apiDocList, config);
     }
 
     /**
      * build torna Data
      *
-     * @param apiDocs apiData
+     * @param apiDocs   apiData
+     * @param apiConfig ApiConfig
      */
-    public static void buildTorna(List<ApiDoc> apiDocs,ApiConfig apiConfig) {
+    public static void buildTorna(List<ApiDoc> apiDocs, ApiConfig apiConfig) {
         Apis api;
         for (ApiDoc a : apiDocs) {
             api = new Apis();
             api.setName(a.getDesc());
             //推送接口分类 CATEGORY_CREATE
             String responseMsg = OkHttp3Util.syncPost(apiConfig.getOpenUrl(),
-                    TornaConstants.buildParams(TornaConstants.CATEGORY_CREATE, new Gson().toJson(api),apiConfig));
+                    TornaConstants.buildParams(TornaConstants.CATEGORY_CREATE, new Gson().toJson(api), apiConfig));
             //pushApi
-            pushApi(responseMsg, a,apiConfig);
+            pushApi(responseMsg, a, apiConfig);
 
         }
     }
+
     /**
      * 推送接口
      *
      * @param responseMsg 标签信息
-     * @param a 接口列表
+     * @param a           接口列表
+     * @param config      ApiConfig
      */
-    public static void pushApi(String responseMsg, ApiDoc a,ApiConfig config) {
+    public static void pushApi(String responseMsg, ApiDoc a, ApiConfig config) {
         JsonElement element = JsonParser.parseString(responseMsg);
         //如果获取分类成功
         if (TornaConstants.SUCCESS_CODE.equals(element.getAsJsonObject().get(TornaConstants.CODE).getAsString())) {
@@ -163,7 +184,7 @@ public class TornaBuilder {
             tornaApi.setDebugEnvs(debugEnvs);
 
             OkHttp3Util.syncPost(config.getOpenUrl(),
-                    TornaConstants.buildParams(PUSH, new Gson().toJson(tornaApi),config));
+                    TornaConstants.buildParams(PUSH, new Gson().toJson(tornaApi), config));
         } else {
             System.out.println("Error" + element.getAsJsonObject()
                     .get(TornaConstants.MESSAGE).getAsString());
@@ -174,7 +195,7 @@ public class TornaBuilder {
      * build request header
      *
      * @param apiReqHeaders 请求头参数列表
-     * @return
+     * @return List of HttpParam
      */
     public static List<HttpParam> buildHerder(List<ApiReqHeader> apiReqHeaders) {
         /**
@@ -200,7 +221,7 @@ public class TornaBuilder {
      * build  request response params
      *
      * @param apiParams 参数列表
-     * @return
+     * @return List of HttpParam
      */
     public static List<HttpParam> buildParams(List<ApiParam> apiParams) {
         HttpParam httpParam;
