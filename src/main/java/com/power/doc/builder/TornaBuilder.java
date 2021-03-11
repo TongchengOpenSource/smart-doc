@@ -48,7 +48,6 @@ import static com.power.doc.constants.TornaConstants.PUSH;
  **/
 public class TornaBuilder {
 
-
     /**
      * build controller api
      *
@@ -93,15 +92,30 @@ public class TornaBuilder {
             //pushApi
             pushApi(responseMsg, a, apiConfig);
 
+
+            JsonElement element = JsonParser.parseString(responseMsg);
+            //如果推送成功
+            if (TornaConstants.SUCCESS_CODE.equals(element.getAsJsonObject().get(TornaConstants.CODE).getAsString())) {
+                //pushApi
+                pushApi(responseMsg, a, apiConfig);
+                System.out.println("推送成功");
+            } else {
+                System.out.println(element.getAsJsonObject().get(TornaConstants.MESSAGE).getAsString());
+                System.out.println("接口配置错误，请检查torna相关配置。");
+                break;
+            }
         }
     }
 
     /**
-     * 推送接口
+     * push api
      *
      * @param responseMsg 标签信息
      * @param a           接口列表
+<<<<<<< HEAD
      * @param config      ApiConfig
+=======
+>>>>>>> 381efa9 (修改torna对接问题 在ApiTest中添加torna相关配置)
      */
     public static void pushApi(String responseMsg, ApiDoc a, ApiConfig config) {
         JsonElement element = JsonParser.parseString(responseMsg);
@@ -185,8 +199,10 @@ public class TornaBuilder {
 
             OkHttp3Util.syncPost(config.getOpenUrl(),
                     TornaConstants.buildParams(PUSH, new Gson().toJson(tornaApi), config));
+            debugEnvs.clear();
+
         } else {
-            System.out.println("Error" + element.getAsJsonObject()
+            System.out.println("Error: " + element.getAsJsonObject()
                     .get(TornaConstants.MESSAGE).getAsString());
         }
     }

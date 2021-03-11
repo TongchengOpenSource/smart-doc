@@ -46,7 +46,7 @@ public class ApiDocTest {
                 //SourcePath.path().setPath("F:\\Personal\\project\\smart\\src\\main\\java")
                 //SourcePath.path().setDesc("加载项目外代码").setPath("E:\\ApplicationPower\\ApplicationPower\\Common-util\\src\\main\\java")
         );
-        config.setPackageFilters("com.power.doc.controller.ValidatorTestController");
+        config.setPackageFilters("com.power.doc.controller.UserController");
         config.setDataDictionaries(
                 ApiDataDictionary.builder().setTitle("订单字典").setEnumClass(OrderEnum.class).setCodeField("code").setDescField("desc")
         );
