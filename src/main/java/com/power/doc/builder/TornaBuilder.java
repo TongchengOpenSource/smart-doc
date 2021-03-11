@@ -109,13 +109,9 @@ public class TornaBuilder {
 
     /**
      * push api
-     *
-     * @param responseMsg 标签信息
-     * @param a           接口列表
-<<<<<<< HEAD
-     * @param config      ApiConfig
-=======
->>>>>>> 381efa9 (修改torna对接问题 在ApiTest中添加torna相关配置)
+     * @param responseMsg returnmsg
+     * @param a apiDoc
+     * @param config config
      */
     public static void pushApi(String responseMsg, ApiDoc a, ApiConfig config) {
         JsonElement element = JsonParser.parseString(responseMsg);
