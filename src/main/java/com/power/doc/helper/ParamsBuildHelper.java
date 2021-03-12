@@ -357,6 +357,14 @@ public class ParamsBuildHelper {
                                 }
                             }
                         }
+                        else {
+                            String builder =  "[" +
+                                    DocUtil.jsonValueByType(gName) +
+                                    "," +
+                                    DocUtil.jsonValueByType(gName) +
+                                    "]";
+                            param.setValue(DocUtil.handleJsonStr(builder));
+                        }
                     } else if (subTypeName.length() == 1 || DocGlobalConstants.JAVA_OBJECT_FULLY.equals(subTypeName)) {
                         // handle java generic or object
                         if (isGenerics && DocGlobalConstants.JAVA_OBJECT_FULLY.equals(subTypeName)) {

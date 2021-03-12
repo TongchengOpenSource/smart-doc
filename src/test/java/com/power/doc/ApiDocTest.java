@@ -4,6 +4,7 @@ import com.power.common.util.DateTimeUtil;
 import com.power.doc.builder.HtmlApiDocBuilder;
 import com.power.doc.builder.OpenApiBuilder;
 import com.power.doc.builder.PostmanJsonBuilder;
+import com.power.doc.builder.TornaBuilder;
 import com.power.doc.enums.OrderEnum;
 import com.power.doc.model.*;
 import org.junit.Test;
@@ -30,17 +31,24 @@ public class ApiDocTest {
         ApiConfig config = new ApiConfig();
         config.setServerUrl("http://localhost:8080");
         //config.setStrict(true);
+        config.setOpenUrl("http://torna.opensphere.cn/api/");
+        config.setAppKey("20201216788835306945118208");
+        config.setAppToken("2f9a7d3858a147b7845ebb48785d4dc7");
+        config.setSecret("W.ZyGMOB9Q0UqujVxnfi@.I#V&tUUYZR");
+        config.setDebugEnvName("测试环境");
+        config.setDebugEnvUrl("http://127.0.0.1");
 
         config.setAllInOne(true);
         config.setOutPath("d:\\md3");
         config.setMd5EncryptedHtmlName(true);
         //不指定SourcePaths默认加载代码为项目src/main/java下的
         config.setSourceCodePaths(
-                SourceCodePath.builder().setDesc("本项目代码").setPath("C:\\Users\\xingzi\\Desktop\\smart\\api-doc-test\\src\\main\\java\\com\\power\\doc")
-
+                SourceCodePath.builder().setDesc("本项目代码")
+                        .setPath("C:\\Users\\xingzi\\Desktop\\api-doc-test\\src\\main\\java")
                 //SourcePath.path().setPath("F:\\Personal\\project\\smart\\src\\main\\java")
                 //SourcePath.path().setDesc("加载项目外代码").setPath("E:\\ApplicationPower\\ApplicationPower\\Common-util\\src\\main\\java")
         );
+        config.setPackageFilters("com.power.doc.controller.UserController");
         config.setDataDictionaries(
                 ApiDataDictionary.builder().setTitle("订单字典").setEnumClass(OrderEnum.class).setCodeField("code").setDescField("desc")
         );
@@ -67,7 +75,8 @@ public class ApiDocTest {
 
         long start = System.currentTimeMillis();
        // OpenApiBuilder.buildOpenApi(config);
-        HtmlApiDocBuilder.buildApiDoc(config);
+        //HtmlApiDocBuilder.buildApiDoc(config);
+        TornaBuilder.buildApiDoc(config);
         long end = System.currentTimeMillis();
         DateTimeUtil.printRunTime(end, start);
     }

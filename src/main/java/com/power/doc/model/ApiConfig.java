@@ -25,6 +25,7 @@ package com.power.doc.model;
 import com.power.common.util.CollectionUtil;
 import com.power.doc.constants.DocLanguage;
 import com.power.doc.model.rpc.RpcApiDependency;
+import com.power.doc.model.torna.DebugEnv;
 
 import java.util.List;
 import java.util.Objects;
@@ -269,6 +270,107 @@ public class ApiConfig {
      * create debug page
      */
     private boolean createDebugPage;
+
+    /**
+     *     public static final String APP_KEY = "20201216788835306945118208";
+     *     public static final String SECRET = "W.ZyGMOB9Q0UqujVxnfi@.I#V&tUUYZR";
+     *     public static final String APP_TOKEN = "2f9a7d3858a147b7845ebb48785d4dc7";
+     *     public static final String OPEN_URL = "http://torna.opensphere.cn/api/";
+     * @return
+     */
+    /**
+     * Torna appKey
+     */
+    private String appKey;
+    /**
+     * Torna Secret
+     */
+    private String secret;
+    /**
+     * Torna appToken
+     */
+    private String appToken;
+    /**
+     * Torna openUrl
+     */
+    private String openUrl;
+
+    /**
+     * 调试环境名称
+     */
+    private String debugEnvName;
+    /**
+     * 调试环境请求路径
+     */
+    private String debugEnvUrl;
+
+    public void setSourceCodePaths(List<SourceCodePath> sourceCodePaths) {
+        this.sourceCodePaths = sourceCodePaths;
+    }
+
+    public void setRequestHeaders(List<ApiReqHeader> requestHeaders) {
+        this.requestHeaders = requestHeaders;
+    }
+
+    public void setCustomResponseFields(List<CustomRespField> customResponseFields) {
+        this.customResponseFields = customResponseFields;
+    }
+
+    public void setRevisionLogs(List<RevisionLog> revisionLogs) {
+        this.revisionLogs = revisionLogs;
+    }
+
+    public void setDataDictionaries(List<ApiDataDictionary> dataDictionaries) {
+        this.dataDictionaries = dataDictionaries;
+    }
+
+    public void setErrorCodeDictionaries(List<ApiErrorCodeDictionary> errorCodeDictionaries) {
+        this.errorCodeDictionaries = errorCodeDictionaries;
+    }
+
+    public void setApiObjectReplacements(List<ApiObjectReplacement> apiObjectReplacements) {
+        this.apiObjectReplacements = apiObjectReplacements;
+    }
+
+    public void setRpcApiDependencies(List<RpcApiDependency> rpcApiDependencies) {
+        this.rpcApiDependencies = rpcApiDependencies;
+    }
+
+    public void setApiConstants(List<ApiConstant> apiConstants) {
+        this.apiConstants = apiConstants;
+    }
+
+    public String getAppKey() {
+        return appKey;
+    }
+
+    public void setAppKey(String appKey) {
+        this.appKey = appKey;
+    }
+
+    public String getSecret() {
+        return secret;
+    }
+
+    public void setSecret(String secret) {
+        this.secret = secret;
+    }
+
+    public String getAppToken() {
+        return appToken;
+    }
+
+    public void setAppToken(String appToken) {
+        this.appToken = appToken;
+    }
+
+    public String getOpenUrl() {
+        return openUrl;
+    }
+
+    public void setOpenUrl(String openUrl) {
+        this.openUrl = openUrl;
+    }
 
     public String getServerUrl() {
         return serverUrl;
@@ -601,6 +703,22 @@ public class ApiConfig {
 
     public void setCreateDebugPage(boolean createDebugPage) {
         this.createDebugPage = createDebugPage;
+    }
+
+    public String getDebugEnvName() {
+        return debugEnvName;
+    }
+
+    public void setDebugEnvName(String debugEnvName) {
+        this.debugEnvName = debugEnvName;
+    }
+
+    public String getDebugEnvUrl() {
+        return debugEnvUrl;
+    }
+
+    public void setDebugEnvUrl(String debugEnvUrl) {
+        this.debugEnvUrl = debugEnvUrl;
     }
 
     @Override
