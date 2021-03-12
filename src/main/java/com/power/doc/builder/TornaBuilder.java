@@ -152,8 +152,8 @@ public class TornaBuilder {
                 methodApi.setDescription(apiMethodDoc.getDetail());
                 methodApi.setIsShow(TornaConstants.YES);
                 debugEnv = new DebugEnv();
-                debugEnv.setName("测试环境");
-                debugEnv.setUrl(" ");
+                debugEnv.setName(config.getDebugEnvName());
+                debugEnv.setUrl(config.getDebugEnvUrl());
                 /**
                  *      {
                  *                     "name": "goodsName",

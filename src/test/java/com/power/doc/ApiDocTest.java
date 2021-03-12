@@ -35,6 +35,8 @@ public class ApiDocTest {
         config.setAppKey("20201216788835306945118208");
         config.setAppToken("2f9a7d3858a147b7845ebb48785d4dc7");
         config.setSecret("W.ZyGMOB9Q0UqujVxnfi@.I#V&tUUYZR");
+        config.setDebugEnvName("测试环境");
+        config.setDebugEnvUrl("http://127.0.0.1");
 
         config.setAllInOne(true);
         config.setOutPath("d:\\md3");

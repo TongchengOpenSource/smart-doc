@@ -25,6 +25,7 @@ package com.power.doc.model;
 import com.power.common.util.CollectionUtil;
 import com.power.doc.constants.DocLanguage;
 import com.power.doc.model.rpc.RpcApiDependency;
+import com.power.doc.model.torna.DebugEnv;
 
 import java.util.List;
 import java.util.Objects;
@@ -293,6 +294,15 @@ public class ApiConfig {
      * Torna openUrl
      */
     private String openUrl;
+
+    /**
+     * 调试环境名称
+     */
+    private String debugEnvName;
+    /**
+     * 调试环境请求路径
+     */
+    private String debugEnvUrl;
 
     public void setSourceCodePaths(List<SourceCodePath> sourceCodePaths) {
         this.sourceCodePaths = sourceCodePaths;
@@ -693,6 +703,22 @@ public class ApiConfig {
 
     public void setCreateDebugPage(boolean createDebugPage) {
         this.createDebugPage = createDebugPage;
+    }
+
+    public String getDebugEnvName() {
+        return debugEnvName;
+    }
+
+    public void setDebugEnvName(String debugEnvName) {
+        this.debugEnvName = debugEnvName;
+    }
+
+    public String getDebugEnvUrl() {
+        return debugEnvUrl;
+    }
+
+    public void setDebugEnvUrl(String debugEnvUrl) {
+        this.debugEnvUrl = debugEnvUrl;
     }
 
     @Override
