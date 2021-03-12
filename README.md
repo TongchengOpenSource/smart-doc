@@ -27,7 +27,7 @@ smart-doc does not need to inject annotations into the code like Swagger.
 ## Best Practice
 smart-doc + [Torna](http://torna.cn) form an industry-leading document generation and management solution, using smart-doc to complete Java source code analysis and extract annotations to generate API documents without intrusion, and automatically push the documents to the Torna enterprise-level interface document management platform.
 
-![smart-doc+torna](http://torna.cn/assets/images/case/smart-doc.png)
+![smart-doc+torna](https://raw.githubusercontent.com/shalousun/smart-doc/master/images/smart-doc-torna.png)
 ## Getting Started
 [Smart-doc Samples](https://github.com/shalousun/smart-doc-demo.git)。
 ```
