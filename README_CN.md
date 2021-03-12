@@ -32,6 +32,11 @@ $\color{red}{你给我的star，胜过所有读过的诗—smart-doc}$
 - 支持Maven、Gradle插件式轻松集成。
 - 支持Apache Dubbo RPC接口文档生成。
 - debug接口调试html5页面完全支持文件上传，下载(@download tag标记下载方法)测试。
+
+## Best Practice
+smart-doc + [Torna](http://torna.cn) 组成行业领先的文档生成和管理解决方案，使用smart-doc无侵入完成Java源代码分析和提取注释生成API文档，自动将文档推送到Torna企业级接口文档管理平台。
+
+![smart-doc+torna](http://torna.cn/assets/images/case/smart-doc.png)
 ## Getting Started
 smart-doc使用和测试可参考[smart-doc demo](https://gitee.com/devin-alan/api-doc-test.git)。
 ```
@@ -114,6 +119,12 @@ smart-doc官方目前已经开发完成[Maven插件](https://gitee.com/smart-doc
   "requestExample":"true",//是否将请求示例展示在文档中，默认true，@since 1.9.0
   "responseExample":"true",//是否将响应示例展示在文档中，默认为true，@since 1.9.0
   "displayActualType":false,//配置true会在注释栏自动显示泛型的真实类型短类名，@since 1.9.6
+  "appKey": "xxx",// torna平台对接appKey,, @since 2.0.9
+  "appToken": "xxx", //torna平台appToken,@since 2.0.9
+  "secret": "xx",//torna平台secret，@since 2.0.9
+  "openUrl": "torna server/api/",//torna平台地址，填写自己的私有化部署地址@since 2.0.9
+  "debugEnvName":"测试环境", //torna测试环境
+  "debugEnvUrl":"http://127.0.0.1",//torna
   "ignoreRequestParams":[ //忽略请求参数对象，把不想生成文档的参数对象屏蔽掉，@since 1.9.2
      "org.springframework.ui.ModelMap"
    ],
@@ -189,6 +200,8 @@ mvn -Dfile.encoding=UTF-8 smart-doc:adoc
 mvn -Dfile.encoding=UTF-8 smart-doc:postman
 // 生成 Open Api 3.0+,Since smart-doc-maven-plugin 1.1.5
 mvn -Dfile.encoding=UTF-8 smart-doc:openapi
+// 生成文档推送到Torna平台
+mvn -Dfile.encoding=UTF-8 smart-doc:torna-rest
 
 // Apache Dubbo RPC文档
 // Generate html
