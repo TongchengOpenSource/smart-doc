@@ -36,7 +36,7 @@ $\color{red}{你给我的star，胜过所有读过的诗—smart-doc}$
 ## Best Practice
 smart-doc + [Torna](http://torna.cn) 组成行业领先的文档生成和管理解决方案，使用smart-doc无侵入完成Java源代码分析和提取注释生成API文档，自动将文档推送到Torna企业级接口文档管理平台。
 
-![smart-doc+torna](![smart-doc+torna](https://gitee.com/smart-doc-team/smart-doc/raw/master/images/smart-doc-torna.png))
+![smart-doc+torna](https://gitee.com/smart-doc-team/smart-doc/raw/master/images/smart-doc-torna.png)
 ## Getting Started
 smart-doc使用和测试可参考[smart-doc demo](https://gitee.com/devin-alan/api-doc-test.git)。
 ```
