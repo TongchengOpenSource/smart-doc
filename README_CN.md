@@ -37,6 +37,8 @@ $\color{red}{你给我的star，胜过所有读过的诗—smart-doc}$
 smart-doc + [Torna](http://torna.cn) 组成行业领先的文档生成和管理解决方案，使用smart-doc无侵入完成Java源代码分析和提取注释生成API文档，自动将文档推送到Torna企业级接口文档管理平台。
 
 ![smart-doc+torna](https://gitee.com/smart-doc-team/smart-doc/raw/master/images/smart-doc-torna.png)
+
+[smart-doc+Torna文档自动化](https://gitee.com/smart-doc-team/smart-doc/wikis/smart-doc与torna对接?sort_id=3695028)
 ## Getting Started
 smart-doc使用和测试可参考[smart-doc demo](https://gitee.com/devin-alan/api-doc-test.git)。
 ```
@@ -119,10 +121,10 @@ smart-doc官方目前已经开发完成[Maven插件](https://gitee.com/smart-doc
   "requestExample":"true",//是否将请求示例展示在文档中，默认true，@since 1.9.0
   "responseExample":"true",//是否将响应示例展示在文档中，默认为true，@since 1.9.0
   "displayActualType":false,//配置true会在注释栏自动显示泛型的真实类型短类名，@since 1.9.6
-  "appKey": "xxx",// torna平台对接appKey,, @since 2.0.9
-  "appToken": "xxx", //torna平台appToken,@since 2.0.9
-  "secret": "xx",//torna平台secret，@since 2.0.9
-  "openUrl": "torna server/api/",//torna平台地址，填写自己的私有化部署地址@since 2.0.9
+  "appKey": "20201216788835306945118208",// torna平台对接appKey,, @since 2.0.9
+  "appToken": "c16931fa6590483fb7a4e85340fcbfef", //torna平台appToken,@since 2.0.9
+  "secret": "W.ZyGMOB9Q0UqujVxnfi@.I#V&tUUYZR",//torna平台secret，@since 2.0.9
+  "openUrl": "http://localhost:7700/api",//torna平台地址，填写自己的私有化部署地址@since 2.0.9
   "debugEnvName":"测试环境", //torna测试环境
   "debugEnvUrl":"http://127.0.0.1",//torna
   "ignoreRequestParams":[ //忽略请求参数对象，把不想生成文档的参数对象屏蔽掉，@since 1.9.2
