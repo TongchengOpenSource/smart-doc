@@ -243,7 +243,12 @@ public class OpenApiBuilder {
             if (!isRep && apiMethodDoc.getContentType().equals(DocGlobalConstants.MULTIPART_TYPE)) {
                 // formdata
                 Map<String, Object> map = new LinkedHashMap<>();
-                map.put("type", "object");
+                if(apiMethodDoc.isListParam()) {
+                    map.put("type", DocGlobalConstants.ARRAY);
+                }
+                else {
+                    map.put("type", "object");
+                }
                 Map<String, Object> properties = new LinkedHashMap<>();
                 Map<String, Object> detail;
                 for (ApiParam apiParam : apiMethodDoc.getQueryParams()) {
@@ -261,7 +266,6 @@ public class OpenApiBuilder {
                         } else {
                             detail.put("format", "binary");
                         }
-
                     }
                     properties.put(apiParam.getField(), detail);
                 }
@@ -289,13 +293,11 @@ public class OpenApiBuilder {
         Map<String, Object> schema = new HashMap<>(10);
         //当类型为数组时使用
         Map<String, Object> innerScheme  = new HashMap<>(10);
-
         //去除url中的特殊字符
         String responseRef =  "#/components/schemas/" + apiMethodDoc.getPath().replaceAll(PATH_REGEX, "_") + "response";
         String requestRef = "#/components/schemas/" + apiMethodDoc.getPath().replaceAll(PATH_REGEX, "_") + "request";
-
         //如果是数组类型
-        if(DocGlobalConstants.ARRAY.equals(apiMethodDoc.getType())){
+        if(apiMethodDoc.isListParam()){
             schema.put("type",DocGlobalConstants.ARRAY);
             if (isRep) {
                 innerScheme.put("$ref", responseRef);

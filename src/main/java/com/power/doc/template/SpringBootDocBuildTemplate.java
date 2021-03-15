@@ -320,6 +320,10 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             String simpleTypeName = javaType.getValue();
             typeName = DocClassUtil.rewriteRequestParam(typeName);
             gicTypeName = DocClassUtil.rewriteRequestParam(gicTypeName);
+            //if params is collection
+            if(JavaClassValidateUtil.isCollection(typeName)){
+                apiMethodDoc.setListParam(true);
+            }
             JavaClass javaClass = configBuilder.getJavaProjectBuilder().getClassByName(typeName);
             String[] globGicName = DocClassUtil.getSimpleGicName(gicTypeName);
             String comment = this.paramCommentResolve(paramsComments.get(paramName));

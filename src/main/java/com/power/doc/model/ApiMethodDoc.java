@@ -182,6 +182,19 @@ public class ApiMethodDoc implements Serializable {
      */
     private String page = "";
 
+    /**
+     * 是否为List数据 openApi
+     */
+    private boolean listParam = false;
+
+    public boolean isListParam() {
+        return listParam;
+    }
+
+    public void setListParam(boolean listParam) {
+        this.listParam = listParam;
+    }
+
     public String getMethodId() {
         return methodId;
     }

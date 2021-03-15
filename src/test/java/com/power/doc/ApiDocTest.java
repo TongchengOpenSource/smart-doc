@@ -44,7 +44,8 @@ public class ApiDocTest {
         //不指定SourcePaths默认加载代码为项目src/main/java下的
         config.setSourceCodePaths(
                 SourceCodePath.builder().setDesc("本项目代码")
-                        .setPath("C:\\Users\\xingzi\\Desktop\\api-doc-test\\src\\main\\java")
+                        .setPath("C:\\Users\\xingzi\\Desktop\\api-doc-test")
+
                 //SourcePath.path().setPath("F:\\Personal\\project\\smart\\src\\main\\java")
                 //SourcePath.path().setDesc("加载项目外代码").setPath("E:\\ApplicationPower\\ApplicationPower\\Common-util\\src\\main\\java")
         );
@@ -66,6 +67,7 @@ public class ApiDocTest {
                 CustomRespField.builder().setName("code").setValue("00000")
                 //.setDesc("响应代码")
         );
+        config.setPackageFilters("com.power.doc.controller.UserController");
         //非必须只有当setAllInOne设置为true时文档变更记录才生效，https://gitee.com/sunyurepository/ApplicationPower/issues/IPS4O
         config.setRevisionLogs(
                 RevisionLog.builder().setRevisionTime("2018/12/15").setAuthor("chen").setRemarks("测试").setStatus("创建").setVersion("V1.0"),
@@ -74,9 +76,9 @@ public class ApiDocTest {
 
 
         long start = System.currentTimeMillis();
-       // OpenApiBuilder.buildOpenApi(config);
-        //HtmlApiDocBuilder.buildApiDoc(config);
+
         TornaBuilder.buildApiDoc(config);
+        OpenApiBuilder.buildOpenApi(config);
         long end = System.currentTimeMillis();
         DateTimeUtil.printRunTime(end, start);
     }
