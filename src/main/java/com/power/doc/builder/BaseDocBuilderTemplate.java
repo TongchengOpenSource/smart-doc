@@ -23,6 +23,7 @@
 package com.power.doc.builder;
 
 import com.power.common.util.CollectionUtil;
+import com.power.common.util.DateTimeUtil;
 import com.power.common.util.EnumUtil;
 import com.power.common.util.StringUtil;
 import com.power.doc.constants.DocGlobalConstants;
@@ -31,6 +32,7 @@ import com.power.doc.constants.TemplateVariable;
 import com.power.doc.model.ApiConfig;
 import com.power.doc.model.ApiErrorCode;
 import com.power.doc.model.ApiErrorCodeDictionary;
+import com.power.doc.model.RevisionLog;
 import org.beetl.core.Template;
 
 import java.util.*;
@@ -39,6 +41,8 @@ import java.util.*;
  * @author yu 2020/5/16.
  */
 public class BaseDocBuilderTemplate {
+
+    public static long NOW = System.currentTimeMillis();
 
     /**
      * check condition and init
@@ -67,6 +71,17 @@ public class BaseDocBuilderTemplate {
             //default is chinese
             config.setLanguage(DocLanguage.CHINESE);
             System.setProperty(DocGlobalConstants.DOC_LANGUAGE, DocLanguage.CHINESE.getCode());
+        }
+        if (Objects.isNull(config.getRevisionLogs())) {
+            String strTime = DateTimeUtil.long2Str(NOW, DateTimeUtil.DATE_FORMAT_SECOND);
+            config.setRevisionLogs(
+                    RevisionLog.builder()
+                            .setRevisionTime(strTime)
+                            .setAuthor("@" + System.getProperty("user.name"))
+                            .setVersion("v" + strTime)
+                            .setRemarks("Created by smart-doc")
+                            .setStatus("auto")
+            );
         }
     }
 
