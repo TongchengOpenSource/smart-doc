@@ -25,12 +25,14 @@ package com.power.doc.template;
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.StringUtil;
 import com.power.doc.builder.ProjectDocConfigBuilder;
+import com.power.doc.constants.DocTags;
 import com.power.doc.helper.ParamsBuildHelper;
 import com.power.doc.model.*;
 import com.power.doc.utils.DocClassUtil;
 import com.power.doc.utils.DocUtil;
 import com.power.doc.utils.JavaClassValidateUtil;
 import com.power.doc.utils.OpenApiSchemaUtil;
+import com.thoughtworks.qdox.model.DocletTag;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaMethod;
 import com.thoughtworks.qdox.model.JavaType;
@@ -153,6 +155,18 @@ public interface IDocBuildTemplate<T> {
                     Boolean.TRUE, new HashMap<>(), projectBuilder, null, 0);
         }
         return new ArrayList<>(0);
+    }
+
+    default Set<String> ignoreParamsSets(JavaMethod method) {
+        Set<String> ignoreSets = new HashSet<>();
+        DocletTag ignoreParam = method.getTagByName(DocTags.IGNORE_PARAMS);
+        if (Objects.nonNull(ignoreParam)) {
+            String[] igParams = ignoreParam.getValue().split(" ");
+            for (String str : igParams) {
+                ignoreSets.add(str);
+            }
+        }
+        return ignoreSets;
     }
 
     List<T> getApiData(ProjectDocConfigBuilder projectBuilder);

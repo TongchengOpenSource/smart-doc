@@ -285,6 +285,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             String format = CurlUtil.toCurl(curlRequest);
             return ApiRequestExample.builder().setUrl(apiMethodDoc.getUrl()).setExampleBody(format);
         }
+        Set<String> ignoreSets = ignoreParamsSets(method);
         Map<String, JavaType> actualTypesMap = javaMethod.getActualTypesMap();
         Map<String, String> constantsMap = configBuilder.getConstantsMap();
         boolean requestFieldToUnderline = configBuilder.getApiConfig().isRequestFieldToUnderline();
@@ -300,6 +301,9 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 javaType = actualTypesMap.get(javaType.getCanonicalName());
             }
             String paramName = parameter.getName();
+            if (ignoreSets.contains(paramName)) {
+                continue;
+            }
             String typeName = javaType.getFullyQualifiedName();
             String gicTypeName = javaType.getGenericCanonicalName();
 
@@ -321,14 +325,13 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             typeName = DocClassUtil.rewriteRequestParam(typeName);
             gicTypeName = DocClassUtil.rewriteRequestParam(gicTypeName);
             //if params is collection
-            if(JavaClassValidateUtil.isCollection(typeName)){
+            if (JavaClassValidateUtil.isCollection(typeName)) {
                 apiMethodDoc.setListParam(true);
             }
             JavaClass javaClass = configBuilder.getJavaProjectBuilder().getClassByName(typeName);
             String[] globGicName = DocClassUtil.getSimpleGicName(gicTypeName);
             String comment = this.paramCommentResolve(paramsComments.get(paramName));
             String mockValue = createMockValue(paramsComments, paramName, typeName, simpleTypeName);
-            ;
             if (requestFieldToUnderline) {
                 paramName = StringUtil.camelToUnderline(paramName);
             }
@@ -544,12 +547,15 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         }
         Map<String, String> constantsMap = builder.getConstantsMap();
         boolean requestFieldToUnderline = builder.getApiConfig().isRequestFieldToUnderline();
-
+        Set<String> ignoreSets = ignoreParamsSets(javaMethod);
         Map<String, JavaType> actualTypesMap = docJavaMethod.getActualTypesMap();
         int requestBodyCounter = 0;
         out:
         for (JavaParameter parameter : parameterList) {
             String paramName = parameter.getName();
+            if (ignoreSets.contains(paramName)) {
+                continue;
+            }
             if (mappingParams.containsKey(paramName)) {
                 continue;
             }

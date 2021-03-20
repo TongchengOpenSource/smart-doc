@@ -102,6 +102,11 @@ public interface DocTags {
      */
     String PAGE = "page";
 
+    /**
+     * custom @ignoreParams tag
+     */
+    String IGNORE_PARAMS = "ignoreParams";
+
 
     /**
      * Ignore ResponseBodyAdvice
