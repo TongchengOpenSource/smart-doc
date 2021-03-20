@@ -33,6 +33,8 @@ public class UrlBean {
 
     private String raw;
 
+    private String protocol;
+
     private List<String> path;
 
     private List<String> host;
@@ -49,6 +51,14 @@ public class UrlBean {
 
     public void setRaw(String raw) {
         this.raw = raw;
+    }
+
+    public String getProtocol() {
+        return protocol;
+    }
+
+    public void setProtocol(String protocol) {
+        this.protocol = protocol;
     }
 
     public List<String> getPath() {
