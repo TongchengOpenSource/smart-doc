@@ -9,6 +9,7 @@ import com.power.doc.enums.OrderEnum;
 import com.power.doc.model.*;
 import org.junit.Test;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +25,7 @@ public class ApiDocTest {
      * 包括设置请求头，缺失注释的字段批量在文档生成期使用定义好的注释
      */
     @Test
-    public void testBuilderControllersApi() {
+    public void testBuilderControllersApi()  {
         List<String> list = new ArrayList<>();
         list.add("aa");
         list.contains("aa");
@@ -37,6 +38,7 @@ public class ApiDocTest {
         config.setSecret("W.ZyGMOB9Q0UqujVxnfi@.I#V&tUUYZR");
         config.setDebugEnvName("测试环境");
         config.setDebugEnvUrl("http://127.0.0.1");
+        config.setTornaDebug(true);
 
         config.setAllInOne(true);
         config.setOutPath("d:\\md3");
@@ -44,7 +46,7 @@ public class ApiDocTest {
         //不指定SourcePaths默认加载代码为项目src/main/java下的
         config.setSourceCodePaths(
                 SourceCodePath.builder().setDesc("本项目代码")
-                        .setPath("C:\\Users\\xingzi\\Desktop\\api-doc-test")
+                        .setPath("C:\\Users\\17717\\Desktop\\api-doc-test")
 
                 //SourcePath.path().setPath("F:\\Personal\\project\\smart\\src\\main\\java")
                 //SourcePath.path().setDesc("加载项目外代码").setPath("E:\\ApplicationPower\\ApplicationPower\\Common-util\\src\\main\\java")

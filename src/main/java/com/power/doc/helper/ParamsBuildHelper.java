@@ -52,6 +52,7 @@ public class ParamsBuildHelper {
                                              Map<String, CustomRespField> responseFieldMap, boolean isResp,
                                              Map<String, String> registryClasses, ProjectDocConfigBuilder projectBuilder,
                                              List<String> groupClasses, int pid) {
+        String maxLength = null;
         //存储泛型所对应的实体类
         Map<String, String> genericMap = new HashMap<>(10);
 
@@ -149,6 +150,9 @@ public class ParamsBuildHelper {
                 an:
                 for (JavaAnnotation annotation : javaAnnotations) {
                     String simpleAnnotationName = annotation.getType().getValue();
+                    if("max".equals(simpleAnnotationName.toLowerCase())){
+                        maxLength = annotation.getProperty(DocAnnotationConstants.VALUE_PROP).toString();
+                    }
                     if (DocAnnotationConstants.SHORT_JSON_IGNORE.equals(simpleAnnotationName)) {
                         continue out;
                     } else if (DocAnnotationConstants.SHORT_JSON_FIELD.equals(simpleAnnotationName)) {
@@ -211,6 +215,7 @@ public class ParamsBuildHelper {
                 if (fieldGicName.contains(DocGlobalConstants.MULTIPART_FILE_FULLY)) {
                     ApiParam param = ApiParam.of().setField(pre + fieldName).setType("file")
                             .setPid(pid).setId(paramList.size() + pid + 1)
+                            .setMaxLength(maxLength)
                             .setDesc(comment).setRequired(Boolean.valueOf(isRequired)).setVersion(since);
                     paramList.add(param);
                     continue;
@@ -223,7 +228,7 @@ public class ParamsBuildHelper {
                         fieldValue = DocUtil.getValByTypeAndFieldName(typeSimpleName, field.getName());
                     }
                     ApiParam param = ApiParam.of().setField(pre + fieldName);
-                    param.setPid(pid).setValue(fieldValue);
+                    param.setPid(pid).setMaxLength(maxLength).setValue(fieldValue);
                     String processedType = isShowJavaType ? typeSimpleName : DocClassUtil.processTypeNameForParams(typeSimpleName.toLowerCase());
                     param.setType(processedType);
                     if (StringUtil.isNotEmpty(comment)) {
@@ -232,7 +237,7 @@ public class ParamsBuildHelper {
                         commonHandleParam(paramList, param, isRequired, NO_COMMENTS_FOUND, since, strRequired);
                     }
                 } else {
-                    ApiParam param = ApiParam.of().setField(pre + fieldName).setPid(pid);
+                    ApiParam param = ApiParam.of().setField(pre + fieldName).setPid(pid).setMaxLength(maxLength);
                     JavaClass javaClass = projectBuilder.getJavaProjectBuilder().getClassByName(subTypeName);
                     if (javaClass.isEnum()) {
                         comment = comment + handleEnumComment(javaClass, projectBuilder);
@@ -311,6 +316,7 @@ public class ParamsBuildHelper {
                         if (JavaClassValidateUtil.isMap(gNameTemp)) {
                             ApiParam param1 = ApiParam.of().setField(preBuilder.toString() + "any object")
                                     .setId(paramList.size() + 1).setPid(fieldPid)
+                                    .setMaxLength(maxLength)
                                     .setType("object").setDesc(DocGlobalConstants.ANY_OBJECT_MSG).setVersion(DocGlobalConstants.DEFAULT_VERSION);
                             paramList.add(param1);
                             continue;
@@ -370,6 +376,7 @@ public class ParamsBuildHelper {
                         if (isGenerics && DocGlobalConstants.JAVA_OBJECT_FULLY.equals(subTypeName)) {
                             ApiParam param1 = ApiParam.of().setField(preBuilder.toString() + "any object")
                                     .setId(paramList.size())
+                                    .setMaxLength(maxLength)
                                     .setType("object").setDesc(DocGlobalConstants.ANY_OBJECT_MSG).setVersion(DocGlobalConstants.DEFAULT_VERSION);
                             paramList.add(param1);
                         } else if (!simpleName.equals(className)) {

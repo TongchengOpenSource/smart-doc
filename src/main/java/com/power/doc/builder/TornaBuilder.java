@@ -23,23 +23,28 @@
 package com.power.doc.builder;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.OkHttp3Util;
 import com.power.common.util.StringUtil;
+import com.power.common.util.UrlUtil;
 import com.power.doc.constants.TornaConstants;
 import com.power.doc.model.*;
-import com.power.doc.model.torna.Apis;
-import com.power.doc.model.torna.DebugEnv;
-import com.power.doc.model.torna.HttpParam;
-import com.power.doc.model.torna.TornaApi;
+import com.power.doc.model.torna.*;
 import com.power.doc.template.SpringBootDocBuildTemplate;
 import com.thoughtworks.qdox.JavaProjectBuilder;
+import org.apache.commons.lang3.StringUtils;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import static com.power.doc.constants.TornaConstants.CATEGORY_CREATE;
 import static com.power.doc.constants.TornaConstants.PUSH;
 
 
@@ -53,12 +58,11 @@ public class TornaBuilder {
      *
      * @param config config
      */
-    public static void buildApiDoc(ApiConfig config) {
+    public static void buildApiDoc(ApiConfig config)  {
         JavaProjectBuilder javaProjectBuilder = new JavaProjectBuilder();
         buildApiDoc(config, javaProjectBuilder);
-
-
     }
+
 
     /**
      * Only for smart-doc maven plugin and gradle plugin.
@@ -66,7 +70,7 @@ public class TornaBuilder {
      * @param config             ApiConfig
      * @param javaProjectBuilder ProjectDocConfigBuilder
      */
-    public static void buildApiDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
+    public static void buildApiDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder)  {
         config.setParamsDataToTree(true);
         DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
         builderTemplate.checkAndInit(config);
@@ -82,26 +86,50 @@ public class TornaBuilder {
      * @param apiConfig ApiConfig
      */
     public static void buildTorna(List<ApiDoc> apiDocs, ApiConfig apiConfig) {
+
+        if(apiConfig.isTornaDebug()){
+            String sb = "配置信息列表: \n" +
+                    "OpenUrl: " +
+                    apiConfig.getOpenUrl() +
+                    "\n" +
+                    "appToken: " +
+                    apiConfig.getAppToken() +
+                    "\n" +
+                    "appKey: " +
+                    apiConfig.getAppKey() +
+                    "\n" +
+                    "Secret: " +
+                    apiConfig.getSecret() +
+                    "\n";
+            System.out.println(sb);
+
+        }
         Apis api;
         for (ApiDoc a : apiDocs) {
             api = new Apis();
-            api.setName(a.getDesc());
+            api.setName(StringUtils.isBlank(a.getDesc()) ? a.getName() : a.getDesc());
             //推送接口分类 CATEGORY_CREATE
-            String responseMsg = OkHttp3Util.syncPost(apiConfig.getOpenUrl(),
-                    TornaConstants.buildParams(TornaConstants.CATEGORY_CREATE, new Gson().toJson(api), apiConfig));
-            //pushApi
-            pushApi(responseMsg, a, apiConfig);
-
-
+            Map<String, String> requestJson = TornaConstants.buildParams(TornaConstants.CATEGORY_CREATE, new Gson().toJson(api), apiConfig);
+            String responseMsg = OkHttp3Util.syncPost(apiConfig.getOpenUrl(), requestJson);
             JsonElement element = JsonParser.parseString(responseMsg);
+            //构建日志信息
+            if(apiConfig.isTornaDebug()) {
+                TornaRequestInfo info = new TornaRequestInfo()
+                        .of()
+                        .setCategory(CATEGORY_CREATE)
+                        .setCode(element.getAsJsonObject().get(TornaConstants.CODE).getAsString())
+                        .setMessage(element.getAsJsonObject().get(TornaConstants.MESSAGE).getAsString())
+                        .setRequestInfo(requestJson)
+                        .setResponseInfo(responseMsg);
+                System.out.println(info.buildInfo(a.getName()));
+
+            }
             //如果推送成功
             if (TornaConstants.SUCCESS_CODE.equals(element.getAsJsonObject().get(TornaConstants.CODE).getAsString())) {
-                //pushApi
                 pushApi(responseMsg, a, apiConfig);
-                System.out.println("推送成功");
             } else {
-                System.out.println(element.getAsJsonObject().get(TornaConstants.MESSAGE).getAsString());
-                System.out.println("接口配置错误，请检查torna相关配置。");
+                System.out.println("Error: " + element.getAsJsonObject()
+                        .get(TornaConstants.MESSAGE).getAsString());
                 break;
             }
         }
@@ -109,11 +137,12 @@ public class TornaBuilder {
 
     /**
      * push api
+     *
      * @param responseMsg returnmsg
-     * @param a apiDoc
-     * @param config config
+     * @param a           apiDoc
+     * @param apiConfig      config
      */
-    public static void pushApi(String responseMsg, ApiDoc a, ApiConfig config) {
+    public static void pushApi(String responseMsg, ApiDoc a, ApiConfig apiConfig) {
         JsonElement element = JsonParser.parseString(responseMsg);
         //如果获取分类成功
         if (TornaConstants.SUCCESS_CODE.equals(element.getAsJsonObject().get(TornaConstants.CODE).getAsString())) {
@@ -151,9 +180,7 @@ public class TornaBuilder {
                 methodApi.setParentId(labelId);
                 methodApi.setDescription(apiMethodDoc.getDetail());
                 methodApi.setIsShow(TornaConstants.YES);
-                debugEnv = new DebugEnv();
-                debugEnv.setName(config.getDebugEnvName());
-                debugEnv.setUrl(config.getDebugEnvUrl());
+
                 /**
                  *      {
                  *                     "name": "goodsName",
@@ -188,14 +215,31 @@ public class TornaBuilder {
                     methodApi.setRequestParams(buildParams(apiMethodDoc.getRequestParams()));
                 }
                 apis.add(methodApi);
-                debugEnvs.add(debugEnv);
+
             }
+            //测试环境
+            debugEnv = new DebugEnv();
+            debugEnv.setName(apiConfig.getDebugEnvName());
+            debugEnv.setUrl(apiConfig.getDebugEnvUrl());
+
+            debugEnvs.add(debugEnv);
             tornaApi.setApis(apis);
             tornaApi.setDebugEnvs(debugEnvs);
+            Map<String,String> requestJson  = TornaConstants.buildParams(PUSH, new Gson().toJson(tornaApi), apiConfig);
+            OkHttp3Util.syncPost(apiConfig.getOpenUrl(), requestJson);
 
-            OkHttp3Util.syncPost(config.getOpenUrl(),
-                    TornaConstants.buildParams(PUSH, new Gson().toJson(tornaApi), config));
-            debugEnvs.clear();
+            if(apiConfig.isTornaDebug()) {
+                TornaRequestInfo info = new TornaRequestInfo()
+                        .of()
+                        .setCategory(PUSH)
+                        .setCode(element.getAsJsonObject().get(TornaConstants.CODE).getAsString())
+                        .setMessage(element.getAsJsonObject().get(TornaConstants.MESSAGE).getAsString())
+                        .setRequestInfo(requestJson)
+                        .setResponseInfo(responseMsg);
+                System.out.println(info.buildInfo(a.getName()));
+            }
+
+
 
         } else {
             System.out.println("Error: " + element.getAsJsonObject()
@@ -259,14 +303,13 @@ public class TornaBuilder {
         for (ApiParam apiParam : apiParams) {
             httpParam = new HttpParam();
             httpParam.setName(apiParam.getField());
+            httpParam.setMaxLength(apiParam.getMaxLength());
             httpParam.setType(apiParam.getType());
             httpParam.setRequired(apiParam.isRequired() ? TornaConstants.YES : TornaConstants.NO);
             httpParam.setExample(StringUtil.removeQuotes(apiParam.getValue()));
             httpParam.setDescription(apiParam.getDesc());
-            if (TornaConstants.ARRAY.equals(httpParam.getType())) {
-                if (apiParam.getChildren() != null) {
-                    httpParam.setChildren(buildParams(apiParam.getChildren()));
-                }
+            if (apiParam.getChildren() != null) {
+                httpParam.setChildren(buildParams(apiParam.getChildren()));
             }
             bodies.add(httpParam);
 

@@ -22,6 +22,8 @@
  */
 package com.power.doc.constants;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.power.doc.model.ApiConfig;
 import org.apache.commons.lang3.StringUtils;
 
@@ -50,6 +52,8 @@ public class TornaConstants {
 
     public static final String CATEGORY_CREATE = "doc.category.create";
     public static final String PUSH = "doc.push";
+
+    public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
 
     /**

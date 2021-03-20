@@ -303,6 +303,18 @@ public class ApiConfig {
      * 调试环境请求路径
      */
     private String debugEnvUrl;
+    /**
+     * torna调试开关
+     */
+    private boolean tornaDebug;
+
+    public boolean isTornaDebug() {
+        return tornaDebug;
+    }
+
+    public void setTornaDebug(boolean tornaDebug) {
+        this.tornaDebug = tornaDebug;
+    }
 
     public void setSourceCodePaths(List<SourceCodePath> sourceCodePaths) {
         this.sourceCodePaths = sourceCodePaths;

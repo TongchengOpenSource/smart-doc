@@ -94,6 +94,10 @@ public class ApiParam {
      * enum values
      */
     private List<String> enumValues;
+    /**
+     * Valid @Max
+     */
+    private String maxLength;
 
     public static ApiParam of(){
         return new ApiParam();
@@ -213,6 +217,15 @@ public class ApiParam {
 
     public ApiParam setEnumValues(List<String> enumValues) {
         this.enumValues = enumValues;
+        return this;
+    }
+
+    public String getMaxLength() {
+        return maxLength;
+    }
+
+    public ApiParam setMaxLength(String maxLength) {
+        this.maxLength = maxLength;
         return this;
     }
 
