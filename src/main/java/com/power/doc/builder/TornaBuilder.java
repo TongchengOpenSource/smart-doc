@@ -23,13 +23,11 @@
 package com.power.doc.builder;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.OkHttp3Util;
 import com.power.common.util.StringUtil;
-import com.power.common.util.UrlUtil;
 import com.power.doc.constants.TornaConstants;
 import com.power.doc.model.*;
 import com.power.doc.model.torna.*;
@@ -37,10 +35,7 @@ import com.power.doc.template.SpringBootDocBuildTemplate;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -58,7 +53,7 @@ public class TornaBuilder {
      *
      * @param config config
      */
-    public static void buildApiDoc(ApiConfig config)  {
+    public static void buildApiDoc(ApiConfig config) {
         JavaProjectBuilder javaProjectBuilder = new JavaProjectBuilder();
         buildApiDoc(config, javaProjectBuilder);
     }
@@ -70,7 +65,7 @@ public class TornaBuilder {
      * @param config             ApiConfig
      * @param javaProjectBuilder ProjectDocConfigBuilder
      */
-    public static void buildApiDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder)  {
+    public static void buildApiDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
         config.setParamsDataToTree(true);
         DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
         builderTemplate.checkAndInit(config);
@@ -87,7 +82,7 @@ public class TornaBuilder {
      */
     public static void buildTorna(List<ApiDoc> apiDocs, ApiConfig apiConfig) {
 
-        if(apiConfig.isTornaDebug()){
+        if (apiConfig.isTornaDebug()) {
             String sb = "配置信息列表: \n" +
                     "OpenUrl: " +
                     apiConfig.getOpenUrl() +
@@ -113,7 +108,7 @@ public class TornaBuilder {
             String responseMsg = OkHttp3Util.syncPost(apiConfig.getOpenUrl(), requestJson);
             JsonElement element = JsonParser.parseString(responseMsg);
             //构建日志信息
-            if(apiConfig.isTornaDebug()) {
+            if (apiConfig.isTornaDebug()) {
                 TornaRequestInfo info = new TornaRequestInfo()
                         .of()
                         .setCategory(CATEGORY_CREATE)
@@ -140,7 +135,7 @@ public class TornaBuilder {
      *
      * @param responseMsg returnmsg
      * @param a           apiDoc
-     * @param apiConfig      config
+     * @param apiConfig   config
      */
     public static void pushApi(String responseMsg, ApiDoc a, ApiConfig apiConfig) {
         JsonElement element = JsonParser.parseString(responseMsg);
@@ -225,10 +220,10 @@ public class TornaBuilder {
             debugEnvs.add(debugEnv);
             tornaApi.setApis(apis);
             tornaApi.setDebugEnvs(debugEnvs);
-            Map<String,String> requestJson  = TornaConstants.buildParams(PUSH, new Gson().toJson(tornaApi), apiConfig);
+            Map<String, String> requestJson = TornaConstants.buildParams(PUSH, new Gson().toJson(tornaApi), apiConfig);
             OkHttp3Util.syncPost(apiConfig.getOpenUrl(), requestJson);
 
-            if(apiConfig.isTornaDebug()) {
+            if (apiConfig.isTornaDebug()) {
                 TornaRequestInfo info = new TornaRequestInfo()
                         .of()
                         .setCategory(PUSH)
@@ -238,9 +233,6 @@ public class TornaBuilder {
                         .setResponseInfo(responseMsg);
                 System.out.println(info.buildInfo(a.getName()));
             }
-
-
-
         } else {
             System.out.println("Error: " + element.getAsJsonObject()
                     .get(TornaConstants.MESSAGE).getAsString());
@@ -312,7 +304,6 @@ public class TornaBuilder {
                 httpParam.setChildren(buildParams(apiParam.getChildren()));
             }
             bodies.add(httpParam);
-
         }
         return bodies;
     }

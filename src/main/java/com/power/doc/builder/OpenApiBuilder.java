@@ -34,11 +34,9 @@ import com.power.doc.template.SpringBootDocBuildTemplate;
 import com.power.doc.utils.DocUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 
-
 import java.util.*;
 
 /**
- *
  * @author xingzi
  */
 public class OpenApiBuilder {
@@ -47,8 +45,9 @@ public class OpenApiBuilder {
     private static final String PATH_REGEX = "[/{};\\t+]";
 
     /**
-     * 构建postman json
-     * @param config 配置文件
+     * Build OpenApi json
+     *
+     * @param config ApiConfig
      */
 
     public static void buildOpenApi(ApiConfig config) {
@@ -63,7 +62,7 @@ public class OpenApiBuilder {
      * Only for smart-doc maven plugin and gradle plugin.
      *
      * @param config         ApiConfig Object
-     * @param projectBuilder QDOX avaProjectBuilder
+     * @param projectBuilder QDOX JavaProjectBuilder
      */
     public static void buildOpenApi(ApiConfig config, JavaProjectBuilder projectBuilder) {
         DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
@@ -73,9 +72,9 @@ public class OpenApiBuilder {
     }
 
     /**
-     * 构建openApi 文件
+     * Build OpenApi
      *
-     * @param config        配置文件
+     * @param config        ApiConfig
      * @param configBuilder
      */
     private static void openApiCreate(ApiConfig config, ProjectDocConfigBuilder configBuilder) {
@@ -104,7 +103,7 @@ public class OpenApiBuilder {
      */
     private static Map<String, Object> buildInfo(ApiConfig apiConfig) {
         Map<String, Object> infoMap = new HashMap<>(8);
-        infoMap.put("title", apiConfig.getProjectName() == null ? "未设置项目名称" : apiConfig.getProjectName());
+        infoMap.put("title", apiConfig.getProjectName() == null ? "Project Name is Null." : apiConfig.getProjectName());
         infoMap.put("version", "1.0.0");
         return infoMap;
     }
@@ -243,10 +242,9 @@ public class OpenApiBuilder {
             if (!isRep && apiMethodDoc.getContentType().equals(DocGlobalConstants.MULTIPART_TYPE)) {
                 // formdata
                 Map<String, Object> map = new LinkedHashMap<>();
-                if(apiMethodDoc.isListParam()) {
+                if (apiMethodDoc.isListParam()) {
                     map.put("type", DocGlobalConstants.ARRAY);
-                }
-                else {
+                } else {
                     map.put("type", "object");
                 }
                 Map<String, Object> properties = new LinkedHashMap<>();
@@ -285,28 +283,27 @@ public class OpenApiBuilder {
     /**
      * content body 的schema 信息
      *
-     * @param apiMethodDoc  请求方法参数 去除server
-     * @param isRep 是否是返回数据
+     * @param apiMethodDoc 请求方法参数 去除server
+     * @param isRep        是否是返回数据
      * @return
      */
     private static Map<String, Object> buildBodySchema(ApiMethodDoc apiMethodDoc, boolean isRep) {
         Map<String, Object> schema = new HashMap<>(10);
         //当类型为数组时使用
-        Map<String, Object> innerScheme  = new HashMap<>(10);
+        Map<String, Object> innerScheme = new HashMap<>(10);
         //去除url中的特殊字符
-        String responseRef =  "#/components/schemas/" + apiMethodDoc.getPath().replaceAll(PATH_REGEX, "_") + "response";
+        String responseRef = "#/components/schemas/" + apiMethodDoc.getPath().replaceAll(PATH_REGEX, "_") + "response";
         String requestRef = "#/components/schemas/" + apiMethodDoc.getPath().replaceAll(PATH_REGEX, "_") + "request";
         //如果是数组类型
-        if(apiMethodDoc.isListParam()){
-            schema.put("type",DocGlobalConstants.ARRAY);
+        if (apiMethodDoc.isListParam()) {
+            schema.put("type", DocGlobalConstants.ARRAY);
             if (isRep) {
                 innerScheme.put("$ref", responseRef);
             } else {
                 innerScheme.put("$ref", requestRef);
             }
-            schema.put("items",innerScheme);
-        }
-        else {
+            schema.put("items", innerScheme);
+        } else {
             if (isRep) {
                 schema.put("$ref", responseRef);
             } else {
@@ -387,7 +384,7 @@ public class OpenApiBuilder {
                 parameters.put("name", header.getName());
                 parameters.put("description", header.getDesc());
                 parameters.put("required", header.isRequired());
-                parameters.put("example",header.getValue());
+                parameters.put("example", header.getValue());
                 parameters.put("schema", buildParametersSchema(header));
                 parameters.put("in", "header");
                 parametersList.add(parameters);
@@ -420,8 +417,8 @@ public class OpenApiBuilder {
         if ("object".equals(openApiType) || "string".equals(openApiType)) {
             if ("file".equals(apiParam.getType())) {
                 schema.put("format", "binary");
-            } else if("enum".equals(apiParam.getType())){
-                schema.put("enum",apiParam.getEnumValues());
+            } else if ("enum".equals(apiParam.getType())) {
+                schema.put("enum", apiParam.getEnumValues());
             }
         } else {
             schema.put("format", "int16".equals(apiParam.getType()) ? "int32" : apiParam.getType());
