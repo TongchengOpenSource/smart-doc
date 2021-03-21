@@ -24,6 +24,7 @@ package com.power.doc.handler;
 
 import com.power.common.util.StringUtil;
 import com.power.common.util.UrlUtil;
+import com.power.doc.builder.ProjectDocConfigBuilder;
 import com.power.doc.constants.DocAnnotationConstants;
 import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.constants.Methods;
@@ -50,19 +51,19 @@ public class SpringMVCRequestMappingHandler {
     /**
      * handle spring request mapping
      *
-     * @param serverUrl         server url
+     * @param projectBuilder    projectBuilder
      * @param controllerBaseUrl spring mvc controller base url
      * @param method            JavaMethod
      * @param constantsMap      project constant container
      * @return RequestMapping
      */
-    public RequestMapping handle(String serverUrl, String controllerBaseUrl, JavaMethod method, Map<String, String> constantsMap) {
+    public RequestMapping handle(ProjectDocConfigBuilder projectBuilder, String controllerBaseUrl, JavaMethod method, Map<String, String> constantsMap) {
         List<JavaAnnotation> annotations = method.getAnnotations();
         String url;
         String methodType = null;
         String shortUrl = null;
         String mediaType = null;
-
+        String serverUrl = projectBuilder.getServerUrl();
         boolean deprecated = false;
         for (JavaAnnotation annotation : annotations) {
             String annotationName = annotation.getType().getName();
@@ -127,8 +128,14 @@ public class SpringMVCRequestMappingHandler {
                     shortUrl = shortUrl.replace("+", "");
                 }
             }
-            url = UrlUtil.simplifyUrl(url);
-            shortUrl = UrlUtil.simplifyUrl(shortUrl);
+            String urlSuffix = projectBuilder.getApiConfig().getUrlSuffix();
+            if (StringUtil.isNotEmpty(urlSuffix)) {
+                url = UrlUtil.simplifyUrl(url) + urlSuffix;
+                shortUrl = UrlUtil.simplifyUrl(shortUrl) + urlSuffix;
+            } else {
+                url = UrlUtil.simplifyUrl(url);
+                shortUrl = UrlUtil.simplifyUrl(shortUrl);
+            }
             return RequestMapping.builder().setMediaType(mediaType).setMethodType(methodType)
                     .setUrl(StringUtil.trim(url)).setShortUrl(StringUtil.trim(shortUrl)).setDeprecated(deprecated);
         }

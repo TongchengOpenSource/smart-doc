@@ -272,6 +272,12 @@ public class ApiConfig {
     private boolean createDebugPage;
 
     /**
+     * Spring MVC url suffix
+     * @since 2.1.0
+     */
+    private String urlSuffix;
+
+    /**
      *     public static final String APP_KEY = "20201216788835306945118208";
      *     public static final String SECRET = "W.ZyGMOB9Q0UqujVxnfi@.I#V&tUUYZR";
      *     public static final String APP_TOKEN = "2f9a7d3858a147b7845ebb48785d4dc7";
@@ -303,6 +309,7 @@ public class ApiConfig {
      * 调试环境请求路径
      */
     private String debugEnvUrl;
+
     /**
      * torna调试开关
      */
@@ -733,6 +740,14 @@ public class ApiConfig {
         this.debugEnvUrl = debugEnvUrl;
     }
 
+    public String getUrlSuffix() {
+        return urlSuffix;
+    }
+
+    public void setUrlSuffix(String urlSuffix) {
+        this.urlSuffix = urlSuffix;
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("{");
@@ -816,6 +831,22 @@ public class ApiConfig {
                 .append(style).append('\"');
         sb.append(",\"createDebugPage\":")
                 .append(createDebugPage);
+        sb.append(",\"urlSuffix\":\"")
+                .append(urlSuffix).append('\"');
+        sb.append(",\"appKey\":\"")
+                .append(appKey).append('\"');
+        sb.append(",\"secret\":\"")
+                .append(secret).append('\"');
+        sb.append(",\"appToken\":\"")
+                .append(appToken).append('\"');
+        sb.append(",\"openUrl\":\"")
+                .append(openUrl).append('\"');
+        sb.append(",\"debugEnvName\":\"")
+                .append(debugEnvName).append('\"');
+        sb.append(",\"debugEnvUrl\":\"")
+                .append(debugEnvUrl).append('\"');
+        sb.append(",\"tornaDebug\":")
+                .append(tornaDebug);
         sb.append('}');
         return sb.toString();
     }
