@@ -112,6 +112,7 @@ When you need to use smart-doc to generate more API document information, you ca
   "requestExample":"true",//Whether to display the request example in the document, the default value is true.
   "responseExample":"true",//Whether to display the response example in the document, the default is true.
   "displayActualType":false,//display actual type of generic,
+  "urlSuffix":".do",//Support the url suffix of the old SpringMVC project,@since 2.1.0
   "appKey": "xxx",// torna appKey, @since 2.0.9
   "appToken": "xxx", //torna appToken,@since 2.0.9
   "secret": "xx",//torna secret，@since 2.0.9
