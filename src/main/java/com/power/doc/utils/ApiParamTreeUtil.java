@@ -22,6 +22,7 @@
  */
 package com.power.doc.utils;
 
+import com.power.common.util.CollectionUtil;
 import com.power.doc.model.ApiParam;
 
 import java.util.ArrayList;
@@ -34,7 +35,7 @@ import java.util.Objects;
 public class ApiParamTreeUtil {
 
     public static List<ApiParam> apiParamToTree(List<ApiParam> apiParamList) {
-        if (Objects.isNull(apiParamList)) {
+        if (CollectionUtil.isEmpty(apiParamList)) {
             return new ArrayList<>(0);
         }
         List<ApiParam> params = new ArrayList<>();

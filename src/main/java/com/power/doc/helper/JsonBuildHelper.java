@@ -187,7 +187,6 @@ public class JsonBuildHelper {
             boolean requestFieldToUnderline = builder.getApiConfig().isRequestFieldToUnderline();
             boolean responseFieldToUnderline = builder.getApiConfig().isResponseFieldToUnderline();
             List<DocJavaField> fields = JavaClassUtil.getFields(cls, 0, new LinkedHashMap<>());
-            boolean isGenerics = JavaFieldUtil.checkGenerics(fields);
             out:
             for (DocJavaField docField : fields) {
                 JavaField field = docField.getJavaField();
@@ -238,7 +237,7 @@ public class JsonBuildHelper {
                     if (!DocUtil.javaPrimaryType(typeSimpleName)
                             && !JavaClassValidateUtil.isCollection(subTypeName)
                             && !JavaClassValidateUtil.isMap(subTypeName)
-                    && !JavaClassValidateUtil.isArray(subTypeName)) {
+                            && !JavaClassValidateUtil.isArray(subTypeName)) {
                         fieldValue = DocUtil.handleJsonStr(fieldValue);
                     }
                 }
@@ -351,7 +350,8 @@ public class JsonBuildHelper {
                             data0.append("{\"waring\":\"You may have used non-display generics.\"},");
                         }
                     } else if (DocGlobalConstants.JAVA_OBJECT_FULLY.equals(subTypeName)) {
-                        if (isGenerics) {
+                        if (StringUtil.isNotEmpty(field.getComment())) {
+                            // from source code
                             data0.append("{\"object\":\"any object\"},");
                         } else if (globGicName.length > 0) {
                             String gicName = genericMap.get(subTypeName) == null ? globGicName[0] : genericMap.get(subTypeName);

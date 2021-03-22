@@ -31,7 +31,10 @@ import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.constants.DocTags;
 import com.power.doc.constants.ValidatorAnnotations;
 import com.power.doc.model.*;
-import com.power.doc.utils.*;
+import com.power.doc.utils.DocClassUtil;
+import com.power.doc.utils.DocUtil;
+import com.power.doc.utils.JavaClassUtil;
+import com.power.doc.utils.JavaClassValidateUtil;
 import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaField;
@@ -40,8 +43,7 @@ import com.thoughtworks.qdox.model.JavaMethod;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.power.doc.constants.DocGlobalConstants.JAVA_LIST_FULLY;
-import static com.power.doc.constants.DocGlobalConstants.NO_COMMENTS_FOUND;
+import static com.power.doc.constants.DocGlobalConstants.*;
 
 /**
  * @author yu 2019/12/21.
@@ -108,7 +110,6 @@ public class ParamsBuildHelper {
             }
             paramList.add(param);
         } else {
-            boolean isGenerics = JavaFieldUtil.checkGenerics(fields);
             out:
             for (DocJavaField docField : fields) {
                 JavaField field = docField.getJavaField();
@@ -150,7 +151,7 @@ public class ParamsBuildHelper {
                 an:
                 for (JavaAnnotation annotation : javaAnnotations) {
                     String simpleAnnotationName = annotation.getType().getValue();
-                    if("max".equals(simpleAnnotationName.toLowerCase())){
+                    if ("max".equals(simpleAnnotationName.toLowerCase())) {
                         maxLength = annotation.getProperty(DocAnnotationConstants.VALUE_PROP).toString();
                     }
                     if (DocAnnotationConstants.SHORT_JSON_IGNORE.equals(simpleAnnotationName)) {
@@ -313,15 +314,15 @@ public class ParamsBuildHelper {
                     int fieldPid = paramList.size() + pid;
                     if (JavaClassValidateUtil.isMap(subTypeName)) {
                         String gNameTemp = fieldGicName;
-                        if (JavaClassValidateUtil.isMap(gNameTemp)) {
+                        String valType = DocClassUtil.getMapKeyValueType(gNameTemp)[1];
+                        if (JavaClassValidateUtil.isMap(gNameTemp) || JAVA_OBJECT_FULLY.equals(valType)) {
                             ApiParam param1 = ApiParam.of().setField(preBuilder.toString() + "any object")
-                                    .setId(paramList.size() + 1).setPid(fieldPid)
+                                    .setId(fieldPid + 1).setPid(fieldPid)
                                     .setMaxLength(maxLength)
                                     .setType("object").setDesc(DocGlobalConstants.ANY_OBJECT_MSG).setVersion(DocGlobalConstants.DEFAULT_VERSION);
                             paramList.add(param1);
                             continue;
                         }
-                        String valType = DocClassUtil.getMapKeyValueType(gNameTemp)[1];
                         if (!JavaClassValidateUtil.isPrimitive(valType)) {
                             if (valType.length() == 1) {
                                 String gicName = genericMap.get(valType);
@@ -362,9 +363,8 @@ public class ParamsBuildHelper {
                                             responseFieldMap, isResp, registryClasses, projectBuilder, groupClasses, fieldPid));
                                 }
                             }
-                        }
-                        else {
-                            String builder =  "[" +
+                        } else {
+                            String builder = "[" +
                                     DocUtil.jsonValueByType(gName) +
                                     "," +
                                     DocUtil.jsonValueByType(gName) +
@@ -373,7 +373,7 @@ public class ParamsBuildHelper {
                         }
                     } else if (subTypeName.length() == 1 || DocGlobalConstants.JAVA_OBJECT_FULLY.equals(subTypeName)) {
                         // handle java generic or object
-                        if (isGenerics && DocGlobalConstants.JAVA_OBJECT_FULLY.equals(subTypeName)) {
+                        if (DocGlobalConstants.JAVA_OBJECT_FULLY.equals(subTypeName) && StringUtil.isNotEmpty(field.getComment())) {
                             ApiParam param1 = ApiParam.of().setField(preBuilder.toString() + "any object")
                                     .setId(paramList.size())
                                     .setMaxLength(maxLength)
