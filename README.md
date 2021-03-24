@@ -106,6 +106,7 @@ When you need to use smart-doc to generate more API document information, you ca
   "requestFieldToUnderline":true, //convert request field to underline
   "responseFieldToUnderline":true,//convert response field to underline
   "sortByTitle":false,//Sort by interface title, the default value is false
+  "showAuthor":true,// display author,default is true
   "inlineEnum":true,// Set to true to display enumeration details in the parameter table
   "recursionLimit":7,// Set the number of recursive executions to avoid stack overflow, the default is 7
   "allInOneDocFileName":"index.html",//Customize the output document name
@@ -117,6 +118,7 @@ When you need to use smart-doc to generate more API document information, you ca
   "appToken": "xxx", //torna appToken,@since 2.0.9
   "secret": "xx",//torna secret，@since 2.0.9
   "openUrl": "torna server/api/",//torna server url,@since 2.0.9
+  "tornaDebug":false,"// show log while set true
   "ignoreRequestParams":[ //The request parameter object will be discarded when generating the document.@since 1.9.2
        "org.springframework.ui.ModelMap"
   ],

@@ -126,8 +126,9 @@ smart-doc官方目前已经开发完成[Maven插件](https://gitee.com/smart-doc
   "appToken": "c16931fa6590483fb7a4e85340fcbfef", //torna平台appToken,@since 2.0.9
   "secret": "W.ZyGMOB9Q0UqujVxnfi@.I#V&tUUYZR",//torna平台secret，@since 2.0.9
   "openUrl": "http://localhost:7700/api",//torna平台地址，填写自己的私有化部署地址@since 2.0.9
-  "debugEnvName":"测试环境", //torna测试环境
+  "debugEnvName":"测试环境", //torna环境名称
   "debugEnvUrl":"http://127.0.0.1",//推送torna配置接口服务地址
+  "tornaDebug":false,//启用会推送日志
   "ignoreRequestParams":[ //忽略请求参数对象，把不想生成文档的参数对象屏蔽掉，@since 1.9.2
      "org.springframework.ui.ModelMap"
    ],
