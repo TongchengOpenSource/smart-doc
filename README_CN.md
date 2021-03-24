@@ -127,7 +127,7 @@ smart-doc官方目前已经开发完成[Maven插件](https://gitee.com/smart-doc
   "secret": "W.ZyGMOB9Q0UqujVxnfi@.I#V&tUUYZR",//torna平台secret，@since 2.0.9
   "openUrl": "http://localhost:7700/api",//torna平台地址，填写自己的私有化部署地址@since 2.0.9
   "debugEnvName":"测试环境", //torna测试环境
-  "debugEnvUrl":"http://127.0.0.1",//torna,和serverUrl会有冲突，设置serverUrl则可以不设置该选项
+  "debugEnvUrl":"http://127.0.0.1",//推送torna配置接口服务地址
   "ignoreRequestParams":[ //忽略请求参数对象，把不想生成文档的参数对象屏蔽掉，@since 1.9.2
      "org.springframework.ui.ModelMap"
    ],
