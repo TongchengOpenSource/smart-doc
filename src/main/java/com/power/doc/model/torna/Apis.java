@@ -40,7 +40,7 @@ public class Apis {
     private List<HttpParam> requestParams;
     private List<HttpParam> responseParams;
     private String errorCodeParams;
-    private String items;
+    private List<Apis> items;
 
     public String getName() {
         return name;
@@ -139,11 +139,11 @@ public class Apis {
         this.errorCodeParams = errorCodeParams;
     }
 
-    public String getItems() {
+    public List<Apis> getItems() {
         return items;
     }
 
-    public void setItems(String items) {
+    public void setItems(List<Apis> items) {
         this.items = items;
     }
 }

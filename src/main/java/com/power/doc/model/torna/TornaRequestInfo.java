@@ -87,13 +87,9 @@ public class TornaRequestInfo {
         return this;
     }
 
-    public String buildInfo(String className){
+    public String buildInfo(){
         StringBuilder sb = new StringBuilder();
         sb.append("---------------------------START---------------------------\n")
-
-                .append("接口所属类 : ")
-                .append(className)
-                .append("\n")
                 .append("接口名: ")
                 .append(category)
                 .append("\n")

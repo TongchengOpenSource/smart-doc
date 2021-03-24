@@ -25,6 +25,8 @@ package com.power.doc.builder;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import com.power.common.net.SSLSocketFactoryBuilder;
+import com.power.common.net.TrustAnyTrustManager;
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.OkHttp3Util;
 import com.power.common.util.StringUtil;
@@ -33,11 +35,15 @@ import com.power.doc.model.*;
 import com.power.doc.model.torna.*;
 import com.power.doc.template.SpringBootDocBuildTemplate;
 import com.thoughtworks.qdox.JavaProjectBuilder;
+import okhttp3.*;
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import static com.power.doc.constants.TornaConstants.CATEGORY_CREATE;
 import static com.power.doc.constants.TornaConstants.PUSH;
@@ -82,6 +88,11 @@ public class TornaBuilder {
      */
     public static void buildTorna(List<ApiDoc> apiDocs, ApiConfig apiConfig) {
 
+        //是否设置测试环境
+        boolean hasDebugEnv = StringUtils.isBlank(apiConfig.getDebugEnvName())
+                &&
+                StringUtils.isBlank(apiConfig.getDebugEnvUrl());
+
         if (apiConfig.isTornaDebug()) {
             String sb = "配置信息列表: \n" +
                     "OpenUrl: " +
@@ -97,146 +108,116 @@ public class TornaBuilder {
                     apiConfig.getSecret() +
                     "\n";
             System.out.println(sb);
+        }
+        TornaApi tornaApi = new TornaApi();
+        //设置测试环境
+        List<DebugEnv> debugEnvs = new ArrayList<>();
+        if (hasDebugEnv) {
+            DebugEnv debugEnv = new DebugEnv();
+            debugEnv.setName(apiConfig.getDebugEnvName());
+            debugEnv.setUrl(apiConfig.getDebugEnvUrl());
+            debugEnvs.add(debugEnv);
 
         }
+        //
         Apis api;
+        List<Apis> apisList = new ArrayList<>();
+        //添加接口数据
         for (ApiDoc a : apiDocs) {
             api = new Apis();
             api.setName(StringUtils.isBlank(a.getDesc()) ? a.getName() : a.getDesc());
-            //推送接口分类 CATEGORY_CREATE
-            Map<String, String> requestJson = TornaConstants.buildParams(TornaConstants.CATEGORY_CREATE, new Gson().toJson(api), apiConfig);
-            String responseMsg = OkHttp3Util.syncPost(apiConfig.getOpenUrl(), requestJson);
+            api.setItems(buildApis(a, hasDebugEnv));
+            api.setIsFolder(TornaConstants.YES);
+            apisList.add(api);
+        }
+        tornaApi.setDebugEnvs(debugEnvs);
+        tornaApi.setApis(apisList);
+        //推送文档信息
+        Map<String, String> requestJson =
+                TornaConstants.buildParams(PUSH, new Gson().toJson(tornaApi), apiConfig);
+        //获取返回结果
+        String responseMsg = OkHttp3Util.syncPost(apiConfig.getOpenUrl(), requestJson);
+        //开启调试时打印请求信息
+        if (apiConfig.isTornaDebug()) {
             JsonElement element = JsonParser.parseString(responseMsg);
-            //构建日志信息
-            if (apiConfig.isTornaDebug()) {
-                TornaRequestInfo info = new TornaRequestInfo()
-                        .of()
-                        .setCategory(CATEGORY_CREATE)
-                        .setCode(element.getAsJsonObject().get(TornaConstants.CODE).getAsString())
-                        .setMessage(element.getAsJsonObject().get(TornaConstants.MESSAGE).getAsString())
-                        .setRequestInfo(requestJson)
-                        .setResponseInfo(responseMsg);
-                System.out.println(info.buildInfo(a.getName()));
-
-            }
-            //如果推送成功
-            if (TornaConstants.SUCCESS_CODE.equals(element.getAsJsonObject().get(TornaConstants.CODE).getAsString())) {
-                pushApi(responseMsg, a, apiConfig);
-            } else {
-                System.out.println("Error: " + element.getAsJsonObject()
-                        .get(TornaConstants.MESSAGE).getAsString());
-                break;
-            }
+            TornaRequestInfo info = new TornaRequestInfo()
+                    .of()
+                    .setCategory(PUSH)
+                    .setCode(element.getAsJsonObject().get(TornaConstants.CODE).getAsString())
+                    .setMessage(element.getAsJsonObject().get(TornaConstants.MESSAGE).getAsString())
+                    .setRequestInfo(requestJson)
+                    .setResponseInfo(responseMsg);
+            System.out.println(info.buildInfo());
         }
     }
 
     /**
-     * push api
+     * build apis
      *
-     * @param responseMsg returnmsg
-     * @param a           apiDoc
-     * @param apiConfig   config
+     * @param a apiDoc
      */
-    public static void pushApi(String responseMsg, ApiDoc a, ApiConfig apiConfig) {
-        JsonElement element = JsonParser.parseString(responseMsg);
-        //如果获取分类成功
-        if (TornaConstants.SUCCESS_CODE.equals(element.getAsJsonObject().get(TornaConstants.CODE).getAsString())) {
-            //获取分类id
-            String labelId = element.getAsJsonObject().get(TornaConstants.DATA)
-                    .getAsJsonObject()
-                    .get(TornaConstants.ID).getAsString();
-            List<ApiMethodDoc> apiMethodDocs = a.getList();
-            //参数列表
-            List<Apis> apis = new ArrayList<>();
-            //环境列表
-            List<DebugEnv> debugEnvs = new ArrayList<>();
-            //推送文档数据
-            TornaApi tornaApi = new TornaApi();
-            Apis methodApi;
-            DebugEnv debugEnv;
-            //遍历分类接口
-            for (ApiMethodDoc apiMethodDoc : apiMethodDocs) {
-                /**
-                 *  "name": "获取商品信息",
-                 *             "description": "获取商品信息",
-                 *             "url": "/goods/get",
-                 *             "httpMethod": "GET",
-                 *             "contentType": "application/json",
-                 *             "isFolder": "1",
-                 *             "parentId": "",
-                 *             "isShow": "1",
-                 */
-                methodApi = new Apis();
-                methodApi.setIsFolder(TornaConstants.NO);
-                methodApi.setName(apiMethodDoc.getDesc());
-                methodApi.setUrl(apiMethodDoc.getUrl());
-                methodApi.setHttpMethod(apiMethodDoc.getType());
-                methodApi.setContentType(apiMethodDoc.getContentType());
-                methodApi.setParentId(labelId);
-                methodApi.setDescription(apiMethodDoc.getDetail());
-                methodApi.setIsShow(TornaConstants.YES);
+    public static List<Apis> buildApis(ApiDoc a, boolean hasDebugEnv) {
+        List<ApiMethodDoc> apiMethodDocs = a.getList();
+        //参数列表
+        List<Apis> apis = new ArrayList<>();
+        Apis methodApi;
+        //遍历分类接口
+        for (ApiMethodDoc apiMethodDoc : apiMethodDocs) {
+            /**
+             *  "name": "获取商品信息",
+             *             "description": "获取商品信息",
+             *             "url": "/goods/get",
+             *             "httpMethod": "GET",
+             *             "contentType": "application/json",
+             *             "isFolder": "1",
+             *             "parentId": "",
+             *             "isShow": "1",
+             */
+            methodApi = new Apis();
+            methodApi.setIsFolder(TornaConstants.NO);
+            methodApi.setName(apiMethodDoc.getDesc());
+            methodApi.setUrl(hasDebugEnv ? apiMethodDoc.getPath() : apiMethodDoc.getUrl());
+            methodApi.setHttpMethod(apiMethodDoc.getType());
+            methodApi.setContentType(apiMethodDoc.getContentType());
+            methodApi.setDescription(apiMethodDoc.getDetail());
+            methodApi.setIsShow(TornaConstants.YES);
 
-                /**
-                 *      {
-                 *                     "name": "goodsName",
-                 *                     "type": "string",
-                 *                     "required": "1",
-                 *                     "maxLength": "128",
-                 *                     "example": "iphone12",
-                 *                     "description": "商品名称描述",
-                 *                     "parentId": "",
-                 *                     "enumInfo": {
-                 *                         "name": "支付枚举",
-                 *                         "description": "支付状态",
-                 *                         "items": [
-                 *                             {
-                 *                                 "name": "WAIT_PAY",
-                 *                                 "type": "string",
-                 *                                 "value": "0",
-                 *                                 "description": "未支付"
-                 *                             }
-                 *                         ]
-                 *                     }
-                 *                 }
-                 */
-                methodApi.setHeaderParams(buildHerder(apiMethodDoc.getRequestHeaders()));
-                methodApi.setResponseParams(buildParams(apiMethodDoc.getResponseParams()));
-                //formData
-                if (CollectionUtil.isNotEmpty(apiMethodDoc.getQueryParams())) {
-                    methodApi.setRequestParams(buildParams(apiMethodDoc.getQueryParams()));
-                }
-                //Json
-                if (CollectionUtil.isNotEmpty(apiMethodDoc.getRequestParams())) {
-                    methodApi.setRequestParams(buildParams(apiMethodDoc.getRequestParams()));
-                }
-                apis.add(methodApi);
-
+            /**
+             *      {
+             *                     "name": "goodsName",
+             *                     "type": "string",
+             *                     "required": "1",
+             *                     "maxLength": "128",
+             *                     "example": "iphone12",
+             *                     "description": "商品名称描述",
+             *                     "parentId": "",
+             *                     "enumInfo": {
+             *                         "name": "支付枚举",
+             *                         "description": "支付状态",
+             *                         "items": [
+             *                             {
+             *                                 "name": "WAIT_PAY",
+             *                                 "type": "string",
+             *                                 "value": "0",
+             *                                 "description": "未支付"
+             *                             }
+             *                         ]
+             *                     }
+             *                 }
+             */
+            methodApi.setHeaderParams(buildHerder(apiMethodDoc.getRequestHeaders()));
+            methodApi.setResponseParams(buildParams(apiMethodDoc.getResponseParams()));
+            //formData
+            if (CollectionUtil.isNotEmpty(apiMethodDoc.getQueryParams())) {
+                methodApi.setRequestParams(buildParams(apiMethodDoc.getQueryParams()));
             }
-            //测试环境
-            debugEnv = new DebugEnv();
-            debugEnv.setName(apiConfig.getDebugEnvName());
-            debugEnv.setUrl(apiConfig.getDebugEnvUrl());
-
-            debugEnvs.add(debugEnv);
-            tornaApi.setApis(apis);
-            tornaApi.setDebugEnvs(debugEnvs);
-            Map<String, String> requestJson = TornaConstants.buildParams(PUSH, new Gson().toJson(tornaApi), apiConfig);
-            OkHttp3Util.syncPost(apiConfig.getOpenUrl(), requestJson);
-
-            if (apiConfig.isTornaDebug()) {
-                TornaRequestInfo info = new TornaRequestInfo()
-                        .of()
-                        .setCategory(PUSH)
-                        .setCode(element.getAsJsonObject().get(TornaConstants.CODE).getAsString())
-                        .setMessage(element.getAsJsonObject().get(TornaConstants.MESSAGE).getAsString())
-                        .setRequestInfo(requestJson)
-                        .setResponseInfo(responseMsg);
-                System.out.println(info.buildInfo(a.getName()));
+            //Json
+            if (CollectionUtil.isNotEmpty(apiMethodDoc.getRequestParams())) {
+                methodApi.setRequestParams(buildParams(apiMethodDoc.getRequestParams()));
             }
-        } else {
-            System.out.println("Error: " + element.getAsJsonObject()
-                    .get(TornaConstants.MESSAGE).getAsString());
+            apis.add(methodApi);
         }
+        return apis;
     }
 
     /**
