@@ -89,9 +89,9 @@ public class TornaBuilder {
     public static void buildTorna(List<ApiDoc> apiDocs, ApiConfig apiConfig) {
 
         //是否设置测试环境
-        boolean hasDebugEnv = StringUtils.isBlank(apiConfig.getDebugEnvName())
+        boolean hasDebugEnv = StringUtils.isNotBlank(apiConfig.getDebugEnvName())
                 &&
-                StringUtils.isBlank(apiConfig.getDebugEnvUrl());
+                StringUtils.isNotBlank(apiConfig.getDebugEnvUrl());
 
         if (apiConfig.isTornaDebug()) {
             String sb = "配置信息列表: \n" +
