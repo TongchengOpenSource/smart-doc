@@ -51,6 +51,9 @@ public class CustomRespField {
      */
     private Object value;
 
+
+    private boolean ignore;
+
     public static CustomRespField builder() {
         return new CustomRespField();
     }
@@ -88,6 +91,15 @@ public class CustomRespField {
 
     public CustomRespField setValue(Object value) {
         this.value = value;
+        return this;
+    }
+
+    public boolean isIgnore() {
+        return ignore;
+    }
+
+    public CustomRespField setIgnore(boolean ignore) {
+        this.ignore = ignore;
         return this;
     }
 

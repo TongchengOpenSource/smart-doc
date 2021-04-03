@@ -46,7 +46,7 @@ public class ApiDocTest {
         //不指定SourcePaths默认加载代码为项目src/main/java下的
         config.setSourceCodePaths(
                 SourceCodePath.builder().setDesc("本项目代码")
-                        .setPath("C:\\Users\\17717\\Desktop\\api-doc-test")
+                        .setPath("C:\\Users\\xingzi\\Desktop\\api-doc-test")
 
                 //SourcePath.path().setPath("F:\\Personal\\project\\smart\\src\\main\\java")
                 //SourcePath.path().setDesc("加载项目外代码").setPath("E:\\ApplicationPower\\ApplicationPower\\Common-util\\src\\main\\java")
@@ -66,7 +66,8 @@ public class ApiDocTest {
 //                CustomRespField.field().setName("success").setDesc("成功返回true,失败返回false"),
 //                CustomRespField.field().setName("message").setDesc("接口响应信息"),
 //                CustomRespField.field().setName("data").setDesc("接口响应数据"),
-                CustomRespField.builder().setName("code").setValue("00000")
+                CustomRespField.builder().setName("msg").setDesc("消息测试").setIgnore(true).setValue("000200"),
+                CustomRespField.builder().setName("code2").setDesc("code测试").setIgnore(false).setValue("010000")
                 //.setDesc("响应代码")
         );
         config.setPackageFilters("com.power.doc.controller.UserController");
@@ -75,12 +76,17 @@ public class ApiDocTest {
                 RevisionLog.builder().setRevisionTime("2018/12/15").setAuthor("chen").setRemarks("测试").setStatus("创建").setVersion("V1.0"),
                 RevisionLog.builder().setRevisionTime("2018/12/16").setAuthor("chen2").setRemarks("测试2").setStatus("修改").setVersion("V2.0")
         );
+//        config.setResponseBodyAdvice(ResponseBodyAdvice.builder()
+//                .setDataField("data")
+//                .setDataField("dadada")
+//                .setClassName("com.power.common.model.CommonResult"));
 
 
         long start = System.currentTimeMillis();
 
-        TornaBuilder.buildApiDoc(config);
-        OpenApiBuilder.buildOpenApi(config);
+        //TornaBuilder.buildApiDoc(config);
+        //OpenApiBuilder.buildOpenApi(config);
+        HtmlApiDocBuilder.buildApiDoc(config);
         long end = System.currentTimeMillis();
         DateTimeUtil.printRunTime(end, start);
     }

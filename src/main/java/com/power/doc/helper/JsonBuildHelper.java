@@ -51,7 +51,7 @@ public class JsonBuildHelper {
      */
     public static String buildReturnJson(DocJavaMethod docJavaMethod, ProjectDocConfigBuilder builder) {
         JavaMethod method = docJavaMethod.getJavaMethod();
-        if (method.getReturns().isVoid()) {
+        if (method.getReturns().isVoid() && Objects.isNull(builder.getApiConfig().getResponseBodyAdvice())) {
             return "Doesn't return a value.";
         }
         String returnTypeGenericCanonicalName = method.getReturnType().getGenericCanonicalName();
@@ -228,8 +228,11 @@ public class JsonBuildHelper {
                     }
                 }
                 String typeSimpleName = field.getType().getSimpleName();
-
                 String fieldGicName = docField.getGenericCanonicalName();
+                CustomRespField customResponseField = builder.getCustomRespFieldMap().get(fieldName);
+                if(customResponseField !=null && typeSimpleName.equals(customResponseField.getOwnerClassName()) && (customResponseField.isIgnore()) && isResp){
+                    continue;
+                }
                 data0.append("\"").append(fieldName).append("\":");
                 String fieldValue = "";
                 if (tagsMap.containsKey(DocTags.MOCK) && StringUtil.isNotEmpty(tagsMap.get(DocTags.MOCK))) {
@@ -245,8 +248,7 @@ public class JsonBuildHelper {
                     if (StringUtil.isEmpty(fieldValue)) {
                         fieldValue = DocUtil.getValByTypeAndFieldName(typeSimpleName, field.getName());
                     }
-                    CustomRespField customResponseField = builder.getCustomRespFieldMap().get(fieldName);
-                    if (null != customResponseField) {
+                    if (null != customResponseField ) {
                         Object val = customResponseField.getValue();
                         if (null != val) {
                             if (DocUtil.javaPrimaryType(typeSimpleName)) {

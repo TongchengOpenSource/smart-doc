@@ -148,6 +148,10 @@ public class ParamsBuildHelper {
                 boolean strRequired = false;
                 int annotationCounter = 0;
 
+                CustomRespField customResponseField = responseFieldMap.get(fieldName);
+                if(customResponseField !=null && simpleName.equals(customResponseField.getOwnerClassName()) && (customResponseField.isIgnore()) && isResp){
+                    continue;
+                }
                 an:
                 for (JavaAnnotation annotation : javaAnnotations) {
                     String simpleAnnotationName = annotation.getType().getValue();
@@ -201,7 +205,7 @@ public class ParamsBuildHelper {
                     }
                 }
                 //cover comment
-                CustomRespField customResponseField = responseFieldMap.get(field.getName());
+
                 String comment;
                 if (null != customResponseField && StringUtil.isNotEmpty(customResponseField.getDesc())
                         && simpleName.equals(customResponseField.getOwnerClassName())) {
