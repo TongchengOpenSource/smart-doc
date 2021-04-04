@@ -42,24 +42,24 @@ public class DocClassUtil {
     /**
      * get class names by generic class name
      *
-     * @param returnType generic class name
+     * @param typeName generic class name
      * @return array of string
      */
-    public static String[] getSimpleGicName(String returnType) {
-        if (JavaClassValidateUtil.isCollection(returnType)) {
-            returnType = returnType + "<T>";
-        } else if (JavaClassValidateUtil.isArray(returnType)) {
-            returnType = returnType.substring(0, returnType.lastIndexOf("["));
-            returnType = "java.util.List<" + returnType + ">";
-        } else if (JavaClassValidateUtil.isMap(returnType)) {
-            returnType = returnType + "<String,T>";
+    public static String[] getSimpleGicName(String typeName) {
+        if (JavaClassValidateUtil.isCollection(typeName)) {
+            typeName = typeName + "<T>";
+        } else if (JavaClassValidateUtil.isArray(typeName)) {
+            typeName = typeName.substring(0, typeName.lastIndexOf("["));
+            typeName = "java.util.List<" + typeName + ">";
+        } else if (JavaClassValidateUtil.isMap(typeName)) {
+            typeName = typeName + "<String,T>";
         }
-        if (returnType.contains("<")) {
-            String pre = returnType.substring(0, returnType.indexOf("<"));
+        if (typeName.contains("<")) {
+            String pre = typeName.substring(0, typeName.indexOf("<"));
             if (JavaClassValidateUtil.isMap(pre)) {
-                return getMapKeyValueType(returnType);
+                return getMapKeyValueType(typeName);
             }
-            String type = returnType.substring(returnType.indexOf("<") + 1, returnType.lastIndexOf(">"));
+            String type = typeName.substring(typeName.indexOf("<") + 1, typeName.lastIndexOf(">"));
             if (JavaClassValidateUtil.isCollection(pre)) {
                 return type.split(" ");
             }

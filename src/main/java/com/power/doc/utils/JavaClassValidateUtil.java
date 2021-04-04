@@ -272,4 +272,19 @@ public class JavaClassValidateUtil {
                 return false;
         }
     }
+
+    /**
+     * check reactor param
+     * @param typeName
+     * @return
+     */
+    public static boolean isReactor(String typeName) {
+        switch (typeName) {
+            case "reactor.core.publisher.Mono":
+            case "reactor.core.publisher.Flux":
+                return true;
+            default:
+                return false;
+        }
+    }
 }

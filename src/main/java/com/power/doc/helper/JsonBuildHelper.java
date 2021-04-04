@@ -183,6 +183,9 @@ public class JsonBuildHelper {
         } else if (DocGlobalConstants.JAVA_OBJECT_FULLY.equals(typeName)) {
             data.append("{\"object\":\" any object\"},");
             // throw new RuntimeException("Please do not return java.lang.Object directly in api interface.");
+        } else if(JavaClassValidateUtil.isReactor(typeName)) {
+            data.append(buildJson(globGicName[0], typeName, isResp, nextLevel, registryClasses, builder));
+            return data.toString();
         } else {
             boolean requestFieldToUnderline = builder.getApiConfig().isRequestFieldToUnderline();
             boolean responseFieldToUnderline = builder.getApiConfig().isResponseFieldToUnderline();
