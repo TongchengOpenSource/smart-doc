@@ -50,7 +50,9 @@ public class ProjectDocConfigBuilder {
 
     private Map<String, JavaClass> classFilesMap = new ConcurrentHashMap<>();
 
-    private Map<String, CustomRespField> customRespFieldMap = new ConcurrentHashMap<>();
+    private Map<String, CustomField> customRespFieldMap = new ConcurrentHashMap<>();
+
+    private Map<String,CustomField> customReqFieldMap = new ConcurrentHashMap<>();
 
     private Map<String, String> replaceClassMap = new ConcurrentHashMap<>();
 
@@ -85,6 +87,7 @@ public class ProjectDocConfigBuilder {
         }
         this.initClassFilesMap();
         this.initCustomResponseFieldsMap(apiConfig);
+        this.initCustomRequestFieldsMap(apiConfig);
         this.initReplaceClassMap(apiConfig);
         this.initConstants(apiConfig);
         this.checkResponseBodyAdvice(apiConfig);
@@ -131,8 +134,16 @@ public class ProjectDocConfigBuilder {
 
     private void initCustomResponseFieldsMap(ApiConfig config) {
         if (CollectionUtil.isNotEmpty(config.getCustomResponseFields())) {
-            for (CustomRespField field : config.getCustomResponseFields()) {
+            for (CustomField field : config.getCustomResponseFields()) {
                 customRespFieldMap.put(field.getName(), field);
+            }
+        }
+    }
+
+    private void initCustomRequestFieldsMap(ApiConfig config) {
+        if (CollectionUtil.isNotEmpty(config.getCustomRequestFields())) {
+            for (CustomField field : config.getCustomRequestFields()) {
+                customReqFieldMap.put(field.getName(), field);
             }
         }
     }
@@ -217,8 +228,12 @@ public class ProjectDocConfigBuilder {
         return classFilesMap;
     }
 
-    public Map<String, CustomRespField> getCustomRespFieldMap() {
+    public Map<String, CustomField> getCustomRespFieldMap() {
         return customRespFieldMap;
+    }
+
+    public Map<String, CustomField> getCustomReqFieldMap() {
+        return customReqFieldMap;
     }
 
     public String getServerUrl() {

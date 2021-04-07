@@ -164,7 +164,7 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
     private List<ApiParam> requestParams(final JavaMethod javaMethod, ProjectDocConfigBuilder builder) {
         boolean isStrict = builder.getApiConfig().isStrict();
         boolean isShowJavaType = builder.getApiConfig().getShowJavaType();
-        Map<String, CustomRespField> responseFieldMap = new HashMap<>();
+        Map<String, CustomField> responseFieldMap = new HashMap<>();
         String className = javaMethod.getDeclaringClass().getCanonicalName();
         Map<String, String> paramTagMap = DocUtil.getParamsComments(javaMethod, DocTags.PARAM, className);
         List<JavaParameter> parameterList = javaMethod.getParameters();

@@ -22,6 +22,7 @@
  */
 package com.power.doc.utils;
 
+import com.power.doc.model.CustomField;
 import com.power.doc.model.DocJavaField;
 
 import java.util.List;
@@ -42,5 +43,22 @@ public class JavaFieldUtil {
             }
         }
         return false;
+    }
+
+    /**
+     *
+     * @param data0 data0
+     * @param typeSimpleName typeName
+     * @param customField config field
+     */
+    public static void buildCustomField(StringBuilder data0, String typeSimpleName, CustomField customField) {
+        Object val = customField.getValue();
+        if (null != val) {
+            if (DocUtil.javaPrimaryType(typeSimpleName)) {
+                data0.append(val).append(",");
+            } else {
+                data0.append(DocUtil.handleJsonStr(String.valueOf(val))).append(",");
+            }
+        }
     }
 }

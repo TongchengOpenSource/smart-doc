@@ -229,8 +229,12 @@ public class JsonBuildHelper {
                 }
                 String typeSimpleName = field.getType().getSimpleName();
                 String fieldGicName = docField.getGenericCanonicalName();
-                CustomRespField customResponseField = builder.getCustomRespFieldMap().get(fieldName);
-                if(customResponseField !=null && typeSimpleName.equals(customResponseField.getOwnerClassName()) && (customResponseField.isIgnore()) && isResp){
+                CustomField customResponseField = builder.getCustomRespFieldMap().get(fieldName);
+                CustomField customRequestField = builder.getCustomReqFieldMap().get(fieldName);
+                if(customRequestField !=null && typeName.equals(customRequestField.getOwnerClassName()) && (customRequestField.isIgnore()) && !isResp){
+                    continue;
+                }
+                if(customResponseField !=null && typeName.equals(customResponseField.getOwnerClassName()) && (customResponseField.isIgnore()) && isResp){
                     continue;
                 }
                 data0.append("\"").append(fieldName).append("\":");
@@ -245,23 +249,19 @@ public class JsonBuildHelper {
                     }
                 }
                 if (JavaClassValidateUtil.isPrimitive(subTypeName)) {
+                    int data0Length  = data0.length();
                     if (StringUtil.isEmpty(fieldValue)) {
                         fieldValue = DocUtil.getValByTypeAndFieldName(typeSimpleName, field.getName());
                     }
-                    if (null != customResponseField ) {
-                        Object val = customResponseField.getValue();
-                        if (null != val) {
-                            if (DocUtil.javaPrimaryType(typeSimpleName)) {
-                                data0.append(val).append(",");
-                            } else {
-                                data0.append(DocUtil.handleJsonStr(String.valueOf(val))).append(",");
-                            }
-                        } else {
-                            data0.append(fieldValue).append(",");
-                        }
-                    } else {
-                        data0.append(fieldValue).append(",");
+                    if (null != customRequestField && !isResp && customRequestField.getOwnerClassName().equals(typeName)) {
+                        JavaFieldUtil.buildCustomField(data0, typeSimpleName, customRequestField);
                     }
+                     if (null != customResponseField && isResp && customResponseField.getOwnerClassName().equals(typeName)) {
+                        JavaFieldUtil.buildCustomField(data0, typeSimpleName, customResponseField);
+                    }
+                     if(data0.length()==data0Length) {
+                         data0.append(fieldValue).append(",");
+                     }
                 } else {
                     if (JavaClassValidateUtil.isCollection(subTypeName) || JavaClassValidateUtil.isArray(subTypeName)) {
                         if (StringUtil.isNotEmpty(fieldValue)) {
@@ -390,6 +390,8 @@ public class JsonBuildHelper {
         data0.append("}");
         return data0.toString();
     }
+
+
 
 
 }

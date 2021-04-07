@@ -512,7 +512,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
     private ApiMethodReqParam requestParams(final DocJavaMethod docJavaMethod, ProjectDocConfigBuilder builder) {
         JavaMethod javaMethod = docJavaMethod.getJavaMethod();
         boolean isStrict = builder.getApiConfig().isStrict();
-        Map<String, CustomRespField> responseFieldMap = new HashMap<>();
+        Map<String, CustomField> responseFieldMap = new HashMap<>();
         String className = javaMethod.getDeclaringClass().getCanonicalName();
         Map<String, String> replacementMap = builder.getReplaceClassMap();
         Map<String, String> paramTagMap = DocUtil.getParamsComments(javaMethod, DocTags.PARAM, className);

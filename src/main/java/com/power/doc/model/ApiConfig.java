@@ -27,6 +27,8 @@ import com.power.doc.constants.DocLanguage;
 import com.power.doc.model.rpc.RpcApiDependency;
 import com.power.doc.model.torna.DebugEnv;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -79,7 +81,11 @@ public class ApiConfig {
     /**
      * list of custom response filed
      */
-    private List<CustomRespField> customResponseFields;
+    private List<CustomField> customResponseFields;
+    /**
+     * list of custom request field
+     */
+    private List<CustomField> customRequestFields;
 
     /**
      * List of error code
@@ -331,7 +337,7 @@ public class ApiConfig {
         this.requestHeaders = requestHeaders;
     }
 
-    public void setCustomResponseFields(List<CustomRespField> customResponseFields) {
+    public void setCustomResponseFields(List<CustomField> customResponseFields) {
         this.customResponseFields = customResponseFields;
     }
 
@@ -425,11 +431,11 @@ public class ApiConfig {
                 .collect(Collectors.toList());
     }
 
-    public List<CustomRespField> getCustomResponseFields() {
+    public List<CustomField> getCustomResponseFields() {
         return customResponseFields;
     }
 
-    public void setCustomResponseFields(CustomRespField... customResponseFields) {
+    public void setCustomResponseFields(CustomField... customResponseFields) {
         this.customResponseFields = CollectionUtil.asList(customResponseFields);
     }
 
@@ -746,6 +752,18 @@ public class ApiConfig {
 
     public void setUrlSuffix(String urlSuffix) {
         this.urlSuffix = urlSuffix;
+    }
+
+    public List<CustomField> getCustomRequestFields() {
+        return customRequestFields;
+    }
+
+    public ApiConfig setCustomRequestFields(List<CustomField> customRequestFields) {
+        this.customRequestFields = customRequestFields;
+        return this;
+    }
+    public void setCustomRequestFields(CustomField... customRequestFields) {
+        this.customRequestFields = CollectionUtil.asList(customRequestFields);
     }
 
     @Override

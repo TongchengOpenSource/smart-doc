@@ -66,10 +66,18 @@ public class ApiDocTest {
 //                CustomRespField.field().setName("success").setDesc("成功返回true,失败返回false"),
 //                CustomRespField.field().setName("message").setDesc("接口响应信息"),
 //                CustomRespField.field().setName("data").setDesc("接口响应数据"),
-                CustomRespField.builder().setName("msg").setDesc("消息测试").setIgnore(true).setValue("000200"),
-                CustomRespField.builder().setName("code2").setDesc("code测试").setIgnore(false).setValue("010000")
+                CustomField.builder().setName("msg").setDesc("消息测试").setIgnore(true).setValue("000200"),
+                CustomField.builder().setName("code2").setDesc("code测试").setIgnore(false).setValue("010000")
                 //.setDesc("响应代码")
         );
+        config.setCustomRequestFields(
+                CustomField.builder()
+                        .setName("age").setDesc("年龄").setIgnore(false).setValue("13").setRequire(false).setOwnerClassName("com.power.doc.entity.SimpleUser"),
+                CustomField.builder()
+                        .setName("sex").setDesc("性别").setIgnore(false).setValue("男").setRequire(true).setOwnerClassName("com.power.doc.entity.SimpleUser")
+
+
+                );
         config.setPackageFilters("com.power.doc.controller.UserController");
         //非必须只有当setAllInOne设置为true时文档变更记录才生效，https://gitee.com/sunyurepository/ApplicationPower/issues/IPS4O
         config.setRevisionLogs(

@@ -39,6 +39,7 @@ import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaField;
 import com.thoughtworks.qdox.model.JavaMethod;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -51,7 +52,7 @@ import static com.power.doc.constants.DocGlobalConstants.*;
 public class ParamsBuildHelper {
 
     public static List<ApiParam> buildParams(String className, String pre, int level, String isRequired,
-                                             Map<String, CustomRespField> responseFieldMap, boolean isResp,
+                                             Map<String, CustomField> responseFieldMap, boolean isResp,
                                              Map<String, String> registryClasses, ProjectDocConfigBuilder projectBuilder,
                                              List<String> groupClasses, int pid) {
         String maxLength = null;
@@ -144,12 +145,14 @@ public class ParamsBuildHelper {
                         since = tagsMap.get(DocTags.SINCE);
                     }
                 }
-
                 boolean strRequired = false;
                 int annotationCounter = 0;
-
-                CustomRespField customResponseField = responseFieldMap.get(fieldName);
+                CustomField customResponseField = responseFieldMap.get(fieldName);
                 if(customResponseField !=null && simpleName.equals(customResponseField.getOwnerClassName()) && (customResponseField.isIgnore()) && isResp){
+                    continue;
+                }
+                CustomField customRequestField = projectBuilder.getCustomReqFieldMap().get(fieldName);
+                if(customRequestField !=null && simpleName.equals(customRequestField.getOwnerClassName()) && (customRequestField.isIgnore()) && !isResp){
                     continue;
                 }
                 an:
@@ -204,14 +207,23 @@ public class ParamsBuildHelper {
                         break doc;
                     }
                 }
+                //cover required
+                if(customRequestField !=null && !isResp && simpleName.equals(customRequestField.getOwnerClassName())
+                        && customRequestField.isRequire()){
+                    strRequired = true;
+                }
                 //cover comment
-
-                String comment;
+                String comment = "";
+                if (null != customRequestField && StringUtil.isNotEmpty(customRequestField.getDesc())
+                        && simpleName.equals(customRequestField.getOwnerClassName()) && !isResp) {
+                    comment = customRequestField.getDesc();
+                }
                 if (null != customResponseField && StringUtil.isNotEmpty(customResponseField.getDesc())
-                        && simpleName.equals(customResponseField.getOwnerClassName())) {
+                        && simpleName.equals(customResponseField.getOwnerClassName())&& isResp) {
                     comment = customResponseField.getDesc();
-                } else {
-                    comment = docField.getComment();
+                }
+                if(StringUtils.isBlank(comment)){
+                      comment = docField.getComment();
                 }
                 if (StringUtil.isNotEmpty(comment)) {
                     comment = DocUtil.replaceNewLineToHtmlBr(comment);
@@ -318,7 +330,7 @@ public class ParamsBuildHelper {
                     int fieldPid = paramList.size() + pid;
                     if (JavaClassValidateUtil.isMap(subTypeName)) {
                         String gNameTemp = fieldGicName;
-                        String valType = DocClassUtil.getMapKeyValueType(gNameTemp)[1];
+                        String valType = DocClassUtil.getMapKeyValueType(gNameTemp).length==0?gNameTemp:DocClassUtil.getMapKeyValueType(gNameTemp)[1];
                         if (JavaClassValidateUtil.isMap(gNameTemp) || JAVA_OBJECT_FULLY.equals(valType)) {
                             ApiParam param1 = ApiParam.of().setField(preBuilder.toString() + "any object")
                                     .setId(fieldPid + 1).setPid(fieldPid)
