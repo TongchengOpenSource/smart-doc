@@ -37,6 +37,7 @@ public class Apis {
     private String parentId;
     private String isShow;
     private List<HttpParam> headerParams;
+    private List<HttpParam> pathParams;
     private List<HttpParam> requestParams;
     private List<HttpParam> responseParams;
     private String errorCodeParams;
@@ -117,6 +118,15 @@ public class Apis {
 
     public List<HttpParam> getHeaderParams() {
         return headerParams;
+    }
+
+    public List<HttpParam> getPathParams() {
+        return pathParams;
+    }
+
+    public Apis setPathParams(List<HttpParam> pathParams) {
+        this.pathParams = pathParams;
+        return this;
     }
 
     public void setHeaderParams(List<HttpParam> headerParams) {

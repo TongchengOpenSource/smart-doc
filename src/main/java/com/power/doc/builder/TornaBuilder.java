@@ -208,6 +208,10 @@ public class TornaBuilder {
              */
             methodApi.setHeaderParams(buildHerder(apiMethodDoc.getRequestHeaders()));
             methodApi.setResponseParams(buildParams(apiMethodDoc.getResponseParams()));
+            //Path
+            if (CollectionUtil.isNotEmpty(apiMethodDoc.getPathParams())) {
+                methodApi.setPathParams(buildParams(apiMethodDoc.getPathParams()));
+            }
             //formData
             if (CollectionUtil.isNotEmpty(apiMethodDoc.getQueryParams())) {
                 methodApi.setRequestParams(buildParams(apiMethodDoc.getQueryParams()));
