@@ -146,6 +146,14 @@ When you need to use smart-doc to generate more API document information, you ca
        "desc": "Response code", // Override field comment of response code
        "value": "00000" // Set the value of the response code
   }],
+  "customRequestFields":[{
+       "name":"code", //Override the request code field
+       "desc":"request code", //Override field comment of response code
+       "ownerClassName":"com.xxx.constant.entity.Result",
+       "value":"200", // Set the value of the response code
+       "required":true,
+       "ignore":false
+  }],
   "apiObjectReplacements": [{ // Supports replacing specified objects with custom objects to complete document rendering
        "className": "org.springframework.data.domain.Pageable",
        "replacementClassName": "com.power.doc.model.PageRequestDto" //Use custom PageRequestDto instead of JPA Pageable for document rendering.

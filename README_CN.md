@@ -26,8 +26,7 @@ $\color{red}{你给我的star，胜过所有读过的诗—smart-doc}$
 - 支持生成JSON返回值示例。
 - 支持从项目外部加载源代码来生成字段注释(包括标准规范发布的jar包)。
 - 支持生成多种格式文档：Markdown、HTML5、Asciidoctor、Postman Collection、OpenAPI 3.0。
-- 轻易实现在Spring Boot服务上在线查看静态HTML5 api文档，支持生成在线debug页面。
-- 开放文档数据，可自由实现接入文档管理系统。
+Up- 开放文档数据，可自由实现接入文档管理系统。
 - 支持导出错误码和定义在代码中的各种字典码到接口文档。
 - 支持Maven、Gradle插件式轻松集成。
 - 支持Apache Dubbo RPC接口文档生成。
@@ -157,6 +156,14 @@ smart-doc官方目前已经开发完成[Maven插件](https://gitee.com/smart-doc
       "desc": "响应代码",//覆盖响应码的字段注释
       "ownerClassName": "org.springframework.data.domain.Pageable", //指定你要添加注释的类名
       "value": "00000"//设置响应码的值
+  }],
+  "customRequestFields": [{
+       "name":"code", //属性名
+       "desc":"状态码", //描述
+       "ownerClassName":"com.xxx.constant.entity.Result", //属性对应的类全路径
+       "value":"200", //默认值或者mock值
+       "required":true, //是否必填
+       "ignore":false //是否忽略
   }],
   "requestHeaders": [{ //设置请求头，没有需求可以不设置
       "name": "token",//请求头名称
