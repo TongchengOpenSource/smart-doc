@@ -110,7 +110,10 @@ public class ParamsBuildHelper {
                 param.setDesc(DocGlobalConstants.ANY_OBJECT_MSG).setRequired(false).setVersion(DocGlobalConstants.DEFAULT_VERSION);
             }
             paramList.add(param);
-        } else {
+        } else if (JavaClassValidateUtil.isReactor(simpleName)) {
+            paramList.addAll(buildParams(globGicName[0], pre, nextLevel, isRequired, responseFieldMap, isResp,
+                    registryClasses, projectBuilder, groupClasses, pid));
+        }else {
             out:
             for (DocJavaField docField : fields) {
                 JavaField field = docField.getJavaField();
