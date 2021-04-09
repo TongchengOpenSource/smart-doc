@@ -406,7 +406,7 @@ public class JavaClassUtil {
                             + "() - bad @" + tagName + " javadoc from " + cls.getName() + ", must be add comment if you use it.");
                 }
                 if (tagName.equals(tags.get(i).getName())) {
-                    if (i != 0) {
+                    if (result.length() > 0) {
                         result.append(",");
                     }
                     result.append(value);
