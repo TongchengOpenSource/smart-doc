@@ -267,6 +267,9 @@ public class JavaClassValidateUtil {
     public static boolean isFile(String typeName){
         switch (typeName) {
             case "org.springframework.web.multipart.MultipartFile":
+            case "org.springframework.web.multipart.MultipartFile[]":
+            case "org.springframework.web.multipart.commons.CommonsMultipartFile":
+            case "org.springframework.web.multipart.commons.CommonsMultipartFile[]":
                 return true;
             default:
                 return false;
@@ -275,8 +278,8 @@ public class JavaClassValidateUtil {
 
     /**
      * check reactor param
-     * @param typeName
-     * @return
+     * @param typeName class name
+     * @return boolean
      */
     public static boolean isReactor(String typeName) {
         switch (typeName) {

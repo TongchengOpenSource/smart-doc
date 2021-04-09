@@ -232,7 +232,7 @@ public class ParamsBuildHelper {
                     comment = DocUtil.replaceNewLineToHtmlBr(comment);
                 }
                 // file
-                if (fieldGicName.contains(DocGlobalConstants.MULTIPART_FILE_FULLY)) {
+                if (JavaClassValidateUtil.isFile(fieldGicName)) {
                     ApiParam param = ApiParam.of().setField(pre + fieldName).setType("file")
                             .setPid(pid).setId(paramList.size() + pid + 1)
                             .setMaxLength(maxLength)

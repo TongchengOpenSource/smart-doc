@@ -391,7 +391,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 continue;
             }
             //file upload
-            if (gicTypeName.contains(DocGlobalConstants.MULTIPART_FILE_FULLY)) {
+            if (JavaClassValidateUtil.isFile(gicTypeName)) {
                 apiMethodDoc.setContentType(FILE_CONTENT_TYPE);
                 FormData formData = new FormData();
                 formData.setKey(paramName);
@@ -588,7 +588,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 paramName = StringUtil.camelToUnderline(paramName);
             }
             //file upload
-            if (typeName.contains(DocGlobalConstants.MULTIPART_FILE_FULLY)) {
+            if (JavaClassValidateUtil.isFile(typeName)) {
                 ApiParam param = ApiParam.of().setField(paramName).setType("file")
                         .setId(paramList.size() + 1).setQueryParam(true)
                         .setRequired(true).setVersion(DocGlobalConstants.DEFAULT_VERSION)
@@ -687,7 +687,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                                 "true", responseFieldMap, Boolean.FALSE, new HashMap<>(), builder, groupClasses, 0));
                     } else {
                         throw new RuntimeException("Spring MVC can't support binding Collection on method "
-                                + javaMethod.getName() + "Check it in " + javaMethod.getDeclaringClass().getCanonicalName());
+                                + javaMethod.getName() + ",Check it in " + javaMethod.getDeclaringClass().getCanonicalName());
                     }
                 }
             } else if (JavaClassValidateUtil.isPrimitive(fullTypeName)) {

@@ -155,7 +155,7 @@ public class TornaBuilder {
      * build apis
      * @param a api
      * @param hasDebugEnv has debug environment
-     * @return
+     * @return List of Api
      */
     public static List<Apis> buildApis(ApiDoc a, boolean hasDebugEnv) {
         List<ApiMethodDoc> apiMethodDocs = a.getList();

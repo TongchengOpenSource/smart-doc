@@ -123,7 +123,7 @@ public class FormDataBuildHelper {
             if (StringUtil.isNotEmpty(comment)) {
                 comment = DocUtil.replaceNewLineToHtmlBr(comment);
             }
-            if (fieldGicName.contains(DocGlobalConstants.MULTIPART_FILE_FULLY)) {
+            if (JavaClassValidateUtil.isFile(fieldGicName)) {
                 FormData formData = new FormData();
                 formData.setKey(pre + fieldName);
                 formData.setType("file");
