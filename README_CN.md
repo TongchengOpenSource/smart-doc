@@ -157,7 +157,7 @@ smart-doc官方目前已经开发完成[Maven插件](https://gitee.com/smart-doc
       "ownerClassName": "org.springframework.data.domain.Pageable", //指定你要添加注释的类名
       "value": "00000"//设置响应码的值
   }],
-  "customRequestFields": [{
+  "customRequestFields": [{ //自定义请求体的注释，@since 2.1.3
        "name":"code", //属性名
        "desc":"状态码", //描述
        "ownerClassName":"com.xxx.constant.entity.Result", //属性对应的类全路径

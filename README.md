@@ -146,7 +146,7 @@ When you need to use smart-doc to generate more API document information, you ca
        "desc": "Response code", // Override field comment of response code
        "value": "00000" // Set the value of the response code
   }],
-  "customRequestFields":[{
+  "customRequestFields": [{//@since 2.1.3
        "name":"code", //Override the request code field
        "desc":"request code", //Override field comment of response code
        "ownerClassName":"com.xxx.constant.entity.Result",
