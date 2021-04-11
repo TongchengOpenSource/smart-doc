@@ -176,7 +176,6 @@ public class JavaClassValidateUtil {
             case "NotEmpty":
             case "NotBlank":
             case "Required":
-            case "Size":
                 return true;
             default:
                 return false;
