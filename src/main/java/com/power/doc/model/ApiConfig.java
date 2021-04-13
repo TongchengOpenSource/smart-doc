@@ -320,6 +320,18 @@ public class ApiConfig {
      * torna调试开关
      */
     private boolean tornaDebug;
+    /**
+     * 是否为dubbo
+     */
+    private boolean isDubbo;
+
+    public boolean isDubbo() {
+        return isDubbo;
+    }
+
+    public void setDubbo(boolean dubbo) {
+        this.isDubbo = dubbo;
+    }
 
     public boolean isTornaDebug() {
         return tornaDebug;

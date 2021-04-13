@@ -37,10 +37,20 @@ public class HttpParam {
     private String example;
     private String description;
     private String parentId;
+    private List<EnumInfo> enumInfo;
     private String code;
     private String msg;
     private String solution;
     private List<HttpParam> children;
+
+    public List<EnumInfo> getEnumInfo() {
+        return enumInfo;
+    }
+
+    public HttpParam setEnumInfo(List<EnumInfo> enumInfo) {
+        this.enumInfo = enumInfo;
+        return this;
+    }
 
     public String getName() {
         return name;

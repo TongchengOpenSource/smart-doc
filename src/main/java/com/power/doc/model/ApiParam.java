@@ -22,6 +22,8 @@
  */
 package com.power.doc.model;
 
+import com.power.doc.model.torna.EnumInfo;
+
 import java.util.List;
 import java.util.Map;
 
@@ -95,9 +97,22 @@ public class ApiParam {
      */
     private List<String> enumValues;
     /**
+     * enum
+     */
+    private List<EnumInfo> enumInfo;
+    /**
      * Valid @Max
      */
     private String maxLength;
+
+    public List<EnumInfo> getEnumInfo() {
+        return enumInfo;
+    }
+
+    public ApiParam setEnumInfo(List<EnumInfo> enumInfo) {
+        this.enumInfo = enumInfo;
+        return this;
+    }
 
     public static ApiParam of(){
         return new ApiParam();
