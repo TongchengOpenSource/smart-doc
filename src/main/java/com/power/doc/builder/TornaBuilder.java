@@ -136,7 +136,7 @@ public class TornaBuilder {
         Map<String, String> requestJson =
                 TornaConstants.buildParams(PUSH, new Gson().toJson(tornaApi), apiConfig);
         //获取返回结果
-        String responseMsg = OkHttp3Util.syncPost(apiConfig.getOpenUrl(), requestJson);
+        String responseMsg = OkHttp3Util.syncPostJson(apiConfig.getOpenUrl(), new Gson().toJson(requestJson));
         //开启调试时打印请求信息
         if (apiConfig.isTornaDebug()) {
             JsonElement element = JsonParser.parseString(responseMsg);
