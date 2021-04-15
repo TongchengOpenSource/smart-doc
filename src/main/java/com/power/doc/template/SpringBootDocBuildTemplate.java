@@ -120,7 +120,8 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         boolean paramsDataToTree = projectBuilder.getApiConfig().isParamsDataToTree();
         String group = JavaClassUtil.getClassTagsValue(cls, DocTags.GROUP, Boolean.TRUE);
         String classAuthor = JavaClassUtil.getClassTagsValue(cls, DocTags.AUTHOR, Boolean.TRUE);
-        List<JavaAnnotation> classAnnotations = cls.getAnnotations();
+        List<JavaAnnotation> classAnnotations = new LinkedList<>();
+        getAnnotations(classAnnotations,cls);
         Map<String, String> constantsMap = projectBuilder.getConstantsMap();
         String baseUrl = "";
         for (JavaAnnotation annotation : classAnnotations) {
@@ -877,5 +878,26 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 .setVersion(DocGlobalConstants.DEFAULT_VERSION);
         paramList.add(apiParam);
         mappingParams.put(paramName, null);
+    }
+
+
+    private void getAnnotations(List<JavaAnnotation> annotations,JavaClass cls){
+        List<JavaAnnotation> annotationsList = cls.getAnnotations();
+        annotations.addAll(annotationsList);
+        boolean flag = annotationsList.stream().anyMatch(item -> {
+            String annotationName = item.getType().getValue();
+            if (DocAnnotationConstants.REQUEST_MAPPING.equals(annotationName) ||
+                    DocGlobalConstants.REQUEST_MAPPING_FULLY.equals(annotationName)) {
+                return true;
+            }
+            return false;
+        });
+        if (flag){
+            return;
+        }
+        JavaClass superJavaClass = cls.getSuperJavaClass();
+        if (!"Object".equals(superJavaClass.getSimpleName())){
+            getAnnotations(annotations,superJavaClass);
+        }
     }
 }
