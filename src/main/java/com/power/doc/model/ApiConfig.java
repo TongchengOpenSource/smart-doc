@@ -159,6 +159,13 @@ public class ApiConfig {
      * project name
      */
     private String projectName;
+
+
+    /**
+     * 模块名
+     */
+    private String moduleName;
+
     /**
      * @since 2.0.7
      * project  cn name
@@ -320,6 +327,53 @@ public class ApiConfig {
      * torna调试开关
      */
     private boolean tornaDebug;
+
+    /**
+     * show doc api url
+     */
+    private String showDocApi;
+
+    /**
+     * show doc api key
+     */
+    private String showDocKey;
+
+    /**
+     * show doc api token
+     */
+    private String showDocToken;
+
+    public String getModuleName() {
+        return moduleName;
+    }
+
+    public void setModuleName(String moduleName) {
+        this.moduleName = moduleName;
+    }
+
+    public String getShowDocApi() {
+        return showDocApi;
+    }
+
+    public void setShowDocApi(String showDocApi) {
+        this.showDocApi = showDocApi;
+    }
+
+    public String getShowDocKey() {
+        return showDocKey;
+    }
+
+    public void setShowDocKey(String showDocKey) {
+        this.showDocKey = showDocKey;
+    }
+
+    public String getShowDocToken() {
+        return showDocToken;
+    }
+
+    public void setShowDocToken(String showDocToken) {
+        this.showDocToken = showDocToken;
+    }
 
     public boolean isTornaDebug() {
         return tornaDebug;
