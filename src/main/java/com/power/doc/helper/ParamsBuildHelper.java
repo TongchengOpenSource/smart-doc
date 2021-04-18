@@ -151,11 +151,11 @@ public class ParamsBuildHelper {
                 boolean strRequired = false;
                 int annotationCounter = 0;
                 CustomField customResponseField = responseFieldMap.get(fieldName);
-                if (customResponseField != null && simpleName.equals(customResponseField.getOwnerClassName()) && (customResponseField.isIgnore()) && isResp) {
+                if (customResponseField != null && JavaClassUtil.isTargetChildClass(simpleName,customResponseField.getOwnerClassName()) && (customResponseField.isIgnore()) && isResp) {
                     continue;
                 }
                 CustomField customRequestField = projectBuilder.getCustomReqFieldMap().get(fieldName);
-                if (customRequestField != null && simpleName.equals(customRequestField.getOwnerClassName()) && (customRequestField.isIgnore()) && !isResp) {
+                if (customRequestField != null && JavaClassUtil.isTargetChildClass(simpleName,customRequestField.getOwnerClassName())&& (customRequestField.isIgnore()) && !isResp) {
                     continue;
                 }
                 an:
@@ -211,18 +211,18 @@ public class ParamsBuildHelper {
                     }
                 }
                 //cover required
-                if (customRequestField != null && !isResp && simpleName.equals(customRequestField.getOwnerClassName())
+                if (customRequestField != null && !isResp && JavaClassUtil.isTargetChildClass(simpleName,customRequestField.getOwnerClassName())
                         && customRequestField.isRequire()) {
                     strRequired = true;
                 }
                 //cover comment
                 String comment = "";
                 if (null != customRequestField && StringUtil.isNotEmpty(customRequestField.getDesc())
-                        && simpleName.equals(customRequestField.getOwnerClassName()) && !isResp) {
+                        && JavaClassUtil.isTargetChildClass(simpleName,customRequestField.getOwnerClassName()) && !isResp) {
                     comment = customRequestField.getDesc();
                 }
                 if (null != customResponseField && StringUtil.isNotEmpty(customResponseField.getDesc())
-                        && simpleName.equals(customResponseField.getOwnerClassName()) && isResp) {
+                        && JavaClassUtil.isTargetChildClass(simpleName,customResponseField.getOwnerClassName()) && isResp) {
                     comment = customResponseField.getDesc();
                 }
                 if (StringUtils.isBlank(comment)) {

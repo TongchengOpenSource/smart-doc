@@ -494,4 +494,19 @@ public class JavaClassUtil {
             return returnType;
         }
     }
+
+    public static boolean isTargetChildClass(String sourceClass,String targetClass){
+        try {
+            Class c = Class.forName(sourceClass);
+            while (c !=  null){
+                if(c.getName().equals(targetClass)){
+                    return true;
+                }
+                c = c.getSuperclass();
+            }
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }
