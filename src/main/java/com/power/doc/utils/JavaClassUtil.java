@@ -497,6 +497,9 @@ public class JavaClassUtil {
 
     public static boolean isTargetChildClass(String sourceClass,String targetClass){
         try {
+            if(sourceClass.equals(targetClass)){
+                return true;
+            }
             Class c = Class.forName(sourceClass);
             while (c !=  null){
                 if(c.getName().equals(targetClass)){
