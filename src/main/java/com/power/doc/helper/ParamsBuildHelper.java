@@ -406,6 +406,7 @@ public class ParamsBuildHelper {
                                     //do nothing
                                 } else if (gicName.contains("<")) {
                                     if (JavaClassValidateUtil.isCollection(simple)) {
+                                        param.setType(ARRAY);
                                         String gName = DocClassUtil.getSimpleGicName(gicName)[0];
                                         if (!JavaClassValidateUtil.isPrimitive(gName)) {
                                             paramList.addAll(buildParams(gName, preBuilder.toString(), nextLevel, isRequired,
