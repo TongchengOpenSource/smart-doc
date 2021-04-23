@@ -240,12 +240,18 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             apiMethodDoc.setResponseUsage(JsonBuildHelper.buildReturnJson(docJavaMethod, projectBuilder));
             // build response params
             List<ApiParam> responseParams = buildReturnApiParams(docJavaMethod, projectBuilder);
+            // build request params
+            List<ApiParam> requestParams = buildRequestApiParams(docJavaMethod, projectBuilder) ;
             if (paramsDataToTree) {
                 responseParams = ApiParamTreeUtil.apiParamToTree(responseParams);
+                requestParams = ApiParamTreeUtil.apiParamToTree(requestParams) ;
             }
             apiMethodDoc.setReturnSchema(docJavaMethod.getReturnSchema());
             apiMethodDoc.setRequestSchema(docJavaMethod.getRequestSchema());
             apiMethodDoc.setResponseParams(responseParams);
+            if (CollectionUtil.isNotEmpty(requestParams)){
+                apiMethodDoc.setRequestParams(requestParams);
+            }
             methodDocList.add(apiMethodDoc);
         }
         return methodDocList;
@@ -365,6 +371,20 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 }
                 if (SpringMvcAnnotations.REQUEST_BODY.equals(annotationName) || DocGlobalConstants.REQUEST_BODY_FULLY.equals(annotationName)) {
                     apiMethodDoc.setContentType(JSON_CONTENT_TYPE);
+
+                    String realRequest = null;
+                    if (configBuilder.getApiConfig().getRequestCommonPackage() != null) {
+                        String req = configBuilder.getApiConfig().getRequestCommonPackage().getClassName();
+                        StringBuilder sb = new StringBuilder();
+                        sb.append(req)
+                                .append("<")
+                                .append(typeName).append(">");
+                        realRequest = sb.toString();
+                        gicTypeName = realRequest;
+                        typeName = DocClassUtil.getSimpleName(gicTypeName);
+                        simpleTypeName = typeName.substring(typeName.lastIndexOf(".") + 1);
+                    }
+
                     if (JavaClassValidateUtil.isPrimitive(simpleTypeName)) {
                         StringBuilder builder = new StringBuilder();
                         builder.append("{\"")

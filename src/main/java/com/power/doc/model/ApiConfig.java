@@ -270,6 +270,9 @@ public class ApiConfig {
      */
     private ResponseBodyAdvice responseBodyAdvice;
 
+
+    private  RequestCommonPackage requestCommonPackage ;
+
     private String style;
 
     /**
@@ -778,6 +781,14 @@ public class ApiConfig {
         this.customRequestFields = CollectionUtil.asList(customRequestFields);
     }
 
+    public RequestCommonPackage getRequestCommonPackage() {
+        return requestCommonPackage;
+    }
+
+    public void setRequestCommonPackage(RequestCommonPackage requestCommonPackage) {
+        this.requestCommonPackage = requestCommonPackage;
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("{");
@@ -857,6 +868,8 @@ public class ApiConfig {
                 .append(displayActualType);
         sb.append(",\"responseBodyAdvice\":")
                 .append(responseBodyAdvice);
+        sb.append(",\"requestCommonPackage\":")
+                .append(requestCommonPackage);
         sb.append(",\"style\":\"")
                 .append(style).append('\"');
         sb.append(",\"createDebugPage\":")

@@ -91,6 +91,7 @@ public class ProjectDocConfigBuilder {
         this.initReplaceClassMap(apiConfig);
         this.initConstants(apiConfig);
         this.checkResponseBodyAdvice(apiConfig);
+        this.checkRequestCommonPackage(apiConfig);
     }
 
     public JavaClass getClassByName(String simpleName) {
@@ -189,6 +190,20 @@ public class ProjectDocConfigBuilder {
                 Class.forName(responseBodyAdvice.getClassName());
             } catch (ClassNotFoundException e) {
                 throw new RuntimeException("Can't find class " + responseBodyAdvice.getClassName() + " for ResponseBodyAdvice.");
+            }
+        }
+    }
+
+    private void checkRequestCommonPackage(ApiConfig config) {
+        RequestCommonPackage requestCommonPackage = config.getRequestCommonPackage();
+        if (Objects.nonNull(requestCommonPackage) && StringUtil.isNotEmpty(requestCommonPackage.getClassName())) {
+            if (Objects.nonNull(requestCommonPackage.getWrapperClass())) {
+                return;
+            }
+            try {
+                Class.forName(requestCommonPackage.getClassName());
+            } catch (ClassNotFoundException e) {
+                throw new RuntimeException("Can't find class " + requestCommonPackage.getClassName() + " for RequestCommonPackage.");
             }
         }
     }

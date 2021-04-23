@@ -25,17 +25,16 @@ package com.power.doc.template;
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.StringUtil;
 import com.power.doc.builder.ProjectDocConfigBuilder;
+import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.constants.DocTags;
+import com.power.doc.constants.SpringMvcAnnotations;
 import com.power.doc.helper.ParamsBuildHelper;
 import com.power.doc.model.*;
 import com.power.doc.utils.DocClassUtil;
 import com.power.doc.utils.DocUtil;
 import com.power.doc.utils.JavaClassValidateUtil;
 import com.power.doc.utils.OpenApiSchemaUtil;
-import com.thoughtworks.qdox.model.DocletTag;
-import com.thoughtworks.qdox.model.JavaClass;
-import com.thoughtworks.qdox.model.JavaMethod;
-import com.thoughtworks.qdox.model.JavaType;
+import com.thoughtworks.qdox.model.*;
 
 import java.util.*;
 
@@ -93,12 +92,37 @@ public interface IDocBuildTemplate<T> {
         apiDocList.add(apiDoc);
     }
 
+    default List<ApiParam> buildRequestApiParams(DocJavaMethod docJavaMethod, ProjectDocConfigBuilder projectBuilder) {
+        JavaMethod method = docJavaMethod.getJavaMethod();
+        List<JavaParameter> parameters = method.getParameters();
+        for (JavaParameter parameter : parameters) {
+            List<JavaAnnotation> annotations = parameter.getAnnotations();
+            for (JavaAnnotation annotation : annotations) {
+                String annotationName = annotation.getType().getValue();
+                if (SpringMvcAnnotations.REQUEST_BODY.equals(annotationName) || DocGlobalConstants.REQUEST_BODY_FULLY.equals(annotationName)) {
+                    JavaType javaType = parameter.getType();
+                    String gicTypeName = javaType.getGenericCanonicalName();
+                    String requestReal = gicTypeName;
+                    if (Objects.nonNull(projectBuilder.getApiConfig().getRequestCommonPackage())
+                            && Objects.isNull(method.getTagByName(IGNORE_RESPONSE_BODY_ADVICE))) {
+                        String requestCommonPackage = projectBuilder.getApiConfig().getRequestCommonPackage().getClassName();
+                        requestReal = new StringBuffer()
+                                .append(requestCommonPackage)
+                                .append("<")
+                                .append(requestReal).append(">").toString();
+                        gicTypeName = requestReal;
+                        return ParamsBuildHelper.buildParams(gicTypeName, "", 0, null, projectBuilder.getCustomReqFieldMap(),
+                                Boolean.TRUE, new HashMap<>(), projectBuilder, null, 0, Boolean.FALSE);
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
 
     default List<ApiParam> buildReturnApiParams(DocJavaMethod docJavaMethod, ProjectDocConfigBuilder projectBuilder) {
         JavaMethod method = docJavaMethod.getJavaMethod();
-        if (method.getReturns().isVoid()) {
-            return new ArrayList<>(0);
-        }
         String returnTypeGenericCanonicalName = method.getReturnType().getGenericCanonicalName();
         if (Objects.nonNull(projectBuilder.getApiConfig().getResponseBodyAdvice())
                 && Objects.isNull(method.getTagByName(IGNORE_RESPONSE_BODY_ADVICE))) {
@@ -107,7 +131,12 @@ public interface IDocBuildTemplate<T> {
                     .append(responseBodyAdvice)
                     .append("<")
                     .append(returnTypeGenericCanonicalName).append(">").toString();
+        }else {
+            if (method.getReturns().isVoid()) {
+                return new ArrayList<>(0);
+            }
         }
+
         Map<String, JavaType> actualTypesMap = docJavaMethod.getActualTypesMap();
         ApiReturn apiReturn = DocClassUtil.processReturnType(returnTypeGenericCanonicalName);
         String returnType = apiReturn.getGenericCanonicalName();
