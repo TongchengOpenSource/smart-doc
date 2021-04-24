@@ -77,14 +77,18 @@ public class HtmlApiDocBuilder {
         Template indexCssTemplate = BeetlTemplateUtil.getByName(ALL_IN_ONE_CSS);
         FileUtil.nioWriteFile(indexCssTemplate.render(), config.getOutPath() + FILE_SEPARATOR + ALL_IN_ONE_CSS);
         if (config.isAllInOne()) {
-            if (StringUtils.isNotEmpty(config.getAllInOneDocFileName())) {
-                INDEX_HTML = config.getAllInOneDocFileName();
-            }
             if (config.isCreateDebugPage()) {
-                builderTemplate.buildAllInOne(apiDocList, config, javaProjectBuilder, DEBUG_PAGE_ALL_TPL, DEBUG_PAGE_ALL_TPL);
+                INDEX_HTML = DEBUG_PAGE_ALL_TPL;
+                if (StringUtils.isNotEmpty(config.getAllInOneDocFileName())) {
+                    INDEX_HTML = config.getAllInOneDocFileName();
+                }
+                builderTemplate.buildAllInOne(apiDocList, config, javaProjectBuilder, DEBUG_PAGE_ALL_TPL, INDEX_HTML);
                 Template mockJs = BeetlTemplateUtil.getByName(DEBUG_JS_TPL);
                 FileUtil.nioWriteFile(mockJs.render(), config.getOutPath() + FILE_SEPARATOR + DEBUG_JS_OUT);
             } else {
+                if (StringUtils.isNotEmpty(config.getAllInOneDocFileName())) {
+                    INDEX_HTML = config.getAllInOneDocFileName();
+                }
                 builderTemplate.buildAllInOne(apiDocList, config, javaProjectBuilder, ALL_IN_ONE_HTML_TPL, INDEX_HTML);
             }
             builderTemplate.buildSearchJs(config, javaProjectBuilder, apiDocList, SEARCH_ALL_JS_TPL);
