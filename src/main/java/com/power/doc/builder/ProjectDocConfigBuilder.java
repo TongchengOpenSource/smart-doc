@@ -90,7 +90,8 @@ public class ProjectDocConfigBuilder {
         this.initCustomRequestFieldsMap(apiConfig);
         this.initReplaceClassMap(apiConfig);
         this.initConstants(apiConfig);
-        this.checkResponseBodyAdvice(apiConfig);
+        this.checkBodyAdvice(apiConfig.getRequestBodyAdvice());
+        this.checkBodyAdvice(apiConfig.getResponseBodyAdvice());
     }
 
     public JavaClass getClassByName(String simpleName) {
@@ -179,20 +180,18 @@ public class ProjectDocConfigBuilder {
         }
     }
 
-    private void checkResponseBodyAdvice(ApiConfig config) {
-        ResponseBodyAdvice responseBodyAdvice = config.getResponseBodyAdvice();
-        if (Objects.nonNull(responseBodyAdvice) && StringUtil.isNotEmpty(responseBodyAdvice.getClassName())) {
-            if (Objects.nonNull(responseBodyAdvice.getWrapperClass())) {
+    private void checkBodyAdvice(BodyAdvice bodyAdvice) {
+        if (Objects.nonNull(bodyAdvice) && StringUtil.isNotEmpty(bodyAdvice.getClassName())) {
+            if (Objects.nonNull(bodyAdvice.getWrapperClass())) {
                 return;
             }
             try {
-                Class.forName(responseBodyAdvice.getClassName());
+                Class.forName(bodyAdvice.getClassName());
             } catch (ClassNotFoundException e) {
-                throw new RuntimeException("Can't find class " + responseBodyAdvice.getClassName() + " for ResponseBodyAdvice.");
+                throw new RuntimeException("Can't find class " + bodyAdvice.getClassName() + " for ResponseBodyAdvice.");
             }
         }
     }
-
     /**
      * 设置高亮样式
      */

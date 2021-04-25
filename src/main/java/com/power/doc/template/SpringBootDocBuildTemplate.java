@@ -46,7 +46,7 @@ import java.util.stream.Stream;
 
 import static com.power.doc.constants.DocGlobalConstants.FILE_CONTENT_TYPE;
 import static com.power.doc.constants.DocGlobalConstants.JSON_CONTENT_TYPE;
-import static com.power.doc.constants.DocTags.IGNORE;
+import static com.power.doc.constants.DocTags.*;
 
 /**
  * @author yu 2019/12/21.
@@ -120,7 +120,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         boolean paramsDataToTree = projectBuilder.getApiConfig().isParamsDataToTree();
         String group = JavaClassUtil.getClassTagsValue(cls, DocTags.GROUP, Boolean.TRUE);
         String classAuthor = JavaClassUtil.getClassTagsValue(cls, DocTags.AUTHOR, Boolean.TRUE);
-        List<JavaAnnotation> classAnnotations = cls.getAnnotations();
+        List<JavaAnnotation> classAnnotations = this.getAnnotations(cls);
         Map<String, String> constantsMap = projectBuilder.getConstantsMap();
         String baseUrl = "";
         for (JavaAnnotation annotation : classAnnotations) {
@@ -365,6 +365,19 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 }
                 if (SpringMvcAnnotations.REQUEST_BODY.equals(annotationName) || DocGlobalConstants.REQUEST_BODY_FULLY.equals(annotationName)) {
                     apiMethodDoc.setContentType(JSON_CONTENT_TYPE);
+                    if (Objects.nonNull(configBuilder.getApiConfig().getRequestBodyAdvice())
+                            && Objects.isNull(method.getTagByName(IGNORE_REQUEST_BODY_ADVICE))) {
+                        String requestBodyAdvice = configBuilder.getApiConfig().getRequestBodyAdvice().getClassName();
+                        gicTypeName = new StringBuffer()
+                                .append(requestBodyAdvice)
+                                .append("<")
+                                .append(gicTypeName).append(">").toString();
+                        typeName = new StringBuffer()
+                                .append(requestBodyAdvice)
+                                .append("<")
+                                .append(typeName).append(">").toString();
+                   }
+
                     if (JavaClassValidateUtil.isPrimitive(simpleTypeName)) {
                         StringBuilder builder = new StringBuilder();
                         builder.append("{\"")
@@ -411,7 +424,8 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 if (JavaClassValidateUtil.isArray(gicName)) {
                     gicName = gicName.substring(0, gicName.indexOf("["));
                 }
-                if (!JavaClassValidateUtil.isPrimitive(gicName)) {
+                if (!JavaClassValidateUtil.isPrimitive(gicName)
+                        &&!configBuilder.getJavaProjectBuilder().getClassByName(gicName).isEnum()) {
                     throw new RuntimeException("Spring MVC can't support binding Collection on method "
                             + method.getName() + "Check it in " + method.getDeclaringClass().getCanonicalName());
                 }
@@ -667,14 +681,29 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 if (JavaClassValidateUtil.isArray(gicName)) {
                     gicName = gicName.substring(0, gicName.indexOf("["));
                 }
-                if (JavaClassValidateUtil.isPrimitive(gicName)) {
+                JavaClass gicJavaClass = builder.getJavaProjectBuilder().getClassByName(gicName);
+                if(gicJavaClass.isEnum()){
+                    Object value = JavaClassUtil.getEnumValue(gicJavaClass, Boolean.TRUE);
+                    ApiParam param = ApiParam.of().setField(paramName).setDesc(comment + ",[array of enum]")
+                            .setRequired(required)
+                            .setPathParam(isPathVariable)
+                            .setQueryParam(queryParam)
+                            .setId(paramList.size() + 1)
+                            .setType("array").setValue(String.valueOf(value));
+                    paramList.add(param);
+                    if (requestBodyCounter > 0) {
+                        Map<String, Object> map = OpenApiSchemaUtil.arrayTypeSchema(gicName);
+                        docJavaMethod.setRequestSchema(map);
+                    }
+                } else if (JavaClassValidateUtil.isPrimitive(gicName)) {
                     String shortSimple = DocClassUtil.processTypeNameForParams(gicName);
                     ApiParam param = ApiParam.of().setField(paramName).setDesc(comment + ",[array of " + shortSimple + "]")
                             .setRequired(required)
                             .setPathParam(isPathVariable)
                             .setQueryParam(queryParam)
                             .setId(paramList.size() + 1)
-                            .setType("array");
+                            .setType("array")
+                            .setValue(DocUtil.getValByTypeAndFieldName(gicName,paramName));
                     paramList.add(param);
                     if (requestBodyCounter > 0) {
                         Map<String, Object> map = OpenApiSchemaUtil.arrayTypeSchema(gicName);
@@ -877,5 +906,26 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 .setVersion(DocGlobalConstants.DEFAULT_VERSION);
         paramList.add(apiParam);
         mappingParams.put(paramName, null);
+    }
+
+    private List<JavaAnnotation> getAnnotations(JavaClass cls) {
+        List<JavaAnnotation> annotationsList = cls.getAnnotations();
+        boolean flag = annotationsList.stream().anyMatch(item -> {
+            String annotationName = item.getType().getValue();
+            if (DocAnnotationConstants.REQUEST_MAPPING.equals(annotationName) ||
+                    DocGlobalConstants.REQUEST_MAPPING_FULLY.equals(annotationName)) {
+                return true;
+            }
+            return false;
+        });
+        // child override parent set
+        if (flag) {
+            return annotationsList;
+        }
+        JavaClass superJavaClass = cls.getSuperJavaClass();
+        if (!"Object".equals(superJavaClass.getSimpleName())) {
+            annotationsList.addAll(getAnnotations(superJavaClass));
+        }
+        return annotationsList;
     }
 }

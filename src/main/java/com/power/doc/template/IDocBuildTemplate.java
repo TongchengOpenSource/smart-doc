@@ -96,7 +96,7 @@ public interface IDocBuildTemplate<T> {
 
     default List<ApiParam> buildReturnApiParams(DocJavaMethod docJavaMethod, ProjectDocConfigBuilder projectBuilder) {
         JavaMethod method = docJavaMethod.getJavaMethod();
-        if (method.getReturns().isVoid()) {
+        if (method.getReturns().isVoid() && Objects.isNull(projectBuilder.getApiConfig().getResponseBodyAdvice())) {
             return new ArrayList<>(0);
         }
         String returnTypeGenericCanonicalName = method.getReturnType().getGenericCanonicalName();
