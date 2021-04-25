@@ -7,7 +7,9 @@
     2. 修复配置responseBodyAdvice后，controller中void方法返回显示错误。
     3. 修复往torna推送漏掉pathParams的问题。
     4. 修复非json请求集合中绑定枚举强制检查错误的问题。
-    5. 新增requestAdvice支持，可以实现请求参数包装
+    5. 新增requestBodyAdvice支持，可以实现请求参数包装。
+    6. 修复泛型为List数据时，类型为object问题。
+    7. 修复customFiled为继承参数时配置失效问题。
 #### 版本号：2.1.3
 - 更新日期: 2020-04-11
 - 更新内容：

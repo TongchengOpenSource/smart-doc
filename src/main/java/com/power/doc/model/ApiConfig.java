@@ -268,7 +268,9 @@ public class ApiConfig {
      * Support Spring MVC ResponseBodyAdvice
      * @since 1.9.8
      */
-    private ResponseBodyAdvice responseBodyAdvice;
+    private BodyAdvice responseBodyAdvice;
+
+    private BodyAdvice requestBodyAdvice;
 
     private String style;
 
@@ -718,12 +720,20 @@ public class ApiConfig {
         this.displayActualType = displayActualType;
     }
 
-    public ResponseBodyAdvice getResponseBodyAdvice() {
+    public BodyAdvice getResponseBodyAdvice() {
         return responseBodyAdvice;
     }
 
-    public void setResponseBodyAdvice(ResponseBodyAdvice responseBodyAdvice) {
+    public void setResponseBodyAdvice(BodyAdvice responseBodyAdvice) {
         this.responseBodyAdvice = responseBodyAdvice;
+    }
+
+    public BodyAdvice getRequestBodyAdvice() {
+        return requestBodyAdvice;
+    }
+
+    public void setRequestBodyAdvice(BodyAdvice requestBodyAdvice) {
+        this.requestBodyAdvice = requestBodyAdvice;
     }
 
     public String getStyle() {

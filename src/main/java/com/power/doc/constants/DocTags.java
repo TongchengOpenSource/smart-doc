@@ -112,4 +112,6 @@ public interface DocTags {
      * Ignore ResponseBodyAdvice
      */
     String IGNORE_RESPONSE_BODY_ADVICE = "ignoreResponseBodyAdvice";
+
+    String IGNORE_REQUEST_BODY_ADVICE = "ignoreRequestBodyAdvice";
 }

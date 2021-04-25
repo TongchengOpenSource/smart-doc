@@ -46,7 +46,7 @@ import java.util.stream.Stream;
 
 import static com.power.doc.constants.DocGlobalConstants.FILE_CONTENT_TYPE;
 import static com.power.doc.constants.DocGlobalConstants.JSON_CONTENT_TYPE;
-import static com.power.doc.constants.DocTags.IGNORE;
+import static com.power.doc.constants.DocTags.*;
 
 /**
  * @author yu 2019/12/21.
@@ -365,6 +365,19 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 }
                 if (SpringMvcAnnotations.REQUEST_BODY.equals(annotationName) || DocGlobalConstants.REQUEST_BODY_FULLY.equals(annotationName)) {
                     apiMethodDoc.setContentType(JSON_CONTENT_TYPE);
+                    if (Objects.nonNull(configBuilder.getApiConfig().getRequestBodyAdvice())
+                            && Objects.isNull(method.getTagByName(IGNORE_REQUEST_BODY_ADVICE))) {
+                        String requestBodyAdvice = configBuilder.getApiConfig().getRequestBodyAdvice().getClassName();
+                        gicTypeName = new StringBuffer()
+                                .append(requestBodyAdvice)
+                                .append("<")
+                                .append(gicTypeName).append(">").toString();
+                        typeName = new StringBuffer()
+                                .append(requestBodyAdvice)
+                                .append("<")
+                                .append(typeName).append(">").toString();
+                   }
+
                     if (JavaClassValidateUtil.isPrimitive(simpleTypeName)) {
                         StringBuilder builder = new StringBuilder();
                         builder.append("{\"")

@@ -26,7 +26,7 @@ package com.power.doc.model;
  * @since 1.9.8
  * @author yu 2020/11/5.
  */
-public class ResponseBodyAdvice {
+public class BodyAdvice {
 
     private String className;
 
@@ -34,15 +34,15 @@ public class ResponseBodyAdvice {
 
     private String dataField;
 
-    public static ResponseBodyAdvice builder(){
-        return new ResponseBodyAdvice();
+    public static BodyAdvice builder(){
+        return new BodyAdvice();
     }
 
     public String getClassName() {
         return className;
     }
 
-    public ResponseBodyAdvice setClassName(String className) {
+    public BodyAdvice setClassName(String className) {
         this.className = className;
         return this;
     }
@@ -51,7 +51,7 @@ public class ResponseBodyAdvice {
         return dataField;
     }
 
-    public ResponseBodyAdvice setDataField(String dataField) {
+    public BodyAdvice setDataField(String dataField) {
         this.dataField = dataField;
         return this;
     }
@@ -60,7 +60,7 @@ public class ResponseBodyAdvice {
         return wrapperClass;
     }
 
-    public ResponseBodyAdvice setWrapperClass(Class wrapperClass) {
+    public BodyAdvice setWrapperClass(Class wrapperClass) {
         this.wrapperClass = wrapperClass;
         return this;
     }
