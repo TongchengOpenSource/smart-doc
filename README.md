@@ -169,6 +169,9 @@ When you need to use smart-doc to generate more API document information, you ca
   "responseBodyAdvice":{ //Support ResponseBodyAdvice
        "className":"com.power.common.model.CommonResult" // Standard POJO for Response
   },
+  "requestBodyAdvice":{ //Support ResponseBodyAdvice
+       "className":"com.power.common.model.CommonResult" // Standard POJO for Request
+  },
   "rpcConsumerConfig": "src/main/resources/consumer-example.conf",//dubbo consumer config example
   "requestHeaders": [{// Set global request headers, no need to set
        "name": "token",

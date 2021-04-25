@@ -189,6 +189,9 @@ smart-doc官方目前已经开发完成[Maven插件](https://gitee.com/smart-doc
   "responseBodyAdvice":{ //自smart-doc 1.9.8起，ResponseBodyAdvice统一返回设置，可用ignoreResponseBodyAdvice tag来忽略
   		"className":"com.power.common.model.CommonResult" //通用响应体
   },
+  "requestBodyAdvice":{ ////自smart-doc 2.1.4 起，支持设置RequestBodyAdvice统一请求包装类
+         "className":"com.power.common.model.CommonResult"
+  },
   "sourceCodePaths": [{ //设置代码路径, 插件已经能够自动下载发布的源码包，没必要配置
       "path": "src/main/java",
       "desc": "测试"
