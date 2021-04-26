@@ -368,14 +368,12 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                     if (Objects.nonNull(configBuilder.getApiConfig().getRequestBodyAdvice())
                             && Objects.isNull(method.getTagByName(IGNORE_REQUEST_BODY_ADVICE))) {
                         String requestBodyAdvice = configBuilder.getApiConfig().getRequestBodyAdvice().getClassName();
+                        typeName = configBuilder.getApiConfig().getRequestBodyAdvice().getClassName();
                         gicTypeName = new StringBuffer()
                                 .append(requestBodyAdvice)
                                 .append("<")
                                 .append(gicTypeName).append(">").toString();
-                        typeName = new StringBuffer()
-                                .append(requestBodyAdvice)
-                                .append("<")
-                                .append(typeName).append(">").toString();
+
                    }
 
                     if (JavaClassValidateUtil.isPrimitive(simpleTypeName)) {
