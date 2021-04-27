@@ -235,6 +235,7 @@ public class JavaClassValidateUtil {
             case "javax.servlet.http.HttpServletResponse":
             case "org.springframework.web.reactive.function.server.ServerRequest":
             case "org.springframework.web.multipart.MultipartHttpServletRequest":
+            case "org.springframework.http.HttpHeaders":
                 return true;
             default:
                 return false;
