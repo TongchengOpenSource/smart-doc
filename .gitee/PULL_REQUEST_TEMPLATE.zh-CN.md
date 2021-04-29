@@ -1,1 +1,0 @@
-gitee不接收pull request,请前往[github](https://github.com/smart-doc-group/smart-doc)
