@@ -36,6 +36,7 @@ public class Apis {
     private String isFolder;
     private String parentId;
     private String isShow;
+    private DubboInfo dubboInfo;
     private List<HttpParam> headerParams;
     private List<HttpParam> pathParams;
     private List<HttpParam> requestParams;
@@ -151,6 +152,14 @@ public class Apis {
 
     public List<Apis> getItems() {
         return items;
+    }
+
+    public DubboInfo getDubboInfo() {
+        return dubboInfo;
+    }
+
+    public void setDubboInfo(DubboInfo dubboInfo) {
+        this.dubboInfo = dubboInfo;
     }
 
     public void setItems(List<Apis> items) {
