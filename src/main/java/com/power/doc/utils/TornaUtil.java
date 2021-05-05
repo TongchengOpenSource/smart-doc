@@ -17,8 +17,7 @@ import java.util.Map;
 import static com.power.doc.constants.TornaConstants.PUSH;
 
 /**
- * @author xingzi
- * @date 2021/4/28 16:15
+ * @author xingzi 2021/4/28 16:15
  **/
 public class TornaUtil {
 

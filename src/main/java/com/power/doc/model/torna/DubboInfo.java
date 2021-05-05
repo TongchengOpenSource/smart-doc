@@ -1,8 +1,7 @@
 package com.power.doc.model.torna;
 
 /**
- * @author xingzi
- * @date 2021/4/28 12:54
+ * @author xingzi 2021/4/28 12:54
  **/
 public class DubboInfo {
     private String interfaceName;
