@@ -72,6 +72,7 @@ public class RpcTornaBuilder {
             .setAuthor(a.getAuthor())
                     .setProtocol(a.getProtocol())
                     .setVersion(a.getVersion())
+                    .setDependency(TornaUtil.buildDependencies(apiConfig.getRpcApiDependencies()))
                     .setInterfaceName(a.getName()));
             apisList.add(api);
         }

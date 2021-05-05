@@ -5,8 +5,11 @@ import com.power.doc.builder.HtmlApiDocBuilder;
 import com.power.doc.builder.OpenApiBuilder;
 import com.power.doc.builder.PostmanJsonBuilder;
 import com.power.doc.builder.TornaBuilder;
+import com.power.doc.builder.rpc.RpcHtmlBuilder;
+import com.power.doc.builder.rpc.RpcTornaBuilder;
 import com.power.doc.enums.OrderEnum;
 import com.power.doc.model.*;
+import com.power.doc.model.rpc.RpcApiDependency;
 import org.junit.Test;
 
 import java.io.UnsupportedEncodingException;
@@ -30,15 +33,15 @@ public class ApiDocTest {
         list.add("aa");
         list.contains("aa");
         ApiConfig config = new ApiConfig();
-        config.setServerUrl("http://localhost:8080");
+        config.setServerUrl("http://127.0.0.1:8899");
         //config.setStrict(true);
-        config.setOpenUrl("http://torna.opensphere.cn/api/");
+        config.setOpenUrl("http://127.0.0.1:8899/api");
         config.setAppKey("20201216788835306945118208");
-        config.setAppToken("2f9a7d3858a147b7845ebb48785d4dc7");
+        config.setAppToken("c16931fa6590483fb7a4e85340fcbfef");
         config.setSecret("W.ZyGMOB9Q0UqujVxnfi@.I#V&tUUYZR");
         config.setDebugEnvName("测试环境");
         config.setDebugEnvUrl("http://127.0.0.1");
-        config.setTornaDebug(true);
+       //config.setTornaDebug(true);
 
         config.setAllInOne(true);
         config.setOutPath("d:\\md3");
@@ -51,7 +54,7 @@ public class ApiDocTest {
                 //SourcePath.path().setPath("F:\\Personal\\project\\smart\\src\\main\\java")
                 //SourcePath.path().setDesc("加载项目外代码").setPath("E:\\ApplicationPower\\ApplicationPower\\Common-util\\src\\main\\java")
         );
-        config.setPackageFilters("com.power.doc.controller.UserController");
+        config.setPackageFilters("com.power.doc.dubbo.*");
         config.setDataDictionaries(
                 ApiDataDictionary.builder().setTitle("订单字典").setEnumClass(OrderEnum.class).setCodeField("code").setDescField("desc")
         );
@@ -78,23 +81,31 @@ public class ApiDocTest {
 
 
                 );
-        config.setPackageFilters("com.power.doc.controller.UserController");
+        config.setPackageFilters("com.power.doc.dubbo.*,com.power.doc.controller.UserController");
         //非必须只有当setAllInOne设置为true时文档变更记录才生效，https://gitee.com/sunyurepository/ApplicationPower/issues/IPS4O
         config.setRevisionLogs(
                 RevisionLog.builder().setRevisionTime("2018/12/15").setAuthor("chen").setRemarks("测试").setStatus("创建").setVersion("V1.0"),
                 RevisionLog.builder().setRevisionTime("2018/12/16").setAuthor("chen2").setRemarks("测试2").setStatus("修改").setVersion("V2.0")
         );
-//        config.setResponseBodyAdvice(ResponseBodyAdvice.builder()
-//                .setDataField("data")
-//                .setDataField("dadada")
-//                .setClassName("com.power.common.model.CommonResult"));
-
-
+        config.setResponseBodyAdvice(BodyAdvice.builder()
+                .setDataField("data")
+                .setDataField("dadada")
+                .setClassName("com.power.common.model.CommonResult"));
+        config.setRequestBodyAdvice(BodyAdvice.builder()
+                .setDataField("data")
+                .setDataField("dadada")
+                .setClassName("com.power.common.model.CommonResult"));
+        config.setRpcApiDependencies(RpcApiDependency.builder().setGroupId("com.test").setArtifactId("test1").setVersion("1.0"),
+                RpcApiDependency.builder().setGroupId("com.smart").setArtifactId("test").setVersion("1.1.1")
+                );
         long start = System.currentTimeMillis();
 
         //TornaBuilder.buildApiDoc(config);
         //OpenApiBuilder.buildOpenApi(config);
         HtmlApiDocBuilder.buildApiDoc(config);
+        //RpcTornaBuilder.buildApiDoc(config);
+        TornaBuilder.buildApiDoc(config);
+       // RpcHtmlBuilder.buildApiDoc(config);
         long end = System.currentTimeMillis();
         DateTimeUtil.printRunTime(end, start);
     }

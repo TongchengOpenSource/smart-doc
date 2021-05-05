@@ -369,10 +369,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                             && Objects.isNull(method.getTagByName(IGNORE_REQUEST_BODY_ADVICE))) {
                         String requestBodyAdvice = configBuilder.getApiConfig().getRequestBodyAdvice().getClassName();
                         typeName = configBuilder.getApiConfig().getRequestBodyAdvice().getClassName();
-                        gicTypeName = new StringBuffer()
-                                .append(requestBodyAdvice)
-                                .append("<")
-                                .append(gicTypeName).append(">").toString();
+                        gicTypeName = requestBodyAdvice + "<" + gicTypeName + ">";
 
                    }
 
@@ -660,6 +657,12 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                     if (requestBodyCounter > 0) {
                         throw new RuntimeException("You have use @RequestBody Passing multiple variables  for method "
                                 + javaMethod.getName() + " in " + className + ",@RequestBody annotation could only bind one variables.");
+                    }
+                    if (Objects.nonNull(builder.getApiConfig().getRequestBodyAdvice())
+                            && Objects.isNull(javaMethod.getTagByName(IGNORE_REQUEST_BODY_ADVICE))) {
+                        String requestBodyAdvice = builder.getApiConfig().getRequestBodyAdvice().getClassName();
+                       fullTypeName = typeName = requestBodyAdvice  + "<" + typeName + ">";
+
                     }
                     requestBodyCounter++;
                     isRequestBody = true;

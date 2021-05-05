@@ -508,7 +508,8 @@ public class JavaClassUtil {
                 c = c.getSuperclass();
             }
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            e.getMessage();
+            return false;
         }
         return false;
     }

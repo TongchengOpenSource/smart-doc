@@ -6,6 +6,7 @@ import com.power.common.util.CollectionUtil;
 import com.power.common.util.StringUtil;
 import com.power.doc.constants.TornaConstants;
 import com.power.doc.model.*;
+import com.power.doc.model.rpc.RpcApiDependency;
 import com.power.doc.model.torna.*;
 import org.apache.commons.lang3.StringUtils;
 
@@ -38,7 +39,7 @@ public class TornaUtil {
         return hasDebugEnv;
     }
 
-    public static void printDebugInfo(ApiConfig apiConfig , String responseMsg, Map<String, String> requestJson) {
+    public static void printDebugInfo(ApiConfig apiConfig, String responseMsg, Map<String, String> requestJson) {
         if (apiConfig.isTornaDebug()) {
             String sb = "配置信息列表: \n" +
                     "OpenUrl: " +
@@ -269,5 +270,16 @@ public class TornaUtil {
             bodies.add(httpParam);
         }
         return bodies;
+    }
+
+    public static String buildDependencies(List<RpcApiDependency> dependencies) {
+        StringBuilder s = new StringBuilder();
+        if (CollectionUtil.isNotEmpty(dependencies)) {
+            for (RpcApiDependency r : dependencies) {
+                s.append(r.toString())
+                        .append("\n\n");
+            }
+        }
+        return s.toString();
     }
 }
