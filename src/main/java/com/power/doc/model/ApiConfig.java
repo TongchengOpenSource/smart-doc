@@ -321,7 +321,7 @@ public class ApiConfig {
     /**
      * torna调试开关
      */
-    private boolean tornaDebug;
+    private boolean tornaDebug = true;
     /**
      * 是否为dubbo
      */

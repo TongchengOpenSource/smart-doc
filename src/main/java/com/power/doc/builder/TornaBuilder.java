@@ -34,6 +34,7 @@ import com.power.doc.constants.TornaConstants;
 import com.power.doc.model.*;
 import com.power.doc.model.torna.*;
 import com.power.doc.template.SpringBootDocBuildTemplate;
+import com.power.doc.utils.TornaUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import okhttp3.*;
 import org.apache.commons.lang3.StringUtils;
@@ -47,6 +48,7 @@ import java.util.concurrent.TimeUnit;
 
 import static com.power.doc.constants.TornaConstants.CATEGORY_CREATE;
 import static com.power.doc.constants.TornaConstants.PUSH;
+import static com.power.doc.utils.TornaUtil.*;
 
 
 /**
@@ -87,212 +89,24 @@ public class TornaBuilder {
      * @param apiConfig ApiConfig
      */
     public static void buildTorna(List<ApiDoc> apiDocs, ApiConfig apiConfig) {
-
-        //是否设置测试环境
-        boolean hasDebugEnv = StringUtils.isNotBlank(apiConfig.getDebugEnvName())
-                &&
-                StringUtils.isNotBlank(apiConfig.getDebugEnvUrl());
-
-        if (apiConfig.isTornaDebug()) {
-            String sb = "配置信息列表: \n" +
-                    "OpenUrl: " +
-                    apiConfig.getOpenUrl() +
-                    "\n" +
-                    "appToken: " +
-                    apiConfig.getAppToken() +
-                    "\n" +
-                    "appKey: " +
-                    apiConfig.getAppKey() +
-                    "\n" +
-                    "Secret: " +
-                    apiConfig.getSecret() +
-                    "\n";
-            System.out.println(sb);
-        }
         TornaApi tornaApi = new TornaApi();
-        //设置测试环境
-        List<DebugEnv> debugEnvs = new ArrayList<>();
-        if (hasDebugEnv) {
-            DebugEnv debugEnv = new DebugEnv();
-            debugEnv.setName(apiConfig.getDebugEnvName());
-            debugEnv.setUrl(apiConfig.getDebugEnvUrl());
-            debugEnvs.add(debugEnv);
-
-        }
-        //
         Apis api;
         List<Apis> apisList = new ArrayList<>();
         //添加接口数据
         for (ApiDoc a : apiDocs) {
             api = new Apis();
             api.setName(StringUtils.isBlank(a.getDesc()) ? a.getName() : a.getDesc());
-            api.setItems(buildApis(a, hasDebugEnv));
+            api.setItems(buildApis(a.getList(), TornaUtil.setDebugEnv(apiConfig,tornaApi)));
             api.setIsFolder(TornaConstants.YES);
             apisList.add(api);
         }
-        tornaApi.setDebugEnvs(debugEnvs);
         tornaApi.setApis(apisList);
         //推送文档信息
-        Map<String, String> requestJson =
-                TornaConstants.buildParams(PUSH, new Gson().toJson(tornaApi), apiConfig);
+        Map<String, String> requestJson = TornaConstants.buildParams(PUSH, new Gson().toJson(tornaApi), apiConfig);
         //获取返回结果
         String responseMsg = OkHttp3Util.syncPostJson(apiConfig.getOpenUrl(), new Gson().toJson(requestJson));
         //开启调试时打印请求信息
-        if (apiConfig.isTornaDebug()) {
-            JsonElement element = JsonParser.parseString(responseMsg);
-            TornaRequestInfo info = new TornaRequestInfo()
-                    .of()
-                    .setCategory(PUSH)
-                    .setCode(element.getAsJsonObject().get(TornaConstants.CODE).getAsString())
-                    .setMessage(element.getAsJsonObject().get(TornaConstants.MESSAGE).getAsString())
-                    .setRequestInfo(requestJson)
-                    .setResponseInfo(responseMsg);
-            System.out.println(info.buildInfo());
-        }
+       TornaUtil.printDebugInfo(apiConfig,responseMsg,requestJson);
     }
-
-    /**
-     * build apis
-     * @param a api
-     * @param hasDebugEnv has debug environment
-     * @return List of Api
-     */
-    public static List<Apis> buildApis(ApiDoc a, boolean hasDebugEnv) {
-        List<ApiMethodDoc> apiMethodDocs = a.getList();
-        //参数列表
-        List<Apis> apis = new ArrayList<>();
-        Apis methodApi;
-        //遍历分类接口
-        for (ApiMethodDoc apiMethodDoc : apiMethodDocs) {
-            /**
-             *  "name": "获取商品信息",
-             *             "description": "获取商品信息",
-             *             "url": "/goods/get",
-             *             "httpMethod": "GET",
-             *             "contentType": "application/json",
-             *             "isFolder": "1",
-             *             "parentId": "",
-             *             "isShow": "1",
-             */
-            methodApi = new Apis();
-            methodApi.setIsFolder(TornaConstants.NO);
-            methodApi.setName(apiMethodDoc.getDesc());
-            methodApi.setUrl(hasDebugEnv ? apiMethodDoc.getPath() : apiMethodDoc.getUrl());
-            methodApi.setHttpMethod(apiMethodDoc.getType());
-            methodApi.setContentType(apiMethodDoc.getContentType());
-            methodApi.setDescription(apiMethodDoc.getDetail());
-            methodApi.setIsShow(TornaConstants.YES);
-
-            /**
-             *      {
-             *                     "name": "goodsName",
-             *                     "type": "string",
-             *                     "required": "1",
-             *                     "maxLength": "128",
-             *                     "example": "iphone12",
-             *                     "description": "商品名称描述",
-             *                     "parentId": "",
-             *                     "enumInfo": {
-             *                         "name": "支付枚举",
-             *                         "description": "支付状态",
-             *                         "items": [
-             *                             {
-             *                                 "name": "WAIT_PAY",
-             *                                 "type": "string",
-             *                                 "value": "0",
-             *                                 "description": "未支付"
-             *                             }
-             *                         ]
-             *                     }
-             *                 }
-             */
-            methodApi.setHeaderParams(buildHerder(apiMethodDoc.getRequestHeaders()));
-            methodApi.setResponseParams(buildParams(apiMethodDoc.getResponseParams()));
-            //Path
-            if (CollectionUtil.isNotEmpty(apiMethodDoc.getPathParams())) {
-                methodApi.setPathParams(buildParams(apiMethodDoc.getPathParams()));
-            }
-            //formData
-            if (CollectionUtil.isNotEmpty(apiMethodDoc.getQueryParams())) {
-                methodApi.setRequestParams(buildParams(apiMethodDoc.getQueryParams()));
-            }
-            //Json
-            if (CollectionUtil.isNotEmpty(apiMethodDoc.getRequestParams())) {
-                methodApi.setRequestParams(buildParams(apiMethodDoc.getRequestParams()));
-            }
-            apis.add(methodApi);
-        }
-        return apis;
-    }
-
-    /**
-     * build request header
-     *
-     * @param apiReqHeaders 请求头参数列表
-     * @return List of HttpParam
-     */
-    public static List<HttpParam> buildHerder(List<ApiReqHeader> apiReqHeaders) {
-        /**
-         * name": "token",
-         *                     "required": "1",
-         *                     "example": "iphone12",
-         *                     "description": "商品名称描述"
-         */
-        HttpParam httpParam;
-        List<HttpParam> headers = new ArrayList<>();
-        for (ApiReqHeader header : apiReqHeaders) {
-            httpParam = new HttpParam();
-            httpParam.setName(header.getName());
-            httpParam.setRequired(header.isRequired() ? TornaConstants.YES : TornaConstants.NO);
-            httpParam.setExample(StringUtil.removeQuotes(header.getValue()));
-            httpParam.setDescription(header.getDesc());
-            headers.add(httpParam);
-        }
-        return headers;
-    }
-
-    /**
-     * build  request response params
-     *
-     * @param apiParams 参数列表
-     * @return List of HttpParam
-     */
-    public static List<HttpParam> buildParams(List<ApiParam> apiParams) {
-        HttpParam httpParam;
-        List<HttpParam> bodies = new ArrayList<>();
-        /**
-         *                     "name": "goodsName",
-         *                     "type": "string",
-         *                     "required": "1",
-         *                     "maxLength": "128",
-         *                     "example": "iphone12",
-         *                     "description": "商品名称描述",
-         *                     "parentId": "",
-         *                     "enumInfo": {
-         *                         "name": "支付枚举",
-         *                         "description": "支付状态",
-         *                         "items": [
-         *                             {
-         *                                 "name": "WAIT_PAY",
-         *                                 "type": "string",
-         *                                 "value": "0",
-         *                                 "description": "未支付"
-         */
-        for (ApiParam apiParam : apiParams) {
-            httpParam = new HttpParam();
-            httpParam.setName(apiParam.getField());
-            httpParam.setMaxLength(apiParam.getMaxLength());
-            httpParam.setType(apiParam.getType());
-            httpParam.setRequired(apiParam.isRequired() ? TornaConstants.YES : TornaConstants.NO);
-            httpParam.setExample(StringUtil.removeQuotes(apiParam.getValue()));
-            httpParam.setDescription(apiParam.getDesc());
-            if (apiParam.getChildren() != null) {
-                httpParam.setChildren(buildParams(apiParam.getChildren()));
-            }
-            bodies.add(httpParam);
-        }
-        return bodies;
-    }
-
 }
 
