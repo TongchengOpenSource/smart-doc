@@ -36,6 +36,7 @@ public class Apis {
     private String isFolder;
     private String parentId;
     private String isShow;
+    private String author;
     private DubboInfo dubboInfo;
     private List<HttpParam> headerParams;
     private List<HttpParam> pathParams;
@@ -43,6 +44,14 @@ public class Apis {
     private List<HttpParam> responseParams;
     private String errorCodeParams;
     private List<Apis> items;
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
 
     public String getName() {
         return name;

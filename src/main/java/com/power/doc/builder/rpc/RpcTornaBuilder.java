@@ -64,6 +64,7 @@ public class RpcTornaBuilder {
             TornaUtil.setDebugEnv(apiConfig,tornaApi);
             api.setItems(buildDubboApis(a.getList()));
             api.setIsFolder(TornaConstants.YES);
+            api.setAuthor(apiConfig.getAuthor());
             api.setDubboInfo(new DubboInfo().builder()
             .setAuthor(a.getAuthor())
                     .setProtocol(a.getProtocol())

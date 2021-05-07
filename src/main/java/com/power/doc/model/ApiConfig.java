@@ -325,14 +325,14 @@ public class ApiConfig {
     /**
      * 是否为dubbo
      */
-    private boolean isDubbo;
+    private String  author;
 
-    public boolean isDubbo() {
-        return isDubbo;
+    public String getAuthor() {
+        return author;
     }
 
-    public void setDubbo(boolean dubbo) {
-        this.isDubbo = dubbo;
+    public void setAuthor(String author) {
+        this.author = author;
     }
 
     public boolean isTornaDebug() {

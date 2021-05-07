@@ -97,6 +97,7 @@ public class TornaUtil {
             methodApi.setContentType(apiMethodDoc.getContentType());
             methodApi.setDescription(apiMethodDoc.getDetail());
             methodApi.setIsShow(TornaConstants.YES);
+            methodApi.setAuthor(apiMethodDoc.getAuthor());
 
             /**
              *      {
@@ -167,6 +168,7 @@ public class TornaUtil {
             methodApi.setName(apiMethodDoc.getDesc());
             methodApi.setDescription(apiMethodDoc.getDetail());
             methodApi.setIsShow(TornaConstants.YES);
+            methodApi.setAuthor(apiMethodDoc.getAuthor());
             methodApi.setUrl(apiMethodDoc.getMethodDefinition());
 
             /**
