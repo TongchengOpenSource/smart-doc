@@ -46,7 +46,8 @@ import java.util.stream.Stream;
 
 import static com.power.doc.constants.DocGlobalConstants.FILE_CONTENT_TYPE;
 import static com.power.doc.constants.DocGlobalConstants.JSON_CONTENT_TYPE;
-import static com.power.doc.constants.DocTags.*;
+import static com.power.doc.constants.DocTags.IGNORE;
+import static com.power.doc.constants.DocTags.IGNORE_REQUEST_BODY_ADVICE;
 
 /**
  * @author yu 2019/12/21.
@@ -371,7 +372,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                         typeName = configBuilder.getApiConfig().getRequestBodyAdvice().getClassName();
                         gicTypeName = requestBodyAdvice + "<" + gicTypeName + ">";
 
-                   }
+                    }
 
                     if (JavaClassValidateUtil.isPrimitive(simpleTypeName)) {
                         StringBuilder builder = new StringBuilder();
@@ -420,7 +421,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                     gicName = gicName.substring(0, gicName.indexOf("["));
                 }
                 if (!JavaClassValidateUtil.isPrimitive(gicName)
-                        &&!configBuilder.getJavaProjectBuilder().getClassByName(gicName).isEnum()) {
+                        && !configBuilder.getJavaProjectBuilder().getClassByName(gicName).isEnum()) {
                     throw new RuntimeException("Spring MVC can't support binding Collection on method "
                             + method.getName() + "Check it in " + method.getDeclaringClass().getCanonicalName());
                 }
@@ -602,7 +603,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                         .setId(paramList.size() + 1).setQueryParam(true)
                         .setRequired(true).setVersion(DocGlobalConstants.DEFAULT_VERSION)
                         .setDesc(comment);
-                if (typeName.contains("[]")) {
+                if (typeName.contains("[]") || typeName.endsWith(">")) {
                     comment = comment + "(array of file)";
                     param.setDesc(comment);
                     param.setHasItems(true);
@@ -661,7 +662,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                     if (Objects.nonNull(builder.getApiConfig().getRequestBodyAdvice())
                             && Objects.isNull(javaMethod.getTagByName(IGNORE_REQUEST_BODY_ADVICE))) {
                         String requestBodyAdvice = builder.getApiConfig().getRequestBodyAdvice().getClassName();
-                       fullTypeName = typeName = requestBodyAdvice  + "<" + typeName + ">";
+                        fullTypeName = typeName = requestBodyAdvice + "<" + typeName + ">";
 
                     }
                     requestBodyCounter++;
@@ -683,7 +684,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                     gicName = gicName.substring(0, gicName.indexOf("["));
                 }
                 JavaClass gicJavaClass = builder.getJavaProjectBuilder().getClassByName(gicName);
-                if(gicJavaClass.isEnum()){
+                if (gicJavaClass.isEnum()) {
                     Object value = JavaClassUtil.getEnumValue(gicJavaClass, Boolean.TRUE);
                     ApiParam param = ApiParam.of().setField(paramName).setDesc(comment + ",[array of enum]")
                             .setRequired(required)
@@ -704,7 +705,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                             .setQueryParam(queryParam)
                             .setId(paramList.size() + 1)
                             .setType("array")
-                            .setValue(DocUtil.getValByTypeAndFieldName(gicName,paramName));
+                            .setValue(DocUtil.getValByTypeAndFieldName(gicName, paramName));
                     paramList.add(param);
                     if (requestBodyCounter > 0) {
                         Map<String, Object> map = OpenApiSchemaUtil.arrayTypeSchema(gicName);

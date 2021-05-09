@@ -36,13 +36,23 @@ public class Apis {
     private String isFolder;
     private String parentId;
     private String isShow;
+    private String author;
     private DubboInfo dubboInfo;
     private List<HttpParam> headerParams;
     private List<HttpParam> pathParams;
+    private List<HttpParam> queryParams;
     private List<HttpParam> requestParams;
     private List<HttpParam> responseParams;
     private String errorCodeParams;
     private List<Apis> items;
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
 
     public String getName() {
         return name;
@@ -108,6 +118,13 @@ public class Apis {
         this.isShow = isShow;
     }
 
+    public List<HttpParam> getQueryParams() {
+        return queryParams;
+    }
+
+    public void setQueryParams(List<HttpParam> queryParams) {
+        this.queryParams = queryParams;
+    }
 
     public List<HttpParam> getRequestParams() {
         return requestParams;

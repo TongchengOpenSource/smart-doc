@@ -97,6 +97,7 @@ public class TornaUtil {
             methodApi.setContentType(apiMethodDoc.getContentType());
             methodApi.setDescription(apiMethodDoc.getDetail());
             methodApi.setIsShow(TornaConstants.YES);
+            methodApi.setAuthor(apiMethodDoc.getAuthor());
 
             /**
              *      {
@@ -129,7 +130,7 @@ public class TornaUtil {
             }
             //formData
             if (CollectionUtil.isNotEmpty(apiMethodDoc.getQueryParams())) {
-                methodApi.setRequestParams(buildParams(apiMethodDoc.getQueryParams()));
+                methodApi.setQueryParams(buildParams(apiMethodDoc.getQueryParams()));
             }
             //Json
             if (CollectionUtil.isNotEmpty(apiMethodDoc.getRequestParams())) {
@@ -167,6 +168,7 @@ public class TornaUtil {
             methodApi.setName(apiMethodDoc.getDesc());
             methodApi.setDescription(apiMethodDoc.getDetail());
             methodApi.setIsShow(TornaConstants.YES);
+            methodApi.setAuthor(apiMethodDoc.getAuthor());
             methodApi.setUrl(apiMethodDoc.getMethodDefinition());
 
             /**
