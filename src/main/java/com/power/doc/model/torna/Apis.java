@@ -40,6 +40,7 @@ public class Apis {
     private DubboInfo dubboInfo;
     private List<HttpParam> headerParams;
     private List<HttpParam> pathParams;
+    private List<HttpParam> queryParams;
     private List<HttpParam> requestParams;
     private List<HttpParam> responseParams;
     private String errorCodeParams;
@@ -117,6 +118,13 @@ public class Apis {
         this.isShow = isShow;
     }
 
+    public List<HttpParam> getQueryParams() {
+        return queryParams;
+    }
+
+    public void setQueryParams(List<HttpParam> queryParams) {
+        this.queryParams = queryParams;
+    }
 
     public List<HttpParam> getRequestParams() {
         return requestParams;

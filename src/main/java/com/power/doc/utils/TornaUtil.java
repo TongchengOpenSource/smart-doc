@@ -130,7 +130,7 @@ public class TornaUtil {
             }
             //formData
             if (CollectionUtil.isNotEmpty(apiMethodDoc.getQueryParams())) {
-                methodApi.setRequestParams(buildParams(apiMethodDoc.getQueryParams()));
+                methodApi.setQueryParams(buildParams(apiMethodDoc.getQueryParams()));
             }
             //Json
             if (CollectionUtil.isNotEmpty(apiMethodDoc.getRequestParams())) {
