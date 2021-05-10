@@ -28,10 +28,7 @@ import com.power.doc.builder.ProjectDocConfigBuilder;
 import com.power.doc.constants.DocTags;
 import com.power.doc.helper.ParamsBuildHelper;
 import com.power.doc.model.*;
-import com.power.doc.utils.DocClassUtil;
-import com.power.doc.utils.DocUtil;
-import com.power.doc.utils.JavaClassValidateUtil;
-import com.power.doc.utils.OpenApiSchemaUtil;
+import com.power.doc.utils.*;
 import com.thoughtworks.qdox.model.DocletTag;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaMethod;
@@ -80,9 +77,12 @@ public interface IDocBuildTemplate<T> {
     default void handleApiDoc(JavaClass cls, List<ApiDoc> apiDocList, List<ApiMethodDoc> apiMethodDocs, int order, boolean isUseMD5) {
         String controllerName = cls.getName();
         ApiDoc apiDoc = new ApiDoc();
+        String classAuthor = JavaClassUtil.getClassTagsValue(cls, DocTags.AUTHOR, Boolean.TRUE);
         apiDoc.setOrder(order);
         apiDoc.setName(controllerName);
+        apiDoc.setAuthor(classAuthor);
         apiDoc.setAlias(controllerName);
+        //apiDoc.setAuthor();
         if (isUseMD5) {
             String name = DocUtil.generateId(apiDoc.getName());
             apiDoc.setAlias(name);

@@ -99,7 +99,7 @@ public class TornaBuilder {
             api.setName(StringUtils.isBlank(a.getDesc()) ? a.getName() : a.getDesc());
             api.setItems(buildApis(a.getList(), TornaUtil.setDebugEnv(apiConfig,tornaApi)));
             api.setIsFolder(TornaConstants.YES);
-            api.setAuthor(apiConfig.getAuthor());
+            api.setAuthor(a.getAuthor());
             apisList.add(api);
         }
         tornaApi.setApis(apisList);

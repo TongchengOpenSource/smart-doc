@@ -40,7 +40,7 @@ public class ApiDocTest {
         config.setAppToken("258e853573d44ef4a3e2caebdcafbc0f");
         config.setSecret("W.ZyGMOB9Q0UqujVxnfi@.I#V&tUUYZR");
         config.setDebugEnvName("测试环境");
-        config.setAuthor("test");
+//        config.setAuthor("test");
         config.setDebugEnvUrl("http://127.0.0.1");
        //config.setTornaDebug(true);
 
