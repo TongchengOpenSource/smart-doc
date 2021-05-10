@@ -90,6 +90,7 @@ public class TornaBuilder {
      */
     public static void buildTorna(List<ApiDoc> apiDocs, ApiConfig apiConfig) {
         TornaApi tornaApi = new TornaApi();
+        tornaApi.setAuthor(StringUtil.isEmpty(apiConfig.getAuthor()) ? System.getProperty("user.name") : apiConfig.getAuthor());
         Apis api;
         List<Apis> apisList = new ArrayList<>();
         //添加接口数据

@@ -35,11 +35,12 @@ public class ApiDocTest {
         ApiConfig config = new ApiConfig();
         config.setServerUrl("http://127.0.0.1:8899");
         //config.setStrict(true);
-        config.setOpenUrl("http://127.0.0.1:8899/api");
+        config.setOpenUrl("http://demo.torna.cn/api");
         config.setAppKey("20201216788835306945118208");
-        config.setAppToken("c16931fa6590483fb7a4e85340fcbfef");
+        config.setAppToken("258e853573d44ef4a3e2caebdcafbc0f");
         config.setSecret("W.ZyGMOB9Q0UqujVxnfi@.I#V&tUUYZR");
         config.setDebugEnvName("测试环境");
+        config.setAuthor("test");
         config.setDebugEnvUrl("http://127.0.0.1");
        //config.setTornaDebug(true);
 

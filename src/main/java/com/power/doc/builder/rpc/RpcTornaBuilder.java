@@ -2,6 +2,7 @@ package com.power.doc.builder.rpc;
 
 import com.google.gson.Gson;
 import com.power.common.util.OkHttp3Util;
+import com.power.common.util.StringUtil;
 import com.power.doc.builder.ProjectDocConfigBuilder;
 import com.power.doc.constants.TornaConstants;
 import com.power.doc.model.ApiConfig;
@@ -52,9 +53,9 @@ public class RpcTornaBuilder {
         List<RpcApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder);
         buildTorna(apiDocList, config);
     }
-
     public static void buildTorna(List<RpcApiDoc> apiDocs, ApiConfig apiConfig) {
         TornaApi tornaApi = new TornaApi();
+        tornaApi.setAuthor(StringUtil.isEmpty(apiConfig.getAuthor()) ? System.getProperty("user.name") : apiConfig.getAuthor());
         Apis api;
         List<Apis> apisList = new ArrayList<>();
         //添加接口数据
@@ -64,7 +65,7 @@ public class RpcTornaBuilder {
             TornaUtil.setDebugEnv(apiConfig,tornaApi);
             api.setItems(buildDubboApis(a.getList()));
             api.setIsFolder(TornaConstants.YES);
-            api.setAuthor(apiConfig.getAuthor());
+            api.setAuthor(a.getAuthor());
             api.setDubboInfo(new DubboInfo().builder()
             .setAuthor(a.getAuthor())
                     .setProtocol(a.getProtocol())

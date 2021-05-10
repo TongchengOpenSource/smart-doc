@@ -40,6 +40,15 @@ public class TornaApi {
      */
     List<DebugEnv> debugEnvs;
     List<Apis> apis;
+    String author;
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
 
     public List<DebugEnv> getDebugEnvs() {
         return debugEnvs;
