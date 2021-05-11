@@ -23,32 +23,24 @@
 package com.power.doc.builder;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
-import com.power.common.net.SSLSocketFactoryBuilder;
-import com.power.common.net.TrustAnyTrustManager;
-import com.power.common.util.CollectionUtil;
 import com.power.common.util.OkHttp3Util;
 import com.power.common.util.StringUtil;
 import com.power.doc.constants.TornaConstants;
-import com.power.doc.model.*;
-import com.power.doc.model.torna.*;
+import com.power.doc.model.ApiConfig;
+import com.power.doc.model.ApiDoc;
+import com.power.doc.model.torna.Apis;
+import com.power.doc.model.torna.TornaApi;
 import com.power.doc.template.SpringBootDocBuildTemplate;
 import com.power.doc.utils.TornaUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
-import okhttp3.*;
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
-import static com.power.doc.constants.TornaConstants.CATEGORY_CREATE;
 import static com.power.doc.constants.TornaConstants.PUSH;
-import static com.power.doc.utils.TornaUtil.*;
+import static com.power.doc.utils.TornaUtil.buildApis;
 
 
 /**
