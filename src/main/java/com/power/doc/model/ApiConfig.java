@@ -527,12 +527,12 @@ public class ApiConfig {
         this.dataDictionaries = CollectionUtil.asList(dataDictConfigs);
     }
 
-    public ApiDataDictionary getDataDictionary(String enumClassSimpleName) {
+    public ApiDataDictionary getDataDictionary(String enumClassName) {
         if (Objects.isNull(this.dataDictionaries)) {
             return null;
         }
         return this.dataDictionaries.stream().filter((apiDataDictionary ->
-                enumClassSimpleName.equalsIgnoreCase(apiDataDictionary.getEnumClassName())))
+                enumClassName.equalsIgnoreCase(apiDataDictionary.getEnumClassName())))
                 .findFirst().orElse(new ApiDataDictionary());
     }
 

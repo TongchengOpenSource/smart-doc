@@ -466,7 +466,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             url = UrlUtil.simplifyUrl(url);
 
             if (requestExample.isJson()) {
-                if (StringUtil.isNotEmpty(requestExample.getJsonBody())) {
+                if (StringUtil.isNotEmpty(body)) {
                     url = url + "?" + body;
                 }
                 CurlRequest curlRequest = CurlRequest.builder()

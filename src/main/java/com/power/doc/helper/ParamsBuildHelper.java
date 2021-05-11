@@ -489,7 +489,7 @@ public class ParamsBuildHelper {
         }
         String enumComments = javaClass.getComment();
         if (projectBuilder.getApiConfig().getInlineEnum()) {
-            ApiDataDictionary dataDictionary = projectBuilder.getApiConfig().getDataDictionary(javaClass.getSimpleName());
+            ApiDataDictionary dataDictionary = projectBuilder.getApiConfig().getDataDictionary(javaClass.getCanonicalName());
             if (Objects.isNull(dataDictionary)) {
                 comment = comment + "<br/>" + JavaClassUtil.getEnumParams(javaClass);
             } else {
