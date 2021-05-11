@@ -270,6 +270,9 @@ public class ApiConfig {
      */
     private BodyAdvice responseBodyAdvice;
 
+    /**
+     * @since 2.1.4
+     */
     private BodyAdvice requestBodyAdvice;
 
     private String style;
@@ -322,8 +325,9 @@ public class ApiConfig {
      * torna调试开关
      */
     private boolean tornaDebug = true;
+
     /**
-     * 是否为dubbo
+     * 推送人
      */
     private String  author;
 
