@@ -331,6 +331,32 @@ public class ApiConfig {
      */
     private String  author;
 
+    /**
+     * yapi server url
+     */
+    private String yapiServerUrl;
+    /**
+     * yapi project token
+     */
+    private String yapiToken;
+
+
+    public String getYapiServerUrl() {
+        return yapiServerUrl;
+    }
+
+    public void setYapiServerUrl(String yapiServerUrl) {
+        this.yapiServerUrl = yapiServerUrl;
+    }
+
+    public String getYapiToken() {
+        return yapiToken;
+    }
+
+    public void setYapiToken(String yapiToken) {
+        this.yapiToken = yapiToken;
+    }
+
     public String getAuthor() {
         return author;
     }

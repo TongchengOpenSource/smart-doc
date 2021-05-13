@@ -176,6 +176,7 @@ public class DocClassUtil {
         }
         switch (javaTypeName) {
             case "java.lang.String":
+            case "String":
             case "string":
             case "char":
             case "date":
@@ -214,6 +215,7 @@ public class DocClassUtil {
                 return "double";
             case "java.lang.Long":
             case "long":
+            case "Long":
                 return "int64";
             case "java.lang.Float":
             case "float":

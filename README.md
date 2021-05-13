@@ -119,6 +119,8 @@ When you need to use smart-doc to generate more API document information, you ca
   "secret": "xx",//torna secret，@since 2.0.9
   "openUrl": "torna server/api/",//torna server url,@since 2.0.9
   "tornaDebug":false,"// show log while set true
+  "yapiServerUrl": "https://yapi.mock.com", // yapi server url
+  "yapiToken": "xxx", // yapi project token
   "ignoreRequestParams":[ //The request parameter object will be discarded when generating the document.@since 1.9.2
        "org.springframework.ui.ModelMap"
   ],
