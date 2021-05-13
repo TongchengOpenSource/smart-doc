@@ -184,7 +184,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             apiMethodDoc.setOrder(methodOrder);
             String comment = DocUtil.getEscapeAndCleanComment(method.getComment());
             apiMethodDoc.setDesc(comment);
-            String methodUid = DocUtil.generateId(clazName + method.getName());
+            String methodUid = DocUtil.generateId(clazName + method.getName() + UUID.randomUUID());
             apiMethodDoc.setMethodId(methodUid);
             String apiNoteValue = DocUtil.getNormalTagComments(method, DocTags.API_NOTE, cls.getName());
             if (StringUtil.isEmpty(apiNoteValue)) {
