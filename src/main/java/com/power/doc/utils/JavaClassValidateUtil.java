@@ -268,9 +268,10 @@ public class JavaClassValidateUtil {
         switch (typeName) {
             case "org.springframework.web.multipart.MultipartFile":
             case "org.springframework.web.multipart.MultipartFile[]":
+            case "java.util.List<org.springframework.web.multipart.MultipartFile>":
             case "org.springframework.web.multipart.commons.CommonsMultipartFile":
             case "org.springframework.web.multipart.commons.CommonsMultipartFile[]":
-            case "java.util.List<org.springframework.web.multipart.MultipartFile>":
+            case "java.util.List<org.springframework.web.multipart.commons.CommonsMultipartFile>":
                 return true;
             default:
                 return false;
