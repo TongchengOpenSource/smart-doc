@@ -38,6 +38,9 @@ smart-doc + [Torna](http://torna.cn) 组成行业领先的文档生成和管理�
 ![smart-doc+torna](https://gitee.com/smart-doc-team/smart-doc/raw/master/images/smart-doc-torna.png)
 
 [smart-doc+Torna文档自动化](https://gitee.com/smart-doc-team/smart-doc/wikis/smart-doc与torna对接?sort_id=3695028)
+
+> Torna是由smart-doc官方独家推动联合研发的企业级文档管理系统，因此smart-doc官方不会对接其它任何的外部文档管理系统，例如像showdoc、yapi
+之类的对接请自定内部处理，也不要再给我们提其他文档系统对接的PR。我们核心是把smart-doc+Torna的这套方案打造好。
 ## Getting Started
 smart-doc使用和测试可参考[smart-doc demo](https://gitee.com/devin-alan/api-doc-test.git)。
 ```
@@ -224,6 +227,9 @@ mvn -Dfile.encoding=UTF-8 smart-doc:rpc-html
 mvn -Dfile.encoding=UTF-8 smart-doc:rpc-markdown
 // Generate adoc
 mvn -Dfile.encoding=UTF-8 smart-doc:rpc-adoc
+
+// 生成dubbo接口文档推送到torna
+mvn -Dfile.encoding=UTF-8 smart-doc:torna-rpc
 ```
 **注意：** 尤其在window系统下，如果实际使用Maven命令行执行文档生成，可能会出现乱码，因此需要在执行时指定`-Dfile.encoding=UTF-8`。
 #### Use in IDEA

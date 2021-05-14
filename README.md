@@ -205,6 +205,8 @@ mvn -Dfile.encoding=UTF-8 smart-doc:rpc-html
 mvn -Dfile.encoding=UTF-8 smart-doc:rpc-markdown
 // Generate adoc
 mvn -Dfile.encoding=UTF-8 smart-doc:rpc-adoc
+// Push dubbo rpc document to Torna
+mvn -Dfile.encoding=UTF-8 smart-doc:torna-rpc
 ```
 **Note:** Under the window system, if you use the maven command line to perform document generation, 
 non-English characters may be garbled, so you need to specify `-Dfile.encoding = UTF-8` during execution.
