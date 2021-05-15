@@ -848,10 +848,11 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         if (Objects.nonNull(commentClass) && !DocGlobalConstants.NO_COMMENTS_FOUND.equals(commentClass)) {
             String[] comments = commentClass.split("\\|");
             rewriteClassName = comments[comments.length - 1];
-        } else {
-            rewriteClassName = replacementMap.get(fullTypeName);
+            if (DocUtil.isClassName(rewriteClassName)) {
+                return rewriteClassName;
+            }
         }
-        return rewriteClassName;
+        return replacementMap.get(fullTypeName);
     }
 
     private String createMockValue(Map<String, String> paramsComments, String paramName, String typeName, String simpleTypeName) {

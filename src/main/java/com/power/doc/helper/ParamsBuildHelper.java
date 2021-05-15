@@ -151,17 +151,17 @@ public class ParamsBuildHelper {
                 boolean strRequired = false;
                 int annotationCounter = 0;
                 CustomField customResponseField = responseFieldMap.get(fieldName);
-                if (customResponseField != null && JavaClassUtil.isTargetChildClass(simpleName,customResponseField.getOwnerClassName()) && (customResponseField.isIgnore()) && isResp) {
+                if (customResponseField != null && JavaClassUtil.isTargetChildClass(simpleName, customResponseField.getOwnerClassName()) && (customResponseField.isIgnore()) && isResp) {
                     continue;
                 }
                 CustomField customRequestField = projectBuilder.getCustomReqFieldMap().get(fieldName);
-                if (customRequestField != null && JavaClassUtil.isTargetChildClass(simpleName,customRequestField.getOwnerClassName())&& (customRequestField.isIgnore()) && !isResp) {
+                if (customRequestField != null && JavaClassUtil.isTargetChildClass(simpleName, customRequestField.getOwnerClassName()) && (customRequestField.isIgnore()) && !isResp) {
                     continue;
                 }
                 an:
                 for (JavaAnnotation annotation : javaAnnotations) {
                     String simpleAnnotationName = annotation.getType().getValue();
-                    if ("max".equals(simpleAnnotationName.toLowerCase())) {
+                    if ("max".equalsIgnoreCase(simpleAnnotationName)) {
                         maxLength = annotation.getProperty(DocAnnotationConstants.VALUE_PROP).toString();
                     }
                     if (DocAnnotationConstants.SHORT_JSON_IGNORE.equals(simpleAnnotationName)) {
@@ -203,6 +203,16 @@ public class ParamsBuildHelper {
                         break an;
                     }
                 }
+                String fieldValue = "";
+                if (tagsMap.containsKey(DocTags.MOCK) && StringUtil.isNotEmpty(tagsMap.get(DocTags.MOCK))) {
+                    fieldValue = tagsMap.get(DocTags.MOCK);
+                    if (!DocUtil.javaPrimaryType(typeSimpleName)
+                            && !JavaClassValidateUtil.isCollection(subTypeName)
+                            && !JavaClassValidateUtil.isMap(subTypeName)
+                            && !JavaClassValidateUtil.isArray(subTypeName)) {
+                        fieldValue = DocUtil.handleJsonStr(fieldValue);
+                    }
+                }
                 if (annotationCounter < 1) {
                     doc:
                     if (tagsMap.containsKey(DocTags.REQUIRED)) {
@@ -211,18 +221,18 @@ public class ParamsBuildHelper {
                     }
                 }
                 //cover required
-                if (customRequestField != null && !isResp && JavaClassUtil.isTargetChildClass(simpleName,customRequestField.getOwnerClassName())
+                if (customRequestField != null && !isResp && JavaClassUtil.isTargetChildClass(simpleName, customRequestField.getOwnerClassName())
                         && customRequestField.isRequire()) {
                     strRequired = true;
                 }
                 //cover comment
                 String comment = "";
                 if (null != customRequestField && StringUtil.isNotEmpty(customRequestField.getDesc())
-                        && JavaClassUtil.isTargetChildClass(simpleName,customRequestField.getOwnerClassName()) && !isResp) {
+                        && JavaClassUtil.isTargetChildClass(simpleName, customRequestField.getOwnerClassName()) && !isResp) {
                     comment = customRequestField.getDesc();
                 }
                 if (null != customResponseField && StringUtil.isNotEmpty(customResponseField.getDesc())
-                        && JavaClassUtil.isTargetChildClass(simpleName,customResponseField.getOwnerClassName()) && isResp) {
+                        && JavaClassUtil.isTargetChildClass(simpleName, customResponseField.getOwnerClassName()) && isResp) {
                     comment = customResponseField.getDesc();
                 }
                 if (StringUtils.isBlank(comment)) {
@@ -241,10 +251,7 @@ public class ParamsBuildHelper {
                     continue;
                 }
                 if (JavaClassValidateUtil.isPrimitive(subTypeName)) {
-                    String fieldValue = "";
-                    if (tagsMap.containsKey(DocTags.MOCK) && StringUtil.isNotEmpty(tagsMap.get(DocTags.MOCK))) {
-                        fieldValue = tagsMap.get(DocTags.MOCK);
-                    } else {
+                    if (StringUtil.isEmpty(fieldValue)) {
                         fieldValue = DocUtil.getValByTypeAndFieldName(typeSimpleName, field.getName());
                     }
                     ApiParam param = ApiParam.of().setField(pre + fieldName);
@@ -315,7 +322,7 @@ public class ParamsBuildHelper {
                             }
                             index++;
                         }
-                        Object value = JavaClassUtil.getEnumValue(javaClass,!jsonRequest);
+                        Object value = JavaClassUtil.getEnumValue(javaClass, !jsonRequest);
                         param.setValue(String.valueOf(value));
                         param.setEnumValues(JavaClassUtil.getEnumValues(javaClass));
                         param.setType(DocGlobalConstants.ENUM);
@@ -364,9 +371,16 @@ public class ParamsBuildHelper {
                             continue out;
                         }
                         String gName = DocClassUtil.getSimpleGicName(gNameTemp)[0];
+
                         if (!JavaClassValidateUtil.isPrimitive(gName)) {
                             if (!simpleName.equals(gName) && !gName.equals(simpleName)) {
-                                if (gName.length() == 1) {
+                                JavaClass arraySubClass = projectBuilder.getJavaProjectBuilder().getClassByName(gName);
+                                if (arraySubClass.isEnum()) {
+                                    Object value = JavaClassUtil.getEnumValue(arraySubClass, Boolean.FALSE);
+                                    StringBuilder sb = new StringBuilder();
+                                    sb.append("[\"").append(value).append("\"]");
+                                    param.setValue(sb.toString());
+                                } else if (gName.length() == 1) {
                                     // handle generic
                                     int len = globGicName.length;
                                     if (len < 1) {
@@ -388,7 +402,11 @@ public class ParamsBuildHelper {
                                     "," +
                                     DocUtil.jsonValueByType(gName) +
                                     "]";
-                            param.setValue(DocUtil.handleJsonStr(builder));
+                            if (StringUtil.isEmpty(fieldValue)) {
+                                param.setValue(DocUtil.handleJsonStr(builder));
+                            } else {
+                                param.setValue(fieldValue);
+                            }
                         }
                     } else if (subTypeName.length() == 1 || DocGlobalConstants.JAVA_OBJECT_FULLY.equals(subTypeName)) {
                         // handle java generic or object
