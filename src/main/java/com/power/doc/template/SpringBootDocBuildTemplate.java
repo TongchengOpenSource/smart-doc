@@ -825,7 +825,10 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
     }
 
     private boolean checkController(JavaClass cls) {
-        List<JavaAnnotation> classAnnotations = cls.getAnnotations();
+        JavaClass superClass = cls.getSuperJavaClass();
+        List<JavaAnnotation> classAnnotations = new ArrayList<>();
+        classAnnotations.addAll(superClass.getAnnotations());
+        classAnnotations.addAll(cls.getAnnotations());
         for (JavaAnnotation annotation : classAnnotations) {
             String name = annotation.getType().getValue();
             if (SpringMvcAnnotations.CONTROLLER.equals(name) || SpringMvcAnnotations.REST_CONTROLLER.equals(name)) {
@@ -912,7 +915,8 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
     }
 
     private List<JavaAnnotation> getAnnotations(JavaClass cls) {
-        List<JavaAnnotation> annotationsList = cls.getAnnotations();
+        List<JavaAnnotation> annotationsList = new ArrayList<>();
+        annotationsList.addAll(cls.getAnnotations());
         boolean flag = annotationsList.stream().anyMatch(item -> {
             String annotationName = item.getType().getValue();
             if (DocAnnotationConstants.REQUEST_MAPPING.equals(annotationName) ||
