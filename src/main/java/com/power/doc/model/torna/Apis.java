@@ -138,6 +138,10 @@ public class Apis {
         return headerParams;
     }
 
+    public void setHeaderParams(List<HttpParam> headerParams) {
+        this.headerParams = headerParams;
+    }
+
     public List<HttpParam> getPathParams() {
         return pathParams;
     }
@@ -145,10 +149,6 @@ public class Apis {
     public Apis setPathParams(List<HttpParam> pathParams) {
         this.pathParams = pathParams;
         return this;
-    }
-
-    public void setHeaderParams(List<HttpParam> headerParams) {
-        this.headerParams = headerParams;
     }
 
     public List<HttpParam> getResponseParams() {
@@ -171,15 +171,15 @@ public class Apis {
         return items;
     }
 
+    public void setItems(List<Apis> items) {
+        this.items = items;
+    }
+
     public DubboInfo getDubboInfo() {
         return dubboInfo;
     }
 
     public void setDubboInfo(DubboInfo dubboInfo) {
         this.dubboInfo = dubboInfo;
-    }
-
-    public void setItems(List<Apis> items) {
-        this.items = items;
     }
 }

@@ -49,6 +49,10 @@ public class CustomField {
 
     private boolean ignore;
 
+    public static CustomField builder() {
+        return new CustomField();
+    }
+
     public boolean isRequire() {
         return require;
     }
@@ -56,9 +60,6 @@ public class CustomField {
     public CustomField setRequire(boolean require) {
         this.require = require;
         return this;
-    }
-    public static CustomField builder() {
-        return new CustomField();
     }
 
     public String getName() {

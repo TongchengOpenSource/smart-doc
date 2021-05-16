@@ -4,7 +4,7 @@
   "allInOne": true,
   "outPath": "D://md2",
   "coverOld": true,
-  "allInOneDocFileName":"demoProject.html",
+  "allInOneDocFileName": "demoProject.html",
   "packageFilters": "",
   "md5EncryptedHtmlName": false,
   "projectName": "smart-doc",

@@ -28,11 +28,11 @@ package com.power.doc.model.torna;
 public class Item {
     /**
      * {
-     *      *                                 "name": "WAIT_PAY",
-     *      *                                 "type": "string",
-     *      *                                 "value": "0",
-     *      *                                 "description": "未支付"
-     *      *                             }
+     * *                                 "name": "WAIT_PAY",
+     * *                                 "type": "string",
+     * *                                 "value": "0",
+     * *                                 "description": "未支付"
+     * *                             }
      */
     private String name;
     private String type;

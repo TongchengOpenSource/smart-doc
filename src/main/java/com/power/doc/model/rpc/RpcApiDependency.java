@@ -66,10 +66,10 @@ public class RpcApiDependency {
 
     @Override
     public String toString() {
-        return "<dependency>"+"\r"+
-                "\t"+"<groupId>" + groupId + "</groupId>" +"\n"+
-                "\t"+"<artifactId>" + artifactId + "</artifactId>" +"\n"+
-                "\t"+ "<version>" + version + "</version>" +""+
-                "\r"+"</dependency>";
+        return "<dependency>" + "\r" +
+                "\t" + "<groupId>" + groupId + "</groupId>" + "\n" +
+                "\t" + "<artifactId>" + artifactId + "</artifactId>" + "\n" +
+                "\t" + "<version>" + version + "</version>" + "" +
+                "\r" + "</dependency>";
     }
 }

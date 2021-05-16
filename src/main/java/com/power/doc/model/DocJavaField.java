@@ -32,7 +32,7 @@ import java.util.List;
 /**
  * @author yu 2020/3/19.
  */
-public class DocJavaField  {
+public class DocJavaField {
 
     /**
      * field info

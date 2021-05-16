@@ -9,6 +9,7 @@
 ```
 
 Consumer config
+
 ```
 dubbo:
   registry:

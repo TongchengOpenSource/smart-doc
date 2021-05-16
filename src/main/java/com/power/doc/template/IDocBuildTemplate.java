@@ -132,8 +132,8 @@ public interface IDocBuildTemplate<T> {
                     docJavaMethod.setReturnSchema(OpenApiSchemaUtil.arrayTypeSchema(gicName));
                     return new ArrayList<>(0);
                 }
-                return ParamsBuildHelper.buildParams(gicName, "", 0, null, projectBuilder.getCustomRespFieldMap(),
-                        Boolean.TRUE, new HashMap<>(), projectBuilder, null, 0, Boolean.FALSE);
+                return ParamsBuildHelper.buildParams(gicName, "", 0, null, Boolean.TRUE,
+                        new HashMap<>(), projectBuilder, null, 0, Boolean.FALSE);
             } else {
                 return new ArrayList<>(0);
             }
@@ -147,12 +147,12 @@ public interface IDocBuildTemplate<T> {
                 docJavaMethod.setReturnSchema(OpenApiSchemaUtil.mapTypeSchema(keyValue[1]));
                 return new ArrayList<>(0);
             }
-            return ParamsBuildHelper.buildParams(keyValue[1], "", 0, null, projectBuilder.getCustomRespFieldMap(),
-                    Boolean.TRUE, new HashMap<>(), projectBuilder, null, 0, Boolean.FALSE);
+            return ParamsBuildHelper.buildParams(keyValue[1], "", 0, null, Boolean.TRUE,
+                    new HashMap<>(), projectBuilder, null, 0, Boolean.FALSE);
         }
         if (StringUtil.isNotEmpty(returnType)) {
-            return ParamsBuildHelper.buildParams(returnType, "", 0, null, projectBuilder.getCustomRespFieldMap(),
-                    Boolean.TRUE, new HashMap<>(), projectBuilder, null, 0, Boolean.FALSE);
+            return ParamsBuildHelper.buildParams(returnType, "", 0, null, Boolean.TRUE,
+                    new HashMap<>(), projectBuilder, null, 0, Boolean.FALSE);
         }
         return new ArrayList<>(0);
     }

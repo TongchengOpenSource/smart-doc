@@ -26,7 +26,7 @@ public class Main {
     public static void main(String[] args) {
         String artifactId = "ksharding-jdbc";
         new HashMap<>();
-        ConcurrentHashMap<String,String> map = new ConcurrentHashMap<>();
+        ConcurrentHashMap<String, String> map = new ConcurrentHashMap<>();
         map.size();
         System.out.println(ignoreArtifactById(artifactId));
     }

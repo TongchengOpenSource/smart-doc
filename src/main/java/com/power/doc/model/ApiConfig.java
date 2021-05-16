@@ -25,10 +25,7 @@ package com.power.doc.model;
 import com.power.common.util.CollectionUtil;
 import com.power.doc.constants.DocLanguage;
 import com.power.doc.model.rpc.RpcApiDependency;
-import com.power.doc.model.torna.DebugEnv;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -253,19 +250,22 @@ public class ApiConfig {
 
     /**
      * request ignore param
-     * @since 1.9.2
+     *
      * @return
+     * @since 1.9.2
      */
     private List<String> ignoreRequestParams;
 
     /**
      * display actual type of generic
+     *
      * @since 1.9.6
      */
     private boolean displayActualType;
 
     /**
      * Support Spring MVC ResponseBodyAdvice
+     *
      * @since 1.9.8
      */
     private BodyAdvice responseBodyAdvice;
@@ -284,6 +284,7 @@ public class ApiConfig {
 
     /**
      * Spring MVC url suffix
+     *
      * @since 2.1.0
      */
     private String urlSuffix;
@@ -329,7 +330,7 @@ public class ApiConfig {
     /**
      * 推送人
      */
-    private String  author;
+    private String author;
 
     public String getAuthor() {
         return author;
@@ -345,42 +346,6 @@ public class ApiConfig {
 
     public void setTornaDebug(boolean tornaDebug) {
         this.tornaDebug = tornaDebug;
-    }
-
-    public void setSourceCodePaths(List<SourceCodePath> sourceCodePaths) {
-        this.sourceCodePaths = sourceCodePaths;
-    }
-
-    public void setRequestHeaders(List<ApiReqHeader> requestHeaders) {
-        this.requestHeaders = requestHeaders;
-    }
-
-    public void setCustomResponseFields(List<CustomField> customResponseFields) {
-        this.customResponseFields = customResponseFields;
-    }
-
-    public void setRevisionLogs(List<RevisionLog> revisionLogs) {
-        this.revisionLogs = revisionLogs;
-    }
-
-    public void setDataDictionaries(List<ApiDataDictionary> dataDictionaries) {
-        this.dataDictionaries = dataDictionaries;
-    }
-
-    public void setErrorCodeDictionaries(List<ApiErrorCodeDictionary> errorCodeDictionaries) {
-        this.errorCodeDictionaries = errorCodeDictionaries;
-    }
-
-    public void setApiObjectReplacements(List<ApiObjectReplacement> apiObjectReplacements) {
-        this.apiObjectReplacements = apiObjectReplacements;
-    }
-
-    public void setRpcApiDependencies(List<RpcApiDependency> rpcApiDependencies) {
-        this.rpcApiDependencies = rpcApiDependencies;
-    }
-
-    public void setApiConstants(List<ApiConstant> apiConstants) {
-        this.apiConstants = apiConstants;
     }
 
     public String getAppKey() {
@@ -443,6 +408,10 @@ public class ApiConfig {
         return requestHeaders;
     }
 
+    public void setRequestHeaders(List<ApiReqHeader> requestHeaders) {
+        this.requestHeaders = requestHeaders;
+    }
+
     public void setRequestHeaders(ApiReqHeader... requestHeaders) {
         this.requestHeaders = CollectionUtil.asList(requestHeaders);
         this.requestHeaders.stream().map(header -> header.setDesc(header.getDesc() + "(Global)"))
@@ -453,10 +422,13 @@ public class ApiConfig {
         return customResponseFields;
     }
 
+    public void setCustomResponseFields(List<CustomField> customResponseFields) {
+        this.customResponseFields = customResponseFields;
+    }
+
     public void setCustomResponseFields(CustomField... customResponseFields) {
         this.customResponseFields = CollectionUtil.asList(customResponseFields);
     }
-
 
     public List<ApiErrorCode> getErrorCodes() {
         return errorCodes;
@@ -468,6 +440,10 @@ public class ApiConfig {
 
     public List<SourceCodePath> getSourceCodePaths() {
         return sourceCodePaths;
+    }
+
+    public void setSourceCodePaths(List<SourceCodePath> sourceCodePaths) {
+        this.sourceCodePaths = sourceCodePaths;
     }
 
     public void setSourceCodePaths(SourceCodePath... sourcePaths) {
@@ -494,10 +470,13 @@ public class ApiConfig {
         return revisionLogs;
     }
 
+    public void setRevisionLogs(List<RevisionLog> revisionLogs) {
+        this.revisionLogs = revisionLogs;
+    }
+
     public void setRevisionLogs(RevisionLog... revisionLogs) {
         this.revisionLogs = CollectionUtil.asList(revisionLogs);
     }
-
 
     public boolean isMd5EncryptedHtmlName() {
         return md5EncryptedHtmlName;
@@ -527,6 +506,10 @@ public class ApiConfig {
         return dataDictionaries;
     }
 
+    public void setDataDictionaries(List<ApiDataDictionary> dataDictionaries) {
+        this.dataDictionaries = dataDictionaries;
+    }
+
     public void setDataDictionaries(ApiDataDictionary... dataDictConfigs) {
         this.dataDictionaries = CollectionUtil.asList(dataDictConfigs);
     }
@@ -544,12 +527,20 @@ public class ApiConfig {
         return errorCodeDictionaries;
     }
 
+    public void setErrorCodeDictionaries(List<ApiErrorCodeDictionary> errorCodeDictionaries) {
+        this.errorCodeDictionaries = errorCodeDictionaries;
+    }
+
     public void setErrorCodeDictionaries(ApiErrorCodeDictionary... errorCodeDictConfigs) {
         this.errorCodeDictionaries = CollectionUtil.asList(errorCodeDictConfigs);
     }
 
     public List<ApiObjectReplacement> getApiObjectReplacements() {
         return apiObjectReplacements;
+    }
+
+    public void setApiObjectReplacements(List<ApiObjectReplacement> apiObjectReplacements) {
+        this.apiObjectReplacements = apiObjectReplacements;
     }
 
     public void setApiObjectReplacements(ApiObjectReplacement... apiObjectReplaces) {
@@ -560,12 +551,20 @@ public class ApiConfig {
         return rpcApiDependencies;
     }
 
+    public void setRpcApiDependencies(List<RpcApiDependency> rpcApiDependencies) {
+        this.rpcApiDependencies = rpcApiDependencies;
+    }
+
     public void setRpcApiDependencies(RpcApiDependency... rpcApiDependencies) {
         this.rpcApiDependencies = CollectionUtil.asList(rpcApiDependencies);
     }
 
     public List<ApiConstant> getApiConstants() {
         return apiConstants;
+    }
+
+    public void setApiConstants(List<ApiConstant> apiConstants) {
+        this.apiConstants = apiConstants;
     }
 
     public void setApiConstants(ApiConstant... apiConstants) {
@@ -788,6 +787,7 @@ public class ApiConfig {
         this.customRequestFields = customRequestFields;
         return this;
     }
+
     public void setCustomRequestFields(CustomField... customRequestFields) {
         this.customRequestFields = CollectionUtil.asList(customRequestFields);
     }

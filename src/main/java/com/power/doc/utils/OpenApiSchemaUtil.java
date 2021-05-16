@@ -31,13 +31,13 @@ import java.util.Map;
  */
 public class OpenApiSchemaUtil {
 
-    public static Map<String,Object> primaryTypeSchema(String primaryType){
+    public static Map<String, Object> primaryTypeSchema(String primaryType) {
         Map<String, Object> map = new HashMap<>();
         map.put("type", DocClassUtil.processTypeNameForParams(primaryType));
         return map;
     }
 
-    public static Map<String,Object> mapTypeSchema(String primaryType){
+    public static Map<String, Object> mapTypeSchema(String primaryType) {
         Map<String, Object> map = new LinkedHashMap<>();
         map.put("type", "object");
         Map<String, Object> items = new HashMap<>();
@@ -46,7 +46,7 @@ public class OpenApiSchemaUtil {
         return map;
     }
 
-    public static Map<String,Object> arrayTypeSchema(String primaryType){
+    public static Map<String, Object> arrayTypeSchema(String primaryType) {
         Map<String, Object> map = new HashMap<>();
         map.put("type", "array");
         Map<String, Object> items = new HashMap<>();

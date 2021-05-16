@@ -75,6 +75,7 @@ public class RpcTornaBuilder {
         List<RpcApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder);
         buildTorna(apiDocList, config);
     }
+
     public static void buildTorna(List<RpcApiDoc> apiDocs, ApiConfig apiConfig) {
         TornaApi tornaApi = new TornaApi();
         tornaApi.setAuthor(StringUtil.isEmpty(apiConfig.getAuthor()) ? System.getProperty("user.name") : apiConfig.getAuthor());
@@ -84,12 +85,12 @@ public class RpcTornaBuilder {
         for (RpcApiDoc a : apiDocs) {
             api = new Apis();
             api.setName(StringUtils.isBlank(a.getDesc()) ? a.getName() : a.getDesc());
-            TornaUtil.setDebugEnv(apiConfig,tornaApi);
+            TornaUtil.setDebugEnv(apiConfig, tornaApi);
             api.setItems(buildDubboApis(a.getList()));
             api.setIsFolder(TornaConstants.YES);
             api.setAuthor(a.getAuthor());
             api.setDubboInfo(new DubboInfo().builder()
-            .setAuthor(a.getAuthor())
+                    .setAuthor(a.getAuthor())
                     .setProtocol(a.getProtocol())
                     .setVersion(a.getVersion())
                     .setDependency(TornaUtil.buildDependencies(apiConfig.getRpcApiDependencies()))
@@ -102,6 +103,6 @@ public class RpcTornaBuilder {
         //获取返回结果
         String responseMsg = OkHttp3Util.syncPostJson(apiConfig.getOpenUrl(), new Gson().toJson(requestJson));
         //开启调试时打印请求信息
-        TornaUtil.printDebugInfo(apiConfig,responseMsg,requestJson);
+        TornaUtil.printDebugInfo(apiConfig, responseMsg, requestJson);
     }
 }

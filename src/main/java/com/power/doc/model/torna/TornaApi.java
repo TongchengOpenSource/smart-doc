@@ -30,13 +30,13 @@ import java.util.List;
 public class TornaApi {
 
     /**
-     *   "debugEnvs": [
-     *         {
-     *             "name": "测试环境",
-     *             "url": "http://10.1.30.165:2222"
-     *         }
-     *     ],
-     *     "apis": [
+     * "debugEnvs": [
+     * {
+     * "name": "测试环境",
+     * "url": "http://10.1.30.165:2222"
+     * }
+     * ],
+     * "apis": [
      */
     List<DebugEnv> debugEnvs;
     List<Apis> apis;

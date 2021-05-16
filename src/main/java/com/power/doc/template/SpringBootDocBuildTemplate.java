@@ -55,13 +55,11 @@ import static com.power.doc.constants.DocTags.IGNORE_REQUEST_BODY_ADVICE;
 public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
 
     private static Logger log = Logger.getLogger(SpringBootDocBuildTemplate.class.getName());
-
-    private List<ApiReqHeader> headers;
-
     /**
      * api index
      */
     private final AtomicInteger atomicInteger = new AtomicInteger(1);
+    private List<ApiReqHeader> headers;
 
     @Override
     public List<ApiDoc> getApiData(ProjectDocConfigBuilder projectBuilder) {
@@ -715,7 +713,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                     if (requestBodyCounter > 0) {
                         //for json
                         paramList.addAll(ParamsBuildHelper.buildParams(gicNameArr[0], DocGlobalConstants.EMPTY, 0,
-                                "true", responseFieldMap, Boolean.FALSE, new HashMap<>(), builder,
+                                "true", Boolean.FALSE, new HashMap<>(), builder,
                                 groupClasses, 0, Boolean.TRUE));
                     } else {
                         throw new RuntimeException("Spring MVC can't support binding Collection on method "
@@ -765,7 +763,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                     }
                 } else {
                     paramList.addAll(ParamsBuildHelper.buildParams(gicNameArr[1], DocGlobalConstants.EMPTY, 0,
-                            "true", responseFieldMap, Boolean.FALSE, new HashMap<>(),
+                            "true", Boolean.FALSE, new HashMap<>(),
                             builder, groupClasses, 0, Boolean.FALSE));
                 }
 
@@ -786,7 +784,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 paramList.add(param);
             } else {
                 paramList.addAll(ParamsBuildHelper.buildParams(typeName, DocGlobalConstants.EMPTY, 0,
-                        "true", responseFieldMap, Boolean.FALSE, new HashMap<>(), builder, groupClasses, 0, Boolean.FALSE));
+                        "true", Boolean.FALSE, new HashMap<>(), builder, groupClasses, 0, Boolean.FALSE));
             }
         }
         List<ApiParam> pathParams = new ArrayList<>();

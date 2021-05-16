@@ -28,6 +28,7 @@ import com.power.doc.builder.ProjectDocConfigBuilder;
 import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.constants.DocTags;
 import com.power.doc.model.ApiConfig;
+import com.power.doc.model.CustomField;
 import com.power.doc.model.DocJavaField;
 import com.power.doc.model.FormData;
 import com.power.doc.utils.DocClassUtil;
@@ -136,6 +137,12 @@ public class FormDataBuildHelper {
                     fieldValue = tagsMap.get(DocTags.MOCK);
                 } else {
                     fieldValue = DocUtil.getValByTypeAndFieldName(typeSimpleName, field.getName());
+                }
+                CustomField customRequestField = builder.getCustomReqFieldMap().get(fieldName);
+                // cover request value
+                if (Objects.nonNull(customRequestField) && Objects.nonNull(customRequestField.getValue())
+                        && JavaClassUtil.isTargetChildClass(simpleName, customRequestField.getOwnerClassName())) {
+                    fieldValue = String.valueOf(customRequestField.getValue());
                 }
                 FormData formData = new FormData();
                 formData.setKey(pre + fieldName);

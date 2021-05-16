@@ -30,7 +30,10 @@ import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.constants.DocTags;
 import com.power.doc.constants.DubboAnnotationConstants;
 import com.power.doc.helper.ParamsBuildHelper;
-import com.power.doc.model.*;
+import com.power.doc.model.ApiConfig;
+import com.power.doc.model.ApiParam;
+import com.power.doc.model.DocJavaMethod;
+import com.power.doc.model.JavaMethodDoc;
 import com.power.doc.model.rpc.RpcApiDoc;
 import com.power.doc.utils.DocClassUtil;
 import com.power.doc.utils.DocUtil;
@@ -164,7 +167,6 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
     private List<ApiParam> requestParams(final JavaMethod javaMethod, ProjectDocConfigBuilder builder) {
         boolean isStrict = builder.getApiConfig().isStrict();
         boolean isShowJavaType = builder.getApiConfig().getShowJavaType();
-        Map<String, CustomField> responseFieldMap = new HashMap<>();
         String className = javaMethod.getDeclaringClass().getCanonicalName();
         Map<String, String> paramTagMap = DocUtil.getParamsComments(javaMethod, DocTags.PARAM, className);
         List<JavaParameter> parameterList = javaMethod.getParameters();
@@ -203,7 +205,7 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
                     paramList.add(param);
                 } else {
                     paramList.addAll(ParamsBuildHelper.buildParams(gicNameArr[0], paramPre, 0, "true",
-                            responseFieldMap, Boolean.FALSE, new HashMap<>(), builder, groupClasses, 0, Boolean.FALSE));
+                            Boolean.FALSE, new HashMap<>(), builder, groupClasses, 0, Boolean.FALSE));
                 }
             } else if (JavaClassValidateUtil.isPrimitive(fullTypeName)) {
                 ApiParam param = ApiParam.of().setField(paramName)
@@ -219,14 +221,14 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
                 }
                 String[] gicNameArr = DocClassUtil.getSimpleGicName(typeName);
                 paramList.addAll(ParamsBuildHelper.buildParams(gicNameArr[1], paramPre, 0, "true",
-                        responseFieldMap, Boolean.FALSE, new HashMap<>(), builder, groupClasses, 0, Boolean.FALSE));
+                        Boolean.FALSE, new HashMap<>(), builder, groupClasses, 0, Boolean.FALSE));
             } else if (javaClass.isEnum()) {
                 ApiParam param = ApiParam.of().setField(paramName)
                         .setType("Enum").setDesc(comment).setRequired(true).setVersion(DocGlobalConstants.DEFAULT_VERSION);
                 paramList.add(param);
             } else {
                 paramList.addAll(ParamsBuildHelper.buildParams(typeName, paramPre, 0, "true",
-                        responseFieldMap, Boolean.FALSE, new HashMap<>(), builder, groupClasses, 0, Boolean.FALSE));
+                        Boolean.FALSE, new HashMap<>(), builder, groupClasses, 0, Boolean.FALSE));
             }
         }
         return paramList;

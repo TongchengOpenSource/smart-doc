@@ -9,7 +9,9 @@
 
     <name>smart-doc</name>
     <url>https://github.com/smart-doc-group/smart-doc.git</url>
-    <description>Smart-doc is a tool that supports both JAVA RESTFUL API and Apache Dubbo RPC interface document generation.</description>
+    <description>Smart-doc is a tool that supports both JAVA RESTFUL API and Apache Dubbo RPC interface document
+        generation.
+    </description>
 
     <licenses>
         <license>

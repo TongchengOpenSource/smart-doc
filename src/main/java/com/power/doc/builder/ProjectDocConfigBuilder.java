@@ -52,7 +52,7 @@ public class ProjectDocConfigBuilder {
 
     private Map<String, CustomField> customRespFieldMap = new ConcurrentHashMap<>();
 
-    private Map<String,CustomField> customReqFieldMap = new ConcurrentHashMap<>();
+    private Map<String, CustomField> customReqFieldMap = new ConcurrentHashMap<>();
 
     private Map<String, String> replaceClassMap = new ConcurrentHashMap<>();
 
@@ -192,6 +192,7 @@ public class ProjectDocConfigBuilder {
             }
         }
     }
+
     /**
      * 设置高亮样式
      */

@@ -29,18 +29,18 @@ import java.util.List;
  **/
 public class EnumInfo {
     /**
-     *  "enumInfo": {
-     *                         "name": "支付枚举",
-     *                         "description": "支付状态",
-     *                         "items": [
-     *                             {
-     *                                 "name": "WAIT_PAY",
-     *                                 "type": "string",
-     *                                 "value": "0",
-     *                                 "description": "未支付"
-     *                             }
-     *                         ]
-     *                     }
+     * "enumInfo": {
+     * "name": "支付枚举",
+     * "description": "支付状态",
+     * "items": [
+     * {
+     * "name": "WAIT_PAY",
+     * "type": "string",
+     * "value": "0",
+     * "description": "未支付"
+     * }
+     * ]
+     * }
      */
     private String name;
     private String description;

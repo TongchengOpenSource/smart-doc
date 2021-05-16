@@ -44,7 +44,7 @@ public class ApiMethodReqParam {
      */
     private List<ApiParam> requestParams;
 
-    public static ApiMethodReqParam builder(){
+    public static ApiMethodReqParam builder() {
         return new ApiMethodReqParam();
     }
 

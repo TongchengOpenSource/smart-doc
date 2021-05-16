@@ -41,7 +41,7 @@ public class CurlUtil {
         if (request.getUrl().indexOf("https") == 0) {
             sb.append(" -k");
         }
-        if (StringUtil.isNotEmpty(request.getContentType())&&
+        if (StringUtil.isNotEmpty(request.getContentType()) &&
                 !DocGlobalConstants.URL_CONTENT_TYPE.equals(request.getContentType())) {
             sb.append(" -H");
             sb.append(" 'Content-Type: ").append(request.getContentType()).append("'");

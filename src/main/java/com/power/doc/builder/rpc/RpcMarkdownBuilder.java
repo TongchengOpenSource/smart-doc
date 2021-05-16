@@ -52,7 +52,7 @@ public class RpcMarkdownBuilder {
     }
 
     /**
-     *Only for smart-doc maven plugin and gradle plugin.
+     * Only for smart-doc maven plugin and gradle plugin.
      *
      * @param config             ApiConfig
      * @param javaProjectBuilder ProjectDocConfigBuilder

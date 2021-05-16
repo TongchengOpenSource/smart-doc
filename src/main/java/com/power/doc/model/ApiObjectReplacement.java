@@ -31,7 +31,7 @@ public class ApiObjectReplacement {
 
     private String replacementClassName;
 
-    public static ApiObjectReplacement builder(){
+    public static ApiObjectReplacement builder() {
         return new ApiObjectReplacement();
     }
 

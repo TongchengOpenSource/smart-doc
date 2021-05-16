@@ -31,19 +31,16 @@ public class JavaMethodDoc {
 
     /**
      * methodId handled by md5
-     *
      */
     private String methodId;
 
     /**
      * method name
-     *
      */
     private String name;
 
     /**
      * method order
-     *
      */
     private int order;
 

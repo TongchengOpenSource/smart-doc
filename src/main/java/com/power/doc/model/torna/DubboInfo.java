@@ -10,9 +10,10 @@ public class DubboInfo {
     private String protocol;
     private String dependency;
 
-    public DubboInfo builder(){
+    public DubboInfo builder() {
         return new DubboInfo();
     }
+
     public String getInterfaceName() {
         return interfaceName;
     }

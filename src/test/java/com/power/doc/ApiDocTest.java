@@ -2,17 +2,12 @@ package com.power.doc;
 
 import com.power.common.util.DateTimeUtil;
 import com.power.doc.builder.HtmlApiDocBuilder;
-import com.power.doc.builder.OpenApiBuilder;
-import com.power.doc.builder.PostmanJsonBuilder;
 import com.power.doc.builder.TornaBuilder;
-import com.power.doc.builder.rpc.RpcHtmlBuilder;
-import com.power.doc.builder.rpc.RpcTornaBuilder;
 import com.power.doc.enums.OrderEnum;
 import com.power.doc.model.*;
 import com.power.doc.model.rpc.RpcApiDependency;
 import org.junit.Test;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +23,7 @@ public class ApiDocTest {
      * 包括设置请求头，缺失注释的字段批量在文档生成期使用定义好的注释
      */
     @Test
-    public void testBuilderControllersApi()  {
+    public void testBuilderControllersApi() {
         List<String> list = new ArrayList<>();
         list.add("aa");
         list.contains("aa");
@@ -42,7 +37,7 @@ public class ApiDocTest {
         config.setDebugEnvName("测试环境");
 //        config.setAuthor("test");
         config.setDebugEnvUrl("http://127.0.0.1");
-       //config.setTornaDebug(true);
+        //config.setTornaDebug(true);
 
         config.setAllInOne(true);
         config.setOutPath("d:\\md3");
@@ -81,7 +76,7 @@ public class ApiDocTest {
                         .setName("sex").setDesc("性别").setIgnore(false).setValue("男").setRequire(true).setOwnerClassName("com.power.doc.entity.SimpleUser")
 
 
-                );
+        );
         config.setPackageFilters("com.power.doc.dubbo.*,com.power.doc.controller.UserController");
         //非必须只有当setAllInOne设置为true时文档变更记录才生效，https://gitee.com/sunyurepository/ApplicationPower/issues/IPS4O
         config.setRevisionLogs(
@@ -98,7 +93,7 @@ public class ApiDocTest {
                 .setClassName("com.power.common.model.CommonResult"));
         config.setRpcApiDependencies(RpcApiDependency.builder().setGroupId("com.test").setArtifactId("test1").setVersion("1.0"),
                 RpcApiDependency.builder().setGroupId("com.smart").setArtifactId("test").setVersion("1.1.1")
-                );
+        );
         long start = System.currentTimeMillis();
 
         //TornaBuilder.buildApiDoc(config);
@@ -106,7 +101,7 @@ public class ApiDocTest {
         HtmlApiDocBuilder.buildApiDoc(config);
         //RpcTornaBuilder.buildApiDoc(config);
         TornaBuilder.buildApiDoc(config);
-       // RpcHtmlBuilder.buildApiDoc(config);
+        // RpcHtmlBuilder.buildApiDoc(config);
         long end = System.currentTimeMillis();
         DateTimeUtil.printRunTime(end, start);
     }

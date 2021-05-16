@@ -216,7 +216,7 @@ public class JavaClassValidateUtil {
     /**
      * ignore param of spring mvc
      *
-     * @param paramType param type name
+     * @param paramType    param type name
      * @param ignoreParams ignore param list
      * @return boolean
      */
@@ -261,10 +261,11 @@ public class JavaClassValidateUtil {
 
     /**
      * check file
+     *
      * @param typeName type name
      * @return boolean
      */
-    public static boolean isFile(String typeName){
+    public static boolean isFile(String typeName) {
         switch (typeName) {
             case "org.springframework.web.multipart.MultipartFile":
             case "org.springframework.web.multipart.MultipartFile[]":
@@ -280,6 +281,7 @@ public class JavaClassValidateUtil {
 
     /**
      * check reactor param
+     *
      * @param typeName class name
      * @return boolean
      */

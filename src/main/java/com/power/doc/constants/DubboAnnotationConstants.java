@@ -24,6 +24,7 @@ package com.power.doc.constants;
 
 /**
  * dubbo annotation
+ *
  * @author yu 2020/1/29.
  */
 public interface DubboAnnotationConstants {
@@ -38,5 +39,5 @@ public interface DubboAnnotationConstants {
     /**
      * support ali dubbo
      */
-    String ALI_DUBBO_SERVICE= "com.alibaba.dubbo.config.annotation.Service";
+    String ALI_DUBBO_SERVICE = "com.alibaba.dubbo.config.annotation.Service";
 }

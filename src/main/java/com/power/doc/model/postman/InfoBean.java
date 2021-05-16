@@ -38,7 +38,7 @@ public class InfoBean {
 
     public InfoBean(String name) {
         if (StringUtils.isBlank(name)) {
-            this.name = "smart-doc    " + DateTimeUtil.long2Str(System.currentTimeMillis(),DateTimeUtil.DATE_FORMAT_SECOND);
+            this.name = "smart-doc    " + DateTimeUtil.long2Str(System.currentTimeMillis(), DateTimeUtil.DATE_FORMAT_SECOND);
         } else {
             this.name = name;
         }

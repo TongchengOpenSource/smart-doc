@@ -23,8 +23,8 @@
 package com.power.doc.model;
 
 /**
- * @since 1.9.8
  * @author yu 2020/11/5.
+ * @since 1.9.8
  */
 public class BodyAdvice {
 
@@ -34,7 +34,7 @@ public class BodyAdvice {
 
     private String dataField;
 
-    public static BodyAdvice builder(){
+    public static BodyAdvice builder() {
         return new BodyAdvice();
     }
 

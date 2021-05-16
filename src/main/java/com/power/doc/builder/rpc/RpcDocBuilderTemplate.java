@@ -52,10 +52,8 @@ import static com.power.doc.constants.DocGlobalConstants.RPC_OUT_DIR;
  */
 public class RpcDocBuilderTemplate extends BaseDocBuilderTemplate {
 
-    private static long now = System.currentTimeMillis();
-
     private static final String DEPENDENCY_TITLE = "Add dependency";
-
+    private static long now = System.currentTimeMillis();
 
     public void checkAndInit(ApiConfig config) {
         super.checkAndInit(config);

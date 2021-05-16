@@ -3,6 +3,7 @@
 # List<String>结构
 
 api-doc对于List中返回基础数据类型都是支持的
+
 ```
 /**
  * List<String>
@@ -14,10 +15,13 @@ public List<String> testList() {
     return null;
 }
 ```
+
 api-doc生成的响应数据
+
 ```
 [ "ivvqah","isrz5x"]
 ```
+
 # List<Map<String,String>>结构
 
 ```
@@ -30,7 +34,9 @@ public List<Map<String,String>> testMap() {
     return null;
 }
 ```
+
 api-doc生成的响应数据
+
 ```
 [{
 	"mapKey1": "o9mibj",
@@ -47,6 +53,7 @@ public List<Map<String,Student>> testMap() {
 }
 
 ```
+
 相应数据省略
 
 # 测试List<T>结构
@@ -63,6 +70,7 @@ public List<Teacher> testMap() {
 ```
 
 # List<T<M,N>>结构
+
 ```
 /**
  * 测试List<T<M,N>>结构
@@ -73,7 +81,9 @@ public List<Teacher<User,User>> testMap() {
     return null;
 }
 ```
+
 # List<Map<M,N<P,k>>>超复杂结构
+
 ```
 /**
  * 测试List<Map<M,N<P,k>>>超复杂结构
@@ -84,7 +94,9 @@ public List<Map<String,Teacher<User,User>>> testMap() {
     return null;
 }
 ```
+
 api-doc自动返回的数据
+
 ```
 [{
 	"mapKey": {
@@ -102,6 +114,7 @@ api-doc自动返回的数据
 	}
 }]
 ```
+
 # List<T<List<M>,List<M>,List<M>>>超复杂结构
 
 ```
@@ -114,7 +127,9 @@ public List<Teacher<List<User>,List<User>,List<User>>> testListString(){
     return null;
 }
 ```
+
 # 其他复杂结构
+
 ```
 /**
  * List<T<List<M>,List<M>,List<M>>>
@@ -132,5 +147,4 @@ public List<Teacher<Teacher<User,User,User>,Teacher<User,User,User>,Teacher<User
 }
 ```
 
-**注意：** api-doc为了传入的复杂泛型结构数据，做了许多情况的测试，目前基本能兼容系统开发中95%以上的List返回接口，
-也提供了一些能够处理的很复杂的泛型结构，但是这种复杂的泛型结构在开发中是不被推荐的。
+**注意：** api-doc为了传入的复杂泛型结构数据，做了许多情况的测试，目前基本能兼容系统开发中95%以上的List返回接口， 也提供了一些能够处理的很复杂的泛型结构，但是这种复杂的泛型结构在开发中是不被推荐的。

@@ -28,20 +28,20 @@ import com.thoughtworks.qdox.model.JavaType;
 import java.util.Map;
 
 /**
- * @since 1.9.8
  * @author yu 2020/10/30.
+ * @since 1.9.8
  */
 public class DocJavaMethod {
 
     private JavaMethod javaMethod;
 
-    private Map<String,Object> returnSchema;
+    private Map<String, Object> returnSchema;
 
-    private Map<String,Object> requestSchema;
+    private Map<String, Object> requestSchema;
 
     private Map<String, JavaType> actualTypesMap;
 
-    public static DocJavaMethod builder(){
+    public static DocJavaMethod builder() {
         return new DocJavaMethod();
     }
 
@@ -63,11 +63,11 @@ public class DocJavaMethod {
         return this;
     }
 
-    public Map<String,Object> getReturnSchema() {
+    public Map<String, Object> getReturnSchema() {
         return returnSchema;
     }
 
-    public DocJavaMethod setReturnSchema(Map<String,Object> returnSchema) {
+    public DocJavaMethod setReturnSchema(Map<String, Object> returnSchema) {
         this.returnSchema = returnSchema;
         return this;
     }

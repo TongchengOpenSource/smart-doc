@@ -60,7 +60,7 @@ public interface DocTags {
     /**
      * java deprecated tag
      */
-    String DEPRECATED= "deprecated";
+    String DEPRECATED = "deprecated";
 
     /**
      * custom ignore tag

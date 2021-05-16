@@ -183,7 +183,7 @@ public class JsonBuildHelper {
         } else if (DocGlobalConstants.JAVA_OBJECT_FULLY.equals(typeName)) {
             data.append("{\"object\":\" any object\"},");
             // throw new RuntimeException("Please do not return java.lang.Object directly in api interface.");
-        } else if(JavaClassValidateUtil.isReactor(typeName)) {
+        } else if (JavaClassValidateUtil.isReactor(typeName)) {
             data.append(buildJson(globGicName[0], typeName, isResp, nextLevel, registryClasses, builder));
             return data.toString();
         } else {
@@ -234,10 +234,10 @@ public class JsonBuildHelper {
                 String fieldGicName = docField.getGenericCanonicalName();
                 CustomField customResponseField = builder.getCustomRespFieldMap().get(fieldName);
                 CustomField customRequestField = builder.getCustomReqFieldMap().get(fieldName);
-                if(customRequestField !=null && typeName.equals(customRequestField.getOwnerClassName()) && (customRequestField.isIgnore()) && !isResp){
+                if (customRequestField != null && typeName.equals(customRequestField.getOwnerClassName()) && (customRequestField.isIgnore()) && !isResp) {
                     continue;
                 }
-                if(customResponseField !=null && typeName.equals(customResponseField.getOwnerClassName()) && (customResponseField.isIgnore()) && isResp){
+                if (customResponseField != null && typeName.equals(customResponseField.getOwnerClassName()) && (customResponseField.isIgnore()) && isResp) {
                     continue;
                 }
                 data0.append("\"").append(fieldName).append("\":");
@@ -252,19 +252,19 @@ public class JsonBuildHelper {
                     }
                 }
                 if (JavaClassValidateUtil.isPrimitive(subTypeName)) {
-                    int data0Length  = data0.length();
+                    int data0Length = data0.length();
                     if (StringUtil.isEmpty(fieldValue)) {
                         fieldValue = DocUtil.getValByTypeAndFieldName(typeSimpleName, field.getName());
                     }
                     if (null != customRequestField && !isResp && customRequestField.getOwnerClassName().equals(typeName)) {
                         JavaFieldUtil.buildCustomField(data0, typeSimpleName, customRequestField);
                     }
-                     if (null != customResponseField && isResp && customResponseField.getOwnerClassName().equals(typeName)) {
+                    if (null != customResponseField && isResp && customResponseField.getOwnerClassName().equals(typeName)) {
                         JavaFieldUtil.buildCustomField(data0, typeSimpleName, customResponseField);
                     }
-                     if(data0.length()==data0Length) {
-                         data0.append(fieldValue).append(",");
-                     }
+                    if (data0.length() == data0Length) {
+                        data0.append(fieldValue).append(",");
+                    }
                 } else {
                     if (JavaClassValidateUtil.isCollection(subTypeName) || JavaClassValidateUtil.isArray(subTypeName)) {
                         if (StringUtil.isNotEmpty(fieldValue)) {
@@ -393,8 +393,6 @@ public class JsonBuildHelper {
         data0.append("}");
         return data0.toString();
     }
-
-
 
 
 }

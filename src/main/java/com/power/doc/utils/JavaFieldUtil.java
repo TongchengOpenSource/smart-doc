@@ -46,10 +46,9 @@ public class JavaFieldUtil {
     }
 
     /**
-     *
-     * @param data0 data0
+     * @param data0          data0
      * @param typeSimpleName typeName
-     * @param customField config field
+     * @param customField    config field
      */
     public static void buildCustomField(StringBuilder data0, String typeSimpleName, CustomField customField) {
         Object val = customField.getValue();

@@ -89,7 +89,7 @@ public class TornaBuilder {
         for (ApiDoc a : apiDocs) {
             api = new Apis();
             api.setName(StringUtils.isBlank(a.getDesc()) ? a.getName() : a.getDesc());
-            api.setItems(buildApis(a.getList(), TornaUtil.setDebugEnv(apiConfig,tornaApi)));
+            api.setItems(buildApis(a.getList(), TornaUtil.setDebugEnv(apiConfig, tornaApi)));
             api.setIsFolder(TornaConstants.YES);
             api.setAuthor(a.getAuthor());
             apisList.add(api);
@@ -100,7 +100,7 @@ public class TornaBuilder {
         //获取返回结果
         String responseMsg = OkHttp3Util.syncPostJson(apiConfig.getOpenUrl(), new Gson().toJson(requestJson));
         //开启调试时打印请求信息
-       TornaUtil.printDebugInfo(apiConfig,responseMsg,requestJson);
+        TornaUtil.printDebugInfo(apiConfig, responseMsg, requestJson);
     }
 }
 

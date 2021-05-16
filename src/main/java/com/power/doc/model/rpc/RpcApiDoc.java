@@ -22,7 +22,6 @@
  */
 package com.power.doc.model.rpc;
 
-import com.power.common.util.StringUtil;
 import com.power.doc.model.JavaMethodDoc;
 
 import java.util.List;
@@ -185,7 +184,7 @@ public class RpcApiDoc implements Comparable<RpcApiDoc> {
     }
 
     public String getLink() {
-        return desc.replace(" ","_").toLowerCase();
+        return desc.replace(" ", "_").toLowerCase();
     }
 
     public void setLink(String link) {

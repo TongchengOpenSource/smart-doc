@@ -42,14 +42,10 @@ import static com.power.doc.constants.DocGlobalConstants.*;
  */
 public class HtmlApiDocBuilder {
 
-    private static long now = System.currentTimeMillis();
-
-    private static String INDEX_HTML = "index.html";
-
     private static final String ERROR_CODE_HTML = "error.html";
-
     private static final String DICT_HTML = "dict.html";
-
+    private static long now = System.currentTimeMillis();
+    private static String INDEX_HTML = "index.html";
 
     /**
      * build controller api

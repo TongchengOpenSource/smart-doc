@@ -25,7 +25,6 @@ package com.power.doc.model;
 import com.power.doc.model.torna.EnumInfo;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author yu 2019/9/27.
@@ -105,6 +104,10 @@ public class ApiParam {
      */
     private String maxLength;
 
+    public static ApiParam of() {
+        return new ApiParam();
+    }
+
     public List<EnumInfo> getEnumInfo() {
         return enumInfo;
     }
@@ -112,10 +115,6 @@ public class ApiParam {
     public ApiParam setEnumInfo(List<EnumInfo> enumInfo) {
         this.enumInfo = enumInfo;
         return this;
-    }
-
-    public static ApiParam of(){
-        return new ApiParam();
     }
 
     public String getField() {
@@ -185,6 +184,11 @@ public class ApiParam {
         return children;
     }
 
+    public ApiParam setChildren(List<ApiParam> children) {
+        this.children = children;
+        return this;
+    }
+
     public boolean isPathParam() {
         return pathParam;
     }
@@ -200,11 +204,6 @@ public class ApiParam {
 
     public ApiParam setQueryParam(boolean queryParam) {
         this.queryParam = queryParam;
-        return this;
-    }
-
-    public ApiParam setChildren(List<ApiParam> children) {
-        this.children = children;
         return this;
     }
 

@@ -6,16 +6,18 @@
 ![java version](https://img.shields.io/badge/JAVA-1.8+-green.svg)
 
 ## Introduce
+
 smart-doc是一款同时支持JAVA REST API和Apache Dubbo RPC接口文档生成的工具，smart-doc在业内率先提出基于JAVA泛型定义推导的理念，
-完全基于接口源码来分析生成接口文档，不采用任何注解侵入到业务代码中。你只需要按照java-doc标准编写注释，
-smart-doc就能帮你生成一个简易明了的Markdown、HTML5、Postman Collection2.0+、OpenAPI 3.0+的文档。
+完全基于接口源码来分析生成接口文档，不采用任何注解侵入到业务代码中。你只需要按照java-doc标准编写注释， smart-doc就能帮你生成一个简易明了的Markdown、HTML5、Postman
+Collection2.0+、OpenAPI 3.0+的文档。
 
 $\color{red}{你给我的star，胜过所有读过的诗—smart-doc}$
 
-> 无论你是很有经验的大佬、还是刚入行的萌新。遇到使用疑惑时，我们希望你能仔细阅读smart-doc官方码云的wiki文档。我们将smart-doc及其插件的
-每一个配置项和可能在日常中遇到的问题都整理到了文档中。仔细阅读文档就是对开源项目最大的支持。
+> 无论你是很有经验的大佬、还是刚入行的萌新。遇到使用疑惑时，我们希望你能仔细阅读smart-doc官方码云的wiki文档。我们将smart-doc及其插件的 每一个配置项和可能在日常中遇到的问题都整理到了文档中。仔细阅读文档就是对开源项目最大的支持。
 [wiki文档](https://gitee.com/smart-doc-team/smart-doc/wikis/HOME?sort_id=3127893)
+
 ## Features
+
 - 零注解、零学习成本、只需要写标准JAVA注释。
 - 基于源代码接口定义自动推导，强大的返回结构推导。
 - 支持Spring MVC、Spring Boot、Spring Boot Web Flux(controller书写方式)、Feign。
@@ -25,33 +27,40 @@ $\color{red}{你给我的star，胜过所有读过的诗—smart-doc}$
 - 对一些常用字段定义能够生成有效的模拟值。
 - 支持生成JSON返回值示例。
 - 支持从项目外部加载源代码来生成字段注释(包括标准规范发布的jar包)。
-- 支持生成多种格式文档：Markdown、HTML5、Asciidoctor、Postman Collection、OpenAPI 3.0。
-Up- 开放文档数据，可自由实现接入文档管理系统。
+- 支持生成多种格式文档：Markdown、HTML5、Asciidoctor、Postman Collection、OpenAPI 3.0。 Up- 开放文档数据，可自由实现接入文档管理系统。
 - 支持导出错误码和定义在代码中的各种字典码到接口文档。
 - 支持Maven、Gradle插件式轻松集成。
 - 支持Apache Dubbo RPC接口文档生成。
 - debug接口调试html5页面完全支持文件上传，下载(@download tag标记下载方法)测试。
 
 ## Best Practice
+
 smart-doc + [Torna](http://torna.cn) 组成行业领先的文档生成和管理解决方案，使用smart-doc无侵入完成Java源代码分析和提取注释生成API文档，自动将文档推送到Torna企业级接口文档管理平台。
 
 ![smart-doc+torna](https://gitee.com/smart-doc-team/smart-doc/raw/master/images/smart-doc-torna.png)
 
 [smart-doc+Torna文档自动化](https://gitee.com/smart-doc-team/smart-doc/wikis/smart-doc与torna对接?sort_id=3695028)
 
-> Torna是由smart-doc官方独家推动联合研发的企业级文档管理系统，因此smart-doc官方不会对接其它任何的外部文档管理系统，例如像showdoc、yapi
-之类的对接请自定内部处理，也不要再给我们提其他文档系统对接的PR。我们核心是把smart-doc+Torna的这套方案打造好。
+> Torna是由smart-doc官方独家推动联合研发的企业级文档管理系统，因此smart-doc官方不会对接其它任何的外部文档管理系统，例如像showdoc、yapi 之类的对接请自定内部处理，也不要再给我们提其他文档系统对接的PR。我们核心是把smart-doc+Torna的这套方案打造好。
+
 ## Getting Started
+
 smart-doc使用和测试可参考[smart-doc demo](https://gitee.com/devin-alan/api-doc-test.git)。
+
 ```
 # git clone https://gitee.com/devin-alan/api-doc-test.git
 ```
+
 你可以启动这个Spring Boot的项目，然后访问`http://localhost:8080/doc/api.html`来浏览smart-doc生成的接口文档。
+
 ### Add Maven Plugin
+
 smart-doc官方目前已经开发完成[Maven插件](https://gitee.com/smart-doc-team/smart-doc-maven-plugin)
 和[Gradle插件](https://gitee.com/smart-doc-team/smart-doc-gradle-plugin)，
 你可以根据自己的构建工具来选择使用Maven插件或者是Gradle插件。
+
 #### Add Plugin
+
 ```
 <plugin>
     <groupId>com.github.shalousun</groupId>
@@ -86,20 +95,24 @@ smart-doc官方目前已经开发完成[Maven插件](https://gitee.com/smart-doc
     </executions>
 </plugin>
 ```
-#### Configuration
-在项目中添加创建一个`smart-doc.json`配置文件，插件读取这个配置来生成项目的文档，
-这个配置内容实际上就是以前采用单元测试编写的`ApiConfig`转成json后的结果，因此关于配置项说明可以参考原来单元测试的配置。
 
- **最小配置单元：** 
+#### Configuration
+
+在项目中添加创建一个`smart-doc.json`配置文件，插件读取这个配置来生成项目的文档， 这个配置内容实际上就是以前采用单元测试编写的`ApiConfig`转成json后的结果，因此关于配置项说明可以参考原来单元测试的配置。
+
+**最小配置单元：**
+
 ```
 {
    "outPath": "D://md2" //指定文档的输出路径,相对路径时请用./开头，eg:./src/main/resources/static/doc
 }
 ```
->如果你想把html文档也打包到应用中一起访问，则建议你配置路径为：src/main/resources/static/doc
+
+> 如果你想把html文档也打包到应用中一起访问，则建议你配置路径为：src/main/resources/static/doc
 
 仅仅需要上面一行配置就能启动smart-doc-maven-plugin插件，根据自己项目情况更多详细的配置参考下面。
- **详细配置说明** 
+**详细配置说明**
+
 ```
 {
   "serverUrl": "http://127.0.0.1", //服务器地址,非必须。导出postman建议设置成http://{{server}}方便直接在postman直接设置环境变量
@@ -201,11 +214,15 @@ smart-doc官方目前已经开发完成[Maven插件](https://gitee.com/smart-doc
   }]
 }
 ```
+
 上面的JSON配置实例中只有"outPath"是必填项。
 
 **注意：** 对于老用户完全可以通过`Fastjson`或者是`Gson`库将`ApiConfig`转化成JSON配置。
+
 #### Use Maven Command
+
 添加好插件和配置文件后可以直接运行Maven命令生成文档。
+
 ```
 //生成html
 mvn -Dfile.encoding=UTF-8 smart-doc:html
@@ -231,35 +248,55 @@ mvn -Dfile.encoding=UTF-8 smart-doc:rpc-adoc
 // 生成dubbo接口文档推送到torna
 mvn -Dfile.encoding=UTF-8 smart-doc:torna-rpc
 ```
+
 **注意：** 尤其在window系统下，如果实际使用Maven命令行执行文档生成，可能会出现乱码，因此需要在执行时指定`-Dfile.encoding=UTF-8`。
+
 #### Use in IDEA
+
 ![idea中smart-doc-maven插件使用](https://gitee.com/smart-doc-team/smart-doc-maven-plugin/raw/master/images/idea.png "maven_plugin_tasks.png")
 
 ### Use gradle plugin
+
 如果你使用Gradle来构建项目，你可以参考Gradle插件的使用文档来集成，
 [smart-doc-gradle-plugin](https://gitee.com/smart-doc-team/smart-doc-gradle-plugin/blob/master/README_CN.md)
-### Use Junit Test 
+
+### Use Junit Test
+
 从smart-doc 1.7.9开始，官方提供了Maven插件，使用smart-doc的Maven插件后不再需要创建单元测试。
 [单元测试生成文档](https://gitee.com/smart-doc-team/smart-doc/wikis/单元测试集成smart-doc?sort_id=1990284)
 
 > 单元测试集成存在很多绝限性: <br/>1. 对于多模块项目源码注释很麻烦，也不符合正常开发团队的开发协作。<br/>2. 不方便与CI工具集成
+
 ### Generated document example
+
 [点击查看文档生成文档效果图](https://gitee.com/smart-doc-team/smart-doc/wikis/文档效果图?sort_id=1652819)
+
 ## Building
+
 如果你需要自己构建smart-doc，那可以使用下面命令，构建需要依赖Java 1.8。
+
 ```
 mvn clean install -Dmaven.test.skip=true
 ```
+
 ## TODO
+
 - Jakarta RS-API 2.x
+
 ## Other reference
+
 - [smart-doc功能使用介绍](https://my.oschina.net/u/1760791/blog/2250962)
 - [smart-doc官方wiki](https://gitee.com/smart-doc-team/smart-doc/wikis/Home?sort_id=1652800)
+
 ## License
-smart-doc is under the Apache 2.0 license.  See the [LICENSE](https://gitee.com/smart-doc-team/smart-doc/blob/master/LICENSE) file for details.
+
+smart-doc is under the Apache 2.0 license. See
+the [LICENSE](https://gitee.com/smart-doc-team/smart-doc/blob/master/LICENSE) file for details.
 
 **注意：** smart-doc源代码文件全部带有版权注释，使用关键代码二次开源请保留原始版权，否则后果自负！
+
 ## Who is using
+
 > 排名不分先后，更多接入公司，欢迎在[https://gitee.com/smart-doc-team/smart-doc/issues/I1594T](https://gitee.com/smart-doc-team/smart-doc/issues/I1594T)登记（仅供开源用户参考）
 
 ![IFLYTEK](https://gitee.com/smart-doc-team/smart-doc/raw/master/images/known-users/iflytek.png)
@@ -267,11 +304,16 @@ smart-doc is under the Apache 2.0 license.  See the [LICENSE](https://gitee.com
 &nbsp;&nbsp;<img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/known-users/xiaomi.png" title="小米" width="170px" height="83px"/>
 <img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/known-users/yuanmengjiankang.png" title="远盟健康" width="260px" height="83px"/>
 <img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/known-users/zhongkezhilian.png" title="中科智链" width="272px" height="83px"/>
-<img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/known-users/puqie_gaitubao_100x100.jpg" title="普切信息科技" width="83px" height="83px"/>&nbsp;&nbsp;
+<img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/known-users/puqie_gaitubao_100x100.jpg" title="普切信息科技" width="83px" height="83px"/>
+&nbsp;&nbsp;
 <img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/known-users/tianbo-tech.png" title="杭州天铂云科" width="127px" height="70px"/>
+
 ## Award situation
+
 - 2020 年度 OSC 中国开源项目评选”活动中获得「最积极运营项目」
+
 ## Contact
+
 愿意参与构建smart-doc或者是需要交流问题可以加入qq群：
 
 <img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/smart-doc-qq.png" title="qq群" width="200px" height="200px"/>

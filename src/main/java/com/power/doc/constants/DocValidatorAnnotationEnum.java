@@ -69,8 +69,7 @@ public enum DocValidatorAnnotationEnum {
 
     RANGE("Range"),
 
-    VALIDATED("Validated")
-    ;
+    VALIDATED("Validated");
 
     private String value;
 

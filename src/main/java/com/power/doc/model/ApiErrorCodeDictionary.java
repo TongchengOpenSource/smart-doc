@@ -52,7 +52,7 @@ public class ApiErrorCodeDictionary {
         return new ApiErrorCodeDictionary();
     }
 
-    public static ApiErrorCodeDictionary builder(){
+    public static ApiErrorCodeDictionary builder() {
         return new ApiErrorCodeDictionary();
     }
 
