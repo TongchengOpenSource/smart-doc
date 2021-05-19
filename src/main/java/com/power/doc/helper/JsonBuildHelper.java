@@ -274,14 +274,11 @@ public class JsonBuildHelper {
                         if (globGicName.length > 0 && "java.util.List".equals(fieldGicName)) {
                             fieldGicName = fieldGicName + "<T>";
                         }
-                        fieldGicName = JavaClassValidateUtil.isArray(subTypeName) ? fieldGicName.substring(0, fieldGicName.indexOf("[")) : fieldGicName;
-
-                        if (DocClassUtil.getSimpleGicName(fieldGicName).length == 0) {
-                            data0.append("[{\"object\":\"any object\"}],");
-                            continue out;
+                        if (JavaClassValidateUtil.isArray(subTypeName)) {
+                            fieldGicName = fieldGicName.substring(0, fieldGicName.lastIndexOf("["));
+                            fieldGicName = "java.util.List<" + fieldGicName + ">";
                         }
                         String gicName = DocClassUtil.getSimpleGicName(fieldGicName)[0];
-
                         if (DocGlobalConstants.JAVA_STRING_FULLY.equals(gicName)) {
                             data0.append("[").append(DocUtil.jsonValueByType(gicName)).append("]").append(",");
                         } else if (DocGlobalConstants.JAVA_LIST_FULLY.equals(gicName)) {
