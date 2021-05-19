@@ -107,33 +107,4 @@ public class BaseDocBuilderTemplate {
         }
         return titleMap;
     }
-
-    public List<ApiErrorCode> errorCodeDictToList(ApiConfig config) {
-        if (CollectionUtil.isNotEmpty(config.getErrorCodes())) {
-            return config.getErrorCodes();
-        }
-        List<ApiErrorCodeDictionary> errorCodeDictionaries = config.getErrorCodeDictionaries();
-        if (CollectionUtil.isEmpty(errorCodeDictionaries)) {
-            return new ArrayList<>(0);
-        } else {
-            List<ApiErrorCode> errorCodeList = new ArrayList<>();
-            try {
-                for (ApiErrorCodeDictionary dictionary : errorCodeDictionaries) {
-                    Class<?> clzz = dictionary.getEnumClass();
-                    if (Objects.isNull(clzz)) {
-                        if (StringUtil.isEmpty(dictionary.getEnumClassName())) {
-                            throw new RuntimeException("Enum class name can't be null.");
-                        }
-                        clzz = Class.forName(dictionary.getEnumClassName());
-                    }
-                    List<ApiErrorCode> enumDictionaryList = EnumUtil.getEnumInformation(clzz, dictionary.getCodeField(),
-                            dictionary.getDescField());
-                    errorCodeList.addAll(enumDictionaryList);
-                }
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-            return errorCodeList;
-        }
-    }
 }

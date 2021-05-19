@@ -41,6 +41,7 @@ public class TornaApi {
     List<DebugEnv> debugEnvs;
     List<Apis> apis;
     String author;
+    List<CommonErrorCode> commonErrorCodes;
 
     public String getAuthor() {
         return author;
@@ -64,5 +65,13 @@ public class TornaApi {
 
     public void setApis(List<Apis> apis) {
         this.apis = apis;
+    }
+
+    public List<CommonErrorCode> getCommonErrorCodes() {
+        return commonErrorCodes;
+    }
+
+    public void setCommonErrorCodes(List<CommonErrorCode> commonErrorCodes) {
+        this.commonErrorCodes = commonErrorCodes;
     }
 }

@@ -53,6 +53,8 @@ public class TornaConstants {
     public static final String CATEGORY_CREATE = "doc.category.create";
     public static final String PUSH = "doc.push";
 
+    public static final String ENUM_PUSH = "enum.batch.push";
+
     public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
 

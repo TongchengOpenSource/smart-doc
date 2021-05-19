@@ -62,9 +62,9 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
         apiAllData.setProjectId(DocUtil.generateId(config.getProjectName()));
         apiAllData.setLanguage(config.getLanguage().getCode());
         apiAllData.setApiDocList(listOfApiData(config, javaProjectBuilder));
-        apiAllData.setErrorCodeList(errorCodeDictToList(config));
+        apiAllData.setErrorCodeList(DocUtil.errorCodeDictToList(config));
         apiAllData.setRevisionLogs(config.getRevisionLogs());
-        apiAllData.setApiDocDictList(buildDictionary(config, javaProjectBuilder));
+        apiAllData.setApiDocDictList(DocUtil.buildDictionary(config, javaProjectBuilder));
         return apiAllData;
     }
 
@@ -119,7 +119,7 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
         String outPath = config.getOutPath();
         String strTime = DateTimeUtil.long2Str(now, DateTimeUtil.DATE_FORMAT_SECOND);
         FileUtil.mkdirs(outPath);
-        List<ApiErrorCode> errorCodeList = errorCodeDictToList(config);
+        List<ApiErrorCode> errorCodeList = DocUtil.errorCodeDictToList(config);
         Template tpl = BeetlTemplateUtil.getByName(template);
         String style = config.getStyle();
         tpl.binding(TemplateVariable.STYLE.getVariable(), style);
@@ -144,13 +144,13 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
             tpl.binding(TemplateVariable.LIST.getVariable(), apiDoc.getList());//类名
         }
         setDirectoryLanguageVariable(config, tpl);
-        List<ApiDocDict> apiDocDictList = buildDictionary(config, javaProjectBuilder);
+        List<ApiDocDict> apiDocDictList = DocUtil.buildDictionary(config, javaProjectBuilder);
         tpl.binding(TemplateVariable.DICT_LIST.getVariable(), apiDocDictList);
         FileUtil.nioWriteFile(tpl.render(), outPath + FILE_SEPARATOR + outPutFileName);
     }
 
     public void buildSearchJs(ApiConfig config, JavaProjectBuilder javaProjectBuilder, List<ApiDoc> apiDocList, String template) {
-        List<ApiErrorCode> errorCodeList = errorCodeDictToList(config);
+        List<ApiErrorCode> errorCodeList = DocUtil.errorCodeDictToList(config);
         Template tpl = BeetlTemplateUtil.getByName(template);
         // directory tree
         List<ApiDoc> apiDocs = new ArrayList<>();
@@ -170,7 +170,7 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
             apiDocs.add(apiDoc1);
         }
         // set dict list
-        List<ApiDocDict> apiDocDictList = buildDictionary(config, javaProjectBuilder);
+        List<ApiDocDict> apiDocDictList = DocUtil.buildDictionary(config, javaProjectBuilder);
         ApiDoc apiDoc1 = new ApiDoc();
         apiDoc1.setOrder(apiDocs.size() + 1);
         apiDoc1.setLink("dict_list");
@@ -198,7 +198,7 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
      * @param outPutFileName output file
      */
     public void buildErrorCodeDoc(ApiConfig config, String template, String outPutFileName) {
-        List<ApiErrorCode> errorCodeList = errorCodeDictToList(config);
+        List<ApiErrorCode> errorCodeList = DocUtil.errorCodeDictToList(config);
         String strTime = DateTimeUtil.long2Str(now, DateTimeUtil.DATE_FORMAT_SECOND);
         Template mapper = BeetlTemplateUtil.getByName(template);
         mapper.binding(TemplateVariable.CREATE_TIME.getVariable(), strTime);
@@ -218,7 +218,7 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
      */
     public void buildErrorCodeDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder,
                                   List<ApiDoc> apiDocList, String template, String outPutFileName, String indexAlias) {
-        List<ApiErrorCode> errorCodeList = errorCodeDictToList(config);
+        List<ApiErrorCode> errorCodeList = DocUtil.errorCodeDictToList(config);
         String strTime = DateTimeUtil.long2Str(now, DateTimeUtil.DATE_FORMAT_SECOND);
         Template errorTemplate = BeetlTemplateUtil.getByName(template);
         errorTemplate.binding(TemplateVariable.PROJECT_NAME.getVariable(), config.getProjectName());
@@ -229,7 +229,7 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
         } else {
             errorTemplate.binding(TemplateVariable.DICT_ORDER.getVariable(), apiDocList.size() + 2);
         }
-        List<ApiDocDict> apiDocDictList = buildDictionary(config, javaProjectBuilder);
+        List<ApiDocDict> apiDocDictList = DocUtil.buildDictionary(config, javaProjectBuilder);
         errorTemplate.binding(TemplateVariable.CREATE_TIME.getVariable(), strTime);
         errorTemplate.binding(TemplateVariable.VERSION.getVariable(), now);
         errorTemplate.binding(TemplateVariable.DICT_LIST.getVariable(), apiDocDictList);
@@ -254,13 +254,13 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
      */
     public void buildDirectoryDataDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder, List<ApiDoc> apiDocList,
                                       String template, String outPutFileName, String indexAlias) {
-        List<ApiDocDict> directoryList = buildDictionary(config, javaProjectBuilder);
+        List<ApiDocDict> directoryList = DocUtil.buildDictionary(config, javaProjectBuilder);
         Template mapper = BeetlTemplateUtil.getByName(template);
         String strTime = DateTimeUtil.long2Str(now, DateTimeUtil.DATE_FORMAT_SECOND);
         mapper.binding(TemplateVariable.PROJECT_NAME.getVariable(), config.getProjectName());
         String style = config.getStyle();
         mapper.binding(TemplateVariable.STYLE.getVariable(), style);
-        List<ApiErrorCode> errorCodeList = errorCodeDictToList(config);
+        List<ApiErrorCode> errorCodeList = DocUtil.errorCodeDictToList(config);
         if (CollectionUtil.isEmpty(errorCodeList)) {
             mapper.binding(TemplateVariable.DICT_ORDER.getVariable(), apiDocList.size() + 1);
         } else {
@@ -286,7 +286,7 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
      * @param outPutFileName     output file
      */
     public void buildDirectoryDataDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder, String template, String outPutFileName) {
-        List<ApiDocDict> directoryList = buildDictionary(config, javaProjectBuilder);
+        List<ApiDocDict> directoryList = DocUtil.buildDictionary(config, javaProjectBuilder);
         Template mapper = BeetlTemplateUtil.getByName(template);
         setDirectoryLanguageVariable(config, mapper);
         String strTime = DateTimeUtil.long2Str(now, DateTimeUtil.DATE_FORMAT_SECOND);
@@ -316,50 +316,6 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
         FileUtil.writeFileNotAppend(mapper.render(), config.getOutPath() + FILE_SEPARATOR + doc.getName() + fileExtension);
     }
 
-    /**
-     * Build dictionary
-     *
-     * @param config             api config
-     * @param javaProjectBuilder JavaProjectBuilder
-     * @return list of ApiDocDict
-     */
-    public List<ApiDocDict> buildDictionary(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
-        List<ApiDataDictionary> apiDataDictionaryList = config.getDataDictionaries();
-        if (CollectionUtil.isEmpty(apiDataDictionaryList)) {
-            return new ArrayList<>(0);
-        }
-        List<ApiDocDict> apiDocDictList = new ArrayList<>();
-        try {
-            int order = 0;
-            for (ApiDataDictionary apiDataDictionary : apiDataDictionaryList) {
-                order++;
-                Class<?> clazz = apiDataDictionary.getEnumClass();
-                if (Objects.isNull(clazz)) {
-                    if (StringUtil.isEmpty(apiDataDictionary.getEnumClassName())) {
-                        throw new RuntimeException("Enum class name can't be null.");
-                    }
-                    clazz = Class.forName(apiDataDictionary.getEnumClassName());
-                }
-                ApiDocDict apiDocDict = new ApiDocDict();
-                apiDocDict.setOrder(order);
-                apiDocDict.setTitle(apiDataDictionary.getTitle());
-                JavaClass javaClass = javaProjectBuilder.getClassByName(clazz.getCanonicalName());
-                if (apiDataDictionary.getTitle() == null) {
-                    apiDocDict.setTitle(javaClass.getComment());
-                }
-                List<DataDict> enumDictionaryList = EnumUtil.getEnumInformation(clazz, apiDataDictionary.getCodeField(),
-                        apiDataDictionary.getDescField());
-                if (!clazz.isEnum()) {
-                    throw new RuntimeException(clazz.getCanonicalName() + " is not an enum class.");
-                }
-                apiDocDict.setDataDictList(enumDictionaryList);
-                apiDocDictList.add(apiDocDict);
-            }
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        return apiDocDictList;
-    }
 
     private List<ApiDoc> listOfApiData(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
         this.checkAndInitForGetApiData(config);

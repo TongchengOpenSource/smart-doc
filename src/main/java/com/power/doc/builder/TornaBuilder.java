@@ -28,19 +28,25 @@ import com.power.common.util.StringUtil;
 import com.power.doc.constants.TornaConstants;
 import com.power.doc.model.ApiConfig;
 import com.power.doc.model.ApiDoc;
+import com.power.doc.model.ApiDocDict;
 import com.power.doc.model.torna.Apis;
 import com.power.doc.model.torna.TornaApi;
+import com.power.doc.model.torna.TornaDic;
 import com.power.doc.template.SpringBootDocBuildTemplate;
+import com.power.doc.utils.DocUtil;
 import com.power.doc.utils.TornaUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.power.doc.constants.TornaConstants.ENUM_PUSH;
 import static com.power.doc.constants.TornaConstants.PUSH;
 import static com.power.doc.utils.TornaUtil.buildApis;
+import static com.power.doc.utils.TornaUtil.buildErrorCode;
 
 
 /**
@@ -71,7 +77,7 @@ public class TornaBuilder {
         builderTemplate.checkAndInit(config);
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
         List<ApiDoc> apiDocList = new SpringBootDocBuildTemplate().getApiData(configBuilder);
-        buildTorna(apiDocList, config);
+        buildTorna(apiDocList, config,javaProjectBuilder);
     }
 
     /**
@@ -80,7 +86,7 @@ public class TornaBuilder {
      * @param apiDocs   apiData
      * @param apiConfig ApiConfig
      */
-    public static void buildTorna(List<ApiDoc> apiDocs, ApiConfig apiConfig) {
+    public static void buildTorna(List<ApiDoc> apiDocs, ApiConfig apiConfig,JavaProjectBuilder builder) {
         TornaApi tornaApi = new TornaApi();
         tornaApi.setAuthor(StringUtil.isEmpty(apiConfig.getAuthor()) ? System.getProperty("user.name") : apiConfig.getAuthor());
         Apis api;
@@ -94,13 +100,21 @@ public class TornaBuilder {
             api.setAuthor(a.getAuthor());
             apisList.add(api);
         }
+        tornaApi.setCommonErrorCodes(buildErrorCode(apiConfig));
         tornaApi.setApis(apisList);
         //推送文档信息
         Map<String, String> requestJson = TornaConstants.buildParams(PUSH, new Gson().toJson(tornaApi), apiConfig);
+        //推送字典信息
+        Map<String,Object> dicMap = new HashMap<>(2);
+        List<TornaDic> docDicts =TornaUtil.buildTornaDic(DocUtil.buildDictionary(apiConfig,builder));
+        dicMap.put("enums",docDicts);
+        Map<String, String> dicRequestJson = TornaConstants.buildParams(ENUM_PUSH, new Gson().toJson(dicMap), apiConfig);
         //获取返回结果
         String responseMsg = OkHttp3Util.syncPostJson(apiConfig.getOpenUrl(), new Gson().toJson(requestJson));
+        String dicResponseMsg = OkHttp3Util.syncPostJson(apiConfig.getOpenUrl(), new Gson().toJson(dicRequestJson));
         //开启调试时打印请求信息
-        TornaUtil.printDebugInfo(apiConfig, responseMsg, requestJson);
+        TornaUtil.printDebugInfo(apiConfig, responseMsg, requestJson,PUSH);
+        TornaUtil.printDebugInfo(apiConfig, dicResponseMsg, dicRequestJson,ENUM_PUSH);
     }
 }
 

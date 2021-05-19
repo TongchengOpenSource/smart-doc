@@ -27,12 +27,9 @@ import com.mifmif.common.regex.Generex;
 import com.power.common.util.*;
 import com.power.doc.constants.DocAnnotationConstants;
 import com.power.doc.constants.DocGlobalConstants;
-import com.power.doc.model.DocJavaField;
-import com.power.doc.model.FormData;
-import com.thoughtworks.qdox.model.DocletTag;
-import com.thoughtworks.qdox.model.JavaAnnotation;
-import com.thoughtworks.qdox.model.JavaField;
-import com.thoughtworks.qdox.model.JavaMethod;
+import com.power.doc.model.*;
+import com.thoughtworks.qdox.JavaProjectBuilder;
+import com.thoughtworks.qdox.model.*;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -537,4 +534,79 @@ public class DocUtil {
             return null == url ? StringUtil.EMPTY : url.toString();
         }
     }
+
+    public static List<ApiErrorCode> errorCodeDictToList(ApiConfig config) {
+        if (CollectionUtil.isNotEmpty(config.getErrorCodes())) {
+            return config.getErrorCodes();
+        }
+        List<ApiErrorCodeDictionary> errorCodeDictionaries = config.getErrorCodeDictionaries();
+        if (CollectionUtil.isEmpty(errorCodeDictionaries)) {
+            return new ArrayList<>(0);
+        } else {
+            List<ApiErrorCode> errorCodeList = new ArrayList<>();
+            try {
+                for (ApiErrorCodeDictionary dictionary : errorCodeDictionaries) {
+                    Class<?> clzz = dictionary.getEnumClass();
+                    if (Objects.isNull(clzz)) {
+                        if (StringUtil.isEmpty(dictionary.getEnumClassName())) {
+                            throw new RuntimeException("Enum class name can't be null.");
+                        }
+                        clzz = Class.forName(dictionary.getEnumClassName());
+                    }
+                    List<ApiErrorCode> enumDictionaryList = EnumUtil.getEnumInformation(clzz, dictionary.getCodeField(),
+                            dictionary.getDescField());
+                    errorCodeList.addAll(enumDictionaryList);
+                }
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            return errorCodeList;
+        }
+    }
+
+    /**
+     * Build dictionary
+     *
+     * @param config             api config
+     * @param javaProjectBuilder JavaProjectBuilder
+     * @return list of ApiDocDict
+     */
+    public static List<ApiDocDict> buildDictionary(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
+        List<ApiDataDictionary> apiDataDictionaryList = config.getDataDictionaries();
+        if (CollectionUtil.isEmpty(apiDataDictionaryList)) {
+            return new ArrayList<>(0);
+        }
+        List<ApiDocDict> apiDocDictList = new ArrayList<>();
+        try {
+            int order = 0;
+            for (ApiDataDictionary apiDataDictionary : apiDataDictionaryList) {
+                order++;
+                Class<?> clazz = apiDataDictionary.getEnumClass();
+                if (Objects.isNull(clazz)) {
+                    if (StringUtil.isEmpty(apiDataDictionary.getEnumClassName())) {
+                        throw new RuntimeException("Enum class name can't be null.");
+                    }
+                    clazz = Class.forName(apiDataDictionary.getEnumClassName());
+                }
+                ApiDocDict apiDocDict = new ApiDocDict();
+                apiDocDict.setOrder(order);
+                apiDocDict.setTitle(apiDataDictionary.getTitle());
+                JavaClass javaClass = javaProjectBuilder.getClassByName(clazz.getCanonicalName());
+                if (apiDataDictionary.getTitle() == null) {
+                    apiDocDict.setTitle(javaClass.getComment());
+                }
+                List<DataDict> enumDictionaryList = EnumUtil.getEnumInformation(clazz, apiDataDictionary.getCodeField(),
+                        apiDataDictionary.getDescField());
+                if (!clazz.isEnum()) {
+                    throw new RuntimeException(clazz.getCanonicalName() + " is not an enum class.");
+                }
+                apiDocDict.setDataDictList(enumDictionaryList);
+                apiDocDictList.add(apiDocDict);
+            }
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return apiDocDictList;
+    }
+
 }

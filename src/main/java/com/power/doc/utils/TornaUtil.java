@@ -2,12 +2,16 @@ package com.power.doc.utils;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import com.google.gson.internal.$Gson$Types;
+import com.power.common.model.EnumDictionary;
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.StringUtil;
+import com.power.doc.builder.BaseDocBuilderTemplate;
 import com.power.doc.constants.TornaConstants;
 import com.power.doc.model.*;
 import com.power.doc.model.rpc.RpcApiDependency;
 import com.power.doc.model.torna.*;
+import okhttp3.internal.http2.ErrorCode;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -38,7 +42,7 @@ public class TornaUtil {
         return hasDebugEnv;
     }
 
-    public static void printDebugInfo(ApiConfig apiConfig, String responseMsg, Map<String, String> requestJson) {
+    public static void printDebugInfo(ApiConfig apiConfig, String responseMsg, Map<String, String> requestJson,String category) {
         if (apiConfig.isTornaDebug()) {
             String sb = "配置信息列表: \n" +
                     "OpenUrl: " +
@@ -57,7 +61,7 @@ public class TornaUtil {
             JsonElement element = JsonParser.parseString(responseMsg);
             TornaRequestInfo info = new TornaRequestInfo()
                     .of()
-                    .setCategory(PUSH)
+                    .setCategory(category)
                     .setCode(element.getAsJsonObject().get(TornaConstants.CODE).getAsString())
                     .setMessage(element.getAsJsonObject().get(TornaConstants.MESSAGE).getAsString())
                     .setRequestInfo(requestJson)
@@ -79,16 +83,6 @@ public class TornaUtil {
         Apis methodApi;
         //遍历分类接口
         for (ApiMethodDoc apiMethodDoc : apiMethodDocs) {
-            /**
-             *  "name": "获取商品信息",
-             *             "description": "获取商品信息",
-             *             "url": "/goods/get",
-             *             "httpMethod": "GET",
-             *             "contentType": "application/json",
-             *             "isFolder": "1",
-             *             "parentId": "",
-             *             "isShow": "1",
-             */
             methodApi = new Apis();
             methodApi.setIsFolder(TornaConstants.NO);
             methodApi.setName(apiMethodDoc.getDesc());
@@ -99,29 +93,6 @@ public class TornaUtil {
             methodApi.setIsShow(TornaConstants.YES);
             methodApi.setAuthor(apiMethodDoc.getAuthor());
 
-            /**
-             *      {
-             *                     "name": "goodsName",
-             *                     "type": "string",
-             *                     "required": "1",
-             *                     "maxLength": "128",
-             *                     "example": "iphone12",
-             *                     "description": "商品名称描述",
-             *                     "parentId": "",
-             *                     "enumInfo": {
-             *                         "name": "支付枚举",
-             *                         "description": "支付状态",
-             *                         "items": [
-             *                             {
-             *                                 "name": "WAIT_PAY",
-             *                                 "type": "string",
-             *                                 "value": "0",
-             *                                 "description": "未支付"
-             *                             }
-             *                         ]
-             *                     }
-             *                 }
-             */
             methodApi.setHeaderParams(buildHerder(apiMethodDoc.getRequestHeaders()));
             methodApi.setResponseParams(buildParams(apiMethodDoc.getResponseParams()));
             //Path
@@ -153,16 +124,6 @@ public class TornaUtil {
         Apis methodApi;
         //遍历分类接口
         for (JavaMethodDoc apiMethodDoc : apiMethodDocs) {
-            /**
-             *  "name": "获取商品信息",
-             *             "description": "获取商品信息",
-             *             "url": "/goods/get",
-             *             "httpMethod": "GET",
-             *             "contentType": "application/json",
-             *             "isFolder": "1",
-             *             "parentId": "",
-             *             "isShow": "1",
-             */
             methodApi = new Apis();
             methodApi.setIsFolder(TornaConstants.NO);
             methodApi.setName(apiMethodDoc.getDesc());
@@ -170,30 +131,6 @@ public class TornaUtil {
             methodApi.setIsShow(TornaConstants.YES);
             methodApi.setAuthor(apiMethodDoc.getAuthor());
             methodApi.setUrl(apiMethodDoc.getMethodDefinition());
-
-            /**
-             *      {
-             *                     "name": "goodsName",
-             *                     "type": "string",
-             *                     "required": "1",
-             *                     "maxLength": "128",
-             *                     "example": "iphone12",
-             *                     "description": "商品名称描述",
-             *                     "parentId": "",
-             *                     "enumInfo": {
-             *                         "name": "支付枚举",
-             *                         "description": "支付状态",
-             *                         "items": [
-             *                             {
-             *                                 "name": "WAIT_PAY",
-             *                                 "type": "string",
-             *                                 "value": "0",
-             *                                 "description": "未支付"
-             *                             }
-             *                         ]
-             *                     }
-             *                 }
-             */
             methodApi.setResponseParams(buildParams(apiMethodDoc.getResponseParams()));
             //Json
             if (CollectionUtil.isNotEmpty(apiMethodDoc.getRequestParams())) {
@@ -282,5 +219,52 @@ public class TornaUtil {
             }
         }
         return s.toString();
+    }
+
+    public static List<CommonErrorCode> buildErrorCode(ApiConfig config) {
+        List<CommonErrorCode> commonErrorCodes = new ArrayList<>();
+        CommonErrorCode commonErrorCode;
+        List<ApiErrorCode> errorCodes = DocUtil.errorCodeDictToList(config);
+        if (CollectionUtil.isNotEmpty(errorCodes)) {
+            for (EnumDictionary code : errorCodes) {
+                commonErrorCode = new CommonErrorCode();
+                commonErrorCode.setCode(code.getValue());
+                // commonErrorCode.setSolution(code.getDesc());
+                commonErrorCode.setMsg(code.getDesc());
+                commonErrorCodes.add(commonErrorCode);
+            }
+        }
+        return commonErrorCodes;
+    }
+
+    public static List<TornaDic> buildTornaDic(List<ApiDocDict> apiDocDicts) {
+        List<TornaDic> dics = new ArrayList<>();
+        TornaDic tornaDic = new TornaDic();
+        if (CollectionUtil.isNotEmpty(apiDocDicts)) {
+            for (ApiDocDict doc : apiDocDicts) {
+                tornaDic.setName(doc.getTitle())
+                       // .setDescription(doc.getTitle())
+                        .setItems(buildTornaDicItems(doc.getDataDictList()));
+                dics.add(tornaDic);
+            }
+        }
+        return dics;
+    }
+
+    private static List<HttpParam> buildTornaDicItems(List<DataDict> dataDicts) {
+        List<HttpParam> apis = new ArrayList<>();
+        HttpParam api;
+        if (CollectionUtil.isNotEmpty(dataDicts)) {
+            for (EnumDictionary d : dataDicts) {
+                api = new HttpParam();
+                api.setName(d.getName());
+                api.setType(d.getType());
+                api.setValue(d.getValue());
+                api.setDescription(d.getDesc());
+
+                apis.add(api);
+            }
+        }
+        return apis;
     }
 }
