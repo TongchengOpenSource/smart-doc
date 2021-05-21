@@ -92,6 +92,9 @@ public class FormDataBuildHelper {
             if (JavaClassValidateUtil.isArray(gicName)) {
                 gicName = gicName.substring(0, gicName.indexOf("["));
             }
+            if (JavaClassValidateUtil.isPrimitive(gicName)) {
+                pre = pre.substring(0, pre.lastIndexOf("."));
+            }
             formDataList.addAll(getFormData(gicName, registryClasses, counter, builder, pre + "[]"));
         }
         int n = 0;
