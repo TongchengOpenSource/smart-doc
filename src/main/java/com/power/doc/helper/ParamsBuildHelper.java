@@ -300,7 +300,7 @@ public class ParamsBuildHelper {
                     if (javaClass.isEnum()) {
                         comment = comment + handleEnumComment(javaClass, projectBuilder);
                         param.setType(DocGlobalConstants.ENUM);
-                        if (!isResp){
+                        if (!isResp) {
                             List<JavaMethod> methods = javaClass.getMethods();
                             int index = 0;
                             enumOut:
@@ -345,12 +345,10 @@ public class ParamsBuildHelper {
                             comment = comment + handleEnumComment(javaClass1, projectBuilder);
                         }
                         String gName = gNameArr[0];
-                        if(JavaClassValidateUtil.isPrimitive(gName)){
-                            String builder = "[" +
-                                    DocUtil.jsonValueByType(gName) +
+                        if (JavaClassValidateUtil.isPrimitive(gName)) {
+                            String builder = DocUtil.jsonValueByType(gName) +
                                     "," +
-                                    DocUtil.jsonValueByType(gName) +
-                                    "]";
+                                    DocUtil.jsonValueByType(gName);
                             if (StringUtil.isEmpty(fieldValue)) {
                                 param.setValue(DocUtil.handleJsonStr(builder));
                             } else {
@@ -361,7 +359,7 @@ public class ParamsBuildHelper {
                             } else {
                                 commonHandleParam(paramList, param, isRequired, NO_COMMENTS_FOUND + appendComment, since, strRequired);
                             }
-                        } else  {
+                        } else {
                             if (!simpleName.equals(gName) && !gName.equals(simpleName)) {
                                 JavaClass arraySubClass = projectBuilder.getJavaProjectBuilder().getClassByName(gName);
                                 if (arraySubClass.isEnum()) {
@@ -410,7 +408,7 @@ public class ParamsBuildHelper {
                                         isResp, registryClasses, projectBuilder, groupClasses, fieldPid, jsonRequest));
                             }
                         }
-                    }  else if (subTypeName.length() == 1 || DocGlobalConstants.JAVA_OBJECT_FULLY.equals(subTypeName)) {
+                    } else if (subTypeName.length() == 1 || DocGlobalConstants.JAVA_OBJECT_FULLY.equals(subTypeName)) {
                         // handle java generic or object
                         if (DocGlobalConstants.JAVA_OBJECT_FULLY.equals(subTypeName) && StringUtil.isNotEmpty(field.getComment())) {
                             ApiParam param1 = ApiParam.of().setField(preBuilder.toString() + "any object")
