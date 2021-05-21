@@ -158,14 +158,28 @@ public class FormDataBuildHelper {
                 formData.setValue(StringUtil.removeQuotes(String.valueOf(value)));
                 formData.setDescription(comment);
                 formDataList.add(formData);
-            } else if (JavaClassValidateUtil.isCollection(subTypeName)) {
+            } else if (JavaClassValidateUtil.isCollection(subTypeName) || JavaClassValidateUtil.isArray(subTypeName)) {
                 String gNameTemp = field.getType().getGenericCanonicalName();
                 String[] gNameArr = DocClassUtil.getSimpleGicName(gNameTemp);
                 if (gNameArr.length == 0) {
                     continue out;
                 }
                 String gName = DocClassUtil.getSimpleGicName(gNameTemp)[0];
-                if (!JavaClassValidateUtil.isPrimitive(gName)) {
+                if (JavaClassValidateUtil.isPrimitive(gName)) {
+                    String fieldValue = "";
+                    if (tagsMap.containsKey(DocTags.MOCK) && StringUtil.isNotEmpty(tagsMap.get(DocTags.MOCK))) {
+                        fieldValue = tagsMap.get(DocTags.MOCK);
+                    } else {
+                        String val = DocUtil.getValByTypeAndFieldName(gName, field.getName());
+                        fieldValue = val + "," + val;
+                    }
+                    FormData formData = new FormData();
+                    formData.setKey(pre + fieldName);
+                    formData.setType("text");
+                    formData.setValue(fieldValue);
+                    formData.setDescription(comment);
+                    formDataList.add(formData);
+                } else {
                     if (!simpleName.equals(gName) && !gName.equals(simpleName)) {
                         if (gName.length() == 1) {
                             int len = globGicName.length;
