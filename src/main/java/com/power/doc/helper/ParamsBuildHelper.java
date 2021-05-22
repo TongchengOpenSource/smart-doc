@@ -360,6 +360,12 @@ public class ParamsBuildHelper {
                                 commonHandleParam(paramList, param, isRequired, NO_COMMENTS_FOUND + appendComment, since, strRequired);
                             }
                         } else {
+                            if (StringUtil.isNotEmpty(comment)) {
+                                commonHandleParam(paramList, param, isRequired, comment + appendComment, since, strRequired);
+                            } else {
+                                commonHandleParam(paramList, param, isRequired, NO_COMMENTS_FOUND + appendComment, since, strRequired);
+                            }
+                            fieldPid = paramList.size() + pid;
                             if (!simpleName.equals(gName) && !gName.equals(simpleName)) {
                                 JavaClass arraySubClass = projectBuilder.getJavaProjectBuilder().getClassByName(gName);
                                 if (arraySubClass.isEnum()) {
@@ -386,6 +392,7 @@ public class ParamsBuildHelper {
                         }
 
                     } else if (JavaClassValidateUtil.isMap(subTypeName)) {
+                        fieldPid = paramList.size() + pid;
                         String gNameTemp = fieldGicName;
                         String valType = DocClassUtil.getMapKeyValueType(gNameTemp).length == 0 ? gNameTemp : DocClassUtil.getMapKeyValueType(gNameTemp)[1];
                         if (JavaClassValidateUtil.isMap(gNameTemp) || JAVA_OBJECT_FULLY.equals(valType)) {
@@ -409,6 +416,7 @@ public class ParamsBuildHelper {
                             }
                         }
                     } else if (subTypeName.length() == 1 || DocGlobalConstants.JAVA_OBJECT_FULLY.equals(subTypeName)) {
+                        fieldPid = paramList.size() + pid;
                         // handle java generic or object
                         if (DocGlobalConstants.JAVA_OBJECT_FULLY.equals(subTypeName) && StringUtil.isNotEmpty(field.getComment())) {
                             ApiParam param1 = ApiParam.of().setField(preBuilder.toString() + "any object")
@@ -452,10 +460,10 @@ public class ParamsBuildHelper {
                     } else if (simpleName.equals(subTypeName)) {
                         //do nothing
                     } else {
-                        if (!javaClass.isEnum()) {
-                            paramList.addAll(buildParams(fieldGicName, preBuilder.toString(), nextLevel, isRequired,
-                                    isResp, registryClasses, projectBuilder, groupClasses, fieldPid, jsonRequest));
-                        }
+                        fieldPid = paramList.size() + pid;
+                        paramList.addAll(buildParams(fieldGicName, preBuilder.toString(), nextLevel, isRequired,
+                                isResp, registryClasses, projectBuilder, groupClasses, fieldPid, jsonRequest));
+
                     }
                 }
             }//end field
