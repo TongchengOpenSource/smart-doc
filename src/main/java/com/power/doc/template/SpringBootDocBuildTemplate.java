@@ -823,9 +823,14 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
     }
 
     private boolean checkController(JavaClass cls) {
+        if (cls.isAnnotation() || cls.isEnum()) {
+            return false;
+        }
         JavaClass superClass = cls.getSuperJavaClass();
         List<JavaAnnotation> classAnnotations = new ArrayList<>();
-        classAnnotations.addAll(superClass.getAnnotations());
+        if (Objects.nonNull(superClass)) {
+            classAnnotations.addAll(superClass.getAnnotations());
+        }
         classAnnotations.addAll(cls.getAnnotations());
         for (JavaAnnotation annotation : classAnnotations) {
             String name = annotation.getType().getValue();
@@ -928,7 +933,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             return annotationsList;
         }
         JavaClass superJavaClass = cls.getSuperJavaClass();
-        if (!"Object".equals(superJavaClass.getSimpleName())) {
+        if (Objects.nonNull(superJavaClass) && !"Object".equals(superJavaClass.getSimpleName())) {
             annotationsList.addAll(getAnnotations(superJavaClass));
         }
         return annotationsList;
