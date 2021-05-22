@@ -39,6 +39,7 @@ import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaField;
 import com.thoughtworks.qdox.model.JavaMethod;
+import com.thoughtworks.qdox.model.expression.AnnotationValue;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
@@ -153,7 +154,7 @@ public class ParamsBuildHelper {
                 CustomField customResponseField = responseFieldMap.get(fieldName);
                 if (customResponseField != null && JavaClassUtil.isTargetChildClass(simpleName, customResponseField.getOwnerClassName())
                         && (customResponseField.isIgnore()) && isResp) {
-                    continue;
+                    continue ;
                 }
                 CustomField customRequestField = projectBuilder.getCustomReqFieldMap().get(fieldName);
                 if (customRequestField != null && JavaClassUtil.isTargetChildClass(simpleName, customRequestField.getOwnerClassName())
@@ -163,8 +164,19 @@ public class ParamsBuildHelper {
                 an:
                 for (JavaAnnotation annotation : javaAnnotations) {
                     String simpleAnnotationName = annotation.getType().getValue();
-                    if ("max".equalsIgnoreCase(simpleAnnotationName)) {
+                    if (DocAnnotationConstants.MAX.equalsIgnoreCase(simpleAnnotationName)) {
                         maxLength = annotation.getProperty(DocAnnotationConstants.VALUE_PROP).toString();
+                    }
+                    if(DocAnnotationConstants.JSON_PROPERTY.equalsIgnoreCase(simpleAnnotationName)){
+                        AnnotationValue value = annotation.getProperty("access");
+                        if(Objects.nonNull(value)){
+                           if(JSON_PROPERTY_READ_ONLY.equals(value.getParameterValue()) && !isResp){
+                               continue out;
+                           }
+                            if(JSON_PROPERTY_WRITE_ONLY.equals(value.getParameterValue()) && isResp){
+                               continue out;
+                            }
+                        }
                     }
                     if (DocAnnotationConstants.SHORT_JSON_IGNORE.equals(simpleAnnotationName)) {
                         continue out;

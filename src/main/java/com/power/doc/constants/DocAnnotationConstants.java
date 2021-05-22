@@ -66,4 +66,6 @@ public interface DocAnnotationConstants {
     String JSON_CREATOR = "JsonCreator";
 
     String MAX = "max";
+
+    String JSON_PROPERTY = "JsonProperty";
 }

@@ -31,9 +31,12 @@ import com.power.doc.constants.DocTags;
 import com.power.doc.model.*;
 import com.power.doc.utils.*;
 import com.thoughtworks.qdox.model.*;
+import com.thoughtworks.qdox.model.expression.AnnotationValue;
 
 import java.util.*;
 
+import static com.power.doc.constants.DocGlobalConstants.JSON_PROPERTY_READ_ONLY;
+import static com.power.doc.constants.DocGlobalConstants.JSON_PROPERTY_WRITE_ONLY;
 import static com.power.doc.constants.DocTags.IGNORE_RESPONSE_BODY_ADVICE;
 
 
@@ -214,6 +217,17 @@ public class JsonBuildHelper {
                 List<JavaAnnotation> annotations = docField.getAnnotations();
                 for (JavaAnnotation annotation : annotations) {
                     String annotationName = annotation.getType().getValue();
+                    if(DocAnnotationConstants.JSON_PROPERTY.equalsIgnoreCase(annotationName)){
+                        AnnotationValue value = annotation.getProperty("access");
+                        if(Objects.nonNull(value)){
+                            if(JSON_PROPERTY_READ_ONLY.equals(value.getParameterValue()) && !isResp){
+                                continue out;
+                            }
+                            if(JSON_PROPERTY_WRITE_ONLY.equals(value.getParameterValue()) && isResp){
+                                continue out;
+                            }
+                        }
+                    }
                     if (DocAnnotationConstants.SHORT_JSON_IGNORE.equals(annotationName)) {
                         continue out;
                     } else if (DocAnnotationConstants.SHORT_JSON_FIELD.equals(annotationName)) {
