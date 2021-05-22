@@ -154,7 +154,7 @@ public class ParamsBuildHelper {
                 CustomField customResponseField = responseFieldMap.get(fieldName);
                 if (customResponseField != null && JavaClassUtil.isTargetChildClass(simpleName, customResponseField.getOwnerClassName())
                         && (customResponseField.isIgnore()) && isResp) {
-                    continue ;
+                    continue;
                 }
                 CustomField customRequestField = projectBuilder.getCustomReqFieldMap().get(fieldName);
                 if (customRequestField != null && JavaClassUtil.isTargetChildClass(simpleName, customRequestField.getOwnerClassName())
@@ -167,14 +167,14 @@ public class ParamsBuildHelper {
                     if (DocAnnotationConstants.MAX.equalsIgnoreCase(simpleAnnotationName)) {
                         maxLength = annotation.getProperty(DocAnnotationConstants.VALUE_PROP).toString();
                     }
-                    if(DocAnnotationConstants.JSON_PROPERTY.equalsIgnoreCase(simpleAnnotationName)){
+                    if (DocAnnotationConstants.JSON_PROPERTY.equalsIgnoreCase(simpleAnnotationName)) {
                         AnnotationValue value = annotation.getProperty("access");
-                        if(Objects.nonNull(value)){
-                           if(JSON_PROPERTY_READ_ONLY.equals(value.getParameterValue()) && !isResp){
-                               continue out;
-                           }
-                            if(JSON_PROPERTY_WRITE_ONLY.equals(value.getParameterValue()) && isResp){
-                               continue out;
+                        if (Objects.nonNull(value)) {
+                            if (JSON_PROPERTY_READ_ONLY.equals(value.getParameterValue()) && !isResp) {
+                                continue out;
+                            }
+                            if (JSON_PROPERTY_WRITE_ONLY.equals(value.getParameterValue()) && isResp) {
+                                continue out;
                             }
                         }
                     }

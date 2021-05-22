@@ -217,13 +217,13 @@ public class JsonBuildHelper {
                 List<JavaAnnotation> annotations = docField.getAnnotations();
                 for (JavaAnnotation annotation : annotations) {
                     String annotationName = annotation.getType().getValue();
-                    if(DocAnnotationConstants.JSON_PROPERTY.equalsIgnoreCase(annotationName)){
+                    if (DocAnnotationConstants.JSON_PROPERTY.equalsIgnoreCase(annotationName)) {
                         AnnotationValue value = annotation.getProperty("access");
-                        if(Objects.nonNull(value)){
-                            if(JSON_PROPERTY_READ_ONLY.equals(value.getParameterValue()) && !isResp){
+                        if (Objects.nonNull(value)) {
+                            if (JSON_PROPERTY_READ_ONLY.equals(value.getParameterValue()) && !isResp) {
                                 continue out;
                             }
-                            if(JSON_PROPERTY_WRITE_ONLY.equals(value.getParameterValue()) && isResp){
+                            if (JSON_PROPERTY_WRITE_ONLY.equals(value.getParameterValue()) && isResp) {
                                 continue out;
                             }
                         }

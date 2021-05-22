@@ -1,8 +1,4 @@
 ## smart-doc版本
-#### 版本号2.1.9
-- 更新日期
-- 更新内容
-    1.添加@JsonProperty支持
 
 #### 版本号：2.1.8
 
@@ -15,7 +11,7 @@
     5. 修复maven插件torna-rest和torna-rpc两个task未加编译前缀的问题。
     6. 修复生成json用例中数组类型json错误的问题。
     7. 修复customRequestFields中设置字段value在用例中不生效的bug。
-
+    8. 添加@JsonProperty支持,支持JsonProperty.Access控制字段。
 #### 版本号：2.1.7
 
 - 更新日期: 2020-05-12

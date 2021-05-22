@@ -827,7 +827,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         }
         JavaClass superClass = cls.getSuperJavaClass();
         List<JavaAnnotation> classAnnotations = new ArrayList<>();
-        if(Objects.nonNull(superClass)) {
+        if (Objects.nonNull(superClass)) {
             classAnnotations.addAll(superClass.getAnnotations());
         }
         classAnnotations.addAll(cls.getAnnotations());
