@@ -322,6 +322,7 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
         config.setMd5EncryptedHtmlName(true);
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
         IDocBuildTemplate docBuildTemplate = new SpringBootDocBuildTemplate();
-        return docBuildTemplate.getApiData(configBuilder);
+        List<ApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder);
+        return apiDocList;
     }
 }

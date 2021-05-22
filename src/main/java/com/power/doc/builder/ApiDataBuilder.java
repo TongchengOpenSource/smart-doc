@@ -39,7 +39,7 @@ public class ApiDataBuilder {
      * @return List of ApiDoc
      */
     public static ApiAllData getApiData(ApiConfig config) {
-        return getApiData(config, false);
+        return getApiData(config, Boolean.FALSE);
     }
 
     /**
@@ -49,7 +49,7 @@ public class ApiDataBuilder {
      * @return List of ApiDoc
      */
     public static ApiAllData getApiDataTree(ApiConfig config) {
-        return getApiData(config, true);
+        return getApiData(config, Boolean.TRUE);
     }
 
     private static ApiAllData getApiData(ApiConfig config, boolean toTree) {
@@ -57,7 +57,7 @@ public class ApiDataBuilder {
         DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
         builderTemplate.checkAndInitForGetApiData(config);
         JavaProjectBuilder javaProjectBuilder = new JavaProjectBuilder();
-        builderTemplate.getApiData(config, javaProjectBuilder);
-        return builderTemplate.getApiData(config, javaProjectBuilder);
+        ApiAllData apiAllData = builderTemplate.getApiData(config, javaProjectBuilder);
+        return apiAllData;
     }
 }
