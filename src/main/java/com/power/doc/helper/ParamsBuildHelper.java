@@ -294,8 +294,16 @@ public class ParamsBuildHelper {
                         preBuilder.append(DocGlobalConstants.FIELD_SPACE);
                     }
                     preBuilder.append("└─");
-                    int fieldPid = paramList.size() + pid;
+                    int fieldPid;
                     ApiParam param = ApiParam.of().setField(pre + fieldName).setPid(pid).setMaxLength(maxLength);
+
+                    String processedType;
+                    if (typeSimpleName.length() == 1) {
+                        processedType = DocClassUtil.processTypeNameForParams(typeSimpleName.toLowerCase());
+                    } else {
+                        processedType = isShowJavaType ? typeSimpleName : DocClassUtil.processTypeNameForParams(typeSimpleName.toLowerCase());
+                    }
+                    param.setType(processedType);
                     JavaClass javaClass = projectBuilder.getJavaProjectBuilder().getClassByName(subTypeName);
                     if (javaClass.isEnum()) {
                         comment = comment + handleEnumComment(javaClass, projectBuilder);
@@ -392,6 +400,11 @@ public class ParamsBuildHelper {
                         }
 
                     } else if (JavaClassValidateUtil.isMap(subTypeName)) {
+                        if (StringUtil.isNotEmpty(comment)) {
+                            commonHandleParam(paramList, param, isRequired, comment + appendComment, since, strRequired);
+                        } else {
+                            commonHandleParam(paramList, param, isRequired, NO_COMMENTS_FOUND + appendComment, since, strRequired);
+                        }
                         fieldPid = paramList.size() + pid;
                         String gNameTemp = fieldGicName;
                         String valType = DocClassUtil.getMapKeyValueType(gNameTemp).length == 0 ? gNameTemp : DocClassUtil.getMapKeyValueType(gNameTemp)[1];
@@ -416,6 +429,11 @@ public class ParamsBuildHelper {
                             }
                         }
                     } else if (subTypeName.length() == 1 || DocGlobalConstants.JAVA_OBJECT_FULLY.equals(subTypeName)) {
+                        if (StringUtil.isNotEmpty(comment)) {
+                            commonHandleParam(paramList, param, isRequired, comment + appendComment, since, strRequired);
+                        } else {
+                            commonHandleParam(paramList, param, isRequired, NO_COMMENTS_FOUND + appendComment, since, strRequired);
+                        }
                         fieldPid = paramList.size() + pid;
                         // handle java generic or object
                         if (DocGlobalConstants.JAVA_OBJECT_FULLY.equals(subTypeName) && StringUtil.isNotEmpty(field.getComment())) {
@@ -460,6 +478,11 @@ public class ParamsBuildHelper {
                     } else if (simpleName.equals(subTypeName)) {
                         //do nothing
                     } else {
+                        if (StringUtil.isNotEmpty(comment)) {
+                            commonHandleParam(paramList, param, isRequired, comment + appendComment, since, strRequired);
+                        } else {
+                            commonHandleParam(paramList, param, isRequired, NO_COMMENTS_FOUND + appendComment, since, strRequired);
+                        }
                         fieldPid = paramList.size() + pid;
                         paramList.addAll(buildParams(fieldGicName, preBuilder.toString(), nextLevel, isRequired,
                                 isResp, registryClasses, projectBuilder, groupClasses, fieldPid, jsonRequest));
