@@ -22,20 +22,21 @@
  */
 package com.power.doc.builder;
 
-import com.power.common.util.CollectionUtil;
 import com.power.common.util.DateTimeUtil;
-import com.power.common.util.EnumUtil;
 import com.power.common.util.StringUtil;
 import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.constants.DocLanguage;
 import com.power.doc.constants.TemplateVariable;
 import com.power.doc.model.ApiConfig;
-import com.power.doc.model.ApiErrorCode;
-import com.power.doc.model.ApiErrorCodeDictionary;
 import com.power.doc.model.RevisionLog;
 import org.beetl.core.Template;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+
+import static com.power.doc.constants.DocGlobalConstants.CSS_CDN;
+import static com.power.doc.constants.DocGlobalConstants.CSS_CDN_CH;
 
 /**
  * @author yu 2020/5/16.
@@ -106,5 +107,13 @@ public class BaseDocBuilderTemplate {
             titleMap.put(TemplateVariable.DICT_LIST_TITLE.getVariable(), DocGlobalConstants.DICT_CN_TITLE);
         }
         return titleMap;
+    }
+
+    public void setCssCDN(ApiConfig config,Template template) {
+        if (DocLanguage.CHINESE.equals(config.getLanguage())) {
+            template.binding(TemplateVariable.CSS_CND.getVariable(), CSS_CDN_CH);
+        } else {
+            template.binding(TemplateVariable.CSS_CND.getVariable(), CSS_CDN);
+        }
     }
 }

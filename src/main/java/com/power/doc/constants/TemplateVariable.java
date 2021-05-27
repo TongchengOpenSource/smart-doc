@@ -54,7 +54,8 @@ public enum TemplateVariable {
     RESPONSE_LIST("respList"),
     ORDER("order"),
     INDEX_ALIAS("alias"),
-    DIRECTORY_TREE("directoryTree");
+    DIRECTORY_TREE("directoryTree"),
+    CSS_CND("css_cdn");
 
     private String variable;
 

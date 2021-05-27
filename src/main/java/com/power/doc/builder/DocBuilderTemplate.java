@@ -23,6 +23,8 @@
 package com.power.doc.builder;
 
 import com.power.common.util.*;
+import com.power.doc.constants.DocGlobalConstants;
+import com.power.doc.constants.DocLanguage;
 import com.power.doc.constants.HighlightStyle;
 import com.power.doc.constants.TemplateVariable;
 import com.power.doc.model.*;
@@ -39,8 +41,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import static com.power.doc.constants.DocGlobalConstants.FILE_SEPARATOR;
-import static com.power.doc.constants.DocGlobalConstants.SEARCH_JS_OUT;
+import static com.power.doc.constants.DocGlobalConstants.*;
 
 /**
  * @author yu 2019/9/26.
@@ -133,6 +134,7 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
         tpl.binding(TemplateVariable.PROJECT_NAME.getVariable(), config.getProjectName());
         tpl.binding(TemplateVariable.REQUEST_EXAMPLE.getVariable(), config.isRequestExample());
         tpl.binding(TemplateVariable.RESPONSE_EXAMPLE.getVariable(), config.isResponseExample());
+        setCssCDN(config,tpl);
         if (CollectionUtil.isEmpty(errorCodeList)) {
             tpl.binding(TemplateVariable.DICT_ORDER.getVariable(), apiDocList.size() + 1);
         } else {
@@ -200,10 +202,11 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
     public void buildErrorCodeDoc(ApiConfig config, String template, String outPutFileName) {
         List<ApiErrorCode> errorCodeList = DocUtil.errorCodeDictToList(config);
         String strTime = DateTimeUtil.long2Str(now, DateTimeUtil.DATE_FORMAT_SECOND);
-        Template mapper = BeetlTemplateUtil.getByName(template);
-        mapper.binding(TemplateVariable.CREATE_TIME.getVariable(), strTime);
-        mapper.binding(TemplateVariable.LIST.getVariable(), errorCodeList);
-        FileUtil.nioWriteFile(mapper.render(), config.getOutPath() + FILE_SEPARATOR + outPutFileName);
+        Template tpl = BeetlTemplateUtil.getByName(template);
+        setCssCDN(config, tpl);
+        tpl.binding(TemplateVariable.CREATE_TIME.getVariable(), strTime);
+        tpl.binding(TemplateVariable.LIST.getVariable(), errorCodeList);
+        FileUtil.nioWriteFile(tpl.render(), config.getOutPath() + FILE_SEPARATOR + outPutFileName);
     }
 
     /**
@@ -229,6 +232,8 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
         } else {
             errorTemplate.binding(TemplateVariable.DICT_ORDER.getVariable(), apiDocList.size() + 2);
         }
+        // set css cdn
+        setCssCDN(config, errorTemplate);
         List<ApiDocDict> apiDocDictList = DocUtil.buildDictionary(config, javaProjectBuilder);
         errorTemplate.binding(TemplateVariable.CREATE_TIME.getVariable(), strTime);
         errorTemplate.binding(TemplateVariable.VERSION.getVariable(), now);
@@ -261,10 +266,12 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
         String style = config.getStyle();
         mapper.binding(TemplateVariable.STYLE.getVariable(), style);
         List<ApiErrorCode> errorCodeList = DocUtil.errorCodeDictToList(config);
-        if (CollectionUtil.isEmpty(errorCodeList)) {
-            mapper.binding(TemplateVariable.DICT_ORDER.getVariable(), apiDocList.size() + 1);
+        // set css cdn
+        setCssCDN(config, mapper);
+        if (DocLanguage.CHINESE.equals(config.getLanguage())) {
+            mapper.binding(TemplateVariable.CSS_CND.getVariable(), CSS_CDN_CH);
         } else {
-            mapper.binding(TemplateVariable.DICT_ORDER.getVariable(), apiDocList.size() + 2);
+            mapper.binding(TemplateVariable.CSS_CND.getVariable(), CSS_CDN);
         }
         mapper.binding(TemplateVariable.CREATE_TIME.getVariable(), strTime);
         mapper.binding(TemplateVariable.VERSION.getVariable(), now);
@@ -289,6 +296,8 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
         List<ApiDocDict> directoryList = DocUtil.buildDictionary(config, javaProjectBuilder);
         Template mapper = BeetlTemplateUtil.getByName(template);
         setDirectoryLanguageVariable(config, mapper);
+        // set css cdn
+        setCssCDN(config, mapper);
         String strTime = DateTimeUtil.long2Str(now, DateTimeUtil.DATE_FORMAT_SECOND);
         mapper.binding(TemplateVariable.CREATE_TIME.getVariable(), strTime);
         mapper.binding(TemplateVariable.DICT_LIST.getVariable(), directoryList);
@@ -324,4 +333,5 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
         IDocBuildTemplate docBuildTemplate = new SpringBootDocBuildTemplate();
         return docBuildTemplate.getApiData(configBuilder);
     }
+
 }
