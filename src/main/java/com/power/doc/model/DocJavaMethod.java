@@ -41,6 +41,8 @@ public class DocJavaMethod {
 
     private Map<String, JavaType> actualTypesMap;
 
+    private boolean download;
+
     public static DocJavaMethod builder() {
         return new DocJavaMethod();
     }
@@ -78,6 +80,15 @@ public class DocJavaMethod {
 
     public DocJavaMethod setRequestSchema(Map<String, Object> requestSchema) {
         this.requestSchema = requestSchema;
+        return this;
+    }
+
+    public boolean isDownload() {
+        return download;
+    }
+
+    public DocJavaMethod setDownload(boolean download) {
+        this.download = download;
         return this;
     }
 }

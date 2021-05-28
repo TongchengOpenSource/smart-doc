@@ -107,10 +107,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
 
     @Override
     public boolean ignoreReturnObject(String typeName, List<String> ignoreParams) {
-        if (JavaClassValidateUtil.isMvcIgnoreParams(typeName, ignoreParams)) {
-            return DocGlobalConstants.MODE_AND_VIEW_FULLY.equals(typeName);
-        }
-        return false;
+        return JavaClassValidateUtil.isMvcIgnoreParams(typeName, ignoreParams);
     }
 
     private List<ApiMethodDoc> buildControllerMethod(final JavaClass cls, ApiConfig apiConfig,
@@ -237,6 +234,10 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             apiMethodDoc.setRequestUsage(requestJson == null ? requestExample.getUrl() : requestJson);
             // build response usage
             apiMethodDoc.setResponseUsage(JsonBuildHelper.buildReturnJson(docJavaMethod, projectBuilder));
+            // auto mark file download
+            if (Objects.isNull(docletTag)) {
+                apiMethodDoc.setDownload(docJavaMethod.isDownload());
+            }
             // build response params
             List<ApiParam> responseParams = buildReturnApiParams(docJavaMethod, projectBuilder);
             if (paramsDataToTree) {

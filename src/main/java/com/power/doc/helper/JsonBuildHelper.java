@@ -57,6 +57,10 @@ public class JsonBuildHelper {
         if (method.getReturns().isVoid() && Objects.isNull(builder.getApiConfig().getResponseBodyAdvice())) {
             return "Doesn't return a value.";
         }
+        DocletTag downloadTag = method.getTagByName(DocTags.DOWNLOAD);
+        if (Objects.nonNull(downloadTag)) {
+            return "File download.";
+        }
         String returnTypeGenericCanonicalName = method.getReturnType().getGenericCanonicalName();
         if (Objects.nonNull(builder.getApiConfig().getResponseBodyAdvice())
                 && Objects.isNull(method.getTagByName(IGNORE_RESPONSE_BODY_ADVICE))) {
@@ -69,6 +73,10 @@ public class JsonBuildHelper {
         }
         ApiReturn apiReturn = DocClassUtil.processReturnType(returnTypeGenericCanonicalName);
         String typeName = apiReturn.getSimpleName();
+        if (JavaClassValidateUtil.isFileDownloadResource(typeName)) {
+            docJavaMethod.setDownload(true);
+            return "File download.";
+        }
         Map<String, JavaType> actualTypesMap = docJavaMethod.getActualTypesMap();
         String returnType = apiReturn.getGenericCanonicalName();
         if (Objects.nonNull(actualTypesMap)) {

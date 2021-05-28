@@ -99,6 +99,10 @@ public interface IDocBuildTemplate<T> {
         if (method.getReturns().isVoid() && Objects.isNull(projectBuilder.getApiConfig().getResponseBodyAdvice())) {
             return new ArrayList<>(0);
         }
+        DocletTag downloadTag = method.getTagByName(DocTags.DOWNLOAD);
+        if (Objects.nonNull(downloadTag)) {
+            return new ArrayList<>(0);
+        }
         String returnTypeGenericCanonicalName = method.getReturnType().getGenericCanonicalName();
         if (Objects.nonNull(projectBuilder.getApiConfig().getResponseBodyAdvice())
                 && Objects.isNull(method.getTagByName(IGNORE_RESPONSE_BODY_ADVICE))) {

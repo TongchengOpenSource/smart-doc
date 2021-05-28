@@ -214,6 +214,22 @@ public class JavaClassValidateUtil {
     }
 
     /**
+     * Download
+     * @param typeName return type name
+     * @return
+     */
+    public static boolean isFileDownloadResource(String typeName){
+        switch (typeName) {
+            case "org.springframework.core.io.Resource":
+            case "org.springframework.core.io.InputStreamSource":
+            case "org.springframework.core.io.ByteArrayResource":
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    /**
      * ignore param of spring mvc
      *
      * @param paramType    param type name
@@ -236,6 +252,9 @@ public class JavaClassValidateUtil {
             case "org.springframework.web.reactive.function.server.ServerRequest":
             case "org.springframework.web.multipart.MultipartHttpServletRequest":
             case "org.springframework.http.HttpHeaders":
+            case "org.springframework.core.io.Resource":
+            case "org.springframework.core.io.InputStreamSource":
+            case "org.springframework.core.io.ByteArrayResource":
                 return true;
             default:
                 return false;

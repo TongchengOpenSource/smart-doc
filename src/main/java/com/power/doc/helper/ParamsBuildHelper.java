@@ -550,7 +550,6 @@ public class ParamsBuildHelper {
             }
         } else {
             enumComments = DocUtil.replaceNewLineToHtmlBr(enumComments);
-            comment = comment + "<br/>" + JavaClassUtil.getEnumParams(javaClass) + "<br/>";
             if (StringUtil.isNotEmpty(enumComments)) {
                 comment = comment + "(See: " + enumComments + ")";
             }
