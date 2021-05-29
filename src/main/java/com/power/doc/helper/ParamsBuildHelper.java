@@ -495,6 +495,14 @@ public class ParamsBuildHelper {
                         } else {
                             commonHandleParam(paramList, param, isRequired, NO_COMMENTS_FOUND + appendComment, since, strRequired);
                         }
+                        String[] gNameArr = DocClassUtil.getSimpleGicName(fieldGicName);
+                        if (gNameArr.length > 0) {
+                            String gName = gNameArr[0];
+                            if (gName.length() == 1) {
+                                String gicName = genericMap.get(gName) != null ? genericMap.get(gName) : globGicName[0];
+                                fieldGicName = fieldGicName.replace(gName,gicName);
+                            }
+                        }
                         fieldPid = paramList.size() + pid;
                         paramList.addAll(buildParams(fieldGicName, preBuilder.toString(), nextLevel, isRequired,
                                 isResp, registryClasses, projectBuilder, groupClasses, fieldPid, jsonRequest));

@@ -216,7 +216,7 @@ public class JavaClassValidateUtil {
     /**
      * Download
      * @param typeName return type name
-     * @return
+     * @return boolean
      */
     public static boolean isFileDownloadResource(String typeName){
         switch (typeName) {

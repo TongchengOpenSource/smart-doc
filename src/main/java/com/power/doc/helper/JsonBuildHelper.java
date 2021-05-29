@@ -400,6 +400,14 @@ public class JsonBuildHelper {
                             Object value = JavaClassUtil.getEnumValue(javaClass, Boolean.FALSE);
                             data0.append(value).append(",");
                         } else {
+                            String[] gNameArr = DocClassUtil.getSimpleGicName(fieldGicName);
+                            if (gNameArr.length > 0) {
+                                String gName = gNameArr[0];
+                                if (gName.length() == 1) {
+                                    String gicName = genericMap.get(gName) != null ? genericMap.get(gName) : globGicName[0];
+                                    fieldGicName = fieldGicName.replace(gName,gicName);
+                                }
+                            }
                             data0.append(buildJson(subTypeName, fieldGicName, isResp, nextLevel, registryClasses, builder)).append(",");
                         }
                     }
