@@ -100,6 +100,7 @@ public class RpcTornaBuilder {
                     .setVersion(a.getVersion())
                     .setDependency(TornaUtil.buildDependencies(apiConfig.getRpcApiDependencies()))
                     .setInterfaceName(a.getName()));
+            api.setOrderIndex(a.getOrder());
             apisList.add(api);
         }
         tornaApi.setCommonErrorCodes(buildErrorCode(apiConfig));

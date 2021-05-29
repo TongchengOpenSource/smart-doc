@@ -92,6 +92,7 @@ public class TornaUtil {
             methodApi.setDescription(apiMethodDoc.getDetail());
             methodApi.setIsShow(TornaConstants.YES);
             methodApi.setAuthor(apiMethodDoc.getAuthor());
+            methodApi.setOrderIndex(apiMethodDoc.getOrder());
 
             methodApi.setHeaderParams(buildHerder(apiMethodDoc.getRequestHeaders()));
             methodApi.setResponseParams(buildParams(apiMethodDoc.getResponseParams()));
@@ -132,6 +133,7 @@ public class TornaUtil {
             methodApi.setAuthor(apiMethodDoc.getAuthor());
             methodApi.setUrl(apiMethodDoc.getMethodDefinition());
             methodApi.setResponseParams(buildParams(apiMethodDoc.getResponseParams()));
+            methodApi.setOrderIndex(apiMethodDoc.getOrder());
             //Json
             if (CollectionUtil.isNotEmpty(apiMethodDoc.getRequestParams())) {
                 methodApi.setRequestParams(buildParams(apiMethodDoc.getRequestParams()));

@@ -98,6 +98,7 @@ public class TornaBuilder {
             api.setItems(buildApis(a.getList(), TornaUtil.setDebugEnv(apiConfig, tornaApi)));
             api.setIsFolder(TornaConstants.YES);
             api.setAuthor(a.getAuthor());
+            api.setOrderIndex(a.getOrder());
             apisList.add(api);
         }
         tornaApi.setCommonErrorCodes(buildErrorCode(apiConfig));

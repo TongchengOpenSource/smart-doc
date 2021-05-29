@@ -37,6 +37,7 @@ public class Apis {
     private String parentId;
     private String isShow;
     private String author;
+    private Integer orderIndex;
     private DubboInfo dubboInfo;
     private List<HttpParam> headerParams;
     private List<HttpParam> pathParams;
@@ -45,6 +46,14 @@ public class Apis {
     private List<HttpParam> responseParams;
     private String errorCodeParams;
     private List<Apis> items;
+
+    public Integer getOrderIndex() {
+        return orderIndex;
+    }
+
+    public void setOrderIndex(Integer orderIndex) {
+        this.orderIndex = orderIndex;
+    }
 
     public String getAuthor() {
         return author;
