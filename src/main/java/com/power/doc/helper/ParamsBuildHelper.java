@@ -118,16 +118,11 @@ public class ParamsBuildHelper {
             out:
             for (DocJavaField docField : fields) {
                 JavaField field = docField.getJavaField();
-                String fieldName = field.getName();
-                String subTypeName = docField.getFullyQualifiedName();
-                if (field.isStatic() || "this$0".equals(fieldName) ||
-                        JavaClassValidateUtil.isIgnoreFieldTypes(subTypeName)) {
-                    continue;
-                }
                 if (field.isTransient() && skipTransientField) {
                     continue;
                 }
-
+                String fieldName = field.getName();
+                String subTypeName = docField.getFullyQualifiedName();
                 if ((responseFieldToUnderline && isResp) || (requestFieldToUnderline && !isResp)) {
                     fieldName = StringUtil.camelToUnderline(fieldName);
                 }

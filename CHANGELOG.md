@@ -7,7 +7,9 @@
   1. 修复inlineEnum为false时枚举展示在参数中的问题。
   2. 返回Spring文件下载对象支持自动识别为文件下载，减少手动标记@download tag。
   3. smart-doc使用的css cdn更换，默认使用国内cdn，提升国内的加载速度，切换英文环境使用google的cdn.
-  4. 多层泛型嵌套的解析支持。gitee #I3T6UV .
+  4. 添加多层泛型嵌套的解析支持。gitee #I3T6UV .
+  5. 修复父类是泛型时父类中LocalDateTime类型字段生成json样例错误。
+  6. 添加将接口排序order推送到torna中。
 #### 版本号：2.1.8
 
 - 更新日期: 2020-05-22

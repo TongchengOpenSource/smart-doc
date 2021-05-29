@@ -204,15 +204,11 @@ public class JsonBuildHelper {
             out:
             for (DocJavaField docField : fields) {
                 JavaField field = docField.getJavaField();
-                String subTypeName = docField.getFullyQualifiedName();
-                String fieldName = field.getName();
-                if (field.isStatic() || "this$0".equals(fieldName) ||
-                        JavaClassValidateUtil.isIgnoreFieldTypes(subTypeName)) {
-                    continue;
-                }
                 if (field.isTransient() && skipTransientField) {
                     continue;
                 }
+                String subTypeName = docField.getFullyQualifiedName();
+                String fieldName = field.getName();
                 if ((responseFieldToUnderline && isResp) || (requestFieldToUnderline && !isResp)) {
                     fieldName = StringUtil.camelToUnderline(fieldName);
                 }

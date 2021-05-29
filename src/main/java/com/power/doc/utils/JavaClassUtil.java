@@ -134,10 +134,15 @@ public class JavaClassUtil {
             }
             for (JavaField javaField : cls1.getFields()) {
                 String fieldName = javaField.getName();
+                String subTypeName = javaField.getType().getFullyQualifiedName();
+                if (javaField.isStatic() || "this$0".equals(fieldName) ||
+                        JavaClassValidateUtil.isIgnoreFieldTypes(subTypeName)) {
+                    continue;
+                }
                 DocJavaField docJavaField = DocJavaField.builder();
                 boolean typeChecked = false;
                 String gicName = javaField.getType().getGenericCanonicalName();
-                String subTypeName = javaField.getType().getFullyQualifiedName();
+
                 String actualType = null;
                 if (JavaClassValidateUtil.isCollection(subTypeName) &&
                         !JavaClassValidateUtil.isCollection(gicName)) {
@@ -160,7 +165,7 @@ public class JavaClassUtil {
                 for (Map.Entry<String, JavaType> entry : actualJavaTypes.entrySet()) {
                     String key = entry.getKey();
                     JavaType value = entry.getValue();
-                    if (gicName.contains(key)) {
+                    if (gicName.equals(key)) {
                         subTypeName = subTypeName.replaceAll(key, value.getFullyQualifiedName());
                         gicName = gicName.replaceAll(key, value.getGenericCanonicalName());
                         actualType = value.getFullyQualifiedName();
