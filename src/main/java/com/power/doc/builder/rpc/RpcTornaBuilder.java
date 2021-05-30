@@ -79,10 +79,10 @@ public class RpcTornaBuilder {
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
         RpcDocBuildTemplate docBuildTemplate = new RpcDocBuildTemplate();
         List<RpcApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder);
-        buildTorna(apiDocList, config,javaProjectBuilder);
+        buildTorna(apiDocList, config, javaProjectBuilder);
     }
 
-    public static void buildTorna(List<RpcApiDoc> apiDocs, ApiConfig apiConfig,JavaProjectBuilder builder) {
+    public static void buildTorna(List<RpcApiDoc> apiDocs, ApiConfig apiConfig, JavaProjectBuilder builder) {
         TornaApi tornaApi = new TornaApi();
         tornaApi.setAuthor(StringUtil.isEmpty(apiConfig.getAuthor()) ? System.getProperty("user.name") : apiConfig.getAuthor());
         Apis api;
@@ -110,10 +110,10 @@ public class RpcTornaBuilder {
         Map<String, String> requestJson = TornaConstants.buildParams(PUSH, new Gson().toJson(tornaApi), apiConfig);
 
         //推送字典信息
-        Map<String,Object> dicMap = new HashMap<>(2);
-        List<TornaDic> docDicts =TornaUtil.buildTornaDic(DocUtil.buildDictionary(apiConfig,builder));
+        Map<String, Object> dicMap = new HashMap<>(2);
+        List<TornaDic> docDicts = TornaUtil.buildTornaDic(DocUtil.buildDictionary(apiConfig, builder));
 
-        if(CollectionUtil.isNotEmpty(docDicts)) {
+        if (CollectionUtil.isNotEmpty(docDicts)) {
             dicMap.put("enums", docDicts);
             Map<String, String> dicRequestJson = TornaConstants.buildParams(ENUM_PUSH, new Gson().toJson(dicMap), apiConfig);
             String dicResponseMsg = OkHttp3Util.syncPostJson(apiConfig.getOpenUrl(), new Gson().toJson(dicRequestJson));
@@ -123,6 +123,6 @@ public class RpcTornaBuilder {
         //获取返回结果
         String responseMsg = OkHttp3Util.syncPostJson(apiConfig.getOpenUrl(), new Gson().toJson(requestJson));
         //开启调试时打印请求信息
-        TornaUtil.printDebugInfo(apiConfig, responseMsg, requestJson,PUSH);
+        TornaUtil.printDebugInfo(apiConfig, responseMsg, requestJson, PUSH);
     }
 }
