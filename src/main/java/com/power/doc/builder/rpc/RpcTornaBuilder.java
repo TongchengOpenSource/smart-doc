@@ -23,6 +23,7 @@
 package com.power.doc.builder.rpc;
 
 import com.google.gson.Gson;
+import com.power.common.util.CollectionUtil;
 import com.power.common.util.OkHttp3Util;
 import com.power.common.util.StringUtil;
 import com.power.doc.builder.ProjectDocConfigBuilder;
@@ -111,13 +112,17 @@ public class RpcTornaBuilder {
         //推送字典信息
         Map<String,Object> dicMap = new HashMap<>(2);
         List<TornaDic> docDicts =TornaUtil.buildTornaDic(DocUtil.buildDictionary(apiConfig,builder));
-        dicMap.put("enums",docDicts);
+
+        if(CollectionUtil.isNotEmpty(docDicts)) {
+            dicMap.put("enums", docDicts);
+            Map<String, String> dicRequestJson = TornaConstants.buildParams(ENUM_PUSH, new Gson().toJson(dicMap), apiConfig);
+            String dicResponseMsg = OkHttp3Util.syncPostJson(apiConfig.getOpenUrl(), new Gson().toJson(dicRequestJson));
+            TornaUtil.printDebugInfo(apiConfig, dicResponseMsg, dicRequestJson, ENUM_PUSH);
+        }
         Map<String, String> dicRequestJson = TornaConstants.buildParams(ENUM_PUSH, new Gson().toJson(dicMap), apiConfig);
         //获取返回结果
         String responseMsg = OkHttp3Util.syncPostJson(apiConfig.getOpenUrl(), new Gson().toJson(requestJson));
-        String dicResponseMsg = OkHttp3Util.syncPostJson(apiConfig.getOpenUrl(), new Gson().toJson(dicRequestJson));
         //开启调试时打印请求信息
         TornaUtil.printDebugInfo(apiConfig, responseMsg, requestJson,PUSH);
-        TornaUtil.printDebugInfo(apiConfig, dicResponseMsg, dicRequestJson,ENUM_PUSH);
     }
 }
