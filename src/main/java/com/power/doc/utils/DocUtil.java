@@ -609,4 +609,31 @@ public class DocUtil {
         return apiDocDictList;
     }
 
+    /**
+     * Format  field Type
+     * @param genericMap genericMap
+     * @param globGicName
+     * @param fieldGicName
+     * @return string
+     */
+    public static String formatFieldTypeGicName(Map<String, String> genericMap, String[] globGicName, String fieldGicName) {
+        String[] gNameArr = DocClassUtil.getSimpleGicName(fieldGicName);
+        if (gNameArr.length > 0) {
+            String gName = gNameArr[0];
+            if (gName.length() == 1) {
+                String gicName = "";
+                if (Objects.nonNull(genericMap.get(gName))) {
+                    gicName = genericMap.get(gName);
+                }
+                if (globGicName.length > 0) {
+                    gicName = globGicName[0];
+                }
+                if (StringUtil.isNotEmpty(gicName)) {
+                    fieldGicName = fieldGicName.replace(gName, gicName);
+                }
+            }
+        }
+        return fieldGicName;
+    }
+
 }
