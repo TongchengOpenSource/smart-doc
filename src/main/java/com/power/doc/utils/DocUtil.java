@@ -343,16 +343,13 @@ public class DocUtil {
                 throw new RuntimeException("ERROR: #" + javaMethod.getName()
                         + "() - bad @" + tagName + " javadoc from " + javaMethod.getDeclaringClass().getCanonicalName() + ", must be add comment if you use it.");
             }
-            String pName;
-            String pValue;
-            int idx = value.indexOf("\n");
+            String pName = value;
+            String pValue = DocGlobalConstants.NO_COMMENTS_FOUND;
+            int idx = value.indexOf(" ");
             //existed \n
             if (idx > -1) {
                 pName = value.substring(0, idx);
                 pValue = value.substring(idx + 1);
-            } else {
-                pName = (value.contains(" ")) ? value.substring(0, value.indexOf(" ")) : value;
-                pValue = value.contains(" ") ? value.substring(value.indexOf(' ') + 1) : DocGlobalConstants.NO_COMMENTS_FOUND;
             }
             paramTagMap.put(pName, pValue);
         }
@@ -611,7 +608,8 @@ public class DocUtil {
 
     /**
      * Format  field Type
-     * @param genericMap genericMap
+     *
+     * @param genericMap   genericMap
      * @param globGicName
      * @param fieldGicName
      * @return string
