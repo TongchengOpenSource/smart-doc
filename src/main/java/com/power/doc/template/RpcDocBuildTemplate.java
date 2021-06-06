@@ -70,7 +70,8 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
                     continue;
                 }
             }
-            if (!checkDubboInterface(cls)) {
+            DocletTag ignoreTag = cls.getTagByName(DocTags.IGNORE);
+            if (!checkDubboInterface(cls)|| Objects.nonNull(ignoreTag)) {
                 continue;
             }
             String strOrder = JavaClassUtil.getClassTagsValue(cls, DocTags.ORDER, Boolean.TRUE);

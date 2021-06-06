@@ -343,16 +343,13 @@ public class DocUtil {
                 throw new RuntimeException("ERROR: #" + javaMethod.getName()
                         + "() - bad @" + tagName + " javadoc from " + javaMethod.getDeclaringClass().getCanonicalName() + ", must be add comment if you use it.");
             }
-            String pName;
-            String pValue;
-            int idx = value.indexOf("\n");
+            String pName = value;
+            String pValue = DocGlobalConstants.NO_COMMENTS_FOUND;
+            int idx = value.indexOf(" ");
             //existed \n
             if (idx > -1) {
                 pName = value.substring(0, idx);
                 pValue = value.substring(idx + 1);
-            } else {
-                pName = (value.contains(" ")) ? value.substring(0, value.indexOf(" ")) : value;
-                pValue = value.contains(" ") ? value.substring(value.indexOf(' ') + 1) : DocGlobalConstants.NO_COMMENTS_FOUND;
             }
             paramTagMap.put(pName, pValue);
         }
@@ -607,6 +604,34 @@ public class DocUtil {
             e.printStackTrace();
         }
         return apiDocDictList;
+    }
+
+    /**
+     * Format  field Type
+     *
+     * @param genericMap   genericMap
+     * @param globGicName
+     * @param fieldGicName
+     * @return string
+     */
+    public static String formatFieldTypeGicName(Map<String, String> genericMap, String[] globGicName, String fieldGicName) {
+        String[] gNameArr = DocClassUtil.getSimpleGicName(fieldGicName);
+        if (gNameArr.length > 0) {
+            String gName = gNameArr[0];
+            if (gName.length() == 1) {
+                String gicName = "";
+                if (Objects.nonNull(genericMap.get(gName))) {
+                    gicName = genericMap.get(gName);
+                }
+                if (globGicName.length > 0) {
+                    gicName = globGicName[0];
+                }
+                if (StringUtil.isNotEmpty(gicName)) {
+                    fieldGicName = fieldGicName.replace(gName, gicName);
+                }
+            }
+        }
+        return fieldGicName;
     }
 
 }

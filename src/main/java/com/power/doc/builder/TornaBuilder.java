@@ -85,7 +85,7 @@ public class TornaBuilder {
      *
      * @param apiDocs   apiData
      * @param apiConfig ApiConfig
-     * @param builder JavaProjectBuilder
+     * @param builder   JavaProjectBuilder
      */
     public static void buildTorna(List<ApiDoc> apiDocs, ApiConfig apiConfig, JavaProjectBuilder builder) {
         TornaApi tornaApi = new TornaApi();
@@ -109,7 +109,7 @@ public class TornaBuilder {
         //推送字典信息
         Map<String, Object> dicMap = new HashMap<>(2);
         List<TornaDic> docDicts = TornaUtil.buildTornaDic(DocUtil.buildDictionary(apiConfig, builder));
-        if(CollectionUtil.isNotEmpty(docDicts)) {
+        if (CollectionUtil.isNotEmpty(docDicts)) {
             dicMap.put("enums", docDicts);
             Map<String, String> dicRequestJson = TornaConstants.buildParams(ENUM_PUSH, new Gson().toJson(dicMap), apiConfig);
             String dicResponseMsg = OkHttp3Util.syncPostJson(apiConfig.getOpenUrl(), new Gson().toJson(dicRequestJson));
