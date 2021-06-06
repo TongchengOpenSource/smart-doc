@@ -55,7 +55,7 @@ public class ParamsBuildHelper {
     public static List<ApiParam> buildParams(String className, String pre, int level, String isRequired, boolean isResp,
                                              Map<String, String> registryClasses, ProjectDocConfigBuilder projectBuilder,
                                              List<String> groupClasses, int pid, boolean jsonRequest) {
-        String maxLength = null;
+
         //存储泛型所对应的实体类
         Map<String, String> genericMap = new HashMap<>(10);
 
@@ -117,6 +117,7 @@ public class ParamsBuildHelper {
         } else {
             out:
             for (DocJavaField docField : fields) {
+                String maxLength = null;
                 JavaField field = docField.getJavaField();
                 if (field.isTransient() && skipTransientField) {
                     continue;
