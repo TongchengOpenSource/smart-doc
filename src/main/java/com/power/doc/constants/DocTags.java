@@ -114,4 +114,9 @@ public interface DocTags {
     String IGNORE_RESPONSE_BODY_ADVICE = "ignoreResponseBodyAdvice";
 
     String IGNORE_REQUEST_BODY_ADVICE = "ignoreRequestBodyAdvice";
+
+    /**
+     * response tag @since 2.2.0
+     */
+    String API_RESPONSE = "response";
 }

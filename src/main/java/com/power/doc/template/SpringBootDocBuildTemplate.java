@@ -188,7 +188,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             Map<String, String> authorMap = DocUtil.getParamsComments(method, DocTags.AUTHOR, cls.getName());
             String authorValue = String.join(", ", new ArrayList<>(authorMap.keySet()));
             if (apiConfig.isShowAuthor() && StringUtil.isNotEmpty(authorValue)) {
-                apiMethodDoc.setAuthor(authorValue);
+                apiMethodDoc.setAuthor(JsonFormatUtil.formatJson(authorValue));
             }
             if (apiConfig.isShowAuthor() && StringUtil.isEmpty(authorValue)) {
                 apiMethodDoc.setAuthor(classAuthor);
@@ -233,7 +233,12 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             apiMethodDoc.setRequestExample(requestExample);
             apiMethodDoc.setRequestUsage(requestJson == null ? requestExample.getUrl() : requestJson);
             // build response usage
-            apiMethodDoc.setResponseUsage(JsonBuildHelper.buildReturnJson(docJavaMethod, projectBuilder));
+            String responseValue = DocUtil.getNormalTagComments(method, DocTags.API_RESPONSE, cls.getName());
+            if (StringUtil.isNotEmpty(responseValue)) {
+                apiMethodDoc.setResponseUsage(responseValue);
+            } else {
+                apiMethodDoc.setResponseUsage(JsonBuildHelper.buildReturnJson(docJavaMethod, projectBuilder));
+            }
             // auto mark file download
             if (Objects.isNull(docletTag)) {
                 apiMethodDoc.setDownload(docJavaMethod.isDownload());
