@@ -46,6 +46,42 @@ public class Apis {
     private List<HttpParam> responseParams;
     private String errorCodeParams;
     private List<Apis> items;
+    private Integer isRequestArray;
+    private String requestArrayType;
+    private Integer isResponseArray;
+    private String responseArrayType;
+
+    public Integer getIsRequestArray() {
+        return isRequestArray;
+    }
+
+    public void setIsRequestArray(Integer isRequestArray) {
+        this.isRequestArray = isRequestArray;
+    }
+
+    public String getRequestArrayType() {
+        return requestArrayType;
+    }
+
+    public void setRequestArrayType(String requestArrayType) {
+        this.requestArrayType = requestArrayType;
+    }
+
+    public Integer getIsResponseArray() {
+        return isResponseArray;
+    }
+
+    public void setIsResponseArray(Integer isResponseArray) {
+        this.isResponseArray = isResponseArray;
+    }
+
+    public String getResponseArrayType() {
+        return responseArrayType;
+    }
+
+    public void setResponseArrayType(String responseArrayType) {
+        this.responseArrayType = responseArrayType;
+    }
 
     public Integer getOrderIndex() {
         return orderIndex;

@@ -181,11 +181,58 @@ public class ApiMethodDoc implements Serializable {
      * mark page
      */
     private String page = "";
-
+    /**
+     * torna request is array
+     */
+    private Integer isRequestArray;
+    /**
+     * torna request is array-type
+     */
+    private String requestArrayType;
+    /**
+     * torna response is array
+     */
+    private Integer isResponseArray;
+    /**
+     * torna request is array
+     */
+    private String responseArrayType;
     /**
      * 是否为List数据 openApi
      */
     private boolean listParam = false;
+
+    public Integer getIsRequestArray() {
+        return isRequestArray;
+    }
+
+    public void setIsRequestArray(Integer isRequestArray) {
+        this.isRequestArray = isRequestArray;
+    }
+
+    public String getRequestArrayType() {
+        return requestArrayType;
+    }
+
+    public void setRequestArrayType(String requestArrayType) {
+        this.requestArrayType = requestArrayType;
+    }
+
+    public Integer getIsResponseArray() {
+        return isResponseArray;
+    }
+
+    public void setIsResponseArray(Integer isResponseArray) {
+        this.isResponseArray = isResponseArray;
+    }
+
+    public String getResponseArrayType() {
+        return responseArrayType;
+    }
+
+    public void setResponseArrayType(String responseArrayType) {
+        this.responseArrayType = responseArrayType;
+    }
 
     public boolean isListParam() {
         return listParam;

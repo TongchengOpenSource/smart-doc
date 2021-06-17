@@ -96,6 +96,10 @@ public class TornaUtil {
 
             methodApi.setHeaderParams(buildHerder(apiMethodDoc.getRequestHeaders()));
             methodApi.setResponseParams(buildParams(apiMethodDoc.getResponseParams()));
+            methodApi.setIsRequestArray(apiMethodDoc.getIsRequestArray());
+            methodApi.setIsResponseArray(apiMethodDoc.getIsResponseArray());
+            methodApi.setRequestArrayType(apiMethodDoc.getRequestArrayType());
+            methodApi.setResponseArrayType(apiMethodDoc.getResponseArrayType());
             //Path
             if (CollectionUtil.isNotEmpty(apiMethodDoc.getPathParams())) {
                 methodApi.setPathParams(buildParams(apiMethodDoc.getPathParams()));

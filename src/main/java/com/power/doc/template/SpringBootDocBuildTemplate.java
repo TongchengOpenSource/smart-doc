@@ -44,8 +44,8 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.power.doc.constants.DocGlobalConstants.FILE_CONTENT_TYPE;
-import static com.power.doc.constants.DocGlobalConstants.JSON_CONTENT_TYPE;
+import static com.power.doc.constants.DocAnnotationConstants.MAX;
+import static com.power.doc.constants.DocGlobalConstants.*;
 import static com.power.doc.constants.DocTags.IGNORE;
 import static com.power.doc.constants.DocTags.IGNORE_REQUEST_BODY_ADVICE;
 
@@ -202,6 +202,10 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             apiMethodDoc.setServerUrl(projectBuilder.getServerUrl());
             apiMethodDoc.setPath(requestMapping.getShortUrl());
             apiMethodDoc.setDeprecated(requestMapping.isDeprecated());
+            List<JavaParameter> javaParameters = method.getParameters();
+
+            setTornaArrayTags(javaParameters,apiMethodDoc, docJavaMethod.getJavaMethod().getReturns());
+           // apiMethodDoc.setIsRequestArray();
             ApiMethodReqParam apiMethodReqParam = requestParams(docJavaMethod, projectBuilder);
             // build request params
             if (paramsDataToTree) {
@@ -943,4 +947,71 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         }
         return annotationsList;
     }
+
+    private static void setTornaArrayTags(List<JavaParameter> javaParameters, ApiMethodDoc apiMethodDoc, JavaClass returnClass) {
+
+        apiMethodDoc.setIsResponseArray(0);
+        apiMethodDoc.setIsRequestArray(0);
+        //response tags
+        if (JavaClassValidateUtil.isCollection(returnClass.getFullyQualifiedName()) ||
+                JavaClassValidateUtil.isArray(returnClass.getFullyQualifiedName())) {
+            apiMethodDoc.setIsResponseArray(1);
+            String gicType;
+            String simpleGicType;
+            String typeName = returnClass.getGenericFullyQualifiedName();
+            gicType = getType(typeName);
+            simpleGicType = gicType.substring(gicType.lastIndexOf(".") + 1).toLowerCase();
+            apiMethodDoc.setResponseArrayType(JavaClassValidateUtil.isPrimitive(gicType) ? simpleGicType : OBJECT);
+        }
+        //request tags
+        if (CollectionUtil.isNotEmpty(javaParameters)) {
+            for (JavaParameter parameter : javaParameters) {
+                String gicType;
+                String simpleGicType;
+                String typeName = parameter.getType().getGenericFullyQualifiedName();
+                String name = parameter.getType().getFullyQualifiedName();
+                gicType = getType(typeName);
+                simpleGicType = gicType.substring(gicType.lastIndexOf(".") + 1).toLowerCase();
+                // is array
+                if (JavaClassValidateUtil.isCollection(name) || JavaClassValidateUtil.isArray(name)) {
+                    boolean hasRequestBody = false;
+                    //param has @RequestBody ?
+                    List<JavaAnnotation> annotations = parameter.getAnnotations();
+                    for (JavaAnnotation annotation : annotations) {
+                        if (REQUEST_BODY_FULLY.equals(annotation.getType().getName())) {
+                            hasRequestBody = true;
+                            break;
+                        }
+                    }
+                    //formData - multiple data
+                    if (!hasRequestBody && javaParameters.size() > 1) {
+                        return;
+                    }
+                    else {
+                        apiMethodDoc.setIsRequestArray(1);
+                            if (JavaClassValidateUtil.isPrimitive(gicType)) {
+                                apiMethodDoc.setRequestArrayType(simpleGicType);
+                            } else {
+                                apiMethodDoc.setRequestArrayType(OBJECT);
+                            }
+                    }
+                }
+            }
+        }
+    }
+
+    private static String getType(String typeName) {
+        String gicType;
+        //get generic type
+        if (typeName.contains("<")) {
+            gicType = typeName.substring(typeName.indexOf("<") + 1, typeName.lastIndexOf(">"));
+        } else {
+            gicType = typeName;
+        }
+        if (gicType.contains("[")) {
+            gicType = gicType.substring(0, gicType.indexOf("["));
+        }
+        return gicType;
+    }
+
 }

@@ -203,6 +203,8 @@ public interface DocGlobalConstants {
 
     String ARRAY = "array";
 
+    String OBJECT = "object";
+
     String JSON_PROPERTY_READ_WRITE = "JsonProperty.Access.READ_WRITE";
 
     String JSON_PROPERTY_READ_ONLY = "JsonProperty.Access.READ_ONLY";
