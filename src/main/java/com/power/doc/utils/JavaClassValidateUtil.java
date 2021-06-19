@@ -87,6 +87,7 @@ public class JavaClassValidateUtil {
             case "boolean":
             case "byte":
             case "uuid":
+            case "character":
             case "java.sql.timestamp":
             case "java.util.date":
             case "java.time.localdatetime":
@@ -101,6 +102,7 @@ public class JavaClassValidateUtil {
             case "java.util.uuid":
             case "java.util.UUID":
             case "java.io.serializable":
+            case "java.lang.character":
                 return true;
             default:
                 return false;

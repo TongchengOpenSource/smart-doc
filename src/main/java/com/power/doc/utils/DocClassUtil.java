@@ -165,6 +165,7 @@ public class DocClassUtil {
      * @return String
      */
     public static String processTypeNameForParams(String javaTypeName) {
+        System.out.println("typeName:"+javaTypeName);
         if (StringUtil.isEmpty(javaTypeName)) {
             return "object";
         }
@@ -188,6 +189,8 @@ public class DocClassUtil {
             case "zoneddatetime":
             case "java.time.zoneddatetime":
             case "java.time.ZonedDateTime":
+            case "java.lang.Character":
+            case "character":
                 return "string";
             case "java.util.List":
             case "list":

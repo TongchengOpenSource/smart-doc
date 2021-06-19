@@ -473,6 +473,8 @@ public class DocUtil {
             case "BigDecimal":
             case "BigInteger":
             case "Byte":
+            case "Character":
+            case "character":
                 return true;
             default:
                 return false;
@@ -610,8 +612,8 @@ public class DocUtil {
      * Format  field Type
      *
      * @param genericMap   genericMap
-     * @param globGicName
-     * @param fieldGicName
+     * @param globGicName  globGicName array
+     * @param fieldGicName fieldGicName
      * @return string
      */
     public static String formatFieldTypeGicName(Map<String, String> genericMap, String[] globGicName, String fieldGicName) {
