@@ -165,7 +165,6 @@ public class DocClassUtil {
      * @return String
      */
     public static String processTypeNameForParams(String javaTypeName) {
-        System.out.println("typeName:"+javaTypeName);
         if (StringUtil.isEmpty(javaTypeName)) {
             return "object";
         }
