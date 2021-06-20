@@ -10,6 +10,7 @@
   4. 修复推送到torna请求或返回为数组时，示例显示错误
   5. Character类型解析支持。
   6. 修复使用Quartz中JobDataMap类型解析错误。
+  7. 移除YapiBuilder。smart-doc不在支持其他第三方接口系统，请使用torna.
 #### 版本号：2.1.9
 
 - 更新日期: 2020-05-29
