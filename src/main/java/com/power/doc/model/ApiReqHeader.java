@@ -67,16 +67,16 @@ public class ApiReqHeader {
     private String since = "-";
 
     /**
-     * ignore request header
+     * Regular expression ignore request header
      */
-    private String regex;
+    private String urlPatterns;
 
-    public String getRegex() {
-        return regex;
+    public String getUrlPatterns() {
+        return urlPatterns;
     }
 
-    public void setRegex(String regex) {
-        this.regex = regex;
+    public void setUrlPatterns(String urlPatterns) {
+        this.urlPatterns = urlPatterns;
     }
 
     @Deprecated
@@ -170,8 +170,8 @@ public class ApiReqHeader {
                 .append(required);
         sb.append(",\"since\":\"")
                 .append(since).append('\"');
-        sb.append(",\"regex\":\"")
-                .append(regex).append('\"');
+        sb.append(",\"urlPatterns\":\"")
+                .append(urlPatterns).append('\"');
         sb.append('}');
         return sb.toString();
     }
