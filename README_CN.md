@@ -188,6 +188,14 @@ smart-doc官方目前已经开发完成[Maven插件](https://gitee.com/smart-doc
       "value":"token请求头的值",//不设置默认null
       "required": false,//是否必须
       "since": "-"//什么版本添加的改请求头
+  },{
+      "name": "appkey",//请求头
+      "type": "string",//请求头类型
+      "desc": "desc",//请求头描述信息
+      "value":"appkey请求头的值",//不设置默认null
+      "required": false,//是否必须
+      "urlPatterns": "/test/add;/testConstants/1.0",//正则表达式过滤请求头,url匹配上才会添加该请求头，多个正则用分号隔开
+      "since": "-"//什么版本添加的改请求头
   }],
   "rpcApiDependencies":[{ // 项目开放的dubbo api接口模块依赖，配置后输出到文档方便使用者集成
         "artifactId":"SpringBoot2-Dubbo-Api",
@@ -299,7 +307,7 @@ the [LICENSE](https://gitee.com/smart-doc-team/smart-doc/blob/master/LICENSE) fi
 ![IFLYTEK](https://gitee.com/smart-doc-team/smart-doc/raw/master/images/known-users/iflytek.png)
 &nbsp;&nbsp;<img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/known-users/oneplus.png" title="一加" width="83px" height="83px"/>
 &nbsp;&nbsp;<img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/known-users/xiaomi.png" title="小米" width="170px" height="83px"/>
-&nbsp;&nbsp;<img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/known-users/neusoft.png" title="东软集团" width="170px" height="83px"/>
+&nbsp;&nbsp;<img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/known-users/neusoft.png" title="东软集团" width="180px" height="83px"/>
 &nbsp;&nbsp;<img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/known-users/zhongkezhilian.png" title="中科智链" width="272px" height="83px"/>
 <img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/known-users/yuanmengjiankang.png" title="远盟健康" width="260px" height="83px"/>
 <img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/known-users/puqie_gaitubao_100x100.jpg" title="普切信息科技" width="83px" height="83px"/>

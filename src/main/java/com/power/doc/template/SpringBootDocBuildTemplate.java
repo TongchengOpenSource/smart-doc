@@ -44,7 +44,6 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.power.doc.constants.DocAnnotationConstants.MAX;
 import static com.power.doc.constants.DocGlobalConstants.*;
 import static com.power.doc.constants.DocTags.IGNORE;
 import static com.power.doc.constants.DocTags.IGNORE_REQUEST_BODY_ADVICE;
@@ -204,8 +203,8 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             apiMethodDoc.setDeprecated(requestMapping.isDeprecated());
             List<JavaParameter> javaParameters = method.getParameters();
 
-            setTornaArrayTags(javaParameters,apiMethodDoc, docJavaMethod.getJavaMethod().getReturns());
-           // apiMethodDoc.setIsRequestArray();
+            setTornaArrayTags(javaParameters, apiMethodDoc, docJavaMethod.getJavaMethod().getReturns());
+            // apiMethodDoc.setIsRequestArray();
             ApiMethodReqParam apiMethodReqParam = requestParams(docJavaMethod, projectBuilder);
             // build request params
             if (paramsDataToTree) {
@@ -227,7 +226,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             }
             allApiReqHeaders.removeIf(apiReqHeader -> {
                 if (StringUtil.isNotEmpty(apiReqHeader.getUrlPatterns())) {
-                    return requestMapping.getShortUrl().matches(apiReqHeader.getUrlPatterns());
+                    return !PathUtil.isMatchUrl(requestMapping.getShortUrl(), apiReqHeader.getUrlPatterns());
                 }
                 return false;
             });
@@ -992,14 +991,13 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                     //formData - multiple data
                     if (!hasRequestBody && javaParameters.size() > 1) {
                         return;
-                    }
-                    else {
+                    } else {
                         apiMethodDoc.setIsRequestArray(1);
-                            if (JavaClassValidateUtil.isPrimitive(gicType)) {
-                                apiMethodDoc.setRequestArrayType(simpleGicType);
-                            } else {
-                                apiMethodDoc.setRequestArrayType(OBJECT);
-                            }
+                        if (JavaClassValidateUtil.isPrimitive(gicType)) {
+                            apiMethodDoc.setRequestArrayType(simpleGicType);
+                        } else {
+                            apiMethodDoc.setRequestArrayType(OBJECT);
+                        }
                     }
                 }
             }

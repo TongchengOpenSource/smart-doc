@@ -26,6 +26,8 @@ import com.power.common.util.StringUtil;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
+import java.util.*;
+import java.util.regex.Pattern;
 
 public class PathUtil {
 
@@ -60,5 +62,34 @@ public class PathUtil {
             return path;
         }
         return null;
+    }
+
+    /**
+     * match
+     * @param url url
+     * @param urlPatterns patterns
+     * @return true if match
+     */
+    public static boolean isMatchUrl(String url , String urlPatterns){
+        List<String> urlPatternList;
+        if (StringUtil.isNotEmpty(urlPatterns)) {
+            urlPatternList = Arrays.asList(urlPatterns.split(";", 0));
+        } else {
+           return false;
+        }
+        for (String str : urlPatternList) {
+            if (str.endsWith("/*")) {
+                String name = str.substring(0, str.length() - 1);
+                if (url.contains(name)) {
+                    return true;
+                }
+            } else {
+                Pattern pattern = Pattern.compile(str);
+                if (pattern.matcher(url).matches()) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
