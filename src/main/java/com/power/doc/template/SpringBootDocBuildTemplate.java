@@ -227,6 +227,12 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             }
             //reduce create in template
             apiMethodDoc.setHeaders(this.createDocRenderHeaders(allApiReqHeaders, apiConfig.isAdoc()));
+            allApiReqHeaders.removeIf(apiReqHeader -> {
+                if (StringUtil.isNotEmpty(apiReqHeader.getRegex())) {
+                    return requestMapping.getShortUrl().matches(apiReqHeader.getRegex());
+                }
+                return false;
+            });
             apiMethodDoc.setRequestHeaders(allApiReqHeaders);
 
             // build request json

@@ -66,6 +66,19 @@ public class ApiReqHeader {
      */
     private String since = "-";
 
+    /**
+     * ignore request header
+     */
+    private String regex;
+
+    public String getRegex() {
+        return regex;
+    }
+
+    public void setRegex(String regex) {
+        this.regex = regex;
+    }
+
     @Deprecated
     public static ApiReqHeader header() {
         return new ApiReqHeader();
@@ -157,6 +170,8 @@ public class ApiReqHeader {
                 .append(required);
         sb.append(",\"since\":\"")
                 .append(since).append('\"');
+        sb.append(",\"regex\":\"")
+                .append(regex).append('\"');
         sb.append('}');
         return sb.toString();
     }
