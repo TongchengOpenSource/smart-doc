@@ -327,6 +327,36 @@ public class DocUtil {
     }
 
     /**
+     * 分割url
+     *
+     * @param url 待分割的url
+     * @return url列表
+     */
+    public static List<String> split(String url) {
+        char[] chars = url.toCharArray();
+        List<String> result = new ArrayList<>();
+        StringBuilder sb = new StringBuilder();
+        Stack<Character> stack = new Stack<>();
+        for (int i = 0; i < chars.length; i++) {
+            char s = chars[i];
+            if ('{' == s) {
+                stack.push(s);
+            }
+            if ('}' == s) {
+                stack.pop();
+            }
+            if (',' == s && stack.isEmpty()) {
+                result.add(sb.toString());
+                sb.delete(0, sb.length());
+                continue;
+            }
+            sb.append(s);
+        }
+        result.add(sb.toString());
+        return result;
+    }
+
+    /**
      * obtain params comments
      *
      * @param javaMethod JavaMethod

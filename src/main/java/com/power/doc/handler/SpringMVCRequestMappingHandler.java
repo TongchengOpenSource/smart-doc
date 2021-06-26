@@ -108,10 +108,10 @@ public class SpringMVCRequestMappingHandler {
                 return null;
             }
             shortUrl = StringUtil.removeQuotes(shortUrl);
-            String[] urls = shortUrl.split(",");
-            if (urls.length > 1) {
-                url = DocUrlUtil.getMvcUrls(serverUrl, controllerBaseUrl, Arrays.asList(urls));
-                shortUrl = DocUrlUtil.getMvcUrls("", controllerBaseUrl, Arrays.asList(urls));
+            List<String> urls = DocUtil.split(shortUrl);
+            if (urls.size() > 1) {
+                url = DocUrlUtil.getMvcUrls(serverUrl, controllerBaseUrl, urls);
+                shortUrl = DocUrlUtil.getMvcUrls("", controllerBaseUrl, urls);
             } else {
                 url = serverUrl + "/" + controllerBaseUrl + "/" + shortUrl;
                 shortUrl = "/" + controllerBaseUrl + "/" + shortUrl;
