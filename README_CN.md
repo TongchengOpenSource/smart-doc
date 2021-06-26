@@ -202,7 +202,7 @@ smart-doc官方目前已经开发完成[Maven插件](https://gitee.com/smart-doc
   "apiConstants": [{//从1.8.9开始配置自己的常量类，smart-doc在解析到常量时自动替换为具体的值，非必须
         "constantsClassName": "com.power.doc.constants.RequestParamConstant"
   }],
-  "responseBodyAdvice":{ //自smart-doc 1.9.8起，ResponseBodyAdvice统一返回设置，可用ignoreResponseBodyAdvice tag来忽略
+  "responseBodyAdvice":{ //自smart-doc 1.9.8起，非必须项，ResponseBodyAdvice统一返回设置(不要随便配置根据项目的技术来配置)，可用ignoreResponseBodyAdvice tag来忽略
   		"className":"com.power.common.model.CommonResult" //通用响应体
   },
   "requestBodyAdvice":{ ////自smart-doc 2.1.4 起，支持设置RequestBodyAdvice统一请求包装类，非必须
@@ -211,8 +211,8 @@ smart-doc官方目前已经开发完成[Maven插件](https://gitee.com/smart-doc
 }
 ```
 
->上面的JSON配置实例中只有"outPath"是必填项。其他额外配置项请根据实际情况来配置，胡乱复制上面的全配置到自己的项目中
-可能引起使用错误
+>上面的JSON配置实例中只有"outPath"是必填项。其他额外配置项请根据实际情况来配置，请不要胡乱复制上面的全配置到自己的项目中
+可能引起使用错误。
 
 **注意：** 对于老用户完全可以通过`Fastjson`或者是`Gson`库将`ApiConfig`转化成JSON配置。
 

@@ -2,23 +2,18 @@ package com.power.doc.utils;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import com.google.gson.internal.$Gson$Types;
 import com.power.common.model.EnumDictionary;
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.StringUtil;
-import com.power.doc.builder.BaseDocBuilderTemplate;
 import com.power.doc.constants.TornaConstants;
 import com.power.doc.model.*;
 import com.power.doc.model.rpc.RpcApiDependency;
 import com.power.doc.model.torna.*;
-import okhttp3.internal.http2.ErrorCode;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import static com.power.doc.constants.TornaConstants.PUSH;
 
 /**
  * @author xingzi 2021/4/28 16:15
