@@ -67,22 +67,10 @@ public class ApiReqHeader {
     private String since = "-";
 
     /**
+     * @since 2.2.2
      * Regular expression ignore request header
      */
     private String urlPatterns;
-
-    public String getUrlPatterns() {
-        return urlPatterns;
-    }
-
-    public void setUrlPatterns(String urlPatterns) {
-        this.urlPatterns = urlPatterns;
-    }
-
-    @Deprecated
-    public static ApiReqHeader header() {
-        return new ApiReqHeader();
-    }
 
     public static ApiReqHeader builder() {
         return new ApiReqHeader();
@@ -139,6 +127,15 @@ public class ApiReqHeader {
 
     public ApiReqHeader setValue(String value) {
         this.value = value;
+        return this;
+    }
+
+    public String getUrlPatterns() {
+        return urlPatterns;
+    }
+
+    public ApiReqHeader setUrlPatterns(String urlPatterns) {
+        this.urlPatterns = urlPatterns;
         return this;
     }
 

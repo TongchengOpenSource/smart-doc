@@ -46,7 +46,7 @@
         <dependency>
             <groupId>com.ibeetl</groupId>
             <artifactId>beetl</artifactId>
-            <version>3.3.1.RELEASE</version>
+            <version>3.3.2.RELEASE</version>
         </dependency>
         <dependency>
             <groupId>com.thoughtworks.qdox</groupId>
