@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import com.power.common.util.JsonFormatUtil;
 
 /**
  * @author yu 2021/6/26.
@@ -17,10 +18,7 @@ public class JsonUtil {
      * @return Format json string
      */
     public static String toPrettyFormat(String jsonString) {
-        JsonElement jsonElement = JsonParser.parseString(jsonString);
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        String prettyJson = gson.toJson(jsonElement);
-        return prettyJson;
+        return JsonFormatUtil.formatJson(jsonString);
     }
 
     /**

@@ -22,7 +22,6 @@
  */
 package com.power.doc.helper;
 
-import com.power.common.util.JsonFormatUtil;
 import com.power.common.util.StringUtil;
 import com.power.doc.builder.ProjectDocConfigBuilder;
 import com.power.doc.constants.DocAnnotationConstants;
@@ -61,6 +60,16 @@ public class JsonBuildHelper {
         if (Objects.nonNull(downloadTag)) {
             return "File download.";
         }
+        if (method.getReturns().isEnum()) {
+            return StringUtil.removeQuotes(String.valueOf(JavaClassUtil.getEnumValue(method.getReturns(), Boolean.FALSE)));
+        }
+        if (method.getReturns().isPrimitive()) {
+            String typeName = method.getReturnType().getCanonicalName();
+            return StringUtil.removeQuotes(DocUtil.jsonValueByType(typeName));
+        }
+        if (DocGlobalConstants.JAVA_STRING_FULLY.equals(method.getReturnType().getGenericCanonicalName())) {
+            return "string";
+        }
         String returnTypeGenericCanonicalName = method.getReturnType().getGenericCanonicalName();
         if (Objects.nonNull(builder.getApiConfig().getResponseBodyAdvice())
                 && Objects.isNull(method.getTagByName(IGNORE_RESPONSE_BODY_ADVICE))) {
@@ -91,6 +100,7 @@ public class JsonBuildHelper {
             }
             return StringUtil.removeQuotes(DocUtil.jsonValueByType(typeName));
         }
+
         return JsonUtil.toPrettyFormat(buildJson(typeName, returnType, Boolean.TRUE, 0, new HashMap<>(), builder));
     }
 
@@ -129,7 +139,7 @@ public class JsonBuildHelper {
             return StringUtil.removeQuotes(DocUtil.jsonValueByType(typeName));
         }
         if (javaClass.isEnum()) {
-            return String.valueOf(JavaClassUtil.getEnumValue(javaClass, Boolean.FALSE));
+            return StringUtil.removeQuotes(String.valueOf(JavaClassUtil.getEnumValue(javaClass, Boolean.FALSE)));
         }
         boolean skipTransientField = apiConfig.isSkipTransientField();
         StringBuilder data0 = new StringBuilder();
