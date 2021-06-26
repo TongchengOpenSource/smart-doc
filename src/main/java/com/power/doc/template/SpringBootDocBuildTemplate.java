@@ -188,7 +188,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             Map<String, String> authorMap = DocUtil.getParamsComments(method, DocTags.AUTHOR, cls.getName());
             String authorValue = String.join(", ", new ArrayList<>(authorMap.keySet()));
             if (apiConfig.isShowAuthor() && StringUtil.isNotEmpty(authorValue)) {
-                apiMethodDoc.setAuthor(JsonFormatUtil.formatJson(authorValue));
+                apiMethodDoc.setAuthor(JsonUtil.toPrettyFormat(authorValue));
             }
             if (apiConfig.isShowAuthor() && StringUtil.isEmpty(authorValue)) {
                 apiMethodDoc.setAuthor(classAuthor);
@@ -395,10 +395,10 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                                 .append("\":")
                                 .append(DocUtil.handleJsonStr(mockValue))
                                 .append("}");
-                        requestExample.setJsonBody(JsonFormatUtil.formatJson(builder.toString())).setJson(true);
+                        requestExample.setJsonBody(JsonUtil.toPrettyFormat(builder.toString())).setJson(true);
                     } else {
                         String json = JsonBuildHelper.buildJson(typeName, gicTypeName, Boolean.FALSE, 0, new HashMap<>(), configBuilder);
-                        requestExample.setJsonBody(JsonFormatUtil.formatJson(json)).setJson(true);
+                        requestExample.setJsonBody(JsonUtil.toPrettyFormat(json)).setJson(true);
                     }
                     paramAdded = true;
                 } else if (SpringMvcAnnotations.PATH_VARIABLE.contains(annotationName)) {

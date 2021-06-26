@@ -91,7 +91,7 @@ public class JsonBuildHelper {
             }
             return StringUtil.removeQuotes(DocUtil.jsonValueByType(typeName));
         }
-        return JsonFormatUtil.formatJson(buildJson(typeName, returnType, Boolean.TRUE, 0, new HashMap<>(), builder));
+        return JsonUtil.toPrettyFormat(buildJson(typeName, returnType, Boolean.TRUE, 0, new HashMap<>(), builder));
     }
 
     /**

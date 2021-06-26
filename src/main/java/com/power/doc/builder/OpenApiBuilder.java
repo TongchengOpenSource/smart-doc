@@ -22,8 +22,6 @@
  */
 package com.power.doc.builder;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.FileUtil;
 import com.power.common.util.StringUtil;
@@ -32,6 +30,7 @@ import com.power.doc.constants.Methods;
 import com.power.doc.model.*;
 import com.power.doc.template.SpringBootDocBuildTemplate;
 import com.power.doc.utils.DocUtil;
+import com.power.doc.utils.JsonUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 
 import java.util.*;
@@ -90,8 +89,7 @@ public class OpenApiBuilder {
 
         String filePath = config.getOutPath();
         filePath = filePath + DocGlobalConstants.OPEN_API_JSON;
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        String data = gson.toJson(json);
+        String data = JsonUtil.toPrettyJson(json);
         FileUtil.nioWriteFile(data, filePath);
     }
 

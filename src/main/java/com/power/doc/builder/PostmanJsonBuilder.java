@@ -22,8 +22,6 @@
  */
 package com.power.doc.builder;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.FileUtil;
 import com.power.common.util.StringUtil;
@@ -39,6 +37,7 @@ import com.power.doc.model.postman.request.body.BodyBean;
 import com.power.doc.model.postman.request.header.HeaderBean;
 import com.power.doc.template.IDocBuildTemplate;
 import com.power.doc.template.SpringBootDocBuildTemplate;
+import com.power.doc.utils.JsonUtil;
 import com.power.doc.utils.PathUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 
@@ -255,8 +254,7 @@ public class PostmanJsonBuilder {
         requestItem.setItem(itemBeans);
         String filePath = config.getOutPath();
         filePath = filePath + DocGlobalConstants.POSTMAN_JSON;
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        String data = gson.toJson(requestItem);
+        String data = JsonUtil.toPrettyJson(requestItem);
         FileUtil.nioWriteFile(data, filePath);
     }
 
