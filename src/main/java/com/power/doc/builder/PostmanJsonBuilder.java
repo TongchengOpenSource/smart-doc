@@ -38,7 +38,7 @@ import com.power.doc.model.postman.request.header.HeaderBean;
 import com.power.doc.template.IDocBuildTemplate;
 import com.power.doc.template.SpringBootDocBuildTemplate;
 import com.power.doc.utils.JsonUtil;
-import com.power.doc.utils.PathUtil;
+import com.power.doc.utils.DocPathUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 
 import java.net.MalformedURLException;
@@ -131,7 +131,7 @@ public class PostmanJsonBuilder {
     private static UrlBean buildUrlBean(ApiMethodDoc apiMethodDoc) {
         UrlBean urlBean = new UrlBean();
         String url = Optional.ofNullable(apiMethodDoc.getRequestExample().getUrl()).orElse(apiMethodDoc.getUrl());
-        urlBean.setRaw(PathUtil.toPostmanPath(url));
+        urlBean.setRaw(DocPathUtil.toPostmanPath(url));
         try {
             URL javaUrl = new java.net.URL(apiMethodDoc.getServerUrl());
             if (javaUrl.getPort() == -1) {
@@ -154,7 +154,7 @@ public class PostmanJsonBuilder {
             urlBean.setPath(paths);
         } catch (MalformedURLException e) {
         }
-        String shortUrl = PathUtil.toPostmanPath(apiMethodDoc.getPath());
+        String shortUrl = DocPathUtil.toPostmanPath(apiMethodDoc.getPath());
         String[] paths = shortUrl.split("/");
         List<String> pathList = new ArrayList<>();
         if (CollectionUtil.isNotEmpty(urlBean.getPath()) && shortUrl.indexOf(urlBean.getPath().get(0)) < 0) {

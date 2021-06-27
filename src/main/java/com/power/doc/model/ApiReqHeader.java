@@ -68,9 +68,15 @@ public class ApiReqHeader {
 
     /**
      * @since 2.2.2
+     * Regular expression match request header
+     */
+    private String pathPatterns;
+
+    /**
+     * @since 2.2.2
      * Regular expression ignore request header
      */
-    private String urlPatterns;
+    private String excludePathPatterns;
 
     public static ApiReqHeader builder() {
         return new ApiReqHeader();
@@ -130,12 +136,21 @@ public class ApiReqHeader {
         return this;
     }
 
-    public String getUrlPatterns() {
-        return urlPatterns;
+    public String getPathPatterns() {
+        return pathPatterns;
     }
 
-    public ApiReqHeader setUrlPatterns(String urlPatterns) {
-        this.urlPatterns = urlPatterns;
+    public ApiReqHeader setPathPatterns(String pathPatterns) {
+        this.pathPatterns = pathPatterns;
+        return this;
+    }
+
+    public String getExcludePathPatterns() {
+        return excludePathPatterns;
+    }
+
+    public ApiReqHeader setExcludePathPatterns(String excludePathPatterns) {
+        this.excludePathPatterns = excludePathPatterns;
         return this;
     }
 
@@ -167,8 +182,10 @@ public class ApiReqHeader {
                 .append(required);
         sb.append(",\"since\":\"")
                 .append(since).append('\"');
-        sb.append(",\"urlPatterns\":\"")
-                .append(urlPatterns).append('\"');
+        sb.append(",\"pathPatterns\":\"")
+                .append(pathPatterns).append('\"');
+        sb.append(",\"excludePathPatterns\":\"")
+                .append(excludePathPatterns).append('\"');
         sb.append('}');
         return sb.toString();
     }

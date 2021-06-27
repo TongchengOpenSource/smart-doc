@@ -50,9 +50,12 @@ smart-doc使用和测试可参考[smart-doc demo](https://gitee.com/devin-alan/a
 ```
 # git clone https://gitee.com/devin-alan/api-doc-test.git
 ```
-
 你可以启动这个Spring Boot的项目，然后访问`http://localhost:8080/doc/api.html`来浏览smart-doc生成的接口文档。
 
+maven多模块项目请参考
+```
+# git clone https://gitee.com/devin-alan/spring-boot-maven-multiple-module.git
+```
 ### Add Maven Plugin
 
 smart-doc官方目前已经开发完成[Maven插件](https://gitee.com/smart-doc-team/smart-doc-maven-plugin)
@@ -187,14 +190,16 @@ smart-doc官方目前已经开发完成[Maven插件](https://gitee.com/smart-doc
       "desc": "desc",//请求头描述信息
       "value":"token请求头的值",//不设置默认null
       "required": false,//是否必须
-      "since": "-"//什么版本添加的改请求头
+      "since": "-",//什么版本添加的改请求头
+      "pathPatterns": "/app/test/**",//请看https://gitee.com/smart-doc-team/smart-doc/wikis/请求头高级配置?sort_id=4178978
+      "excludePathPatterns":"/app/page/**"//请看https://gitee.com/smart-doc-team/smart-doc/wikis/请求头高级配置?sort_id=4178978
   },{
       "name": "appkey",//请求头
       "type": "string",//请求头类型
       "desc": "desc",//请求头描述信息
       "value":"appkey请求头的值",//不设置默认null
       "required": false,//是否必须
-      "urlPatterns": "/test/add;/testConstants/1.0",//正则表达式过滤请求头,url匹配上才会添加该请求头，多个正则用分号隔开
+      "pathPatterns": "/test/add,/testConstants/1.0",//正则表达式过滤请求头,url匹配上才会添加该请求头，多个正则用分号隔开
       "since": "-"//什么版本添加的改请求头
   }],
   "rpcApiDependencies":[{ // 项目开放的dubbo api接口模块依赖，配置后输出到文档方便使用者集成

@@ -225,10 +225,14 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 allApiReqHeaders = apiReqHeaders;
             }
             allApiReqHeaders.removeIf(apiReqHeader -> {
-                if (StringUtil.isNotEmpty(apiReqHeader.getUrlPatterns())) {
-                    return !PathUtil.isMatchUrl(requestMapping.getShortUrl(), apiReqHeader.getUrlPatterns());
+                if (StringUtil.isEmpty(apiReqHeader.getPathPatterns())
+                        && StringUtil.isEmpty(apiReqHeader.getExcludePathPatterns())) {
+                    return false;
+                } else {
+                    boolean flag = DocPathUtil.matches(requestMapping.getShortUrl(), apiReqHeader.getPathPatterns()
+                            , apiReqHeader.getExcludePathPatterns());
+                    return !flag;
                 }
-                return false;
             });
             //reduce create in template
             apiMethodDoc.setHeaders(this.createDocRenderHeaders(allApiReqHeaders, apiConfig.isAdoc()));
@@ -805,7 +809,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         List<ApiParam> queryParams = new ArrayList<>();
         List<ApiParam> bodyParams = new ArrayList<>();
         for (ApiParam param : paramList) {
-            param.setValue(StringUtil.removeQuotes(param.getValue()));
+            param.setValue(StringUtil.removeDoubleQuotes(param.getValue()));
             if (param.isPathParam()) {
                 param.setId(pathParams.size() + 1);
                 pathParams.add(param);

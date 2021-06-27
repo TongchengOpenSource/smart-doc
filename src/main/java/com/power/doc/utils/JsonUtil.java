@@ -41,7 +41,7 @@ public class JsonUtil {
     public static String toPrettyFormat(String jsonString) {
         try {
             JsonElement jsonElement = JsonParser.parseString(jsonString);
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
             String prettyJson = gson.toJson(jsonElement);
             return prettyJson;
         } catch (Exception e) {

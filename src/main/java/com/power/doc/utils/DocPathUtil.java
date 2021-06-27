@@ -22,14 +22,15 @@
  */
 package com.power.doc.utils;
 
+import com.power.common.util.PathUtil;
 import com.power.common.util.StringUtil;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
-import java.util.*;
-import java.util.regex.Pattern;
+import java.util.Arrays;
+import java.util.List;
 
-public class PathUtil {
+public class DocPathUtil {
 
     /**
      * Get the java class name
@@ -65,31 +66,22 @@ public class PathUtil {
     }
 
     /**
-     * match
-     * @param url url
-     * @param urlPatterns patterns
-     * @return true if match
+     * Determine a match for the given lookup path.
+     *
+     * @param lookupPath      the request path
+     * @param includePatterns the path patterns to map (empty for matching to all paths)
+     * @param excludePatterns the path patterns to exclude (empty for no specific excludes)
+     * @return {@code true} if matched the request path
      */
-    public static boolean isMatchUrl(String url , String urlPatterns){
-        List<String> urlPatternList;
-        if (StringUtil.isNotEmpty(urlPatterns)) {
-            urlPatternList = Arrays.asList(urlPatterns.split(";", 0));
-        } else {
-           return false;
+    public static boolean matches(String lookupPath, String includePatterns, String excludePatterns) {
+        List<String> includePatternList = null;
+        if (StringUtil.isNotEmpty(includePatterns)) {
+            includePatternList = Arrays.asList(includePatterns.split(",", 0));
         }
-        for (String str : urlPatternList) {
-            if (str.endsWith("/*")) {
-                String name = str.substring(0, str.length() - 1);
-                if (url.contains(name)) {
-                    return true;
-                }
-            } else {
-                Pattern pattern = Pattern.compile(str);
-                if (pattern.matcher(url).matches()) {
-                    return true;
-                }
-            }
+        List<String> excludePatternList = null;
+        if (StringUtil.isNotEmpty(excludePatterns)) {
+            excludePatternList = Arrays.asList(excludePatterns.split(",", 0));
         }
-        return false;
+        return PathUtil.matches(lookupPath,includePatternList,excludePatternList);
     }
 }
