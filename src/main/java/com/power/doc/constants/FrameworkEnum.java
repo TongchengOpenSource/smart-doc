@@ -39,7 +39,7 @@ public enum FrameworkEnum {
     /**
      * Spring Framework
      */
-    SPRING("spring", "com.power.doc.template.RpcDocBuildTemplate.SpringBootDocBuildTemplate");
+    SPRING("spring", "com.power.doc.template.SpringBootDocBuildTemplate");
 
     /**
      * Framework name

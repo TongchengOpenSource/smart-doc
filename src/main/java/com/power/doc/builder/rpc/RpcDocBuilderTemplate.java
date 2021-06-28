@@ -25,15 +25,17 @@ package com.power.doc.builder.rpc;
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.DateTimeUtil;
 import com.power.common.util.FileUtil;
+import com.power.common.util.StringUtil;
 import com.power.doc.builder.BaseDocBuilderTemplate;
 import com.power.doc.builder.ProjectDocConfigBuilder;
+import com.power.doc.constants.FrameworkEnum;
 import com.power.doc.constants.TemplateVariable;
+import com.power.doc.factory.BuildTemplateFactory;
 import com.power.doc.model.ApiConfig;
 import com.power.doc.model.ApiErrorCode;
 import com.power.doc.model.rpc.RpcApiAllData;
 import com.power.doc.model.rpc.RpcApiDoc;
 import com.power.doc.template.IDocBuildTemplate;
-import com.power.doc.template.RpcDocBuildTemplate;
 import com.power.doc.utils.BeetlTemplateUtil;
 import com.power.doc.utils.DocUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
@@ -56,6 +58,9 @@ public class RpcDocBuilderTemplate extends BaseDocBuilderTemplate {
     private static long now = System.currentTimeMillis();
 
     public void checkAndInit(ApiConfig config) {
+        if (StringUtil.isEmpty(config.getFramework())) {
+            config.setFramework(FrameworkEnum.DUBBO.getFramework());
+        }
         super.checkAndInit(config);
         config.setOutPath(config.getOutPath() + FILE_SEPARATOR + RPC_OUT_DIR);
     }
@@ -189,7 +194,7 @@ public class RpcDocBuilderTemplate extends BaseDocBuilderTemplate {
         this.checkAndInitForGetApiData(config);
         config.setMd5EncryptedHtmlName(true);
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
-        IDocBuildTemplate docBuildTemplate = new RpcDocBuildTemplate();
+        IDocBuildTemplate docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework());
         return docBuildTemplate.getApiData(configBuilder);
     }
 

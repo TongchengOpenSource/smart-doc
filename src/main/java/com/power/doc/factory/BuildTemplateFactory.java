@@ -28,23 +28,25 @@ import com.power.doc.template.IDocBuildTemplate;
 /**
  * @author yu 2021/6/27.
  */
-public class TemplateFactory {
+public class BuildTemplateFactory {
 
     /**
      * Get Doc build template
      *
      * @param framework framework name
+     * @param <T> API doc type
      * @return Implements of IDocBuildTemplate
      */
-    public static IDocBuildTemplate getDocBuildTemplate(String framework) {
+    public static <T> IDocBuildTemplate<T> getDocBuildTemplate(String framework) {
+        String className = FrameworkEnum.getClassNameByFramework(framework);
         try {
-            return (IDocBuildTemplate) Class.forName(FrameworkEnum.getClassNameByFramework(framework)).newInstance();
+            return (IDocBuildTemplate) Class.forName(className).newInstance();
         } catch (InstantiationException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
-            throw new RuntimeException("The currently supported framework name can only be=> dubbo, spring .");
+            throw new RuntimeException("The class=>" + className + " is not found , smart-doc currently supported framework name can only be set in [dubbo, spring].");
         }
         return null;
     }

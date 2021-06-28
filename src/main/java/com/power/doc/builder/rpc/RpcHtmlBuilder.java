@@ -24,8 +24,11 @@ package com.power.doc.builder.rpc;
 
 import com.power.common.util.FileUtil;
 import com.power.doc.builder.ProjectDocConfigBuilder;
+import com.power.doc.constants.FrameworkEnum;
+import com.power.doc.factory.BuildTemplateFactory;
 import com.power.doc.model.ApiConfig;
 import com.power.doc.model.rpc.RpcApiDoc;
+import com.power.doc.template.IDocBuildTemplate;
 import com.power.doc.template.RpcDocBuildTemplate;
 import com.power.doc.utils.BeetlTemplateUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
@@ -68,7 +71,7 @@ public class RpcHtmlBuilder {
         RpcDocBuilderTemplate builderTemplate = new RpcDocBuilderTemplate();
         builderTemplate.checkAndInit(config);
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
-        RpcDocBuildTemplate docBuildTemplate = new RpcDocBuildTemplate();
+        IDocBuildTemplate docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework());
         List<RpcApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder);
         Template indexCssTemplate = BeetlTemplateUtil.getByName(ALL_IN_ONE_CSS);
         FileUtil.nioWriteFile(indexCssTemplate.render(), config.getOutPath() + FILE_SEPARATOR + ALL_IN_ONE_CSS);

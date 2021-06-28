@@ -332,6 +332,11 @@ public class ApiConfig {
      */
     private String author;
 
+    /**
+     * smart-doc supported framework, if not set default is spring,
+     */
+    private String framework;
+
     public String getAuthor() {
         return author;
     }
@@ -792,6 +797,14 @@ public class ApiConfig {
         this.customRequestFields = CollectionUtil.asList(customRequestFields);
     }
 
+    public String getFramework() {
+        return framework;
+    }
+
+    public void setFramework(String framework) {
+        this.framework = framework;
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("{");
@@ -811,6 +824,8 @@ public class ApiConfig {
                 .append(coverOld);
         sb.append(",\"customResponseFields\":")
                 .append(customResponseFields);
+        sb.append(",\"customRequestFields\":")
+                .append(customRequestFields);
         sb.append(",\"errorCodes\":")
                 .append(errorCodes);
         sb.append(",\"packageFilters\":\"")
@@ -871,6 +886,8 @@ public class ApiConfig {
                 .append(displayActualType);
         sb.append(",\"responseBodyAdvice\":")
                 .append(responseBodyAdvice);
+        sb.append(",\"requestBodyAdvice\":")
+                .append(requestBodyAdvice);
         sb.append(",\"style\":\"")
                 .append(style).append('\"');
         sb.append(",\"createDebugPage\":")
@@ -891,6 +908,10 @@ public class ApiConfig {
                 .append(debugEnvUrl).append('\"');
         sb.append(",\"tornaDebug\":")
                 .append(tornaDebug);
+        sb.append(",\"author\":\"")
+                .append(author).append('\"');
+        sb.append(",\"framework\":\"")
+                .append(framework).append('\"');
         sb.append('}');
         return sb.toString();
     }

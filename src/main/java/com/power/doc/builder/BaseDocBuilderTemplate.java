@@ -26,6 +26,7 @@ import com.power.common.util.DateTimeUtil;
 import com.power.common.util.StringUtil;
 import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.constants.DocLanguage;
+import com.power.doc.constants.FrameworkEnum;
 import com.power.doc.constants.TemplateVariable;
 import com.power.doc.model.ApiConfig;
 import com.power.doc.model.RevisionLog;
@@ -84,6 +85,10 @@ public class BaseDocBuilderTemplate {
                             .setStatus("auto")
             );
         }
+        if (StringUtil.isEmpty(config.getFramework())) {
+            config.setFramework(FrameworkEnum.SPRING.getFramework());
+        }
+
     }
 
     public Map<String, String> setDirectoryLanguageVariable(ApiConfig config, Template mapper) {
@@ -109,7 +114,7 @@ public class BaseDocBuilderTemplate {
         return titleMap;
     }
 
-    public void setCssCDN(ApiConfig config,Template template) {
+    public void setCssCDN(ApiConfig config, Template template) {
         if (DocLanguage.CHINESE.equals(config.getLanguage())) {
             template.binding(TemplateVariable.CSS_CND.getVariable(), CSS_CDN_CH);
         } else {

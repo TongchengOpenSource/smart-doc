@@ -24,6 +24,7 @@ package com.power.doc.builder.rpc;
 
 import com.power.common.util.DateTimeUtil;
 import com.power.doc.builder.ProjectDocConfigBuilder;
+import com.power.doc.factory.BuildTemplateFactory;
 import com.power.doc.model.ApiConfig;
 import com.power.doc.model.rpc.RpcApiDoc;
 import com.power.doc.template.IDocBuildTemplate;
@@ -63,7 +64,7 @@ public class RpcMarkdownBuilder {
         RpcDocBuilderTemplate builderTemplate = new RpcDocBuilderTemplate();
         builderTemplate.checkAndInit(config);
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
-        IDocBuildTemplate docBuildTemplate = new RpcDocBuildTemplate();
+        IDocBuildTemplate docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework());
         List<RpcApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder);
         if (config.isAllInOne()) {
             String version = config.isCoverOld() ? "" : "-V" + DateTimeUtil.long2Str(System.currentTimeMillis(), DATE_FORMAT);

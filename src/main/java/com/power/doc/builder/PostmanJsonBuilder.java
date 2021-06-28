@@ -26,6 +26,7 @@ import com.power.common.util.CollectionUtil;
 import com.power.common.util.FileUtil;
 import com.power.common.util.StringUtil;
 import com.power.doc.constants.DocGlobalConstants;
+import com.power.doc.factory.BuildTemplateFactory;
 import com.power.doc.model.*;
 import com.power.doc.model.postman.InfoBean;
 import com.power.doc.model.postman.ItemBean;
@@ -240,7 +241,7 @@ public class PostmanJsonBuilder {
     }
 
     private static void postManCreate(ApiConfig config, ProjectDocConfigBuilder configBuilder) {
-        IDocBuildTemplate docBuildTemplate = new SpringBootDocBuildTemplate();
+        IDocBuildTemplate docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework());
         List<ApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder);
         RequestItem requestItem = new RequestItem();
         requestItem.setInfo(new InfoBean(config.getProjectName()));

@@ -27,11 +27,13 @@ import com.power.common.util.CollectionUtil;
 import com.power.common.util.OkHttp3Util;
 import com.power.common.util.StringUtil;
 import com.power.doc.constants.TornaConstants;
+import com.power.doc.factory.BuildTemplateFactory;
 import com.power.doc.model.ApiConfig;
 import com.power.doc.model.ApiDoc;
 import com.power.doc.model.torna.Apis;
 import com.power.doc.model.torna.TornaApi;
 import com.power.doc.model.torna.TornaDic;
+import com.power.doc.template.IDocBuildTemplate;
 import com.power.doc.template.SpringBootDocBuildTemplate;
 import com.power.doc.utils.DocUtil;
 import com.power.doc.utils.TornaUtil;
@@ -76,7 +78,8 @@ public class TornaBuilder {
         DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
         builderTemplate.checkAndInit(config);
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
-        List<ApiDoc> apiDocList = new SpringBootDocBuildTemplate().getApiData(configBuilder);
+        IDocBuildTemplate docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework());
+        List<ApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder);
         buildTorna(apiDocList, config, javaProjectBuilder);
     }
 

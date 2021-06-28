@@ -23,6 +23,7 @@
 package com.power.doc.builder;
 
 import com.power.common.util.DateTimeUtil;
+import com.power.doc.factory.BuildTemplateFactory;
 import com.power.doc.model.ApiConfig;
 import com.power.doc.model.ApiDoc;
 import com.power.doc.template.IDocBuildTemplate;
@@ -64,7 +65,7 @@ public class ApiDocBuilder {
         config.setAdoc(false);
         config.setParamsDataToTree(false);
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
-        IDocBuildTemplate docBuildTemplate = new SpringBootDocBuildTemplate();
+        IDocBuildTemplate docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework());
         List<ApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder);
         if (config.isAllInOne()) {
             String version = config.isCoverOld() ? "" : "-V" + DateTimeUtil.long2Str(System.currentTimeMillis(), DATE_FORMAT);

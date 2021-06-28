@@ -28,12 +28,14 @@ import com.power.common.util.OkHttp3Util;
 import com.power.common.util.StringUtil;
 import com.power.doc.builder.ProjectDocConfigBuilder;
 import com.power.doc.constants.TornaConstants;
+import com.power.doc.factory.BuildTemplateFactory;
 import com.power.doc.model.ApiConfig;
 import com.power.doc.model.rpc.RpcApiDoc;
 import com.power.doc.model.torna.Apis;
 import com.power.doc.model.torna.DubboInfo;
 import com.power.doc.model.torna.TornaApi;
 import com.power.doc.model.torna.TornaDic;
+import com.power.doc.template.IDocBuildTemplate;
 import com.power.doc.template.RpcDocBuildTemplate;
 import com.power.doc.utils.DocUtil;
 import com.power.doc.utils.TornaUtil;
@@ -77,7 +79,7 @@ public class RpcTornaBuilder {
         RpcDocBuilderTemplate builderTemplate = new RpcDocBuilderTemplate();
         builderTemplate.checkAndInit(config);
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
-        RpcDocBuildTemplate docBuildTemplate = new RpcDocBuildTemplate();
+        IDocBuildTemplate docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework());
         List<RpcApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder);
         buildTorna(apiDocList, config, javaProjectBuilder);
     }

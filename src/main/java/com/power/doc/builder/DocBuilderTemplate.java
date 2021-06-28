@@ -22,18 +22,19 @@
  */
 package com.power.doc.builder;
 
-import com.power.common.util.*;
-import com.power.doc.constants.DocGlobalConstants;
+import com.power.common.util.CollectionUtil;
+import com.power.common.util.DateTimeUtil;
+import com.power.common.util.FileUtil;
 import com.power.doc.constants.DocLanguage;
 import com.power.doc.constants.HighlightStyle;
 import com.power.doc.constants.TemplateVariable;
+import com.power.doc.factory.BuildTemplateFactory;
 import com.power.doc.model.*;
 import com.power.doc.template.IDocBuildTemplate;
 import com.power.doc.template.SpringBootDocBuildTemplate;
 import com.power.doc.utils.BeetlTemplateUtil;
 import com.power.doc.utils.DocUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
-import com.thoughtworks.qdox.model.JavaClass;
 import org.beetl.core.Template;
 
 import java.util.ArrayList;
@@ -134,7 +135,7 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
         tpl.binding(TemplateVariable.PROJECT_NAME.getVariable(), config.getProjectName());
         tpl.binding(TemplateVariable.REQUEST_EXAMPLE.getVariable(), config.isRequestExample());
         tpl.binding(TemplateVariable.RESPONSE_EXAMPLE.getVariable(), config.isResponseExample());
-        setCssCDN(config,tpl);
+        setCssCDN(config, tpl);
         if (CollectionUtil.isEmpty(errorCodeList)) {
             tpl.binding(TemplateVariable.DICT_ORDER.getVariable(), apiDocList.size() + 1);
         } else {
@@ -316,7 +317,7 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
     public void buildSingleApi(ProjectDocConfigBuilder projectBuilder, String controllerName, String template, String fileExtension) {
         ApiConfig config = projectBuilder.getApiConfig();
         FileUtil.mkdirs(config.getOutPath());
-        IDocBuildTemplate<ApiDoc> docBuildTemplate = new SpringBootDocBuildTemplate();
+        IDocBuildTemplate<ApiDoc> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework());
         ApiDoc doc = docBuildTemplate.getSingleApiData(projectBuilder, controllerName);
         Template mapper = BeetlTemplateUtil.getByName(template);
         mapper.binding(TemplateVariable.DESC.getVariable(), doc.getDesc());
@@ -330,7 +331,7 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
         this.checkAndInitForGetApiData(config);
         config.setMd5EncryptedHtmlName(true);
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
-        IDocBuildTemplate docBuildTemplate = new SpringBootDocBuildTemplate();
+        IDocBuildTemplate docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework());
         return docBuildTemplate.getApiData(configBuilder);
     }
 

@@ -27,8 +27,9 @@ import com.power.common.util.FileUtil;
 import com.power.common.util.StringUtil;
 import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.constants.Methods;
+import com.power.doc.factory.BuildTemplateFactory;
 import com.power.doc.model.*;
-import com.power.doc.template.SpringBootDocBuildTemplate;
+import com.power.doc.template.IDocBuildTemplate;
 import com.power.doc.utils.DocUtil;
 import com.power.doc.utils.JsonUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
@@ -78,7 +79,7 @@ public class OpenApiBuilder {
      */
     private static void openApiCreate(ApiConfig config, ProjectDocConfigBuilder configBuilder) {
         config.setParamsDataToTree(true);
-        SpringBootDocBuildTemplate docBuildTemplate = new SpringBootDocBuildTemplate();
+        IDocBuildTemplate docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework());
         List<ApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder);
         Map<String, Object> json = new HashMap<>(8);
         json.put("openapi", "3.0.3");
