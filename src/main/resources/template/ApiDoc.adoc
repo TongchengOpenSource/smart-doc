@@ -28,8 +28,9 @@ for(doc in list){
 |====================
 |Header | Type|Description|Required|Since
 ${doc.headers}
-<%}%>
 |====================
+<%}%>
+
 
 <%if(isNotEmpty(doc.pathParams)){%>
 *Path-parameters:*
