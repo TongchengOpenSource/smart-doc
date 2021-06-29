@@ -31,7 +31,6 @@ import com.power.doc.constants.TemplateVariable;
 import com.power.doc.factory.BuildTemplateFactory;
 import com.power.doc.model.*;
 import com.power.doc.template.IDocBuildTemplate;
-import com.power.doc.template.SpringBootDocBuildTemplate;
 import com.power.doc.utils.BeetlTemplateUtil;
 import com.power.doc.utils.DocUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
@@ -274,6 +273,12 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
         } else {
             mapper.binding(TemplateVariable.CSS_CND.getVariable(), CSS_CDN);
         }
+        if (CollectionUtil.isNotEmpty(errorCodeList)) {
+            mapper.binding(TemplateVariable.DICT_ORDER.getVariable(), apiDocList.size() + 2);
+        } else {
+            mapper.binding(TemplateVariable.DICT_ORDER.getVariable(), apiDocList.size() + 1);
+        }
+
         mapper.binding(TemplateVariable.CREATE_TIME.getVariable(), strTime);
         mapper.binding(TemplateVariable.VERSION.getVariable(), now);
         mapper.binding(TemplateVariable.API_DOC_LIST.getVariable(), apiDocList);
