@@ -248,9 +248,10 @@ public class JavaClassValidateUtil {
             case "org.springframework.web.servlet.ModelAndView":
             case "org.springframework.validation.BindingResult":
             case "javax.servlet.http.HttpServletRequest":
-            case "org.springframework.web.context.request.WebRequest":
+            case "javax.servlet.http.HttpServlet":
             case "javax.servlet.http.HttpSession":
             case "javax.servlet.http.HttpServletResponse":
+            case "org.springframework.web.context.request.WebRequest":
             case "org.springframework.web.reactive.function.server.ServerRequest":
             case "org.springframework.web.multipart.MultipartHttpServletRequest":
             case "org.springframework.http.HttpHeaders":
