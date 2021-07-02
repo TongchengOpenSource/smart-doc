@@ -25,7 +25,7 @@ package com.power.doc.model.torna;
 import java.util.List;
 
 /**
- * @author: xingzi 2021/2/25 12:13
+ * @author xingzi 2021/2/25 12:13
  **/
 public class EnumInfo {
     /**

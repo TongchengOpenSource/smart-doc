@@ -24,16 +24,47 @@ package com.power.doc.utils;
 
 import com.github.javafaker.Faker;
 import com.mifmif.common.regex.Generex;
-import com.power.common.util.*;
+import com.power.common.util.CollectionUtil;
+import com.power.common.util.DateTimeUtil;
+import com.power.common.util.EnumUtil;
+import com.power.common.util.IDCardUtil;
+import com.power.common.util.PathMatcher;
+import com.power.common.util.RandomUtil;
+import com.power.common.util.StringUtil;
+import com.power.common.util.ValidateUtil;
 import com.power.doc.constants.DocAnnotationConstants;
 import com.power.doc.constants.DocGlobalConstants;
-import com.power.doc.model.*;
+import com.power.doc.model.ApiConfig;
+import com.power.doc.model.ApiDataDictionary;
+import com.power.doc.model.ApiDocDict;
+import com.power.doc.model.ApiErrorCode;
+import com.power.doc.model.ApiErrorCodeDictionary;
+import com.power.doc.model.DataDict;
+import com.power.doc.model.DocJavaField;
+import com.power.doc.model.FormData;
 import com.thoughtworks.qdox.JavaProjectBuilder;
-import com.thoughtworks.qdox.model.*;
+import com.thoughtworks.qdox.model.DocletTag;
+import com.thoughtworks.qdox.model.JavaAnnotation;
+import com.thoughtworks.qdox.model.JavaClass;
+import com.thoughtworks.qdox.model.JavaField;
+import com.thoughtworks.qdox.model.JavaMethod;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.IdentityHashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.Stack;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -232,6 +263,10 @@ public class DocUtil {
                 name = str.substring(0, str.length() - 2);
             }
             if (controllerName.contains(name)) {
+                return true;
+            }
+            String controllerPackage = controllerName.substring(0, controllerName.lastIndexOf("."));
+            if (new PathMatcher().matches(str, controllerPackage)) {
                 return true;
             }
         }

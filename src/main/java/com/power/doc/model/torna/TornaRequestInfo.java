@@ -31,7 +31,7 @@ import java.util.HashMap;
 /**
  * torna请求日志信息
  *
- * @author: xingzi 2021/3/20 22:11
+ * @author xingzi 2021/3/20 22:11
  **/
 public class TornaRequestInfo {
     private String code;
