@@ -257,7 +257,7 @@ public class DocClassUtil {
     public static String rewriteRequestParam(String typeName) {
         switch (typeName) {
             case "org.springframework.data.domain.Pageable":
-                return "org.springframework.data.domain.PageRequest";
+                return "com.power.doc.model.framework.PageableAsQueryParam";
             default:
                 return typeName;
         }
