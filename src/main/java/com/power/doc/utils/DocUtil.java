@@ -34,6 +34,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -227,11 +228,8 @@ public class DocUtil {
         }
         String[] patterns = packageFilters.split(",");
         for (String str : patterns) {
-            String name = str;
-            if (str.endsWith("*")) {
-                name = str.substring(0, str.length() - 2);
-            }
-            if (controllerName.contains(name)) {
+            Pattern pattern = Pattern.compile(str);
+            if(pattern.matcher(controllerName).matches()){
                 return true;
             }
         }

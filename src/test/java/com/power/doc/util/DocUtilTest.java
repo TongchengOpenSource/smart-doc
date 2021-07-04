@@ -32,4 +32,13 @@ public class DocUtilTest {
         System.out.println(params.size());
         System.out.println(me);
     }
+
+    @Test
+    public void testIsMatch(){
+        System.setProperty(DocGlobalConstants.DOC_LANGUAGE, DocLanguage.CHINESE.getCode());
+        String pattern = "com.aaa.*.controller";
+        String controllerName = "com.aaa.cc.controlle";
+
+        System.out.println(DocUtil.isMatch(pattern,controllerName));
+    }
 }

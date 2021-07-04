@@ -2,7 +2,7 @@
 
 #### 版本号：2.2.2
 
-- 更新日期: 2020-07-01
+- 更新日期: 2020-07-04
 - 更新内容：
   1. 修复url中遇到正则表达解析错误问题.
   2. 修复生成的json样例部分格式化后错误的bug,gitee #I3XSE5。
@@ -14,7 +14,9 @@
   8. 修复字典模板错误，#119。
   9. 忽略HttpServlet对象。
   10. 支持内置替换Jpa Pageable对象的对象，去除不必要的请求参数。
-
+  11. packageFilters增强，可使用正则进行匹配，gitee #I3YKZ4 。
+  12. 修复dubbo rpc文档推送到torna数据错误。
+  13. 修复customResponseFields和customRequestFields设置时不同类同名字段覆盖bug，gitee #I3Y6AL。
 #### 版本号：2.2.1
 
 - 更新日期: 2020-06-20
