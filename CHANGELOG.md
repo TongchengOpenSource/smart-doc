@@ -17,6 +17,7 @@
   11. packageFilters增强，可使用正则进行匹配，gitee #I3YKZ4 。
   12. 修复dubbo rpc文档推送到torna数据错误。
   13. 修复customResponseFields和customRequestFields设置时不同类同名字段覆盖bug，gitee #I3Y6AL。
+  14. 修复高版本gradle中使用implements添加依赖时，gradle插件无法加载依赖导致返回空json的bug。
 #### 版本号：2.2.1
 
 - 更新日期: 2020-06-20
