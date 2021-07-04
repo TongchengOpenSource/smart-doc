@@ -229,7 +229,7 @@ public class DocUtil {
         String[] patterns = packageFilters.split(",");
         for (String str : patterns) {
             Pattern pattern = Pattern.compile(str);
-            if(pattern.matcher(controllerName).matches()){
+            if (pattern.matcher(controllerName).matches()) {
                 return true;
             }
         }
