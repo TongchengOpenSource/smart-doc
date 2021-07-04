@@ -136,7 +136,7 @@ public class ProjectDocConfigBuilder {
     private void initCustomResponseFieldsMap(ApiConfig config) {
         if (CollectionUtil.isNotEmpty(config.getCustomResponseFields())) {
             for (CustomField field : config.getCustomResponseFields()) {
-                customRespFieldMap.put(field.getName(), field);
+                customRespFieldMap.put(field.getOwnerClassName() + "." +field.getName(), field);
             }
         }
     }
@@ -144,7 +144,7 @@ public class ProjectDocConfigBuilder {
     private void initCustomRequestFieldsMap(ApiConfig config) {
         if (CollectionUtil.isNotEmpty(config.getCustomRequestFields())) {
             for (CustomField field : config.getCustomRequestFields()) {
-                customReqFieldMap.put(field.getName(), field);
+                customReqFieldMap.put(field.getOwnerClassName() + "."+field.getName(), field);
             }
         }
     }

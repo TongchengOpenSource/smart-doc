@@ -260,12 +260,13 @@ public class JsonBuildHelper {
                 }
                 String typeSimpleName = field.getType().getSimpleName();
                 String fieldGicName = docField.getGenericCanonicalName();
-                CustomField customResponseField = builder.getCustomRespFieldMap().get(fieldName);
-                CustomField customRequestField = builder.getCustomReqFieldMap().get(fieldName);
-                if (customRequestField != null && typeName.equals(customRequestField.getOwnerClassName()) && (customRequestField.isIgnore()) && !isResp) {
+                CustomField customResponseField = builder.getCustomRespFieldMap().get(typeName +"."+fieldName);
+                CustomField customRequestField = builder.getCustomReqFieldMap().get(typeName +"."+fieldName);
+
+                if (customRequestField != null &&  JavaClassUtil.isTargetChildClass(typeName, customRequestField.getOwnerClassName())  && (customRequestField.isIgnore()) && !isResp) {
                     continue;
                 }
-                if (customResponseField != null && typeName.equals(customResponseField.getOwnerClassName()) && (customResponseField.isIgnore()) && isResp) {
+                if (customResponseField != null && JavaClassUtil.isTargetChildClass(typeName, customResponseField.getOwnerClassName()) && (customResponseField.isIgnore()) && isResp) {
                     continue;
                 }
                 data0.append("\"").append(fieldName).append("\":");

@@ -147,12 +147,12 @@ public class ParamsBuildHelper {
                 }
                 boolean strRequired = false;
                 int annotationCounter = 0;
-                CustomField customResponseField = responseFieldMap.get(fieldName);
+                CustomField customResponseField = responseFieldMap.get(simpleName  + "."+ fieldName);
                 if (customResponseField != null && JavaClassUtil.isTargetChildClass(simpleName, customResponseField.getOwnerClassName())
                         && (customResponseField.isIgnore()) && isResp) {
                     continue;
                 }
-                CustomField customRequestField = projectBuilder.getCustomReqFieldMap().get(fieldName);
+                CustomField customRequestField = projectBuilder.getCustomReqFieldMap().get(simpleName +"."+fieldName);
                 if (customRequestField != null && JavaClassUtil.isTargetChildClass(simpleName, customRequestField.getOwnerClassName())
                         && (customRequestField.isIgnore()) && !isResp) {
                     continue;

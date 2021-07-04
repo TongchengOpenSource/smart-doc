@@ -35,10 +35,7 @@ import com.power.doc.model.ApiParam;
 import com.power.doc.model.DocJavaMethod;
 import com.power.doc.model.JavaMethodDoc;
 import com.power.doc.model.rpc.RpcApiDoc;
-import com.power.doc.utils.DocClassUtil;
-import com.power.doc.utils.DocUtil;
-import com.power.doc.utils.JavaClassUtil;
-import com.power.doc.utils.JavaClassValidateUtil;
+import com.power.doc.utils.*;
 import com.thoughtworks.qdox.model.*;
 
 import java.util.*;
@@ -153,12 +150,20 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
                 continue;
             }
             apiMethodDoc.setDeprecated(deprecated);
+
+
             // build request params
             List<ApiParam> requestParams = requestParams(method, projectBuilder);
-            apiMethodDoc.setRequestParams(requestParams);
             // build response params
             List<ApiParam> responseParams = buildReturnApiParams(DocJavaMethod.builder().setJavaMethod(method), projectBuilder);
-            apiMethodDoc.setResponseParams(responseParams);
+
+            if (apiConfig.isParamsDataToTree()) {
+                apiMethodDoc.setRequestParams(ApiParamTreeUtil.apiParamToTree(requestParams));
+                apiMethodDoc.setResponseParams(ApiParamTreeUtil.apiParamToTree(responseParams));
+            } else {
+                apiMethodDoc.setRequestParams(requestParams);
+                apiMethodDoc.setResponseParams(responseParams);
+            }
             methodDocList.add(apiMethodDoc);
 
         }
