@@ -7,13 +7,13 @@
   1. 修复url中遇到正则表达解析错误问题.
   2. 修复生成的json样例部分格式化后错误的bug,gitee #I3XSE5。
   3. 增强对文档中html特殊字符的处理，防止html渲染后显示错误，gitee #I3XO31。
-  4. 请求头设置增强，支持配置urlPatterns去匹配对应的接口。
+  4. 请求头设置增强，支持配置urlPatterns和excludePathPatterns两个属性去匹配对应的接口。
   5. 优化了maven插件的提示，优化后可以将加载了那些目录模块代码路径打印。
   6. 提供了其它框架扩展文档解析的能力。
   7. 修复doc模板错误，gitee #I3Y640。
   8. 修复字典模板错误，#119。
-  9. 忽略HttpServlet对象。
-  10. 支持内置替换Jpa Pageable对象的对象，去除不必要的请求参数。
+  9. 添加忽略HttpServlet对象。
+  10. 支持内置替换Jpa Pageable分页对象，去除不必要的请求参数替换配置。
   11. packageFilters增强，可使用正则进行匹配，gitee #I3YKZ4 。
   12. 修复dubbo rpc文档推送到torna数据错误。
   13. 修复customResponseFields和customRequestFields设置时不同类同名字段覆盖bug，gitee #I3Y6AL。
