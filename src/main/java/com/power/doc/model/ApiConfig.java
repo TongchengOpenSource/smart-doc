@@ -44,6 +44,11 @@ public class ApiConfig {
     private String serverUrl;
 
     /**
+     * Path Prefix, eg: Servlet ContextPath
+     */
+    private String pathPrefix;
+
+    /**
      * Set comments check mode
      */
     private boolean isStrict;
@@ -336,6 +341,14 @@ public class ApiConfig {
      * smart-doc supported framework, if not set default is spring,
      */
     private String framework;
+
+    public String getPathPrefix() {
+        return pathPrefix;
+    }
+
+    public void setPathPrefix(String pathPrefix) {
+        this.pathPrefix = pathPrefix;
+    }
 
     public String getAuthor() {
         return author;
