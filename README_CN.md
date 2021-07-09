@@ -45,16 +45,16 @@ smart-doc + [Torna](http://torna.cn) 组成行业领先的文档生成和管理�
 
 ## Getting Started
 
-smart-doc使用和测试可参考[smart-doc demo](https://gitee.com/devin-alan/api-doc-test.git)。
+smart-doc使用和测试可参考[smart-doc demo](https://gitee.com/smart-doc-team/smart-doc-example-cn.git)。
 
 ```
-# git clone https://gitee.com/devin-alan/api-doc-test.git
+# git clone https://gitee.com/smart-doc-team/smart-doc-example-cn.git
 ```
 你可以启动这个Spring Boot的项目，然后访问`http://localhost:8080/doc/api.html`来浏览smart-doc生成的接口文档。
 
 maven多模块项目请参考
 ```
-# git clone https://gitee.com/devin-alan/spring-boot-maven-multiple-module.git
+# git clone https://gitee.com/smart-doc-team/spring-boot-maven-multiple-module.git
 ```
 ### Add Maven Plugin
 
@@ -316,7 +316,8 @@ the [LICENSE](https://gitee.com/smart-doc-team/smart-doc/blob/master/LICENSE) fi
 &nbsp;&nbsp;<img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/known-users/xiaomi.png" title="小米" width="170px" height="83px"/>
 &nbsp;&nbsp;<img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/known-users/neusoft.png" title="东软集团" width="180px" height="83px"/>
 &nbsp;&nbsp;<img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/known-users/zhongkezhilian.png" title="中科智链" width="272px" height="83px"/>
-<img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/known-users/yuanmengjiankang.png" title="远盟健康" width="260px" height="83px"/>
+&nbsp;&nbsp;<img src="https://www.hand-china.com/static/img/handlogo.svg" title="上海汉得信息技术股份有限公司" width="260px" height="83px"/>
+&nbsp;&nbsp;<img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/known-users/yuanmengjiankang.png" title="远盟健康" width="260px" height="83px"/>
 <img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/known-users/puqie_gaitubao_100x100.jpg" title="普切信息科技" width="83px" height="83px"/>
 &nbsp;&nbsp;
 <img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/known-users/tianbo-tech.png" title="杭州天铂云科" width="135px" height="83px"/>
