@@ -170,10 +170,11 @@ smart-doc官方目前已经开发完成[Maven插件](https://gitee.com/smart-doc
       "remarks": "desc" //变更描述
     }
   ],
-  "customResponseFields": [{ //自定义添加字段和注释，api-doc后期遇到同名字段则直接给相应字段加注释，非必须
+  "customResponseFields": [{ //自定义添加字段和注释，一般用户处理第三方jar包库，非必须
       "name": "code",//覆盖响应码字段
       "desc": "响应代码",//覆盖响应码的字段注释
       "ownerClassName": "org.springframework.data.domain.Pageable", //指定你要添加注释的类名
+      "ignore":true, //设置true会被自动忽略掉不会出现在文档中
       "value": "00000"//设置响应码的值
   }],
   "customRequestFields": [{ //自定义请求体的注释，@since 2.1.3，非必须
