@@ -114,6 +114,7 @@ When you need to use smart-doc to generate more API document information, you ca
 ```
 {
   "serverUrl": "http://127.0.0.1", // Set the server address, not required
+  "pathPrefix": "", //Set the path prefix,not required。eg: Servlet ContextPath
   "isStrict": false, // whether to enable strict mode
   "allInOne": true, // whether to merge documents into one file, generally recommended as true
   "outPath": "D: // md2", // Specify the output path of the document

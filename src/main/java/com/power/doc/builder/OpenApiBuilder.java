@@ -85,7 +85,7 @@ public class OpenApiBuilder {
         json.put("openapi", "3.0.3");
         json.put("info", buildInfo(config));
         json.put("servers", buildServers(config));
-        json.put("paths", buildPaths(apiDocList));
+        json.put("paths", buildPaths(config, apiDocList));
         json.put("components", buildComponentsSchema(apiDocList));
 
         String filePath = config.getOutPath();
@@ -127,7 +127,7 @@ public class OpenApiBuilder {
      * @param apiDocList api列表
      * @return
      */
-    private static Map<String, Object> buildPaths(List<ApiDoc> apiDocList) {
+    private static Map<String, Object> buildPaths(ApiConfig config, List<ApiDoc> apiDocList) {
         Map<String, Object> pathMap = new HashMap<>(500);
         apiDocList.forEach(
                 a -> {
@@ -135,7 +135,7 @@ public class OpenApiBuilder {
                     apiMethodDocs.forEach(
                             method -> {
                                 //设置paths的请求url 将双斜杠替换成单斜杠
-                                String url = method.getPath().replace("//", "/");
+                                String url = (config.getPathPrefix() + "/" + method.getPath()).replace("//", "/");
                                 Map<String, Object> request = buildPathUrls(method, a);
                                 //pathMap.put(method.getPath().replace("//", "/"), buildPathUrls(method, a));
                                 if (!pathMap.containsKey(url)) {
