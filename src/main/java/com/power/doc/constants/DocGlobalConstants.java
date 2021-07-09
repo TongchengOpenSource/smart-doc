@@ -215,4 +215,6 @@ public interface DocGlobalConstants {
 
     String CSS_CDN = "https://fonts.googleapis.com";
 
+    String PATH_DELIMITER = "/";
+
 }

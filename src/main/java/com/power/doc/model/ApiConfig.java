@@ -46,7 +46,7 @@ public class ApiConfig {
     /**
      * Path Prefix, eg: Servlet ContextPath
      */
-    private String pathPrefix;
+    private String pathPrefix = "";
 
     /**
      * Set comments check mode

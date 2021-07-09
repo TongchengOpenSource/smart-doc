@@ -35,7 +35,6 @@ import com.power.doc.utils.DocUtil;
 import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaMethod;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -64,6 +63,7 @@ public class SpringMVCRequestMappingHandler {
         String shortUrl = null;
         String mediaType = null;
         String serverUrl = projectBuilder.getServerUrl();
+        String contextPath = projectBuilder.getApiConfig().getPathPrefix();
         boolean deprecated = false;
         for (JavaAnnotation annotation : annotations) {
             String annotationName = annotation.getType().getName();
@@ -110,11 +110,11 @@ public class SpringMVCRequestMappingHandler {
             shortUrl = StringUtil.removeQuotes(shortUrl);
             List<String> urls = DocUtil.split(shortUrl);
             if (urls.size() > 1) {
-                url = DocUrlUtil.getMvcUrls(serverUrl, controllerBaseUrl, urls);
-                shortUrl = DocUrlUtil.getMvcUrls("", controllerBaseUrl, urls);
+                url = DocUrlUtil.getMvcUrls(serverUrl, contextPath + "/" + controllerBaseUrl, urls);
+                shortUrl = DocUrlUtil.getMvcUrls(DocGlobalConstants.EMPTY, contextPath + "/" + controllerBaseUrl, urls);
             } else {
-                url = serverUrl + "/" + controllerBaseUrl + "/" + shortUrl;
-                shortUrl = "/" + controllerBaseUrl + "/" + shortUrl;
+                url = String.join(DocGlobalConstants.PATH_DELIMITER, serverUrl, contextPath, controllerBaseUrl, shortUrl);
+                shortUrl = String.join(DocGlobalConstants.PATH_DELIMITER, DocGlobalConstants.PATH_DELIMITER, contextPath, controllerBaseUrl, shortUrl);
             }
             for (Map.Entry<String, String> entry : constantsMap.entrySet()) {
                 String key = entry.getKey();

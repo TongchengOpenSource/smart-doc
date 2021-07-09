@@ -193,9 +193,6 @@ public class ProjectDocConfigBuilder {
         }
     }
 
-    /**
-     * 设置高亮样式
-     */
     private void setHighlightStyle() {
         String style = apiConfig.getStyle();
         if (HighlightStyle.containsStyle(style)) {
