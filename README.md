@@ -320,7 +320,7 @@ smart-doc better.
 
 ## Acknowledgements
 Thanks to [JetBrains SoftWare](https://www.jetbrains.com) for providing free Open Source license for this open source project.
-<img src="https://raw.githubusercontent.com/shalousun/smart-doc/dev/images/jetbrains-variant-3.png" width="260px" height="83px"/>
+<img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/jetbrains-variant-3.png" width="260px" height="220px"/>
 ## License
 
 Smart-doc is under the Apache 2.0 license. See the [LICENSE](https://github.com/shalousun/smart-doc/blob/master/LICENSE)
