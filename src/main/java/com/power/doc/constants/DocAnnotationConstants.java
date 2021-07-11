@@ -39,6 +39,11 @@ public interface DocAnnotationConstants {
 
     String SHORT_JSON_IGNORE = "JsonIgnore";
 
+    /**
+     * jackson JsonIgnoreProperties annotation
+     */
+    String SHORT_JSON_IGNORE_PROPERTIES = "JsonIgnoreProperties";
+
     String SHORT_JSON_PROPERTY = "JsonProperty";
 
     String SHORT_JSON_FIELD = "JSONField";
@@ -68,4 +73,14 @@ public interface DocAnnotationConstants {
     String MAX = "max";
 
     String JSON_PROPERTY = "JsonProperty";
+
+    /**
+     * Fastjson JSONType annotation
+     */
+    String SHORT_JSON_TYPE = "JSONType";
+
+    /**
+     * Fastjson JSONType annotation  ignores prop
+     */
+    String IGNORE_PROP = "ignores";
 }

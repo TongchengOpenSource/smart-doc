@@ -69,6 +69,11 @@ public class DocJavaField {
      */
     private String actualJavaType;
 
+    /**
+     * field name
+     */
+    private String fieldName;
+
     private boolean array;
 
     private boolean primitive;
@@ -198,5 +203,14 @@ public class DocJavaField {
 
     public void setEnum(boolean anEnum) {
         isEnum = anEnum;
+    }
+
+    public String getFieldName() {
+        return fieldName;
+    }
+
+    public DocJavaField setFieldName(String fieldName) {
+        this.fieldName = fieldName;
+        return this;
     }
 }

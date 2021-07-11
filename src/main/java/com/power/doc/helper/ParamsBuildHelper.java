@@ -115,6 +115,7 @@ public class ParamsBuildHelper {
             paramList.addAll(buildParams(globGicName[0], pre, nextLevel, isRequired, isResp,
                     registryClasses, projectBuilder, groupClasses, pid, jsonRequest));
         } else {
+            Map<String, String> ignoreFields = JavaClassUtil.getClassJsonIgnoreFields(cls);
             out:
             for (DocJavaField docField : fields) {
                 String maxLength = null;
@@ -122,7 +123,11 @@ public class ParamsBuildHelper {
                 if (field.isTransient() && skipTransientField) {
                     continue;
                 }
-                String fieldName = field.getName();
+                String fieldName = docField.getFieldName();
+                if (ignoreFields.containsKey(fieldName)) {
+                    continue;
+                }
+
                 String subTypeName = docField.getFullyQualifiedName();
                 if ((responseFieldToUnderline && isResp) || (requestFieldToUnderline && !isResp)) {
                     fieldName = StringUtil.camelToUnderline(fieldName);
@@ -147,12 +152,12 @@ public class ParamsBuildHelper {
                 }
                 boolean strRequired = false;
                 int annotationCounter = 0;
-                CustomField customResponseField = responseFieldMap.get(simpleName  + "."+ fieldName);
+                CustomField customResponseField = responseFieldMap.get(simpleName + "." + fieldName);
                 if (customResponseField != null && JavaClassUtil.isTargetChildClass(simpleName, customResponseField.getOwnerClassName())
                         && (customResponseField.isIgnore()) && isResp) {
                     continue;
                 }
-                CustomField customRequestField = projectBuilder.getCustomReqFieldMap().get(simpleName +"."+fieldName);
+                CustomField customRequestField = projectBuilder.getCustomReqFieldMap().get(simpleName + "." + fieldName);
                 if (customRequestField != null && JavaClassUtil.isTargetChildClass(simpleName, customRequestField.getOwnerClassName())
                         && (customRequestField.isIgnore()) && !isResp) {
                     continue;

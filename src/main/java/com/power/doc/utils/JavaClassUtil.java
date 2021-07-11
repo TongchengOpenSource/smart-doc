@@ -25,6 +25,7 @@ package com.power.doc.utils;
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.StringUtil;
 import com.power.doc.constants.DocAnnotationConstants;
+import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.constants.DocValidatorAnnotationEnum;
 import com.power.doc.constants.ValidatorAnnotations;
 import com.power.doc.model.DocJavaField;
@@ -89,6 +90,7 @@ public class JavaClassUtil {
                     String comment = javaMethod.getComment();
                     JavaField javaField = new DefaultJavaField(javaMethod.getReturns(), methodName);
                     DocJavaField docJavaField = DocJavaField.builder()
+                            .setFieldName(methodName)
                             .setJavaField(javaField)
                             .setComment(comment)
                             .setDocletTags(javaMethod.getTags())
@@ -129,16 +131,23 @@ public class JavaClassUtil {
                     DocJavaField docJavaField = addedFields.get(methodName);
                     docJavaField.setAnnotations(method.getAnnotations());
                     docJavaField.setComment(comment);
+                    docJavaField.setFieldName(methodName);
                     addedFields.put(methodName, docJavaField);
                 }
             }
             for (JavaField javaField : cls1.getFields()) {
                 String fieldName = javaField.getName();
                 String subTypeName = javaField.getType().getFullyQualifiedName();
+
                 if (javaField.isStatic() || "this$0".equals(fieldName) ||
                         JavaClassValidateUtil.isIgnoreFieldTypes(subTypeName)) {
                     continue;
                 }
+                if (fieldName.startsWith("is") && ("boolean".equals(subTypeName)
+                        || DocGlobalConstants.JAVA_BOOLEAN.equals(subTypeName))) {
+                    fieldName = StringUtil.firstToLowerCase(fieldName.substring(2));
+                }
+
                 DocJavaField docJavaField = DocJavaField.builder();
                 boolean typeChecked = false;
                 String gicName = javaField.getType().getGenericCanonicalName();
@@ -174,7 +183,8 @@ public class JavaClassUtil {
                 docJavaField.setComment(javaField.getComment())
                         .setJavaField(javaField).setFullyQualifiedName(subTypeName)
                         .setGenericCanonicalName(gicName).setActualJavaType(actualType)
-                        .setAnnotations(javaField.getAnnotations());
+                        .setAnnotations(javaField.getAnnotations())
+                        .setFieldName(fieldName);
                 if (addedFields.containsKey(fieldName)) {
                     addedFields.put(fieldName, docJavaField);
                     continue;
@@ -518,4 +528,39 @@ public class JavaClassUtil {
         }
         return false;
     }
+
+    public static Map<String, String> getClassJsonIgnoreFields(JavaClass cls) {
+        List<JavaAnnotation> classAnnotation = cls.getAnnotations();
+        Map<String, String> ignoreFields = new HashMap<>();
+        for (JavaAnnotation annotation : classAnnotation) {
+            String simpleAnnotationName = annotation.getType().getValue();
+            if (DocAnnotationConstants.SHORT_JSON_IGNORE_PROPERTIES.equalsIgnoreCase(simpleAnnotationName)) {
+                return JavaClassUtil.getJsonIgnoresProp(annotation, DocAnnotationConstants.VALUE_PROP);
+            }
+            if (DocAnnotationConstants.SHORT_JSON_TYPE.equals(simpleAnnotationName)) {
+                return JavaClassUtil.getJsonIgnoresProp(annotation, DocAnnotationConstants.IGNORE_PROP);
+            }
+        }
+        return ignoreFields;
+    }
+
+    public static Map<String, String> getJsonIgnoresProp(JavaAnnotation annotation, String propName) {
+        Map<String, String> ignoreFields = new HashMap<>();
+        Object ignoresObject = annotation.getNamedParameter(propName);
+        if (Objects.isNull(ignoresObject)) {
+            return ignoreFields;
+        }
+        if (ignoresObject instanceof String) {
+            String prop = StringUtil.removeQuotes(ignoresObject.toString());
+            ignoreFields.put(prop, null);
+            return ignoreFields;
+        }
+        List<String> ignorePropList = (LinkedList) ignoresObject;
+        for (String str : ignorePropList) {
+            String prop = StringUtil.removeQuotes(str);
+            ignoreFields.put(prop, null);
+        }
+        return ignoreFields;
+    }
 }
+

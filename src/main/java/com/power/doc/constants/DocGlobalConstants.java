@@ -141,6 +141,8 @@ public interface DocGlobalConstants {
 
     String JAVA_OBJECT_FULLY = "java.lang.Object";
 
+    String JAVA_BOOLEAN = "java.lang.Boolean";
+
     String JAVA_STRING_FULLY = "java.lang.String";
 
     String JAVA_MAP_FULLY = "java.util.Map";
