@@ -119,7 +119,7 @@ smart-doc官方目前已经开发完成[Maven插件](https://gitee.com/smart-doc
 ```
 {
   "serverUrl": "http://127.0.0.1", //服务器地址,非必须。导出postman建议设置成http://{{server}}方便直接在postman直接设置环境变量
-  "pathPrefix": "", //设置path前缀,非必须。如配置Servlet ContextPath
+  "pathPrefix": "", //设置path前缀,非必须。如配置Servlet ContextPath 。@since 2.2.3
   "isStrict": false, //是否开启严格模式
   "allInOne": true,  //是否将文档合并到一个文件中，一般推荐为true
   "outPath": "D://md2", //指定文档的输出路径
