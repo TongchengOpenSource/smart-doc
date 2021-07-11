@@ -324,6 +324,7 @@ public class DocUtil {
         }
     }
 
+
     /**
      * 分割url
      *
@@ -369,7 +370,8 @@ public class DocUtil {
             String value = docletTag.getValue();
             if (StringUtil.isEmpty(value) && StringUtil.isNotEmpty(className)) {
                 throw new RuntimeException("ERROR: #" + javaMethod.getName()
-                        + "() - bad @" + tagName + " javadoc from " + javaMethod.getDeclaringClass().getCanonicalName() + ", must be add comment if you use it.");
+                        + "() - bad @" + tagName + " javadoc from " + javaMethod.getDeclaringClass()
+                        .getCanonicalName() + ", must be add comment if you use it.");
             }
             String pName = value;
             String pValue = DocGlobalConstants.NO_COMMENTS_FOUND;
@@ -553,13 +555,41 @@ public class DocUtil {
      */
     public static String getRequestMappingUrl(JavaAnnotation annotation) {
         Object url = annotation.getNamedParameter(DocAnnotationConstants.VALUE_PROP);
-
         if (null != url) {
             return url.toString();
         } else {
             url = annotation.getNamedParameter(DocAnnotationConstants.PATH_PROP);
             return null == url ? StringUtil.EMPTY : url.toString();
         }
+    }
+
+    /**
+     * handle spring mvc RequestHeader value
+     *
+     * @param annotation JavaAnnotation
+     * @return String
+     */
+    public static String handleRequestHeaderValue(JavaAnnotation annotation) {
+        String header = getRequestHeaderValue(annotation);
+        if (StringUtil.isEmpty(header)) {
+            return header;
+        }
+        return StringUtil.trimBlank(header);
+
+    }
+
+    /**
+     * Obtain constant from @RequestHeader annotation
+     *
+     * @param annotation RequestMapping GetMapping PostMapping etc.
+     * @return The constant value
+     */
+    public static String getRequestHeaderValue(JavaAnnotation annotation) {
+        Object constantValue = annotation.getNamedParameter(DocAnnotationConstants.VALUE_PROP);
+        if (null != constantValue) {
+            return constantValue.toString();
+        }
+        return "";
     }
 
     public static List<ApiErrorCode> errorCodeDictToList(ApiConfig config) {

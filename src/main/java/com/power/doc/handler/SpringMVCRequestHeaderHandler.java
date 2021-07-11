@@ -23,6 +23,7 @@
 package com.power.doc.handler;
 
 import com.power.common.util.StringUtil;
+import com.power.doc.builder.ProjectDocConfigBuilder;
 import com.power.doc.constants.DocAnnotationConstants;
 import com.power.doc.constants.DocTags;
 import com.power.doc.constants.SpringMvcAnnotations;
@@ -45,10 +46,12 @@ public class SpringMVCRequestHeaderHandler {
     /**
      * handle Spring MVC Request Header
      *
-     * @param method JavaMethod
+     * @param method         JavaMethod
+     * @param projectBuilder projectBuilder
      * @return list of ApiReqHeader
      */
-    public List<ApiReqHeader> handle(JavaMethod method) {
+    public List<ApiReqHeader> handle(JavaMethod method, ProjectDocConfigBuilder projectBuilder) {
+        Map<String, String> constantsMap = projectBuilder.getConstantsMap();
         List<ApiReqHeader> mappingHeaders = new ArrayList<>();
         List<JavaAnnotation> annotations = method.getAnnotations();
         for (JavaAnnotation annotation : annotations) {
@@ -84,7 +87,18 @@ public class SpringMVCRequestHeaderHandler {
                     apiReqHeader = new ApiReqHeader();
                     Map<String, Object> requestHeaderMap = annotation.getNamedParameterMap();
                     if (requestHeaderMap.get(DocAnnotationConstants.VALUE_PROP) != null) {
-                        apiReqHeader.setName(StringUtil.removeQuotes((String) requestHeaderMap.get(DocAnnotationConstants.VALUE_PROP)));
+                        String attribute = DocUtil.handleRequestHeaderValue(annotation);
+                        String constValue = ((String) requestHeaderMap.get(DocAnnotationConstants.VALUE_PROP)).replaceAll("\"", "");
+                        if (StringUtil.isEmpty(attribute)) {
+                            apiReqHeader.setName(constValue);
+                        } else {
+                            Object value = constantsMap.get(attribute);
+                            if (value == null) {
+                                apiReqHeader.setName(constValue);
+                            } else {
+                                apiReqHeader.setName((String) value);
+                            }
+                        }
                     } else {
                         apiReqHeader.setName(paramName);
                     }
@@ -100,7 +114,8 @@ public class SpringMVCRequestHeaderHandler {
                     }
                     apiReqHeader.setDesc(desc.toString());
                     if (requestHeaderMap.get(DocAnnotationConstants.REQUIRED_PROP) != null) {
-                        apiReqHeader.setRequired(!Boolean.FALSE.toString().equals(requestHeaderMap.get(DocAnnotationConstants.REQUIRED_PROP)));
+                        apiReqHeader.setRequired(!Boolean.FALSE.toString()
+                                .equals(requestHeaderMap.get(DocAnnotationConstants.REQUIRED_PROP)));
                     } else {
                         apiReqHeader.setRequired(true);
                     }
@@ -112,7 +127,9 @@ public class SpringMVCRequestHeaderHandler {
             }
         }
         List<ApiReqHeader> allApiReqHeaders = Stream.of(mappingHeaders, reqHeaders)
-                .flatMap(Collection::stream).distinct().collect(Collectors.toList());
+                .flatMap(Collection::stream)
+                .distinct()
+                .collect(Collectors.toList());
         return allApiReqHeaders;
     }
 
@@ -133,8 +150,12 @@ public class SpringMVCRequestHeaderHandler {
     public void processMappingHeaders(String header, List<ApiReqHeader> mappingHeaders) {
         if (header.contains("!=")) {
             String headerName = header.substring(0, header.indexOf("!"));
-            ApiReqHeader apiReqHeader = ApiReqHeader.builder().setName(headerName)
-                    .setRequired(true).setValue(null).setDesc("header condition").setType("string");
+            ApiReqHeader apiReqHeader = ApiReqHeader.builder()
+                    .setName(headerName)
+                    .setRequired(true)
+                    .setValue(null)
+                    .setDesc("header condition")
+                    .setType("string");
             mappingHeaders.add(apiReqHeader);
         } else {
             String headerName;
@@ -146,8 +167,12 @@ public class SpringMVCRequestHeaderHandler {
             } else {
                 headerName = header;
             }
-            ApiReqHeader apiReqHeader = ApiReqHeader.builder().setName(headerName)
-                    .setRequired(true).setValue(headerValue).setDesc("header condition").setType("string");
+            ApiReqHeader apiReqHeader = ApiReqHeader.builder()
+                    .setName(headerName)
+                    .setRequired(true)
+                    .setValue(headerValue)
+                    .setDesc("header condition")
+                    .setType("string");
             mappingHeaders.add(apiReqHeader);
         }
     }

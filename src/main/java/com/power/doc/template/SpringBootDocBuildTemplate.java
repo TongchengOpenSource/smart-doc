@@ -194,7 +194,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             }
             apiMethodDoc.setDetail(apiNoteValue);
             //handle headers
-            List<ApiReqHeader> apiReqHeaders = new SpringMVCRequestHeaderHandler().handle(method);
+            List<ApiReqHeader> apiReqHeaders = new SpringMVCRequestHeaderHandler().handle(method, projectBuilder);
 
             apiMethodDoc.setType(requestMapping.getMethodType());
             apiMethodDoc.setUrl(requestMapping.getUrl());
