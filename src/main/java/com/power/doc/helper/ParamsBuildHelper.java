@@ -120,6 +120,7 @@ public class ParamsBuildHelper {
             for (DocJavaField docField : fields) {
                 String maxLength = null;
                 JavaField field = docField.getJavaField();
+
                 if (field.isTransient() && skipTransientField) {
                     continue;
                 }
@@ -317,7 +318,7 @@ public class ParamsBuildHelper {
                         processedType = isShowJavaType ? typeSimpleName : DocClassUtil.processTypeNameForParams(typeSimpleName.toLowerCase());
                     }
                     param.setType(processedType);
-                    JavaClass javaClass = projectBuilder.getJavaProjectBuilder().getClassByName(subTypeName);
+                    JavaClass javaClass = field.getType();
                     if (javaClass.isEnum()) {
                         comment = comment + handleEnumComment(javaClass, projectBuilder);
                         param.setType(DocGlobalConstants.ENUM);

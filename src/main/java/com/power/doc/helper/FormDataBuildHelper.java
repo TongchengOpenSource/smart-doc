@@ -104,7 +104,7 @@ public class FormDataBuildHelper {
             String fieldName = field.getName();
             String subTypeName = docField.getFullyQualifiedName();
             String fieldGicName = docField.getGenericCanonicalName();
-            JavaClass javaClass = builder.getJavaProjectBuilder().getClassByName(subTypeName);
+            JavaClass javaClass = field.getType();
             if (field.isStatic() || "this$0".equals(fieldName) ||
                     JavaClassValidateUtil.isIgnoreFieldTypes(subTypeName)) {
                 continue;

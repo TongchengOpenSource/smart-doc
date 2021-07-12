@@ -416,8 +416,8 @@ public class JsonBuildHelper {
                     } else if (typeName.equals(subTypeName)) {
                         data0.append("{\"$ref\":\"...\"}").append(",");
                     } else {
-                        javaClass = builder.getJavaProjectBuilder().getClassByName(subTypeName);
-                        if (!isResp && javaClass.isEnum()) {
+                        javaClass = field.getType();
+                        if (javaClass.isEnum()) {
                             Object value = JavaClassUtil.getEnumValue(javaClass, Boolean.FALSE);
                             data0.append(value).append(",");
                         } else {
