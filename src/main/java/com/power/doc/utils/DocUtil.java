@@ -554,13 +554,24 @@ public class DocUtil {
      * @return the url
      */
     public static String getRequestMappingUrl(JavaAnnotation annotation) {
-        Object url = annotation.getNamedParameter(DocAnnotationConstants.VALUE_PROP);
-        if (null != url) {
-            return url.toString();
-        } else {
-            url = annotation.getNamedParameter(DocAnnotationConstants.PATH_PROP);
-            return null == url ? StringUtil.EMPTY : url.toString();
+        return getPathUrl(annotation, DocAnnotationConstants.VALUE_PROP, DocAnnotationConstants.PATH_PROP);
+    }
+
+    /**
+     * Get mapping url from Annotation
+     *
+     * @param annotation JavaAnnotation
+     * @param props      annotation properties
+     * @return the path
+     */
+    public static String getPathUrl(JavaAnnotation annotation, String... props) {
+        for (String prop : props) {
+            Object url = annotation.getNamedParameter(prop);
+            if (Objects.nonNull(url)) {
+                return url.toString();
+            }
         }
+        return StringUtil.EMPTY;
     }
 
     /**

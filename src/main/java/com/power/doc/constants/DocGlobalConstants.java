@@ -137,6 +137,10 @@ public interface DocGlobalConstants {
 
     String MODE_AND_VIEW_FULLY = "org.springframework.web.servlet.ModelAndView";
 
+    String FEIGN_CLIENT_FULLY = "org.springframework.cloud.netflix.feign.FeignClient";
+    
+    String FEIGN_CLIENT = "FeignClient";
+
     String MULTIPART_FILE_FULLY = "org.springframework.web.multipart.MultipartFile";
 
     String JAVA_OBJECT_FULLY = "java.lang.Object";

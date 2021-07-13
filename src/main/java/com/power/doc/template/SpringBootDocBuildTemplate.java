@@ -124,7 +124,12 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                     DocGlobalConstants.REQUEST_MAPPING_FULLY.equals(annotationName)) {
                 baseUrl = StringUtil.removeQuotes(DocUtil.getRequestMappingUrl(annotation));
             }
+            //FeignClient path handle
+            if (DocGlobalConstants.FEIGN_CLIENT.equals(annotationName) || DocGlobalConstants.FEIGN_CLIENT_FULLY.equals(annotationName)) {
+                baseUrl = StringUtil.removeQuotes(DocUtil.getPathUrl(annotation, DocAnnotationConstants.PATH_PROP));
+            }
         }
+
         List<JavaMethod> methods = cls.getMethods();
         List<DocJavaMethod> docJavaMethods = new ArrayList<>(methods.size());
         for (JavaMethod method : methods) {
@@ -336,7 +341,8 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 gicTypeName = rewriteClassName;
                 typeName = DocClassUtil.getSimpleName(rewriteClassName);
             }
-            if (JavaClassValidateUtil.isMvcIgnoreParams(typeName, configBuilder.getApiConfig().getIgnoreRequestParams())) {
+            if (JavaClassValidateUtil.isMvcIgnoreParams(typeName, configBuilder.getApiConfig()
+                    .getIgnoreRequestParams())) {
                 continue;
             }
             String simpleTypeName = javaType.getValue();
@@ -715,7 +721,9 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                     }
                 } else if (JavaClassValidateUtil.isPrimitive(gicName)) {
                     String shortSimple = DocClassUtil.processTypeNameForParams(gicName);
-                    ApiParam param = ApiParam.of().setField(paramName).setDesc(comment + ",[array of " + shortSimple + "]")
+                    ApiParam param = ApiParam.of()
+                            .setField(paramName)
+                            .setDesc(comment + ",[array of " + shortSimple + "]")
                             .setRequired(required)
                             .setPathParam(isPathVariable)
                             .setQueryParam(queryParam)
@@ -735,16 +743,21 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                                 groupClasses, 0, Boolean.TRUE));
                     } else {
                         throw new RuntimeException("Spring MVC can't support binding Collection on method "
-                                + javaMethod.getName() + ",Check it in " + javaMethod.getDeclaringClass().getCanonicalName());
+                                + javaMethod.getName() + ",Check it in " + javaMethod.getDeclaringClass()
+                                .getCanonicalName());
                     }
                 }
             } else if (JavaClassValidateUtil.isPrimitive(fullTypeName)) {
-                ApiParam param = ApiParam.of().setField(paramName)
+                ApiParam param = ApiParam.of()
+                        .setField(paramName)
                         .setType(DocClassUtil.processTypeNameForParams(simpleName))
                         .setId(paramList.size() + 1)
                         .setPathParam(isPathVariable)
-                        .setQueryParam(queryParam).setValue(mockValue)
-                        .setDesc(comment).setRequired(required).setVersion(DocGlobalConstants.DEFAULT_VERSION);
+                        .setQueryParam(queryParam)
+                        .setValue(mockValue)
+                        .setDesc(comment)
+                        .setRequired(required)
+                        .setVersion(DocGlobalConstants.DEFAULT_VERSION);
                 paramList.add(param);
                 if (requestBodyCounter > 0) {
                     Map<String, Object> map = OpenApiSchemaUtil.primaryTypeSchema(simpleName);
@@ -755,11 +768,15 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                         + javaMethod.getDeclaringClass().getCanonicalName() + "#" + javaMethod.getName());
                 //如果typeName 是 map 但没加泛型 java.util.HashMap
                 if (JavaClassValidateUtil.isMap(typeName)) {
-                    ApiParam apiParam = ApiParam.of().setField(paramName).setType("map")
+                    ApiParam apiParam = ApiParam.of()
+                            .setField(paramName)
+                            .setType("map")
                             .setId(paramList.size() + 1)
                             .setPathParam(isPathVariable)
                             .setQueryParam(queryParam)
-                            .setDesc(comment).setRequired(required).setVersion(DocGlobalConstants.DEFAULT_VERSION);
+                            .setDesc(comment)
+                            .setRequired(required)
+                            .setVersion(DocGlobalConstants.DEFAULT_VERSION);
                     paramList.add(apiParam);
                     if (requestBodyCounter > 0) {
                         Map<String, Object> map = OpenApiSchemaUtil.mapTypeSchema("object");
@@ -769,11 +786,15 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 }
                 String[] gicNameArr = DocClassUtil.getSimpleGicName(typeName);
                 if (JavaClassValidateUtil.isPrimitive(gicNameArr[1])) {
-                    ApiParam apiParam = ApiParam.of().setField(paramName).setType("map")
+                    ApiParam apiParam = ApiParam.of()
+                            .setField(paramName)
+                            .setType("map")
                             .setId(paramList.size() + 1)
                             .setPathParam(isPathVariable)
                             .setQueryParam(queryParam)
-                            .setDesc(comment).setRequired(required).setVersion(DocGlobalConstants.DEFAULT_VERSION);
+                            .setDesc(comment)
+                            .setRequired(required)
+                            .setVersion(DocGlobalConstants.DEFAULT_VERSION);
                     paramList.add(apiParam);
                     if (requestBodyCounter > 0) {
                         Map<String, Object> map = OpenApiSchemaUtil.mapTypeSchema(gicNameArr[1]);

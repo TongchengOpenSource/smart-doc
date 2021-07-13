@@ -95,8 +95,10 @@ public class JavaClassUtil {
                             .setComment(comment)
                             .setDocletTags(javaMethod.getTags())
                             .setAnnotations(javaMethod.getAnnotations())
-                            .setFullyQualifiedName(javaField.getType().getFullyQualifiedName())
-                            .setGenericCanonicalName(javaField.getType().getGenericCanonicalName());
+                            .setFullyQualifiedName(javaField.getType()
+                                    .getFullyQualifiedName())
+                            .setGenericCanonicalName(javaField.getType()
+                                    .getGenericCanonicalName());
                     addedFields.put(methodName, docJavaField);
                 }
             }
@@ -191,8 +193,10 @@ public class JavaClassUtil {
                 }
                 addedFields.put(fieldName, docJavaField);
             }
-            List<DocJavaField> parentFieldList = addedFields.values().stream()
-                    .filter(v -> Objects.nonNull(v)).collect(Collectors.toList());
+            List<DocJavaField> parentFieldList = addedFields.values()
+                    .stream()
+                    .filter(v -> Objects.nonNull(v))
+                    .collect(Collectors.toList());
             fieldList.addAll(parentFieldList);
         }
         return fieldList;
@@ -530,6 +534,7 @@ public class JavaClassUtil {
     }
 
     public static Map<String, String> getClassJsonIgnoreFields(JavaClass cls) {
+        if (cls == null) return Collections.EMPTY_MAP;
         List<JavaAnnotation> classAnnotation = cls.getAnnotations();
         Map<String, String> ignoreFields = new HashMap<>();
         for (JavaAnnotation annotation : classAnnotation) {
