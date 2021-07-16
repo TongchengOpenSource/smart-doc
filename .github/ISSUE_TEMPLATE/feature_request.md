@@ -1,20 +1,17 @@
 ---
-name: Feature request
-about: Suggest an idea for this project
-title: ''
-labels: ''
-assignees: ''
-
+name: Feature Request 💡 
+about: Suggest a new idea for the project. 
+labels: enhancement
 ---
 
-**Is your feature request related to a problem? Please describe.**
-A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
+## Summary(关于这个pr的描述)
 
-**Describe the solution you'd like**
-A clear and concise description of what you want to happen.
+Brief explanation of the feature.
 
-**Describe alternatives you've considered**
-A clear and concise description of any alternative solutions or features you've considered.
+### Basic example(pr的用例)
 
-**Additional context**
-Add any other context or screenshots about the feature request here.
+If the proposal involves a new or changed API, include a basic code example. Omit this section if it's not applicable.
+
+### Motivation(提出这个pr目的)
+
+Why are we doing this? What use cases does it support? What is the expected outcome?
