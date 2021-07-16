@@ -107,10 +107,12 @@ public interface IDocBuildTemplate<T> {
         if (Objects.nonNull(projectBuilder.getApiConfig().getResponseBodyAdvice())
                 && Objects.isNull(method.getTagByName(IGNORE_RESPONSE_BODY_ADVICE))) {
             String responseBodyAdvice = projectBuilder.getApiConfig().getResponseBodyAdvice().getClassName();
-            returnTypeGenericCanonicalName = new StringBuffer()
-                    .append(responseBodyAdvice)
-                    .append("<")
-                    .append(returnTypeGenericCanonicalName).append(">").toString();
+            if (!returnTypeGenericCanonicalName.startsWith(responseBodyAdvice)) {
+                returnTypeGenericCanonicalName = new StringBuffer()
+                        .append(responseBodyAdvice)
+                        .append("<")
+                        .append(returnTypeGenericCanonicalName).append(">").toString();
+            }
         }
         Map<String, JavaType> actualTypesMap = docJavaMethod.getActualTypesMap();
         ApiReturn apiReturn = DocClassUtil.processReturnType(returnTypeGenericCanonicalName);
