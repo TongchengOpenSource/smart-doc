@@ -225,7 +225,6 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 apiMethodDoc.setQueryParams(apiMethodReqParam.getQueryParams());
                 apiMethodDoc.setRequestParams(apiMethodReqParam.getRequestParams());
             }
-            
 
             List<ApiReqParam> allApiReqParams;
             if (this.configApiReqParams != null) {
@@ -235,37 +234,25 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 final List<ApiReqParam> headerParamList = reqParamMap.getOrDefault(ApiReqParamInTypeEnum.HEADER.getValue(), Collections.emptyList());
                 allApiReqParams = Stream.of(apiReqParams, headerParamList).filter(Objects::nonNull)
                         .flatMap(Collection::stream).distinct().collect(Collectors.toList());
-
-                // query param handle
-//                final List<ApiReqParam> queryParamList = reqParamMap.getOrDefault(ApiReqParamInTypeEnum.QUERY.getValue(), Collections.emptyList());
-//                AtomicInteger querySize = apiMethodDoc.getQueryParams() == null ? new AtomicInteger(1)
-//                        : new AtomicInteger(apiMethodDoc.getQueryParams().size() + 1);
-//                final List<ApiParam> defaultQueryList = queryParamList.stream()
-//                        .map(param -> ApiReqParam.convertToApiParam(param).setQueryParam(true).setId(querySize.getAndIncrement()))
-//                        .collect(Collectors.toList());
-//
-//                apiMethodDoc.setQueryParams(Stream.of(apiMethodDoc.getQueryParams(), defaultQueryList).filter(Objects::nonNull)
-//                        .flatMap(Collection::stream).distinct().collect(Collectors.toList()));
-//
-//                // path param handle
-//                final List<ApiReqParam> pathParamList = reqParamMap.getOrDefault(ApiReqParamInTypeEnum.PATH.getValue(), Collections.emptyList());
-//                AtomicInteger pathSize = apiMethodDoc.getPathParams() == null ? new AtomicInteger(1)
-//                        : new AtomicInteger(apiMethodDoc.getPathParams().size() + 1);
-//                final List<ApiParam> defaultPathList = pathParamList.stream()
-//                        .map(param -> ApiReqParam.convertToApiParam(param).setPathParam(true).setId(pathSize.getAndIncrement()))
-//                        .collect(Collectors.toList());
-//
-//                apiMethodDoc.setPathParams(Stream.of(apiMethodDoc.getPathParams(), defaultPathList).filter(Objects::nonNull)
-//                        .flatMap(Collection::stream).distinct().collect(Collectors.toList()));
-
             } else {
                 allApiReqParams = apiReqParams.stream().filter(param -> filterPath(requestMapping, param)).collect(Collectors.toList());
             }
-//            allApiReqParams.removeIf(apiReqHeader -> filterPath(requestMapping, apiReqHeader));
 
             //reduce create in template
             apiMethodDoc.setHeaders(this.createDocRenderHeaders(allApiReqParams, apiConfig.isAdoc()));
             apiMethodDoc.setRequestHeaders(allApiReqParams);
+
+            String path = apiMethodDoc.getPath().split(";")[0];
+            String pathUrl = DocUtil.formatPathUrl(path);
+            List<ApiParam> pathParams = apiMethodDoc.getPathParams();
+            Iterator<ApiParam> pathIterator = pathParams.iterator();
+            while (pathIterator.hasNext()) {
+                ApiParam next = pathIterator.next();
+                String pathKey = "{" + next.getField() + "}";
+                if (!pathUrl.contains(pathKey)) {
+                    pathIterator.remove();
+                }
+            }
 
             // build request json
             ApiRequestExample requestExample = buildReqJson(docJavaMethod, apiMethodDoc, requestMapping.getMethodType(),
@@ -315,12 +302,10 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         Map<String, String> pathParamsMap = new LinkedHashMap<>();
         Map<String, String> queryParamsMap = new LinkedHashMap<>();
 
-        Stream.of(apiMethodDoc.getPathParams()).filter(Objects::nonNull)
-                .flatMap(pl -> pl.stream().filter(ApiParam::isConfigParam))
+        apiMethodDoc.getPathParams().stream().filter(Objects::nonNull).filter(ApiParam::isConfigParam)
                 .forEach(param -> pathParamsMap.put(param.getField(), param.getValue()));
 
-        Stream.of(apiMethodDoc.getQueryParams()).filter(Objects::nonNull)
-                .flatMap(pl -> pl.stream().filter(ApiParam::isConfigParam))
+        apiMethodDoc.getQueryParams().stream().filter(Objects::nonNull).filter(ApiParam::isConfigParam)
                 .forEach(param -> queryParamsMap.put(param.getField(), param.getValue()));
 
         List<JavaAnnotation> methodAnnotations = method.getAnnotations();
@@ -407,6 +392,9 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             String[] globGicName = DocClassUtil.getSimpleGicName(gicTypeName);
             String comment = this.paramCommentResolve(paramsComments.get(paramName));
             String mockValue = createMockValue(paramsComments, paramName, typeName, simpleTypeName);
+            if (queryParamsMap.containsKey(paramName)) {
+                mockValue = queryParamsMap.get(paramName);
+            }
             if (requestFieldToUnderline) {
                 paramName = StringUtil.camelToUnderline(paramName);
             }
@@ -465,6 +453,9 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                     if (javaClass.isEnum()) {
                         Object value = JavaClassUtil.getEnumValue(javaClass, Boolean.TRUE);
                         mockValue = StringUtil.removeQuotes(String.valueOf(value));
+                    }
+                    if (pathParamsMap.containsKey(paramName)) {
+                        mockValue = pathParamsMap.get(paramName);
                     }
                     pathParamsMap.put(paramName, mockValue);
                     paramAdded = true;
@@ -896,9 +887,15 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         for (ApiParam param : paramList) {
             param.setValue(StringUtil.removeDoubleQuotes(param.getValue()));
             if (param.isPathParam()) {
+                if (pathReqParamMap.containsKey(param.getField())) {
+                    param.setConfigParam(true).setValue(pathReqParamMap.get(param.getField()).getValue());
+                }
                 param.setId(pathParams.size() + 1);
                 pathParams.add(param);
             } else if (param.isQueryParam() || requestBodyCounter < 1) {
+                if (queryReqParamMap.containsKey(param.getField())) {
+                    param.setConfigParam(true).setValue(queryReqParamMap.get(param.getField()).getValue());
+                }
                 param.setId(queryParams.size() + 1);
                 queryParams.add(param);
             } else {
