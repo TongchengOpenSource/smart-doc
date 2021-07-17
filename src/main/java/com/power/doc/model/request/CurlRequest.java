@@ -22,7 +22,7 @@
  */
 package com.power.doc.model.request;
 
-import com.power.doc.model.ApiReqHeader;
+import com.power.doc.model.ApiReqParam;
 
 import java.util.List;
 
@@ -33,7 +33,7 @@ public class CurlRequest {
 
     private String type;
 
-    private List<ApiReqHeader> reqHeaders;
+    private List<ApiReqParam> reqHeaders;
 
     private String url;
 
@@ -54,11 +54,11 @@ public class CurlRequest {
         return this;
     }
 
-    public List<ApiReqHeader> getReqHeaders() {
+    public List<ApiReqParam> getReqHeaders() {
         return reqHeaders;
     }
 
-    public CurlRequest setReqHeaders(List<ApiReqHeader> reqHeaders) {
+    public CurlRequest setReqHeaders(List<ApiReqParam> reqHeaders) {
         this.reqHeaders = reqHeaders;
         return this;
     }

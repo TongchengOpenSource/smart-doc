@@ -378,7 +378,7 @@ public class OpenApiBuilder {
         }
         //如果包含请求头
         if (!CollectionUtil.isEmpty(apiMethodDoc.getRequestHeaders())) {
-            for (ApiReqHeader header : apiMethodDoc.getRequestHeaders()) {
+            for (ApiReqParam header : apiMethodDoc.getRequestHeaders()) {
                 parameters = new HashMap<>(20);
                 parameters.put("name", header.getName());
                 parameters.put("description", header.getDesc());
@@ -431,7 +431,7 @@ public class OpenApiBuilder {
      * @param header 参数信息
      * @return
      */
-    private static Map<String, Object> buildParametersSchema(ApiReqHeader header) {
+    private static Map<String, Object> buildParametersSchema(ApiReqParam header) {
         Map<String, Object> schema = new HashMap<>(10);
         String openApiType = DocUtil.javaTypeToOpenApiTypeConvert(header.getType());
         schema.put("type", openApiType);

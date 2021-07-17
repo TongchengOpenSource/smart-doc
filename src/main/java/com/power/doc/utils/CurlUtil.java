@@ -25,7 +25,7 @@ package com.power.doc.utils;
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.StringUtil;
 import com.power.doc.constants.DocGlobalConstants;
-import com.power.doc.model.ApiReqHeader;
+import com.power.doc.model.ApiReqParam;
 import com.power.doc.model.request.CurlRequest;
 
 /**
@@ -47,7 +47,7 @@ public class CurlUtil {
             sb.append(" 'Content-Type: ").append(request.getContentType()).append("'");
         }
         if (CollectionUtil.isNotEmpty(request.getReqHeaders())) {
-            for (ApiReqHeader reqHeader : request.getReqHeaders()) {
+            for (ApiReqParam reqHeader : request.getReqHeaders()) {
                 sb.append(" -H");
                 if (StringUtil.isEmpty(reqHeader.getValue())) {
                     sb.append(" '" + reqHeader.getName() + "'");

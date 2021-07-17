@@ -28,7 +28,6 @@ import com.power.doc.model.rpc.RpcApiDependency;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * Description:
@@ -72,7 +71,13 @@ public class ApiConfig {
     /**
      * list of Request headers
      */
-    private List<ApiReqHeader> requestHeaders;
+    private List<ApiReqParam> requestHeaders;
+
+    /**
+     * @since 2.2.2
+     * list of Request params
+     */
+    private List<ApiReqParam> requestParams;
 
     /**
      * @since 1.7.5
@@ -422,18 +427,31 @@ public class ApiConfig {
         this.outPath = outPath;
     }
 
-    public List<ApiReqHeader> getRequestHeaders() {
+    public List<ApiReqParam> getRequestHeaders() {
         return requestHeaders;
     }
 
-    public void setRequestHeaders(List<ApiReqHeader> requestHeaders) {
+    public void setRequestHeaders(List<ApiReqParam> requestHeaders) {
         this.requestHeaders = requestHeaders;
     }
 
-    public void setRequestHeaders(ApiReqHeader... requestHeaders) {
+    public void setRequestHeaders(ApiReqParam... requestHeaders) {
         this.requestHeaders = CollectionUtil.asList(requestHeaders);
-        this.requestHeaders.stream().map(header -> header.setDesc(header.getDesc() + "(Global)"))
-                .collect(Collectors.toList());
+        this.requestHeaders.forEach(header -> header.setDesc(header.getDesc() + "(Global)"));
+    }
+
+    public List<ApiReqParam> getRequestParams() {
+        return requestParams;
+    }
+
+    public ApiConfig setRequestParams(List<ApiReqParam> requestParams) {
+        this.requestParams = requestParams;
+        return this;
+    }
+
+    public void setRequestParams(ApiReqParam... requestParams) {
+        this.requestParams = CollectionUtil.asList(requestParams);
+        this.requestParams.forEach(param -> param.setDesc(param.getDesc() + "(Global)"));
     }
 
     public List<CustomField> getCustomResponseFields() {
