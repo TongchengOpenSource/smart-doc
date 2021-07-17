@@ -58,12 +58,13 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
      * api index
      */
     private final AtomicInteger atomicInteger = new AtomicInteger(1);
-    private List<ApiReqHeader> headers;
+    private List<ApiReqParam> configApiReqParams;
 
     @Override
     public List<ApiDoc> getApiData(ProjectDocConfigBuilder projectBuilder) {
         ApiConfig apiConfig = projectBuilder.getApiConfig();
-        this.headers = apiConfig.getRequestHeaders();
+        this.configApiReqParams = Stream.of(apiConfig.getRequestHeaders(), apiConfig.getRequestParams()).filter(Objects::nonNull)
+                .flatMap(Collection::stream).collect(Collectors.toList());
         List<ApiDoc> apiDocList = new ArrayList<>();
         int order = 0;
         Collection<JavaClass> classes = projectBuilder.getJavaProjectBuilder().getClasses();
@@ -199,7 +200,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             }
             apiMethodDoc.setDetail(apiNoteValue);
             //handle headers
-            List<ApiReqHeader> apiReqHeaders = new SpringMVCRequestHeaderHandler().handle(method, projectBuilder);
+            List<ApiReqParam> apiReqParams = new SpringMVCRequestHeaderHandler().handle(method, projectBuilder);
 
             apiMethodDoc.setType(requestMapping.getMethodType());
             apiMethodDoc.setUrl(requestMapping.getUrl());
@@ -210,7 +211,10 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
 
             setTornaArrayTags(javaParameters, apiMethodDoc, docJavaMethod.getJavaMethod().getReturns());
             // apiMethodDoc.setIsRequestArray();
-            ApiMethodReqParam apiMethodReqParam = requestParams(docJavaMethod, projectBuilder);
+            final List<ApiReqParam> apiReqParamList = this.configApiReqParams.stream()
+                    .filter(param -> filterPath(requestMapping, param)).collect(Collectors.toList());
+
+            ApiMethodReqParam apiMethodReqParam = requestParams(docJavaMethod, projectBuilder, apiReqParamList);
             // build request params
             if (paramsDataToTree) {
                 apiMethodDoc.setPathParams(ApiParamTreeUtil.apiParamToTree(apiMethodReqParam.getPathParams()));
@@ -221,27 +225,47 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 apiMethodDoc.setQueryParams(apiMethodReqParam.getQueryParams());
                 apiMethodDoc.setRequestParams(apiMethodReqParam.getRequestParams());
             }
+            
 
-            List<ApiReqHeader> allApiReqHeaders;
-            if (this.headers != null) {
-                allApiReqHeaders = Stream.of(this.headers, apiReqHeaders)
+            List<ApiReqParam> allApiReqParams;
+            if (this.configApiReqParams != null) {
+
+                final Map<String, List<ApiReqParam>> reqParamMap = apiReqParamList.stream().collect(Collectors.groupingBy(ApiReqParam::getParamIn));
+
+                final List<ApiReqParam> headerParamList = reqParamMap.getOrDefault(ApiReqParamInTypeEnum.HEADER.getValue(), Collections.emptyList());
+                allApiReqParams = Stream.of(apiReqParams, headerParamList).filter(Objects::nonNull)
                         .flatMap(Collection::stream).distinct().collect(Collectors.toList());
+
+                // query param handle
+//                final List<ApiReqParam> queryParamList = reqParamMap.getOrDefault(ApiReqParamInTypeEnum.QUERY.getValue(), Collections.emptyList());
+//                AtomicInteger querySize = apiMethodDoc.getQueryParams() == null ? new AtomicInteger(1)
+//                        : new AtomicInteger(apiMethodDoc.getQueryParams().size() + 1);
+//                final List<ApiParam> defaultQueryList = queryParamList.stream()
+//                        .map(param -> ApiReqParam.convertToApiParam(param).setQueryParam(true).setId(querySize.getAndIncrement()))
+//                        .collect(Collectors.toList());
+//
+//                apiMethodDoc.setQueryParams(Stream.of(apiMethodDoc.getQueryParams(), defaultQueryList).filter(Objects::nonNull)
+//                        .flatMap(Collection::stream).distinct().collect(Collectors.toList()));
+//
+//                // path param handle
+//                final List<ApiReqParam> pathParamList = reqParamMap.getOrDefault(ApiReqParamInTypeEnum.PATH.getValue(), Collections.emptyList());
+//                AtomicInteger pathSize = apiMethodDoc.getPathParams() == null ? new AtomicInteger(1)
+//                        : new AtomicInteger(apiMethodDoc.getPathParams().size() + 1);
+//                final List<ApiParam> defaultPathList = pathParamList.stream()
+//                        .map(param -> ApiReqParam.convertToApiParam(param).setPathParam(true).setId(pathSize.getAndIncrement()))
+//                        .collect(Collectors.toList());
+//
+//                apiMethodDoc.setPathParams(Stream.of(apiMethodDoc.getPathParams(), defaultPathList).filter(Objects::nonNull)
+//                        .flatMap(Collection::stream).distinct().collect(Collectors.toList()));
+
             } else {
-                allApiReqHeaders = apiReqHeaders;
+                allApiReqParams = apiReqParams.stream().filter(param -> filterPath(requestMapping, param)).collect(Collectors.toList());
             }
-            allApiReqHeaders.removeIf(apiReqHeader -> {
-                if (StringUtil.isEmpty(apiReqHeader.getPathPatterns())
-                        && StringUtil.isEmpty(apiReqHeader.getExcludePathPatterns())) {
-                    return false;
-                } else {
-                    boolean flag = DocPathUtil.matches(requestMapping.getShortUrl(), apiReqHeader.getPathPatterns()
-                            , apiReqHeader.getExcludePathPatterns());
-                    return !flag;
-                }
-            });
+//            allApiReqParams.removeIf(apiReqHeader -> filterPath(requestMapping, apiReqHeader));
+
             //reduce create in template
-            apiMethodDoc.setHeaders(this.createDocRenderHeaders(allApiReqHeaders, apiConfig.isAdoc()));
-            apiMethodDoc.setRequestHeaders(allApiReqHeaders);
+            apiMethodDoc.setHeaders(this.createDocRenderHeaders(allApiReqParams, apiConfig.isAdoc()));
+            apiMethodDoc.setRequestHeaders(allApiReqParams);
 
             // build request json
             ApiRequestExample requestExample = buildReqJson(docJavaMethod, apiMethodDoc, requestMapping.getMethodType(),
@@ -274,10 +298,31 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         return methodDocList;
     }
 
+    private boolean filterPath(RequestMapping requestMapping, ApiReqParam apiReqHeader) {
+        if (StringUtil.isEmpty(apiReqHeader.getPathPatterns())
+                && StringUtil.isEmpty(apiReqHeader.getExcludePathPatterns())) {
+            return false;
+        } else {
+            boolean flag = DocPathUtil.matches(requestMapping.getShortUrl(), apiReqHeader.getPathPatterns()
+                    , apiReqHeader.getExcludePathPatterns());
+            return !flag;
+        }
+    }
+
     private ApiRequestExample buildReqJson(DocJavaMethod javaMethod, ApiMethodDoc apiMethodDoc, String methodType,
                                            ProjectDocConfigBuilder configBuilder) {
         JavaMethod method = javaMethod.getJavaMethod();
         Map<String, String> pathParamsMap = new LinkedHashMap<>();
+        Map<String, String> queryParamsMap = new LinkedHashMap<>();
+
+        Stream.of(apiMethodDoc.getPathParams()).filter(Objects::nonNull)
+                .flatMap(pl -> pl.stream().filter(ApiParam::isConfigParam))
+                .forEach(param -> pathParamsMap.put(param.getField(), param.getValue()));
+
+        Stream.of(apiMethodDoc.getQueryParams()).filter(Objects::nonNull)
+                .flatMap(pl -> pl.stream().filter(ApiParam::isConfigParam))
+                .forEach(param -> queryParamsMap.put(param.getField(), param.getValue()));
+
         List<JavaAnnotation> methodAnnotations = method.getAnnotations();
         for (JavaAnnotation annotation : methodAnnotations) {
             String annotationName = annotation.getType().getName();
@@ -288,23 +333,29 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 }
                 String params = StringUtil.removeQuotes(paramsObjects.toString());
                 if (!params.startsWith("[")) {
-                    mappingParamProcess(paramsObjects.toString(), pathParamsMap);
+                    mappingParamProcess(paramsObjects.toString(), queryParamsMap);
                     continue;
                 }
                 List<String> headers = (LinkedList) paramsObjects;
                 for (String str : headers) {
-                    mappingParamProcess(str, pathParamsMap);
+                    mappingParamProcess(str, queryParamsMap);
                 }
             }
         }
         List<JavaParameter> parameterList = method.getParameters();
-        List<ApiReqHeader> reqHeaderList = apiMethodDoc.getRequestHeaders();
+        List<ApiReqParam> reqHeaderList = apiMethodDoc.getRequestHeaders();
         if (parameterList.size() < 1) {
+            String path = apiMethodDoc.getPath().split(";")[0];
+            path = DocUtil.formatAndRemove(path, pathParamsMap);
+            String url = UrlUtil.urlJoin(path, queryParamsMap);
+            url = StringUtil.removeQuotes(url);
+            url = apiMethodDoc.getServerUrl() + "/" + url;
+            url = UrlUtil.simplifyUrl(url);
             CurlRequest curlRequest = CurlRequest.builder()
                     .setContentType(apiMethodDoc.getContentType())
                     .setType(methodType)
                     .setReqHeaders(reqHeaderList)
-                    .setUrl(apiMethodDoc.getUrl());
+                    .setUrl(url);
             String format = CurlUtil.toCurl(curlRequest);
             return ApiRequestExample.builder().setUrl(apiMethodDoc.getUrl()).setExampleBody(format);
         }
@@ -477,12 +528,14 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         String body;
         String exampleBody;
         String url;
+        final Map<String, String> formDataToMap = DocUtil.formDataToMap(formDataList);
         if (Methods.POST.getValue()
                 .equals(methodType) || Methods.PUT.getValue()
                 .equals(methodType)) {
             //for post put
             path = DocUtil.formatAndRemove(path, pathParamsMap);
-            body = UrlUtil.urlJoin(DocGlobalConstants.EMPTY, DocUtil.formDataToMap(formDataList))
+            formDataToMap.putAll(queryParamsMap);
+            body = UrlUtil.urlJoin(DocGlobalConstants.EMPTY, formDataToMap)
                     .replace("?", DocGlobalConstants.EMPTY);
             body = StringUtil.removeQuotes(body);
             url = apiMethodDoc.getServerUrl() + "/" + path;
@@ -521,9 +574,9 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             requestExample.setExampleBody(exampleBody).setUrl(url);
         } else {
             // for get delete
-            pathParamsMap.putAll(DocUtil.formDataToMap(formDataList));
+            queryParamsMap.putAll(formDataToMap);
             path = DocUtil.formatAndRemove(path, pathParamsMap);
-            url = UrlUtil.urlJoin(path, pathParamsMap);
+            url = UrlUtil.urlJoin(path, queryParamsMap);
             url = StringUtil.removeQuotes(url);
             url = apiMethodDoc.getServerUrl() + "/" + url;
             url = UrlUtil.simplifyUrl(url);
@@ -542,7 +595,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
     }
 
 
-    private ApiMethodReqParam requestParams(final DocJavaMethod docJavaMethod, ProjectDocConfigBuilder builder) {
+    private ApiMethodReqParam requestParams(final DocJavaMethod docJavaMethod, ProjectDocConfigBuilder builder, List<ApiReqParam> configApiReqParams) {
         JavaMethod javaMethod = docJavaMethod.getJavaMethod();
         boolean isStrict = builder.getApiConfig().isStrict();
         String className = javaMethod.getDeclaringClass().getCanonicalName();
@@ -570,10 +623,21 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 }
             }
         }
+        final Map<String, Map<String, ApiReqParam>> collect = configApiReqParams.stream().collect(Collectors.groupingBy(ApiReqParam::getParamIn,
+                Collectors.toMap(ApiReqParam::getName, m -> m, (k1, k2) -> k1)));
+        final Map<String, ApiReqParam> pathReqParamMap = collect.getOrDefault(ApiReqParamInTypeEnum.PATH.getValue(), Collections.emptyMap());
+        final Map<String, ApiReqParam> queryReqParamMap = collect.getOrDefault(ApiReqParamInTypeEnum.QUERY.getValue(), Collections.emptyMap());
         List<JavaParameter> parameterList = javaMethod.getParameters();
         if (parameterList.size() < 1) {
+            AtomicInteger querySize = new AtomicInteger(paramList.size() + 1);
+            paramList.addAll(queryReqParamMap.values().stream()
+                    .map(p -> ApiReqParam.convertToApiParam(p).setQueryParam(true).setId(querySize.getAndIncrement()))
+                    .collect(Collectors.toList()));
+            AtomicInteger pathSize = new AtomicInteger(1);
             return ApiMethodReqParam.builder()
-                    .setPathParams(new ArrayList<>(0))
+                    .setPathParams(new ArrayList<>(pathReqParamMap.values().stream()
+                            .map(p -> ApiReqParam.convertToApiParam(p).setPathParam(true).setId(pathSize.getAndIncrement()))
+                            .collect(Collectors.toList())))
                     .setQueryParams(paramList)
                     .setRequestParams(new ArrayList<>(0));
         }
@@ -842,6 +906,27 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 bodyParams.add(param);
             }
         }
+
+        final Set<String> queryParamSet = queryParams.stream().map(ApiParam::getField).collect(Collectors.toSet());
+        for (ApiReqParam value : queryReqParamMap.values()) {
+            if (queryParamSet.contains(value.getName())) {
+                continue;
+            }
+            final ApiParam apiParam = ApiReqParam.convertToApiParam(value)
+                    .setQueryParam(true).setId(queryParams.size());
+            queryParams.add(apiParam);
+        }
+
+        final Set<String> pathParamSet = pathParams.stream().map(ApiParam::getField).collect(Collectors.toSet());
+        for (ApiReqParam value : pathReqParamMap.values()) {
+            if (pathParamSet.contains(value.getName())) {
+                continue;
+            }
+            final ApiParam apiParam = ApiReqParam.convertToApiParam(value)
+                    .setPathParam(true).setId(pathParams.size());
+            pathParams.add(apiParam);
+        }
+
         ApiMethodReqParam apiMethodReqParam = ApiMethodReqParam.builder()
                 .setRequestParams(bodyParams)
                 .setPathParams(pathParams)

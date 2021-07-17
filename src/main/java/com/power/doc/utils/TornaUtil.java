@@ -145,10 +145,10 @@ public class TornaUtil {
     /**
      * build request header
      *
-     * @param apiReqHeaders 请求头参数列表
+     * @param apiReqParams 请求头参数列表
      * @return List of HttpParam
      */
-    public static List<HttpParam> buildHerder(List<ApiReqHeader> apiReqHeaders) {
+    public static List<HttpParam> buildHerder(List<ApiReqParam> apiReqParams) {
         /**
          * name": "token",
          *                     "required": "1",
@@ -157,7 +157,7 @@ public class TornaUtil {
          */
         HttpParam httpParam;
         List<HttpParam> headers = new ArrayList<>();
-        for (ApiReqHeader header : apiReqHeaders) {
+        for (ApiReqParam header : apiReqParams) {
             httpParam = new HttpParam();
             httpParam.setName(header.getName());
             httpParam.setRequired(header.isRequired() ? TornaConstants.YES : TornaConstants.NO);

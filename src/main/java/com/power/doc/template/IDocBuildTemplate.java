@@ -44,12 +44,12 @@ import static com.power.doc.constants.DocTags.IGNORE_RESPONSE_BODY_ADVICE;
  */
 public interface IDocBuildTemplate<T> {
 
-    default String createDocRenderHeaders(List<ApiReqHeader> headers, boolean isAdoc) {
+    default String createDocRenderHeaders(List<ApiReqParam> headers, boolean isAdoc) {
         StringBuilder builder = new StringBuilder();
         if (CollectionUtil.isEmpty(headers)) {
             headers = new ArrayList<>(0);
         }
-        for (ApiReqHeader header : headers) {
+        for (ApiReqParam header : headers) {
             if (isAdoc) {
                 builder.append("|");
             }

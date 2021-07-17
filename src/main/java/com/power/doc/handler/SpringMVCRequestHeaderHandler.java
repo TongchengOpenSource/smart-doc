@@ -27,7 +27,7 @@ import com.power.doc.builder.ProjectDocConfigBuilder;
 import com.power.doc.constants.DocAnnotationConstants;
 import com.power.doc.constants.DocTags;
 import com.power.doc.constants.SpringMvcAnnotations;
-import com.power.doc.model.ApiReqHeader;
+import com.power.doc.model.ApiReqParam;
 import com.power.doc.utils.DocClassUtil;
 import com.power.doc.utils.DocUtil;
 import com.thoughtworks.qdox.model.JavaAnnotation;
@@ -50,9 +50,9 @@ public class SpringMVCRequestHeaderHandler {
      * @param projectBuilder projectBuilder
      * @return list of ApiReqHeader
      */
-    public List<ApiReqHeader> handle(JavaMethod method, ProjectDocConfigBuilder projectBuilder) {
+    public List<ApiReqParam> handle(JavaMethod method, ProjectDocConfigBuilder projectBuilder) {
         Map<String, String> constantsMap = projectBuilder.getConstantsMap();
-        List<ApiReqHeader> mappingHeaders = new ArrayList<>();
+        List<ApiReqParam> mappingHeaders = new ArrayList<>();
         List<JavaAnnotation> annotations = method.getAnnotations();
         for (JavaAnnotation annotation : annotations) {
             String annotationName = annotation.getType().getValue();
@@ -74,17 +74,17 @@ public class SpringMVCRequestHeaderHandler {
                 processMappingHeaders(header, mappingHeaders);
             }
         }
-        List<ApiReqHeader> reqHeaders = new ArrayList<>();
+        List<ApiReqParam> reqHeaders = new ArrayList<>();
         for (JavaParameter javaParameter : method.getParameters()) {
             List<JavaAnnotation> javaAnnotations = javaParameter.getAnnotations();
             String className = method.getDeclaringClass().getCanonicalName();
             Map<String, String> paramMap = DocUtil.getParamsComments(method, DocTags.PARAM, className);
             String paramName = javaParameter.getName();
-            ApiReqHeader apiReqHeader;
+            ApiReqParam apiReqHeader;
             for (JavaAnnotation annotation : javaAnnotations) {
                 String annotationName = annotation.getType().getValue();
                 if (SpringMvcAnnotations.REQUEST_HERDER.equals(annotationName)) {
-                    apiReqHeader = new ApiReqHeader();
+                    apiReqHeader = new ApiReqParam();
                     Map<String, Object> requestHeaderMap = annotation.getNamedParameterMap();
                     if (requestHeaderMap.get(DocAnnotationConstants.VALUE_PROP) != null) {
                         String attribute = DocUtil.handleRequestHeaderValue(annotation);
@@ -126,7 +126,7 @@ public class SpringMVCRequestHeaderHandler {
                 }
             }
         }
-        List<ApiReqHeader> allApiReqHeaders = Stream.of(mappingHeaders, reqHeaders)
+        List<ApiReqParam> allApiReqHeaders = Stream.of(mappingHeaders, reqHeaders)
                 .flatMap(Collection::stream)
                 .distinct()
                 .collect(Collectors.toList());
@@ -147,10 +147,10 @@ public class SpringMVCRequestHeaderHandler {
         }
     }
 
-    public void processMappingHeaders(String header, List<ApiReqHeader> mappingHeaders) {
+    public void processMappingHeaders(String header, List<ApiReqParam> mappingHeaders) {
         if (header.contains("!=")) {
             String headerName = header.substring(0, header.indexOf("!"));
-            ApiReqHeader apiReqHeader = ApiReqHeader.builder()
+            ApiReqParam apiReqHeader = ApiReqParam.builder()
                     .setName(headerName)
                     .setRequired(true)
                     .setValue(null)
@@ -167,7 +167,7 @@ public class SpringMVCRequestHeaderHandler {
             } else {
                 headerName = header;
             }
-            ApiReqHeader apiReqHeader = ApiReqHeader.builder()
+            ApiReqParam apiReqHeader = ApiReqParam.builder()
                     .setName(headerName)
                     .setRequired(true)
                     .setValue(headerValue)

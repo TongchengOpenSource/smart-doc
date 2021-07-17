@@ -109,7 +109,7 @@ public class ApiMethodDoc implements Serializable {
     /**
      * http request headers
      */
-    private List<ApiReqHeader> requestHeaders;
+    private List<ApiReqParam> requestHeaders;
 
     /**
      * path params
@@ -338,11 +338,11 @@ public class ApiMethodDoc implements Serializable {
         this.responseParams = responseParams;
     }
 
-    public List<ApiReqHeader> getRequestHeaders() {
+    public List<ApiReqParam> getRequestHeaders() {
         return requestHeaders;
     }
 
-    public void setRequestHeaders(List<ApiReqHeader> requestHeaders) {
+    public void setRequestHeaders(List<ApiReqParam> requestHeaders) {
         this.requestHeaders = requestHeaders;
     }
 

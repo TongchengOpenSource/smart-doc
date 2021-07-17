@@ -37,7 +37,6 @@ import com.power.doc.model.postman.request.RequestBean;
 import com.power.doc.model.postman.request.body.BodyBean;
 import com.power.doc.model.postman.request.header.HeaderBean;
 import com.power.doc.template.IDocBuildTemplate;
-import com.power.doc.template.SpringBootDocBuildTemplate;
 import com.power.doc.utils.JsonUtil;
 import com.power.doc.utils.DocPathUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
@@ -224,7 +223,7 @@ public class PostmanJsonBuilder {
     private static List<HeaderBean> buildHeaderBeanList(ApiMethodDoc apiMethodDoc) {
         List<HeaderBean> headerBeans = new ArrayList<>();
 
-        List<ApiReqHeader> headers = apiMethodDoc.getRequestHeaders();
+        List<ApiReqParam> headers = apiMethodDoc.getRequestHeaders();
         headers.forEach(
                 apiReqHeader -> {
                     HeaderBean headerBean = new HeaderBean();

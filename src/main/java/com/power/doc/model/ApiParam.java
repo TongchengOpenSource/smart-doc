@@ -104,6 +104,12 @@ public class ApiParam {
      */
     private String maxLength;
 
+    /**
+     *  is config.json config param
+     *  default false
+     */
+    private boolean configParam;
+
     public static ApiParam of() {
         return new ApiParam();
     }
@@ -240,6 +246,15 @@ public class ApiParam {
 
     public ApiParam setMaxLength(String maxLength) {
         this.maxLength = maxLength;
+        return this;
+    }
+
+    public boolean isConfigParam() {
+        return configParam;
+    }
+
+    public ApiParam setConfigParam(boolean configParam) {
+        this.configParam = configParam;
         return this;
     }
 
