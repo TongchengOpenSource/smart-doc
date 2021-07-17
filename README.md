@@ -201,8 +201,34 @@ When you need to use smart-doc to generate more API document information, you ca
        "type": "string",
        "desc": "desc",
        "required": false,
+       "pathPatterns": "*",
+       "excludePathPatterns":"/app/page/**"
        "since": "-"
-  }]
+  }],
+  "requestParams": [ //Public request parameters (a scenario where public request parameters are processed through interceptors) ，@since 2.2.3,no need to set
+    {
+      "name": "configPathParam",
+      "type": "string",
+      "desc": "desc",
+      "paramIn": "path", // path,query
+      "value":"testPath",//default is null
+      "required": false,
+      "since": "-",
+      "pathPatterns": "*",
+      "excludePathPatterns":"/app/page/**"
+    },
+    {
+      "name": "configQueryParam",
+      "type": "string",
+      "desc": "desc",
+      "paramIn": "query",
+      "value":"testQuery",
+      "required": false,
+      "since": "-",
+      "pathPatterns": "*",
+      "excludePathPatterns":"/app/page/**"
+    }
+  ]
 }
 ```
 

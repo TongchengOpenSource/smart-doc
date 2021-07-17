@@ -204,6 +204,30 @@ smart-doc官方目前已经开发完成[Maven插件](https://gitee.com/smart-doc
       "pathPatterns": "/test/add,/testConstants/1.0",//正则表达式过滤请求头,url匹配上才会添加该请求头，多个正则用分号隔开
       "since": "-"//什么版本添加的改请求头
   }],
+  "requestParams": [ //公共请求参数(通过拦截器处理的场景)，@since 2.2.3,没有需求请不要设置
+    {
+      "name": "configPathParam",//请求头名称
+      "type": "string",//请求头类型
+      "desc": "desc",//请求头描述信息
+      "paramIn": "path",
+      "value":"testPath",//不设置默认null
+      "required": false,//是否必须
+      "since": "-",//什么版本添加的改请求头
+      "pathPatterns": "*",//正则表达式过滤请求头
+      "excludePathPatterns":"/app/page/**" //参考请求头中的用法
+    },
+    {
+      "name": "configQueryParam",//请求头名称
+      "type": "string",//请求头类型
+      "desc": "desc",//请求头描述信息
+      "paramIn": "query",
+      "value":"testQuery",//不设置默认null
+      "required": false,//是否必须
+      "since": "-",//什么版本添加的改请求头
+      "pathPatterns": "*",//正则表达式过滤请求头
+      "excludePathPatterns":"/app/page/**"
+    }
+  ],
   "rpcApiDependencies":[{ // 项目开放的dubbo api接口模块依赖，配置后输出到文档方便使用者集成
         "artifactId":"SpringBoot2-Dubbo-Api",
         "groupId":"com.demo",
