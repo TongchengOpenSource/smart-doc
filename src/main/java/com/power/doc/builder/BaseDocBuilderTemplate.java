@@ -30,6 +30,7 @@ import com.power.doc.constants.FrameworkEnum;
 import com.power.doc.constants.TemplateVariable;
 import com.power.doc.model.ApiConfig;
 import com.power.doc.model.RevisionLog;
+import org.apache.commons.lang3.StringUtils;
 import org.beetl.core.Template;
 
 import java.util.HashMap;
@@ -119,6 +120,21 @@ public class BaseDocBuilderTemplate {
             template.binding(TemplateVariable.CSS_CND.getVariable(), CSS_CDN_CH);
         } else {
             template.binding(TemplateVariable.CSS_CND.getVariable(), CSS_CDN);
+        }
+    }
+
+    public String allInOneDocName(ApiConfig apiConfig, String fileName, String suffix) {
+        String allInOneName = apiConfig.getAllInOneDocFileName();
+        if (StringUtils.isNotEmpty(apiConfig.getAllInOneDocFileName())) {
+            if (allInOneName.endsWith(suffix)) {
+                return allInOneName;
+            } else {
+                return allInOneName + suffix;
+            }
+        } else if (fileName.equals(suffix)) {
+            return fileName;
+        } else {
+            return fileName + suffix;
         }
     }
 }
