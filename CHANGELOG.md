@@ -7,6 +7,9 @@
   1. 增加pathPrefix配置项用于配置上下文，引入该配置项后serverUrl仅用于配置服务器地址。
   2. 支持请求头常量设置解析。
   3. 支持使用JsonIgnoreProperties和JSONType注解去忽略多字段。
+  4. 修改部分文档设置allInOneDocFileName无效的问题,#131 。
+  5. 修复dubbo rpc文档模板格式错误 #https://gitee.com/smart-doc-team/smart-doc/issues/I40ZGE .
+  
 #### 版本号：2.2.2
 
 - 更新日期: 2020-07-04
