@@ -31,10 +31,7 @@ import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.constants.DocTags;
 import com.power.doc.constants.ValidatorAnnotations;
 import com.power.doc.model.*;
-import com.power.doc.utils.DocClassUtil;
-import com.power.doc.utils.DocUtil;
-import com.power.doc.utils.JavaClassUtil;
-import com.power.doc.utils.JavaClassValidateUtil;
+import com.power.doc.utils.*;
 import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaField;
@@ -350,6 +347,16 @@ public class ParamsBuildHelper {
 
                     } else if (JavaClassValidateUtil.isCollection(subTypeName) || JavaClassValidateUtil.isArray(subTypeName)) {
                         param.setType("array");
+                        if (tagsMap.containsKey(DocTags.MOCK) && StringUtil.isNotEmpty(tagsMap.get(DocTags.MOCK))) {
+                            param.setValue(fieldValue);
+                            if (StringUtil.isNotEmpty(comment)) {
+                                commonHandleParam(paramList, param, isRequired, comment + appendComment, since, strRequired);
+                            } else {
+                                commonHandleParam(paramList, param, isRequired, NO_COMMENTS_FOUND + appendComment, since, strRequired);
+                            }
+                            continue;
+                        }
+
                         if (globGicName.length > 0 && "java.util.List".equals(fieldGicName)) {
                             fieldGicName = fieldGicName + "<T>";
                         }
@@ -414,6 +421,17 @@ public class ParamsBuildHelper {
                         }
 
                     } else if (JavaClassValidateUtil.isMap(subTypeName)) {
+                        if (tagsMap.containsKey(DocTags.MOCK) && StringUtil.isNotEmpty(tagsMap.get(DocTags.MOCK))) {
+                            param.setType("map");
+                            param.setValue(fieldValue);
+                            if (StringUtil.isNotEmpty(comment)) {
+                                commonHandleParam(paramList, param, isRequired, comment + appendComment, since, strRequired);
+                            } else {
+                                commonHandleParam(paramList, param, isRequired, NO_COMMENTS_FOUND + appendComment, since, strRequired);
+                            }
+                            continue;
+                        }
+
                         if (StringUtil.isNotEmpty(comment)) {
                             commonHandleParam(paramList, param, isRequired, comment + appendComment, since, strRequired);
                         } else {

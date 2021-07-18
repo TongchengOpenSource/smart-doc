@@ -31,14 +31,15 @@ public class ApiDocTest {
         config.setServerUrl("http://127.0.0.1:8899");
         //config.setStrict(true);
         config.setOpenUrl("http://demo.torna.cn/api");
-        config.setAppKey("20201216788835306945118208");
-        config.setAppToken("258e853573d44ef4a3e2caebdcafbc0f");
-        config.setSecret("W.ZyGMOB9Q0UqujVxnfi@.I#V&tUUYZR");
+        config.setAppKey("20210617855226428617129984");
+        config.setAppToken("b3e291ed6a75452f9a467d420583082c");
+        config.setSecret("^^As.tU#XpK=FATTpY<Vj0PFLt9iak!2");
         config.setDebugEnvName("测试环境");
 //        config.setAuthor("test");
         config.setDebugEnvUrl("http://127.0.0.1");
         //config.setTornaDebug(true);
 
+        config.setCreateDebugPage(true);
         config.setAllInOne(true);
         config.setOutPath("d:\\md3");
         config.setMd5EncryptedHtmlName(true);
