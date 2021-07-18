@@ -1,18 +1,17 @@
 <%if(isNotEmpty(projectName)){%>
-
 # ${projectName}
-
 <%}%>
 
 <%if(isNotEmpty(revisionLogList)){%>
-Version | Update Time | Status | Author | Description ---|---|---|---|---
+
+Version|Update Time|Status|Author|Description
+---|---|---|---|---
 <% for(revisionLog in revisionLogList){ %>
 ${revisionLog.version}|${revisionLog.revisionTime}|${revisionLog.status}|${revisionLog.author}|${revisionLog.remarks}
 <%}%>
 <%}%>
 
 <%if(isNotEmpty(dependencyList)){%>
-
 ## Add dependency
 
 ```
@@ -30,16 +29,15 @@ for(dependency in dependencyList){
 
 <%if(isNotEmpty(consumerConfigExample)){%>
 Consumer config
-
 ```
 ${consumerConfigExample}
 ```
-
 <%}%>
 <%}%>
 
-<% for(api in apiDocList){ %>
-
+<%
+for(api in apiDocList){
+%>
 ## ${api.desc}
 
 **URI:** ${api.uri}
@@ -51,15 +49,13 @@ ${consumerConfigExample}
 **Author:** ${api.author}
 
 **Version:** ${api.version}
-<% for(doc in api.list){ %>
+<%
+for(doc in api.list){
+%>
 <%if(doc.deprecated){%>
-
 ### ~~${doc.desc}~~
-
 <%}else{%>
-
 ### ${doc.desc}
-
 <%}%>
 
 **Definition：** ${doc.methodDefinition}
@@ -75,8 +71,9 @@ ${consumerConfigExample}
 
 Parameter|Type|Description|Required|Since
 ---|---|---|---|---
-
-<% for(param in doc.requestParams){ %>
+<%
+for(param in doc.requestParams){
+%>
 ${param.field}|${param.type}|${param.desc}|${param.required}|${param.version}
 <%}%>
 <%}%>
@@ -86,23 +83,25 @@ ${param.field}|${param.type}|${param.desc}|${param.required}|${param.version}
 
 Field | Type|Description|Since
 ---|---|---|---
-
-<% for(param in doc.responseParams){ %>
+<%
+for(param in doc.responseParams){
+%>
 ${param.field}|${param.type}|${param.desc}|${param.version}
 <%}%>
 <%}%>
 
-<%if(isNotEmpty(errorCodeList)){%>
 
+
+<%}%>
+<%}%>
+<%if(isNotEmpty(errorCodeList)){%>
 ## ${errorListTitle}
 
 Error code |Description
 ---|---
-
-<% for(error in errorCodeList){ %>
+<%
+for(error in errorCodeList){
+%>
 ${error.value}|${error.desc}
-<%}%>
-<%}%>
-
 <%}%>
 <%}%>

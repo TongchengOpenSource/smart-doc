@@ -1,5 +1,7 @@
 ---
-name: Feature Request 💡 about: Suggest a new idea for the project. labels: enhancement
+name: Feature Request 💡 
+about: Suggest a new idea for the project. 
+labels: enhancement
 ---
 
 ## Summary(关于这个pr的描述)

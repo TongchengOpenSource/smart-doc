@@ -461,15 +461,15 @@ public class JavaClassUtil {
         if (CollectionUtil.isEmpty(annotationValueList)) {
             return;
         }
-        for (int i = 0; i < annotationValueList.size(); i++) {
-            TypeRef annotationValue = (TypeRef) annotationValueList.get(i);
-            DefaultJavaParameterizedType annotationValueType = (DefaultJavaParameterizedType) annotationValue.getType();
+        for (AnnotationValue annotationValue : annotationValueList) {
+            TypeRef typeRef = (TypeRef) annotationValue;
+            DefaultJavaParameterizedType annotationValueType = (DefaultJavaParameterizedType) typeRef.getType();
             javaClassList.add(annotationValueType.getGenericCanonicalName());
         }
     }
 
     private static List<AnnotationValue> getAnnotationValues(List<String> validates, JavaAnnotation javaAnnotation) {
-        List<AnnotationValue> annotationValueList = null;
+        List<AnnotationValue> annotationValueList = new ArrayList<>();
         String simpleName = javaAnnotation.getType().getValue();
         if (simpleName.equalsIgnoreCase(ValidatorAnnotations.VALIDATED)) {
             if (Objects.nonNull(javaAnnotation.getProperty(DocAnnotationConstants.VALUE_PROP))) {
@@ -478,7 +478,6 @@ public class JavaClassUtil {
                     annotationValueList = ((AnnotationValueList) v).getValueList();
                 }
                 if (v instanceof TypeRef) {
-                    annotationValueList = new ArrayList<>();
                     annotationValueList.add(v);
                 }
             }
@@ -489,7 +488,6 @@ public class JavaClassUtil {
                     annotationValueList = ((AnnotationValueList) v).getValueList();
                 }
                 if (v instanceof TypeRef) {
-                    annotationValueList = new ArrayList<>();
                     annotationValueList.add(v);
                 }
             }

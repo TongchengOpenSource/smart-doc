@@ -53,32 +53,38 @@ public class JsonBuildHelper {
      */
     public static String buildReturnJson(DocJavaMethod docJavaMethod, ProjectDocConfigBuilder builder) {
         JavaMethod method = docJavaMethod.getJavaMethod();
-        if (method.getReturns().isVoid() && Objects.isNull(builder.getApiConfig().getResponseBodyAdvice())) {
+        String responseBodyAdvice = null;
+        if (Objects.nonNull(builder.getApiConfig().getResponseBodyAdvice())) {
+            responseBodyAdvice = builder.getApiConfig().getResponseBodyAdvice().getClassName();
+        }
+        if (method.getReturns().isVoid() && Objects.isNull(responseBodyAdvice)) {
             return "Doesn't return a value.";
         }
         DocletTag downloadTag = method.getTagByName(DocTags.DOWNLOAD);
         if (Objects.nonNull(downloadTag)) {
             return "File download.";
         }
-        if (method.getReturns().isEnum()) {
+        if (method.getReturns().isEnum() && Objects.isNull(responseBodyAdvice)) {
             return StringUtil.removeQuotes(String.valueOf(JavaClassUtil.getEnumValue(method.getReturns(), Boolean.FALSE)));
         }
-        if (method.getReturns().isPrimitive()) {
+        if (method.getReturns().isPrimitive() && Objects.isNull(responseBodyAdvice)) {
             String typeName = method.getReturnType().getCanonicalName();
             return StringUtil.removeQuotes(DocUtil.jsonValueByType(typeName));
         }
-        if (DocGlobalConstants.JAVA_STRING_FULLY.equals(method.getReturnType().getGenericCanonicalName())) {
+        if (DocGlobalConstants.JAVA_STRING_FULLY.equals(method.getReturnType().getGenericCanonicalName())
+                && Objects.isNull(responseBodyAdvice)) {
             return "string";
         }
         String returnTypeGenericCanonicalName = method.getReturnType().getGenericCanonicalName();
-        if (Objects.nonNull(builder.getApiConfig().getResponseBodyAdvice())
+        if (Objects.nonNull(responseBodyAdvice)
                 && Objects.isNull(method.getTagByName(IGNORE_RESPONSE_BODY_ADVICE))) {
-            String responseBodyAdvice = builder.getApiConfig().getResponseBodyAdvice().getClassName();
-            StringBuilder sb = new StringBuilder();
-            sb.append(responseBodyAdvice)
-                    .append("<")
-                    .append(returnTypeGenericCanonicalName).append(">");
-            returnTypeGenericCanonicalName = sb.toString();
+            if (!returnTypeGenericCanonicalName.startsWith(responseBodyAdvice)) {
+                StringBuilder sb = new StringBuilder();
+                sb.append(responseBodyAdvice)
+                        .append("<")
+                        .append(returnTypeGenericCanonicalName).append(">");
+                returnTypeGenericCanonicalName = sb.toString();
+            }
         }
         ApiReturn apiReturn = DocClassUtil.processReturnType(returnTypeGenericCanonicalName);
         String typeName = apiReturn.getSimpleName();

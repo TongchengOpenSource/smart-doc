@@ -200,7 +200,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             }
             apiMethodDoc.setDetail(apiNoteValue);
             //handle headers
-            List<ApiReqParam> apiReqParams = new SpringMVCRequestHeaderHandler().handle(method, projectBuilder);
+            List<ApiReqParam> apiReqHeaders = new SpringMVCRequestHeaderHandler().handle(method, projectBuilder);
 
             apiMethodDoc.setType(requestMapping.getMethodType());
             apiMethodDoc.setUrl(requestMapping.getUrl());
@@ -226,21 +226,21 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 apiMethodDoc.setRequestParams(apiMethodReqParam.getRequestParams());
             }
 
-            List<ApiReqParam> allApiReqParams;
+            List<ApiReqParam> allApiReqHeaders;
             if (this.configApiReqParams != null) {
 
                 final Map<String, List<ApiReqParam>> reqParamMap = apiReqParamList.stream().collect(Collectors.groupingBy(ApiReqParam::getParamIn));
 
                 final List<ApiReqParam> headerParamList = reqParamMap.getOrDefault(ApiReqParamInTypeEnum.HEADER.getValue(), Collections.emptyList());
-                allApiReqParams = Stream.of(apiReqParams, headerParamList).filter(Objects::nonNull)
+                allApiReqHeaders = Stream.of(apiReqHeaders, headerParamList).filter(Objects::nonNull)
                         .flatMap(Collection::stream).distinct().collect(Collectors.toList());
             } else {
-                allApiReqParams = apiReqParams.stream().filter(param -> filterPath(requestMapping, param)).collect(Collectors.toList());
+                allApiReqHeaders = apiReqHeaders.stream().filter(param -> filterPath(requestMapping, param)).collect(Collectors.toList());
             }
 
             //reduce create in template
-            apiMethodDoc.setHeaders(this.createDocRenderHeaders(allApiReqParams, apiConfig.isAdoc()));
-            apiMethodDoc.setRequestHeaders(allApiReqParams);
+            apiMethodDoc.setHeaders(this.createDocRenderHeaders(allApiReqHeaders, apiConfig.isAdoc()));
+            apiMethodDoc.setRequestHeaders(allApiReqHeaders);
 
             String path = apiMethodDoc.getPath().split(";")[0];
             String pathUrl = DocUtil.formatPathUrl(path);
@@ -288,11 +288,11 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
     private boolean filterPath(RequestMapping requestMapping, ApiReqParam apiReqHeader) {
         if (StringUtil.isEmpty(apiReqHeader.getPathPatterns())
                 && StringUtil.isEmpty(apiReqHeader.getExcludePathPatterns())) {
-            return false;
+            return true;
         } else {
             boolean flag = DocPathUtil.matches(requestMapping.getShortUrl(), apiReqHeader.getPathPatterns()
                     , apiReqHeader.getExcludePathPatterns());
-            return !flag;
+            return flag;
         }
     }
 
