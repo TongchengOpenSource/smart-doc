@@ -9,6 +9,8 @@
   3. 支持使用JsonIgnoreProperties和JSONType注解去忽略多字段。
   4. 修改部分文档设置allInOneDocFileName无效的问题,#131 。
   5. 修复dubbo rpc文档模板格式错误 #https://gitee.com/smart-doc-team/smart-doc/issues/I40ZGE .
+  6. 支持配置添加拦截器中设置全局请求参数，#https://github.com/smart-doc-group/smart-doc/issues/132 .
+  7. 修复部分类型mock未推送到torna的问题。
   
 #### 版本号：2.2.2
 
