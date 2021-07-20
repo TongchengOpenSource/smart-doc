@@ -157,8 +157,14 @@ public class PostmanJsonBuilder {
         String shortUrl = DocPathUtil.toPostmanPath(apiMethodDoc.getPath());
         String[] paths = shortUrl.split("/");
         List<String> pathList = new ArrayList<>();
-        if (CollectionUtil.isNotEmpty(urlBean.getPath()) && shortUrl.indexOf(urlBean.getPath().get(0)) < 0) {
-            pathList.add(urlBean.getPath().get(0).replaceAll("/", ""));
+        String serverPath = urlBean.getPath().get(0);
+        if (CollectionUtil.isNotEmpty(urlBean.getPath()) && !shortUrl.contains(serverPath)) {
+            String[] serverPaths = serverPath.split("/");
+            for (int i = 1; i < serverPaths.length; i++) {
+                pathList.add(serverPaths[i]);
+            }
+            //serverPath中的path可能不止一个,例如/app/xxxx
+            //pathList.add(urlBean.getPath().get(0).replaceAll("/", ""));
         }
         for (String str : paths) {
             if (StringUtil.isNotEmpty(str)) {
