@@ -10,7 +10,9 @@ public class RemoveLineBreaks implements Function {
 
   @Override
   public String call(Object[] paras, Context ctx) {
-    String str = String.valueOf(paras[0]).replaceAll("\n", " ")
+    String str = String.valueOf(paras[0])
+        .replaceAll(" ","")
+        .replaceAll("\n", " ")
         .replaceAll("\r"," ");
     return str;
   }

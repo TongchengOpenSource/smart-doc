@@ -3,14 +3,14 @@ let api = [];
 api.push({
     alias: '${api.alias}',
     order: '${api.order}',
-    link: '${api.link}',
-    desc: '${api.desc}',
+    link: '${removeLineBreaks(api.link)}',
+    desc: '${removeLineBreaks(api.desc)}',
     list: []
 })
 <%for(doc in api.list) {%>
 api[${apiLP.dataIndex}].list.push({
     order: '${doc.order}',
-    desc: '${doc.desc}',
+    desc: '${removeLineBreaks(doc.desc)}',
 });
 <%}%>
 <%}%>
