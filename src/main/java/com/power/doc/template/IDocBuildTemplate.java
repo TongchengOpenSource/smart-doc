@@ -83,6 +83,11 @@ public interface IDocBuildTemplate<T> {
         apiDoc.setAuthor(classAuthor);
         apiDoc.setAlias(controllerName);
         //apiDoc.setAuthor();
+
+        // handle class tags
+        List<DocletTag> classTags = cls.getTagsByName(DocTags.TAG);
+        apiDoc.setTags(classTags.stream().map(DocletTag::getValue).toArray(String[]::new));
+
         if (isUseMD5) {
             String name = DocUtil.generateId(apiDoc.getName());
             apiDoc.setAlias(name);

@@ -37,6 +37,7 @@ import com.power.doc.model.request.RequestMapping;
 import com.power.doc.utils.*;
 import com.thoughtworks.qdox.model.*;
 import com.thoughtworks.qdox.model.expression.AnnotationValue;
+import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -88,6 +89,9 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             List<ApiMethodDoc> apiMethodDocs = buildControllerMethod(cls, apiConfig, projectBuilder);
             this.handleApiDoc(cls, apiDocList, apiMethodDocs, order, apiConfig.isMd5EncryptedHtmlName());
         }
+        // handle TagsApiDoc
+        apiDocList = handleTagsApiDoc(apiDocList);
+
         // sort
         if (apiConfig.isSortByTitle()) {
             Collections.sort(apiDocList);
@@ -99,6 +103,72 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         }
         return apiDocList;
     }
+
+    /**
+     *  handle tags to api doc
+     *  copy the same tag
+     *
+     * @author cqmike
+     * @param apiDocList
+     */
+    private List<ApiDoc> handleTagsApiDoc(List<ApiDoc> apiDocList) {
+        if (CollectionUtil.isEmpty(apiDocList)) {
+            return Collections.emptyList();
+        }
+
+        // all class tag copy
+        Map<String, ApiDoc> copyMap = new HashMap<>();
+        apiDocList.forEach(doc -> {
+            String[] tags = doc.getTags();
+            if (ArrayUtils.isEmpty(tags)) {
+                tags = new String[]{doc.getName()};
+            }
+
+            for (String tag : tags) {
+                tag = StringUtil.trim(tag);
+                copyMap.computeIfPresent(tag, (k, v) -> {
+                    List<ApiMethodDoc> list = CollectionUtil.isEmpty(v.getList()) ? new ArrayList<>() : v.getList();
+                    list.addAll(doc.getList());
+                    v.setList(list);
+                    return v;
+                });
+                copyMap.putIfAbsent(tag, doc);
+            }
+        });
+
+        // handle method tag
+        Map<String, ApiDoc> allMap = new HashMap<>(copyMap);
+        allMap.forEach((k, v) -> {
+            List<ApiMethodDoc> methodDocList = v.getList();
+            methodDocList.forEach(method -> {
+                String[] tags = method.getTags();
+                if (ArrayUtils.isEmpty(tags)) {
+                    return;
+                }
+                for (String tag : tags) {
+                    tag = StringUtil.trim(tag);
+                    copyMap.computeIfPresent(tag, (k1, v2) -> {
+                        method.setOrder(v2.getList().size() + 1);
+                        v2.getList().add(method);
+                        return v2;
+                    });
+                    copyMap.putIfAbsent(tag, ApiDoc.buildTagApiDoc(v, tag, method));
+                }
+            });
+        });
+
+        List<ApiDoc> apiDocs = new ArrayList<>(copyMap.values());
+        int index = apiDocs.size() - 1;
+        for (ApiDoc apiDoc : apiDocs) {
+            if (apiDoc.getOrder() == null) {
+                apiDoc.setOrder(index++);
+            }
+        }
+        apiDocs.sort(Comparator.comparing(ApiDoc::getOrder));
+        return apiDocs;
+    }
+
+
 
     @Override
     public ApiDoc getSingleApiData(ProjectDocConfigBuilder projectBuilder, String apiClassName) {
@@ -179,6 +249,11 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             } else {
                 apiMethodDoc.setGroup(group);
             }
+
+            // handle tags
+            List<DocletTag> tags = method.getTagsByName(DocTags.TAG);
+            apiMethodDoc.setTags(tags.stream().map(DocletTag::getValue).toArray(String[]::new));
+
             methodOrder++;
             apiMethodDoc.setName(method.getName());
             apiMethodDoc.setOrder(methodOrder);

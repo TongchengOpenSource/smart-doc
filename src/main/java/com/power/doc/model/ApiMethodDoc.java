@@ -33,7 +33,7 @@ import java.util.Map;
 /**
  * java api method info model.
  */
-public class ApiMethodDoc implements Serializable {
+public class ApiMethodDoc implements Serializable, Cloneable {
 
 
     private static final long serialVersionUID = 7211922919532562867L;
@@ -201,6 +201,11 @@ public class ApiMethodDoc implements Serializable {
      * 是否为List数据 openApi
      */
     private boolean listParam = false;
+
+    /**
+     * tags
+     */
+    private String[] tags;
 
     public Integer getIsRequestArray() {
         return isRequestArray;
@@ -462,6 +467,15 @@ public class ApiMethodDoc implements Serializable {
         this.page = page;
     }
 
+    public String[] getTags() {
+        return tags;
+    }
+
+    public ApiMethodDoc setTags(String[] tags) {
+        this.tags = tags;
+        return this;
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("{");
@@ -509,5 +523,14 @@ public class ApiMethodDoc implements Serializable {
                 .append(deprecated);
         sb.append('}');
         return sb.toString();
+    }
+
+    @Override
+    public ApiMethodDoc clone() {
+        try {
+            return (ApiMethodDoc) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException("clone apiMethodDoc is error", e);
+        }
     }
 }

@@ -25,6 +25,7 @@ package com.power.doc.model;
 
 import com.power.common.util.StringUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -35,7 +36,7 @@ public class ApiDoc implements Comparable<ApiDoc> {
      *
      * @since 1.7+
      */
-    public int order;
+    public Integer order;
 
     /**
      * controller name
@@ -48,6 +49,13 @@ public class ApiDoc implements Comparable<ApiDoc> {
      * @since 1.7+
      */
     private String alias;
+
+    /**
+     * tags
+     *
+     * @author cqmike
+     */
+    private String[] tags;
 
     /**
      * List of method doc
@@ -98,11 +106,11 @@ public class ApiDoc implements Comparable<ApiDoc> {
         this.desc = desc;
     }
 
-    public int getOrder() {
+    public Integer getOrder() {
         return order;
     }
 
-    public void setOrder(int order) {
+    public void setOrder(Integer order) {
         this.order = order;
     }
 
@@ -112,6 +120,14 @@ public class ApiDoc implements Comparable<ApiDoc> {
 
     public void setAlias(String alias) {
         this.alias = alias;
+    }
+
+    public String[] getTags() {
+        return tags;
+    }
+
+    public void setTags(String[] tags) {
+        this.tags = tags;
     }
 
     public String getLink() {
@@ -131,6 +147,20 @@ public class ApiDoc implements Comparable<ApiDoc> {
             return desc.compareTo(o.getDesc());
         }
         return name.compareTo(o.getName());
+    }
+
+    public static ApiDoc buildTagApiDoc(ApiDoc source, String tag, ApiMethodDoc methodDoc) {
+        ApiDoc apiDoc = new ApiDoc();
+        apiDoc.setAlias(source.getAlias());
+        apiDoc.setLink(source.getLink());
+        apiDoc.setDesc(tag);
+        apiDoc.setAuthor(source.getAuthor());
+        apiDoc.setName(tag);
+        apiDoc.setList(new ArrayList<>());
+        ApiMethodDoc clone = methodDoc.clone();
+        clone.setOrder(apiDoc.getList().size() + 1);
+        apiDoc.getList().add(clone);
+        return apiDoc;
     }
 
 
