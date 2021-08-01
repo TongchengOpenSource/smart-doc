@@ -163,9 +163,20 @@ public class ParamsBuildHelper {
                 an:
                 for (JavaAnnotation annotation : javaAnnotations) {
                     String simpleAnnotationName = annotation.getType().getValue();
+                    AnnotationValue annotationValue = null;
                     if (DocAnnotationConstants.MAX.equalsIgnoreCase(simpleAnnotationName)) {
-                        maxLength = annotation.getProperty(DocAnnotationConstants.VALUE_PROP).toString();
+                        annotationValue = annotation.getProperty(DocAnnotationConstants.VALUE_PROP);
                     }
+                    if (DocAnnotationConstants.SIZE.equalsIgnoreCase(simpleAnnotationName)) {
+                        annotationValue = annotation.getProperty(DocAnnotationConstants.MAX);
+                    }
+                    if (DocAnnotationConstants.LENGTH.equalsIgnoreCase(simpleAnnotationName)) {
+                        annotationValue = annotation.getProperty(DocAnnotationConstants.MAX);
+                    }
+                    if (!Objects.isNull(annotationValue)) {
+                        maxLength = annotationValue.toString();
+                    }
+
                     if (DocAnnotationConstants.JSON_PROPERTY.equalsIgnoreCase(simpleAnnotationName)) {
                         AnnotationValue value = annotation.getProperty("access");
                         if (Objects.nonNull(value)) {

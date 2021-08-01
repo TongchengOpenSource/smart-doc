@@ -240,9 +240,10 @@ public class TornaUtil {
 
     public static List<TornaDic> buildTornaDic(List<ApiDocDict> apiDocDicts) {
         List<TornaDic> dics = new ArrayList<>();
-        TornaDic tornaDic = new TornaDic();
+        TornaDic tornaDic ;
         if (CollectionUtil.isNotEmpty(apiDocDicts)) {
             for (ApiDocDict doc : apiDocDicts) {
+                tornaDic = new TornaDic();
                 tornaDic.setName(doc.getTitle())
                        // .setDescription(doc.getTitle())
                         .setItems(buildTornaDicItems(doc.getDataDictList()));

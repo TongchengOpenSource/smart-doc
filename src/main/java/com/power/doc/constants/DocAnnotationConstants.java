@@ -72,6 +72,10 @@ public interface DocAnnotationConstants {
 
     String MAX = "max";
 
+    String SIZE = "size";
+
+    String LENGTH = "length";
+
     String JSON_PROPERTY = "JsonProperty";
 
     /**
