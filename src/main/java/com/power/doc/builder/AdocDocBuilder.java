@@ -31,6 +31,7 @@ import com.power.doc.template.SpringBootDocBuildTemplate;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.power.doc.constants.DocGlobalConstants.*;
 
@@ -71,6 +72,7 @@ public class AdocDocBuilder {
         List<ApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder);
         if (config.isAllInOne()) {
             String docName = builderTemplate.allInOneDocName(config,INDEX_DOC,".doc");
+            apiDocList = docBuildTemplate.handleApiGroup(apiDocList, config);
             builderTemplate.buildAllInOne(apiDocList, config, javaProjectBuilder, ALL_IN_ONE_ADOC_TPL, docName);
         } else {
             builderTemplate.buildApiDoc(apiDocList, config, API_DOC_ADOC_TPL, API_EXTENSION);

@@ -31,6 +31,7 @@ import com.power.doc.template.SpringBootDocBuildTemplate;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.power.doc.constants.DocGlobalConstants.*;
 
@@ -70,6 +71,7 @@ public class ApiDocBuilder {
         if (config.isAllInOne()) {
             String version = config.isCoverOld() ? "" : "-V" + DateTimeUtil.long2Str(System.currentTimeMillis(), DATE_FORMAT);
             String docName = builderTemplate.allInOneDocName(config,"AllInOne" + version + ".md",".md");
+            apiDocList = docBuildTemplate.handleApiGroup(apiDocList, config);
             builderTemplate.buildAllInOne(apiDocList, config, javaProjectBuilder, ALL_IN_ONE_MD_TPL, docName);
         } else {
             builderTemplate.buildApiDoc(apiDocList, config, API_DOC_MD_TPL, API_EXTENSION);

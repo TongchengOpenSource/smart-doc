@@ -35,6 +35,8 @@ import com.thoughtworks.qdox.model.JavaMethod;
 import com.thoughtworks.qdox.model.JavaType;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 import static com.power.doc.constants.DocGlobalConstants.NO_COMMENTS_FOUND;
 import static com.power.doc.constants.DocTags.IGNORE_RESPONSE_BODY_ADVICE;
@@ -82,6 +84,8 @@ public interface IDocBuildTemplate<T> {
         apiDoc.setName(controllerName);
         apiDoc.setAuthor(classAuthor);
         apiDoc.setAlias(controllerName);
+        apiDoc.setFolder(true);
+        apiDoc.setPackageName(cls.getPackage().getName());
         //apiDoc.setAuthor();
 
         // handle class tags
@@ -96,6 +100,54 @@ public interface IDocBuildTemplate<T> {
         apiDoc.setDesc(desc);
         apiDoc.setList(apiMethodDocs);
         apiDocList.add(apiDoc);
+    }
+
+
+    /**
+     *  handle group api docs
+     *
+     * @author cqmike
+     * @param apiDocList
+     * @param apiConfig
+     */
+    default List<ApiDoc> handleApiGroup(List<ApiDoc> apiDocList, ApiConfig apiConfig) {
+        if (CollectionUtil.isEmpty(apiDocList) || apiConfig == null) {
+            return apiDocList;
+        }
+
+        List<ApiGroup> groups = apiConfig.getGroups();
+        ApiDoc defaultGroup = ApiDoc.buildGroupApiDoc("default");
+
+        List<ApiDoc> finalApiDocs = new ArrayList<>();
+        finalApiDocs.add(defaultGroup);
+        AtomicInteger order = new AtomicInteger(1);
+        defaultGroup.setOrder(order.getAndIncrement());
+        groups.forEach(group -> {
+
+            ApiDoc groupApiDoc = ApiDoc.buildGroupApiDoc(group.getName());
+            groupApiDoc.setOrder(order.getAndIncrement());
+            finalApiDocs.add(groupApiDoc);
+            apiDocList.forEach(doc -> {
+
+                if (!DocUtil.isMatch(group.getApis(), doc.getPackageName())) {
+                    defaultGroup.getChildrenApiDocs().add(doc);
+                    doc.setOrder(defaultGroup.getChildrenApiDocs().size());
+                    return;
+                }
+                groupApiDoc.getChildrenApiDocs().add(doc);
+                doc.setOrder(groupApiDoc.getChildrenApiDocs().size());
+                doc.setGroup(group.getName());
+                if (StringUtil.isEmpty(group.getPaths())) {
+                    return;
+                }
+                List<ApiMethodDoc> methodDocs = doc.getList().stream()
+                        .filter(l -> DocPathUtil.matches(l.getPath(), group.getPaths(), null))
+                        .collect(Collectors.toList());
+                doc.setList(methodDocs);
+            });
+        });
+
+        return finalApiDocs;
     }
 
 

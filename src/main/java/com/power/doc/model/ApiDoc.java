@@ -58,6 +58,19 @@ public class ApiDoc implements Comparable<ApiDoc> {
     private String[] tags;
 
     /**
+     * group
+     *
+     * @author cqmike
+     */
+    private String group;
+
+    /**
+     * class in package name
+     *
+     */
+    private String packageName;
+
+    /**
      * List of method doc
      */
     private List<ApiMethodDoc> list;
@@ -73,6 +86,16 @@ public class ApiDoc implements Comparable<ApiDoc> {
     private String link;
 
     private String author;
+
+    /**
+     *  if this is group, then is true
+     */
+    private boolean isFolder;
+
+    /**
+     *  children
+     */
+    private List<ApiDoc> childrenApiDocs = new ArrayList<>();
 
     public String getAuthor() {
         return author;
@@ -141,6 +164,38 @@ public class ApiDoc implements Comparable<ApiDoc> {
         this.link = link;
     }
 
+    public String getPackageName() {
+        return packageName;
+    }
+
+    public void setPackageName(String packageName) {
+        this.packageName = packageName;
+    }
+
+    public String getGroup() {
+        return group;
+    }
+
+    public void setGroup(String group) {
+        this.group = group;
+    }
+
+    public boolean isFolder() {
+        return isFolder;
+    }
+
+    public void setFolder(boolean folder) {
+        isFolder = folder;
+    }
+
+    public List<ApiDoc> getChildrenApiDocs() {
+        return childrenApiDocs;
+    }
+
+    public void setChildrenApiDocs(List<ApiDoc> childrenApiDocs) {
+        this.childrenApiDocs = childrenApiDocs;
+    }
+
     @Override
     public int compareTo(ApiDoc o) {
         if (Objects.nonNull(o.getDesc())) {
@@ -155,6 +210,7 @@ public class ApiDoc implements Comparable<ApiDoc> {
         apiDoc.setLink(source.getLink());
         apiDoc.setDesc(tag);
         apiDoc.setAuthor(source.getAuthor());
+        apiDoc.setPackageName(source.getPackageName());
         apiDoc.setName(tag);
         apiDoc.setList(new ArrayList<>());
         ApiMethodDoc clone = methodDoc.clone();
@@ -163,6 +219,16 @@ public class ApiDoc implements Comparable<ApiDoc> {
         return apiDoc;
     }
 
+
+    public static ApiDoc buildGroupApiDoc(String group) {
+        ApiDoc apiDoc = new ApiDoc();
+        apiDoc.setFolder(true);
+        apiDoc.setGroup(group);
+        apiDoc.setName(group);
+        apiDoc.setDesc(group);
+        apiDoc.setChildrenApiDocs(new ArrayList<>());
+        return apiDoc;
+    }
 
     @Override
     public String toString() {
