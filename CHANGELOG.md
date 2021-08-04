@@ -1,5 +1,13 @@
 ## smart-doc版本
 
+#### 版本号：2.2.4
+
+- 更新日期: 2021-08-04
+- 更新内容：
+  1. 修复字典码推送torna错误 #https://gitee.com/smart-doc-team/smart-doc/issues/I43JQR。
+  2. 新增jsr303 @size和@length支持。
+  3. 修改html的模板样式错误。
+  4. 修复postman错误#I41G2E 。
 #### 版本号：2.2.3
 
 - 更新日期: 2021-07-18
