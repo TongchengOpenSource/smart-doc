@@ -101,7 +101,7 @@ public class ParamsBuildHelper {
                         registryClasses, projectBuilder, groupClasses, pid, jsonRequest));
             }
         } else if (DocGlobalConstants.JAVA_OBJECT_FULLY.equals(className)) {
-            ApiParam param = ApiParam.of().setField(pre + "any object").setType("object").setPid(pid);
+            ApiParam param = ApiParam.of().setId(pid + 1).setField(pre + "any object").setType("object").setPid(pid);
             if (StringUtil.isEmpty(isRequired)) {
                 param.setDesc(DocGlobalConstants.ANY_OBJECT_MSG).setVersion(DocGlobalConstants.DEFAULT_VERSION);
             } else {
@@ -163,9 +163,20 @@ public class ParamsBuildHelper {
                 an:
                 for (JavaAnnotation annotation : javaAnnotations) {
                     String simpleAnnotationName = annotation.getType().getValue();
+                    AnnotationValue annotationValue = null;
                     if (DocAnnotationConstants.MAX.equalsIgnoreCase(simpleAnnotationName)) {
-                        maxLength = annotation.getProperty(DocAnnotationConstants.VALUE_PROP).toString();
+                        annotationValue = annotation.getProperty(DocAnnotationConstants.VALUE_PROP);
                     }
+                    if (DocAnnotationConstants.SIZE.equalsIgnoreCase(simpleAnnotationName)) {
+                        annotationValue = annotation.getProperty(DocAnnotationConstants.MAX);
+                    }
+                    if (DocAnnotationConstants.LENGTH.equalsIgnoreCase(simpleAnnotationName)) {
+                        annotationValue = annotation.getProperty(DocAnnotationConstants.MAX);
+                    }
+                    if (!Objects.isNull(annotationValue)) {
+                        maxLength = annotationValue.toString();
+                    }
+
                     if (DocAnnotationConstants.JSON_PROPERTY.equalsIgnoreCase(simpleAnnotationName)) {
                         AnnotationValue value = annotation.getProperty("access");
                         if (Objects.nonNull(value)) {

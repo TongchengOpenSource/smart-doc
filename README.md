@@ -140,6 +140,7 @@ When you need to use smart-doc to generate more API document information, you ca
   "appKey": "xxx",// torna appKey, @since 2.0.9
   "appToken": "xxx", //torna appToken,@since 2.0.9
   "secret": "xx",//torna secret，@since 2.0.9
+  "isReplace":true, torna replace doc @since 2.2.4
   "openUrl": "torna server/api/",//torna server url,@since 2.0.9
   "tornaDebug":false,"// show log while set true
   "ignoreRequestParams":[ //The request parameter object will be discarded when generating the document.@since 1.9.2

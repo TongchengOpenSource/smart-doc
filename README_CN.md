@@ -83,6 +83,7 @@ smart-doc官方目前已经开发完成[Maven插件](https://gitee.com/smart-doc
         <!--smart-doc能自动分析依赖树加载所有依赖源码，原则上会影响文档构建效率，因此你可以使用includes来让插件加载你配置的组件-->
         <includes>
             <!--格式为：groupId:artifactId;参考如下-->
+            <!--也可以支持正则式如：com.alibaba:.* -->
             <include>com.alibaba:fastjson</include>
         </includes>
     </configuration>
