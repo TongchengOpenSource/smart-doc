@@ -101,7 +101,7 @@ public class ParamsBuildHelper {
                         registryClasses, projectBuilder, groupClasses, pid, jsonRequest));
             }
         } else if (DocGlobalConstants.JAVA_OBJECT_FULLY.equals(className)) {
-            ApiParam param = ApiParam.of().setField(pre + "any object").setType("object").setPid(pid);
+            ApiParam param = ApiParam.of().setId(pid + 1).setField(pre + "any object").setType("object").setPid(pid);
             if (StringUtil.isEmpty(isRequired)) {
                 param.setDesc(DocGlobalConstants.ANY_OBJECT_MSG).setVersion(DocGlobalConstants.DEFAULT_VERSION);
             } else {

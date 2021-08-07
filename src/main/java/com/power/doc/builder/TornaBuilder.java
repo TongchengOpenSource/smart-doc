@@ -107,6 +107,7 @@ public class TornaBuilder {
         }
         tornaApi.setCommonErrorCodes(buildErrorCode(apiConfig));
         tornaApi.setApis(apisList);
+        tornaApi.setIsReplace(apiConfig.isReplace() ? 1 : 0);
         //推送文档信息
         Map<String, String> requestJson = TornaConstants.buildParams(PUSH, new Gson().toJson(tornaApi), apiConfig);
         //推送字典信息
