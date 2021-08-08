@@ -186,7 +186,7 @@ public class DocUtil {
     }
 
     /**
-     * 是否是合法的java类名称
+     * valid java class name
      *
      * @param className class nem
      * @return boolean
@@ -325,10 +325,10 @@ public class DocUtil {
 
 
     /**
-     * 分割url
+     * Split url
      *
-     * @param url 待分割的url
-     * @return url列表
+     * @param url URL to be divided
+     * @return list of url
      */
     public static List<String> split(String url) {
         char[] chars = url.toCharArray();

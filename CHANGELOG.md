@@ -2,7 +2,7 @@
 
 #### 版本号：2.2.4
 
-- 更新日期: 2021-08-04
+- 更新日期: 2021-08-08
 - 更新内容：
   1. 修复字典码推送torna错误 #https://gitee.com/smart-doc-team/smart-doc/issues/I43JQR。
   2. 新增jsr303 @size和@length支持。
