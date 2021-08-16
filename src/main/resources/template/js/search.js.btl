@@ -4,13 +4,17 @@ api.push({
     alias: '${api.alias}',
     order: '${api.order}',
     desc: '${removeLineBreaks(api.desc)}',
+    href: '${RemoveLineBreaksForHref(api.desc)}',
     link: '${removeLineBreaks(api.link)}',
     list: []
 })
 <%for(doc in api.list) {%>
 api[${apiLP.dataIndex}].list.push({
     order: '${doc.order}',
+    deprecated: '${doc.deprecated}',
     desc: '${removeLineBreaks(doc.desc)}',
+    href: '${RemoveLineBreaksForHref(doc.desc)}',
+    url: '${doc.url}'
 });
 <%}%>
 <%}%>
@@ -29,7 +33,8 @@ function keyDownSearch(e) {
                 searchArr.push({
                     order: apiData.order,
                     desc: apiData.desc,
-                    link: apiData.link,
+                    href: apiData.href,
+                    link: apiData.link+'?searchValue='+searchValue,
                     alias: apiData.alias,
                     list: apiData.list
                 });
@@ -39,17 +44,18 @@ function keyDownSearch(e) {
                 for (let j = 0; j < methodList.length; j++) {
                     const methodData = methodList[j];
                     const methodDesc = methodData.desc;
-                    if (methodDesc.indexOf(searchValue) > -1) {
+                    const methodUrl = methodData.url;
+                    if (methodDesc.indexOf(searchValue) > -1 || methodUrl.indexOf(searchValue) > -1) {
                         methodListTemp.push(methodData);
-                        break;
                     }
                 }
                 if (methodListTemp.length > 0) {
                     const data = {
                         order: apiData.order,
                         desc: apiData.desc,
+                        href: apiData.href,
                         alias: apiData.alias,
-                        link: apiData.link,
+                        link: apiData.link+'?searchValue='+searchValue,
                         list: methodListTemp
                     };
                     searchArr.push(data);
@@ -60,12 +66,12 @@ function keyDownSearch(e) {
         if (searchValue == '') {
             const liClass = "";
             const display = "display: none";
-            html = buildAccordion(api,liClass,display);
+            html = buildAccordion(api,liClass,display,searchValue);
             document.getElementById('accordion').innerHTML = html;
         } else {
             const liClass = "open";
             const display = "display: block";
-            html = buildAccordion(searchArr,liClass,display);
+            html = buildAccordion(searchArr,liClass,display,searchValue);
             document.getElementById('accordion').innerHTML = html;
         }
         const Accordion = function (el, multiple) {
@@ -87,17 +93,23 @@ function keyDownSearch(e) {
     }
 }
 
-function buildAccordion(apiData, liClass, display) {
+function buildAccordion(apiData, liClass, display, searchValue) {
     let html = "";
     let doc;
     if (apiData.length > 0) {
          for (let j = 0; j < apiData.length; j++) {
             html += '<li class="'+liClass+'">';
-            html += '<a class="dd" href="' + apiData[j].alias + '.html#header">' + apiData[j].order + '.&nbsp;' + apiData[j].desc + '</a>';
+            html += '<a class="dd" href="' + apiData[j].alias + '.html'+"?searchValue="+searchValue+'#header">' + apiData[j].order + '.&nbsp;' + apiData[j].desc + '</a>';
             html += '<ul class="sectlevel2" style="'+display+'">';
             doc = apiData[j].list;
             for (let m = 0; m < doc.length; m++) {
-                html += '<li><a href="' + apiData[j].alias + '.html#_' + apiData[j].order + '_' + doc[m].order + '_' + doc[m].desc + '">' + apiData[j].order + '.' + doc[m].order + '.&nbsp;' + doc[m].desc + '</a> </li>';
+                let spanString;
+                if (doc[m].deprecated == 'true') {
+                    spanString='<span class="line-through">';
+                } else {
+                    spanString='<span>';
+                }
+                html += '<li><a href="' + apiData[j].alias + '.html'+"?searchValue="+searchValue+'#_' + apiData[j].order + '_' + doc[m].order + '_' + doc[m].href +'">' + apiData[j].order + '.' + doc[m].order + '.&nbsp;' + spanString + doc[m].desc + '</span></a> </li>';
             }
             html += '</ul>';
             html += '</li>';

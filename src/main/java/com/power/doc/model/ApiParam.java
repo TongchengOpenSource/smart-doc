@@ -22,9 +22,9 @@
  */
 package com.power.doc.model;
 
-import com.power.doc.model.torna.EnumInfo;
-
 import java.util.List;
+
+import com.power.doc.model.torna.EnumInfo;
 
 /**
  * @author yu 2019/9/27.
@@ -109,6 +109,14 @@ public class ApiParam {
      *  default false
      */
     private boolean configParam;
+
+    /**
+     * param deprecated
+     *
+     * @author PsychoPass
+     * @since 2021-08-16 18:41:00
+     */
+    private boolean deprecated;
 
     public static ApiParam of() {
         return new ApiParam();
@@ -283,5 +291,14 @@ public class ApiParam {
                 .append(children);
         sb.append('}');
         return sb.toString();
+    }
+
+    public boolean isDeprecated() {
+        return deprecated;
+    }
+
+    public ApiParam setDeprecated(boolean deprecated) {
+        this.deprecated = deprecated;
+        return this;
     }
 }

@@ -22,25 +22,38 @@
  */
 package com.power.doc.utils;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.StringUtil;
 import com.power.doc.constants.DocAnnotationConstants;
-import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.constants.DocValidatorAnnotationEnum;
 import com.power.doc.constants.ValidatorAnnotations;
 import com.power.doc.model.DocJavaField;
-import com.thoughtworks.qdox.model.*;
+import com.thoughtworks.qdox.model.DocletTag;
+import com.thoughtworks.qdox.model.JavaAnnotation;
+import com.thoughtworks.qdox.model.JavaClass;
+import com.thoughtworks.qdox.model.JavaField;
+import com.thoughtworks.qdox.model.JavaGenericDeclaration;
+import com.thoughtworks.qdox.model.JavaMethod;
+import com.thoughtworks.qdox.model.JavaParameterizedType;
+import com.thoughtworks.qdox.model.JavaType;
+import com.thoughtworks.qdox.model.JavaTypeVariable;
 import com.thoughtworks.qdox.model.expression.AnnotationValue;
 import com.thoughtworks.qdox.model.expression.AnnotationValueList;
 import com.thoughtworks.qdox.model.expression.Expression;
 import com.thoughtworks.qdox.model.expression.TypeRef;
 import com.thoughtworks.qdox.model.impl.DefaultJavaField;
 import com.thoughtworks.qdox.model.impl.DefaultJavaParameterizedType;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Handle JavaClass
@@ -145,8 +158,7 @@ public class JavaClassUtil {
                         JavaClassValidateUtil.isIgnoreFieldTypes(subTypeName)) {
                     continue;
                 }
-                if (fieldName.startsWith("is") && ("boolean".equals(subTypeName)
-                        || DocGlobalConstants.JAVA_BOOLEAN.equals(subTypeName))) {
+                if (fieldName.startsWith("is") && ("boolean".equals(subTypeName))) {
                     fieldName = StringUtil.firstToLowerCase(fieldName.substring(2));
                 }
 

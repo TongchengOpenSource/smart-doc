@@ -148,6 +148,8 @@ public class ParamsBuildHelper {
                     }
                 }
                 boolean strRequired = false;
+                //是否废弃
+                boolean deprecated = false;
                 int annotationCounter = 0;
                 CustomField customResponseField = responseFieldMap.get(simpleName + "." + fieldName);
                 if (customResponseField != null && JavaClassUtil.isTargetChildClass(simpleName, customResponseField.getOwnerClassName())
@@ -175,7 +177,9 @@ public class ParamsBuildHelper {
                     if (!Objects.isNull(annotationValue)) {
                         maxLength = annotationValue.toString();
                     }
-
+                    if (DocAnnotationConstants.DEPRECATED.equals(simpleAnnotationName)) {
+                        deprecated =true;
+                    }
                     if (DocAnnotationConstants.JSON_PROPERTY.equalsIgnoreCase(simpleAnnotationName)) {
                         AnnotationValue value = annotation.getProperty("access");
                         if (Objects.nonNull(value)) {
@@ -279,6 +283,7 @@ public class ParamsBuildHelper {
                     ApiParam param = ApiParam.of().setField(pre + fieldName).setType("file")
                             .setPid(pid).setId(paramList.size() + pid + 1)
                             .setMaxLength(maxLength)
+                            .setDeprecated(deprecated)
                             .setDesc(comment).setRequired(Boolean.valueOf(isRequired)).setVersion(since);
                     paramList.add(param);
                     continue;
@@ -291,6 +296,7 @@ public class ParamsBuildHelper {
                     param.setPid(pid).setMaxLength(maxLength).setValue(fieldValue);
                     String processedType = isShowJavaType ? typeSimpleName : DocClassUtil.processTypeNameForParams(typeSimpleName.toLowerCase());
                     param.setType(processedType);
+                    param.setDeprecated(deprecated);
                     if (StringUtil.isNotEmpty(comment)) {
                         commonHandleParam(paramList, param, isRequired, comment, since, strRequired);
                     } else {
@@ -325,6 +331,7 @@ public class ParamsBuildHelper {
                         processedType = isShowJavaType ? typeSimpleName : DocClassUtil.processTypeNameForParams(typeSimpleName.toLowerCase());
                     }
                     param.setType(processedType);
+                    param.setDeprecated(deprecated);
                     JavaClass javaClass = field.getType();
                     if (javaClass.isEnum()) {
                         comment = comment + handleEnumComment(javaClass, projectBuilder);

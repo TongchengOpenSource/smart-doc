@@ -22,27 +22,68 @@
  */
 package com.power.doc.template;
 
-import com.power.common.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import com.power.common.util.CollectionUtil;
+import com.power.common.util.RandomUtil;
+import com.power.common.util.StringUtil;
+import com.power.common.util.UrlUtil;
+import com.power.common.util.ValidateUtil;
 import com.power.doc.builder.ProjectDocConfigBuilder;
-import com.power.doc.constants.*;
+import com.power.doc.constants.ApiReqParamInTypeEnum;
+import com.power.doc.constants.DocAnnotationConstants;
+import com.power.doc.constants.DocGlobalConstants;
+import com.power.doc.constants.DocTags;
+import com.power.doc.constants.Methods;
+import com.power.doc.constants.SpringMvcAnnotations;
+import com.power.doc.constants.SpringMvcRequestAnnotationsEnum;
 import com.power.doc.handler.SpringMVCRequestHeaderHandler;
 import com.power.doc.handler.SpringMVCRequestMappingHandler;
 import com.power.doc.helper.FormDataBuildHelper;
 import com.power.doc.helper.JsonBuildHelper;
 import com.power.doc.helper.ParamsBuildHelper;
-import com.power.doc.model.*;
+import com.power.doc.model.ApiConfig;
+import com.power.doc.model.ApiDoc;
+import com.power.doc.model.ApiMethodDoc;
+import com.power.doc.model.ApiMethodReqParam;
+import com.power.doc.model.ApiParam;
+import com.power.doc.model.ApiReqParam;
+import com.power.doc.model.DocJavaMethod;
+import com.power.doc.model.FormData;
 import com.power.doc.model.request.ApiRequestExample;
 import com.power.doc.model.request.CurlRequest;
 import com.power.doc.model.request.RequestMapping;
-import com.power.doc.utils.*;
-import com.thoughtworks.qdox.model.*;
+import com.power.doc.utils.ApiParamTreeUtil;
+import com.power.doc.utils.CurlUtil;
+import com.power.doc.utils.DocClassUtil;
+import com.power.doc.utils.DocPathUtil;
+import com.power.doc.utils.DocUtil;
+import com.power.doc.utils.JavaClassUtil;
+import com.power.doc.utils.JavaClassValidateUtil;
+import com.power.doc.utils.JsonUtil;
+import com.power.doc.utils.OpenApiSchemaUtil;
+import com.thoughtworks.qdox.model.DocletTag;
+import com.thoughtworks.qdox.model.JavaAnnotation;
+import com.thoughtworks.qdox.model.JavaClass;
+import com.thoughtworks.qdox.model.JavaMethod;
+import com.thoughtworks.qdox.model.JavaParameter;
+import com.thoughtworks.qdox.model.JavaType;
 import com.thoughtworks.qdox.model.expression.AnnotationValue;
 
-import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.logging.Logger;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static com.power.doc.constants.DocGlobalConstants.*;
 import static com.power.doc.constants.DocTags.IGNORE;
@@ -683,11 +724,22 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             if (requestFieldToUnderline) {
                 paramName = StringUtil.camelToUnderline(paramName);
             }
+            List<JavaAnnotation> annotations = parameter.getAnnotations();
+            //是否废弃
+            boolean deprecated = false;
             //file upload
             if (JavaClassValidateUtil.isFile(typeName)) {
+                for (JavaAnnotation annotation : annotations) {
+                    if (Objects.equals(DocAnnotationConstants.DEPRECATED, annotation.getType().getValue())) {
+                        deprecated = true;
+                        break;
+                    }
+                }
+
                 ApiParam param = ApiParam.of().setField(paramName).setType("file")
                         .setId(paramList.size() + 1).setQueryParam(true)
                         .setRequired(true).setVersion(DocGlobalConstants.DEFAULT_VERSION)
+                        .setDeprecated(deprecated)
                         .setDesc(comment);
                 if (typeName.contains("[]") || typeName.endsWith(">")) {
                     comment = comment + "(array of file)";
@@ -699,7 +751,6 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             }
             String mockValue = createMockValue(paramsComments, paramName, typeName, simpleTypeName);
             JavaClass javaClass = builder.getJavaProjectBuilder().getClassByName(fullTypeName);
-            List<JavaAnnotation> annotations = parameter.getAnnotations();
             List<String> groupClasses = JavaClassUtil.getParamGroupJavaClass(annotations);
             String strRequired = "false";
             boolean isPathVariable = false;
@@ -735,6 +786,11 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                         strRequired = annotationRequired.toString();
                     } else {
                         strRequired = "true";
+                    }
+                    if (Objects.equals(annotation.getType().getValue(), DocAnnotationConstants.DEPRECATED)) {
+                        deprecated = true;
+                    } else {
+                        deprecated = false;
                     }
                 }
                 if (JavaClassValidateUtil.isJSR303Required(annotationName)) {
@@ -777,6 +833,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                             .setPathParam(isPathVariable)
                             .setQueryParam(queryParam)
                             .setId(paramList.size() + 1)
+                            .setDeprecated(deprecated)
                             .setType("array").setValue(String.valueOf(value));
                     paramList.add(param);
                     if (requestBodyCounter > 0) {
@@ -792,6 +849,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                             .setPathParam(isPathVariable)
                             .setQueryParam(queryParam)
                             .setId(paramList.size() + 1)
+                            .setDeprecated(deprecated)
                             .setType("array")
                             .setValue(DocUtil.getValByTypeAndFieldName(gicName, paramName));
                     paramList.add(param);
@@ -821,6 +879,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                         .setValue(mockValue)
                         .setDesc(comment)
                         .setRequired(required)
+                        .setDeprecated(deprecated)
                         .setVersion(DocGlobalConstants.DEFAULT_VERSION);
                 paramList.add(param);
                 if (requestBodyCounter > 0) {
@@ -840,6 +899,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                             .setQueryParam(queryParam)
                             .setDesc(comment)
                             .setRequired(required)
+                            .setDeprecated(deprecated)
                             .setVersion(DocGlobalConstants.DEFAULT_VERSION);
                     paramList.add(apiParam);
                     if (requestBodyCounter > 0) {
@@ -858,6 +918,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                             .setQueryParam(queryParam)
                             .setDesc(comment)
                             .setRequired(required)
+                            .setDeprecated(deprecated)
                             .setVersion(DocGlobalConstants.DEFAULT_VERSION);
                     paramList.add(apiParam);
                     if (requestBodyCounter > 0) {
@@ -883,6 +944,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                         .setType("enum").setDesc(StringUtil.removeQuotes(o))
                         .setRequired(required)
                         .setVersion(DocGlobalConstants.DEFAULT_VERSION)
+                        .setDeprecated(deprecated)
                         .setEnumValues(JavaClassUtil.getEnumValues(javaClass));
                 paramList.add(param);
             } else {

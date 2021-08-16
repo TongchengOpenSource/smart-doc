@@ -11,6 +11,7 @@ api.push({
 api[${apiLP.dataIndex}].list.push({
     order: '${doc.order}',
     desc: '${removeLineBreaks(doc.desc)}',
+    url: '${doc.url}'
 });
 <%}%>
 <%}%>
@@ -38,9 +39,9 @@ function keyDownSearch(e) {
                 for (let j = 0; j < methodList.length; j++) {
                     const methodData = methodList[j];
                     const methodDesc = methodData.desc;
-                    if (methodDesc.indexOf(searchValue) > -1) {
+                    const methodUrl = methodData.url;
+                    if (methodDesc.indexOf(searchValue) > -1 || methodUrl.indexOf(searchValue) > -1) {
                         methodListTemp.push(methodData);
-                        break;
                     }
                 }
                 if (methodListTemp.length > 0) {
@@ -58,12 +59,12 @@ function keyDownSearch(e) {
         if (searchValue == '') {
             const liClass = "";
             const display = "display: none";
-            html = buildAccordion(api,liClass,display);
+            html = buildAccordion(searchArr,liClass,display,searchValue);
             document.getElementById('accordion').innerHTML = html;
         } else {
             const liClass = "open";
             const display = "display: block";
-            html = buildAccordion(searchArr,liClass,display);
+            html = buildAccordion(searchArr,liClass,display,searchValue);
             document.getElementById('accordion').innerHTML = html;
         }
         const Accordion = function (el, multiple) {
@@ -85,11 +86,11 @@ function keyDownSearch(e) {
     }
 }
 
-function buildAccordion(apiData, liClass, display) {
+function buildAccordion(apiData, liClass, display, searchValue) {
     let html = "";
     let doc;
     if (apiData.length > 0) {
-        for (let j = 0; j < apiData.length; j++) {
+         for (let j = 0; j < apiData.length; j++) {
             html += '<li class="'+liClass+'">';
             html += '<a class="dd" href="#_' + apiData[j].link + '">' + apiData[j].order + '.&nbsp;' + apiData[j].desc + '</a>';
             html += '<ul class="sectlevel2" style="'+display+'">';
