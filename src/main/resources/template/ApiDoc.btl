@@ -8,83 +8,83 @@ for(doc in list){
 <%}else{%>
 ## ${doc.desc}
 <%}%>
-**URL:** `${doc.url}`
+**${templateMap.url}:** `${doc.url}`
 
-**Type:** `${doc.type}`
+**${templateMap.type}:** `${doc.type}`
 
 <%if(isNotEmpty(doc.author)){%>
-**Author:** ${doc.author}
+**${templateMap.author}:** ${doc.author}
 <%}%>
 
-**Content-Type:** `${doc.contentType}`
+**${templateMap.contentType}:** `${doc.contentType}`
 
-**Description:** ${doc.detail}
+**${templateMap.description}:** ${doc.detail}
 
 <%if(isNotEmpty(doc.headers)){%>
-**Request-headers:**
+**${templateMap.requestHeaders}:**
 
-Header | Type|Description|Required|Since
+${templateMap.paramParameter} | ${templateMap.paramType}|${templateMap.paramDescription}|${templateMap.paramRequired}|${templateMap.since}
 ---|---|---|---|----
 ${doc.headers}
 <%}%>
 
 <%if(isNotEmpty(doc.pathParams)){%>
-**Path-parameters:**
+**${templateMap.pathParameters}:**
 
-Parameter|Type|Description|Required|Since
+${templateMap.paramParameter}|${templateMap.paramType}|${templateMap.paramDescription}|${templateMap.paramRequired}|${templateMap.since}
 ---|---|---|---|---
 <%
 for(param in doc.pathParams){
 %>
-${param.field}|${param.type}|${param.desc}|${param.required}|${param.version}
+<%if(param.deprecated){%>~~${param.field}~~<%}else{%>${param.field}<%}%>|${param.type}|${param.desc}|${param.required}|${param.version}
 <%}%>
 <%}%>
 
 <%if(isNotEmpty(doc.queryParams)){%>
-**Query-parameters:**
+**${templateMap.queryParameters}:**
 
-Parameter|Type|Description|Required|Since
+${templateMap.paramParameter}|${templateMap.paramType}|${templateMap.paramDescription}|${templateMap.paramRequired}|${templateMap.since}
 ---|---|---|---|---
 <%
 for(param in doc.queryParams){
 %>
-${param.field}|${param.type}|${param.desc}|${param.required}|${param.version}
+<%if(param.deprecated){%>~~${param.field}~~<%}else{%>${param.field}<%}%>|${param.type}|${param.desc}|${param.required}|${param.version}
 <%}%>
 <%}%>
 
 <%if(isNotEmpty(doc.requestParams)){%>
-**Body-parameters:**
+**${templateMap.bodyParameters}:**
 
-Parameter|Type|Description|Required|Since
+${templateMap.paramParameter}|${templateMap.paramType}|${templateMap.paramDescription}|${templateMap.paramRequired}|${templateMap.since}
 ---|---|---|---|---
 <%
 for(param in doc.requestParams){
 %>
-${param.field}|${param.type}|${param.desc}|${param.required}|${param.version}
+<%if(param.deprecated){%>~~${param.field}~~<%}else{%>${param.field}<%}%>|${param.type}|${param.desc}|${param.required}|${param.version}
 <%}%>
 <%}%>
 
 <%if(isNotEmpty(doc.requestUsage)&&isRequestExample){%>
-**Request-example:**
-```
+**${templateMap.requestExample}:**
+```json
 ${doc.requestUsage}
 ```
 <%}%>
 <%if(isNotEmpty(doc.responseParams)){%>
-**Response-fields:**
+**${templateMap.responseFields}:**
 
-Field | Type|Description|Since
+${templateMap.paramParameter} | ${templateMap.paramType}|${templateMap.paramDescription}|${templateMap.since}
 ---|---|---|---
 <%
 for(param in doc.responseParams){
 %>
-${param.field}|${param.type}|${param.desc}|${param.version}
+<%if(param.deprecated){%>~~${param.field}~~<%}else{%>${param.field}<%}%>|${param.type}|${param.desc}|${param.version}
 <%}%>
 <%}%>
 
 <%if(isNotEmpty(doc.responseUsage)&&isResponseExample){%>
-**Response-example:**
-```
+**${templateMap.responseExample}:**
+```json
 ${doc.responseUsage}
 ```
 <%}%>

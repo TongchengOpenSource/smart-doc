@@ -12,10 +12,13 @@ public class RemoveLineBreaksForHref implements Function {
 
   @Override
   public String call(Object[] paras, Context ctx) {
-    String str = String.valueOf(paras[0])
+    return call(String.valueOf(paras[0]));
+  }
+
+  public static String call(String s) {
+    return String.valueOf(s)
         .replaceAll(" ","%20")
         .replaceAll("\n", "%20")
         .replaceAll("\r","%20");
-    return str;
   }
 }

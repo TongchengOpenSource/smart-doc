@@ -22,6 +22,15 @@
  */
 package com.power.doc.builder;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import org.beetl.core.Template;
+
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.DateTimeUtil;
 import com.power.common.util.FileUtil;
@@ -29,17 +38,18 @@ import com.power.doc.constants.DocLanguage;
 import com.power.doc.constants.HighlightStyle;
 import com.power.doc.constants.TemplateVariable;
 import com.power.doc.factory.BuildTemplateFactory;
-import com.power.doc.model.*;
+import com.power.doc.function.RemoveLineBreaks;
+import com.power.doc.model.ApiAllData;
+import com.power.doc.model.ApiConfig;
+import com.power.doc.model.ApiDoc;
+import com.power.doc.model.ApiDocDict;
+import com.power.doc.model.ApiErrorCode;
+import com.power.doc.model.ApiMethodDoc;
 import com.power.doc.template.IDocBuildTemplate;
 import com.power.doc.utils.BeetlTemplateUtil;
 import com.power.doc.utils.DocUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
-import org.beetl.core.Template;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
 import static com.power.doc.constants.DocGlobalConstants.*;
 
@@ -81,12 +91,38 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
         FileUtil.mkdirs(config.getOutPath());
         for (ApiDoc doc : apiDocList) {
             Template mapper = BeetlTemplateUtil.getByName(template);
+            mapper.binding(TemplateVariable.TEMPLATE_MAP.getVariable(), DocLanguage.getLanguageMap(config.getLanguage()));
             mapper.binding(TemplateVariable.DESC.getVariable(), doc.getDesc());
             mapper.binding(TemplateVariable.NAME.getVariable(), doc.getName());
             mapper.binding(TemplateVariable.LIST.getVariable(), doc.getList());
             mapper.binding(TemplateVariable.REQUEST_EXAMPLE.getVariable(), config.isRequestExample());
             mapper.binding(TemplateVariable.RESPONSE_EXAMPLE.getVariable(), config.isResponseExample());
             FileUtil.nioWriteFile(mapper.render(), config.getOutPath() + FILE_SEPARATOR + doc.getName() + fileExtension);
+        }
+    }
+
+    /**
+     * Generate api documentation for one api.
+     *
+     * @param apiDoc        api doc
+     * @param config        api config
+     * @param template      template
+     * @param fileExtension file extension
+     */
+    public void buildApiDoc(ApiDoc apiDoc, ApiConfig config, String template, String fileExtension) {
+        FileUtil.mkdirs(config.getOutPath());
+        List<ApiMethodDoc> list = apiDoc.getList();
+        for (ApiMethodDoc apiMethodDoc : list) {
+            Template mapper = BeetlTemplateUtil.getByName(template);
+            mapper.binding(TemplateVariable.TEMPLATE_MAP.getVariable(), DocLanguage.getLanguageMap(config.getLanguage()));
+            mapper.binding(TemplateVariable.DESC.getVariable(), apiDoc.getDesc());
+            mapper.binding(TemplateVariable.NAME.getVariable(), apiDoc.getName());
+            mapper.binding(TemplateVariable.LIST.getVariable(), Stream.of(apiMethodDoc).collect(Collectors.toList()));
+            mapper.binding(TemplateVariable.REQUEST_EXAMPLE.getVariable(), config.isRequestExample());
+            mapper.binding(TemplateVariable.RESPONSE_EXAMPLE.getVariable(), config.isResponseExample());
+            FileUtil.nioWriteFile(mapper.render(),
+                    config.getOutPath() + FILE_SEPARATOR + RemoveLineBreaks.call(apiMethodDoc.getDesc())
+                            + fileExtension);
         }
     }
 
@@ -123,6 +159,7 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
         List<ApiErrorCode> errorCodeList = DocUtil.errorCodeDictToList(config);
         Template tpl = BeetlTemplateUtil.getByName(template);
         String style = config.getStyle();
+        tpl.binding(TemplateVariable.TEMPLATE_MAP.getVariable(), DocLanguage.getLanguageMap(config.getLanguage()));
         tpl.binding(TemplateVariable.STYLE.getVariable(), style);
         tpl.binding(TemplateVariable.BACKGROUND.getVariable(), HighlightStyle.getBackgroundColor(style));
         tpl.binding(TemplateVariable.API_DOC_LIST.getVariable(), apiDocList);
@@ -144,6 +181,15 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
             tpl.binding(TemplateVariable.DESC.getVariable(), apiDoc.getDesc());
             tpl.binding(TemplateVariable.ORDER.getVariable(), apiDoc.order);
             tpl.binding(TemplateVariable.LIST.getVariable(), apiDoc.getList());//类名
+            if(config.isHtmlWithMarkdown()){
+                buildApiDoc(apiDoc, config, API_DOC_MD_TPL, ".md");
+            }
+        }else{
+            if(config.isHtmlWithMarkdown()){
+                for (ApiDoc doc : apiDocList) {
+                    buildApiDoc(doc, config, API_DOC_MD_TPL, ".md");
+                }
+            }
         }
         setDirectoryLanguageVariable(config, tpl);
         List<ApiDocDict> apiDocDictList = DocUtil.buildDictionary(config, javaProjectBuilder);
@@ -188,6 +234,7 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
         apiDoc1.setList(methodDocs);
         apiDocs.add(apiDoc1);
         tpl.binding(TemplateVariable.API_DOC_LIST.getVariable(), apiDocs);
+        tpl.binding(TemplateVariable.TEMPLATE_MAP.getVariable(), DocLanguage.getLanguageMap(config.getLanguage()));
         FileUtil.nioWriteFile(tpl.render(), config.getOutPath() + FILE_SEPARATOR + SEARCH_JS_OUT);
     }
 
@@ -203,7 +250,9 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
         List<ApiErrorCode> errorCodeList = DocUtil.errorCodeDictToList(config);
         String strTime = DateTimeUtil.long2Str(now, DateTimeUtil.DATE_FORMAT_SECOND);
         Template tpl = BeetlTemplateUtil.getByName(template);
+        setDirectoryLanguageVariable(config,tpl);
         setCssCDN(config, tpl);
+        tpl.binding(TemplateVariable.TEMPLATE_MAP.getVariable(), DocLanguage.getLanguageMap(config.getLanguage()));
         tpl.binding(TemplateVariable.CREATE_TIME.getVariable(), strTime);
         tpl.binding(TemplateVariable.LIST.getVariable(), errorCodeList);
         FileUtil.nioWriteFile(tpl.render(), config.getOutPath() + FILE_SEPARATOR + outPutFileName);
@@ -243,8 +292,8 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
         errorTemplate.binding(TemplateVariable.BACKGROUND.getVariable(), HighlightStyle.getBackgroundColor(style));
         errorTemplate.binding(TemplateVariable.ERROR_CODE_LIST.getVariable(), errorCodeList);
         setDirectoryLanguageVariable(config, errorTemplate);
+        errorTemplate.binding(TemplateVariable.TEMPLATE_MAP.getVariable(), DocLanguage.getLanguageMap(config.getLanguage()));
         FileUtil.nioWriteFile(errorTemplate.render(), config.getOutPath() + FILE_SEPARATOR + outPutFileName);
-
     }
 
     /**
@@ -286,6 +335,7 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
         mapper.binding(TemplateVariable.BACKGROUND.getVariable(), HighlightStyle.getBackgroundColor(style));
         mapper.binding(TemplateVariable.ERROR_CODE_LIST.getVariable(), errorCodeList);
         setDirectoryLanguageVariable(config, mapper);
+        mapper.binding(TemplateVariable.TEMPLATE_MAP.getVariable(), DocLanguage.getLanguageMap(config.getLanguage()));
         mapper.binding(TemplateVariable.DICT_LIST.getVariable(), directoryList);
         FileUtil.nioWriteFile(mapper.render(), config.getOutPath() + FILE_SEPARATOR + outPutFileName);
     }
@@ -307,6 +357,7 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
         String strTime = DateTimeUtil.long2Str(now, DateTimeUtil.DATE_FORMAT_SECOND);
         mapper.binding(TemplateVariable.CREATE_TIME.getVariable(), strTime);
         mapper.binding(TemplateVariable.DICT_LIST.getVariable(), directoryList);
+        mapper.binding(TemplateVariable.TEMPLATE_MAP.getVariable(), DocLanguage.getLanguageMap(config.getLanguage()));
         FileUtil.nioWriteFile(mapper.render(), config.getOutPath() + FILE_SEPARATOR + outPutFileName);
     }
 

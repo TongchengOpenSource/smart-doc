@@ -1,7 +1,7 @@
 
-# Error code list
+# ${templateMap.errorCodeList}
 
-Error code |Description
+${templateMap.errorCode} |${templateMap.paramDescription}
 ---|---
 <%
 for(error in list){

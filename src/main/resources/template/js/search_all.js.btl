@@ -5,12 +5,15 @@ api.push({
     order: '${api.order}',
     link: '${removeLineBreaks(api.link)}',
     desc: '${removeLineBreaks(api.desc)}',
+    href: '${RemoveLineBreaksForHref(api.desc)}',
     list: []
 })
 <%for(doc in api.list) {%>
 api[${apiLP.dataIndex}].list.push({
     order: '${doc.order}',
+    deprecated: '${doc.deprecated}',
     desc: '${removeLineBreaks(doc.desc)}',
+    href: '${RemoveLineBreaksForHref(doc.desc)}',
     url: '${doc.url}'
 });
 <%}%>
@@ -30,6 +33,7 @@ function keyDownSearch(e) {
                 searchArr.push({
                     order: apiData.order,
                     desc: apiData.desc,
+                    href: apiData.href,
                     link: apiData.link,
                     list: apiData.list
                 });
@@ -48,6 +52,7 @@ function keyDownSearch(e) {
                     const data = {
                         order: apiData.order,
                         desc: apiData.desc,
+                        href: apiData.href,
                         link: apiData.link,
                         list: methodListTemp
                     };
@@ -96,7 +101,13 @@ function buildAccordion(apiData, liClass, display, searchValue) {
             html += '<ul class="sectlevel2" style="'+display+'">';
             doc = apiData[j].list;
             for (let m = 0; m < doc.length; m++) {
-                html += '<li><a href="#_' + apiData[j].order + '_' + doc[m].order + '_' + doc[m].desc + '">' + apiData[j].order + '.' + doc[m].order + '.&nbsp;' + doc[m].desc + '</a> </li>';
+                let spanString;
+                if (doc[m].deprecated == 'true') {
+                    spanString='<span class="line-through">';
+                } else {
+                    spanString='<span>';
+                }
+                html += '<li><a href="#_' + apiData[j].order + '_' + doc[m].order + '_' + doc[m].href + '">' + apiData[j].order + '.' + doc[m].order + '.&nbsp;' + spanString + doc[m].desc + '<span></a> </li>';
             }
             html += '</ul>';
             html += '</li>';

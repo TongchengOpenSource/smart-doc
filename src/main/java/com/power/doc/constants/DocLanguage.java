@@ -22,14 +22,108 @@
  */
 package com.power.doc.constants;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * language support
  *
  * @author yu 2019/9/21.
  */
 public enum DocLanguage {
+    /**
+     * 英文
+     */
     ENGLISH("en-US"),
+    /**
+     * 中文
+     */
     CHINESE("zh-CN");
+
+    /**
+     * 模版常量
+     */
+    public static Map<String, String> getLanguageMap(DocLanguage language) {
+        Map<String, String> languageMap = new HashMap<>();
+        String url = "URL";
+        String type = "Type";
+        String author = "Author";
+        String contentType = "Content-Type";
+        String description = "Description";
+        String requestHeaders = "Request-headers";
+        String queryParameters = "Query-parameters";
+        String paramParameter = "Parameter";
+        String paramValue = "Value";
+        String paramType = "Type";
+        String paramRequired = "Required";
+        String paramDescription = "Description";
+        String responseFields = "Response-fields";
+        String since = "Since";
+        String pathParameters = "Path-parameters";
+        String requestExample = "Request-example";
+        String responseExample = "Response-example";
+        String requestBody = "Request-body";
+        String bodyParameters = "Body-parameters";
+        String curlExample = "Curl-example";
+        String sendRequest = "Send Request";
+        String apiReference = "API Reference";
+        String typeToSearch = "Type to search";
+        String errorCodeList = "Error Code List";
+        String errorCode = "Error Code";
+        if (language == CHINESE) {
+            url = "接口地址";
+            type = "请求方式";
+            author = "作者";
+            contentType = "请求格式";
+            description = "接口说明";
+            requestHeaders = "请求头";
+            queryParameters = "请求参数";
+            bodyParameters = "请求体";
+            paramParameter = "参数名";
+            paramValue = "参数值";
+            paramType = "参数类型";
+            paramRequired = "是否必填";
+            paramDescription = "参数注释";
+            responseFields = "返回参数";
+            since = "添加自";
+            pathParameters = "URL路径参数";
+            requestExample = "请求示例";
+            responseExample = "返回示例";
+            requestBody = "请求体";
+            curlExample = "curl 代码示例";
+            sendRequest = "发起请求";
+            apiReference = "接口目录";
+            typeToSearch = "请输入关键字或URL路径搜索...";
+            errorCode = "错误码";
+            errorCodeList = "错误码列表";
+        }
+        languageMap.put("url", url);
+        languageMap.put("type", type);
+        languageMap.put("author", author);
+        languageMap.put("contentType", contentType);
+        languageMap.put("description", description);
+        languageMap.put("requestHeaders", requestHeaders);
+        languageMap.put("paramParameter", paramParameter);
+        languageMap.put("paramValue", paramValue);
+        languageMap.put("paramType", paramType);
+        languageMap.put("paramRequired", paramRequired);
+        languageMap.put("paramDescription", paramDescription);
+        languageMap.put("responseFields", responseFields);
+        languageMap.put("since", since);
+        languageMap.put("requestExample", requestExample);
+        languageMap.put("responseExample", responseExample);
+        languageMap.put("requestBody", requestBody);
+        languageMap.put("queryParameters", queryParameters);
+        languageMap.put("pathParameters", pathParameters);
+        languageMap.put("bodyParameters", bodyParameters);
+        languageMap.put("curlExample", curlExample);
+        languageMap.put("sendRequest", sendRequest);
+        languageMap.put("apiReference", apiReference);
+        languageMap.put("typeToSearch", typeToSearch);
+        languageMap.put("errorCode", errorCode);
+        languageMap.put("errorCodeList", errorCodeList);
+        return languageMap;
+    }
 
     public String code;
 

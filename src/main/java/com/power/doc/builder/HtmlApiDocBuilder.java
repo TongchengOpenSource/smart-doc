@@ -132,5 +132,9 @@ public class HtmlApiDocBuilder {
                     doc.getAlias() + ".html", doc, indexHtml);
             index++;
         }
+        if(config.isHtmlWithMarkdown()){
+            builderTemplate.buildErrorCodeDoc(config, ERROR_CODE_LIST_MD_TPL, ERROR_CODE_LIST_MD);
+            builderTemplate.buildDirectoryDataDoc(config, javaProjectBuilder, DICT_LIST_MD_TPL, DICT_LIST_MD);
+        }
     }
 }

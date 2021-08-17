@@ -5,7 +5,7 @@ for(dict in dictList){
 %>
 ## ${dict.title}
 
-Code |Type|Description
+${templateMap.paramValue} |${templateMap.paramType}|${templateMap.paramDescription}
 ---|---|---
 <%
 for(dataDict in dict.dataDictList){

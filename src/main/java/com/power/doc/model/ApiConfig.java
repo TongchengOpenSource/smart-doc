@@ -28,6 +28,7 @@ import com.power.doc.model.rpc.RpcApiDependency;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Description:
@@ -128,6 +129,11 @@ public class ApiConfig {
      * adoc flag
      */
     private boolean adoc;
+
+    /**
+     * 生成html的时候, 同时生成markdown版本的文档;
+     */
+    private boolean htmlWithMarkdown;
 
 
     /**
@@ -786,7 +792,7 @@ public class ApiConfig {
     }
 
     public String getStyle() {
-        return style;
+        return Optional.ofNullable(style).orElse("atom-one-dark");
     }
 
     public void setStyle(String style) {
@@ -963,5 +969,13 @@ public class ApiConfig {
                 .append(framework).append('\"');
         sb.append('}');
         return sb.toString();
+    }
+
+    public boolean isHtmlWithMarkdown() {
+        return htmlWithMarkdown;
+    }
+
+    public void setHtmlWithMarkdown(boolean htmlWithMarkdown) {
+        this.htmlWithMarkdown = htmlWithMarkdown;
     }
 }

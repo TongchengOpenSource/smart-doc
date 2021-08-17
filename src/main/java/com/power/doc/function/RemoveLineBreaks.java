@@ -10,10 +10,13 @@ public class RemoveLineBreaks implements Function {
 
   @Override
   public String call(Object[] paras, Context ctx) {
-    String str = String.valueOf(paras[0])
-        .replaceAll(" ","")
-        .replaceAll("\n", " ")
-        .replaceAll("\r"," ");
-    return str;
+    return call(String.valueOf(paras[0]));
+  }
+
+  public static String call(String s) {
+    return String.valueOf(s)
+            .replaceAll(" ","")
+            .replaceAll("\n", "")
+            .replaceAll("\r","");
   }
 }
