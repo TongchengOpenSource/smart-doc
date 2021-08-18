@@ -122,7 +122,6 @@ public class JsonBuildHelper {
     public static String buildJson(String typeName, String genericCanonicalName,
                                    boolean isResp, int counter, Map<String, String> registryClasses, ProjectDocConfigBuilder builder) {
 
-        //存储泛型所对应的实体类
         Map<String, String> genericMap = new HashMap<>(10);
         JavaClass javaClass = builder.getJavaProjectBuilder().getClassByName(typeName);
         ApiConfig apiConfig = builder.getApiConfig();
@@ -153,7 +152,7 @@ public class JsonBuildHelper {
 
         data0.append("{");
         String[] globGicName = DocClassUtil.getSimpleGicName(genericCanonicalName);
-        //添加泛型对应关系
+
         JavaClassUtil.genericParamMap(genericMap, cls, globGicName);
         StringBuilder data = new StringBuilder();
         if (JavaClassValidateUtil.isCollection(typeName) || JavaClassValidateUtil.isArray(typeName)) {

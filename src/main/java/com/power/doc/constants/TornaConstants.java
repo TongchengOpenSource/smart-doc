@@ -72,7 +72,7 @@ public class TornaConstants {
             if (StringUtils.isNotBlank(data)) {
                 data = URLEncoder.encode(data, "utf-8");
             }
-            // 公共参数
+            // Public request parameters for pushing documents to Torna
             param.put("name", name);
             param.put("app_key", config.getAppKey());
             param.put("data", data);
@@ -112,23 +112,16 @@ public class TornaConstants {
     }
 
     /**
-     * 生成md5,全部大写
+     * Generate md5 and convert to uppercase
      *
-     * @param message 消息
+     * @param message message
      * @return String
      */
     public static String md5(String message) {
         try {
-            // 1 创建一个提供信息摘要算法的对象，初始化为md5算法对象
             MessageDigest md = MessageDigest.getInstance("MD5");
-
-            // 2 将消息变成byte数组
             byte[] input = message.getBytes();
-
-            // 3 计算后获得字节数组,这就是那128位了
             byte[] buff = md.digest(input);
-
-            // 4 把数组每一字节（一个字节占八位）换成16进制连成md5字符串
             return byte2hex(buff);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -136,8 +129,7 @@ public class TornaConstants {
     }
 
     /**
-     * 二进制转十六进制字符串
-     *
+     * Convert byte array to hex
      * @param bytes byte array
      * @return String
      */

@@ -1,25 +1,25 @@
 package com.power.doc.constants;
 
 /**
- * 请求参数所在位置
- *
  * @author chen qi 2021-07-15 10:55
- *
  **/
 public enum ApiReqParamInTypeEnum {
 
     /**
-     * 请求头参数
+     * header param
      */
     HEADER("header"),
+
     /**
-     * query 参数
+     * query param
      */
     QUERY("query"),
+
     /**
-     *  path参数
+     * path param
      */
     PATH("path");
+
     private final String value;
 
     ApiReqParamInTypeEnum(String value) {

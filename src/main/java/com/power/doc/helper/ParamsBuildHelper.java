@@ -53,7 +53,6 @@ public class ParamsBuildHelper {
                                              Map<String, String> registryClasses, ProjectDocConfigBuilder projectBuilder,
                                              List<String> groupClasses, int pid, boolean jsonRequest) {
 
-        //存储泛型所对应的实体类
         Map<String, String> genericMap = new HashMap<>(10);
 
         if (StringUtil.isEmpty(className)) {
@@ -80,7 +79,7 @@ public class ParamsBuildHelper {
         String simpleName = DocClassUtil.getSimpleName(className);
         String[] globGicName = DocClassUtil.getSimpleGicName(className);
         JavaClass cls = projectBuilder.getClassByName(simpleName);
-        //如果存在泛型 则将泛型与类名的对应关系存起来
+
         JavaClassUtil.genericParamMap(genericMap, cls, globGicName);
         List<DocJavaField> fields = JavaClassUtil.getFields(cls, 0, new LinkedHashMap<>());
         if (JavaClassValidateUtil.isPrimitive(simpleName)) {

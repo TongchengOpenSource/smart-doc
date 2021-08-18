@@ -108,10 +108,10 @@ public class RpcTornaBuilder {
         }
         tornaApi.setCommonErrorCodes(buildErrorCode(apiConfig));
         tornaApi.setApis(apisList);
-        //推送文档信息
+        //Build push document information
         Map<String, String> requestJson = TornaConstants.buildParams(PUSH, new Gson().toJson(tornaApi), apiConfig);
 
-        //推送字典信息
+        //Push dictionary information
         Map<String, Object> dicMap = new HashMap<>(2);
         List<TornaDic> docDicts = TornaUtil.buildTornaDic(DocUtil.buildDictionary(apiConfig, builder));
 
@@ -122,9 +122,9 @@ public class RpcTornaBuilder {
             TornaUtil.printDebugInfo(apiConfig, dicResponseMsg, dicRequestJson, ENUM_PUSH);
         }
         Map<String, String> dicRequestJson = TornaConstants.buildParams(ENUM_PUSH, new Gson().toJson(dicMap), apiConfig);
-        //获取返回结果
+        //Get the response result
         String responseMsg = OkHttp3Util.syncPostJson(apiConfig.getOpenUrl(), new Gson().toJson(requestJson));
-        //开启调试时打印请求信息
+        //Print the log of pushing documents to Torna
         TornaUtil.printDebugInfo(apiConfig, responseMsg, requestJson, PUSH);
     }
 }

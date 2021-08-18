@@ -21,11 +21,10 @@ import java.util.Map;
 public class TornaUtil {
 
     public static boolean setDebugEnv(ApiConfig apiConfig, TornaApi tornaApi) {
-        //是否设置测试环境
         boolean hasDebugEnv = StringUtils.isNotBlank(apiConfig.getDebugEnvName())
                 &&
                 StringUtils.isNotBlank(apiConfig.getDebugEnvUrl());
-        //设置测试环境
+        //Set up the test environment
         List<DebugEnv> debugEnvs = new ArrayList<>();
         if (hasDebugEnv) {
             DebugEnv debugEnv = new DebugEnv();
@@ -37,9 +36,9 @@ public class TornaUtil {
         return hasDebugEnv;
     }
 
-    public static void printDebugInfo(ApiConfig apiConfig, String responseMsg, Map<String, String> requestJson,String category) {
+    public static void printDebugInfo(ApiConfig apiConfig, String responseMsg, Map<String, String> requestJson, String category) {
         if (apiConfig.isTornaDebug()) {
-            String sb = "配置信息列表: \n" +
+            String sb = "Configuration information : \n" +
                     "OpenUrl: " +
                     apiConfig.getOpenUrl() +
                     "\n" +
@@ -73,10 +72,10 @@ public class TornaUtil {
      * @return List of Api
      */
     public static List<Apis> buildApis(List<ApiMethodDoc> apiMethodDocs, boolean hasDebugEnv) {
-        //参数列表
+        //Parameter list
         List<Apis> apis = new ArrayList<>();
         Apis methodApi;
-        //遍历分类接口
+        //Iterative classification interface
         for (ApiMethodDoc apiMethodDoc : apiMethodDocs) {
             methodApi = new Apis();
             methodApi.setIsFolder(TornaConstants.NO);
@@ -119,10 +118,10 @@ public class TornaUtil {
      * @return List of Api
      */
     public static List<Apis> buildDubboApis(List<JavaMethodDoc> apiMethodDocs) {
-        //参数列表
+        //Parameter list
         List<Apis> apis = new ArrayList<>();
         Apis methodApi;
-        //遍历分类接口
+        //Iterative classification interface
         for (JavaMethodDoc apiMethodDoc : apiMethodDocs) {
             methodApi = new Apis();
             methodApi.setIsFolder(TornaConstants.NO);
@@ -145,16 +144,10 @@ public class TornaUtil {
     /**
      * build request header
      *
-     * @param apiReqParams 请求头参数列表
+     * @param apiReqParams Request header parameter list
      * @return List of HttpParam
      */
     public static List<HttpParam> buildHerder(List<ApiReqParam> apiReqParams) {
-        /**
-         * name": "token",
-         *                     "required": "1",
-         *                     "example": "iphone12",
-         *                     "description": "商品名称描述"
-         */
         HttpParam httpParam;
         List<HttpParam> headers = new ArrayList<>();
         for (ApiReqParam header : apiReqParams) {
@@ -171,30 +164,12 @@ public class TornaUtil {
     /**
      * build  request response params
      *
-     * @param apiParams 参数列表
+     * @param apiParams Param list
      * @return List of HttpParam
      */
     public static List<HttpParam> buildParams(List<ApiParam> apiParams) {
         HttpParam httpParam;
         List<HttpParam> bodies = new ArrayList<>();
-        /**
-         *                     "name": "goodsName",
-         *                     "type": "string",
-         *                     "required": "1",
-         *                     "maxLength": "128",
-         *                     "example": "iphone12",
-         *                     "description": "商品名称描述",
-         *                     "parentId": "",
-         *                     "enumInfo": {
-         *                         "name": "支付枚举",
-         *                         "description": "支付状态",
-         *                         "items": [
-         *                             {
-         *                                 "name": "WAIT_PAY",
-         *                                 "type": "string",
-         *                                 "value": "0",
-         *                                 "description": "未支付"
-         */
         for (ApiParam apiParam : apiParams) {
             httpParam = new HttpParam();
             httpParam.setName(apiParam.getField());
@@ -240,12 +215,12 @@ public class TornaUtil {
 
     public static List<TornaDic> buildTornaDic(List<ApiDocDict> apiDocDicts) {
         List<TornaDic> dics = new ArrayList<>();
-        TornaDic tornaDic ;
+        TornaDic tornaDic;
         if (CollectionUtil.isNotEmpty(apiDocDicts)) {
             for (ApiDocDict doc : apiDocDicts) {
                 tornaDic = new TornaDic();
                 tornaDic.setName(doc.getTitle())
-                       // .setDescription(doc.getTitle())
+                        // .setDescription(doc.getTitle())
                         .setItems(buildTornaDicItems(doc.getDataDictList()));
                 dics.add(tornaDic);
             }

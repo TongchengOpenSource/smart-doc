@@ -25,25 +25,14 @@ package com.power.doc.model.torna;
 import java.util.List;
 
 /**
- * @author: xingzi 2021/2/25 12:13
+ * @author xingzi 2021/2/25 12:13
  **/
 public class EnumInfo {
-    /**
-     * "enumInfo": {
-     * "name": "支付枚举",
-     * "description": "支付状态",
-     * "items": [
-     * {
-     * "name": "WAIT_PAY",
-     * "type": "string",
-     * "value": "0",
-     * "description": "未支付"
-     * }
-     * ]
-     * }
-     */
+
     private String name;
+
     private String description;
+
     private List<Item> items;
 
     public String getName() {
