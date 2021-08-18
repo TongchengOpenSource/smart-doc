@@ -145,8 +145,7 @@ public class JavaClassUtil {
                         JavaClassValidateUtil.isIgnoreFieldTypes(subTypeName)) {
                     continue;
                 }
-                if (fieldName.startsWith("is") && ("boolean".equals(subTypeName)
-                        || DocGlobalConstants.JAVA_BOOLEAN.equals(subTypeName))) {
+                if (fieldName.startsWith("is") && ("boolean".equals(subTypeName))) {
                     fieldName = StringUtil.firstToLowerCase(fieldName.substring(2));
                 }
 
