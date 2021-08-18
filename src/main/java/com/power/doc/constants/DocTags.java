@@ -119,4 +119,9 @@ public interface DocTags {
      * response tag @since 2.2.0
      */
     String API_RESPONSE = "response";
+
+    /**
+     *  custom @tag
+     */
+    String TAG = "tag";
 }

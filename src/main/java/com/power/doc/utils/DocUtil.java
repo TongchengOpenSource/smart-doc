@@ -45,7 +45,7 @@ import java.util.stream.Collectors;
  */
 public class DocUtil {
 
-    private static Faker faker = new Faker(new Locale(System.getProperty(DocGlobalConstants.DOC_LANGUAGE)));
+    private static Faker faker = new Faker(new Locale("en-US"));
     //private static Faker faker = new Faker(new Locale("smart-doc_language"));
     private static Faker enFaker = new Faker(new Locale("en-US"));
 
@@ -285,6 +285,27 @@ public class DocUtil {
 
         }
         return builder.toString();
+    }
+
+    /**
+     *  // /detail/{id:[a-zA-Z0-9]{3}}/{name:[a-zA-Z0-9]{3}}
+     *  去除正则表达式
+     * @param str
+     * @return
+     */
+    public static String formatPathUrl(String str) {
+        if (!str.contains(":")) {
+            return str;
+        }
+        String[] strArr = str.split("/");
+        for (int i = 0; i < strArr.length; i++) {
+            String pathParam = strArr[i];
+            if (pathParam.contains(":")) {
+                strArr[i] = pathParam.substring(0, pathParam.indexOf(":")) + "}";
+            }
+        }
+        str = StringUtils.join(Arrays.asList(strArr), '/');
+        return str;
     }
 
     /**

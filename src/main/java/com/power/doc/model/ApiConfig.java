@@ -26,8 +26,10 @@ import com.power.common.util.CollectionUtil;
 import com.power.doc.constants.DocLanguage;
 import com.power.doc.model.rpc.RpcApiDependency;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * Description:
@@ -351,11 +353,15 @@ public class ApiConfig {
      */
     private String framework;
 
+
+    private List<ApiGroup> groups;
+
     /**
      * replace old document while push to torna
      * @since 2.2.4
      */
     private boolean replace;
+
 
     public String getPathPrefix() {
         return pathPrefix;
@@ -448,6 +454,20 @@ public class ApiConfig {
     public void setRequestHeaders(ApiReqParam... requestHeaders) {
         this.requestHeaders = CollectionUtil.asList(requestHeaders);
         this.requestHeaders.forEach(header -> header.setDesc(header.getDesc() + "(Global)"));
+    }
+
+    public List<ApiGroup> getGroups() {
+        return groups;
+    }
+
+    public ApiConfig setGroups(List<ApiGroup> groups) {
+        this.groups = groups;
+        return this;
+    }
+
+    public ApiConfig setGroups(ApiGroup... groups) {
+        this.groups = CollectionUtil.asList(groups);
+        return this;
     }
 
     public List<ApiReqParam> getRequestParams() {

@@ -80,6 +80,7 @@ public class TornaBuilder {
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
         IDocBuildTemplate docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework());
         List<ApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder);
+        apiDocList = docBuildTemplate.handleApiGroup(apiDocList, config);
         buildTorna(apiDocList, config, javaProjectBuilder);
     }
 
@@ -91,23 +92,34 @@ public class TornaBuilder {
      * @param builder   JavaProjectBuilder
      */
     public static void buildTorna(List<ApiDoc> apiDocs, ApiConfig apiConfig, JavaProjectBuilder builder) {
-        TornaApi tornaApi = new TornaApi();
+       TornaApi tornaApi = new TornaApi();
         tornaApi.setAuthor(StringUtil.isEmpty(apiConfig.getAuthor()) ? System.getProperty("user.name") : apiConfig.getAuthor());
         Apis api;
-        List<Apis> apisList = new ArrayList<>();
+        List<Apis> groupApiList = new ArrayList<>();
         //Convert ApiDoc to Apis
-        for (ApiDoc a : apiDocs) {
+        for (ApiDoc groupApi : apiDocs) {
+            List<Apis> apisList = new ArrayList<>();
+            List<ApiDoc> childrenApiDocs = groupApi.getChildrenApiDocs();
+            for (ApiDoc a : childrenApiDocs) {
+                api = new Apis();
+                api.setName(StringUtils.isBlank(a.getDesc()) ? a.getName() : a.getDesc());
+                api.setItems(buildApis(a.getList(), TornaUtil.setDebugEnv(apiConfig, tornaApi)));
+                api.setIsFolder(TornaConstants.YES);
+                api.setAuthor(a.getAuthor());
+                api.setOrderIndex(a.getOrder());
+                apisList.add(api);
+            }
             api = new Apis();
-            api.setName(StringUtils.isBlank(a.getDesc()) ? a.getName() : a.getDesc());
-            api.setItems(buildApis(a.getList(), TornaUtil.setDebugEnv(apiConfig, tornaApi)));
+            api.setName(StringUtils.isBlank(groupApi.getDesc()) ? groupApi.getName() : groupApi.getDesc());
+            api.setAuthor(tornaApi.getAuthor());
+            api.setOrderIndex(groupApi.getOrder());
             api.setIsFolder(TornaConstants.YES);
-            api.setAuthor(a.getAuthor());
-            api.setOrderIndex(a.getOrder());
-            apisList.add(api);
+            api.setItems(apisList);
+            groupApiList.add(api);
+
         }
         tornaApi.setCommonErrorCodes(buildErrorCode(apiConfig));
-        tornaApi.setApis(apisList);
-        tornaApi.setIsReplace(apiConfig.isReplace() ? 1 : 0);
+        tornaApi.setApis(groupApiList);
         //Build push document information
         Map<String, String> requestJson = TornaConstants.buildParams(PUSH, new Gson().toJson(tornaApi), apiConfig);
         //Push dictionary information

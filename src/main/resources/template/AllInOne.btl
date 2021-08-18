@@ -14,7 +14,11 @@ ${revisionLog.version}|${revisionLog.revisionTime}|${revisionLog.status}|${revis
 
 
 <%
-for(api in apiDocList){
+for(apiGroup in apiDocList){
+%>
+# ${apiGroup.group}
+<%
+for(api in apiGroup.childrenApiDocs){
 %>
 ## ${api.desc}
 <%
@@ -106,6 +110,7 @@ ${doc.responseUsage}
 ```
 <%}%>
 
+<% } %>
 <% } %>
 <% } %>
 <%if(isNotEmpty(errorCodeList)){%>

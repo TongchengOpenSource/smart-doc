@@ -25,6 +25,7 @@ package com.power.doc.model;
 
 import com.power.common.util.StringUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -35,7 +36,7 @@ public class ApiDoc implements Comparable<ApiDoc> {
      *
      * @since 1.7+
      */
-    public int order;
+    public Integer order;
 
     /**
      * controller name
@@ -48,6 +49,26 @@ public class ApiDoc implements Comparable<ApiDoc> {
      * @since 1.7+
      */
     private String alias;
+
+    /**
+     * tags
+     *
+     * @author cqmike
+     */
+    private String[] tags;
+
+    /**
+     * group
+     *
+     * @author cqmike
+     */
+    private String group;
+
+    /**
+     * class in package name
+     *
+     */
+    private String packageName;
 
     /**
      * List of method doc
@@ -65,6 +86,16 @@ public class ApiDoc implements Comparable<ApiDoc> {
     private String link;
 
     private String author;
+
+    /**
+     *  if this is group, then is true
+     */
+    private boolean isFolder;
+
+    /**
+     *  children
+     */
+    private List<ApiDoc> childrenApiDocs = new ArrayList<>();
 
     public String getAuthor() {
         return author;
@@ -98,11 +129,11 @@ public class ApiDoc implements Comparable<ApiDoc> {
         this.desc = desc;
     }
 
-    public int getOrder() {
+    public Integer getOrder() {
         return order;
     }
 
-    public void setOrder(int order) {
+    public void setOrder(Integer order) {
         this.order = order;
     }
 
@@ -112,6 +143,14 @@ public class ApiDoc implements Comparable<ApiDoc> {
 
     public void setAlias(String alias) {
         this.alias = alias;
+    }
+
+    public String[] getTags() {
+        return tags;
+    }
+
+    public void setTags(String[] tags) {
+        this.tags = tags;
     }
 
     public String getLink() {
@@ -125,6 +164,38 @@ public class ApiDoc implements Comparable<ApiDoc> {
         this.link = link;
     }
 
+    public String getPackageName() {
+        return packageName;
+    }
+
+    public void setPackageName(String packageName) {
+        this.packageName = packageName;
+    }
+
+    public String getGroup() {
+        return group;
+    }
+
+    public void setGroup(String group) {
+        this.group = group;
+    }
+
+    public boolean isFolder() {
+        return isFolder;
+    }
+
+    public void setFolder(boolean folder) {
+        isFolder = folder;
+    }
+
+    public List<ApiDoc> getChildrenApiDocs() {
+        return childrenApiDocs;
+    }
+
+    public void setChildrenApiDocs(List<ApiDoc> childrenApiDocs) {
+        this.childrenApiDocs = childrenApiDocs;
+    }
+
     @Override
     public int compareTo(ApiDoc o) {
         if (Objects.nonNull(o.getDesc())) {
@@ -133,6 +204,31 @@ public class ApiDoc implements Comparable<ApiDoc> {
         return name.compareTo(o.getName());
     }
 
+    public static ApiDoc buildTagApiDoc(ApiDoc source, String tag, ApiMethodDoc methodDoc) {
+        ApiDoc apiDoc = new ApiDoc();
+        apiDoc.setAlias(source.getAlias());
+        apiDoc.setLink(source.getLink());
+        apiDoc.setDesc(tag);
+        apiDoc.setAuthor(source.getAuthor());
+        apiDoc.setPackageName(source.getPackageName());
+        apiDoc.setName(tag);
+        apiDoc.setList(new ArrayList<>());
+        ApiMethodDoc clone = methodDoc.clone();
+        clone.setOrder(apiDoc.getList().size() + 1);
+        apiDoc.getList().add(clone);
+        return apiDoc;
+    }
+
+
+    public static ApiDoc buildGroupApiDoc(String group) {
+        ApiDoc apiDoc = new ApiDoc();
+        apiDoc.setFolder(true);
+        apiDoc.setGroup(group);
+        apiDoc.setName(group);
+        apiDoc.setDesc(group);
+        apiDoc.setChildrenApiDocs(new ArrayList<>());
+        return apiDoc;
+    }
 
     @Override
     public String toString() {

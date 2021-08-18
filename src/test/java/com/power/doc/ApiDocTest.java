@@ -102,7 +102,7 @@ public class ApiDocTest {
         //OpenApiBuilder.buildOpenApi(config);
         HtmlApiDocBuilder.buildApiDoc(config);
         //RpcTornaBuilder.buildApiDoc(config);
-        TornaBuilder.buildApiDoc(config);
+//        TornaBuilder.buildApiDoc(config);
         // RpcHtmlBuilder.buildApiDoc(config);
         long end = System.currentTimeMillis();
         DateTimeUtil.printRunTime(end, start);

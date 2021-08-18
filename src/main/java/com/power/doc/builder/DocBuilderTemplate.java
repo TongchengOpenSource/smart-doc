@@ -169,6 +169,7 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
             apiDoc1.setList(new ArrayList<>(0));
             apiDoc1.setLink("error_code_list");
             apiDoc1.setAlias("error");
+            apiDoc1.setGroup(apiDoc1.getDesc());
             apiDocs.add(apiDoc1);
         }
         // set dict list
@@ -178,6 +179,7 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
         apiDoc1.setLink("dict_list");
         apiDoc1.setAlias("dict");
         apiDoc1.setDesc(titleMap.get(TemplateVariable.DICT_LIST_TITLE.getVariable()));
+        apiDoc1.setGroup(apiDoc1.getDesc());
         List<ApiMethodDoc> methodDocs = new ArrayList<>();
         for (ApiDocDict apiDocDict : apiDocDictList) {
             ApiMethodDoc methodDoc = new ApiMethodDoc();
