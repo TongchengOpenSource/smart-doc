@@ -16,7 +16,10 @@ ${revisionLog.version}|${revisionLog.revisionTime}|${revisionLog.status}|${revis
 <%
 for(apiGroup in apiDocList){
 %>
+<%
+if(apiGroupLP.size > 1) {%>
 # ${apiGroup.group}
+<%}%>
 <%
 for(api in apiGroup.childrenApiDocs){
 %>

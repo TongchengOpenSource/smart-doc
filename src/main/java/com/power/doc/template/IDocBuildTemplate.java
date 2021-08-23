@@ -117,11 +117,15 @@ public interface IDocBuildTemplate<T> {
 
         List<ApiGroup> groups = apiConfig.getGroups();
         ApiDoc defaultGroup = ApiDoc.buildGroupApiDoc("default");
-
         List<ApiDoc> finalApiDocs = new ArrayList<>();
         finalApiDocs.add(defaultGroup);
         AtomicInteger order = new AtomicInteger(1);
         defaultGroup.setOrder(order.getAndIncrement());
+        if (CollectionUtil.isEmpty(groups)) {
+            defaultGroup.getChildrenApiDocs().addAll(apiDocList);
+            return finalApiDocs;
+        }
+
         groups.forEach(group -> {
 
             ApiDoc groupApiDoc = ApiDoc.buildGroupApiDoc(group.getName());
@@ -129,6 +133,7 @@ public interface IDocBuildTemplate<T> {
             finalApiDocs.add(groupApiDoc);
             apiDocList.forEach(doc -> {
 
+                // not match, add default group
                 if (!DocUtil.isMatch(group.getApis(), doc.getPackageName())) {
                     defaultGroup.getChildrenApiDocs().add(doc);
                     doc.setOrder(defaultGroup.getChildrenApiDocs().size());
