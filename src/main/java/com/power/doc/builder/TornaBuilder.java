@@ -92,13 +92,12 @@ public class TornaBuilder {
      * @param builder   JavaProjectBuilder
      */
     public static void buildTorna(List<ApiDoc> apiDocs, ApiConfig apiConfig, JavaProjectBuilder builder) {
-        TornaApi tornaApi = new TornaApi();
+       TornaApi tornaApi = new TornaApi();
         tornaApi.setAuthor(StringUtil.isEmpty(apiConfig.getAuthor()) ? System.getProperty("user.name") : apiConfig.getAuthor());
         Apis api;
         List<Apis> groupApiList = new ArrayList<>();
-        //添加接口数据
+        //Convert ApiDoc to Apis
         for (ApiDoc groupApi : apiDocs) {
-
             List<Apis> apisList = new ArrayList<>();
             List<ApiDoc> childrenApiDocs = groupApi.getChildrenApiDocs();
             for (ApiDoc a : childrenApiDocs) {
@@ -121,9 +120,9 @@ public class TornaBuilder {
         }
         tornaApi.setCommonErrorCodes(buildErrorCode(apiConfig));
         tornaApi.setApis(groupApiList);
-        //推送文档信息
+        //Build push document information
         Map<String, String> requestJson = TornaConstants.buildParams(PUSH, new Gson().toJson(tornaApi), apiConfig);
-        //推送字典信息
+        //Push dictionary information
         Map<String, Object> dicMap = new HashMap<>(2);
         List<TornaDic> docDicts = TornaUtil.buildTornaDic(DocUtil.buildDictionary(apiConfig, builder));
         if (CollectionUtil.isNotEmpty(docDicts)) {
@@ -132,10 +131,10 @@ public class TornaBuilder {
             String dicResponseMsg = OkHttp3Util.syncPostJson(apiConfig.getOpenUrl(), new Gson().toJson(dicRequestJson));
             TornaUtil.printDebugInfo(apiConfig, dicResponseMsg, dicRequestJson, ENUM_PUSH);
         }
-        //获取返回结果
+        //Get the response result
         String responseMsg = OkHttp3Util.syncPostJson(apiConfig.getOpenUrl(), new Gson().toJson(requestJson));
 
-        //开启调试时打印请求信息
+        //Print the log of pushing documents to Torna
         TornaUtil.printDebugInfo(apiConfig, responseMsg, requestJson, PUSH);
 
     }

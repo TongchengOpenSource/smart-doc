@@ -312,35 +312,39 @@ public class ApiConfig {
      * Torna appKey
      */
     private String appKey;
+
     /**
      * Torna Secret
      */
     private String secret;
+
     /**
      * Torna appToken
      */
     private String appToken;
+
     /**
      * Torna openUrl
      */
     private String openUrl;
 
     /**
-     * 调试环境名称
+     * Debugging environment name
      */
     private String debugEnvName;
+
     /**
-     * 调试环境请求路径
+     * Url of the debugging environment
      */
     private String debugEnvUrl;
 
     /**
-     * torna调试开关
+     * Show log when pushing document to torna
      */
     private boolean tornaDebug = true;
 
     /**
-     * 推送人
+     * The operator who pushes the document to Torna
      */
     private String author;
 
@@ -349,7 +353,15 @@ public class ApiConfig {
      */
     private String framework;
 
+
     private List<ApiGroup> groups;
+
+    /**
+     * replace old document while push to torna
+     * @since 2.2.4
+     */
+    private boolean replace;
+
 
     public String getPathPrefix() {
         return pathPrefix;
@@ -852,6 +864,14 @@ public class ApiConfig {
 
     public void setFramework(String framework) {
         this.framework = framework;
+    }
+
+    public boolean isReplace() {
+        return replace;
+    }
+
+    public void setReplace(boolean replace) {
+        this.replace = replace;
     }
 
     @Override
