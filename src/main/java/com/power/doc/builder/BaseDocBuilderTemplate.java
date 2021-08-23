@@ -131,7 +131,7 @@ public class BaseDocBuilderTemplate {
             } else {
                 return allInOneName + suffix;
             }
-        } else if (fileName.equals(suffix)) {
+        } else if (StringUtil.isNotEmpty(fileName) && fileName.endsWith(suffix)) {
             return fileName;
         } else {
             return fileName + suffix;
