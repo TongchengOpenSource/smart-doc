@@ -359,12 +359,6 @@ public class ParamsBuildHelper {
                         param.setType("array");
                         if (tagsMap.containsKey(DocTags.MOCK) && StringUtil.isNotEmpty(tagsMap.get(DocTags.MOCK))) {
                             param.setValue(fieldValue);
-                            if (StringUtil.isNotEmpty(comment)) {
-                                commonHandleParam(paramList, param, isRequired, comment + appendComment, since, strRequired);
-                            } else {
-                                commonHandleParam(paramList, param, isRequired, NO_COMMENTS_FOUND + appendComment, since, strRequired);
-                            }
-                            continue;
                         }
 
                         if (globGicName.length > 0 && "java.util.List".equals(fieldGicName)) {
@@ -434,12 +428,6 @@ public class ParamsBuildHelper {
                         if (tagsMap.containsKey(DocTags.MOCK) && StringUtil.isNotEmpty(tagsMap.get(DocTags.MOCK))) {
                             param.setType("map");
                             param.setValue(fieldValue);
-                            if (StringUtil.isNotEmpty(comment)) {
-                                commonHandleParam(paramList, param, isRequired, comment + appendComment, since, strRequired);
-                            } else {
-                                commonHandleParam(paramList, param, isRequired, NO_COMMENTS_FOUND + appendComment, since, strRequired);
-                            }
-                            continue;
                         }
 
                         if (StringUtil.isNotEmpty(comment)) {
