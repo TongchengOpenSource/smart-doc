@@ -15,11 +15,23 @@
       name: '',
       repo: '',
       loadSidebar: true,
-      coverpage: true
+      coverpage: true,
+      EditOnGithubPlugin.create(
+    'https://github.com/chenqi146/blog/tree/master/docs/',
+    null,
+    function(file) {
+      if (file.indexOf('en') === -1) {
+        return '编辑'
+      } else {
+        return 'edit on git'
+      }
+    }
+  )
     }
   </script>
   <!-- Docsify v4 -->
   <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
   <script src="//cdn.jsdelivr.net/npm/docsify-copy-code/dist/docsify-copy-code.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify-edit-on-github"></script>
 </body>
 </html>
