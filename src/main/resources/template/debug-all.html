@@ -27,11 +27,11 @@
                 <ul id="accordion" class="sectlevel1"><%for(apiGroup in apiDocList){%><%if(apiGroupLP.first){%>
                     <li class="open"><a class="dd" href="#_${apiGroup.group}"> ${apiGroup.order}.&nbsp;${htmlEscape(apiGroup.group)}</a>
                         <ul class="sectlevel1"><%for(api in apiGroup.childrenApiDocs){%>
-                            <li class="open"><a class="dd" href="#_${api.desc}"> ${api.order}.&nbsp;${htmlEscape(api.desc)}</a>
+                            <li class="open"><a class="dd" href="#_${api.desc}"> ${apiGroup.order}.${api.order}.&nbsp;${htmlEscape(api.desc)}</a>
                                 <ul class="sectlevel2" style="display: block"><%for(doc in api.list){%>
-                                    <li><%if(doc.deprecated){%><a href="#_${api.order}_${doc.order}_${doc.desc}">${api.order}.${doc.order}.&nbsp;<span
+                                    <li><%if(doc.deprecated){%><a href="#_${api.order}_${doc.order}_${doc.desc}">${apiGroup.order}.${api.order}.${doc.order}.&nbsp;<span
                                             class="line-through">${htmlEscape(doc.desc)}</span></a><%}else{%><a
-                                            href="#_${api.order}_${doc.order}_${doc.desc}"> ${api.order}.${doc.order}.&nbsp;${htmlEscape(doc.desc)}</a><%}%>
+                                            href="#_${api.order}_${doc.order}_${doc.desc}"> ${apiGroup.order}.${api.order}.${doc.order}.&nbsp;${htmlEscape(doc.desc)}</a><%}%>
                                     </li>
                                     <%}%>
                                 </ul>
@@ -42,11 +42,11 @@
                     <%}else{%>
                     <li><a class="dd" href="#_${apiGroup.group}"> ${apiGroup.order}.&nbsp;${htmlEscape(apiGroup.group)}</a>
                         <ul class="sectlevel1"><%for(api in apiGroup.childrenApiDocs){%>
-                            <li class="open"><a class="dd" href="#_${api.desc}"> ${api.order}.&nbsp;${htmlEscape(api.desc)}</a>
+                            <li class="open"><a class="dd" href="#_${api.desc}"> ${apiGroup.order}.${api.order}.&nbsp;${htmlEscape(api.desc)}</a>
                                 <ul class="sectlevel2"><%for(doc in api.list){%>
-                                    <li><%if(doc.deprecated){%><a href="#_${api.order}_${doc.order}_${doc.desc}">${api.order}.${doc.order}.&nbsp;<span
+                                    <li><%if(doc.deprecated){%><a href="#_${api.order}_${doc.order}_${doc.desc}">${apiGroup.order}.${api.order}.${doc.order}.&nbsp;<span
                                             class="line-through">${htmlEscape(doc.desc)}</span></a><%}else{%><a
-                                            href="#_${api.order}_${doc.order}_${doc.desc}"> ${api.order}.${doc.order}.&nbsp;${htmlEscape(doc.desc)}</a><%}%>
+                                            href="#_${api.order}_${doc.order}_${doc.desc}"> ${apiGroup.order}.${api.order}.${doc.order}.&nbsp;${htmlEscape(doc.desc)}</a><%}%>
                                     </li>
                                     <%}%>
                                 </ul>
@@ -110,14 +110,14 @@
             <%for(apiGroup in apiDocList){%>
             <%for(api in apiGroup.childrenApiDocs){%>
             <div class="sect1"><h2 id="_${api.desc}"><a class="anchor" href="#_${api.desc}"></a><a class="link"
-                                                                                                   href="#_${api.desc}">${api.order}.&nbsp;${htmlEscape(api.desc)}</a>
+                                                                                                   href="#_${api.desc}">${apiGroup.order}.${api.order}.&nbsp;${htmlEscape(api.desc)}</a>
             </h2>
                 <div class="sectionbody"><%for(doc in api.list){%>
                     <div class="sect2" id="${doc.methodId}"><h3 id="_${api.order}_${doc.order}_${doc.desc}"><a
                             class="anchor" href="#_${api.order}_${doc.order}_${doc.desc}"></a><%if(doc.deprecated){%><a
-                            class="link" href="#_${api.order}_${doc.order}_${doc.desc}">${api.order}.${doc.order}.&nbsp;<span
+                            class="link" href="#_${api.order}_${doc.order}_${doc.desc}">${apiGroup.order}.${api.order}.${doc.order}.&nbsp;<span
                             class="line-through">${htmlEscape(doc.desc)}</span></a><%}else{%><a class="link"
-                                                                                                href="#_${api.order}_${doc.order}_${doc.desc}">${api.order}.${doc.order}.&nbsp;${htmlEscape(doc.desc)}</a><%}%>
+                                                                                                href="#_${api.order}_${doc.order}_${doc.desc}">${apiGroup.order}.${api.order}.${doc.order}.&nbsp;${htmlEscape(doc.desc)}</a><%}%>
                     </h3>
                         <div class="paragraph" id="${doc.methodId}-url" data-url="${doc.url}"
                              data-download="${doc.download}" data-page="${doc.page}"><p><strong>URL:</strong><a
