@@ -32,6 +32,7 @@ import com.thoughtworks.qdox.JavaProjectBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.beetl.core.Template;
 
+import java.io.*;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -74,6 +75,13 @@ public class HtmlApiDocBuilder {
         List<ApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder);
         Template indexCssTemplate = BeetlTemplateUtil.getByName(ALL_IN_ONE_CSS);
         FileUtil.nioWriteFile(indexCssTemplate.render(), config.getOutPath() + FILE_SEPARATOR + ALL_IN_ONE_CSS);
+        copyJarFile(HIGH_LIGHT,config.getOutPath() + FILE_SEPARATOR + HIGH_LIGHT);
+        copyJarFile(FONT_STYLE,config.getOutPath() + FILE_SEPARATOR + FONT_STYLE);
+        copyJarFile(JQUERY,config.getOutPath() + FILE_SEPARATOR + JQUERY);
+        copyJarFile(SEARCH_JS_OUT,config.getOutPath() + FILE_SEPARATOR + SEARCH_JS_OUT);
+        copyJarFile(HIGH_LIGHT_STYLE,config.getOutPath() + FILE_SEPARATOR + HIGH_LIGHT_STYLE);
+
+
         if (config.isAllInOne()) {
             apiDocList = docBuildTemplate.handleApiGroup(apiDocList, config);
             if (config.isCreateDebugPage()) {
@@ -133,6 +141,22 @@ public class HtmlApiDocBuilder {
             builderTemplate.buildDoc(apiDocList, config, javaProjectBuilder, template,
                     doc.getAlias() + ".html", doc, indexHtml);
             index++;
+        }
+    }
+
+    public static void copyJarFile(String source,String target){
+        InputStream in = HtmlApiDocBuilder.class.getResourceAsStream(TEMPLE_PATH + source);
+        if (null != in) {
+            File file = new File(target);
+            try(  OutputStream out= new FileOutputStream(file)) {
+                byte[] bytes = new byte[1];
+                while (in.read(bytes) != -1) {
+                    out.write(bytes);
+                }
+                out.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

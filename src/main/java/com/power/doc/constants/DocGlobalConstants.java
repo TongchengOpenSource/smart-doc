@@ -93,6 +93,16 @@ public interface DocGlobalConstants {
 
     String ALL_IN_ONE_CSS = "AllInOne.css";
 
+    String TEMPLE_PATH = "../../../../template/";
+
+    String FONT_STYLE = "css.css";
+
+    String HIGH_LIGHT = "highlight.min.js";
+
+    String JQUERY = "jquery.min.js";
+
+    String HIGH_LIGHT_STYLE = "xt256.min.css";
+
     String RPC_OUT_DIR = "rpc";
 
     String RPC_API_DOC_ADOC_TPL = "dubbo/Dubbo.adoc";
