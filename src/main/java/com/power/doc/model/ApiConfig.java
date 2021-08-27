@@ -596,7 +596,7 @@ public class ApiConfig {
         }
         return this.dataDictionaries.stream().filter((apiDataDictionary ->
                 enumClassName.equalsIgnoreCase(apiDataDictionary.getEnumClassName())))
-                .findFirst().orElse(new ApiDataDictionary());
+                .findFirst().orElse(null);
     }
 
     public List<ApiErrorCodeDictionary> getErrorCodeDictionaries() {
