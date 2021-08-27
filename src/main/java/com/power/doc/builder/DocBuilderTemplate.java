@@ -134,6 +134,8 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
         tpl.binding(TemplateVariable.PROJECT_NAME.getVariable(), config.getProjectName());
         tpl.binding(TemplateVariable.REQUEST_EXAMPLE.getVariable(), config.isRequestExample());
         tpl.binding(TemplateVariable.RESPONSE_EXAMPLE.getVariable(), config.isResponseExample());
+        tpl.binding(TemplateVariable.DISPLAY_REQUEST_PARAMS.getVariable(),config.isRequestParamsTable());
+        tpl.binding(TemplateVariable.DISPLAY_RESPONSE_PARAMS.getVariable(),config.isResponseParamsTable());
         setCssCDN(config, tpl);
         if (CollectionUtil.isEmpty(errorCodeList)) {
             tpl.binding(TemplateVariable.DICT_ORDER.getVariable(), apiDocList.size() + 1);

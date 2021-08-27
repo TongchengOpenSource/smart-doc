@@ -34,10 +34,11 @@ import org.beetl.core.Resource;
 import org.beetl.core.Template;
 import org.beetl.core.resource.ClasspathResourceLoader;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Reader;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 import static com.power.doc.constants.DocGlobalConstants.*;
 
@@ -77,13 +78,10 @@ public class HtmlApiDocBuilder {
         List<ApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder);
         Template indexCssTemplate = BeetlTemplateUtil.getByName(ALL_IN_ONE_CSS);
         FileUtil.nioWriteFile(indexCssTemplate.render(), config.getOutPath() + FILE_SEPARATOR + ALL_IN_ONE_CSS);
-        copyJarFile(HIGH_LIGHT,config.getOutPath() + FILE_SEPARATOR + HIGH_LIGHT);
-        copyJarFile(FONT_STYLE,config.getOutPath() + FILE_SEPARATOR + FONT_STYLE);
-        copyJarFile(JQUERY,config.getOutPath() + FILE_SEPARATOR + JQUERY);
-        copyJarFile(SEARCH_JS_OUT,config.getOutPath() + FILE_SEPARATOR + SEARCH_JS_OUT);
-        copyJarFile(HIGH_LIGHT_STYLE,config.getOutPath() + FILE_SEPARATOR + HIGH_LIGHT_STYLE);
-
-
+        copyJarFile("js/"+HIGH_LIGHT_JS, config.getOutPath() + FILE_SEPARATOR + HIGH_LIGHT_JS);
+        copyJarFile("css/"+FONT_STYLE, config.getOutPath() + FILE_SEPARATOR + FONT_STYLE);
+        copyJarFile("js/"+JQUERY, config.getOutPath() + FILE_SEPARATOR + JQUERY);
+        copyJarFile("css/"+HIGH_LIGHT_STYLE, config.getOutPath() + FILE_SEPARATOR + HIGH_LIGHT_STYLE);
         if (config.isAllInOne()) {
             apiDocList = docBuildTemplate.handleApiGroup(apiDocList, config);
             if (config.isCreateDebugPage()) {
@@ -146,7 +144,7 @@ public class HtmlApiDocBuilder {
         }
     }
 
-    public static void copyJarFile(String source, String target) {
+    private static void copyJarFile(String source, String target) {
         ClasspathResourceLoader resourceLoader = new ClasspathResourceLoader("/template/");
         Resource resource = resourceLoader.getResource(source);
         try (FileWriter fileWriter = new FileWriter(target, false);

@@ -362,6 +362,16 @@ public class ApiConfig {
      */
     private boolean replace;
 
+    /**
+     * @since 2.2.5
+     */
+    private boolean requestParamsTable = Boolean.TRUE;
+
+    /**
+     * @since 2.2.5
+     */
+    private boolean responseParamsTable = Boolean.TRUE;
+
 
     public String getPathPrefix() {
         return pathPrefix;
@@ -874,11 +884,29 @@ public class ApiConfig {
         this.replace = replace;
     }
 
+    public boolean isRequestParamsTable() {
+        return requestParamsTable;
+    }
+
+    public void setRequestParamsTable(boolean requestParamsTable) {
+        this.requestParamsTable = requestParamsTable;
+    }
+
+    public boolean isResponseParamsTable() {
+        return responseParamsTable;
+    }
+
+    public void setResponseParamsTable(boolean responseParamsTable) {
+        this.responseParamsTable = responseParamsTable;
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("{");
         sb.append("\"serverUrl\":\"")
                 .append(serverUrl).append('\"');
+        sb.append(",\"pathPrefix\":\"")
+                .append(pathPrefix).append('\"');
         sb.append(",\"isStrict\":")
                 .append(isStrict);
         sb.append(",\"allInOne\":")
@@ -889,6 +917,8 @@ public class ApiConfig {
                 .append(sourceCodePaths);
         sb.append(",\"requestHeaders\":")
                 .append(requestHeaders);
+        sb.append(",\"requestParams\":")
+                .append(requestParams);
         sb.append(",\"coverOld\":")
                 .append(coverOld);
         sb.append(",\"customResponseFields\":")
@@ -945,6 +975,10 @@ public class ApiConfig {
                 .append(requestExample);
         sb.append(",\"responseExample\":")
                 .append(responseExample);
+        sb.append(",\"requestParamsTable\":")
+                .append(requestParamsTable);
+        sb.append(",\"responseParamsTable\":")
+                .append(responseParamsTable);
         sb.append(",\"allInOneDocFileName\":\"")
                 .append(allInOneDocFileName).append('\"');
         sb.append(",\"paramsDataToTree\":")
@@ -981,6 +1015,10 @@ public class ApiConfig {
                 .append(author).append('\"');
         sb.append(",\"framework\":\"")
                 .append(framework).append('\"');
+        sb.append(",\"groups\":")
+                .append(groups);
+        sb.append(",\"replace\":")
+                .append(replace);
         sb.append('}');
         return sb.toString();
     }

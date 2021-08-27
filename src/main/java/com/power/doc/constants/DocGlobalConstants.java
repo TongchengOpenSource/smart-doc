@@ -91,11 +91,11 @@ public interface DocGlobalConstants {
 
     String SINGLE_DICT_HTML_TPL = "html/dict.html";
 
-    String ALL_IN_ONE_CSS = "AllInOne.css";
+    String ALL_IN_ONE_CSS = "css/AllInOne.css";
 
     String FONT_STYLE = "font.css";
 
-    String HIGH_LIGHT = "highlight.min.js";
+    String HIGH_LIGHT_JS = "highlight.min.js";
 
     String JQUERY = "jquery.min.js";
 

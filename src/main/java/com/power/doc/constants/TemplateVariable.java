@@ -51,6 +51,8 @@ public enum TemplateVariable {
     RPC_CONSUMER_CONFIG("consumerConfigExample"),
     REQUEST_EXAMPLE("isRequestExample"),
     RESPONSE_EXAMPLE("isResponseExample"),
+    DISPLAY_REQUEST_PARAMS("displayRequestParams"),
+    DISPLAY_RESPONSE_PARAMS("displayResponseParams"),
     RESPONSE_LIST("respList"),
     ORDER("order"),
     INDEX_ALIAS("alias"),
