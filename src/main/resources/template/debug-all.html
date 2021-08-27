@@ -6,9 +6,9 @@
         <meta name="generator" content="smart-doc">
         <%if(isNotEmpty(projectName)){%><title>${projectName}</title><%}else{%><title>API Reference</title><%}%>
         <link rel="stylesheet"
-              href="css.css">
+              href="font.css">
         <link rel="stylesheet" href="AllInOne.css?v=${version}"/>
-        <%if(isNotEmpty(style)){%> <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/highlight.js/10.3.2/styles/${style}.min.css"><%}else{%><link rel="stylesheet" href="xt256.min.css"><%}%>
+        <link rel="stylesheet" href="xt256.min.css">
         <style>.literalblock pre, .listingblock pre:not(.highlight), .listingblock pre[class="highlight"], .listingblock pre[class^="highlight "], .listingblock pre.CodeRay, .listingblock pre.prettyprint {
             background: ${background}
         }

@@ -95,7 +95,7 @@ public interface DocGlobalConstants {
 
     String TEMPLE_PATH = "../../../../template/";
 
-    String FONT_STYLE = "css.css";
+    String FONT_STYLE = "font.css";
 
     String HIGH_LIGHT = "highlight.min.js";
 

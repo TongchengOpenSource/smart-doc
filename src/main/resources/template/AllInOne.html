@@ -6,18 +6,18 @@
     <meta name="generator" content="smart-doc">
     <%if(isNotEmpty(projectName)){%><title>${projectName}</title><%}else{%><title>API Reference</title><%}%>
     <link rel="stylesheet"
-          href="${css_cdn}/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+          href="font.css">
     <link rel="stylesheet" href="AllInOne.css?v=${version}"/>
-    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/highlight.js/10.3.2/styles/${style}.min.css">
-    <style>.literalblock pre, .listingblock pre:not(.highlight), .listingblock pre[class="highlight"], .listingblock pre[class^="highlight "], .listingblock pre.CodeRay, .listingblock pre.prettyprint {
+    <link rel="stylesheet" href="xt256.min.css"/>
+       <style>.literalblock pre, .listingblock pre:not(.highlight), .listingblock pre[class="highlight"], .listingblock pre[class^="highlight "], .listingblock pre.CodeRay, .listingblock pre.prettyprint {
         background: ${background}
     }
 
     .hljs {
         padding: 0
     }</style>
-    <script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/10.3.2/highlight.min.js"></script>
-    <script src="https://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+    <script src="highlight.min.js"></script>
+    <script src="jquery.min.js"></script>
 </head>
 <body class="book toc2 toc-left">
 <div id="header"><%if(isNotEmpty(projectName)){%><h1>${projectName}</h1><%}%>
