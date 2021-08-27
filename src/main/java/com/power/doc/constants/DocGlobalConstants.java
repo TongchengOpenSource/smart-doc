@@ -93,8 +93,6 @@ public interface DocGlobalConstants {
 
     String ALL_IN_ONE_CSS = "AllInOne.css";
 
-    String TEMPLE_PATH = "../../../../template/";
-
     String FONT_STYLE = "font.css";
 
     String HIGH_LIGHT = "highlight.min.js";

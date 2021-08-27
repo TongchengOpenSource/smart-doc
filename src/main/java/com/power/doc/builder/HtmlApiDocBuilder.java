@@ -30,7 +30,9 @@ import com.power.doc.template.IDocBuildTemplate;
 import com.power.doc.utils.BeetlTemplateUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import org.apache.commons.lang3.StringUtils;
+import org.beetl.core.Resource;
 import org.beetl.core.Template;
+import org.beetl.core.resource.ClasspathResourceLoader;
 
 import java.io.*;
 import java.util.List;
@@ -144,19 +146,24 @@ public class HtmlApiDocBuilder {
         }
     }
 
-    public static void copyJarFile(String source,String target){
-        InputStream in = HtmlApiDocBuilder.class.getResourceAsStream(TEMPLE_PATH + source);
-        if (null != in) {
-            File file = new File(target);
-            try(  OutputStream out= new FileOutputStream(file)) {
-                byte[] bytes = new byte[1];
-                while (in.read(bytes) != -1) {
-                    out.write(bytes);
-                }
-                out.flush();
-            } catch (IOException e) {
-                e.printStackTrace();
+    public static void copyJarFile(String source, String target) {
+        ClasspathResourceLoader resourceLoader = new ClasspathResourceLoader("/template/");
+        Resource resource = resourceLoader.getResource(source);
+        try (FileWriter fileWriter = new FileWriter(target, false);
+             Reader reader = resource.openReader()) {
+            char[] c = new char[1024 * 1024];
+            int temp;
+            int len = 0;
+            while ((temp = reader.read()) != -1) {
+                c[len] = (char) temp;
+                len++;
             }
+            reader.close();
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+            bufferedWriter.write(c, 0, len);
+            bufferedWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
