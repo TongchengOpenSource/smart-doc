@@ -130,14 +130,14 @@ public class SpringMVCRequestMappingHandler {
             }
             String urlSuffix = projectBuilder.getApiConfig().getUrlSuffix();
             if (StringUtil.isNotEmpty(urlSuffix)) {
-                url = UrlUtil.simplifyUrl(url) + urlSuffix;
-                shortUrl = UrlUtil.simplifyUrl(shortUrl) + urlSuffix;
+                url = UrlUtil.simplifyUrl(StringUtil.trim(url)) + urlSuffix;
+                shortUrl = UrlUtil.simplifyUrl(StringUtil.trim(shortUrl)) + urlSuffix;
             } else {
-                url = UrlUtil.simplifyUrl(url);
-                shortUrl = UrlUtil.simplifyUrl(shortUrl);
+                url = UrlUtil.simplifyUrl(StringUtil.trim(url));
+                shortUrl = UrlUtil.simplifyUrl(StringUtil.trim(shortUrl));
             }
             return RequestMapping.builder().setMediaType(mediaType).setMethodType(methodType)
-                    .setUrl(StringUtil.trim(url)).setShortUrl(StringUtil.trim(shortUrl)).setDeprecated(deprecated);
+                    .setUrl(url).setShortUrl(shortUrl).setDeprecated(deprecated);
         }
         return null;
     }

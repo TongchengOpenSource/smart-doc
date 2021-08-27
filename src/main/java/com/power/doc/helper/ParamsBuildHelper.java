@@ -31,7 +31,10 @@ import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.constants.DocTags;
 import com.power.doc.constants.ValidatorAnnotations;
 import com.power.doc.model.*;
-import com.power.doc.utils.*;
+import com.power.doc.utils.DocClassUtil;
+import com.power.doc.utils.DocUtil;
+import com.power.doc.utils.JavaClassUtil;
+import com.power.doc.utils.JavaClassValidateUtil;
 import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaField;
@@ -108,15 +111,16 @@ public class ParamsBuildHelper {
             }
             paramList.add(param);
         } else if (JavaClassValidateUtil.isReactor(simpleName)) {
-            paramList.addAll(buildParams(globGicName[0], pre, nextLevel, isRequired, isResp,
-                    registryClasses, projectBuilder, groupClasses, pid, jsonRequest));
+            if (globGicName.length > 0) {
+                paramList.addAll(buildParams(globGicName[0], pre, nextLevel, isRequired, isResp,
+                        registryClasses, projectBuilder, groupClasses, pid, jsonRequest));
+            }
         } else {
             Map<String, String> ignoreFields = JavaClassUtil.getClassJsonIgnoreFields(cls);
             out:
             for (DocJavaField docField : fields) {
                 String maxLength = null;
                 JavaField field = docField.getJavaField();
-
                 if (field.isTransient() && skipTransientField) {
                     continue;
                 }
