@@ -1,0 +1,11 @@
+{
+    "customResponseFields": [
+        {
+            "name": "code", //覆盖响应码字段
+            "desc": "响应代码", //覆盖响应码的字段注释
+            "ownerClassName": "org.springframework.data.domain.Pageable", //指定你要添加注释的类名
+            "ignore": true, //设置true会被自动忽略掉不会出现在文档中
+            "value": "00000" //设置响应码的值
+        }
+    ]
+}
