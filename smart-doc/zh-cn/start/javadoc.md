@@ -14,7 +14,7 @@ smart-doc的实现初衷是通过使用javadoc文档注释来去除注解式的�
 smart-doc针对java原生的@param添加一些特殊的用法。
 - 对基本类型请求参数设置mock值
 
-```
+```java
 /**
  * Test @RequestParam
  *
@@ -35,7 +35,7 @@ public void testRequestParam(@RequestParam String author, @RequestParam String t
 
 例如：使用jpa的Pageable作为接口参数接收对象时spring框架做了处理，实际生真正的属性是PageRequest,不过smart-doc如果采用PageRequest会推到出一些不必要的属性，该功能从smart-doc 1.8.5开始提供。
 
-```
+```java
 /**
  * 参数对象替换测试
  * @param pageable com.power.doc.model.PageRequestDto
@@ -49,7 +49,7 @@ public SimpleEnum resp(@RequestBody Pageable pageable){
 上面的写法中smart-doc就会使用`com.power.doc.model.PageRequestDto`代替jpa的Pageable做文档渲染，注意类名必须是全类名。
 下面来看smart-doc支持的书写方式
 
-```
+```java
 @param pageable com.power.doc.model.PageRequestDto
 @param pageable 你的注释|com.power.doc.model.PageRequestDto
 # smart-doc本身基于泛型推导，如果需要泛型则需要写上具体的对象
@@ -72,7 +72,7 @@ tag名称 | 描述
 @page|从smart-doc 2.0.2开始，page tag用于标注在controller的方法上表示该方法用来渲染返回一个静态页面，生成debug页面时如果发起测试，测试页面会自动在浏览器开启新标签显示页面。
 @ignoreParams|从smart-doc 2.1.0开始，ignoreParams tag用于标注在controller方法上忽略掉不想显示在文档中的参数，例如：@ignoreParams id name，多个参数名用空格隔开
 @response|从smart-doc 2.2.0开始，response tag标注在controller方法上可以允许用这自己定义返回的json example。建议只在返回基础类型时使用，如：Result<String>类型这种泛型是简单原生类型的响应。
-
+@tag|@since 2.2.5, @tag用于将controller方法分类, 可以将不同contoller下的方法指定到多个分类下, 同时也可以直接指定controller为一个分类或多个分类
 
 
 ## 2.1 @ignore使用
@@ -158,7 +158,7 @@ public class SubUser {
 
 ## 2.3 @mock使用
 
-```
+```java
 public class SimpleUser {
 
     /**
@@ -189,7 +189,7 @@ public class SimpleUser {
 ## 2.4 @download使用
 用于告诉smart-doc。你的controller中某一个方法是文件下载接口，smart-doc在生成debug调试页面时，可以生成一个文件下载的请求。后台参考代码如下：
 
-```
+```java
 /**
  * BaseController
  *
@@ -252,7 +252,7 @@ public abstract class BaseController {
 ```
 文件下载处理controller
 
-```
+```java
 /**
  * 文件下载测试
  *
@@ -299,7 +299,7 @@ public class DownloadController extends BaseController {
 
 ## 2.4 @page使用
 
-```
+```java
 /**
  * arthas火焰图列表
  *
@@ -320,7 +320,7 @@ public String render() {
 
 ## 2.5 @ignoreParams使用
 
-```
+```java
 /**
  * 测试时间
  * @ignoreParams id
@@ -335,7 +335,7 @@ public CommonResult<DateEntity> test(int id,@RequestBody DateEntity dateEntity){
 把id参数忽略掉，不要展示在文档中，这种主要是传统的有状态后台管理系统中的用户状态参数。
 ## 2.6 @response使用
 
-```
+```java
 /**
  * 测试response tag
  *
@@ -356,9 +356,45 @@ public CommonResult<String> create() {
 把id参数忽略掉，不要展示在文档中，这种主要是传统的有状态后台管理系统中的用户状态参数。
 
 
+## 2.7 @tag使用
+```java
+/**
+ * json file config test
+ * @tag dev
+ * @author cqmike 2021-07-16 14:09
+ **/
+@RestController
+public class ConfigRequestParamController {
+
+    /**
+     * get request test query param
+     * @tag test
+     * @author cqmike
+     * @return
+     */
+    @GetMapping("configQueryParamGet")
+    public void configQueryParamGet(String configQueryParam) {
+
+    }
+
+    /**
+     * post request test query param
+     *
+     * @tag test
+     * @author cqmike
+     * @return
+     */
+    @PostMapping("configQueryParamPost")
+    public void configQueryParamPost(String configQueryParam) {
+
+    }
+}
+```
+
+
 # IDEA自定义tag提示
 自定义的tag默认是不会自动提示的，需要用户在idea中进行设置。设置好后即可使用，下面以设置smart-doc自定义的mock tag为例，设置操作如下：
-![idea设置自定义tag提示](https://images.gitee.com/uploads/images/2020/0226/234135_8477cd9b_144669.png "idea_tag.png")
+![idea设置自定义tag提示](../../_images/234135_8477cd9b_144669.png "idea_tag.png")
 
 使用其它开发工具的用户请自行查找相关工具的自定义tag提示设置。
 

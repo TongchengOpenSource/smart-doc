@@ -1,10 +1,12 @@
 
-# smart-doc <small>2.2.4</small>
+# smart-doc <small>2.2.5</small>
 
 
-> 你给我的star，胜过所有读过的诗—smart−doc
+> A non-intrusive api interface document generator.
 
+* Smart-doc is a java restful api document generation tool.
+* Smart-doc is based on interface source code analysis to generate interface documentation, completely zero-injection.
 
-[GitHub](https://github.com/docsifyjs/docsify/)
+[GitHub](https://github.com/smart-doc-group/smart-doc)
 [Getting Started](#smart-doc)
 

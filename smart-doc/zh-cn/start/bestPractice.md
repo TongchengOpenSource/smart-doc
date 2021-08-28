@@ -6,7 +6,7 @@ smart-doc是一款根据接口的泛型定义来在编译器期加载分析项�
 # 不规范的返回定义
 ## 1.1 接口中使用Map
 因为无法分析代码中map的key值，所以smart-doc无法生成好的文档。
-```
+```java
 @GetMapping(value = "/object")
 public Map<String, User> testMapUser() {
     return null;
@@ -15,7 +15,7 @@ public Map<String, User> testMapUser() {
 这种生成文档中key没法明确。
 ## 1.2 返回JSONObject
 
-```
+```java
 /**
  * 返回用户信息
  * @return
@@ -29,7 +29,7 @@ public JSONObject object() {
 
 ## 1.3 返回ModelMap
  
-```
+```java
 /**
  * 返回用户信息
  * @return

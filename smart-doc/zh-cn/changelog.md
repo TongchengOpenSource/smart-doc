@@ -1,15 +1,26 @@
 # 变更日志
 
+#### 版本号：2.2.5
+- 更新日期: 2021-08-28
+- 更新内容：
+  1. 支持在html文档中不显示参数列表。
+  2. html文档使用的资源全部改成本地引用。
+  3. 修复Boolean类型字段命名为is前缀时，is前缀被去除的bug。
+  4. 修复配置了字典码列表后枚举字段注释显示错误[git #139](https://github.com/smart-doc-group/smart-doc/issues/139) 。
+  5. 修复分析过程中出现的数组越界异常 。
+  6. 新增接口分组支持。
+
 
 #### 版本号：2.2.4
 - 更新日期: 2021-08-08
 - 更新内容：
-  1. 修复字典码推送torna错误 #https://gitee.com/smart-doc-team/smart-doc/issues/I43JQR。
+  1. 修复字典码推送torna错误 [gitee #I43JQR](https://gitee.com/smart-doc-team/smart-doc/issues/I43JQR)。
   2. 新增jsr303 @size和@length支持。
   3. 修改html的模板样式错误。
   4. 修复postman错误#I41G2E 。
   5. 新增isReplace配置 。
   6. 修复当存在多个jsr注解时，部分注解失效问题。
+
 
 #### 版本号：2.2.3
 - 更新日期: 2021-07-18
@@ -17,9 +28,9 @@
   1. 增加pathPrefix配置项用于配置上下文，引入该配置项后serverUrl仅用于配置服务器地址。
   2. 支持请求头常量设置解析。
   3. 支持使用JsonIgnoreProperties和JSONType注解去忽略多字段。
-  4. 修改部分文档设置allInOneDocFileName无效的问题,#131 。
-  5. 修复dubbo rpc文档模板格式错误 #https://gitee.com/smart-doc-team/smart-doc/issues/I40ZGE .
-  6. 支持配置添加拦截器中设置全局请求参数，#https://github.com/smart-doc-group/smart-doc/issues/132 .
+  4. 修改部分文档设置allInOneDocFileName无效的问题,[git #131](https://github.com/smart-doc-group/smart-doc/issues/131) 。
+  5. 修复dubbo rpc文档模板格式错误 [gitee #I40ZGE](https://gitee.com/smart-doc-team/smart-doc/issues/I40ZGE) .
+  6. 支持配置添加拦截器中设置全局请求参数，[git #132](https://github.com/smart-doc-group/smart-doc/issues/132) .
   7. 修复部分类型mock未推送到torna的问题。
   
 
