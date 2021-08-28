@@ -229,6 +229,12 @@ When you need to use smart-doc to generate more API document information, you ca
       "pathPatterns": "*",
       "excludePathPatterns":"/app/page/**"
     }
+  ],
+  "groups": [ // Group different controllers, @since 2.2.5
+    {
+      "name": "test group",
+      "apis": "com.power.doc.controller.app.*"
+    }
   ]
 }
 ```
