@@ -135,6 +135,8 @@ When you need to use smart-doc to generate more API document information, you ca
   "allInOneDocFileName":"index.html",//Customize the output document name
   "requestExample":"true",//Whether to display the request example in the document, the default value is true.
   "responseExample":"true",//Whether to display the response example in the document, the default is true.
+  "requestParamsTable": true, //@since 2.2.5,Whether to display the request params table in the document, the default value is true.
+  "responseParamsTable": true //@since 2.2.5,Whether to display the response params table in the document, the default is true.
   "displayActualType":false,//display actual type of generic,
   "urlSuffix":".do",//Support the url suffix of the old SpringMVC project,@since 2.1.0
   "appKey": "xxx",// torna appKey, @since 2.0.9

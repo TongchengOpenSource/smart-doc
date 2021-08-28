@@ -140,6 +140,8 @@ smart-doc官方目前已经开发完成[Maven插件](https://gitee.com/smart-doc
   "allInOneDocFileName":"index.html",//自定义设置输出文档名称, @since 1.9.0
   "requestExample":"true",//是否将请求示例展示在文档中，默认true，@since 1.9.0
   "responseExample":"true",//是否将响应示例展示在文档中，默认为true，@since 1.9.0
+  "requestParamsTable": true, //是否将请求参数表展示在文档中，默认true，@since 2.2.5
+  "responseParamsTable": true //是否将响应参数表展示在文档中, 默认true，@since 2.2.5
   "urlSuffix":".do",//支持SpringMVC旧项目的url后缀,@since 2.1.0
   "displayActualType":false,//配置true会在注释栏自动显示泛型的真实类型短类名，@since 1.9.6
   "appKey": "20201216788835306945118208",// torna平台对接appKey,, @since 2.0.9
