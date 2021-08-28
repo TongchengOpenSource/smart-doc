@@ -227,9 +227,13 @@ public class DocUtil {
         }
         String[] patterns = packageFilters.split(",");
         for (String str : patterns) {
-            Pattern pattern = Pattern.compile(str);
-            if (pattern.matcher(controllerName).matches()) {
-                return true;
+            if (str.contains("*")) {
+                Pattern pattern = Pattern.compile(str);
+                if (pattern.matcher(controllerName).matches()) {
+                    return true;
+                }
+            } else {
+                return controllerName.startsWith(str);
             }
         }
         return false;
@@ -288,8 +292,9 @@ public class DocUtil {
     }
 
     /**
-     *  // /detail/{id:[a-zA-Z0-9]{3}}/{name:[a-zA-Z0-9]{3}}
-     *  去除正则表达式
+     * // /detail/{id:[a-zA-Z0-9]{3}}/{name:[a-zA-Z0-9]{3}}
+     * 去除正则表达式
+     *
      * @param str
      * @return
      */
