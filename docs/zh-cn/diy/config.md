@@ -147,7 +147,9 @@
       "name": "测试分组",
       "apis": "com.power.doc.controller.app.*"
     }
-  ]
+  ],
+  "requestParamsTable": true, // 是否将请求参数表展示在文档中，默认true，@since 2.2.5
+  "responseParamsTable": true //是否将响应参数表展示在文档中, 默认true，@since 2.2.5
 }
 ```
 
@@ -827,5 +829,33 @@ ResponseBodyAdvice统一返回设置(不要随便配置根据项目的技术来�
             "apis": "com.power.doc.controller.app.*"  // 分组url, 支持正则
         }
     ]
+}
+```
+
+
+## requestParamsTable
+* 必填：`false`
+* 类型：`Boolean`
+* 默认值: `true`
+* @since `2.2.5` :new:
+
+是否将请求参数表展示在文档中。
+```json
+{
+    "requestParamsTable": true
+}
+```
+
+
+## responseParamsTable  
+* 必填：`false`
+* 类型：`Boolean`
+* 默认值: `true`
+* @since `2.2.5` :new:
+
+是否将响应参数表展示在文档中。
+```json
+{
+    "responseParamsTable": true
 }
 ```

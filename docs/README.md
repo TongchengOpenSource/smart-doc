@@ -36,7 +36,7 @@ smart-doc在业内率先提出基于JAVA泛型定义推导的理念， 完全基
 ## 最佳实践
 
 smart-doc + [Torna](http://torna.cn/) 组成行业领先的文档生成和管理解决方案，使用smart-doc无侵入完成Java源代码分析和提取注释生成API文档，自动将文档推送到Torna企业级接口文档管理平台。
-![smart-doc + Torna](../_images/smart-to-torna.png)
+![smart-doc + Torna](./_images/smart-to-torna.png)
 
 [smart-doc+Torna文档自动化](zh-cn/diy/integrated.md)
 
@@ -56,7 +56,7 @@ smart-doc is under the Apache 2.0 license. See the [LICENSE](https://github.com/
 
 ## 谁在使用
 
-> 排名不分先后，更多接入公司，欢迎在[此处]](https://github.com/smart-doc-group/smart-doc/issues/12)登记（仅供开源用户参考）
+> 排名不分先后，更多接入公司，欢迎在[此处](https://github.com/smart-doc-group/smart-doc/issues/12)登记（仅供开源用户参考）
 
 ![IFLYTEK](https://gitee.com/smart-doc-team/smart-doc/raw/master/images/known-users/iflytek.png)
 &nbsp;&nbsp;<img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/known-users/oneplus.png" title="一加" width="83px" height="83px"/>

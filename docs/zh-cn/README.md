@@ -56,7 +56,7 @@ smart-doc is under the Apache 2.0 license. See the [LICENSE](https://github.com/
 
 ## 谁在使用
 
-> 排名不分先后，更多接入公司，欢迎在[此处]](https://github.com/smart-doc-group/smart-doc/issues/12)登记（仅供开源用户参考）
+> 排名不分先后，更多接入公司，欢迎在[此处](https://github.com/smart-doc-group/smart-doc/issues/12)登记（仅供开源用户参考）
 
 ![IFLYTEK](https://gitee.com/smart-doc-team/smart-doc/raw/master/images/known-users/iflytek.png)
 &nbsp;&nbsp;<img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/known-users/oneplus.png" title="一加" width="83px" height="83px"/>
