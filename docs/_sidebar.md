@@ -1,6 +1,13 @@
 - Getting started
+  - [Quick start](zh-cn/start/quickstart.md "Quick start")
+  - [Code Usage](zh-cn/start/javadoc.md "Code Usage")
+  - [Best Practice](zh-cn/start/bestPractice.md "Best Practice")
 
-  - [Quick start](start/quickstart.md)
-
-
-- [Changelog](start/changelog.md)
+- Customization
+  - [Configuration](zh-cn/diy/config.md "Configuration")
+  - [Advanced Features](zh-cn/diy/advancedFeatures.md)
+  - [Code Highlight](zh-cn/diy/highlight.md)
+  - [Interface UI integration](zh-cn/diy/integrated.md)
+- [Document Effect](zh-cn/docsImages.md)
+- [Expand Development](zh-cn/expand.md)
+- [Changelog](zh-cn/changelog.md "Changelog")
