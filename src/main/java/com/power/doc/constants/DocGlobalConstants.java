@@ -93,6 +93,8 @@ public interface DocGlobalConstants {
 
     String ALL_IN_ONE_CSS = "css/AllInOne.css";
 
+    String ALL_IN_ONE_CSS_OUT = "AllInOne.css";
+
     String FONT_STYLE = "font.css";
 
     String HIGH_LIGHT_JS = "highlight.min.js";
