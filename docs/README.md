@@ -6,41 +6,39 @@
 ![closed pull requests](https://img.shields.io/github/issues-pr-closed/shalousun/smart-doc)
 ![java version](https://img.shields.io/badge/JAVA-1.8+-green.svg)
 
-> smart-doc是一款同时支持JAVA REST API和Apache Dubbo RPC接口文档生成的工具。
+> smart-doc is a tool that supports both JAVA REST API and Apache Dubbo RPC interface document generation.
 
-## 概述
-smart-doc在业内率先提出基于JAVA泛型定义推导的理念， 完全基于接口源码来分析生成接口文档，不采用任何注解侵入到业务代码中。你只需要按照java-doc标准编写注释， smart-doc就能帮你生成一个简易明了的Markdown、HTML5、Postman Collection2.0+、OpenAPI 3.0+的文档。
+## Introduce
+Smart-doc is the first in the industry to put forward the concept of derivation based on JAVA generic definitions. It analyzes and generates interface documents based on the interface source code, and does not use any annotations to invade the business code. You only need to write comments in accordance with the java-doc standard, and smart-doc can help you generate a simple and clear documentation of Markdown, HTML5, Postman Collection2.0+, and OpenAPI 3.0+.
 
-> 无论你是很有经验的大佬、还是刚入行的萌新。遇到使用疑惑时，我们希望你能仔细阅读smart-doc官方码云的wiki文档。我们将smart-doc及其插件的 每一个配置项和可能在日常中遇到的问题都整理到了文档中。仔细阅读文档就是对开源项目最大的支持。
+> Whether you are a very experienced boss or a newcomer. When encountering doubts about usage, we hope you can carefully read the wiki document of smart-doc official code cloud. We have organized each configuration item of smart-doc and its plug-ins and the problems that may be encountered in daily life into the document. Reading the documentation carefully is the greatest support for open source projects.
 
-查看[快速开始](zh-cn/start/quickstart.md)了解详情。
+Check out the [quick start](zh-cn/start/quickstart.md) for details.
 
-## 特性
-
-- 零注解、零学习成本、只需要写标准JAVA注释。
-- 基于源代码接口定义自动推导，强大的返回结构推导。
-- 支持Spring MVC、Spring Boot、Spring Boot Web Flux(controller书写方式)、Feign。
-- 支持Callable、Future、CompletableFuture等异步接口返回的推导。
-- 支持JavaBean上的JSR303参数校验规范，包括分组验证。
-- 对JSON请求参数的接口能够自动生成模拟JSON参数。
-- 对一些常用字段定义能够生成有效的模拟值。
-- 支持生成JSON返回值示例。
-- 支持从项目外部加载源代码来生成字段注释(包括标准规范发布的jar包)。
-- 支持生成多种格式文档：Markdown、HTML5、Asciidoctor、Postman Collection、OpenAPI 3.0。 Up- 开放文档数据，可自由实现接入文档管理系统。
-- 支持导出错误码和定义在代码中的各种字典码到接口文档。
-- 支持Maven、Gradle插件式轻松集成。
-- 支持Apache Dubbo RPC接口文档生成。
-- debug接口调试html5页面完全支持文件上传，下载(@download tag标记下载方法)测试。
+## Features
+- Zero annotations, zero learning costs, and only need to write standard JAVA annotations.
+- Automatic derivation based on source code interface definition, powerful return structure derivation.
+- Support Spring MVC, Spring Boot, Spring Boot Web Flux (controller writing method), Feign.
+- Support the derivation of asynchronous interface returns such as Callable, Future, CompletableFuture.
+- Support JSR303 parameter verification specification on JavaBean, including group verification.
+- The interface for JSON request parameters can automatically generate simulated JSON parameters.
+- The definition of some commonly used fields can generate valid analog values.
+- Support generating JSON return value examples.
+- Support loading source code from outside the project to generate field comments (including jar packages released by standard specifications).
+- Support to generate documents in multiple formats: Markdown, HTML5, Asciidoctor, Postman Collection, OpenAPI 3.0. Up- open document data, freely realize access to document management system.
+- Support exporting error codes and various dictionary codes defined in the code to the interface document.
+- Support Maven, Gradle plug-in easy integration.
+- Support Apache Dubbo RPC interface document generation.
+- The debug interface debugging html5 page fully supports file upload and download (@download tag tag download method) testing.
 
 
 ## 最佳实践
-
-smart-doc + [Torna](http://torna.cn/) 组成行业领先的文档生成和管理解决方案，使用smart-doc无侵入完成Java源代码分析和提取注释生成API文档，自动将文档推送到Torna企业级接口文档管理平台。
+smart-doc + [Torna](http://torna.cn/) form an industry-leading document generation and management solution, using smart-doc to complete Java source code analysis and extract annotations to generate API documents without intrusion, and automatically push the documents to the Torna enterprise-level interface document management platform.
 ![smart-doc + Torna](./_images/smart-to-torna.png)
 
 [smart-doc+Torna文档自动化](zh-cn/diy/integrated.md)
 
-> Torna是由smart-doc官方独家推动联合研发的企业级文档管理系统，因此smart-doc官方不会对接其它任何的外部文档管理系统，例如像showdoc、yapi 之类的对接请自定内部处理，也不要再给我们提其他文档系统对接的PR。我们核心是把smart-doc+Torna的这套方案打造好
+> Torna is an enterprise-level document management system jointly developed and exclusively promoted by smart-doc officials. Therefore, smart-doc officials will not connect to any other external document management systems, such as showdoc and yapi. Don't mention the PR for other file systems. Our core is to build the smart-doc+Torna solution.
 
 
 ## TODO
@@ -51,12 +49,12 @@ smart-doc + [Torna](http://torna.cn/) 组成行业领先的文档生成和管理
 
 smart-doc is under the Apache 2.0 license. See the [LICENSE](https://github.com/smart-doc-group/smart-doc/blob/master/LICENSE) file for details.
 
-**注意：** smart-doc源代码文件全部带有版权注释，使用关键代码二次开源请保留原始版权，否则后果自负！
+**PS:** Smart-doc source code files are all with copyright notes. Please keep the original copyright when using the key code for the second open source, otherwise you will be responsible for the consequences!
 
 
 ## 谁在使用
 
-> 排名不分先后，更多接入公司，欢迎在[此处](https://github.com/smart-doc-group/smart-doc/issues/12)登记（仅供开源用户参考）
+> These are only part of the companies using smart-doc, for reference only. If you are using smart-doc, please [add your company here](https://github.com/smart-doc-group/smart-doc/issues/12) to tell us your scenario to make smart-doc better.
 
 ![IFLYTEK](https://gitee.com/smart-doc-team/smart-doc/raw/master/images/known-users/iflytek.png)
 &nbsp;&nbsp;<img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/known-users/oneplus.png" title="一加" width="83px" height="83px"/>
@@ -72,17 +70,13 @@ smart-doc is under the Apache 2.0 license. See the [LICENSE](https://github.com/
 &nbsp;&nbsp;
 
 
-## 获奖情况
 
-- 2020 年度 OSC 中国开源项目评选”活动中获得「最积极运营项目」
-
-
-## 致谢
-感谢[JetBrains SoftWare](https://www.jetbrains.com) 为本开源项目提供的免费Open Source license。
+## Acknowledgements
+Thanks to [JetBrains SoftWare](https://www.jetbrains.com) for providing free Open Source license for this open source project. 
 <img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/jetbrains-variant-3.png" width="260px" height="220px"/>
+
 ## Contact
 
-愿意参与构建smart-doc或者是需要交流问题可以加入qq群：
+Email： 836575280@qq.com
 
-<img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/smart-doc-qq.png" title="qq群" width="200px" height="210px"/>
 
