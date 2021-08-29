@@ -124,4 +124,9 @@ public interface DocTags {
      *  custom @tag
      */
     String TAG = "tag";
+
+    /**
+     * custom @dubboRest tag
+     */
+    String DUBBO_REST = "dubboRest";
 }

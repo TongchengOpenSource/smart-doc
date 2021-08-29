@@ -231,4 +231,34 @@ public interface DocGlobalConstants {
 
     String PATH_DELIMITER = "/";
 
+
+    /**
+     * JAX-RS@PATH
+     */
+    String JAX_PATH_FULLY = "javax.ws.rs.Path";
+    /**
+     * JAX-RS@Produces
+     */
+    String JAX_PRODUCES_FULLY = "javax.ws.rs.Produces";
+    /**
+     * JAX-RS@Produces
+     */
+    String JAX_CONSUMES_FULLY = "javax.ws.rs.Consumes";
+    /**
+     * JAX-RS@GET
+     */
+    String JAX_GET_FULLY = "javax.ws.rs.GET";
+    /**
+     * JAX-RS@POST
+     */
+    String JAX_POST_FULLY = "javax.ws.rs.POST";
+    /**
+     * JAX-RS@PUT
+     */
+    String JAX_PUT_FULLY = "javax.ws.rs.PUT";
+    /**
+     * JAX-RS@DELETE
+     */
+    String JAXB_DELETE_FULLY = "javax.ws.rs.DELETE";
+
 }

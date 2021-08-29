@@ -35,7 +35,14 @@ public class RequestMapping {
      * path
      */
     private String shortUrl;
+    /**
+     * method type
+     */
     private String methodType;
+
+    /**
+     * media type
+     */
     private String mediaType;
 
     /**

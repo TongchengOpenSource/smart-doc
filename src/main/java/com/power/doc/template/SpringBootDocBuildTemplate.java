@@ -105,11 +105,11 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
     }
 
     /**
-     *  handle tags to api doc
-     *  copy the same tag
+     * handle tags to api doc
+     * copy the same tag
      *
-     * @author cqmike
      * @param apiDocList
+     * @author cqmike
      */
     private List<ApiDoc> handleTagsApiDoc(List<ApiDoc> apiDocList) {
         if (CollectionUtil.isEmpty(apiDocList)) {
@@ -167,7 +167,6 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         apiDocs.sort(Comparator.comparing(ApiDoc::getOrder));
         return apiDocs;
     }
-
 
 
     @Override
@@ -364,11 +363,10 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         if (StringUtil.isEmpty(apiReqHeader.getPathPatterns())
                 && StringUtil.isEmpty(apiReqHeader.getExcludePathPatterns())) {
             return true;
-        } else {
-            boolean flag = DocPathUtil.matches(requestMapping.getShortUrl(), apiReqHeader.getPathPatterns()
-                    , apiReqHeader.getExcludePathPatterns());
-            return flag;
         }
+        return DocPathUtil.matches(requestMapping.getShortUrl(), apiReqHeader.getPathPatterns()
+                , apiReqHeader.getExcludePathPatterns());
+
     }
 
     private ApiRequestExample buildReqJson(DocJavaMethod javaMethod, ApiMethodDoc apiMethodDoc, String methodType,

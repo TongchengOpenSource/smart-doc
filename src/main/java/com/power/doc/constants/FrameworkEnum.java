@@ -39,7 +39,12 @@ public enum FrameworkEnum {
     /**
      * Spring Framework
      */
-    SPRING("spring", "com.power.doc.template.SpringBootDocBuildTemplate");
+    SPRING("spring", "com.power.doc.template.SpringBootDocBuildTemplate"),
+
+    /**
+     * Apache Dubbo Rest Resolver
+     */
+    DUBBO_REST("dubbo_rest", "com.power.doc.template.DubboDocBuildTemplate");
 
     /**
      * Framework name
