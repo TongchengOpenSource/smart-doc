@@ -71,7 +71,7 @@ public class AdocDocBuilder {
         IDocBuildTemplate docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework());
         List<ApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder);
         if (config.isAllInOne()) {
-            String docName = builderTemplate.allInOneDocName(config,INDEX_DOC,".doc");
+            String docName = builderTemplate.allInOneDocName(config,INDEX_DOC,".adoc");
             apiDocList = docBuildTemplate.handleApiGroup(apiDocList, config);
             builderTemplate.buildAllInOne(apiDocList, config, javaProjectBuilder, ALL_IN_ONE_ADOC_TPL, docName);
         } else {
