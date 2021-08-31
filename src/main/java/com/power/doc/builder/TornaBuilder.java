@@ -30,6 +30,7 @@ import com.power.doc.constants.TornaConstants;
 import com.power.doc.factory.BuildTemplateFactory;
 import com.power.doc.model.ApiConfig;
 import com.power.doc.model.ApiDoc;
+import com.power.doc.model.ApiGroup;
 import com.power.doc.model.torna.Apis;
 import com.power.doc.model.torna.TornaApi;
 import com.power.doc.model.torna.TornaDic;
@@ -119,7 +120,8 @@ public class TornaBuilder {
 
         }
         tornaApi.setCommonErrorCodes(buildErrorCode(apiConfig));
-        tornaApi.setApis(groupApiList);
+        // delete default group when only default group
+        tornaApi.setApis(groupApiList.size() == 1 ? groupApiList.get(0).getItems() : groupApiList);
         //Build push document information
         Map<String, String> requestJson = TornaConstants.buildParams(PUSH, new Gson().toJson(tornaApi), apiConfig);
         //Push dictionary information

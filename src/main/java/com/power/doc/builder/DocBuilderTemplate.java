@@ -162,22 +162,29 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
             apiDoc1.setOrder(apiDocs.size() + 1);
             apiDocs.add(apiDoc1);
         }
+
+        boolean isOnlyDefaultGroup = apiDocList.size() == 1;
+
         Map<String, String> titleMap = setDirectoryLanguageVariable(config, tpl);
         // set error code
         if (CollectionUtil.isNotEmpty(errorCodeList)) {
             ApiDoc apiDoc1 = new ApiDoc();
-            apiDoc1.setOrder(apiDocs.size() + 1);
+            apiDoc1.setOrder((isOnlyDefaultGroup ? apiDocs.get(0).getChildrenApiDocs().size() : apiDocs.size()) + 1);
             apiDoc1.setDesc(titleMap.get(TemplateVariable.ERROR_LIST_TITLE.getVariable()));
             apiDoc1.setList(new ArrayList<>(0));
             apiDoc1.setLink("error_code_list");
             apiDoc1.setAlias("error");
             apiDoc1.setGroup(apiDoc1.getDesc());
-            apiDocs.add(apiDoc1);
+            if (isOnlyDefaultGroup) {
+                apiDocs.get(0).getChildrenApiDocs().add(apiDoc1);
+            } else {
+                apiDocs.add(apiDoc1);
+            }
         }
         // set dict list
         List<ApiDocDict> apiDocDictList = DocUtil.buildDictionary(config, javaProjectBuilder);
         ApiDoc apiDoc1 = new ApiDoc();
-        apiDoc1.setOrder(apiDocs.size() + 1);
+        apiDoc1.setOrder((isOnlyDefaultGroup ? apiDocs.get(0).getChildrenApiDocs().size() : apiDocs.size()) + 1);
         apiDoc1.setLink("dict_list");
         apiDoc1.setAlias("dict");
         apiDoc1.setDesc(titleMap.get(TemplateVariable.DICT_LIST_TITLE.getVariable()));
@@ -190,7 +197,11 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
             methodDocs.add(methodDoc);
         }
         apiDoc1.setList(methodDocs);
-        apiDocs.add(apiDoc1);
+        if (isOnlyDefaultGroup) {
+            apiDocs.get(0).getChildrenApiDocs().add(apiDoc1);
+        } else {
+            apiDocs.add(apiDoc1);
+        }
         tpl.binding(TemplateVariable.API_DOC_LIST.getVariable(), apiDocs);
         FileUtil.nioWriteFile(tpl.render(), config.getOutPath() + FILE_SEPARATOR + SEARCH_JS_OUT);
     }
