@@ -1,82 +1,81 @@
 # 高级特性
 
-## 公共请求头
+## Public request header
 
 **requestHeaders**
 
-在smart-doc 2.2.2以前的版本中，在smart-doc.json中设置请求头是这样的
+In versions prior to smart-doc 2.2.2, the request header is set in smart-doc.json like this
 
 ```json
 {
-    "requestHeaders": [ //设置请求头，没有需求可以不设置
-        {
-            "name": "token", //请求头名称
-            "type": "string", //请求头类型
-            "desc": "desc", //请求头描述信息
-            "value": "kk", //不设置默认null
-            "required": false, //是否必须
-            "since": "-" //什么版本添加的改请求头
-        }
-    ]
+     "requestHeaders": [//Set the request header, no need to set it
+         {
+             "name": "token", //Request header name
+             "type": "string", //Request header type
+             "desc": "desc", //Request header description information
+             "value": "kk", //Do not set the default null
+             "required": false, //Is it necessary
+             "since": "-" //What version added to change the request header
+         }
+     ]
 }
 ```
+Many users said in the issue that their token was intercepted by an interceptor, and did not explicitly declare the request header at the interface level. Starting from version 2.2.2, we have added two configuration properties:
 
-很多用户在issue中说他们的token是通过拦截器拦截的，并没有显示的在接口层面去申明请求头。在2.2.2版本开始，我们增加了两个配置属性：
+- `pathPatterns` configures the action path of the request header, which is consistent with the interceptor configuration `pathPatterns`, and multiple regular expressions are separated by commas.
+- `excludePathPatterns` configures to ignore the request header on those paths. Consistent with the interceptor `excludePathPatterns`, multiple regular expressions are separated by commas.
 
-- `pathPatterns` 配置请求头的作用路径，和拦截器配置`pathPatterns`一致的，多个正则式之间用逗号隔开。
-- `excludePathPatterns` 配置在那些path上忽略该请求头。和拦截器的`excludePathPatterns`一致的，多个正则式之间用逗号隔开。
-
-所以你可以根据自己的需求来增加上面两个配置属性。例如：
+So you can add the above two configuration attributes according to your needs. E.g:
 
 ```json
 {
-    "requestHeaders": [ //设置请求头，没有需求可以不设置
-        {
-            "name": "token", //请求头名称
-            "type": "string", //请求头类型
-            "desc": "desc", //请求头描述信息
-            "value": "kk", //不设置默认null
-            "required": false, //是否必须
-            "since": "-", //什么版本添加的改请求头
-            "pathPatterns": "/app/test/**", //只有以/app/test/开头的url才会有此请求头
-            "excludePathPatterns": "/app/login" // 登录url=/app/page/将不会有该请求头
-        }
-    ]
+     "requestHeaders": [//Set the request header, no need to set it
+         {
+             "name": "token", //Request header name
+             "type": "string", //Request header type
+             "desc": "desc", //Request header description information
+             "value": "kk", //Do not set the default null
+             "required": false, //Is it necessary
+             "since": "-", //What version added the change request header
+             "pathPatterns": "/app/test/**", //only URLs beginning with /app/test/ will have this request header
+             "excludePathPatterns": "/app/login" // Login url=/app/page/ will not have this request header
+         }
+     ]
 }
 ```
 
-> smart-doc完全借鉴了Spring的PathMatcher的匹配，因此就按照自己的拦截器规则来添加。
+> smart-doc fully borrows the matching of Spring's PathMatcher, so it is added according to its own interceptor rules.
 
 
-## 公共请求参数
+## Public request parameters
 * @since `2.2.3`
 
 **requestParams**
 
 ```json
 {
-    "requestParams": [
-        {
-            "name": "configPathParam", //请求参数名称
-            "type": "string", //请求参数类型
-            "desc": "desc", //请求参数描述信息
-            "paramIn": "path", // path 或者query
-            "value": "testPath", //不设置默认null
-            "required": false, //是否必须
-            "since": "-", //什么版本添加的改请求参数
-            "pathPatterns": "**", //正则表达式过滤请求, 所有参数都会有此参数
-            "excludePathPatterns": "/app/page/**" //参考请求头中的用法
-        }
-    ]
+     "requestParams": [
+         {
+             "name": "configPathParam", //Request parameter name
+             "type": "string", //request parameter type
+             "desc": "desc", //Request parameter description information
+             "paramIn": "path", // path or query
+             "value": "testPath", //Do not set the default null
+             "required": false, //Is it necessary
+             "since": "-", //What version added the request parameter
+             "pathPatterns": "**", //Regular expression filtering request, all parameters will have this parameter
+             "excludePathPatterns": "/app/page/**" //Refer to the usage in the request header
+         }
+     ]
 }
 ```
 
 #### `paramIn`
-* `path`: path参数, id为公共请求参数
+* `path`: path parameter, id is a public request parameter
 
 ```java
 /**
- * 接收数组类型pathVariable
+ * Receive array type pathVariable
  * @return
  */
 @GetMapping("/test/{id}")
@@ -85,13 +84,13 @@ public CommonResult<String[]> testPathVariable(@PathVariable("id") String[] id )
 }
 ```
 
-* `query`: query参数, configQueryParam为公共请求参数
+* `query`: query parameter, configQueryParam is a public request parameter
 
 ```java
 /**
- * post请求测试query参数
+ * post request test query parameters
  *
- * @tag 顶顶顶到达
+ * @tag dddd
  * @author cqmike
  * @return
  */
@@ -102,16 +101,16 @@ public CommonResult<Void> configQueryParamPost(String configQueryParam) {
 }
 ```
 
-## 静态常量替换
+## Static constant replacement
 
-在java web接口开发的过程中，有用户会在controller的path中使用静态场景。因此也是希望smart-doc能够解析静态常量获取到真实的值。
-下面来看下例子：
+In the process of java web interface development, some users will use static scenes in the controller's path. Therefore, it is also hoped that smart-doc can parse static constants to obtain real values.
+Let's look at an example:
 
 ```java
 /**
  * Test Constants
  *
- * @param page 页码
+ * @param page page
  */
 @GetMapping(value = "testConstants/" + ApiVersion.VERSION)
 public void testConstantsRequestParams(@RequestParam(required = false,
@@ -120,8 +119,8 @@ public void testConstantsRequestParams(@RequestParam(required = false,
 
 }
 ```
-针对这种常量的使用，smart-doc要求用户配置产量类，smart-doc根据设置的常量类分析形成常量容器，在做接口分析是从常量容器中查找做替换。
-配置参考输入：
+For the use of such constants, smart-doc requires users to configure the output class. Smart-doc analyzes the set constant class to form a constant container. When doing interface analysis, it searches and replaces the constant container.
+Configuration reference input:
 
 ```json
 {
@@ -135,7 +134,7 @@ public void testConstantsRequestParams(@RequestParam(required = false,
    }]
 }
 ```
-如果是单元测试，配置参考如下
+If it is a unit test, the configuration reference is as follows
 
 ```java
 ApiConfig config = new ApiConfig();
@@ -145,25 +144,25 @@ config.setApiConstants(
        ApiConstant.builder().setConstantsClass(ApiVersion.class)
 );
 ```
-> 由于存在不同常量类中常量同名的情况，因此smart-doc在加载配置的常量类创建常量池的时候，每个常量是带上类名前缀的。
-例如ApiVersion类中的VERSION常量。最后的名字是`ApiVersion.VERSION`。这就要求在使用常量的时候使用`类名.常量名`的方式。
-当然常量是是写在接口中还是普通的常量类中都是支持加载解析的。
+> Since there are constants in different constant classes with the same name, when smart-doc loads the configured constant class to create a constant pool, each constant is prefixed with the class name.
+For example, the VERSION constant in the ApiVersion class. The final name is `ApiVersion.VERSION`. This requires the use of `class name.constant name` when using constants.
+Of course, whether the constant is written in the interface or in the ordinary constant class supports loading and parsing.
 
 
-## 响应字段忽略
+## Response field ignored
 
-有同学在使用smart-doc时提问：“如何忽略响应实体中的某个字段？”，例如像密码`password`这种字段敏感字段，smart-doc在一开始开发的时候就考虑到了这种情况，因此我们对java的一些json序列化库做了支持，像Spring框架默认使用的`jackson`和国内用户使用较多的`Fastjson`都是支持的。
-- 为什么不用@ignore来标注返回字段忽略？这是一种掩耳盗铃的做法，仅仅是表面文档不展示，数据依旧返回了，因此这是smart-doc不支持的原因。还是使用框架的注解来控制吧。
+Some students asked when using smart-doc: "How to ignore a field in the response entity?", such as a sensitive field such as password `password`, which was considered when smart-doc was first developed. Therefore, we have supported some json serialization libraries of java, such as `jackson` which is used by default by Spring framework and `Fastjson` which is used more by domestic users.
+- Why not use @ignore to mark the return field to ignore? This is a way to hide the ears and steal the bells, but the surface documents are not displayed, and the data is still returned, so this is the reason why smart-doc does not support it. Let's use the annotations of the framework to control it.
 
-### 使用jackson注解忽略
+### Ignore using jackson annotations
 
-一般spring框架默认使用的是`jackson`作为json序列化和反序列化库。
+Generally, the default spring framework uses `jackson` as the json serialization and deserialization library.
 
 ```java
 public class JacksonAnnotation {
 
     /**
-     * 用户名
+     * user name
      */
 
     @JsonProperty("name")
@@ -171,85 +170,85 @@ public class JacksonAnnotation {
 
 
     /**
-     * 身份证号
+     * ID card
      */
     @JsonIgnore
     private String idCard;
 }
 ```
-像这个idCard使用@JsonIgnore注解后，接口不会看到该字段，smart-doc发现该注解也不会把该字段显示在接口文档中。
-### Fastjson忽略响应字段
-Fastjson也自己用于忽略字段的注解，Fastjson使用 `@JSONField(serialize = false)`,起关键作用的是`serialize = false`
+Like this idCard using @JsonIgnore annotation, the interface will not see the field, and smart-doc will find that the annotation will not display the field in the interface document.
+### Ignore using fastjson annotations 
+Fastjson is also used to ignore field annotations. Fastjson uses `@JSONField(serialize = false)`, and the key role is `serialize = false`
 
 ```java
 public class FastJson {
 
     /**
-     * 用户名
+     * user name
      */
     @JSONField(name = "name")
     private String username;
 
 
     /**
-     * 身份证号
+     * ID card
      */
     @JSONField(serialize = false)
     private String idCard;
 }
 ```
-如果你在项目中使用了Fastjson替代默认的Jackson，按照上面的`idCard`字段这样写上注解后，无论是真实的数据响应还是smart-doc的文档都能帮你
-忽略掉相关字段。
+If you use Fastjson instead of the default Jackson in your project, after writing the annotations in the `idCard` field above, whether it is a real data response or a smart-doc document, it can help you ignore the relevant fields.
 
 
-## 源码加载
+## Source code loading
 
-### 为什么外部jar没有注释
-在编译java代码打包成jar包后，编译器会将代码中的注释去除，并且泛型也被擦除(例如定义泛型T,编译后T将变成Object),smart-doc是依赖泛型和源码推荐出文档的，因此如果接口使用的类来自外部jar包或者是其他模块，那么需要做一些处理才能让smart-doc能够正确分析出文档。
-### 如何让smart-doc加载源码
-Smart-doc作为一款完全依赖源码注释来分析生成文档的工具。如果没有源代码，那么在生成文档时将只能看到字段名和字段类型等信息，注释相关的信息都将无法生成，对于一个所有代码都在一个单独项目中的情况，你不需要考虑任何东西，Smart-doc能完美的完成你想要的文档，但是对一个多模块项目，或者项目依赖了一个独立的jar包的情况，smart-doc将无法加载到它所运行模块之外的代码。下面将会介绍如何来让Smart-doc加载到运行模块外的项目代码。
+### Why is there no comment in the external jar
+After compiling the java code and packaging it into a jar package, the compiler will remove the comments in the code, and the generics are also erased (for example, define generic T, T will become Object after compilation), smart-doc is dependent on generics Documents are recommended with the source code. Therefore, if the classes used in the interface come from external jar packages or other modules, some processing is required to allow smart-doc to correctly analyze the documents.
 
- **注意：自smart-doc-maven-plugin 1.0.2版本开始，使用maven的插件能够实现自动源码加载。** 
-#### 通过`ApiConfig`类设置
-代码示例如下：
+### How to make smart-doc load source code
+Smart-doc is a tool that completely relies on source code comments to analyze and generate documents. If there is no source code, you will only be able to see information such as field names and field types when generating documents, and information related to comments will not be generated. For a situation where all the codes are in a single project, you don’t need to consider anything. , Smart-doc can perfectly complete the document you want, but for a multi-module project, or the project relies on an independent jar package, smart-doc will not be able to load the code outside of the module it runs. The following will introduce how to load Smart-doc into the project code outside the running module.
+
+ **Note: Since smart-doc-maven-plugin 1.0.2 version, the use of maven plug-in can realize automatic source code loading。** 
+#### Set through the `ApiConfig` class
+The code example is as follows:
 
 ```java
 ApiConfig config = new ApiConfig();
-//以前的版本为setSourcePaths，SourceCodePath为SourcePath
+// The previous version is setSourcePaths, SourceCodePath is SourcePath
 config.setSourceCodePaths(
-        SourceCodePath.path().setDesc("本项目代码").setPath("src/main/java"),
-        //smart-doc对路径自动会做处理，无论是window合适linux系统路径，直接拷贝贴入即可
-        SourceCodePath.path().setDesc("加载外部项目源码").setPath("E:\\Test\\Mybatis-PageHelper-master\\src\\main\\java")
+        SourceCodePath.path().setDesc("desc").setPath("src/main/java"),
+        // smart-doc will automatically process the path, whether it is the path of the window suitable for the linux system, just copy and paste it directly
+        SourceCodePath.path().setDesc("desc").setPath("E:\\Test\\Mybatis-PageHelper-master\\src\\main\\java")
 );
 ```
-这样smart-doc就能将外部的源码载入。
+In this way, smart-doc can load the external source code.
 
-#### 通过`maven`的`classifier`来指定源码包
-这里先看如何使用classifier来加载源码包。
+#### Specify the source package through the `classifier` of `maven`
+Let's first look at how to use the classifier to load the source code package.
 
 ```xml
-<!--依赖的库-->
+<!--Dependent library-->
 <dependency>
-    <groupId>com.github.shalousun</groupId>
-    <artifactId>common-util</artifactId>
-    <version>1.8.6</version>
+     <groupId>com.github.shalousun</groupId>
+     <artifactId>common-util</artifactId>
+     <version>1.8.6</version>
 </dependency>
-<!--依赖库源码，使用smart-doc的插件无需使用这种方式加载sources-->
+<!--Depending on the library source code, plug-ins using smart-doc do not need to use this method to load sources-->
 <dependency>
-    <groupId>com.github.shalousun</groupId>
-    <artifactId>common-util</artifactId>
-    <version>1.8.6</version>
-    <classifier>sources</classifier>
-    <!--设置为test,项目发布时source不会放入最终的产品包-->
-    <scope>test</scope>
+     <groupId>com.github.shalousun</groupId>
+     <artifactId>common-util</artifactId>
+     <version>1.8.6</version>
+     <classifier>sources</classifier>
+     <!--Set to test, the source will not be put into the final product package when the project is released-->
+     <scope>test</scope>
 </dependency>
 ```
-这样不需要像上面一样设置源码加载路径了。但是并不是所有的打包都能有源码包。需要在打包是做规范化处理。
 
- **注意：** 在加载jar包和source源码jar包时，如出现代码导入错误可尝试变更二者依赖顺序，推荐使用smart-doc最新的maven插件或者gradle插件。
+There is no need to set the source code load path as above. But not all packages can have source code packages. Need to be standardized in the packaging.
 
-#### 公有jar包打规范(推荐)
-当你发布公共jar包或者dubbo应用api接口共有jar包时，在maven的plugs中加入`maven-source-plugin`,示例如下：
+**Note:** When loading the jar package and the source source code jar package, if there is a code import error, you can try to change the dependency order of the two. It is recommended to use the latest maven plug-in or gradle plug-in of smart-doc.
+#### Specification of public jar package (recommended)
+When you publish a public jar package or a shared jar package for the dubbo application api interface, add `maven-source-plugin` to the maven plugs. The example is as follows:
 
 ```xml
 <!-- Source -->
@@ -267,24 +266,24 @@ config.setSourceCodePaths(
     </executions>
 </plugin>
 ```
-这样发布的时候就会生成一个`[your jar name]-sources.jar`的源码包，这个包也会一起发布到私有仓库。这样就可以通过`classifier`来指定`sources`了。如果还是不清楚可以直接参考`smart-doc`源码的`pom.xml`配置。
+In this way, a source code package of `[your jar name]-sources.jar` will be generated when it is released, and this package will also be released to the private warehouse together. In this way, `sources` can be specified by `classifier`. If you are still not sure, you can directly refer to the `pom.xml` configuration of the `smart-doc` source code.
 
-**注意：** 经测试验证，如果只是通过`install`到本地，即便是指定了`sources`也无法读取到源码，只有将公用的模块`deploy`到`nexus`这样的私服上才能正常使用。
+**Note:** It has been tested and verified that if you only use `install` to the local, the source code cannot be read even if `sources` is specified. Only the public module `deploy` can be placed on a private server such as `nexus` Normal use.
 
 
 
-### 第三方源码示例
+### Third-party source code example
 
-当前在做项目开发时难免会使用到一些第三方的开源工具或者是框架，例如：mybatis-plus，smart-doc本身是基于源代码来分析的，如果没有源代码smart-doc将不能正确的生成完整的接口文档。 **当然如果使用smart-doc-maven-plugin 1.0.2版本开始的插件，插件可以自动加载到相关使用依赖的源码，使用插件后就不需要自行去配置source的依赖了，推荐使用插件** 
+Currently, when doing project development, it is inevitable that some third-party open source tools or frameworks will be used, for example: mybatis-plus, smart-doc itself is analyzed based on the source code, if there is no source code smart-doc will not be generated correctly Complete interface documentation. **Of course, if you use the plug-in starting from version 1.0.2 of smart-doc-maven-plugin, the plug-in can be automatically loaded into the source code of the relevant use dependency. After using the plug-in, you do not need to configure the source dependency by yourself. It is recommended to use the plug-in**
 
-#### mybatis-plus分页处理
-在使用mybatis-plus的分页时，如果使用`IPage`作为Controller层的返回，smart-doc无论如何也不能扫描出正确的文档，因为`IPage`是一个纯接口，所以可以在service层正常使用`IPage`作为分页返回，然后在Controller层做下转换。
+#### mybatis-plus pagination processing
+When using the pagination of mybatis-plus, if you use `IPage` as the return of the Controller layer, smart-doc will not be able to scan the correct document anyway, because `IPage` is a pure interface, so it can be used normally at the service layer. IPage` is returned as a page, and then down-converted in the Controller layer.
 
 ```java
 /**
- * 分页查询订单信息
- * @param pageIndex 当前页码
- * @param pageSize 页面大小
+ * Paging query order information
+ * @param pageIndex pageIndex
+ * @param pageSize pageSize
  * @return
  */
 @GetMapping(value = "page/{pageIndex}/{pageSize}")
@@ -294,7 +293,7 @@ public Page<Order> queryPage(@PathVariable int pageIndex , @PathVariable int pag
     return page;
 }
 ```
-当然也要在项目中引入mybatis-plus的源码
+Of course, the source code of mybatis-plus must also be introduced into the project
 
 ```xml
  <dependency>
@@ -306,44 +305,44 @@ public Page<Order> queryPage(@PathVariable int pageIndex , @PathVariable int pag
 </dependency>
 ```
 
-## dubbo配置
+## dubbo configuration
 
-smart-doc从1.8.7版本开始支持dubbo api文档的生成，下面介绍如何利用smart-doc工具来生成dubbo的rpc内部接口文档。
-### dubbo文档生成
-smart-doc本着使用简单的原则开发了maven插件和gradle，通过插件来降低smart-doc的集成难度和去除依赖侵入性。您可以根据自己使用的依赖构建管理工具来选择相关的插件，下面以使用smart-doc-maven-plugin插件集成smart-doc生成dubbo为例。当然集成smart-doc来生成dubbo rpc接口文档你有两种可选方式：
+Smart-doc supports the generation of dubbo api documentation from version 1.8.7. The following describes how to use the smart-doc tool to generate dubbo's rpc internal interface documentation.
+### dubbo document generation
+Smart-doc developed the maven plug-in and gradle based on the principle of simple use, through plug-ins to reduce the integration difficulty of smart-doc and remove the dependency intrusiveness. You can select the relevant plug-in according to the dependency build management tool you use. The following uses the smart-doc-maven-plugin plug-in to integrate smart-doc to generate dubbo as an example. Of course, you have two options for integrating smart-doc to generate dubbo rpc interface documentation:
 
-- 使用smart-doc扫描dubbo api模块
-- 使用smart-doc扫描dubbo provider模块
+- Use smart-doc to scan dubbo api module
+- Use smart-doc to scan dubbo provider module
 
-下面来看下集成方式。
-#### 添加插件
-在你的dubbo api或者或者是dubbo provider模块中添加smart-doc-maven-plugin。当然你只需要选中一种方式即可
+Let's look at the integration method.
+#### Add plugin
+Add smart-doc-maven-plugin to your dubbo api or dubbo provider module. Of course you only need to select one method
 ```xml
 <plugin>
     <groupId>com.github.shalousun</groupId>
     <artifactId>smart-doc-maven-plugin</artifactId>
-    <version>[最新版本]</version>
+    <version>[Latest version]</version>
     <configuration>
-        <!--指定生成文档的使用的配置文件,配置文件放在自己的项目中-->
+        <!--Specify the configuration file used to generate the document, and the configuration file is placed in your own project -->
         <configFile>./src/main/resources/smart-doc.json</configFile>
-        <!--指定项目名称-->
-        <projectName>测试</projectName>
-        <!--smart-doc实现自动分析依赖树加载第三方依赖的源码，如果一些框架依赖库加载不到导致报错，这时请使用excludes排除掉-->
+        <!--Specify the project name-->
+        <projectName>Test</projectName>
+        <!--smart-doc realizes automatic analysis of the dependency tree to load the source code of third-party dependencies. If some framework dependency libraries cannot be loaded and cause an error, please use excludes to exclude -->
         <excludes>
-            <!--格式为：groupId:artifactId;参考如下-->
-            <!--1.0.7版本开始你还可以用正则匹配排除,如：poi.* -->
+            <!--The format is: groupId:artifactId; reference is as follows-->
+            <!- ​​Starting from version 1.0.7, you can also use regular matching to exclude, such as: poi.* -->
             <exclude>com.alibaba:fastjson</exclude>
         </excludes>
-        <!--自1.0.8版本开始，插件提供includes支持-->
-        <!--smart-doc能自动分析依赖树加载所有依赖源码，原则上会影响文档构建效率，因此你可以使用includes来让插件加载你配置的组件-->
+        <!--Since version 1.0.8, the plugin provides includes support-->
+        <!--smart-doc can automatically analyze the dependency tree to load all dependent source code, in principle, it will affect the efficiency of document construction, so you can use includes to let the plug-in load the components you configure -->
         <includes>
-            <!--格式为：groupId:artifactId;参考如下-->
+            <!--The format is: groupId:artifactId; reference is as follows-->
             <include>com.alibaba:fastjson</include>
         </includes>
     </configuration>
     <executions>
         <execution>
-            <!--如果不需要在执行编译时启动smart-doc，则将phase注释掉-->
+            <!--If you don't need to start smart-doc when compiling, please comment out the phase -->
             <phase>compile</phase>
             <goals>
                 <goal>html</goal>
@@ -352,28 +351,29 @@ smart-doc本着使用简单的原则开发了maven插件和gradle，通过插件
     </executions>
 </plugin>
 ```
-#### 添加smart-doc所需配置文件
-在你的dubbo api或者或者是dubbo provider模块reources中添加smart-doc.json配置文件
+
+#### Add configuration files required by smart-doc
+Add the smart-doc.json configuration file to your dubbo api or dubbo provider module reources
 
 ```json
 {
-  "isStrict": false, //是否开启严格模式
-  "allInOne": true,  //是否将文档合并到一个文件中，一般推荐为true
-  "outPath": "D://md2", //指定文档的输出路径
-  "projectName": "smart-doc",//配置自己的项目名称
-  "rpcApiDependencies":[{ // 项目开放的dubbo api接口模块依赖，配置后输出到文档方便使用者集成
-      "artifactId":"SpringBoot2-Dubbo-Api",
-      "groupId":"com.demo",
-      "version":"1.0.0"
-  }],
-  "rpcConsumerConfig":"src/main/resources/consumer-example.conf"//文档中添加dubbo consumer集成配置，用于方便集成方可以快速集成
+   "isStrict": false, //Whether to enable strict mode
+   "allInOne": true, //Whether to merge the documents into one file, generally recommended as true
+   "outPath": "D://md2", //Specify the output path of the document
+   "projectName": "smart-doc",//Configure your own project name
+   "rpcApiDependencies":[{ // The project's open dubbo api interface module is dependent, after configuration, it is output to the document to facilitate user integration
+       "artifactId":"SpringBoot2-Dubbo-Api",
+       "groupId":"com.demo",
+       "version":"1.0.0"
+   }],
+   "rpcConsumerConfig":"src/main/resources/consumer-example.conf"//Add dubbo consumer integration configuration to the document to facilitate the integration party to quickly integrate
 }
 ```
-关于smart-doc如果你生成文档需要更详细的配置请常看官方项目wiki的其它文档
+About smart-doc, if you need more detailed configuration for generating documents, please refer to other documents on the official project wiki.
 
 **rpcConsumerConfig：**
 
-如果下你想让dubbo consumer集成更加快速，你可以将集成配置示例`consumer-example.conf`中，Smart-doc会将该示例直接输出到文档中。
+If you want to make dubbo consumer integration faster, you can put the integration configuration example in `consumer-example.conf`, and Smart-doc will output the example directly to the document.
 
 ```
 dubbo:
@@ -386,15 +386,16 @@ dubbo:
   application:
     name: dubbo-consumer
 ```
-### dubbo接口扫描
-上面提到了smart-doc支持单独去扫描dubbo api或者dubbo provider。在扫描原理是主要通过识别@dubbo注释tag(idea可以支持添加自定义注释tag提示可以参考smart-doc wiki文档介绍)或dubbo的 @service注解。
 
-#### 扫描dubbo api
-dubbo api通常都是很简洁的dubbo接口定义，如果你需要让smart-doc扫描到dubbo接口，那么需要加上@dubbo注释tag。示例如下：
+### dubbo interface scan
+As mentioned above, smart-doc supports scanning dubbo api or dubbo provider separately. The scanning principle is mainly through the recognition of @dubbo annotation tags (idea can support adding custom annotation tags to remind you can refer to the smart-doc wiki document introduction) or dubbo's @service annotations.
+
+#### Scan dubbo api
+The dubbo api is usually a very concise dubbo interface definition. If you need smart-doc to scan the dubbo interface, you need to add the @dubbo annotation tag. Examples are as follows:
 
 ```java
 /**
- * 用户操作
+ * User action
  *
  * @author yu 2019/4/22.
  * @author zhangsan 2019/4/22.
@@ -404,14 +405,14 @@ dubbo api通常都是很简洁的dubbo接口定义，如果你需要让smart-doc
 public interface UserService {
 
     /**
-     * 查询所有用户
+     * Query all users
      *
      * @return
      */
     List<User> listOfUser();
 
     /**
-     * 根据用户id查询
+     * Query based on user id
      *
      * @param userId
      * @return
@@ -419,8 +420,9 @@ public interface UserService {
     User getById(String userId);
 }
 ```
-#### 扫描dubbo provider
-如果想通过dubbo provider生成rpc接口文档的情况，你不需要加任何的其他注释tag，smart-doc自动扫描@service注解完成。
+
+#### Scan dubbo provider
+If you want to generate rpc interface documentation through dubbo provider, you don't need to add any other annotation tags, smart-doc automatically scans @service annotations to complete.
 
 ```java
 /**
@@ -435,12 +437,12 @@ public class UserServiceImpl implements UserService {
         userMap.put("1",new User()
                 .setUid(UUIDUtil.getUuid32())
                 .setName("zhangsan")
-                .setAddress("四川成都")
+                .setAddress("chengdu")
         );
     }
     
     /**
-     * 获取用户
+     * Get users
      * @param userId
      * @return
      */
@@ -450,7 +452,7 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * 获取用户
+     * Get users
      * @return
      */
     @Override
@@ -459,34 +461,33 @@ public class UserServiceImpl implements UserService {
     }
 }
 ```
-#### 生成操作
-直接通过maven命令运行插件的文档生成命令或者在idea中直接单击插件的可视化命令即可。
+
+#### Generate operation
+Run the plug-in's document generation command directly through the maven command or click the plug-in's visualization command directly in idea.
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20200705230512435.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3NoYWxvdXN1bg==,size_16,color_FFFFFF,t_70)
 
-运行rpc-html等就能生成dubbo rpc文档
+Run rpc-html etc. to generate dubbo rpc document
 
+## Postman documentation
 
-## Postman文档
-
-
-从Smart-doc 1.7.8版本开始，smart-doc支持生成Postman的json文件，你可以使用Smart-doc生成整个项目的或者某个微服务所有接口的Postman json文件，然后通过将这个json文件导入Postman的Collections做测试。导出json.
+Starting from Smart-doc 1.7.8, smart-doc supports the generation of Postman json files. You can use Smart-doc to generate Postman json files for the entire project or all interfaces of a certain microservice, and then import this json file into Postman Collections for testing. Export json.
 
 ```java
 ApiConfig config = new ApiConfig();
-//导出postman建议将server设置成这样，然后在postman中建立一个server环境变量，调试时只需根据实际服务器来修改server的值。
+//It is recommended to set the server to this way when exporting postman, and then create a server environment variable in postman. When debugging, you only need to modify the server value according to the actual server.
 config.setServerUrl("http://{{server}}");
-//已省略config，详细配置请参考其它文档
+//Config has been omitted, please refer to other documents for detailed configuration
 PostmanJsonBuilder.buildPostmanApi(config);
-//自smart-doc 1.8.1开始使用下面的方法
+//Use the following method since smart-doc 1.8.1
 PostmanJsonBuilder.buildPostmanCollection(config);
 ```
 
-导入json到Postman效果如下图：
+The effect of importing json to Postman is as follows:
 ![输入图片说明](../../_images/095300_24a7f126_144669.png "postman.png")
 
-### postman中设置环境变量
+### Setting environment in postman
 
 ![输入图片说明](../../_images/141540_aed7de0b_144669.png "postman_set_env.png")
- **注意：** 在Add Environment中不要忘记给环境设置名称(例如：本地开发测试)，否则按上图不能保存成功。
+**Note:** Don't forget to set the name of the environment in Add Environment (for example: local development and test), otherwise it will not be saved successfully according to the above picture.
 
 

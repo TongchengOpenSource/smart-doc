@@ -32,7 +32,7 @@ Check out the [quick start](zh-cn/start/quickstart.md) for details.
 - The debug interface debugging html5 page fully supports file upload and download (@download tag tag download method) testing.
 
 
-## 最佳实践
+## Best Practice
 smart-doc + [Torna](http://torna.cn/) form an industry-leading document generation and management solution, using smart-doc to complete Java source code analysis and extract annotations to generate API documents without intrusion, and automatically push the documents to the Torna enterprise-level interface document management platform.
 ![smart-doc + Torna](./_images/smart-to-torna.png)
 
@@ -52,7 +52,7 @@ smart-doc is under the Apache 2.0 license. See the [LICENSE](https://github.com/
 **PS:** Smart-doc source code files are all with copyright notes. Please keep the original copyright when using the key code for the second open source, otherwise you will be responsible for the consequences!
 
 
-## 谁在使用
+## Who is using
 
 > These are only part of the companies using smart-doc, for reference only. If you are using smart-doc, please [add your company here](https://github.com/smart-doc-group/smart-doc/issues/12) to tell us your scenario to make smart-doc better.
 

@@ -128,7 +128,7 @@ apply(plugin = "com.github.shalousun.smart-doc")
 
 | Option | Default value | Description |
 | ------ | ------------- | ----------- |
-|configFile|src/main/resources/default.json|插件配置文件|
+|configFile|src/main/resources/smart-doc.json|插件配置文件|
 |exclude|	无|排除一些无法自定下载的java lib sources,例如:exclude 'org.springframework.boot:spring-boot-starter-tomcat' |
 |include|	无|让插件自定下载指定的java lib sources,例如:include 'org.springframework.boot:spring-boot-starter-tomcat' |
 

@@ -390,7 +390,7 @@ public class ConfigRequestParamController {
     }
 }
 ```
-
+@tag用于将controller方法分类, 可以将不同contoller下的方法指定到多个分类下, 同时也可以直接指定controller为一个分类或多个分类
 
 # IDEA自定义tag提示
 自定义的tag默认是不会自动提示的，需要用户在idea中进行设置。设置好后即可使用，下面以设置smart-doc自定义的mock tag为例，设置操作如下：

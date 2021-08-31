@@ -1,24 +1,24 @@
-# 代码使用
+# Code Usage
 
-smart-doc的实现初衷是通过使用javadoc文档注释来去除注解式的侵入，因此smart-doc每增加一个功能首先都是去考虑javadoc原生的tag,下面对smart-doc使用的一些javadoc tag做介绍。
+The original intention of smart-doc is to remove the intrusion of annotations by using javadoc document comments. Therefore, every additional function of smart-doc is to consider the native tags of javadoc. The following is an introduction to some javadoc tags used by smart-doc. .
 
-|  tag名称   |  使用描述   |
+|  tag name   |  description   |
 | --- | --- |
-|  @param  | 对于在Spring Boot接口层，对于简单类型的参数必须在使用@param时写上注释描述，对于Entity类型smart-doc则不会检查    |
-|  @deprecated  |可以在注释中用于标记接口已经废弃，作用同@Deprecated注解|
-|  @apiNote | @apiNote是java新增的文档tag,smart-doc使用@apiNote的注释作为方法的详细描述，因此可以使用apiNote来写一段长注释。如果一个方法不写 @apiNote注释说明，smart-doc直接使用方法默认注释填充|
+|  @param  | For the Spring Boot interface layer, for simple type parameters, you must write a comment description when using @param, and for Entity type smart-doc, it will not be checked.    |
+|  @deprecated  |Can be used in comments to mark that the interface is obsolete, and the effect is the same as the @Deprecated annotation|
+|  @apiNote | @apiNote is a new document tag for java, smart-doc uses @apiNote as a detailed description of the method, so you can use apiNote to write a long note. If a method does not write @apiNote annotation description, smart-doc directly uses the method default annotation to fill in|
 
 
-# javadoc使用
-## 1.1 @param 特殊用法
-smart-doc针对java原生的@param添加一些特殊的用法。
-- 对基本类型请求参数设置mock值
+# javadoc Usage
+## 1.1 @param Special usage
+smart-doc adds some special usages for java native @param.
+- Set mock values for basic type request parameters
 
 ```java
 /**
  * Test @RequestParam
  *
- * @param author 作者|村上春树
+ * @param author author|Bob
  * @param type   type
  */
 @GetMapping("testRequestParam")
@@ -26,18 +26,17 @@ public void testRequestParam(@RequestParam String author, @RequestParam String t
 
 }
 ```
-上面通过|符号后面添加了作者的mock值为`村上春树`
+The author's mock value is added after the | symbol above `Bob`
 
-- 参数对象替换
+- Parameter object substitution
 
-例如一些对象在框架底层做了特殊处理，smart-doc根据原始参数对象依赖过于强大的分析处理后的文档可能并不符合要求，这时你可以定义一个参数对象来
-替换，然后smart-doc按照你指定的对象来输出文档。
+For example, some objects have been specially processed at the bottom of the framework. Smart-doc relies on the original parameter object. The document after analysis and processing may not meet the requirements. In this case, you can define a parameter object to replace it, and then smart-doc will follow you Specify the object to output the document.
 
-例如：使用jpa的Pageable作为接口参数接收对象时spring框架做了处理，实际生真正的属性是PageRequest,不过smart-doc如果采用PageRequest会推到出一些不必要的属性，该功能从smart-doc 1.8.5开始提供。
+For example: when using jpa's Pageable as an interface parameter to receive an object, the spring framework handles it. The actual attribute is PageRequest, but if smart-doc uses PageRequest, it will push out some unnecessary attributes. This function is from smart-doc 1.8 .5 Available now.
 
 ```java
 /**
- * 参数对象替换测试
+ * Parametric object replacement test
  * @param pageable com.power.doc.model.PageRequestDto
  * @return
  */
@@ -46,56 +45,55 @@ public SimpleEnum resp(@RequestBody Pageable pageable){
     return null;
 }
 ```
-上面的写法中smart-doc就会使用`com.power.doc.model.PageRequestDto`代替jpa的Pageable做文档渲染，注意类名必须是全类名。
-下面来看smart-doc支持的书写方式
+In the above writing method, smart-doc will use `com.power.doc.model.PageRequestDto` instead of jpa's Pageable for document rendering. Note that the class name must be the full class name.
+Let's look at the writing methods supported by smart-doc.
 
 ```java
 @param pageable com.power.doc.model.PageRequestDto
-@param pageable 你的注释|com.power.doc.model.PageRequestDto
-# smart-doc本身基于泛型推导，如果需要泛型则需要写上具体的对象
+@param pageable Your comment|com.power.doc.model.PageRequestDto
+# smart-doc itself is based on generic derivation, if you need generics, you need to write specific objects
 @param pageable com.power.doc.model.PageRequestDto<com.power.doc.model.User>
 ```
-> 尽量少采用这种参数替换的形式，代码书写很不方便，建议直接自己定义对象作为入参
+> Try to use this form of parameter substitution as little as possible. It is very inconvenient to write code. It is recommended to directly define objects as input parameters.
 
-# smart-doc自定义注释tag
+# Custom annotation tag
 
-tag名称 | 描述
+tag name | description
 ---|---
- @ignore| ignore tag用于过滤请求参数对象上的某个字段，设置后smart-doc不输出改字段到请求参数列表中。关于响应字段忽略的请看[【忽略响应字段】](https://gitee.com/smart-doc-team/smart-doc/wikis/响应字段忽略?sort_id=1823812)，如果ignore加到方法上，则接口方法不会输出到文档。从1.8.4开始ignore支持添加到controller上进行忽略不想生成文档的接口类。ignore也可以用于方法上忽略某个请求参数。
-@required|如果你没有使用JSR303参数验证规范实现的方式来标注字段，就可以使用@required去标注请求参数对象的字段，标注smart-doc在输出参数列表时会设置为true。
-@mock|从smart-doc 1.8.0开始，mock tag用于在对象基本类型字段设置自定义文档展示值。设置值后smart-doc不再帮你生成随机值。方便可以通过smart-doc直接输出交付文档。
-@dubbo|从smart-doc 1.8.7开始，dubbo tag用于在dubbo的api接口类上添加让smart-doc可以扫描到dubbo rpc的接口生成文档。
-@restApi|从smart-doc 1.8.8开始，restApi tag用于支持smart-doc去扫描Spring Cloud Feign的定义接口生成文档。
-@order|从smart-doc 1.9.4开始，order tag用于设置controller接口或者api入口的自定义排序序号，@order 1就表示设置序号为1。
-@ignoreResponseBodyAdvice|从smart-doc 1.9.8开始，ignoreResponseBodyAdvice tag用于忽略ResponseBodyAdvice设置的包装类。
-@download|从smart-doc 2.0.1开始，download tag用于标注在controller的文件下载方法上，生成debug页面时可实现文件下载测试。并且支持下载文件带请求头参数测试。
-@page|从smart-doc 2.0.2开始，page tag用于标注在controller的方法上表示该方法用来渲染返回一个静态页面，生成debug页面时如果发起测试，测试页面会自动在浏览器开启新标签显示页面。
-@ignoreParams|从smart-doc 2.1.0开始，ignoreParams tag用于标注在controller方法上忽略掉不想显示在文档中的参数，例如：@ignoreParams id name，多个参数名用空格隔开
-@response|从smart-doc 2.2.0开始，response tag标注在controller方法上可以允许用这自己定义返回的json example。建议只在返回基础类型时使用，如：Result<String>类型这种泛型是简单原生类型的响应。
-@tag|@since 2.2.5, @tag用于将controller方法分类, 可以将不同contoller下的方法指定到多个分类下, 同时也可以直接指定controller为一个分类或多个分类
+ @ignore| ignore tag is used to filter a certain field on the request parameter object. After setting, smart-doc will not output the changed field to the request parameter list. Please refer to [Ignore Response Field](/diy/advancedFeatures#response-field-ignored) for the ignore of response fields. If ignore is added to the method , The interface method will not be output to the document. Starting from 1.8.4, ignore support is added to the controller to ignore interface classes that do not want to generate documents. Ignore can also be used to ignore a request parameter in a method.
+@required|If you have not used the JSR303 parameter verification specification implementation method to mark the fields, you can use @required to mark the fields of the request parameter object. The mark smart-doc will be set to true when the parameter list is output.
+@mock|Starting from smart-doc 1.8.0, mock tag is used to set custom document display value in the basic object type field. After setting the value, smart-doc will no longer help you generate random values. It is convenient to directly output delivery documents through smart-doc.
+@dubbo|Starting from smart-doc 1.8.7, dubbo tag is used to add to the dubbo api interface class so that smart-doc can scan to the dubbo rpc interface to generate documentation.
+@restApi|Starting from smart-doc 1.8.8, restApi tag is used to support smart-doc to scan Spring Cloud Feign's defined interface to generate documentation.
+@order|Starting from smart-doc 1.9.4, order tag is used to set the custom sorting sequence number of the controller interface or api entry, @order 1 means setting the sequence number to 1.
+@ignoreResponseBodyAdvice|Starting from smart-doc 1.9.8, ignoreResponseBodyAdvice tag is used to ignore the wrapper class set by ResponseBodyAdvice.
+@download|Starting from smart-doc 2.0.1, the download tag is used to mark the file download method of the controller, and the file download test can be realized when the debug page is generated. And it supports to download the file with request header parameter test.
+@page|Starting from smart-doc 2.0.2, the page tag is used to mark the controller method to indicate that the method is used to render and return a static page. If a test is initiated when the debug page is generated, the test page will automatically be opened in the browser. Label display page.
+@ignoreParams|Starting from smart-doc 2.1.0, ignoreParams tag is used to mark the parameters that do not want to be displayed in the document on the controller method, for example: @ignoreParams id name, multiple parameter names are separated by spaces
+@response|Starting from smart-doc 2.2.0, the response tag is marked on the controller method to allow you to define the returned json example by yourself. It is recommended to use it only when returning basic types, such as: Result<String> This generic type is a response of a simple primitive type.
+@tag|@since 2.2.5, @tag is used to classify controller methods. You can assign methods under different controllers to multiple categories, and you can also directly assign controllers to one category or multiple categories.
 
-
-## 2.1 @ignore使用
+## 2.1 @ignore use
 ```java
 public class SubUser {
 
     /**
-     * 用户名称
+     * user name
      */
     private String subUserName;
 
     /**
-     * 身份证
+     * ID card
      */
     private String idCard;
 
     /**
-     * 性别
+     * gender
      */
     private int gender;
 
     /**
-     *  创建时间
+     *  createTime
      *  @ignore
      */
     private Timestamp createTime;
@@ -105,38 +103,37 @@ public class SubUser {
 
 ```
 
-在Controller层用SubUser作为参数接收，smart-doc输出的参数请求文档：
+In the Controller layer, use SubUser as a parameter to receive, and the parameter request document output by smart-doc:
 
 | Parameter | Type | Description | Required |
 | --- | --- | --- | --- |
-| subUserName | string | 用户名称 | false |
-| numbers | number | No comments found. | false |
-| idCard | string | 身份证 | false |
-| gender | int | 性别 | false|
+| subUserName | string | user name | false |
+| idCard | string | ID card | false |
+| gender | int | gender | false|
 
-## 2.2 @required使用
+## 2.2 @required use
 
 ```java
 public class SubUser {
 
     /**
-     * 用户名称
+     * user name
      */
     private String subUserName;
 
     /**
-     * 身份证
+     * ID card
      */
     private String idCard;
 
     /**
-     * 性别
+     * gender
      * @required
      */
     private int gender;
 
     /**
-     *  创建时间
+     *  createTime
      *  @ignore
      */
     private Timestamp createTime;
@@ -146,31 +143,30 @@ public class SubUser {
 
 ```
 
-在Controller层用SubUser作为参数接收，smart-doc输出的参数请求文档：
+In the Controller layer, use SubUser as a parameter to receive, and the parameter request document output by smart-doc:
 
 | Parameter | Type | Description | Required |
 | --- | --- | --- | --- |
-| subUserName | string | 用户名称 | false |
-| numbers | number | No comments found. | false |
-| idCard | string | 身份证 | false |
-| gender | int | 性别 | true |
+| subUserName | string | user name | false |
+| idCard | string | ID card | false |
+| gender | int | gender | true |
 
 
-## 2.3 @mock使用
+## 2.3 @mock use
 
 ```java
 public class SimpleUser {
 
     /**
-     * 用户名
-     * @mock 张三
+     * user name
+     * @mock Bob
      * @since v1.0
      */
     @NotNull
     private String username;
 
     /**
-     * 密码
+     * password
      * @mock 12356
      * @since v1.0
      */
@@ -178,16 +174,18 @@ public class SimpleUser {
 
 }
 ```
-在Controller层用SimpleUser作为参数接收，smart-doc不再使用随机值。smart-doc输出的参数请求示例：
+In the Controller layer, SimpleUser is used as a parameter to receive, and smart-doc no longer uses random values. Example of parameter request output by smart-doc:
 
-```
+```json
 {
-    "username":"张三",
-    "password":"12356"
+    "username": "Bob",
+    "password": "12356"
 }
 ```
-## 2.4 @download使用
-用于告诉smart-doc。你的controller中某一个方法是文件下载接口，smart-doc在生成debug调试页面时，可以生成一个文件下载的请求。后台参考代码如下：
+
+
+## 2.4 @download use
+Used to tell smart-doc. One of the methods in your controller is the file download interface. When smart-doc generates a debug page, it can generate a file download request. The background reference code is as follows:
 
 ```java
 /**
@@ -200,19 +198,19 @@ public abstract class BaseController {
     private static final Logger LOGGER = LoggerFactory.getLogger(BaseController.class);
 
     /**
-     * excel文件
+     * excel file
      */
     public static final String EXCEL_CONTENT_TYPE = "application/vnd.ms-excel;charset=utf-8";
 
     /**
-     * 普通的文本
+     * text
      */
     public static final String TEXT_CONTENT_TYPE = "application/octet-stream;charset=utf-8";
 
     /**
-     * 导出excel,添加文件名时需要自己添加后缀
+     * Export excel, you need to add the suffix when adding the file name
      *
-     * @param fileName 文件名(用户信息表.xls)
+     * @param fileName fileName(userInfo.xls)
      * @param response HttpServletResponse
      * @return ServletOutputStream
      * @throws Exception
@@ -222,8 +220,8 @@ public abstract class BaseController {
     }
 
     /**
-     * 基础的文件下载
-     * @param contentType 下载文件的类型
+     * Basic file download
+     * @param contentType Type of download file
      * @param fileName
      * @param response
      * @return
@@ -238,9 +236,9 @@ public abstract class BaseController {
     }
 
     /**
-     * 文件下载
-     * @param fileName 下载文件
-     * @param response 响应
+     * Download file
+     * @param fileName download file
+     * @param response response
      * @return
      * @throws IOException
      */
@@ -250,11 +248,12 @@ public abstract class BaseController {
 
 }
 ```
-文件下载处理controller
+
+File download processing controller
 
 ```java
 /**
- * 文件下载测试
+ * File download test
  *
  * @author yu 2020/12/14.
  */
@@ -263,7 +262,7 @@ public abstract class BaseController {
 public class DownloadController extends BaseController {
     private static final Logger LOGGER = LoggerFactory.getLogger(DownloadController.class);
     /**
-     * 下载普通文件文件
+     * Download normal files
      *
      * @param response
      * @return
@@ -274,9 +273,9 @@ public class DownloadController extends BaseController {
     public void download(HttpServletResponse response) throws IOException {
         String randomStr = RandomUtil.randomNumbers(50);
         String fileName = "test.log";
-        //要使用smart-doc debug页面测试文件下载，则必须设置filename响应头，否则请采用其他模拟工具测试。
-        // urlDecode用于处理中文件名
-        response.setHeader("filename", urlEncode(fileName));// since 2.0.2后不需要这样设置
+        //To use the smart-doc debug page to test the file download, you must set the filename response header, otherwise, use other simulation tools to test.
+        // urlDecode is used to process the file name
+        response.setHeader("filename", urlEncode(fileName));// No need to set this since 2.0.2
         ServletOutputStream outputStream = this.downloadText(fileName, response);
         outputStream.write(randomStr.getBytes());
     }
@@ -295,17 +294,17 @@ public class DownloadController extends BaseController {
     }
 }
 ```
-> smart-doc 2.0.2版本将会自动从下载响应头`Content-Disposition: attachment; filename=xx`中读取文件名，不再需要在响应头中设置`response.setHeader("filename", urlEncode(fileName));`。当然即便是Content-Disposition也记得使用urlEncode处理下文档名，否则会出现中文文件名乱码。如果你是直接使用浏览器打开生成的smart-doc生成的测试页面，测试并不能获取到Content-Disposition，生成的是随机文件名，要验证正确性请通过服务的方式访问页面。
+> Smart-doc version 2.0.2 will automatically read the file name from the download response header `Content-Disposition: attachment; filename=xx`, no longer need to set `response.setHeader("filename", urlEncode() in the response header fileName));`. Of course, even for Content-Disposition, remember to use urlEncode to process the file name, otherwise there will be garbled Chinese file names. If you directly use the browser to open the test page generated by the generated smart-doc, the content-disposition cannot be obtained in the test, but a random file name is generated. To verify the correctness, please visit the page through the service.
 
-## 2.4 @page使用
+## 2.4 @page use
 
 ```java
 /**
- * arthas火焰图列表
+ * arthas flame chart list
  *
  * @return
  * @page /arthas-output.html
- * @apiNote 返回一个展示火焰图文件的arthas-output.html
+ * @apiNote Return an arthas-output.html showing the flame graph file
  */
 @GetMapping("arthas-output.html")
 public String render() {
@@ -316,15 +315,15 @@ public String render() {
     return template.render();
 }
 ```
-> 这个例子中用beetl来编写了一个html模板，正常情况下访问arthas-output.html。会返回渲染后的界面，如果你想在debug页面中点击请求直接访问该页面，那么你可以用@page来告诉smart-doc你的渲染页面名称。这样在debug页面上就可以直接帮你打开新的页签来访问页面。
+> In this example, beetl is used to write an html template, and arthas-output.html is accessed under normal circumstances. It will return to the rendered interface. If you want to click on the request in the debug page to directly access the page, then you can use @page to tell smart-doc the name of your rendered page. In this way, you can directly open a new tab to access the page on the debug page.
 
-## 2.5 @ignoreParams使用
+## 2.5 @ignoreParams use
 
 ```java
 /**
- * 测试时间
+ * testing time
  * @ignoreParams id
- * @param id 编号
+ * @param id id
  * @param dateEntity
  */
 @PostMapping("data-date")
@@ -332,12 +331,14 @@ public CommonResult<DateEntity> test(int id,@RequestBody DateEntity dateEntity){
     return null;
 }
 ```
-把id参数忽略掉，不要展示在文档中，这种主要是传统的有状态后台管理系统中的用户状态参数。
-## 2.6 @response使用
+Ignore the id parameter and do not display it in the document. This is mainly the user state parameter in the traditional stateful back-end management system.
+
+
+## 2.6 @response use
 
 ```java
 /**
- * 测试response tag
+ * test response tag
  *
  * @return
  * @response {
@@ -353,10 +354,10 @@ public CommonResult<String> create() {
     return null;
 }
 ```
-把id参数忽略掉，不要展示在文档中，这种主要是传统的有状态后台管理系统中的用户状态参数。
+Ignore the id parameter and do not display it in the document. This is mainly the user state parameter in the traditional stateful back-end management system.
 
 
-## 2.7 @tag使用
+## 2.7 @tag use
 ```java
 /**
  * json file config test
@@ -390,13 +391,14 @@ public class ConfigRequestParamController {
     }
 }
 ```
+@tag is used to classify controller methods. You can assign methods under different controllers to multiple categories, and you can also directly assign controllers to one category or multiple categories.
 
 
-# IDEA自定义tag提示
-自定义的tag默认是不会自动提示的，需要用户在idea中进行设置。设置好后即可使用，下面以设置smart-doc自定义的mock tag为例，设置操作如下：
+# IDEA custom tag prompt
+The custom tag is not automatically prompted by default, and requires the user to set it in the idea. You can use it after setting it up. The following takes the setting of smart-doc custom mock tag as an example. The setting operation is as follows:
 ![idea设置自定义tag提示](../../_images/234135_8477cd9b_144669.png "idea_tag.png")
 
-使用其它开发工具的用户请自行查找相关工具的自定义tag提示设置。
+Users who use other development tools should find the custom tag prompt settings of related tools by themselves.
 
 
 

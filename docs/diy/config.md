@@ -13,152 +13,142 @@
 完整配置文件示例
 ```json
 {
-  "serverUrl": "http://127.0.0.1", //服务器地址,非必须。导出postman建议设置成http://{{server}}方便直接在postman直接设置环境变量
-  "pathPrefix": "", //设置path前缀,非必须。如配置Servlet ContextPath 。@since 2.2.3
-  "isStrict": false, //是否开启严格模式
-  "allInOne": true,  //是否将文档合并到一个文件中，一般推荐为true
-  "outPath": "D://md2", //指定文档的输出路径
-  "coverOld": true,  //是否覆盖旧的文件，主要用于mardown文件覆盖
-  "createDebugPage": true,//@since 2.0.0 smart-doc支持创建可以测试的html页面，仅在AllInOne模式中起作用。
-  "packageFilters": "",//controller包过滤，多个包用英文逗号隔开，2.2.2开始需要采用正则：com.test.controller.*
-  "md5EncryptedHtmlName": false,//只有每个controller生成一个html文件是才使用
-  "style":"xt256", //基于highlight.js的代码高设置,可选值很多可查看码云wiki，喜欢配色统一简洁的同学可以不设置
-  "projectName": "smart-doc",//配置自己的项目名称
-  "skipTransientField": true,//目前未实现
-  "sortByTitle":false,//接口标题排序，默认为false,@since 1.8.7版本开始
-  "showAuthor":true,//是否显示接口作者名称，默认是true,不想显示可关闭
-  "requestFieldToUnderline":true,//自动将驼峰入参字段在文档中转为下划线格式,//@since 1.8.7版本开始
-  "responseFieldToUnderline":true,//自动将驼峰入参字段在文档中转为下划线格式,//@since 1.8.7版本开始
-  "inlineEnum":true,//设置为true会将枚举详情展示到参数表中，默认关闭，//@since 1.8.8版本开始
-  "recursionLimit":7,//设置允许递归执行的次数用于避免一些对象解析卡主，默认是7，正常为3次以内，//@since 1.8.8版本开始
-  "allInOneDocFileName":"index.html",//自定义设置输出文档名称, @since 1.9.0
-  "requestExample":"true",//是否将请求示例展示在文档中，默认true，@since 1.9.0
-  "responseExample":"true",//是否将响应示例展示在文档中，默认为true，@since 1.9.0
-  "urlSuffix":".do",//支持SpringMVC旧项目的url后缀,@since 2.1.0
-  "displayActualType":false,//配置true会在注释栏自动显示泛型的真实类型短类名，@since 1.9.6
-  "appKey": "20201216788835306945118208",// torna平台对接appKey,, @since 2.0.9
-  "appToken": "c16931fa6590483fb7a4e85340fcbfef", //torna平台appToken,@since 2.0.9
-  "secret": "W.ZyGMOB9Q0UqujVxnfi@.I#V&tUUYZR",//torna平台secret，@since 2.0.9
-  "openUrl": "http://localhost:7700/api",//torna平台地址，填写自己的私有化部署地址@since 2.0.9
-  "debugEnvName":"测试环境", //torna环境名称
-  "debugEnvUrl":"http://127.0.0.1",//推送torna配置接口服务地址
-  "tornaDebug":false,//启用会推送日志
-  "ignoreRequestParams":[ //忽略请求参数对象，把不想生成文档的参数对象屏蔽掉，@since 1.9.2
-     "org.springframework.ui.ModelMap"
-   ],
-  "dataDictionaries": [{ //配置数据字典，没有需求可以不设置
-      "title": "http状态码字典", //数据字典的名称
-      "enumClassName": "com.power.common.enums.HttpCodeEnum", //数据字典枚举类名称
-      "codeField": "code",//数据字典字典码对应的字段名称
-      "descField": "message"//数据字典对象的描述信息字典
-  }],
-  "errorCodeDictionaries": [{ //错误码列表，没有需求可以不设置
-    "title": "title",
-    "enumClassName": "com.power.common.enums.HttpCodeEnum", //错误码枚举类
-    "codeField": "code",//错误码的code码字段名称
-    "descField": "message"//错误码的描述信息对应的字段名
-  }],
-  "revisionLogs": [{ //文档变更记录，非必须
-      "version": "1.0", //文档版本号
-      "revisionTime": "2020-12-31 10:30", //文档修订时间
-      "status": "update", //变更操作状态，一般为：创建、更新等
-      "author": "author", //文档变更作者
-      "remarks": "desc" //变更描述
-    }
+  "serverUrl": "http://127.0.0.1", // Set the server address, not required
+  "pathPrefix": "", //Set the path prefix,not required。eg: Servlet ContextPath
+  "isStrict": false, // whether to enable strict mode
+  "allInOne": true, // whether to merge documents into one file, generally recommended as true
+  "outPath": "D: // md2", // Specify the output path of the document
+  "coverOld": true, // Whether to overwrite old files, mainly used for mardown file overwrite
+  "style":"xt256", //set highlight
+  "createDebugPage": true,//Create a page that can be used to test your APIs like swagger
+  "language":"ENGLISH",//support ENGLISH and CHINESE
+  "packageFilters": "", // controller package filtering, multiple package names separated by commas
+  "md5EncryptedHtmlName": false, // only used if each controller generates an html file
+  "projectName": "smart-doc", // Configure your own project name
+  "skipTransientField": true, // Not currently implemented
+  "requestFieldToUnderline":true, //convert request field to underline
+  "responseFieldToUnderline":true,//convert response field to underline
+  "sortByTitle":false,//Sort by interface title, the default value is false
+  "showAuthor":true,// display author,default is true
+  "inlineEnum":true,// Set to true to display enumeration details in the parameter table
+  "recursionLimit":7,// Set the number of recursive executions to avoid stack overflow, the default is 7
+  "allInOneDocFileName":"index.html",//Customize the output document name
+  "requestExample":"true",//Whether to display the request example in the document, the default value is true.
+  "responseExample":"true",//Whether to display the response example in the document, the default is true.
+  "requestParamsTable": true, //@since 2.2.5,Whether to display the request params table in the document, the default value is true.
+  "responseParamsTable": true //@since 2.2.5,Whether to display the response params table in the document, the default is true.
+  "displayActualType":false,//display actual type of generic,
+  "urlSuffix":".do",//Support the url suffix of the old SpringMVC project,@since 2.1.0
+  "appKey": "xxx",// torna appKey, @since 2.0.9
+  "appToken": "xxx", //torna appToken,@since 2.0.9
+  "secret": "xx",//torna secret，@since 2.0.9
+  "isReplace":true, torna replace doc @since 2.2.4
+  "openUrl": "torna server/api/",//torna server url,@since 2.0.9
+  "tornaDebug":false, // show log while set true
+  "ignoreRequestParams":[ //The request parameter object will be discarded when generating the document.@since 1.9.2
+       "org.springframework.ui.ModelMap"
   ],
-  "customResponseFields": [{ //自定义添加字段和注释，一般用户处理第三方jar包库，非必须
-      "name": "code",//覆盖响应码字段
-      "desc": "响应代码",//覆盖响应码的字段注释
-      "ownerClassName": "org.springframework.data.domain.Pageable", //指定你要添加注释的类名
-      "ignore":true, //设置true会被自动忽略掉不会出现在文档中
-      "value": "00000"//设置响应码的值
+  "dataDictionaries": [{// Configure the data dictionary, no need to set
+       "title": "Order Status", // The name of the data dictionary
+       "enumClassName": "com.power.doc.enums.OrderEnum", // Data dictionary enumeration class name
+       "codeField": "code", // The field name corresponding to the data dictionary dictionary code
+       "descField": "desc" // Data dictionary object description information dictionary
   }],
-  "customRequestFields": [{ //自定义请求体的注释，@since 2.1.3，非必须
-       "name":"code", //属性名
-       "desc":"状态码", //描述
-       "ownerClassName":"com.xxx.constant.entity.Result", //属性对应的类全路径
-       "value":"200", //默认值或者mock值
-       "required":true, //是否必填
-       "ignore":false //是否忽略
+  "errorCodeDictionaries": [{// error code list, no need to set
+       "title": "title",
+       "enumClassName": "com.power.doc.enums.ErrorCodeEnum", // Error code enumeration class
+       "codeField": "code", // Code field name of the error code
+       "descField": "desc" // Field name corresponding to the error code description
   }],
-  "requestHeaders": [{ //设置请求头，没有需求可以不设置
-      "name": "token",//请求头名称
-      "type": "string",//请求头类型
-      "desc": "desc",//请求头描述信息
-      "value":"token请求头的值",//不设置默认null
-      "required": false,//是否必须
-      "since": "-",//什么版本添加的改请求头
-      "pathPatterns": "/app/test/**",//请看https://gitee.com/smart-doc-team/smart-doc/wikis/请求头高级配置?sort_id=4178978
-      "excludePathPatterns":"/app/page/**"//请看https://gitee.com/smart-doc-team/smart-doc/wikis/请求头高级配置?sort_id=4178978
-  },{
-      "name": "appkey",//请求头
-      "type": "string",//请求头类型
-      "desc": "desc",//请求头描述信息
-      "value":"appkey请求头的值",//不设置默认null
-      "required": false,//是否必须
-      "pathPatterns": "/test/add,/testConstants/1.0",//正则表达式过滤请求头,url匹配上才会添加该请求头，多个正则用分号隔开
-      "since": "-"//什么版本添加的改请求头
+  "revisionLogs": [{// Set document change records, no need to set
+       "version": "1.0", // Document version number
+       "revisionTime": "2020-12-31 10:30", //revision time
+       "author": "author", // Document change author
+       "status": "update", // Change operation status, generally: create, update, etc.
+       "remarks": "desc" // Change description
   }],
-  "requestParams": [ //公共请求参数(通过拦截器处理的场景)，@since 2.2.3,没有需求请不要设置
+  "customResponseFields": [{// Customly add fields and comments. If api-doc encounters a field with the same name later, directly add a comment to the corresponding field. It is not necessary.
+       "name": "code", // Override the response code field
+       "desc": "Response code", // Override field comment of response code
+       "value": "00000" // Set the value of the response code
+  }],
+  "customRequestFields": [{//@since 2.1.3
+       "name":"code", //Override the request code field
+       "desc":"request code", //Override field comment of response code
+       "ownerClassName":"com.xxx.constant.entity.Result",
+       "value":"200", // Set the value of the response code
+       "required":true,
+       "ignore":false
+  }],
+  "apiObjectReplacements": [{ // Supports replacing specified objects with custom objects to complete document rendering
+       "className": "org.springframework.data.domain.Pageable",
+       "replacementClassName": "com.power.doc.model.PageRequestDto" //Use custom PageRequestDto instead of JPA Pageable for document rendering.
+  }],
+  "rpcApiDependencies":[{ // Your Apache Dubbo api interface module dependency description.
+       "artifactId":"SpringBoot2-Dubbo-Api",
+       "groupId":"com.demo",
+       "version":"1.0.0"
+  }],
+  "apiConstants": [{//Configure your own constant class, smart-doc automatically replaces with a specific value when parsing to a constant
+       "constantsClassName": "com.power.doc.constants.RequestParamConstant"
+   }],
+  "responseBodyAdvice":{ //Support ResponseBodyAdvice
+       "className":"com.power.common.model.CommonResult" // Standard POJO for Response
+  },
+  "requestBodyAdvice":{ //Support ResponseBodyAdvice
+       "className":"com.power.common.model.CommonResult" // Standard POJO for Request
+  },
+  "rpcConsumerConfig": "src/main/resources/consumer-example.conf",//dubbo consumer config example
+  "requestHeaders": [{// Set global request headers, no need to set
+       "name": "token",
+       "type": "string",
+       "desc": "desc",
+       "required": false,
+       "pathPatterns": "*",
+       "excludePathPatterns":"/app/page/**",
+       "since": "-"
+  }],
+  "requestParams": [ //Public request parameters (a scenario where public request parameters are processed through interceptors) ，@since 2.2.3,no need to set
     {
-      "name": "configPathParam",//请求参数名称
-      "type": "string",//请求参数类型
-      "desc": "desc",//请求参数描述信息
-      "paramIn": "path",
-      "value":"testPath",//不设置默认null
-      "required": false,//是否必须
-      "since": "-",//什么版本添加的改请求参数
-      "pathPatterns": "*",//正则表达式过滤请求参数
-      "excludePathPatterns":"/app/page/**" //参考请求头中的用法
+      "name": "configPathParam",
+      "type": "string",
+      "desc": "desc",
+      "paramIn": "path", // path,query
+      "value":"testPath",//default is null
+      "required": false,
+      "since": "-",
+      "pathPatterns": "*",
+      "excludePathPatterns":"/app/page/**"
     },
     {
-      "name": "configQueryParam",//请求参数名称
-      "type": "string",//请求参数类型
-      "desc": "desc",//请求参数描述信息
+      "name": "configQueryParam",
+      "type": "string",
+      "desc": "desc",
       "paramIn": "query",
-      "value":"testQuery",//不设置默认null
-      "required": false,//是否必须
-      "since": "-",//什么版本添加的改请求参数
-      "pathPatterns": "*",//正则表达式过滤请求参数
+      "value":"testQuery",
+      "required": false,
+      "since": "-",
+      "pathPatterns": "*",
       "excludePathPatterns":"/app/page/**"
     }
   ],
-  "rpcApiDependencies":[{ // 项目开放的dubbo api接口模块依赖，配置后输出到文档方便使用者集成
-        "artifactId":"SpringBoot2-Dubbo-Api",
-        "groupId":"com.demo",
-        "version":"1.0.0"
-   }],
-  "rpcConsumerConfig": "src/main/resources/consumer-example.conf",//文档中添加dubbo consumer集成配置，用于方便集成方可以快速集成
-  "apiObjectReplacements": [{ // 自smart-doc 1.8.5开始你可以使用自定义类覆盖其他类做文档渲染，非必须
-      "className": "org.springframework.data.domain.Pageable",
-      "replacementClassName": "com.power.doc.model.PageRequestDto" //自定义的PageRequestDto替换Pageable做文档渲染
-  }],
-  "apiConstants": [{//从1.8.9开始配置自己的常量类，smart-doc在解析到常量时自动替换为具体的值，非必须
-        "constantsClassName": "com.power.doc.constants.RequestParamConstant"
-  }],
-  "responseBodyAdvice":{ //自smart-doc 1.9.8起，非必须项，ResponseBodyAdvice统一返回设置(不要随便配置根据项目的技术来配置)，可用ignoreResponseBodyAdvice tag来忽略
-  		"className":"com.power.common.model.CommonResult" //通用响应体
-  },
-  "requestBodyAdvice":{ ////自smart-doc 2.1.4 起，支持设置RequestBodyAdvice统一请求包装类，非必须
-         "className":"com.power.common.model.CommonResult"
-  },
-  "groups": [ // @since 2.2.5, 对不同的controller进行分组
+  "groups": [ // Group different controllers, @since 2.2.5
     {
-      "name": "测试分组",
+      "name": "test group",
       "apis": "com.power.doc.controller.app.*"
     }
   ],
-  "requestParamsTable": true, // 是否将请求参数表展示在文档中，默认true，@since 2.2.5
-  "responseParamsTable": true //是否将响应参数表展示在文档中, 默认true，@since 2.2.5
+  "requestParamsTable": true, // Whether to display the request parameter table in the document, the default is true, @since 2.2.5
+  "responseParamsTable": true // Whether to display the response parameter table in the document, the default is true, @since 2.2.5
 }
 ```
 
 ## serverUrl
-* 必填：`false`
-* 类型：`String`
-* 默认值: `http://127.0.0.1`
+* required: `false`
+* type: `String`
+* default: `http://127.0.0.1`
 
-服务器地址, 导出postman建议设置成http://{{server}}方便直接在postman直接设置环境变量。
+Server address, it is recommended to set it as http://{{server}} for exporting postman to facilitate setting environment variables directly in postman.
 ```json
 {
     "serverUrl": "http://127.0.0.1"
@@ -166,12 +156,12 @@
 ```
 
 ## pathPrefix
-* 必填：`false`
-* 类型：`String`
-* 默认值: `null`
+* required: `false`
+* type:`String`
+* default: `null`
 * @since `2.2.3`
 
-设置path前缀, 如配置Servlet ContextPath。
+Set the path prefix, such as configuring Servlet ContextPath.
 ```json
 {
     "pathPrefix": "myProject"
@@ -179,11 +169,11 @@
 ```
 
 ## isStrict
-* 必填：`false`
-* 类型：`Boolean`
-* 默认值: `flase`
+* required: `false`
+* type:`Boolean`
+* default: `flase`
 
-是否开启严格模式。
+Whether to enable strict mode.
 ```json
 {
     "isStrict": true
@@ -191,11 +181,11 @@
 ```
 
 ## allInOne
-* 必填：`false`
-* 类型：`Boolean`
-* 默认值: `false`
+* required: `false`
+* type:`Boolean`
+* default: `false`
 
-是否将文档合并到一个文件中，一般推荐为true。
+Whether to merge the documents into one file, it is generally recommended to be true.
 ```json
 {
     "allInOne": false
@@ -203,11 +193,11 @@
 ```
 
 ## outPath
-* 必填：`true`
-* 类型：`String`
-* 默认值: `null`
+* required: `true`
+* type:`String`
+* default: `null`
 
-指定文档的输出路径。
+Specify the output path of the document.
 ```json
 {
     "outPath": "D://md2"
@@ -215,11 +205,11 @@
 ```
 
 ## coverOld
-* 必填：`false`
-* 类型：`Boolean`
-* 默认值: `false`
+* required: `false`
+* type:`Boolean`
+* default: `false`
 
-是否覆盖旧的文件，主要用于mardown文件覆盖。
+Whether to overwrite old files, mainly used for markdown file overwriting.
 ```json
 {
     "coverOld": false
@@ -227,12 +217,12 @@
 ```
 
 ## createDebugPage
-* 必填：`false`
-* 类型：`Boolean`
-* 默认值: `false`
+* required: `false`
+* type:`Boolean`
+* default: `false`
 * @since `2.0.0`
 
-smart-doc支持创建可以测试的html页面，仅在AllInOne模式中起作用。
+smart-doc supports the creation of testable html pages and only works in AllInOne mode.
 ```json
 {
     "createDebugPage": false
@@ -240,12 +230,12 @@ smart-doc支持创建可以测试的html页面，仅在AllInOne模式中起作�
 ```
 
 ## packageFilters
-* 必填：`false`
-* 类型：`String`
-* 默认值: `null`
+* required: `false`
+* type:`String`
+* default: `null`
 
-controller包过滤，多个包用英文逗号隔开。
-> PS: 2.2.2开始需要采用正则：com.test.controller.*
+Controller packet filtering, multiple packets are separated by English commas.
+> PS: Since 2.2.2, we need to adopt regularity: com.test.controller.*
 ```json
 {
     "packageFilters": "com.test.controller.*"
@@ -253,11 +243,11 @@ controller包过滤，多个包用英文逗号隔开。
 ```
 
 ## md5EncryptedHtmlName
-* 必填：`false`
-* 类型：`Boolean`
-* 默认值: `false`
+* required: `false`
+* type:`Boolean`
+* default: `false`
 
-只有每个controller生成一个html文件是才使用。
+It is only used when each controller generates an html file.
 ```json
 {
     "md5EncryptedHtmlName": false
@@ -265,11 +255,11 @@ controller包过滤，多个包用英文逗号隔开。
 ```
 
 ## style
-* 必填：`false`
-* 类型：`String`
-* 默认值: `null`
+* required: `false`
+* type:`String`
+* default: `null`
 
-基于highlight.js的[代码高亮](zh-cn/diy/highlight.md)设置。
+[Code Highlight](/diy/highlight.md) setting based on highlight.js.
 ```json
 {
     "style": "xt256"
@@ -277,76 +267,74 @@ controller包过滤，多个包用英文逗号隔开。
 ```
 
 ## projectName
-* 必填：`false`
-* 类型：`String`
-* 默认值: `null`
+* required: `false`
+* type:`String`
+* default: `null`
 
-只有每个controller生成一个html文件是才使用。
+It is only used when each controller generates an html file.
 ```json
 {
     "projectName": "smart-doc"
 }
 ```
 
-
 ## sortByTitle
-* 必填：`false`
-* 类型：`Boolean`
-* 默认值: `false`
+* required: `false`
+* type:`Boolean`
+* default: `false`
 * @since `1.8.7`
 
-接口标题排序。
+Sort by interface title.
 ```json
 {
-    "sortByTitle": false
+     "sortByTitle": false
 }
 ```
 
 ## showAuthor
-* 必填：`false`
-* 类型：`Boolean`
-* 默认值: `true`
+* required: `false`
+* type:`Boolean`
+* default: `true`
 
-是否显示接口作者名称。
+Whether to display the name of the interface author.
 ```json
 {
-    "showAuthor": false
+     "showAuthor": false
 }
 ```
 
 ## requestFieldToUnderline
-* 必填：`false`
-* 类型：`Boolean`
-* 默认值: `false`
+* required: `false`
+* type:`Boolean`
+* default: `false`
 * @since `1.8.7`
 
-自动将驼峰入参字段在文档中转为下划线格式。
+Automatically convert the camel case input parameter field to underscore format in the document.
 ```json
 {
-    "requestFieldToUnderline": true
+     "requestFieldToUnderline": true
 }
 ```
 
 ## responseFieldToUnderline
-* 必填：`false`
-* 类型：`Boolean`
-* 默认值: `false`
+* required: `false`
+* type:`Boolean`
+* default: `false`
 * @since `1.8.7`
 
-自动将驼峰入参字段在文档中转为下划线格式。
+Automatically convert the camel case input parameter field to underscore format in the document.
 ```json
 {
-    "responseFieldToUnderline": true
+     "responseFieldToUnderline": true
 }
 ```
-
 ## inlineEnum
-* 必填：`false`
-* 类型：`Boolean`
-* 默认值: `false`
+* required: `false`
+* type:`Boolean`
+* default: `false`
 * @since `1.8.8`
 
-是否将枚举详情展示到参数表中。
+Whether to display the enumeration details in the parameter table.
 ```json
 {
     "inlineEnum": true
@@ -354,12 +342,12 @@ controller包过滤，多个包用英文逗号隔开。
 ```
 
 ## recursionLimit
-* 必填：`false`
-* 类型：`int`
-* 默认值: `7`
+* required: `false`
+* type:`int`
+* default: `7`
 * @since `1.8.8`
 
-设置允许递归执行的次数用于避免一些对象解析卡主。
+Set the number of allowed recursive executions to avoid some object resolution card owners.
 ```json
 {
     "recursionLimit": 7
@@ -367,12 +355,12 @@ controller包过滤，多个包用英文逗号隔开。
 ```
 
 ## allInOneDocFileName
-* 必填：`false`
-* 类型：`String`
-* 默认值: `index.html`
+* required: `false`
+* type:`String`
+* default: `index.html`
 * @since `1.9.0`
 
-只有每个controller生成一个html文件是才使用。
+It is only used when each controller generates an html file.
 ```json
 {
     "allInOneDocFileName": "index.html"
@@ -380,12 +368,12 @@ controller包过滤，多个包用英文逗号隔开。
 ```
 
 ## requestExample
-* 必填：`false`
-* 类型：`Boolean`
-* 默认值: `true`
+* required: `false`
+* type:`Boolean`
+* default: `true`
 * @since `1.9.0`
 
-是否将请求示例展示在文档中。
+Whether to display request examples in the document.
 ```json
 {
     "requestExample": false
@@ -393,12 +381,12 @@ controller包过滤，多个包用英文逗号隔开。
 ```
 
 ## responseExample
-* 必填：`false`
-* 类型：`Boolean`
-* 默认值: `true`
+* required: `false`
+* type:`Boolean`
+* default: `true`
 * @since `1.9.0`
 
-是否将响应示例展示在文档中。
+Whether to display response examples in the document.
 ```json
 {
     "responseExample": false
@@ -406,24 +394,25 @@ controller包过滤，多个包用英文逗号隔开。
 ```
 
 ## urlSuffix
-* 必填：`false`
-* 类型：`String`
-* 默认值: `true`
+* required: `false`
+* type:`String`
+* default: `true`
 * @since `2.1.0`
 
-支持SpringMVC旧项目的url后缀。
+Support the url suffix of the old SpringMVC project.
 ```json
 {
     "urlSuffix": ".do"
 }
 ```
 
-## language
-* 必填：`false`
-* 类型：`String`
-* 默认值: `CHINESE`
 
-mock值的国际化支持。
+## language
+* required: `false`
+* type:`String`
+* default: `CHINESE`
+
+Internationalization support for mock values.
 ```json
 {
     "language": "ENGLISH"
@@ -431,12 +420,12 @@ mock值的国际化支持。
 ```
 
 ## displayActualType
-* 必填：`false`
-* 类型：`Boolean`
-* 默认值: `false`
+* required: `false`
+* type:`Boolean`
+* default: `false`
 * @since `1.9.6`
 
-是否在注释栏自动显示泛型的真实类型短类名。
+Whether to automatically display the real short class name of the generic type in the comment column.
 ```json
 {
     "displayActualType": false
@@ -444,12 +433,12 @@ mock值的国际化支持。
 ```
 
 ## appKey
-* 必填：`false`
-* 类型：`String`
-* 默认值: `null`
+* required: `false`
+* type:`String`
+* default: `null`
 * @since `2.0.9`
 
-torna平台对接appKey。
+Torna platform docks appKey.
 ```json
 {
     "appKey": "20201216788835306945118208"
@@ -457,12 +446,12 @@ torna平台对接appKey。
 ```
 
 ## appToken
-* 必填：`false`
-* 类型：`String`
-* 默认值: `null`
+* required: `false`
+* type:`String`
+* default: `null`
 * @since `2.0.9`
 
-torna平台appToken。
+torna platform appToken.
 ```json
 {
     "appToken": "c16931fa6590483fb7a4e85340fcbfef"
@@ -470,12 +459,12 @@ torna平台appToken。
 ```
 
 ## secret
-* 必填：`false`
-* 类型：`String`
-* 默认值: `null`
+* required: `false`
+* type:`String`
+* default: `null`
 * @since `2.0.9`
 
-torna平台secret。
+Torna platform secret.
 ```json
 {
     "secret": "W.ZyGMOB9Q0UqujVxnfi@.I#V&tUUYZR"
@@ -483,12 +472,12 @@ torna平台secret。
 ```
 
 ## openUrl
-* 必填：`false`
-* 类型：`String`
-* 默认值: `null`
+* required: `false`
+* type:`String`
+* default: `null`
 * @since `2.0.9`
 
-torna平台地址，填写自己的私有化部署地址。
+Torna platform address, fill in your own privatization deployment address.
 ```json
 {
     "openUrl": "http://localhost:7700/api"
@@ -496,24 +485,25 @@ torna平台地址，填写自己的私有化部署地址。
 ```
 
 ## debugEnvName
-* 必填：`false`
-* 类型：`String`
-* 默认值: `null`
+* required: `false`
+* type:`String`
+* default: `null`
 
-torna环境名称。
+Torna environment name.
 ```json
 {
-    "debugEnvName": "测试环境"
+    "debugEnvName": "Test Environment"
 }
 ```
 
+
 ## replace
-* 必填：`false`
-* 类型：`Boolean`
-* 默认值: `true`
+* required: `false`
+* type:`Boolean`
+* default: `true`
 * @since `2.2.4`
 
-推送torna时替换旧的文档。
+Replace old documents when pushing torna.
 ```json
 {
     "replace": false
@@ -521,12 +511,12 @@ torna环境名称。
 ```
 
 ## debugEnvUrl
-* 必填：`false`
-* 类型：`String`
-* 默认值: `null`
+* required: `false`
+* type:`String`
+* default: `null`
 * @since `2.0.9`
 
-推送torna配置接口服务地址。
+Push torna configuration interface service address.
 ```json
 {
     "debugEnvUrl": "http://127.0.0.1"
@@ -534,12 +524,12 @@ torna环境名称。
 ```
 
 ## tornaDebug
-* 必填：`false`
-* 类型：`Boolean`
-* 默认值: `true`
+* required: `false`
+* type:`Boolean`
+* default: `true`
 * @since `2.0.9`
 
-是否打印torna推送日志。
+Whether to print the torna push log.
 ```json
 {
     "tornaDebug": true
@@ -547,12 +537,12 @@ torna环境名称。
 ```
 
 ## ignoreRequestParams
-* 必填：`false`
-* 类型：`List<String>`
-* 默认值: `null`
+* required: `false`
+* type:`List<String>`
+* default: `null`
 * @since `1.9.2`
 
-忽略请求参数对象，把不想生成文档的参数对象屏蔽掉。
+Ignore the request parameter object, and block the parameter objects that do not want to generate a document.
 ```json
 {
     "ignoreRequestParams": ["org.springframework.ui.ModelMap"]
@@ -560,58 +550,58 @@ torna环境名称。
 ```
 
 ## dataDictionaries
-* 必填：`false`
-* 类型：`List<Object>`
-* 默认值: `null`
+* required: `false`
+* type:`List<Object>`
+* default: `null`
 
-配置数据字典。
+Configure the data dictionary.
 ```json
 {
     "dataDictionaries": [
         {
-            "title": "http状态码字典", //数据字典的名称
-            "enumClassName": "com.power.common.enums.HttpCodeEnum", //数据字典枚举类名称
-            "codeField": "code", //数据字典字典码对应的字段名称
-            "descField": "message" //数据字典对象的描述信息字典
+            "title": "http status code dictionary", //The name of the data dictionary
+            "enumClassName": "com.power.common.enums.HttpCodeEnum", //Data dictionary enumeration class name
+            "codeField": "code", //The field name corresponding to the data dictionary dictionary code
+            "descField": "message" //Description information dictionary of data dictionary object
         }
     ]
 }
 ```
 
 ## errorCodeDictionaries
-* 必填：`false`
-* 类型：`List<Object>`
-* 默认值: `null`
+* required: `false`
+* type:`List<Object>`
+* default: `null`
 
-错误码列表。
+List of error codes.
 ```json
 {
     "errorCodeDictionaries": [
         {
             "title": "title",
-            "enumClassName": "com.power.common.enums.HttpCodeEnum", //错误码枚举类
-            "codeField": "code", //错误码的code码字段名称
-            "descField": "message" //错误码的描述信息对应的字段名
+            "enumClassName": "com.power.common.enums.HttpCodeEnum", //Error code enumeration class
+            "codeField": "code", //Code field name of the error code
+            "descField": "message" //The field name corresponding to the description information of the error code
         }
     ]
 }
 ```
 
 ## revisionLogs
-* 必填：`false`
-* 类型：`List<Object>`
-* 默认值: `null`
+* required: `false`
+* type:`List<Object>`
+* default: `null`
 
-文档变更记录。
+Document change records.
 ```json
 {
     "revisionLogs": [
         {
-            "version": "1.0", //文档版本号
-            "revisionTime": "2020-12-31 10:30", //文档修订时间
-            "status": "update", //变更操作状态，一般为：创建、更新等
-            "author": "author", //文档变更作者
-            "remarks": "desc" //变更描述
+            "version": "1.0", //document version number
+            "revisionTime": "2020-12-31 10:30", //document revision time
+            "status": "update", //Change operation status, generally: create, update, etc.
+            "author": "author", //author of document change
+            "remarks": "desc" //Change description
         }
     ]
 }
@@ -619,20 +609,20 @@ torna环境名称。
 
 
 ## customResponseFields
-* 必填：`false`
-* 类型：`List<Object>`
-* 默认值: `null`
+* required: `false`
+* type:`List<Object>`
+* default: `null`
 
-自定义添加字段和注释，一般用户处理第三方jar包库。
+Custom add fields and comments, general users deal with third-party jar package libraries.
 ```json
 {
     "customResponseFields": [
         {
-            "name": "code", //覆盖响应码字段
-            "desc": "响应代码", //覆盖响应码的字段注释
-            "ownerClassName": "org.springframework.data.domain.Pageable", //指定你要添加注释的类名
-            "ignore": true, //设置true会被自动忽略掉不会出现在文档中
-            "value": "00000" //设置响应码的值
+            "name": "code", //Overwrite the response code field
+            "desc": "Response code", //Override the field comment of the response code
+            "ownerClassName": "org.springframework.data.domain.Pageable", //Specify the name of the class you want to annotate
+            "ignore": true, //Set true will be automatically ignored and will not appear in the document
+            "value": "00000" //Set the value of the response code
         }
     ]
 }
@@ -640,22 +630,22 @@ torna环境名称。
 
 
 ## customRequestFields
-* 必填：`false`
-* 类型：`List<Object>`
-* 默认值: `null`
+* required: `false`
+* type:`List<Object>`
+* default: `null`
 * @since `2.1.3`
 
-自定义请求体的注释。
+Customize the comment of the request body.
 ```json
 {
     "customRequestFields": [
         {
-            "name": "code", //属性名
-            "desc": "状态码", //描述
-            "ownerClassName": "com.xxx.constant.entity.Result", //属性对应的类全路径
-            "value": "200", //默认值或者mock值
-            "required": true, //是否必填
-            "ignore": false //是否忽略
+            "name": "code", //attribute name
+            "desc": "Status Code", //Description
+            "ownerClassName": "com.xxx.constant.entity.Result", //The full path of the class corresponding to the attribute
+            "value": "200", //default value or mock value
+            "required": true, //is required
+            "ignore": false //Whether to ignore
         }
     ]
 }
@@ -663,21 +653,21 @@ torna环境名称。
 
 
 ## requestHeaders
-* 必填：`false`
-* 类型：`List<Object>`
-* 默认值: `null`
+* required: `false`
+* type:`List<Object>`
+* default: `null`
 
-设置[公共请求头](zh-cn/diy/advancedFeatures#公共请求头)。
+Set [public request header](/diy/advancedFeatures#public-request-header).
 ```json
 {
     "requestHeaders": [
         {
-            "name": "token", //请求头名称
-            "type": "string", //请求头类型
-            "desc": "desc", //请求头描述信息
-            "value": "token请求头的值", //不设置默认null
-            "required": false, //是否必须
-            "since": "-", //什么版本添加的改请求头
+            "name": "token", //Request header name
+            "type": "string", //Request header type
+            "desc": "desc", //Request header description information
+            "value": "token request header value", //do not set the default null
+            "required": false, //Is it necessary
+            "since": "-", //What version added the change request header
             "pathPatterns": "/app/test/**",
             "excludePathPatterns": "/app/page/**"
         }
@@ -687,25 +677,25 @@ torna环境名称。
 
 
 ## requestParams
-* 必填：`false`
-* 类型：`List<Object>`
-* 默认值: `null`
+* required: `false`
+* type:`List<Object>`
+* default: `null`
 * @since `2.2.3`
 
-[公共请求参数](zh-cn/diy/advancedFeatures#公共请求参数)(通过拦截器处理的场景)。
+[Public request parameters](/diy/advancedFeatures#public-request-parameters) (scene processed by interceptor).
 ```json
 {
     "requestParams": [
         {
-            "name": "configPathParam", //请求头名称
-            "type": "string", //请求头类型
-            "desc": "desc", //请求头描述信息
-            "paramIn": "path", // path 或者query
-            "value": "testPath", //不设置默认null
-            "required": false, //是否必须
-            "since": "-", //什么版本添加的改请求头
-            "pathPatterns": "*", //正则表达式过滤请求头
-            "excludePathPatterns": "/app/page/**" //参考请求头中的用法
+            "name": "configPathParam", //Request header name
+            "type": "string", //Request header type
+            "desc": "desc", //Request header description information
+            "paramIn": "path", // path or query
+            "value": "testPath", //Do not set the default null
+            "required": false, //Is it necessary
+            "since": "-", //What version added the change request header
+            "pathPatterns": "*", //Regular expression filtering request header
+            "excludePathPatterns": "/app/page/**" //Refer to the usage in the request header
         }
     ]
 }
@@ -713,11 +703,11 @@ torna环境名称。
 
 
 ## rpcApiDependencies
-* 必填：`false`
-* 类型：`List<Object>`
-* 默认值: `null`
+* required: `false`
+* type:`List<Object>`
+* default: `null`
 
-项目开放的dubbo api接口模块依赖，配置后输出到文档方便使用者集成。
+The project's open dubbo api interface module depends on it, and it is output to the document after configuration to facilitate user integration.
 ```json
 {
     "rpcApiDependencies": [
@@ -732,11 +722,11 @@ torna环境名称。
 
 
 ## rpcConsumerConfig
-* 必填：`false`
-* 类型：`String`
-* 默认值: `null`
+* required: `false`
+* type:`String`
+* default: `null`
 
-文档中添加dubbo consumer集成配置，用于方便集成方可以快速集成。
+The dubbo consumer integration configuration is added to the document to facilitate the integration party to quickly integrate.
 ```json
 {
     "rpcConsumerConfig": "src/main/resources/consumer-example.conf"
@@ -745,18 +735,18 @@ torna环境名称。
 
 
 ## apiObjectReplacements
-* 必填：`false`
-* 类型：`List<Object>`
-* 默认值: `null`
+* required: `false`
+* type:`List<Object>`
+* default: `null`
 * @since `1.8.5`
 
-使用自定义类覆盖其他类做文档渲染。
+Use custom classes to override other classes for document rendering.
 ```json
 {
     "apiObjectReplacements": [
         {
             "className": "org.springframework.data.domain.Pageable",
-            "replacementClassName": "com.power.doc.model.PageRequestDto" //自定义的PageRequestDto替换Pageable做文档渲染
+            "replacementClassName": "com.power.doc.model.PageRequestDto" //Custom PageRequestDto replaces Pageable for document rendering
         }
     ]
 }
@@ -764,12 +754,12 @@ torna环境名称。
 
 
 ## apiConstants
-* 必填：`false`
-* 类型：`List<Object>`
-* 默认值: `null`
+* required: `false`
+* type:`List<Object>`
+* default: `null`
 * @since `1.8.9`
 
-[配置自己的常量类](zh-cn/diy/advancedFeatures#静态常量替换)，smart-doc在解析到常量时自动替换为具体的值。
+[Configure your own constant class](/diy/advancedFeatures#static-constant-replacement), smart-doc automatically replaces with specific values ​​when parsed to constants.
 ```json
 {
     "apiConstants": [
@@ -780,53 +770,52 @@ torna环境名称。
 }
 ```
 
-
 ## responseBodyAdvice
-* 必填：`false`
-* 类型：`List<Object>`
-* 默认值: `null`
+* required: `false`
+* type:`List<Object>`
+* default: `null`
 * @since `1.8.9`
 
-ResponseBodyAdvice统一返回设置(不要随便配置根据项目的技术来配置)，可用`ignoreResponseBodyAdvice` tag来忽略。
+ResponseBodyAdvice unified return settings (do not configure randomly according to the project technology), you can use the `ignoreResponseBodyAdvice` tag to ignore.
 ```json
 {
     "rpcApiDependencies": {
-        "className": "com.power.common.model.CommonResult" //通用响应体
+        "className": "com.power.common.model.CommonResult" //Common response body
     }
 }
 ```
 
 
 ## requestBodyAdvice
-* 必填：`false`
-* 类型：`List<Object>`
-* 默认值: `null`
+* required: `false`
+* type:`List<Object>`
+* default: `null`
 * @since `2.1.4`
 
-设置RequestBodyAdvice统一请求包装类。
+Set the RequestBodyAdvice unified request wrapper class.
 ```json
 {
     "rpcApiDependencies": {
-        "className": "com.power.common.model.CommonResult" //通用请求体
+        "className": "com.power.common.model.CommonResult" //Common request body
     }
 }
 ```
 
 
-## groups  
-* 必填：`false`
-* 类型：`List<Object>`
-* 默认值: `null`
+## groups
+* required: `false`
+* type:`List<Object>`
+* default: `null`
 * @since `2.2.5` :new:
 
-对不同的controller进行分组。
-> PS: 分组不对postman.json和openApi.json生效
+Group different controllers.
+> PS: Grouping does not take effect for postman.json and openApi.json
 ```json
 {
     "groups": [
         {
-            "name": "测试分组", // 分组名称
-            "apis": "com.power.doc.controller.app.*"  // 分组url, 支持正则
+            "name": "Test group", // group name
+            "apis": "com.power.doc.controller.app.*" // group url, support regular
         }
     ]
 }
@@ -834,12 +823,12 @@ ResponseBodyAdvice统一返回设置(不要随便配置根据项目的技术来�
 
 
 ## requestParamsTable
-* 必填：`false`
-* 类型：`Boolean`
-* 默认值: `true`
+* required: `false`
+* type:`Boolean`
+* default: `true`
 * @since `2.2.5` :new:
 
-是否将请求参数表展示在文档中。
+Whether to display the request parameter list in the document.
 ```json
 {
     "requestParamsTable": true
@@ -847,13 +836,13 @@ ResponseBodyAdvice统一返回设置(不要随便配置根据项目的技术来�
 ```
 
 
-## responseParamsTable  
-* 必填：`false`
-* 类型：`Boolean`
-* 默认值: `true`
+## responseParamsTable
+* required: `false`
+* type:`Boolean`
+* default: `true`
 * @since `2.2.5` :new:
 
-是否将响应参数表展示在文档中。
+Whether to display the response parameter table in the document.
 ```json
 {
     "responseParamsTable": true
