@@ -1,4 +1,4 @@
-# 代码高亮
+# Code Highlight
 
 <style>
     .color-lump {
@@ -10,20 +10,20 @@
     }
 </style>
 
-使用[hightlight.js](https://github.com/highlightjs/highlight.js/)为生成的html文档增加代码高亮
+Use [hightlight.js](https://github.com/highlightjs/highlight.js/) to add code highlighting to the generated html document
 
-- 用户在smart-doc配置文件中配置style(可选)
+- The user configures style in the smart-doc configuration file (optional)
 
-- 配置指定值(95种可选)，但是有些浅色背景因为和模板颜色有冲突，smart-doc已经剔除了。
+- Configure the specified value (95 types are optional), but some light backgrounds have conflicts with the template colors, smart-doc has been removed.
 
-- 如果是喜欢高亮，则参考下面的列表设置一款自己喜欢的高亮，不建议随机生成，因为每个高亮都需要单独去网上自动下载样式。
+- If you like highlighting, please refer to the list below to set up a highlight you like. Random generation is not recommended, because each highlight needs to be automatically downloaded online.
 
-style可配置值参考如下：
+The configurable values of style are as follows:
 
-| Style | Color |描述
+| Style | Color |description
 |-------|-------|------
-|randomLight|随机浅色|style的值为randomLight会随机生成浅色背景(不推荐)
-|randomDar|随机浅色|style的值为randomDar会随机生成深色背景(不推荐)
+|randomLight|Random light color|The value of style is randomLight will randomly generate a light background (not recommended)
+|randomDar|Random light color|style value randomDar will randomly generate a dark background (not recommended)
 |a11y-dark|#2b2b2b|<div class="color-lump" style="--color: #2b2b2b">
 |agate|#333|<div class="color-lump" style="--color: #333">
 |an-old-hope|#1c1d21|<div class="color-lump" style="--color: #1c1d21">

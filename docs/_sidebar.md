@@ -7,7 +7,7 @@
   - [Configuration](diy/config.md "Configuration")
   - [Advanced Features](diy/advancedFeatures.md)
   - [Code Highlight](diy/highlight.md)
-  - [Interface UI integration](diy/integrated.md)
+  - [UI integration](diy/integrated.md)
 - [Document Effect](docsImages.md)
 - [Expand Development](expand.md)
 - [Changelog](changelog.md "Changelog")

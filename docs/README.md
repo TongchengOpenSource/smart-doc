@@ -34,7 +34,7 @@ Check out the [quick start](zh-cn/start/quickstart.md) for details.
 
 ## Best Practice
 smart-doc + [Torna](http://torna.cn/) form an industry-leading document generation and management solution, using smart-doc to complete Java source code analysis and extract annotations to generate API documents without intrusion, and automatically push the documents to the Torna enterprise-level interface document management platform.
-![smart-doc + Torna](./_images/smart-to-torna.png)
+![smart-doc + Torna](./_images/smart-doc-en.png)
 
 [smart-doc+Torna文档自动化](zh-cn/diy/integrated.md)
 

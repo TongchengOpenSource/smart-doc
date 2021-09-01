@@ -1,8 +1,8 @@
-# 配置项
+# Configuration
 
-> PS: 对于老用户完全可以通过Fastjson或者是Gson库将ApiConfig转化成JSON配置。
+> PS: For old users, ApiConfig can be converted into JSON configuration through Fastjson or Gson library.
 
-你可以配置在`smart-doc.json`文件里。
+You can configure it in the `smart-doc.json` file.
 ```json
 {
     "outPath": "D://md2" 
@@ -10,7 +10,7 @@
 ```
 
 ## allConfig
-完整配置文件示例
+Example of a complete configuration file
 ```json
 {
   "serverUrl": "http://127.0.0.1", // Set the server address, not required
@@ -36,13 +36,13 @@
   "requestExample":"true",//Whether to display the request example in the document, the default value is true.
   "responseExample":"true",//Whether to display the response example in the document, the default is true.
   "requestParamsTable": true, //@since 2.2.5,Whether to display the request params table in the document, the default value is true.
-  "responseParamsTable": true //@since 2.2.5,Whether to display the response params table in the document, the default is true.
-  "displayActualType":false,//display actual type of generic,
+  "responseParamsTable": true, //@since 2.2.5,Whether to display the response params table in the document, the default is true.
+  "displayActualType": false,//display actual type of generic,
   "urlSuffix":".do",//Support the url suffix of the old SpringMVC project,@since 2.1.0
   "appKey": "xxx",// torna appKey, @since 2.0.9
   "appToken": "xxx", //torna appToken,@since 2.0.9
   "secret": "xx",//torna secret，@since 2.0.9
-  "isReplace":true, torna replace doc @since 2.2.4
+  "isReplace":true, //torna replace doc @since 2.2.4
   "openUrl": "torna server/api/",//torna server url,@since 2.0.9
   "tornaDebug":false, // show log while set true
   "ignoreRequestParams":[ //The request parameter object will be discarded when generating the document.@since 1.9.2
