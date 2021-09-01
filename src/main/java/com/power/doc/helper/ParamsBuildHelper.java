@@ -80,8 +80,15 @@ public class ParamsBuildHelper {
         // Registry class
         registryClasses.put(className, className);
         String simpleName = DocClassUtil.getSimpleName(className);
-        String[] globGicName = DocClassUtil.getSimpleGicName(className);
+        String[] globGicName = DocClassUtil.getSimpleGicName(className); 
         JavaClass cls = projectBuilder.getClassByName(simpleName);
+        if (globGicName == null || globGicName.length <= 0) {
+            //获取父类的泛型
+            JavaClass superJavaClass = cls != null ? cls.getSuperJavaClass() : null;
+            if (superJavaClass != null && !"Object".equals(superJavaClass.getSimpleName())) {
+                globGicName = DocClassUtil.getSimpleGicName(superJavaClass.getGenericFullyQualifiedName());
+            }
+        }
 
         JavaClassUtil.genericParamMap(genericMap, cls, globGicName);
         List<DocJavaField> fields = JavaClassUtil.getFields(cls, 0, new LinkedHashMap<>());
