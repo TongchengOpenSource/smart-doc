@@ -27,6 +27,7 @@ public class ApiDocTest {
         List<String> list = new ArrayList<>();
         list.add("aa");
         list.contains("aa");
+
         ApiConfig config = new ApiConfig();
         config.setServerUrl("http://127.0.0.1:8899");
         //config.setStrict(true);
@@ -35,6 +36,7 @@ public class ApiDocTest {
         config.setAppToken("b3e291ed6a75452f9a467d420583082c");
         config.setSecret("^^As.tU#XpK=FATTpY<Vj0PFLt9iak!2");
         config.setDebugEnvName("测试环境");
+        config.setStyle("randomLight");
 //        config.setAuthor("test");
         config.setDebugEnvUrl("http://127.0.0.1");
         //config.setTornaDebug(true);

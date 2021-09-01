@@ -263,4 +263,12 @@ public interface DocGlobalConstants {
      */
     String JAXB_DELETE_FULLY = "javax.ws.rs.DELETE";
 
+    String HIGH_LIGHT_CSS_URL_FORMAT = "https://cdn.bootcdn.net/ajax/libs/highlight.js/10.3.2/styles/%s.min.css";
+
+    String HIGH_LIGHT_CSS_DEFAULT = "xt256.min.css";
+
+    String HIGH_LIGHT_CSS_RANDOM_LIGHT = "randomLight";
+
+    String HIGH_LIGHT_CSS_RANDOM_DARK = "randomDark";
+
 }

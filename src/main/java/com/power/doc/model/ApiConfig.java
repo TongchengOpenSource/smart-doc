@@ -360,7 +360,7 @@ public class ApiConfig {
      * replace old document while push to torna
      * @since 2.2.4
      */
-    private boolean replace;
+    private Boolean replace;
 
     /**
      * @since 2.2.5
@@ -876,11 +876,11 @@ public class ApiConfig {
         this.framework = framework;
     }
 
-    public boolean isReplace() {
+    public Boolean getReplace() {
         return replace;
     }
 
-    public void setReplace(boolean replace) {
+    public void setReplace(Boolean replace) {
         this.replace = replace;
     }
 

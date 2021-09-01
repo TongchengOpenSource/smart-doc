@@ -195,23 +195,31 @@ public class ProjectDocConfigBuilder {
 
     private void setHighlightStyle() {
         String style = apiConfig.getStyle();
+        if(StringUtil.isEmpty(style)) {
+            apiConfig.setStyle(DocGlobalConstants.HIGH_LIGHT_CSS_DEFAULT);
+            return;
+        }
         if (HighlightStyle.containsStyle(style)) {
+            style = String.format(DocGlobalConstants.HIGH_LIGHT_CSS_URL_FORMAT,style);
+            apiConfig.setStyle(style);
             return;
         }
         Random random = new Random();
-        if ("randomLight".equals(style)) {
+        if (DocGlobalConstants.HIGH_LIGHT_CSS_RANDOM_LIGHT.equals(style)) {
             // Eliminate styles that do not match the template
             style = HighlightStyle.randomLight(random);
             if (HighlightStyle.containsStyle(style)) {
+                style = String.format(DocGlobalConstants.HIGH_LIGHT_CSS_URL_FORMAT,style);
                 apiConfig.setStyle(style);
             } else {
-                apiConfig.setStyle("null");
+                apiConfig.setStyle(DocGlobalConstants.HIGH_LIGHT_CSS_DEFAULT);
             }
-        } else if ("randomDark".equals(style)) {
-            apiConfig.setStyle(HighlightStyle.randomDark(random));
-        } else {
+        } else if (DocGlobalConstants.HIGH_LIGHT_CSS_RANDOM_DARK.equals(style)) {
+            style = String.format(DocGlobalConstants.HIGH_LIGHT_CSS_URL_FORMAT,HighlightStyle.randomDark(random));
+            apiConfig.setStyle(style);
+                   } else {
             // Eliminate styles that do not match the template
-            apiConfig.setStyle("null");
+            apiConfig.setStyle(DocGlobalConstants.HIGH_LIGHT_CSS_DEFAULT);
         }
     }
 
