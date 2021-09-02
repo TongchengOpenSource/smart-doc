@@ -82,8 +82,8 @@ public class ParamsBuildHelper {
         String simpleName = DocClassUtil.getSimpleName(className);
         String[] globGicName = DocClassUtil.getSimpleGicName(className); 
         JavaClass cls = projectBuilder.getClassByName(simpleName);
-        if (globGicName == null || globGicName.length <= 0) {
-            //获取父类的泛型
+        if (Objects.isNull(globGicName) || globGicName.length < 1) {
+            // obtain generics from parent class
             JavaClass superJavaClass = cls != null ? cls.getSuperJavaClass() : null;
             if (superJavaClass != null && !"Object".equals(superJavaClass.getSimpleName())) {
                 globGicName = DocClassUtil.getSimpleGicName(superJavaClass.getGenericFullyQualifiedName());
