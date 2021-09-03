@@ -152,7 +152,13 @@ public class JsonBuildHelper {
 
         data0.append("{");
         String[] globGicName = DocClassUtil.getSimpleGicName(genericCanonicalName);
-
+        if (Objects.isNull(globGicName) || globGicName.length < 1) {
+            // obtain generics from parent class
+            JavaClass superJavaClass = cls != null ? cls.getSuperJavaClass() : null;
+            if (Objects.nonNull(superJavaClass) && !"Object".equals(superJavaClass.getSimpleName())) {
+                globGicName = DocClassUtil.getSimpleGicName(superJavaClass.getGenericFullyQualifiedName());
+            }
+        }
         JavaClassUtil.genericParamMap(genericMap, cls, globGicName);
         StringBuilder data = new StringBuilder();
         if (JavaClassValidateUtil.isCollection(typeName) || JavaClassValidateUtil.isArray(typeName)) {
