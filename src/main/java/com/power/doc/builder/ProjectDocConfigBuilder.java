@@ -136,7 +136,7 @@ public class ProjectDocConfigBuilder {
     private void initCustomResponseFieldsMap(ApiConfig config) {
         if (CollectionUtil.isNotEmpty(config.getCustomResponseFields())) {
             for (CustomField field : config.getCustomResponseFields()) {
-                customRespFieldMap.put(field.getOwnerClassName() + "." +field.getName(), field);
+                customRespFieldMap.put(field.getOwnerClassName() + "." + field.getName(), field);
             }
         }
     }
@@ -144,7 +144,7 @@ public class ProjectDocConfigBuilder {
     private void initCustomRequestFieldsMap(ApiConfig config) {
         if (CollectionUtil.isNotEmpty(config.getCustomRequestFields())) {
             for (CustomField field : config.getCustomRequestFields()) {
-                customReqFieldMap.put(field.getOwnerClassName() + "."+field.getName(), field);
+                customReqFieldMap.put(field.getOwnerClassName() + "." + field.getName(), field);
             }
         }
     }
@@ -195,13 +195,13 @@ public class ProjectDocConfigBuilder {
 
     private void setHighlightStyle() {
         String style = apiConfig.getStyle();
-        if(StringUtil.isEmpty(style)) {
-            apiConfig.setStyle(DocGlobalConstants.HIGH_LIGHT_CSS_DEFAULT);
+        if (DocGlobalConstants.HIGH_LIGHT_DEFAULT_STYLE.equals(style)) {
+            // use local css file
+            apiConfig.setHighlightStyleLink(DocGlobalConstants.HIGH_LIGHT_CSS_DEFAULT);
             return;
         }
         if (HighlightStyle.containsStyle(style)) {
-            style = String.format(DocGlobalConstants.HIGH_LIGHT_CSS_URL_FORMAT,style);
-            apiConfig.setStyle(style);
+            apiConfig.setHighlightStyleLink(String.format(DocGlobalConstants.HIGH_LIGHT_CSS_URL_FORMAT, style));
             return;
         }
         Random random = new Random();
@@ -209,21 +209,25 @@ public class ProjectDocConfigBuilder {
             // Eliminate styles that do not match the template
             style = HighlightStyle.randomLight(random);
             if (HighlightStyle.containsStyle(style)) {
-                style = String.format(DocGlobalConstants.HIGH_LIGHT_CSS_URL_FORMAT,style);
                 apiConfig.setStyle(style);
+                apiConfig.setHighlightStyleLink(String.format(DocGlobalConstants.HIGH_LIGHT_CSS_URL_FORMAT, style));
             } else {
-                apiConfig.setStyle(DocGlobalConstants.HIGH_LIGHT_CSS_DEFAULT);
+                apiConfig.setStyle(null);
             }
         } else if (DocGlobalConstants.HIGH_LIGHT_CSS_RANDOM_DARK.equals(style)) {
-            style = String.format(DocGlobalConstants.HIGH_LIGHT_CSS_URL_FORMAT,HighlightStyle.randomDark(random));
+            style = HighlightStyle.randomDark(random);
+            if (DocGlobalConstants.HIGH_LIGHT_DEFAULT_STYLE.equals(style)) {
+                apiConfig.setHighlightStyleLink(DocGlobalConstants.HIGH_LIGHT_CSS_DEFAULT);
+            } else {
+                apiConfig.setHighlightStyleLink(String.format(DocGlobalConstants.HIGH_LIGHT_CSS_URL_FORMAT, style));
+            }
             apiConfig.setStyle(style);
-                   } else {
+        } else {
             // Eliminate styles that do not match the template
-            apiConfig.setStyle(DocGlobalConstants.HIGH_LIGHT_CSS_DEFAULT);
+            apiConfig.setStyle(null);
+
         }
     }
-
-
     public JavaProjectBuilder getJavaProjectBuilder() {
         return javaProjectBuilder;
     }

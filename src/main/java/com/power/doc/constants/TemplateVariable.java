@@ -57,6 +57,7 @@ public enum TemplateVariable {
     ORDER("order"),
     INDEX_ALIAS("alias"),
     DIRECTORY_TREE("directoryTree"),
+    HIGH_LIGHT_CSS_LINK("highlightCssLink"),
     CSS_CND("css_cdn");
 
     private String variable;

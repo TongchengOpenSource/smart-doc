@@ -124,6 +124,7 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
         Template tpl = BeetlTemplateUtil.getByName(template);
         String style = config.getStyle();
         tpl.binding(TemplateVariable.STYLE.getVariable(), style);
+        tpl.binding(TemplateVariable.HIGH_LIGHT_CSS_LINK.getVariable(),config.getHighlightStyleLink());
         tpl.binding(TemplateVariable.BACKGROUND.getVariable(), HighlightStyle.getBackgroundColor(style));
         tpl.binding(TemplateVariable.API_DOC_LIST.getVariable(), apiDocList);
         tpl.binding(TemplateVariable.ERROR_CODE_LIST.getVariable(), errorCodeList);
@@ -241,6 +242,7 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
         Template errorTemplate = BeetlTemplateUtil.getByName(template);
         errorTemplate.binding(TemplateVariable.PROJECT_NAME.getVariable(), config.getProjectName());
         String style = config.getStyle();
+        errorTemplate.binding(TemplateVariable.HIGH_LIGHT_CSS_LINK.getVariable(),config.getHighlightStyleLink());
         errorTemplate.binding(TemplateVariable.STYLE.getVariable(), style);
         if (CollectionUtil.isEmpty(errorCodeList)) {
             errorTemplate.binding(TemplateVariable.DICT_ORDER.getVariable(), apiDocList.size() + 1);
@@ -279,6 +281,7 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
         String strTime = DateTimeUtil.long2Str(now, DateTimeUtil.DATE_FORMAT_SECOND);
         mapper.binding(TemplateVariable.PROJECT_NAME.getVariable(), config.getProjectName());
         String style = config.getStyle();
+        mapper.binding(TemplateVariable.HIGH_LIGHT_CSS_LINK.getVariable(),config.getHighlightStyleLink());
         mapper.binding(TemplateVariable.STYLE.getVariable(), style);
         List<ApiErrorCode> errorCodeList = DocUtil.errorCodeDictToList(config);
         // set css cdn

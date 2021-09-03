@@ -289,6 +289,8 @@ public class ApiConfig {
 
     private String style;
 
+    private String highlightStyleLink;
+
     /**
      * create debug page
      */
@@ -900,126 +902,11 @@ public class ApiConfig {
         this.responseParamsTable = responseParamsTable;
     }
 
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("{");
-        sb.append("\"serverUrl\":\"")
-                .append(serverUrl).append('\"');
-        sb.append(",\"pathPrefix\":\"")
-                .append(pathPrefix).append('\"');
-        sb.append(",\"isStrict\":")
-                .append(isStrict);
-        sb.append(",\"allInOne\":")
-                .append(allInOne);
-        sb.append(",\"outPath\":\"")
-                .append(outPath).append('\"');
-        sb.append(",\"sourceCodePaths\":")
-                .append(sourceCodePaths);
-        sb.append(",\"requestHeaders\":")
-                .append(requestHeaders);
-        sb.append(",\"requestParams\":")
-                .append(requestParams);
-        sb.append(",\"coverOld\":")
-                .append(coverOld);
-        sb.append(",\"customResponseFields\":")
-                .append(customResponseFields);
-        sb.append(",\"customRequestFields\":")
-                .append(customRequestFields);
-        sb.append(",\"errorCodes\":")
-                .append(errorCodes);
-        sb.append(",\"packageFilters\":\"")
-                .append(packageFilters).append('\"');
-        sb.append(",\"revisionLogs\":")
-                .append(revisionLogs);
-        sb.append(",\"md5EncryptedHtmlName\":")
-                .append(md5EncryptedHtmlName);
-        sb.append(",\"language\":")
-                .append(language);
-        sb.append(",\"adoc\":")
-                .append(adoc);
-        sb.append(",\"dataDictionaries\":")
-                .append(dataDictionaries);
-        sb.append(",\"errorCodeDictionaries\":")
-                .append(errorCodeDictionaries);
-        sb.append(",\"apiObjectReplacements\":")
-                .append(apiObjectReplacements);
-        sb.append(",\"rpcApiDependencies\":")
-                .append(rpcApiDependencies);
-        sb.append(",\"apiConstants\":")
-                .append(apiConstants);
-        sb.append(",\"group\":\"")
-                .append(group).append('\"');
-        sb.append(",\"projectName\":\"")
-                .append(projectName).append('\"');
-        sb.append(",\"projectCName\":\"")
-                .append(projectCName).append('\"');
-        sb.append(",\"skipTransientField\":")
-                .append(skipTransientField);
-        sb.append(",\"showAuthor\":")
-                .append(showAuthor);
-        sb.append(",\"requestFieldToUnderline\":")
-                .append(requestFieldToUnderline);
-        sb.append(",\"responseFieldToUnderline\":")
-                .append(responseFieldToUnderline);
-        sb.append(",\"sortByTitle\":")
-                .append(sortByTitle);
-        sb.append(",\"showJavaType\":")
-                .append(showJavaType);
-        sb.append(",\"inlineEnum\":")
-                .append(inlineEnum);
-        sb.append(",\"rpcConsumerConfig\":\"")
-                .append(rpcConsumerConfig).append('\"');
-        sb.append(",\"recursionLimit\":")
-                .append(recursionLimit);
-        sb.append(",\"requestExample\":")
-                .append(requestExample);
-        sb.append(",\"responseExample\":")
-                .append(responseExample);
-        sb.append(",\"requestParamsTable\":")
-                .append(requestParamsTable);
-        sb.append(",\"responseParamsTable\":")
-                .append(responseParamsTable);
-        sb.append(",\"allInOneDocFileName\":\"")
-                .append(allInOneDocFileName).append('\"');
-        sb.append(",\"paramsDataToTree\":")
-                .append(paramsDataToTree);
-        sb.append(",\"ignoreRequestParams\":")
-                .append(ignoreRequestParams);
-        sb.append(",\"displayActualType\":")
-                .append(displayActualType);
-        sb.append(",\"responseBodyAdvice\":")
-                .append(responseBodyAdvice);
-        sb.append(",\"requestBodyAdvice\":")
-                .append(requestBodyAdvice);
-        sb.append(",\"style\":\"")
-                .append(style).append('\"');
-        sb.append(",\"createDebugPage\":")
-                .append(createDebugPage);
-        sb.append(",\"urlSuffix\":\"")
-                .append(urlSuffix).append('\"');
-        sb.append(",\"appKey\":\"")
-                .append(appKey).append('\"');
-        sb.append(",\"secret\":\"")
-                .append(secret).append('\"');
-        sb.append(",\"appToken\":\"")
-                .append(appToken).append('\"');
-        sb.append(",\"openUrl\":\"")
-                .append(openUrl).append('\"');
-        sb.append(",\"debugEnvName\":\"")
-                .append(debugEnvName).append('\"');
-        sb.append(",\"debugEnvUrl\":\"")
-                .append(debugEnvUrl).append('\"');
-        sb.append(",\"tornaDebug\":")
-                .append(tornaDebug);
-        sb.append(",\"author\":\"")
-                .append(author).append('\"');
-        sb.append(",\"framework\":\"")
-                .append(framework).append('\"');
-        sb.append(",\"groups\":")
-                .append(groups);
-        sb.append(",\"replace\":")
-                .append(replace);
-        sb.append('}');
-        return sb.toString();
+    public String getHighlightStyleLink() {
+        return highlightStyleLink;
+    }
+
+    public void setHighlightStyleLink(String highlightStyleLink) {
+        this.highlightStyleLink = highlightStyleLink;
     }
 }
