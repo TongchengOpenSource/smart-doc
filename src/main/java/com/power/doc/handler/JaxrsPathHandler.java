@@ -58,42 +58,35 @@ public class JaxrsPathHandler {
 
     public JaxrsPathMapping handle(ProjectDocConfigBuilder projectBuilder, String baseUrl, JavaMethod method) {
 
-        // 得到方法上的注解
         List<JavaAnnotation> annotations = method.getAnnotations();
         this.constantsMap = projectBuilder.getConstantsMap();
         String url;
         String methodType = null;
         String shortUrl = null;
-        // 响应类型集合
         String mediaType = null;
         String serverUrl = projectBuilder.getServerUrl();
         String contextPath = projectBuilder.getApiConfig().getPathPrefix();
-        // 过期方法标志
         boolean deprecated = false;
-        // 遍历方法上所有注解
         for (JavaAnnotation annotation : annotations) {
             String annotationName = annotation.getType().getName();
             if (JAXRSAnnotations.JAX_PRODUCES.equals(annotationName)) {
-                // 响应类型获取
                 mediaType = DocUtil.getRequestHeaderValue(annotation);
             }
-            // 过时方法
+            // Deprecated annotation on method
             if (DocAnnotationConstants.DEPRECATED.equals(annotationName)) {
                 deprecated = true;
             }
-            // short url 提取
             if (JAXRSAnnotations.JAX_PATH.equals(annotationName) ||
                     JAXRSAnnotations.JAX_PATH_PARAM.equals(annotationName) ||
                     DocGlobalConstants.JAX_PATH_FULLY
                             .equals(annotationName)) {
                 shortUrl = DocUtil.handleMappingValue(annotation);
             }
-            // 提取HTTP方式
             if (ANNOTATION_NAMES.contains(annotationName)) {
                 methodType = annotationName;
             }
         }
-        // tag
+        // @deprecated tag on method
         if (Objects.nonNull(method.getTagByName(DEPRECATED))) {
             deprecated = true;
         }

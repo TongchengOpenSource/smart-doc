@@ -77,10 +77,10 @@
                 </ul>
             </li>
             <%}%><%}%><%}%><%}%><%if(isNotEmpty(errorCodeList)){%>
-            <li><a href="#_error_code_list"> ${apiDocList.~size == 1 ? apiDocList[0].childrenApiDocs.~size+1 :
+            <li><a href="#_${errorListTitle}"> ${apiDocList.~size == 1 ? apiDocList[0].childrenApiDocs.~size+1 :
                 apiDocList.~size+1}.&nbsp;${errorListTitle}</a></li>
             <%}%><%if(isNotEmpty(dictList)){%>
-            <li><a class="dd" href="#_dict_list"> ${apiDocList.~size == 1 ? apiDocList[0].childrenApiDocs.~size+1 :
+            <li><a class="dd" href="#_${dictListTitle}"> ${apiDocList.~size == 1 ? apiDocList[0].childrenApiDocs.~size+1 :
                 dictListOrder}.&nbsp;${dictListTitle}</a>
                 <ul class="sectlevel2"><%for(dict in dictList){%>
                     <li><a href="#_${dictListOrder}_${dict.order}_${dict.title}">${dictListOrder}.${dict.order}.&nbsp;${dict.title}</a>
@@ -326,8 +326,8 @@
         </div>
     </div>
     <%}%><%}%><%if(isNotEmpty(errorCodeList)){%>
-    <div class="sect1"><h2 id="_error_code_list"><a class="anchor" href="#_error_code_list"></a>
-        <a class="link" href="#_error_code_list">${apiDocList.~size == 1 ? apiDocList[0].childrenApiDocs.~size+1 : apiDocList.~size+1}.&nbsp;${errorListTitle}</a></h2>
+    <div class="sect1"><h2 id="_${errorListTitle}"><a class="anchor" href="#_${errorListTitle}"></a>
+        <a class="link" href="#_${errorListTitle}">${apiDocList.~size == 1 ? apiDocList[0].childrenApiDocs.~size+1 : apiDocList.~size+1}.&nbsp;${errorListTitle}</a></h2>
         <div class="sectionbody">
             <table class="tableblock frame-all grid-all spread">
                 <colgroup>
@@ -352,7 +352,7 @@
         </div>
     </div>
     <%}%><%if(isNotEmpty(dictList)){%>
-    <div class="sect1"><h2 id="_dict_list"><a class="anchor" href="#_dict_list"></a><a class="link" href="#_dict_list">${apiDocList.~size
+    <div class="sect1"><h2 id="_${dictListTitle}"><a class="anchor" href="#_${dictListTitle}"></a><a class="link" href="#_dict_list">${apiDocList.~size
         == 1 ? apiDocList[0].childrenApiDocs.~size+1 : dictListOrder}.&nbsp;${dictListTitle}</a></h2>
         <div class="sectionbody"><%for(dict in dictList){%>
             <div class="sect2"><h3 id="_${dictListOrder}_${dict.order}_${dict.title}"><a class="anchor"

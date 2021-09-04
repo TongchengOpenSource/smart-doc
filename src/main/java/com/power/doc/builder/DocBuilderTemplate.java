@@ -124,7 +124,7 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
         Template tpl = BeetlTemplateUtil.getByName(template);
         String style = config.getStyle();
         tpl.binding(TemplateVariable.STYLE.getVariable(), style);
-        tpl.binding(TemplateVariable.HIGH_LIGHT_CSS_LINK.getVariable(),config.getHighlightStyleLink());
+        tpl.binding(TemplateVariable.HIGH_LIGHT_CSS_LINK.getVariable(), config.getHighlightStyleLink());
         tpl.binding(TemplateVariable.BACKGROUND.getVariable(), HighlightStyle.getBackgroundColor(style));
         tpl.binding(TemplateVariable.API_DOC_LIST.getVariable(), apiDocList);
         tpl.binding(TemplateVariable.ERROR_CODE_LIST.getVariable(), errorCodeList);
@@ -135,8 +135,8 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
         tpl.binding(TemplateVariable.PROJECT_NAME.getVariable(), config.getProjectName());
         tpl.binding(TemplateVariable.REQUEST_EXAMPLE.getVariable(), config.isRequestExample());
         tpl.binding(TemplateVariable.RESPONSE_EXAMPLE.getVariable(), config.isResponseExample());
-        tpl.binding(TemplateVariable.DISPLAY_REQUEST_PARAMS.getVariable(),config.isRequestParamsTable());
-        tpl.binding(TemplateVariable.DISPLAY_RESPONSE_PARAMS.getVariable(),config.isResponseParamsTable());
+        tpl.binding(TemplateVariable.DISPLAY_REQUEST_PARAMS.getVariable(), config.isRequestParamsTable());
+        tpl.binding(TemplateVariable.DISPLAY_RESPONSE_PARAMS.getVariable(), config.isResponseParamsTable());
         setCssCDN(config, tpl);
         if (CollectionUtil.isEmpty(errorCodeList)) {
             tpl.binding(TemplateVariable.DICT_ORDER.getVariable(), apiDocList.size() + 1);
@@ -184,27 +184,29 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
         }
         // set dict list
         List<ApiDocDict> apiDocDictList = DocUtil.buildDictionary(config, javaProjectBuilder);
-        ApiDoc apiDoc1 = new ApiDoc();
-        apiDoc1.setOrder((isOnlyDefaultGroup ? apiDocs.get(0).getChildrenApiDocs().size() : apiDocs.size()) + 1);
-        apiDoc1.setLink("dict_list");
-        apiDoc1.setAlias("dict");
-        apiDoc1.setDesc(titleMap.get(TemplateVariable.DICT_LIST_TITLE.getVariable()));
-        apiDoc1.setGroup(apiDoc1.getDesc());
-        List<ApiMethodDoc> methodDocs = new ArrayList<>();
-        for (ApiDocDict apiDocDict : apiDocDictList) {
-            ApiMethodDoc methodDoc = new ApiMethodDoc();
-            methodDoc.setOrder(apiDocDict.getOrder());
-            methodDoc.setDesc(apiDocDict.getTitle());
-            methodDocs.add(methodDoc);
+        if (CollectionUtil.isNotEmpty(apiDocDictList)) {
+            ApiDoc apiDoc1 = new ApiDoc();
+            apiDoc1.setOrder((isOnlyDefaultGroup ? apiDocs.get(0).getChildrenApiDocs().size() : apiDocs.size()) + 1);
+            apiDoc1.setLink("dict_list");
+            apiDoc1.setAlias("dict");
+            apiDoc1.setDesc(titleMap.get(TemplateVariable.DICT_LIST_TITLE.getVariable()));
+            apiDoc1.setGroup(apiDoc1.getDesc());
+            List<ApiMethodDoc> methodDocs = new ArrayList<>();
+            for (ApiDocDict apiDocDict : apiDocDictList) {
+                ApiMethodDoc methodDoc = new ApiMethodDoc();
+                methodDoc.setOrder(apiDocDict.getOrder());
+                methodDoc.setDesc(apiDocDict.getTitle());
+                methodDocs.add(methodDoc);
+            }
+            apiDoc1.setList(methodDocs);
+            if (isOnlyDefaultGroup) {
+                apiDocs.get(0).getChildrenApiDocs().add(apiDoc1);
+            } else {
+                apiDocs.add(apiDoc1);
+            }
+            tpl.binding(TemplateVariable.API_DOC_LIST.getVariable(), apiDocs);
+            FileUtil.nioWriteFile(tpl.render(), config.getOutPath() + FILE_SEPARATOR + SEARCH_JS_OUT);
         }
-        apiDoc1.setList(methodDocs);
-        if (isOnlyDefaultGroup) {
-            apiDocs.get(0).getChildrenApiDocs().add(apiDoc1);
-        } else {
-            apiDocs.add(apiDoc1);
-        }
-        tpl.binding(TemplateVariable.API_DOC_LIST.getVariable(), apiDocs);
-        FileUtil.nioWriteFile(tpl.render(), config.getOutPath() + FILE_SEPARATOR + SEARCH_JS_OUT);
     }
 
 
@@ -242,7 +244,7 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
         Template errorTemplate = BeetlTemplateUtil.getByName(template);
         errorTemplate.binding(TemplateVariable.PROJECT_NAME.getVariable(), config.getProjectName());
         String style = config.getStyle();
-        errorTemplate.binding(TemplateVariable.HIGH_LIGHT_CSS_LINK.getVariable(),config.getHighlightStyleLink());
+        errorTemplate.binding(TemplateVariable.HIGH_LIGHT_CSS_LINK.getVariable(), config.getHighlightStyleLink());
         errorTemplate.binding(TemplateVariable.STYLE.getVariable(), style);
         if (CollectionUtil.isEmpty(errorCodeList)) {
             errorTemplate.binding(TemplateVariable.DICT_ORDER.getVariable(), apiDocList.size() + 1);
@@ -281,7 +283,7 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
         String strTime = DateTimeUtil.long2Str(now, DateTimeUtil.DATE_FORMAT_SECOND);
         mapper.binding(TemplateVariable.PROJECT_NAME.getVariable(), config.getProjectName());
         String style = config.getStyle();
-        mapper.binding(TemplateVariable.HIGH_LIGHT_CSS_LINK.getVariable(),config.getHighlightStyleLink());
+        mapper.binding(TemplateVariable.HIGH_LIGHT_CSS_LINK.getVariable(), config.getHighlightStyleLink());
         mapper.binding(TemplateVariable.STYLE.getVariable(), style);
         List<ApiErrorCode> errorCodeList = DocUtil.errorCodeDictToList(config);
         // set css cdn
