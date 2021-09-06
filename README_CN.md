@@ -151,6 +151,7 @@ smart-doc官方目前已经开发完成[Maven插件](https://gitee.com/smart-doc
   "debugEnvName":"测试环境", //torna环境名称
   "debugEnvUrl":"http://127.0.0.1",//推送torna配置接口服务地址
   "tornaDebug":false,//启用会推送日志
+  "replace":true, // 推送文档到torna强制替换 @since 2.2.4
   "ignoreRequestParams":[ //忽略请求参数对象，把不想生成文档的参数对象屏蔽掉，@since 1.9.2
      "org.springframework.ui.ModelMap"
    ],

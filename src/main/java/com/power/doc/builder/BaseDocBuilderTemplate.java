@@ -31,8 +31,14 @@ import com.power.doc.constants.TemplateVariable;
 import com.power.doc.model.ApiConfig;
 import com.power.doc.model.RevisionLog;
 import org.apache.commons.lang3.StringUtils;
+import org.beetl.core.Resource;
 import org.beetl.core.Template;
+import org.beetl.core.resource.ClasspathResourceLoader;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -135,6 +141,26 @@ public class BaseDocBuilderTemplate {
             return fileName;
         } else {
             return fileName + suffix;
+        }
+    }
+    public static void copyJarFile(String source, String target) {
+        ClasspathResourceLoader resourceLoader = new ClasspathResourceLoader("/template/");
+        Resource resource = resourceLoader.getResource(source);
+        try (FileWriter fileWriter = new FileWriter(target, false);
+             Reader reader = resource.openReader()) {
+            char[] c = new char[1024 * 1024];
+            int temp;
+            int len = 0;
+            while ((temp = reader.read()) != -1) {
+                c[len] = (char) temp;
+                len++;
+            }
+            reader.close();
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+            bufferedWriter.write(c, 0, len);
+            bufferedWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

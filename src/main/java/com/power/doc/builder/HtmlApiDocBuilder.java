@@ -79,10 +79,10 @@ public class HtmlApiDocBuilder {
         List<ApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder);
         Template indexCssTemplate = BeetlTemplateUtil.getByName(ALL_IN_ONE_CSS);
         FileUtil.nioWriteFile(indexCssTemplate.render(), config.getOutPath() + FILE_SEPARATOR + ALL_IN_ONE_CSS_OUT);
-        copyJarFile("js/" + HIGH_LIGHT_JS, config.getOutPath() + FILE_SEPARATOR + HIGH_LIGHT_JS);
-        copyJarFile("css/" + FONT_STYLE, config.getOutPath() + FILE_SEPARATOR + FONT_STYLE);
-        copyJarFile("js/" + JQUERY, config.getOutPath() + FILE_SEPARATOR + JQUERY);
-        copyJarFile("css/" + HIGH_LIGHT_STYLE, config.getOutPath() + FILE_SEPARATOR + HIGH_LIGHT_STYLE);
+        builderTemplate.copyJarFile("js/" + HIGH_LIGHT_JS, config.getOutPath() + FILE_SEPARATOR + HIGH_LIGHT_JS);
+        builderTemplate.copyJarFile("css/" + FONT_STYLE, config.getOutPath() + FILE_SEPARATOR + FONT_STYLE);
+        builderTemplate.copyJarFile("js/" + JQUERY, config.getOutPath() + FILE_SEPARATOR + JQUERY);
+        builderTemplate.copyJarFile("css/" + HIGH_LIGHT_STYLE, config.getOutPath() + FILE_SEPARATOR + HIGH_LIGHT_STYLE);
         if (config.isAllInOne()) {
             apiDocList = docBuildTemplate.handleApiGroup(apiDocList, config);
             if (config.isCreateDebugPage()) {
@@ -142,27 +142,6 @@ public class HtmlApiDocBuilder {
             builderTemplate.buildDoc(apiDocList, config, javaProjectBuilder, template,
                     doc.getAlias() + ".html", doc, indexHtml);
             index++;
-        }
-    }
-
-    private static void copyJarFile(String source, String target) {
-        ClasspathResourceLoader resourceLoader = new ClasspathResourceLoader("/template/");
-        Resource resource = resourceLoader.getResource(source);
-        try (FileWriter fileWriter = new FileWriter(target, false);
-             Reader reader = resource.openReader()) {
-            char[] c = new char[1024 * 1024];
-            int temp;
-            int len = 0;
-            while ((temp = reader.read()) != -1) {
-                c[len] = (char) temp;
-                len++;
-            }
-            reader.close();
-            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-            bufferedWriter.write(c, 0, len);
-            bufferedWriter.close();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 }
