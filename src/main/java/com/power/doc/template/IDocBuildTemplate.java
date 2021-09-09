@@ -125,20 +125,23 @@ public interface IDocBuildTemplate<T> {
             defaultGroup.getChildrenApiDocs().addAll(apiDocList);
             return finalApiDocs;
         }
-
+        Map<String,String> hasInsert  =  new HashMap<>();
         groups.forEach(group -> {
-
             ApiDoc groupApiDoc = ApiDoc.buildGroupApiDoc(group.getName());
             groupApiDoc.setOrder(order.getAndIncrement());
             finalApiDocs.add(groupApiDoc);
             apiDocList.forEach(doc -> {
-
+                if(hasInsert.containsKey(doc.getAlias())){
+                    return;
+                }
                 // not match, add default group
                 if (!DocUtil.isMatch(group.getApis(), doc.getPackageName())) {
                     defaultGroup.getChildrenApiDocs().add(doc);
                     doc.setOrder(defaultGroup.getChildrenApiDocs().size());
+                    hasInsert.put(doc.getAlias(),null);
                     return;
                 }
+                hasInsert.put(doc.getAlias(),null);
                 groupApiDoc.getChildrenApiDocs().add(doc);
                 doc.setOrder(groupApiDoc.getChildrenApiDocs().size());
                 doc.setGroup(group.getName());
