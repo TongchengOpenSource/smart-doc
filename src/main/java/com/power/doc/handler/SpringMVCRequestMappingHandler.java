@@ -38,8 +38,6 @@ import com.thoughtworks.qdox.model.JavaMethod;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static com.power.doc.constants.DocTags.DEPRECATED;
 import static com.power.doc.constants.DocTags.IGNORE;
@@ -121,8 +119,8 @@ public class SpringMVCRequestMappingHandler {
             for (Map.Entry<String, String> entry : constantsMap.entrySet()) {
                 String key = entry.getKey();
                 String value = entry.getValue();
-                url = delConstantsUrl(url,key,value);
-                shortUrl = delConstantsUrl(shortUrl,key, value);
+                url = delConstantsUrl(url, key, value);
+                shortUrl = delConstantsUrl(shortUrl, key, value);
             }
             String urlSuffix = projectBuilder.getApiConfig().getUrlSuffix();
             if (StringUtil.isNotEmpty(urlSuffix)) {
@@ -137,18 +135,16 @@ public class SpringMVCRequestMappingHandler {
         }
         return null;
     }
-    public static String delConstantsUrl(String url,String replaceKey,String replaceValue){
 
-        if (url.endsWith(replaceKey)) {
-            url = url.replace(replaceKey, replaceValue);
-            url = url.replace("+", "");
-        }
-        else{
-            String regex = "("+replaceKey+")[/|\\\\].*?";
-            Pattern pattern =Pattern.compile(regex);
-            Matcher m = pattern.matcher(url);
-            if(m.matches()) {
-                url = m.replaceAll(Matcher.quoteReplacement(replaceValue));
+    public static String delConstantsUrl(String url, String replaceKey, String replaceValue) {
+        url = StringUtil.trim(url);
+        url = url.replace("+", "");
+        url = UrlUtil.simplifyUrl(url);
+        String[] pathWords = url.split("/");
+        for (String word : pathWords) {
+            if (word.equals(replaceKey)) {
+                url = url.replace(replaceKey, replaceValue);
+                return url;
             }
         }
         return url;
