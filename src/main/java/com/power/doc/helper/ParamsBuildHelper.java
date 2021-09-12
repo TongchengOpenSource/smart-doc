@@ -217,7 +217,7 @@ public class ParamsBuildHelper {
                         for (String javaClass : groupClassList) {
                             if (groupClasses.contains(javaClass)) {
                                 strRequired = false;
-                                break an;
+                                continue out;
                             }
                         }
                     } else if (JavaClassValidateUtil.isJSR303Required(simpleAnnotationName) && !isResp) {

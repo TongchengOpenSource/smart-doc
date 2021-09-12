@@ -664,7 +664,8 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             if (requestFieldToUnderline) {
                 paramName = StringUtil.camelToUnderline(paramName);
             }
-
+            List<JavaAnnotation> annotations = parameter.getAnnotations();
+            List<String> groupClasses = JavaClassUtil.getParamGroupJavaClass(annotations);
             boolean paramAdded = false;
             for (JavaAnnotation annotation : methodAnnotations) {
                 String annotationName = annotation.getType().getValue();
@@ -693,7 +694,6 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                                     .getClassName();
                             typeName = configBuilder.getApiConfig().getRequestBodyAdvice().getClassName();
                             gicTypeName = requestBodyAdvice + "<" + gicTypeName + ">";
-
                         }
 
                         if (JavaClassValidateUtil.isPrimitive(simpleTypeName)) {
@@ -705,7 +705,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                                     .append("}");
                             requestExample.setJsonBody(JsonUtil.toPrettyFormat(builder.toString())).setJson(true);
                         } else {
-                            String json = JsonBuildHelper.buildJson(typeName, gicTypeName, Boolean.FALSE, 0, new HashMap<>(), configBuilder);
+                            String json = JsonBuildHelper.buildJson(typeName, gicTypeName, Boolean.FALSE, 0, new HashMap<>(),groupClasses, configBuilder);
                             requestExample.setJsonBody(JsonUtil.toPrettyFormat(json)).setJson(true);
                         }
                         paramAdded = true;

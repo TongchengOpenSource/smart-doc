@@ -104,17 +104,16 @@ public interface IDocBuildTemplate<T> {
 
 
     /**
-     *  handle group api docs
+     * handle group api docs
      *
-     * @author cqmike
      * @param apiDocList
      * @param apiConfig
+     * @author cqmike
      */
     default List<ApiDoc> handleApiGroup(List<ApiDoc> apiDocList, ApiConfig apiConfig) {
         if (CollectionUtil.isEmpty(apiDocList) || apiConfig == null) {
             return apiDocList;
         }
-
         List<ApiGroup> groups = apiConfig.getGroups();
         ApiDoc defaultGroup = ApiDoc.buildGroupApiDoc("default");
         List<ApiDoc> finalApiDocs = new ArrayList<>();
@@ -125,36 +124,40 @@ public interface IDocBuildTemplate<T> {
             defaultGroup.getChildrenApiDocs().addAll(apiDocList);
             return finalApiDocs;
         }
-        Map<String,String> hasInsert  =  new HashMap<>();
-        groups.forEach(group -> {
+        Map<String, String> hasInsert = new HashMap<>();
+        for (ApiGroup group : groups) {
             ApiDoc groupApiDoc = ApiDoc.buildGroupApiDoc(group.getName());
             groupApiDoc.setOrder(order.getAndIncrement());
             finalApiDocs.add(groupApiDoc);
-            apiDocList.forEach(doc -> {
-                if(hasInsert.containsKey(doc.getAlias())){
-                    return;
+            for (ApiDoc doc : apiDocList) {
+                if (hasInsert.containsKey(doc.getAlias())) {
+                    continue;
                 }
-                // not match, add default group
                 if (!DocUtil.isMatch(group.getApis(), doc.getPackageName())) {
-                    defaultGroup.getChildrenApiDocs().add(doc);
-                    doc.setOrder(defaultGroup.getChildrenApiDocs().size());
-                    hasInsert.put(doc.getAlias(),null);
-                    return;
+                    continue;
                 }
-                hasInsert.put(doc.getAlias(),null);
+                hasInsert.put(doc.getAlias(), null);
                 groupApiDoc.getChildrenApiDocs().add(doc);
                 doc.setOrder(groupApiDoc.getChildrenApiDocs().size());
                 doc.setGroup(group.getName());
                 if (StringUtil.isEmpty(group.getPaths())) {
-                    return;
+                    continue;
                 }
                 List<ApiMethodDoc> methodDocs = doc.getList().stream()
                         .filter(l -> DocPathUtil.matches(l.getPath(), group.getPaths(), null))
                         .collect(Collectors.toList());
                 doc.setList(methodDocs);
-            });
-        });
-
+            }
+        }
+        // Ungrouped join the default group
+        for (ApiDoc doc : apiDocList) {
+            String key = doc.getAlias();
+            if (!hasInsert.containsKey(key)) {
+                defaultGroup.getChildrenApiDocs().add(doc);
+                doc.setOrder(defaultGroup.getChildrenApiDocs().size());
+                hasInsert.put(doc.getAlias(), null);
+            }
+        }
         return finalApiDocs;
     }
 
