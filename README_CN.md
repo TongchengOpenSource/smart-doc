@@ -243,7 +243,7 @@ smart-doc官方目前已经开发完成[Maven插件](https://gitee.com/smart-doc
       "replacementClassName": "com.power.doc.model.PageRequestDto" //自定义的PageRequestDto替换Pageable做文档渲染
   }],
   "apiConstants": [{//从1.8.9开始配置自己的常量类，smart-doc在解析到常量时自动替换为具体的值，非必须
-        "constantsClassName": "com.power.doc.constants.RequestParamConstant"
+        "constantsClassName": "com.power.doc.constants.RequestParamConstant" //引用常量时需要用RequestParamConstant.xxx才能被正确解析
   }],
   "responseBodyAdvice":{ //自smart-doc 1.9.8起，非必须项，ResponseBodyAdvice统一返回设置(不要随便配置根据项目的技术来配置)，可用ignoreResponseBodyAdvice tag来忽略
   		"className":"com.power.common.model.CommonResult" //通用响应体
