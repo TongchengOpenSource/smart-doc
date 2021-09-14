@@ -56,21 +56,22 @@ Let's look at the writing methods supported by smart-doc.
 ```
 > Try to use this form of parameter substitution as little as possible. It is very inconvenient to write code. It is recommended to directly define objects as input parameters.
 
-# Custom annotation tag
+# Custom doc tags
+There are relatively few native Javadoc tags in Java, which cannot meet some usage scenarios, so smart-doc has customized some doc tags. The following is a description of the use of custom doc tags.
 
 tag name | description
 ---|---
  @ignore| ignore tag is used to filter a certain field on the request parameter object. After setting, smart-doc will not output the changed field to the request parameter list. Please refer to [Ignore Response Field](/diy/advancedFeatures#response-field-ignored) for the ignore of response fields. If ignore is added to the method , The interface method will not be output to the document. Starting from 1.8.4, ignore support is added to the controller to ignore interface classes that do not want to generate documents. Ignore can also be used to ignore a request parameter in a method.
 @required|If you have not used the JSR303 parameter verification specification implementation method to mark the fields, you can use @required to mark the fields of the request parameter object. The mark smart-doc will be set to true when the parameter list is output.
-@mock|Starting from smart-doc 1.8.0, mock tag is used to set custom document display value in the basic object type field. After setting the value, smart-doc will no longer help you generate random values. It is convenient to directly output delivery documents through smart-doc.
-@dubbo|Starting from smart-doc 1.8.7, dubbo tag is used to add to the dubbo api interface class so that smart-doc can scan to the dubbo rpc interface to generate documentation.
-@restApi|Starting from smart-doc 1.8.8, restApi tag is used to support smart-doc to scan Spring Cloud Feign's defined interface to generate documentation.
-@order|Starting from smart-doc 1.9.4, order tag is used to set the custom sorting sequence number of the controller interface or api entry, @order 1 means setting the sequence number to 1.
-@ignoreResponseBodyAdvice|Starting from smart-doc 1.9.8, ignoreResponseBodyAdvice tag is used to ignore the wrapper class set by ResponseBodyAdvice.
-@download|Starting from smart-doc 2.0.1, the download tag is used to mark the file download method of the controller, and the file download test can be realized when the debug page is generated. And it supports to download the file with request header parameter test.
-@page|Starting from smart-doc 2.0.2, the page tag is used to mark the controller method to indicate that the method is used to render and return a static page. If a test is initiated when the debug page is generated, the test page will automatically be opened in the browser. Label display page.
-@ignoreParams|Starting from smart-doc 2.1.0, ignoreParams tag is used to mark the parameters that do not want to be displayed in the document on the controller method, for example: @ignoreParams id name, multiple parameter names are separated by spaces
-@response|Starting from smart-doc 2.2.0, the response tag is marked on the controller method to allow you to define the returned json example by yourself. It is recommended to use it only when returning basic types, such as: Result<String> This generic type is a response of a simple primitive type.
+@mock|@since smart-doc 1.8.0, mock tag is used to set custom document display value in the basic object type field. After setting the value, smart-doc will no longer help you generate random values. It is convenient to directly output delivery documents through smart-doc.
+@dubbo|@since smart-doc 1.8.7, dubbo tag is used to add to the dubbo api interface class so that smart-doc can scan to the dubbo rpc interface to generate documentation.
+@restApi|@since smart-doc 1.8.8, restApi tag is used to support smart-doc to scan Spring Cloud Feign's defined interface to generate documentation.
+@order|@since smart-doc 1.9.4, order tag is used to set the custom sorting sequence number of the controller interface or api entry, @order 1 means setting the sequence number to 1.
+@ignoreResponseBodyAdvice|@since 1.9.8, ignoreResponseBodyAdvice tag is used to ignore the wrapper class set by ResponseBodyAdvice.
+@download|@since smart-doc 2.0.1, the download tag is used to mark the file download method of the controller, and the file download test can be realized when the debug page is generated. And it supports to download the file with request header parameter test.
+@page|@since smart-doc 2.0.2, the page tag is used to mark the controller method to indicate that the method is used to render and return a static page. If a test is initiated when the debug page is generated, the test page will automatically be opened in the browser. Label display page.
+@ignoreParams|@since smart-doc 2.1.0, ignoreParams tag is used to mark the parameters that do not want to be displayed in the document on the controller method, for example: @ignoreParams id name, multiple parameter names are separated by spaces
+@response|@since smart-doc 2.2.0, the response tag is marked on the controller method to allow you to define the returned json example by yourself. It is recommended to use it only when returning basic types, such as: Result<String> This generic type is a response of a simple primitive type.
 @tag|@since 2.2.5, @tag is used to classify controller methods. You can assign methods under different controllers to multiple categories, and you can also directly assign controllers to one category or multiple categories.
 
 ## 2.1 @ignore use
