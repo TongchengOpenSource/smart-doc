@@ -1,15 +1,15 @@
 从smart-doc 1.7.9开始官方提供了maven插件，可以通过在项目中集成smart-doc的maven插件，然后运行插件直接生成文档。smart-doc-maven-plugin 1.0.8开始支持dubbo rpc文档生成。
-# 一、环境要求
+# 环境要求
 - maven 3.3.9+
 - jdk 1.8+
 
-# 二、插件使用范围
+# 插件使用范围
 在smart-doc-maven-plugin 1.0.2以前的版本，在多模块的maven项目中使用插件后，smart-doc的文档解析存在着各种问题，自smart-doc-maven-plugin 1.0.2插件开始，我们在插件上做了很多努力，从1.0.2版本开发的插件不仅解决了maven多模块的问题，并且使用插件后更会为smart-doc带来更强的源码加载能力，插件为smart-doc赋能，使得在使用插件的情况下，smart-doc的文档分析能力增强的很多。也建议使用旧版本smart-doc-maven-plugin旧版本的用户立即升级到最新版本。后续在使用smart-doc时推荐采用插件的方式。
 
 
 使用参考如下：
 
-# 三、添加插件
+# 添加插件
 
 ```
 <plugin>
@@ -48,7 +48,7 @@
 使用插件后就不需要在项目的`maven dependencies`中添加smart-doc的依赖了，直接使用插件即可。如果需要保留原有单元测试，需要引用smart-doc的依赖。
 
 **提示：** smart-doc-maven-plugin 1.0.2以下版本强烈建议升级到最新。
-# 四、添加smart-doc生成文档的配置
+# 添加smart-doc生成文档的配置
 在项目中添加创建一个`smart-doc.json`配置文件，插件读取这个配置来生成项目的文档，这个配置内容实际上就是以前采用单元测试编写的`ApiConfig`转成json后的结果，因此关于配置项说明可以参考原来单元测试的配置。
 
 **最小配置单元：**
@@ -182,7 +182,7 @@
 ```
 上面的json配置实例中只有"outPath"是必填项。其它的配置根据自身项目需要来配置。
 **注意：** 对于老用户完全可以通过`Fastjson`或者是`Gson`库将`ApiConfig`转化成json配置。
-# 五、运行插件生成文档
+# 运行插件生成文档
 ## 5.1 使用maven命令行
 ```
 //生成html
@@ -229,9 +229,9 @@ OS name: "windows 10", version: "10.0", arch: "amd64", family: "dos"
 ## 5.2 在idea中生成文档
 ![idea中smart-doc-maven插件使用](https://gitee.com/smart-doc-team/smart-doc-maven-plugin/raw/master/images/idea.png "maven_plugin_tasks.png")
 
-# 六、插件项目
+# 插件项目
 [smart-doc的maven插件源代码](https://gitee.com/smart-doc-team/smart-doc-maven-plugin)
-# 七、maven多模块中使用插件
+# maven多模块中使用插件
 
 在独立的maven项目中使用smart-doc，当前可以说是如丝般爽滑。但是在maven的多模块项目中使用smart-doc-maven-plugin时，很多同学就有疑问了，
 smart-doc插件我到底是放在什么地方合适？是放在maven的根pom中？还是说各个需要生成api接口文档的模块中呢？下面就来说说根据不同的项目结构应该怎么放插件。
