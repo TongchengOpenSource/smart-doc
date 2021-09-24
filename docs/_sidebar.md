@@ -8,6 +8,11 @@
   - [Advanced Features](diy/advancedFeatures.md)
   - [Code Highlight](diy/highlight.md)
   - [UI integration](diy/integrated.md)
+
+- Apache Dubbo
+  - [Dubbo configuration](en/dubbo/dubbo.md "Dubbo")
+- JAX-RS Support
+  - [JAX-RS configuration](en/jaxrs/jaxrs.md)
 - [Document Effect](docsImages.md)
 - [Expand Development](expand.md)
 - [Changelog](changelog.md "Changelog")
