@@ -1,6 +1,6 @@
 # Advanced Features
 
-## Public request header
+## Global header settings
 
 **requestHeaders**
 
@@ -20,7 +20,7 @@ In versions prior to smart-doc 2.2.2, the request header is set in smart-doc.jso
      ]
 }
 ```
-Many users said in the issue that their token was intercepted by an interceptor, and did not explicitly declare the request header at the interface level. Starting from version 2.2.2, we have added two configuration properties:
+Many users said in the issue that their token was intercepted by an interceptor, and did not explicitly declare the request header at the interface level. Since version 2.2.2, we have added two options:
 
 - `pathPatterns` configures the action path of the request header, which is consistent with the interceptor configuration `pathPatterns`, and multiple regular expressions are separated by commas.
 - `excludePathPatterns` configures to ignore the request header on those paths. Consistent with the interceptor `excludePathPatterns`, multiple regular expressions are separated by commas.
@@ -47,7 +47,7 @@ So you can add the above two configuration attributes according to your needs. E
 > smart-doc fully borrows the matching of Spring's PathMatcher, so it is added according to its own interceptor rules.
 
 
-## Public request parameters
+## Global request parameter settings
 * @since `2.2.3`
 
 **requestParams**

@@ -1,4 +1,4 @@
-# Code Usage
+# Tags Usage
 
 The original intention of smart-doc is to remove the intrusion of annotations by using javadoc document comments. Therefore, every additional function of smart-doc is to consider the native tags of javadoc. The following is an introduction to some javadoc tags used by smart-doc. .
 

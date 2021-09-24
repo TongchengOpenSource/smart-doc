@@ -1,9 +1,9 @@
 - Getting started
   - [Quick start](start/quickstart.md "Quick start")
-  - [Code Usage](start/javadoc.md "Code Usage")
+  - [Doc tags](start/javadoc.md "Doc tags")
   - [Best Practice](start/bestPractice.md "Best Practice")
 
-- Customization
+- Customization Configuration
   - [Configuration](diy/config.md "Configuration")
   - [Advanced Features](diy/advancedFeatures.md)
   - [Code Highlight](diy/highlight.md)

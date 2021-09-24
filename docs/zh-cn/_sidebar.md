@@ -1,7 +1,7 @@
 - 入门
 
   - [快速开始](zh-cn/start/quickstart.md "快速开始")
-  - [代码使用](zh-cn/start/javadoc.md "代码使用")
+  - [注释TAGS说明](zh-cn/start/javadoc.md "注释TAGS说明")
   - [最佳实践](zh-cn/start/bestPractice.md "最佳实践")
 
 - 定制化
