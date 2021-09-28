@@ -1,5 +1,5 @@
 
-# smart-doc <small>2.2.5</small>
+# smart-doc <small>2.2.7</small>
 
 
 > 一个无侵入式的api接口文档生成器.

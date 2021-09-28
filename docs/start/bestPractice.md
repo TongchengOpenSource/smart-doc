@@ -1,7 +1,7 @@
 # Best Practice
 
-Smart-doc is a tool that assumes that the generic definition of the interface can be determined to load the return type and request parameter type of the analysis item source code during the compiler period. Unable to process.
-
+smart-doc is a tool that loads source code during compilation and analyzes and generates API documentation according to the generic definition of the interface. 
+If you use several interface return types similar to the following in your code, we will not be able to handle them well.
 
 # Irregular return definition
 ## 1.1 Use Map in the interface
@@ -11,8 +11,15 @@ Because the key value of the map in the code cannot be analyzed, smart-doc canno
 public Map<String, User> testMapUser() {
     return null;
 }
+
+// or
+@GetMapping(value = "/object")
+public Map<String, Object> testMap() {
+    return null;
+}
+
 ```
-The key in this generated document is not clear.
+Smart-doc cannot generate high-quality documents when using Map as the interface return value.
 ## 1.2 Return JSONObject
 
 ```java
@@ -25,8 +32,7 @@ public JSONObject object() {
     return null;
 }
 ```
-The team must criticize the return data for such a definition, the ghost knows what it is returning. Programmers can't understand it, let alone smart-doc.
-
+JSONObject can return any json data while the program is running, so smart-doc cannot clearly know the return data type to automatically generate documents.
 ## 1.3 Return ModelMap
  
 ```java
@@ -40,18 +46,16 @@ public ModelMap object() {
 }
 
 ```
-This is the same as map, and smart-doc naturally shields `ModelMap`.
-
-## 1.4 Irregular description
-Only some common ones are listed above, and there may be many more. If similar examples are used in the project and you are unwilling to adjust the code, then return to swagger to write comments honestly.
+This is the same as using Map. Smart-doc has ignored `ModelMap` internally.
 
 
 
 
-# Correct demonstration
 
-## 2.1 Design universal return
-The unified return of most mature teams is similar to the following (due to the length of the document, many comments are omitted, use smart-doc to standardize some comments in the real code), of course, you can customize it according to your own project.
+# Recommended example
+
+## 2.1 Design a general data return structure
+A similar general return data structure can be designed 
 ```java
 public abstract class BaseResult<T> implements Serializable {
 
@@ -163,8 +167,9 @@ public CommonResult addUser(@RequestBody User user){
 In the above case, smart-doc cannot know the return type you defined.
 
 # Generic naming convention
-Some users of smart-doc in the process of defining some entities involve generic names using multi-letter combinations to make generic names. Smart-doc does not support such name resolution.
-There is no such definition in the source code of jdk. This is why smart-doc does not want to support weird generic naming methods. Conventions have always been the concept of smart-doc.
+
+When using smart-doc, we recommend using the following specifications in the code to define JAVA generics,
+Irregular definitions may cause smart-doc to not parse your source code correctly
 
 Although there is no mandatory naming convention, in order to facilitate code reading, some conventional naming conventions have been formed, as follows:
 - T: Type (Java class) general generic type, usually as the first generic type

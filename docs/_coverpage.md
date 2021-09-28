@@ -1,5 +1,5 @@
 
-# smart-doc <small>2.2.5</small>
+# smart-doc <small>2.2.7</small>
 
 
 > A non-intrusive api interface document generator.
