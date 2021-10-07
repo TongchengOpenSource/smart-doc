@@ -41,8 +41,6 @@ import com.power.doc.utils.DocPathUtil;
 import com.power.doc.utils.JsonUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -130,35 +128,13 @@ public class PostmanJsonBuilder {
     }
 
     private static UrlBean buildUrlBean(ApiMethodDoc apiMethodDoc) {
-        UrlBean urlBean = new UrlBean();
+        UrlBean urlBean = new UrlBean(apiMethodDoc.getServerUrl());
         String url = Optional.ofNullable(apiMethodDoc.getRequestExample().getUrl()).orElse(apiMethodDoc.getUrl());
         urlBean.setRaw(DocPathUtil.toPostmanPath(url));
-        try {
-            URL javaUrl = new java.net.URL(apiMethodDoc.getServerUrl());
-            if (javaUrl.getPort() == -1) {
-                urlBean.setPort(null);
-            } else {
-                urlBean.setPort(String.valueOf(javaUrl.getPort()));
-            }
-            // set protocol
-            String protocol = javaUrl.getProtocol();
-            if (StringUtil.isNotEmpty(protocol)) {
-                urlBean.setProtocol(protocol);
-            }
-
-            List<String> hosts = new ArrayList<>();
-            hosts.add(javaUrl.getHost());
-            urlBean.setHost(hosts);
-
-            List<String> paths = new ArrayList<>();
-            paths.add(javaUrl.getPath());
-            urlBean.setPath(paths);
-        } catch (MalformedURLException e) {
-        }
         String shortUrl = DocPathUtil.toPostmanPath(apiMethodDoc.getPath());
         String[] paths = shortUrl.split("/");
         List<String> pathList = new ArrayList<>();
-        String serverPath = urlBean.getPath().get(0);
+        String serverPath = CollectionUtil.isNotEmpty(urlBean.getPath()) ? urlBean.getPath().get(0) : "";
         // Add server path
         if (CollectionUtil.isNotEmpty(urlBean.getPath()) && !shortUrl.contains(serverPath)) {
             String[] serverPaths = serverPath.split("/");
