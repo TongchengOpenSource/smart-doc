@@ -311,7 +311,7 @@ mvn -Dfile.encoding=UTF-8 smart-doc:torna-rpc
 从smart-doc 1.7.9开始，官方提供了Maven插件，使用smart-doc的Maven插件后不再需要创建单元测试。
 [单元测试生成文档](https://gitee.com/smart-doc-team/smart-doc/wikis/单元测试集成smart-doc?sort_id=1990284)
 
-> 单元测试集成存在很多绝限性: <br/>1. 对于多模块项目源码注释很麻烦，也不符合正常开发团队的开发协作。<br/>2. 不方便与CI工具集成
+> 单元测试集成存在很多局限性: <br/>1. 对于多模块项目源码注释很麻烦，也不符合正常开发团队的开发协作。<br/>2. 不方便与CI工具集成
 
 ### Generated document example
 
