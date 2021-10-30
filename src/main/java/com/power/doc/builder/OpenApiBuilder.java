@@ -241,11 +241,7 @@ public class OpenApiBuilder {
             if (!isRep && apiMethodDoc.getContentType().equals(DocGlobalConstants.MULTIPART_TYPE)) {
                 // formdata
                 Map<String, Object> map = new LinkedHashMap<>();
-                if (apiMethodDoc.isListParam()) {
-                    map.put("type", DocGlobalConstants.ARRAY);
-                } else {
-                    map.put("type", "object");
-                }
+                map.put("type", "object");
                 Map<String, Object> properties = new LinkedHashMap<>();
                 Map<String, Object> detail;
                 for (ApiParam apiParam : apiMethodDoc.getQueryParams()) {
