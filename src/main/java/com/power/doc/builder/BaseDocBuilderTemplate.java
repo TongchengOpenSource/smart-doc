@@ -58,9 +58,9 @@ public class BaseDocBuilderTemplate {
      *
      * @param config Api config
      */
-    public void checkAndInit(ApiConfig config) {
+    public void checkAndInit(ApiConfig config,boolean torna) {
         this.checkAndInitForGetApiData(config);
-        if (StringUtil.isEmpty(config.getOutPath())) {
+        if (StringUtil.isEmpty(config.getOutPath())&&!torna) {
             throw new RuntimeException("doc output path can't be null or empty");
         }
     }

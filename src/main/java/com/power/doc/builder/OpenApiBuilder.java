@@ -51,7 +51,7 @@ public class OpenApiBuilder {
 
     public static void buildOpenApi(ApiConfig config) {
         DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
-        builderTemplate.checkAndInit(config);
+        builderTemplate.checkAndInit(config,false);
         JavaProjectBuilder javaProjectBuilder = new JavaProjectBuilder();
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
         openApiCreate(config, configBuilder);
@@ -65,7 +65,7 @@ public class OpenApiBuilder {
      */
     public static void buildOpenApi(ApiConfig config, JavaProjectBuilder projectBuilder) {
         DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
-        builderTemplate.checkAndInit(config);
+        builderTemplate.checkAndInit(config,false);
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, projectBuilder);
         openApiCreate(config, configBuilder);
     }

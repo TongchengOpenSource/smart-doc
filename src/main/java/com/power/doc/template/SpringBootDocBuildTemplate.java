@@ -1160,25 +1160,11 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 simpleGicType = gicType.substring(gicType.lastIndexOf(".") + 1).toLowerCase();
                 // is array
                 if (JavaClassValidateUtil.isCollection(name) || JavaClassValidateUtil.isArray(name)) {
-                    boolean hasRequestBody = false;
-                    //param has @RequestBody ?
-                    List<JavaAnnotation> annotations = parameter.getAnnotations();
-                    for (JavaAnnotation annotation : annotations) {
-                        if (REQUEST_BODY_FULLY.equals(annotation.getType().getName())) {
-                            hasRequestBody = true;
-                            break;
-                        }
-                    }
-                    //formData - multiple data
-                    if (!hasRequestBody && javaParameters.size() > 1) {
-                        return;
+                    apiMethodDoc.setIsRequestArray(1);
+                    if (JavaClassValidateUtil.isPrimitive(gicType)) {
+                        apiMethodDoc.setRequestArrayType(simpleGicType);
                     } else {
-                        apiMethodDoc.setIsRequestArray(1);
-                        if (JavaClassValidateUtil.isPrimitive(gicType)) {
-                            apiMethodDoc.setRequestArrayType(simpleGicType);
-                        } else {
-                            apiMethodDoc.setRequestArrayType(OBJECT);
-                        }
+                        apiMethodDoc.setRequestArrayType(OBJECT);
                     }
                 }
             }

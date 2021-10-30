@@ -61,7 +61,7 @@ public class RpcDocBuilderTemplate extends BaseDocBuilderTemplate {
         if (StringUtil.isEmpty(config.getFramework())) {
             config.setFramework(FrameworkEnum.DUBBO.getFramework());
         }
-        super.checkAndInit(config);
+        super.checkAndInit(config,false);
         config.setOutPath(config.getOutPath() + FILE_SEPARATOR + RPC_OUT_DIR);
     }
 
