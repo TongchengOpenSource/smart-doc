@@ -30,12 +30,10 @@ import com.power.doc.constants.TornaConstants;
 import com.power.doc.factory.BuildTemplateFactory;
 import com.power.doc.model.ApiConfig;
 import com.power.doc.model.ApiDoc;
-import com.power.doc.model.ApiGroup;
 import com.power.doc.model.torna.Apis;
 import com.power.doc.model.torna.TornaApi;
 import com.power.doc.model.torna.TornaDic;
 import com.power.doc.template.IDocBuildTemplate;
-import com.power.doc.template.SpringBootDocBuildTemplate;
 import com.power.doc.utils.DocUtil;
 import com.power.doc.utils.TornaUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
@@ -93,7 +91,7 @@ public class TornaBuilder {
      * @param builder   JavaProjectBuilder
      */
     public static void buildTorna(List<ApiDoc> apiDocs, ApiConfig apiConfig, JavaProjectBuilder builder) {
-       TornaApi tornaApi = new TornaApi();
+        TornaApi tornaApi = new TornaApi();
         tornaApi.setAuthor(StringUtil.isEmpty(apiConfig.getAuthor()) ? System.getProperty("user.name") : apiConfig.getAuthor());
         tornaApi.setIsReplace((apiConfig.getReplace() == null || apiConfig.getReplace()) ? 1 : 0);
         Apis api;

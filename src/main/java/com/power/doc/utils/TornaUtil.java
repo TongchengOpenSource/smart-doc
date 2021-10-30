@@ -5,6 +5,7 @@ import com.google.gson.JsonParser;
 import com.power.common.model.EnumDictionary;
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.StringUtil;
+import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.constants.TornaConstants;
 import com.power.doc.model.*;
 import com.power.doc.model.rpc.RpcApiDependency;
@@ -98,8 +99,12 @@ public class TornaUtil {
             if (CollectionUtil.isNotEmpty(apiMethodDoc.getPathParams())) {
                 methodApi.setPathParams(buildParams(apiMethodDoc.getPathParams()));
             }
-            //formData
-            if (CollectionUtil.isNotEmpty(apiMethodDoc.getQueryParams())) {
+
+            if (CollectionUtil.isNotEmpty(apiMethodDoc.getQueryParams())
+                    && DocGlobalConstants.MULTIPART_TYPE.equals(apiMethodDoc.getContentType())) {
+                // file upload
+                methodApi.setRequestParams(buildParams(apiMethodDoc.getQueryParams()));
+            } else if (CollectionUtil.isNotEmpty(apiMethodDoc.getQueryParams())) {
                 methodApi.setQueryParams(buildParams(apiMethodDoc.getQueryParams()));
             }
             //Json

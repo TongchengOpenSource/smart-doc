@@ -41,7 +41,6 @@ import java.util.*;
  */
 public class OpenApiBuilder {
 
-    //过滤url中的特殊字符
     private static final String PATH_REGEX = "[/{};\\t+]";
 
     /**
@@ -95,9 +94,9 @@ public class OpenApiBuilder {
     }
 
     /**
-     * info 信息
+     * Build openapi info
      *
-     * @param apiConfig 文档配置信息
+     * @param apiConfig ApiConfig
      * @return
      */
     private static Map<String, Object> buildInfo(ApiConfig apiConfig) {
@@ -108,9 +107,9 @@ public class OpenApiBuilder {
     }
 
     /**
-     * server 信息
+     * Build Servers
      *
-     * @param config 文档配置信息
+     * @param config ApiConfig
      * @return
      */
     private static List<Map<String, Object>> buildServers(ApiConfig config) {
@@ -122,9 +121,9 @@ public class OpenApiBuilder {
     }
 
     /**
-     * 构建path数据 url请求
+     * Build openapi paths
      *
-     * @param apiDocList api列表
+     * @param apiDocList List of api
      * @return
      */
     private static Map<String, Object> buildPaths(List<ApiDoc> apiDocList) {
@@ -134,7 +133,7 @@ public class OpenApiBuilder {
                     List<ApiMethodDoc> apiMethodDocs = a.getList();
                     apiMethodDocs.forEach(
                             method -> {
-                                //设置paths的请求url 将双斜杠替换成单斜杠
+                                //replace '//' to '/'
                                 String url = method.getPath().replace("//", "/");
                                 Map<String, Object> request = buildPathUrls(method, a);
                                 //pathMap.put(method.getPath().replace("//", "/"), buildPathUrls(method, a));
@@ -152,10 +151,10 @@ public class OpenApiBuilder {
     }
 
     /**
-     * paths 设置url请求方式
+     * Build path urls
      *
-     * @param apiMethodDoc 方法参数
-     * @param apiDoc       类参数
+     * @param apiMethodDoc Method
+     * @param apiDoc       ApiDoc
      * @return
      */
     private static Map<String, Object> buildPathUrls(ApiMethodDoc apiMethodDoc, ApiDoc apiDoc) {
@@ -189,9 +188,9 @@ public class OpenApiBuilder {
     }
 
     /**
-     * 请求体构建 只针对post请求 并且请求体不为null
+     * Build request body
      *
-     * @param apiMethodDoc 方法参数
+     * @param apiMethodDoc ApiMethodDoc
      * @return
      */
     private static Map<String, Object> buildRequestBody(ApiMethodDoc apiMethodDoc) {
@@ -199,7 +198,7 @@ public class OpenApiBuilder {
         boolean isPost = (apiMethodDoc.getType().equals(Methods.POST.getValue())
                 || apiMethodDoc.getType().equals(Methods.PUT.getValue()) ||
                 apiMethodDoc.getType().equals(Methods.PATCH.getValue()));
-        //如果是post请求 且包含请求体
+        //add content of post method
         if (isPost) {
             requestBody.put("content", buildContent(apiMethodDoc, false));
             return requestBody;
