@@ -257,6 +257,7 @@ public class OpenApiBuilder {
                             detail.put("items", items);
                         } else {
                             detail.put("format", "binary");
+                            detail.put("type", "string");
                         }
                     }
                     properties.put(apiParam.getField(), detail);
