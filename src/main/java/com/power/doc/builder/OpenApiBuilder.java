@@ -252,11 +252,12 @@ public class OpenApiBuilder {
                         if (apiParam.isHasItems()) {
                             detail.put("type", "array");
                             Map<String, Object> items = new HashMap<>();
-                            items.put("type", "string");
+                            items.put("type", "file");
                             items.put("format", "binary");
                             detail.put("items", items);
                         } else {
                             detail.put("format", "binary");
+                            detail.put("type", "file");
                         }
                     }
                     properties.put(apiParam.getField(), detail);
