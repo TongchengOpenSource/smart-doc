@@ -1,5 +1,5 @@
 
-# smart-doc <small> ![maven](https://img.shields.io/maven-central/v/com.github.shalousun/smart-doc?style=for-the-badge) </small>
+# smart-doc <small> ![maven](https://img.shields.io/maven-central/v/com.github.shalousun/smart-doc) </small>
 
 
 > 一个无侵入式的api接口文档生成器.
