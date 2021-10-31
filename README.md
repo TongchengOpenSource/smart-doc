@@ -36,7 +36,7 @@ smart-doc + [Torna](http://torna.cn) form an industry-leading document generatio
 smart-doc to complete Java source code analysis and extract annotations to generate API documents without intrusion, and
 automatically push the documents to the Torna enterprise-level interface document management platform.
 
-![smart-doc+torna](https://raw.githubusercontent.com/shalousun/smart-doc/master/images/smart-doc-torna.png)
+![smart-doc+torna](https://raw.githubusercontent.com/shalousun/smart-doc/master/images/smart-doc-torna-en.png)
 
 ## Getting Started
 
@@ -311,13 +311,6 @@ If you use gradle to build the project, you can refer to the documentation of th
 #### Response parameter example renderings
 
 ![response-fields](https://images.gitee.com/uploads/images/2019/1231/223817_32bea6dc_144669.png "response.png")
-
-## Integration through unit tests
-
-You can generate documentation by adding smart-doc dependencies directly to your project and then writing unit tests to
-start smart-doc. we still recommend that you use the smart-doc-maven-plugin plugin.
-
-[Use smart-doc by junit test](https://github.com/smart-doc-group/smart-doc/wiki/Use-smart-doc-by-junit-test)
 
 ## Building
 
