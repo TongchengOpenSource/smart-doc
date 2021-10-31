@@ -51,7 +51,7 @@ public class OpenApiBuilder {
 
     public static void buildOpenApi(ApiConfig config) {
         DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
-        builderTemplate.checkAndInit(config,false);
+        builderTemplate.checkAndInit(config, false);
         JavaProjectBuilder javaProjectBuilder = new JavaProjectBuilder();
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
         openApiCreate(config, configBuilder);
@@ -65,7 +65,7 @@ public class OpenApiBuilder {
      */
     public static void buildOpenApi(ApiConfig config, JavaProjectBuilder projectBuilder) {
         DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
-        builderTemplate.checkAndInit(config,false);
+        builderTemplate.checkAndInit(config, false);
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, projectBuilder);
         openApiCreate(config, configBuilder);
     }
@@ -250,7 +250,7 @@ public class OpenApiBuilder {
 
                     detail.put("example", DocUtil.handleJsonStr(apiParam.getValue()));
                     if ("file".equals(apiParam.getType())) {
-                    detail.remove("example");
+                        detail.remove("example");
                         if (apiParam.isHasItems()) {
                             detail.put("type", "array");
                             Map<String, Object> items = new HashMap<>();
@@ -438,9 +438,9 @@ public class OpenApiBuilder {
     }
 
     /**
-     * 构建返回信息
+     * build response
      *
-     * @param apiMethodDoc 方法参数
+     * @param apiMethodDoc ApiMethodDoc
      * @return
      */
     private static Map<String, Object> buildResponses(ApiMethodDoc apiMethodDoc) {
@@ -450,9 +450,9 @@ public class OpenApiBuilder {
     }
 
     /**
-     * 构建返回信息实体
+     * response body
      *
-     * @param apiMethodDoc 方法参数
+     * @param apiMethodDoc ApiMethodDoc
      * @return
      */
     private static Map<String, Object> buildResponsesBody(ApiMethodDoc apiMethodDoc) {
@@ -463,9 +463,9 @@ public class OpenApiBuilder {
     }
 
     /**
-     * 构建component
+     * component schema
      *
-     * @param apiDocs 请求列表
+     * @param apiDocs List of ApiDoc
      * @return
      */
     private static Map<String, Object> buildComponentsSchema(List<ApiDoc> apiDocs) {
@@ -498,9 +498,9 @@ public class OpenApiBuilder {
     }
 
     /**
-     * component schema properties 信息
+     * component schema properties
      *
-     * @param apiParam 参数列表
+     * @param apiParam list of ApiParam
      * @return
      */
     private static Map<String, Object> buildProperties(List<ApiParam> apiParam) {
@@ -536,9 +536,9 @@ public class OpenApiBuilder {
     }
 
     /**
-     * component schema properties 实体信息构建
+     * component schema properties data
      *
-     * @param apiParam 参数基本信息
+     * @param apiParam ApiParam
      * @return
      */
     private static Map<String, Object> buildPropertiesData(ApiParam apiParam) {
