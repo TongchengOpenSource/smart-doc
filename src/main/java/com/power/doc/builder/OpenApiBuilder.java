@@ -247,8 +247,10 @@ public class OpenApiBuilder {
                     detail = new HashMap<>();
                     detail.put("type", apiParam.getType());
                     detail.put("description", apiParam.getDesc());
+
                     detail.put("example", DocUtil.handleJsonStr(apiParam.getValue()));
                     if ("file".equals(apiParam.getType())) {
+                    detail.remove("example");
                         if (apiParam.isHasItems()) {
                             detail.put("type", "array");
                             Map<String, Object> items = new HashMap<>();
