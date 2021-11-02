@@ -342,10 +342,6 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             } else {
                 apiMethodDoc.setResponseUsage(JsonBuildHelper.buildReturnJson(docJavaMethod, projectBuilder));
             }
-            // auto mark file download
-            if (Objects.isNull(docletTag)) {
-                apiMethodDoc.setDownload(docJavaMethod.isDownload());
-            }
             // build response params
             List<ApiParam> responseParams = buildReturnApiParams(docJavaMethod, projectBuilder);
             if (paramsDataToTree) {

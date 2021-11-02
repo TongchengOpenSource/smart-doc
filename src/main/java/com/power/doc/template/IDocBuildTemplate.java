@@ -106,9 +106,10 @@ public interface IDocBuildTemplate<T> {
     /**
      * handle group api docs
      *
-     * @param apiDocList
-     * @param apiConfig
+     * @param apiDocList list of apiDocList
+     * @param apiConfig ApiConfig apiConfig
      * @author cqmike
+     * @return List of ApiDoc
      */
     default List<ApiDoc> handleApiGroup(List<ApiDoc> apiDocList, ApiConfig apiConfig) {
         if (CollectionUtil.isEmpty(apiDocList) || apiConfig == null) {

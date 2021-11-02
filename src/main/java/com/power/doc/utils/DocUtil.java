@@ -293,10 +293,10 @@ public class DocUtil {
 
     /**
      * // /detail/{id:[a-zA-Z0-9]{3}}/{name:[a-zA-Z0-9]{3}}
-     * 去除正则表达式
+     * remove pattern
      *
-     * @param str
-     * @return
+     * @param str path
+     * @return String
      */
     public static String formatPathUrl(String str) {
         if (!str.contains(":")) {
