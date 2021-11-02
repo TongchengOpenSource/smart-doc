@@ -232,8 +232,8 @@ public class DocUtil {
                 if (pattern.matcher(controllerName).matches()) {
                     return true;
                 }
-            } else {
-                return controllerName.startsWith(str);
+            } else if (controllerName.startsWith(str)) {
+                return true;
             }
         }
         return false;
