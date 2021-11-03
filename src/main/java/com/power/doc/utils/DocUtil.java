@@ -55,6 +55,7 @@ public class DocUtil {
 
     static {
         fieldValue.put("uuid-string", UUID.randomUUID().toString());
+        fieldValue.put("traceid-string",UUID.randomUUID().toString());
         fieldValue.put("id-string", String.valueOf(RandomUtil.randomInt(1, 200)));
         fieldValue.put("nickname-string", enFaker.name().username());
         fieldValue.put("hostname-string", faker.internet().ipV4Address());
@@ -62,6 +63,8 @@ public class DocUtil {
         fieldValue.put("author-string", faker.book().author());
         fieldValue.put("url-string", faker.internet().url());
         fieldValue.put("username-string", faker.name().username());
+        fieldValue.put("index-int","1");
+        fieldValue.put("index-integer","1");
         fieldValue.put("page-int", "1");
         fieldValue.put("page-integer", "1");
         fieldValue.put("age-int", String.valueOf(RandomUtil.randomInt(0, 70)));

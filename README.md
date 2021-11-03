@@ -66,12 +66,14 @@ Add [smart-doc-maven-plugin](https://github.com/smart-doc-group/smart-doc-maven-
         <!--smart-doc implements automatic analysis of the dependency tree to load the source code of third-party dependencies. If some framework dependency libraries are not loaded, an error is reported, then use excludes to exclude-->
         <excludes>
             <!--The format is: groupId: artifactId; refer to the following-->
+            <!--Regular expressions can also be used, such as: com.google:.* -->
             <exclude>com.google.guava:guava</exclude>
         </excludes>
         <!--Since version 1.0.8, the plugin provides includes support-->
         <!--smart-doc can automatically analyze the dependency tree to load all dependent source code. In principle, it will affect the efficiency of document construction, so you can use includes to let the plugin load the components you configure.-->
         <includes>
             <!--The format is: groupId: artifactId; refer to the following-->
+            <!--Regular expressions can also be used, such as: com.google:.* -->
             <include>com.alibaba:fastjson</include>
         </includes>
     </configuration>

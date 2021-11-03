@@ -77,6 +77,7 @@ smart-doc官方目前已经开发完成[Maven插件](https://gitee.com/smart-doc
         <!--smart-doc实现自动分析依赖树加载第三方依赖的源码，如果一些框架依赖库加载不到导致报错，这时请使用excludes排除掉-->
         <excludes>
             <!--格式为：groupId:artifactId;参考如下-->
+            <!--也可以支持正则式如：com.alibaba:.* -->
             <exclude>com.alibaba:fastjson</exclude>
         </excludes>
         <!--自1.0.8版本开始，插件提供includes支持,配置了includes后插件会按照用户配置加载而不是自动加载，因此使用时需要注意-->
