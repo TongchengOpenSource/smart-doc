@@ -173,7 +173,8 @@ Set the path prefix, such as configuring Servlet ContextPath.
 * type:`Boolean`
 * default: `flase`
 
-Whether to enable strict mode.
+If strict mode is set to true, 
+Smart-doc enforces that the public methods of every interface in the code have comments.
 ```json
 {
     "isStrict": true
@@ -197,7 +198,7 @@ Whether to merge the documents into one file, it is generally recommended to be 
 * type:`String`
 * default: `null`
 
-Specify the output path of the document.
+Used to set the output path of the API document.
 ```json
 {
     "outPath": "D://md2"
@@ -222,7 +223,8 @@ Whether to overwrite old files, mainly used for markdown file overwriting.
 * default: `false`
 * @since `2.0.0`
 
-smart-doc supports the creation of testable html pages and only works in AllInOne mode.
+smart-doc supports the creation of pages for debugging interfaces similar to swagger ui.
+Of course, this can only be used in AllInOne mode.
 ```json
 {
     "createDebugPage": false
@@ -234,7 +236,7 @@ smart-doc supports the creation of testable html pages and only works in AllInOn
 * type:`String`
 * default: `null`
 
-Controller packet filtering, multiple packets are separated by English commas.
+controller package filtering, multiple package names separated by commas.
 > PS: Since 2.2.2, we need to adopt regularity: com.test.controller.*
 ```json
 {
@@ -271,7 +273,7 @@ It is only used when each controller generates an html file.
 * type:`String`
 * default: `null`
 
-It is only used when each controller generates an html file.
+Configure your own project name.
 ```json
 {
     "projectName": "smart-doc"
@@ -296,7 +298,7 @@ Sort by interface title.
 * type:`Boolean`
 * default: `true`
 
-Whether to display the name of the interface author.
+Display the name of the interface author.
 ```json
 {
      "showAuthor": false
@@ -334,7 +336,7 @@ Automatically convert the camel case input parameter field to underscore format 
 * default: `false`
 * @since `1.8.8`
 
-Whether to display the enumeration details in the parameter table.
+Display the enumeration details in the parameter table.
 ```json
 {
     "inlineEnum": true
@@ -347,7 +349,7 @@ Whether to display the enumeration details in the parameter table.
 * default: `7`
 * @since `1.8.8`
 
-Set the number of allowed recursive executions to avoid some object resolution card owners.
+Set the number of recursive executions to avoid stack overflow.
 ```json
 {
     "recursionLimit": 7
@@ -360,7 +362,7 @@ Set the number of allowed recursive executions to avoid some object resolution c
 * default: `index.html`
 * @since `1.9.0`
 
-It is only used when each controller generates an html file.
+Customize the output document name.
 ```json
 {
     "allInOneDocFileName": "index.html"
@@ -438,7 +440,7 @@ Whether to automatically display the real short class name of the generic type i
 * default: `null`
 * @since `2.0.9`
 
-Torna platform docks appKey.
+AppKey required to push documents to TORNA platform.
 ```json
 {
     "appKey": "20201216788835306945118208"
@@ -451,7 +453,7 @@ Torna platform docks appKey.
 * default: `null`
 * @since `2.0.9`
 
-torna platform appToken.
+AppToken required to push documents to TORNA platform.
 ```json
 {
     "appToken": "c16931fa6590483fb7a4e85340fcbfef"
@@ -529,7 +531,7 @@ Push torna configuration interface service address.
 * default: `true`
 * @since `2.0.9`
 
-Whether to print the torna push log.
+Print log when pushing documents to TORNA platform .
 ```json
 {
     "tornaDebug": true
