@@ -5,7 +5,7 @@
 ![number of issues closed](https://img.shields.io/github/issues-closed-raw/shalousun/smart-doc)
 ![closed pull requests](https://img.shields.io/github/issues-pr-closed/shalousun/smart-doc)
 ![java version](https://img.shields.io/badge/JAVA-1.8+-green.svg)
-[![chinese](https://img.shields.io/badge/chinese-中文文档-brightgreen)](https://github.com/shalousun/smart-doc/blob/master/README_CN.md)
+[![chinese](https://img.shields.io/badge/chinese-中文文档-brightgreen)](https://smart-doc-group.github.io/#/zh-cn/)
 
 ## Introduce
 
