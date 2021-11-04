@@ -14,8 +14,8 @@ Collection2.0+、OpenAPI 3.0+的文档。
 $\color{red}{你给我的star，胜过所有读过的诗—smart-doc}$
 
 > 无论你是很有经验的大佬、还是刚入行的萌新。遇到使用疑惑时，我们希望你能仔细阅读smart-doc官方码云的wiki文档。我们将smart-doc及其插件的 每一个配置项和可能在日常中遇到的问题都整理到了文档中。仔细阅读文档就是对开源项目最大的支持。
-[wiki文档](https://smart-doc-group.github.io/#/zh-cn/)
 
+查看[快速开始](https://smart-doc-group.github.io/#/zh-cn/) 了解详情
 ## Features
 
 - 零注解、零学习成本、只需要写标准JAVA注释。
