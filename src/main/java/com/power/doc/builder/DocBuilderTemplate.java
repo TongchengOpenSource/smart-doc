@@ -204,9 +204,9 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
             } else {
                 apiDocs.add(apiDoc1);
             }
-            tpl.binding(TemplateVariable.API_DOC_LIST.getVariable(), apiDocs);
-            FileUtil.nioWriteFile(tpl.render(), config.getOutPath() + FILE_SEPARATOR + SEARCH_JS_OUT);
         }
+        tpl.binding(TemplateVariable.API_DOC_LIST.getVariable(), apiDocs);
+        FileUtil.nioWriteFile(tpl.render(), config.getOutPath() + FILE_SEPARATOR + SEARCH_JS_OUT);
     }
 
 
