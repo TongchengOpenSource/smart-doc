@@ -246,6 +246,7 @@ public class JavaClassValidateUtil {
             case "org.springframework.ui.Model":
             case "org.springframework.ui.ModelMap":
             case "org.springframework.web.servlet.ModelAndView":
+            case "org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap":
             case "org.springframework.validation.BindingResult":
             case "javax.servlet.http.HttpServletRequest":
             case "javax.servlet.http.HttpServlet":
