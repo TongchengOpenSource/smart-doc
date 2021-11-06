@@ -49,7 +49,7 @@ public class ApiParamTreeUtil {
         }
         for (ApiParam apiParam : params) {
             // remove pre of field
-            apiParam.setChildren(getChild(apiParam.getId(), apiParamList));
+            apiParam.setChildren(getChild(apiParam.getId(), apiParamList,0));
         }
         return params;
     }
@@ -59,17 +59,22 @@ public class ApiParamTreeUtil {
      *
      * @param id           param id
      * @param apiParamList List of ApiParam
+     * @param counter      invoked counter
      * @return List of ApiParam
      */
-    private static List<ApiParam> getChild(int id, List<ApiParam> apiParamList) {
+    private static List<ApiParam> getChild(int id, List<ApiParam> apiParamList, int counter) {
         List<ApiParam> childList = new ArrayList<>();
+        if (counter > 7) {
+            return childList;
+        }
         for (ApiParam param : apiParamList) {
             if (param.getPid() == id) {
                 childList.add(param);
             }
         }
+        counter++;
         for (ApiParam param : childList) {
-            param.setChildren(getChild(param.getId(), apiParamList));
+            param.setChildren(getChild(param.getId(), apiParamList, counter));
         }
         if (childList.size() == 0) {
             return new ArrayList<>(0);
