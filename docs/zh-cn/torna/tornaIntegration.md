@@ -24,6 +24,7 @@ smart-doc + [Torna](http://torna.cn) 组成行业领先的文档生成和管理�
   "secret": "W.ZyGMOB9Q0UqujVxnfi@.I#V&tUUYZR",//torna平台secret，@since 2.0.9
   "openUrl": "http://localhost:7700/api",//torna平台地址，填写自己的私有化部署地址@since 2.0.9
   "debugEnvName":"测试环境", //torna测试环境
+  "replace": true,推送torna时替换旧的文档。
   "debugEnvUrl":"http://127.0.0.1",//torna
 }
 ```

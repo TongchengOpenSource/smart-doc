@@ -11,7 +11,7 @@
   - [接口UI集成](zh-cn/diy/integrated.md)
   
 - Torna集成
-  - [torna企业级接口管理](zh-cn/torna/tornaIntegeration.md "torna企业级接口管理")
+  - [torna企业级接口管理](zh-cn/torna/tornaIntegration.md "torna企业级接口管理")
 - Apache Dubbo
   - [构建Dubbo接口文档](zh-cn/dubbo/dubbo.md "dubbo文档生成")
 - JAX-RS Support
