@@ -50,4 +50,6 @@ public interface SpringMvcAnnotations {
     String REST_CONTROLLER = "RestController";
 
     String PATH_VARIABLE = "PathVariable";
+
+    String SESSION_ATTRIBUTE = "SessionAttribute";
 }
