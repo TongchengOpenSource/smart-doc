@@ -10,7 +10,7 @@ smart-doc + [Torna](http://torna.cn) 组成行业领先的文档生成和管理�
 ![smart-doc+torna](../../_images/smart-to-torna.png)
 
 >需要从smart-doc 2.0.9才支持推送文档到torna，当然推荐使用smart-doc同学关注新版本的发布。推荐smart-doc和torna都使用最新的版本。
-### 如何把文档自定推送到torna
+### 如何把文档自动推送到torna
 首先是在java的spring项目中集成smart-doc。smart-doc的集成看smart-doc官方的其他文档。其实smart-doc一直的理念都是让使用变的简单。因此要把文档推送到smart-doc也很简单，只需要在smart-doc.json文件中添加几行推送到torna的配置
 
 ```
