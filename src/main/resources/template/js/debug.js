@@ -182,7 +182,12 @@ function getInputData(element, returnFormDate) {
                 formData.append(name, $(input)[0].files[0]);
             } else {
                 const val = $(input).val();
-                formData.append(name, val);
+                if (isValidUrl(val)) {
+                    formData.append(name, encodeURI(val));
+                } else {
+                    // support chinese
+                    formData.append(name, encodeURIComponent(val));
+                }
             }
         }
     });
@@ -355,4 +360,14 @@ function toCurl(request) {
 
 function isEmpty(obj) {
     return obj === undefined || obj === null || new String(obj).trim() === '';
+}
+
+function isValidUrl(_string) {
+    let urlString;
+    try {
+        urlString = new URL(_string);
+    } catch (_) {
+        return false;
+    }
+    return urlString.protocol === "http:" || urlString.protocol === "https:" ;
 }
