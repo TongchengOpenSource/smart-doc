@@ -441,8 +441,13 @@ public class JsonBuildHelper {
                     } else {
                         javaClass = field.getType();
                         if (javaClass.isEnum()) {
-                            Object value = JavaClassUtil.getEnumValue(javaClass, Boolean.FALSE);
-                            data0.append(value).append(",");
+                            // Override old value
+                            if (tagsMap.containsKey(DocTags.MOCK) && StringUtil.isNotEmpty(tagsMap.get(DocTags.MOCK))) {
+                                data0.append(tagsMap.get(DocTags.MOCK)).append(",");
+                            } else {
+                                Object value = JavaClassUtil.getEnumValue(javaClass, Boolean.FALSE);
+                                data0.append(value).append(",");
+                            }
                         } else {
                             fieldGicName = DocUtil.formatFieldTypeGicName(genericMap, globGicName, fieldGicName);
                             data0.append(buildJson(subTypeName, fieldGicName, isResp, nextLevel, registryClasses, groupClasses, builder)).append(",");

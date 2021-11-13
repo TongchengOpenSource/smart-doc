@@ -155,6 +155,9 @@ public class FormDataBuildHelper {
                 formDataList.add(formData);
             } else if (javaClass.isEnum()) {
                 Object value = JavaClassUtil.getEnumValue(javaClass, Boolean.TRUE);
+                if (tagsMap.containsKey(DocTags.MOCK) && StringUtil.isNotEmpty(tagsMap.get(DocTags.MOCK))) {
+                    value = tagsMap.get(DocTags.MOCK);
+                }
                 FormData formData = new FormData();
                 formData.setKey(pre + fieldName);
                 formData.setType("text");

@@ -80,7 +80,7 @@ public class ParamsBuildHelper {
         // Registry class
         registryClasses.put(className, className);
         String simpleName = DocClassUtil.getSimpleName(className);
-        String[] globGicName = DocClassUtil.getSimpleGicName(className); 
+        String[] globGicName = DocClassUtil.getSimpleGicName(className);
         JavaClass cls = projectBuilder.getClassByName(simpleName);
         if (Objects.isNull(globGicName) || globGicName.length < 1) {
             // obtain generics from parent class
@@ -359,6 +359,10 @@ public class ParamsBuildHelper {
                             Object value = JavaClassUtil.getEnumValue(javaClass, !jsonRequest);
                             param.setValue(String.valueOf(value));
                             param.setEnumValues(JavaClassUtil.getEnumValues(javaClass));
+                        }
+                        // Override old value
+                        if (tagsMap.containsKey(DocTags.MOCK) && StringUtil.isNotEmpty(tagsMap.get(DocTags.MOCK))) {
+                            param.setValue(tagsMap.get(DocTags.MOCK));
                         }
                         if (StringUtil.isNotEmpty(comment)) {
                             commonHandleParam(paramList, param, isRequired, comment + appendComment, since, strRequired);
