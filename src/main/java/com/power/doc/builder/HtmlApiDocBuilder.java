@@ -30,15 +30,8 @@ import com.power.doc.template.IDocBuildTemplate;
 import com.power.doc.utils.BeetlTemplateUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import org.apache.commons.lang3.StringUtils;
-import org.beetl.core.Resource;
 import org.beetl.core.Template;
-import org.beetl.core.resource.ClasspathResourceLoader;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Reader;
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.power.doc.constants.DocGlobalConstants.*;
