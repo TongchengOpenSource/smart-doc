@@ -2,7 +2,7 @@ package com.power.doc.util;
 
 import com.power.doc.utils.DocClassUtil;
 import com.power.doc.utils.JavaClassValidateUtil;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Description:
