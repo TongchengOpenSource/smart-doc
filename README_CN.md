@@ -91,7 +91,10 @@ the [LICENSE](https://gitee.com/smart-doc-team/smart-doc/blob/master/LICENSE) fi
 
 <img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/smart-doc-qq.png" title="qq群" width="200px" height="210px"/>
 <img src="https://images.gitee.com/uploads/images/2021/1111/153909_6afa96f3_5272885.jpeg "qrcode_1636616042379.jpg" title="qq群" width="200px" height="210px"/>
+
 > 1群已满，有问题请加2群。
+
+
 ## Donate
 如果您觉得我们的开源软件对你有所帮助，请扫下方二维码打赏我们一杯咖啡
 
