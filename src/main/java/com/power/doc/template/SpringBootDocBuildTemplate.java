@@ -215,6 +215,16 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 docJavaMethods.add(DocJavaMethod.builder().setJavaMethod(method).setActualTypesMap(actualTypesMap));
             }
         }
+        List<JavaType> implClasses = cls.getImplements();
+        for (JavaType type : implClasses) {
+            JavaClass javaClass = (JavaClass) type;
+            Map<String, JavaType> actualTypesMap = JavaClassUtil.getActualTypesMap(javaClass);
+            for (JavaMethod method : javaClass.getMethods()) {
+                if (method.isDefault()) {
+                    docJavaMethods.add(DocJavaMethod.builder().setJavaMethod(method).setActualTypesMap(actualTypesMap));
+                }
+            }
+        }
         List<ApiMethodDoc> methodDocList = new ArrayList<>(methods.size());
         int methodOrder = 0;
         for (DocJavaMethod docJavaMethod : docJavaMethods) {
