@@ -487,6 +487,10 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 if (SpringMvcAnnotations.SESSION_ATTRIBUTE.equals(annotationName)) {
                     continue out;
                 }
+                if(SpringMvcAnnotations.REQUEST_ATTRIBUTE.equals(annotationName))
+                {
+                    continue out;
+                }
                 if (SpringMvcAnnotations.REQUEST_HERDER.equals(annotationName)) {
                     continue out;
                 }
@@ -780,6 +784,10 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             for (JavaAnnotation annotation : annotations) {
                 String annotationName = annotation.getType().getValue();
                 if (SpringMvcAnnotations.SESSION_ATTRIBUTE.equals(annotationName)) {
+                    continue out;
+                }
+                if(SpringMvcAnnotations.REQUEST_ATTRIBUTE.equals(annotationName))
+                {
                     continue out;
                 }
                 if (SpringMvcAnnotations.REQUEST_HERDER.equals(annotationName)) {

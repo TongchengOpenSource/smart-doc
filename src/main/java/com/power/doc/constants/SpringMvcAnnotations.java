@@ -52,4 +52,6 @@ public interface SpringMvcAnnotations {
     String PATH_VARIABLE = "PathVariable";
 
     String SESSION_ATTRIBUTE = "SessionAttribute";
+
+    String REQUEST_ATTRIBUTE="RequestAttribute";
 }
