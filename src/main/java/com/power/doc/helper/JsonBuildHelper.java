@@ -415,7 +415,7 @@ public class JsonBuildHelper {
                                 data0.append(buildJson(simple, gicName, isResp, nextLevel, registryClasses, groupClasses, builder)).append(",");
                             }
                         } else {
-                            data0.append("{\"waring\":\"You may have used non-display generics.\"},");
+                            data0.append("{},");
                         }
                     } else if (DocGlobalConstants.JAVA_OBJECT_FULLY.equals(subTypeName)) {
                         if (StringUtil.isNotEmpty(field.getComment())) {
@@ -431,10 +431,10 @@ public class JsonBuildHelper {
                                     data0.append(buildJson(simpleName, gicName, isResp, nextLevel, registryClasses, groupClasses, builder)).append(",");
                                 }
                             } else {
-                                data0.append("{\"waring\":\"You may have used non-display generics.\"},");
+                                data0.append("{},");
                             }
                         } else {
-                            data0.append("{\"waring\":\"You may have used non-display generics.\"},");
+                            data0.append("{},");
                         }
                     } else if (typeName.equals(subTypeName)) {
                         data0.append("{\"$ref\":\"...\"}").append(",");

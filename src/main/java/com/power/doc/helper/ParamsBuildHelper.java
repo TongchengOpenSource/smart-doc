@@ -331,7 +331,19 @@ public class ParamsBuildHelper {
 
                     String processedType;
                     if (typeSimpleName.length() == 1) {
-                        processedType = DocClassUtil.processTypeNameForParams(typeSimpleName.toLowerCase());
+                        String gicName = JAVA_OBJECT_FULLY;
+                        if (Objects.nonNull(genericMap.get(typeSimpleName))) {
+                            gicName = genericMap.get(subTypeName);
+                        } else {
+                            if (globGicName.length > 0) {
+                                gicName = globGicName[0];
+                            }
+                        }
+                        if (JavaClassValidateUtil.isPrimitive(gicName)) {
+                            processedType = DocClassUtil.processTypeNameForParams(gicName);
+                        } else {
+                            processedType = DocClassUtil.processTypeNameForParams(typeSimpleName.toLowerCase());
+                        }
                     } else {
                         processedType = isShowJavaType ? typeSimpleName : DocClassUtil.processTypeNameForParams(typeSimpleName.toLowerCase());
                     }
