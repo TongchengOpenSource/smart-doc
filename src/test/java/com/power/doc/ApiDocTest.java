@@ -2,6 +2,7 @@ package com.power.doc;
 
 import com.power.common.util.DateTimeUtil;
 import com.power.doc.builder.HtmlApiDocBuilder;
+import com.power.doc.builder.OpenApiBuilder;
 import com.power.doc.enums.OrderEnum;
 import com.power.doc.model.*;
 import com.power.doc.model.rpc.RpcApiDependency;
@@ -37,6 +38,7 @@ public class ApiDocTest {
         config.setSecret("^^As.tU#XpK=FATTpY<Vj0PFLt9iak!2");
         config.setDebugEnvName("测试环境");
         config.setStyle("randomLight");
+        config.setCreateDebugPage(true);
 //        config.setAuthor("test");
         config.setDebugEnvUrl("http://127.0.0.1");
         //config.setTornaDebug(true);
@@ -48,7 +50,7 @@ public class ApiDocTest {
         //不指定SourcePaths默认加载代码为项目src/main/java下的
         config.setSourceCodePaths(
                 SourceCodePath.builder().setDesc("本项目代码")
-                        .setPath("C:\\Users\\xzli15\\Desktop\\smart-doc-example-cn")
+                        .setPath("C:\\Users\\Administrator\\Desktop\\smart-doc-example-cn")
 
                 //SourcePath.path().setPath("F:\\Personal\\project\\smart\\src\\main\\java")
                 //SourcePath.path().setDesc("加载项目外代码").setPath("E:\\ApplicationPower\\ApplicationPower\\Common-util\\src\\main\\java")
@@ -103,6 +105,7 @@ public class ApiDocTest {
         //TornaBuilder.buildApiDoc(config);
         //OpenApiBuilder.buildOpenApi(config);
         HtmlApiDocBuilder.buildApiDoc(config);
+        OpenApiBuilder.buildOpenApi(config);
         //RpcTornaBuilder.buildApiDoc(config);
 //        TornaBuilder.buildApiDoc(config);
         // RpcHtmlBuilder.buildApiDoc(config);

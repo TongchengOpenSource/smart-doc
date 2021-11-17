@@ -416,6 +416,9 @@ public class OpenApiBuilder {
                 schema.put("format", "binary");
             } else if ("enum".equals(apiParam.getType())) {
                 schema.put("enum", apiParam.getEnumValues());
+            }else if("array".equals(apiParam.getType())) {
+                schema.put("type","array");
+                schema.put("items",new HashMap<>());
             }
         } else {
             schema.put("format", "int16".equals(apiParam.getType()) ? "int32" : apiParam.getType());
