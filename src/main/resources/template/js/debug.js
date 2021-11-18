@@ -15,7 +15,7 @@ $(function () {
         }
     };
     new Accordion($('#accordion'), false);
-    hljs.initHighlightingOnLoad();
+    hljs.highlightAll();
 });
 
 $("[contenteditable=plaintext-only]").on('blur', function (e) {
