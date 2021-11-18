@@ -521,15 +521,8 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                         gicTypeName = requestBodyAdvice + "<" + gicTypeName + ">";
 
                     }
-
                     if (JavaClassValidateUtil.isPrimitive(simpleTypeName)) {
-                        StringBuilder builder = new StringBuilder();
-                        builder.append("{\"")
-                                .append(paramName)
-                                .append("\":")
-                                .append(DocUtil.handleJsonStr(mockValue))
-                                .append("}");
-                        requestExample.setJsonBody(JsonUtil.toPrettyFormat(builder.toString())).setJson(true);
+                        requestExample.setJsonBody(mockValue).setJson(true);
                     } else {
                         String json = JsonBuildHelper.buildJson(typeName, gicTypeName, Boolean.FALSE, 0, new HashMap<>(), groupClasses, configBuilder);
                         requestExample.setJsonBody(JsonUtil.toPrettyFormat(json)).setJson(true);
