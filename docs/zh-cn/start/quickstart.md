@@ -35,7 +35,7 @@
             <!--也可以支持正则式如：com.alibaba:.* -->
             <exclude>com.alibaba:fastjson</exclude>
         </excludes>
-        <!--自1.0.8版本开始，插件提供includes支持,配置了includes后插件会按照用户配置加载而不是自动加载，因此使用时需要注意-->
+        <!--includes配置用于配置加载外部依赖源码,配置后插件会按照配置项加载外部源代码而不是自动加载所有，因此使用时需要注意-->
         <!--smart-doc能自动分析依赖树加载所有依赖源码，原则上会影响文档构建效率，因此你可以使用includes来让插件加载你配置的组件-->
         <includes>
             <!--格式为：groupId:artifactId;参考如下-->
@@ -55,6 +55,9 @@
     </executions>
 </plugin>
 ```
+> 请勿盲目复制上述maven插件的配置项，先先仔细阅读每个配置项的注释，然后根据自己项目情况去配置。
+否则可能造成注释无法正确加载到项目中。
+
 
 #### Use Maven Command
 

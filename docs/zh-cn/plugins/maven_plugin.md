@@ -11,7 +11,7 @@
 
 # 添加插件
 
-```
+```xml
 <plugin>
     <groupId>com.github.shalousun</groupId>
     <artifactId>smart-doc-maven-plugin</artifactId>
@@ -24,12 +24,14 @@
         <!--smart-doc实现自动分析依赖树加载第三方依赖的源码，如果一些框架依赖库加载不到导致报错，这时请使用excludes排除掉-->
         <excludes>
             <!--格式为：groupId:artifactId;参考如下-->
+            <!--也可以支持正则式如：com.alibaba:.* -->
             <exclude>com.alibaba:fastjson</exclude>
         </excludes>
-        <!--自1.0.8版本开始，插件提供includes支持,配置了includes后插件会按照用户配置加载而不是自动加载，因此使用时需要注意-->
+        <!--includes配置用于配置加载外部依赖源码,配置后插件会按照配置项加载外部源代码而不是自动加载所有，因此使用时需要注意-->
         <!--smart-doc能自动分析依赖树加载所有依赖源码，原则上会影响文档构建效率，因此你可以使用includes来让插件加载你配置的组件-->
         <includes>
             <!--格式为：groupId:artifactId;参考如下-->
+            <!--也可以支持正则式如：com.alibaba:.* -->
             <include>com.alibaba:fastjson</include>
         </includes>
     </configuration>
@@ -47,7 +49,10 @@
 ```
 使用插件后就不需要在项目的`maven dependencies`中添加smart-doc的依赖了，直接使用插件即可。如果需要保留原有单元测试，需要引用smart-doc的依赖。
 
-**提示：** smart-doc-maven-plugin 1.0.2以下版本强烈建议升级到最新。
+> 请勿盲目复制上述maven插件的配置项，先先仔细阅读每个配置项的注释，然后根据自己项目情况去配置。
+否则可能造成注释无法正确加载到项目中。
+
+
 # 添加smart-doc生成文档的配置
 在项目中添加创建一个`smart-doc.json`配置文件，插件读取这个配置来生成项目的文档，这个配置内容实际上就是以前采用单元测试编写的`ApiConfig`转成json后的结果，因此关于配置项说明可以参考原来单元测试的配置。
 
