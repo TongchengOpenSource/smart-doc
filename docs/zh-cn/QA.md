@@ -48,3 +48,36 @@
   那请给官方提供一个完整模拟你项目结构的工程，并不要求写什么代码，每个模块写一个测试类即可。
   不要觉得你能随便就能描述清楚，记住`show me your code`.
   
+# 多模块怎么构建文档啊？
+在单模块项目中，例如在idea中使用smart-doc插件可以很容易的在idea界面上去找到maven的工具视图并找到
+smart-doc插件来生成文档。但是在多模块项目中，这个就不行了，因为smart-doc的插件直接使用的是maven底层的
+api，这种使用底层API的好处是你可以在构建工具中直接出发smart-doc插件去生成文档。
+整个过程完成和使用mvn命令来构建多模是一样的，gradle插件也类似。由于官方[多模块demo](https://gitee.com/smart-doc-team/spring-boot-maven-multiple-module.git) 
+都已经这过程做了说明因此你可以去看官方demo的`README`文档。
+
+当然这里也介绍一个构建编排的利器给你Makefile：
+
+- **什么是Makefile:** 很多Winodws的程序员都不知道这个东西，因为那些Windows的IDE都为你做了这个工作，
+  但是如果你或多或少的看过一些开源的C、C++或者是GO程序，基本都能看到他的身影。Makefile就像一个Shell脚本一样，
+  我们可以用它来执行一系列的操作命令。
+  
+- **Makefile带来的好处:** 好处就是——“自动化编译”，一旦写好，只需要一个make命令，整个工程完全自动编译，极大的提高了软件开发的效率。
+
+**看来上面关于Makefile的描述后我想你已经有点了解了，但是为什么我要给你推荐它?**
+
+- IDEA中有Makefile的插件来支持你像点击IDEA中的maven工具一样，一次编写好构建命令后可以直接去点击Makefile中的命令执行。
+无需在手动输入。
+  
+**那如何在windows上支持Makefile呢？**
+
+- window环境下先安装MinGW
+- idea中安装Makefile Support插件
+
+安装好环境之后即可在idea中打开makefile，然后直接选中具体的构建指令运行了。
+
+> 当然怎么去安装和配置，请自行去百度吧，官方已经给出思路了。百度安装配置好就可以使用了。
+
+**有Makefile编写例子吗？**
+
+- [Makefile参考](https://gitee.com/smart-doc-team/spring-boot-maven-multiple-module.git) 
+  
