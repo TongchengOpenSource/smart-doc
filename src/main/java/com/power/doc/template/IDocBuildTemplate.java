@@ -116,13 +116,20 @@ public interface IDocBuildTemplate<T> {
             return apiDocList;
         }
         List<ApiGroup> groups = apiConfig.getGroups();
-        ApiDoc defaultGroup = ApiDoc.buildGroupApiDoc("default");
         List<ApiDoc> finalApiDocs = new ArrayList<>();
-        finalApiDocs.add(defaultGroup);
+
+        ApiDoc defaultGroup = ApiDoc.buildGroupApiDoc("default");
+        // show default group
         AtomicInteger order = new AtomicInteger(1);
-        defaultGroup.setOrder(order.getAndIncrement());
+        if (!apiConfig.isHideDefaultGroup()) {
+            finalApiDocs.add(defaultGroup);
+            defaultGroup.setOrder(order.getAndIncrement());
+            if (CollectionUtil.isEmpty(groups)) {
+                defaultGroup.getChildrenApiDocs().addAll(apiDocList);
+            }
+        }
+
         if (CollectionUtil.isEmpty(groups)) {
-            defaultGroup.getChildrenApiDocs().addAll(apiDocList);
             return finalApiDocs;
         }
         Map<String, String> hasInsert = new HashMap<>();

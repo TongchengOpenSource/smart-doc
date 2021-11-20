@@ -163,6 +163,14 @@ public class ApiConfig {
      * project  group
      */
     private String group;
+
+    /**
+     * 是否隐藏默认分组
+     *
+     * @since 2.3.2
+     */
+    private boolean hideDefaultGroup;
+
     /**
      * @since 1.7.5
      * project name
@@ -479,6 +487,15 @@ public class ApiConfig {
 
     public ApiConfig setGroups(ApiGroup... groups) {
         this.groups = CollectionUtil.asList(groups);
+        return this;
+    }
+
+    public boolean isHideDefaultGroup() {
+        return hideDefaultGroup;
+    }
+
+    public ApiConfig setHideDefaultGroup(boolean hideDefaultGroup) {
+        this.hideDefaultGroup = hideDefaultGroup;
         return this;
     }
 
