@@ -90,7 +90,7 @@ the [LICENSE](https://gitee.com/smart-doc-team/smart-doc/blob/master/LICENSE) fi
 愿意参与构建smart-doc或者是需要交流问题可以加入qq群：
 
 <img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/smart-doc-qq.png" title="qq群" width="200px" height="210px"/>
-<img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/smart-doc-qq.png" title="qq群2" width="200px" height="210px"/>
+<img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/smart-doc-qq2.png" title="qq群2" width="200px" height="210px"/>
 
 > 1群已满，有问题请加2群。
 
