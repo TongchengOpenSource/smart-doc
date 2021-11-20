@@ -1,5 +1,62 @@
 # Changelog
 
+## Version: 2.3.2
+- Update date: 2021-11-21
+- update content:
+  1. Fix the directory anchor error after searching on the debug page.
+  2. Fix the type conversion error when inputting basic type arrays such as List<String> when generating openapi.
+  3. Optimize the display of generic types. When the actual parameter type of the generic type is the basic type, it is directly displayed as the basic type.
+  4. Added ignoring of @RequestAttribute parameter.
+  5. Fix the request parameter example error when @RequstBody uses basic types
+
+## Version: 2.3.1
+- Update date: 2021-11-13
+- update content:
+  1. Fix the bug that the Chinese value of the request header is not supported for debugging.
+  2. Fix the problem that the response custom tag setting returns unformatted line break.
+  3. Fix the problem that the designated mock of the enumeration type field does not take effect.
+  4. Added ignoring the @SessionAttribute parameter.
+  5. Support the controller to implement the interface and use the default method.
+
+## Version: 2.3.0
+- Update date: 2021-11-07
+- update content:
+  1. Fix the problem of missing search.js files when creating html documents.
+  2. Fix the problem that only the first one takes effect when multiple packages are configured in packageFilters.
+  3. Fix the curl command error on the debug page.
+  4. Fix the bug that the data does not take effect after setting the download file interface and the download mark.
+  5. Optimize the random value generation of some common fields.
+
+## Version: 2.2.9
+- Update date: 2021-10-31
+- update content:
+  1. Fix the problem of uploading errors when generating openapi files.
+  2. Fix the problem that the torna parameter pushed by the file upload interface is placed in the query parameter list.
+  3. Modify the problem that the List<T> type parameter is pushed to Torna incorrectly
+  4. Optimize the outPath configuration. When only using torna push, it is no longer required to configure the outPath item.
+
+## Version: 2.2.8
+- Update date: 2021-10-07
+- update content:
+  1. Fix the problem that the anchor point jumps incorrectly when there is no interface comment in the html document.
+  2. Fix the problem that the service port is configured as a variable when exporting postman.
+
+## Version: 2.2.7
+- Update date: 2021-09-12
+- update content:
+  1. Fix the css connection error of dubbo document.
+  2. Fix the grouping error after grouping.
+  3. Fix the bug that the path constant similarity is replaced incorrectly.
+  4. JSR303 group optimization, the group field marked with Null will no longer be displayed in the document.
+
+## Version: 2.2.6
+- Update date: 2021-09-05
+- update content:
+  1. Fix the link error of html document static resource.
+  2. The group is not displayed when the group is not configured.
+  3. Fix the search error of the catalog item after grouping.
+  4. Optimize the maven plugin prompt.
+
 ## Version: 2.2.5
 - Update date: 2021-08-28
 - Update content:
