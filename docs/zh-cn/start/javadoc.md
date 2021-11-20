@@ -76,6 +76,7 @@ tag名称 | 描述
 
 
 ## 2.1 @ignore使用
+
 ```java
 public class SubUser {
 
@@ -104,6 +105,9 @@ public class SubUser {
 
 
 ```
+> 对于实体字段，建议使用Json转换框架的注解去忽略，Jackson和Fastjson的注解smart-doc都是支持的，
+官方不建议采用这种无法做到表现和行为一致的方式。
+
 
 在Controller层用SubUser作为参数接收，smart-doc输出的参数请求文档：
 
@@ -114,8 +118,9 @@ public class SubUser {
 | idCard | string | 身份证 | false |
 | gender | int | 性别 | false|
 
-## 2.2 @required使用
-
+## 2.2 @required使用(不推荐)
+官方不建议采用这种无法做到表现和行为一致的方式，请使用JSR-303参数验证规范。smart-doc原生支持JSR-303，甚至是JSR-303的分组验证
+也是支持的。
 ```java
 public class SubUser {
 
@@ -333,7 +338,10 @@ public CommonResult<DateEntity> test(int id,@RequestBody DateEntity dateEntity){
 }
 ```
 把id参数忽略掉，不要展示在文档中，这种主要是传统的有状态后台管理系统中的用户状态参数。
-## 2.6 @response使用
+
+>如果你要忽略的是一个Spring或者是JAX-RS这种顶级开源项目或者统一规范的参数时，请给官方提issue。例如你发现smart-doc不能忽略Spring
+的@SessionAttribute注解的参数，那么你完成可以给官方提issue。
+## 2.6 @response使用(不推荐)
 
 ```java
 /**
@@ -354,6 +362,8 @@ public CommonResult<String> create() {
 }
 ```
 把id参数忽略掉，不要展示在文档中，这种主要是传统的有状态后台管理系统中的用户状态参数。
+
+>对于使用@response的用户，我们只能认为你的代码是在太不清晰了，最好的就是代码写规范，让smart-doc能够自动生成返回样例。
 
 
 ## 2.7 @tag使用
