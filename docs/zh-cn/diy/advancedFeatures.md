@@ -257,7 +257,7 @@ public enum OrderEnum {
 Smart-doc作为一款完全依赖源码注释来分析生成文档的工具。如果没有源代码，那么在生成文档时将只能看到字段名和字段类型等信息，注释相关的信息都将无法生成，对于一个所有代码都在一个单独项目中的情况，你不需要考虑任何东西，Smart-doc能完美的完成你想要的文档，但是对一个多模块项目，或者项目依赖了一个独立的jar包的情况，smart-doc将无法加载到它所运行模块之外的代码。下面将会介绍如何来让Smart-doc加载到运行模块外的项目代码。
 
  **注意：自smart-doc-maven-plugin 1.0.2版本开始，使用maven的插件能够实现自动源码加载。** 
-#### 通过`ApiConfig`类设置
+#### 通过`ApiConfig`类设置(不推荐)
 代码示例如下：
 
 ```java
@@ -271,7 +271,7 @@ config.setSourceCodePaths(
 ```
 这样smart-doc就能将外部的源码载入。
 
-#### 通过`maven`的`classifier`来指定源码包
+#### 通过`maven`的`classifier`来指定源码包(不推荐)
 这里先看如何使用classifier来加载源码包。
 
 ```xml
@@ -352,7 +352,7 @@ public Page<Order> queryPage(@PathVariable int pageIndex , @PathVariable int pag
      <scope>test</scope>
 </dependency>
 ```
-
+>classifier这种方式都不推荐使用，请使用maven插件或者gradle插件，插件可以实现自动加载。
 
 ## Postman文档
 
