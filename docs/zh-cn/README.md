@@ -46,12 +46,14 @@ smart-doc + [Torna](http://torna.cn/) 组成行业领先的文档生成和管理
 ## TODO
 - Jakarta RS-API 2.x
 
+## Contact
 
-## License
+愿意参与构建smart-doc或者是需要交流问题可以加入qq群：
 
-smart-doc is under the Apache 2.0 license. See the [LICENSE](https://github.com/smart-doc-group/smart-doc/blob/master/LICENSE) file for details.
+<img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/smart-doc-qq.png" title="qq群" width="200px" height="210px"/>
+<img src="https://images.gitee.com/uploads/images/2021/1111/153909_6afa96f3_5272885.jpeg "qrcode_1636616042379.jpg" title="qq群" width="200px" height="210px"/>
 
-**注意：** smart-doc源代码文件全部带有版权注释，使用关键代码二次开源请保留原始版权，否则后果自负！
+> 1群已满，有问题请加2群。
 
 
 ## 谁在使用
@@ -80,9 +82,9 @@ smart-doc is under the Apache 2.0 license. See the [LICENSE](https://github.com/
 ## 致谢
 感谢[JetBrains SoftWare](https://www.jetbrains.com) 为本开源项目提供的免费Open Source license。
 <img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/jetbrains-variant-3.png" width="260px" height="220px"/>
-## Contact
 
-愿意参与构建smart-doc或者是需要交流问题可以加入qq群：
+## License
 
-<img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/smart-doc-qq.png" title="qq群" width="200px" height="210px"/>
+smart-doc is under the Apache 2.0 license. See the [LICENSE](https://github.com/smart-doc-group/smart-doc/blob/master/LICENSE) file for details.
 
+**注意：** smart-doc源代码文件全部带有版权注释，使用关键代码二次开源请保留原始版权，否则后果自负！
