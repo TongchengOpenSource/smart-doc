@@ -121,21 +121,16 @@ public interface IDocBuildTemplate<T> {
         ApiDoc defaultGroup = ApiDoc.buildGroupApiDoc("default");
         // show default group
         AtomicInteger order = new AtomicInteger(1);
-        if (!apiConfig.isHideDefaultGroup()) {
-            finalApiDocs.add(defaultGroup);
-            defaultGroup.setOrder(order.getAndIncrement());
-            if (CollectionUtil.isEmpty(groups)) {
-                defaultGroup.getChildrenApiDocs().addAll(apiDocList);
-            }
-        }
+        finalApiDocs.add(defaultGroup);
 
         if (CollectionUtil.isEmpty(groups)) {
+            defaultGroup.setOrder(order.getAndIncrement());
+            defaultGroup.getChildrenApiDocs().addAll(apiDocList);
             return finalApiDocs;
         }
         Map<String, String> hasInsert = new HashMap<>();
         for (ApiGroup group : groups) {
             ApiDoc groupApiDoc = ApiDoc.buildGroupApiDoc(group.getName());
-            groupApiDoc.setOrder(order.getAndIncrement());
             finalApiDocs.add(groupApiDoc);
             for (ApiDoc doc : apiDocList) {
                 if (hasInsert.containsKey(doc.getAlias())) {
@@ -166,6 +161,10 @@ public interface IDocBuildTemplate<T> {
                 hasInsert.put(doc.getAlias(), null);
             }
         }
+        if (CollectionUtil.isEmpty(defaultGroup.getChildrenApiDocs())) {
+            finalApiDocs.remove(defaultGroup);
+        }
+        finalApiDocs.forEach(group -> group.setOrder(order.getAndIncrement()));
         return finalApiDocs;
     }
 
