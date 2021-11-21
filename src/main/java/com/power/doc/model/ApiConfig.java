@@ -165,13 +165,6 @@ public class ApiConfig {
     private String group;
 
     /**
-     * 是否隐藏默认分组
-     *
-     * @since 2.3.2
-     */
-    private boolean hideDefaultGroup;
-
-    /**
      * @since 1.7.5
      * project name
      */
@@ -490,14 +483,6 @@ public class ApiConfig {
         return this;
     }
 
-    public boolean isHideDefaultGroup() {
-        return hideDefaultGroup;
-    }
-
-    public ApiConfig setHideDefaultGroup(boolean hideDefaultGroup) {
-        this.hideDefaultGroup = hideDefaultGroup;
-        return this;
-    }
 
     public List<ApiReqParam> getRequestParams() {
         return requestParams;
