@@ -61,7 +61,7 @@ public SimpleEnum resp(@RequestBody Pageable pageable){
 
 tag名称 | 描述
 ---|---
- @ignore| ignore tag用于过滤请求参数对象上的某个字段，设置后smart-doc不输出改字段到请求参数列表中。关于响应字段忽略的请看[【忽略响应字段】](https://gitee.com/smart-doc-team/smart-doc/wikis/响应字段忽略?sort_id=1823812)，如果ignore加到方法上，则接口方法不会输出到文档。从1.8.4开始ignore支持添加到controller上进行忽略不想生成文档的接口类。ignore也可以用于方法上忽略某个请求参数。
+@ignore| ignore tag用于过滤请求参数对象上的某个字段，设置后smart-doc不输出改字段到请求参数列表中。关于响应字段忽略的请看[【忽略响应字段】](https://smart-doc-group.github.io/#/zh-cn/diy/advancedFeatures?id=响应字段忽略)，如果ignore加到方法上，则接口方法不会输出到文档。从1.8.4开始ignore支持添加到controller上进行忽略不想生成文档的接口类。ignore也可以用于方法上忽略某个请求参数。
 @required|如果你没有使用JSR303参数验证规范实现的方式来标注字段，就可以使用@required去标注请求参数对象的字段，标注smart-doc在输出参数列表时会设置为true。
 @mock|从smart-doc 1.8.0开始，mock tag用于在对象基本类型字段设置自定义文档展示值。设置值后smart-doc不再帮你生成随机值。方便可以通过smart-doc直接输出交付文档。
 @dubbo|从smart-doc 1.8.7开始，dubbo tag用于在dubbo的api接口类上添加让smart-doc可以扫描到dubbo rpc的接口生成文档。
@@ -75,9 +75,17 @@ tag名称 | 描述
 @tag|@since 2.2.5, @tag用于将controller方法分类, 可以将不同contoller下的方法指定到多个分类下, 同时也可以直接指定controller为一个分类或多个分类
 
 
+> 以上的一些自定义tag，我们建议国内的同学认真阅读这部分全部文档。包括后面对于一些tag的使用当中官方也给
+了文字提示，不要去乱用。也不要觉得可以说服官方能够对当前的一些自定义tag做丰富。
+首先我们是一个非常尊重编码规范的工具，我们不会去随便乱加一个东西来误导人，当前主流框架不提供的东西，我们不会在提供，
+以后对tag的使用只会更加谨慎。
+
 ## 2.1 @ignore使用
 
 ```java
+/**
+ * 这是一个早期版本的错误示范
+ */
 public class SubUser {
 
     /**
@@ -105,7 +113,10 @@ public class SubUser {
 
 
 ```
-> 对于实体字段，建议使用Json转换框架的注解去忽略，Jackson和Fastjson的注解smart-doc都是支持的，
+未来@ignore只能用于标注在方法和类的注释中。
+
+> 对于实体字段，建议使用Json转换框架的注解去忽略，上面这种属于smart-doc早期的错误示范，
+未来的版本中@ignore忽略字段的功能会被下线，Jackson和Fastjson的注解smart-doc都是支持的，
 官方不建议采用这种无法做到表现和行为一致的方式。
 
 
@@ -119,7 +130,7 @@ public class SubUser {
 | gender | int | 性别 | false|
 
 ## 2.2 @required使用(不推荐)
-官方不建议采用这种无法做到表现和行为一致的方式，请使用JSR-303参数验证规范。smart-doc原生支持JSR-303，甚至是JSR-303的分组验证
+官方已经支持JSR303，未来的版本中这个会被移除。 不建议采用这种无法做到表现和行为一致的方式，请使用JSR-303参数验证规范。smart-doc原生支持JSR-303，甚至是JSR-303的分组验证
 也是支持的。
 ```java
 public class SubUser {
