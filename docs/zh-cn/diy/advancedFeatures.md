@@ -201,6 +201,20 @@ public class FastJson {
 如果你在项目中使用了Fastjson替代默认的Jackson，按照上面的`idCard`字段这样写上注解后，无论是真实的数据响应还是smart-doc的文档都能帮你
 忽略掉相关字段。
 
+### 忽略高级设置
+smart-doc官方还支持Fastjson和Jackson的高级忽略配置，例子如下：
+```java
+/**
+* 测试mybatis-plugs page字段忽略
+* @author yu 2021/7/11.
+*/
+@JSONType(ignores ={"current", "size", "orders", "hitCount", "searchCount", "pages","optimizeCountSql"})
+@JsonIgnoreProperties({"current", "size", "orders", "hitCount", "searchCount", "pages","optimizeCountSql"})
+public class MybatisPlusPage<T> extends Page<T> {
+
+
+}
+```
 ## 导出数据字典
 在swagger中针对国内的场景，是很难做到字典导出的。但是smart-doc中可以很容易的把枚举字典导出到文档中。
 例如代码中有一个订单状态枚举字典。
