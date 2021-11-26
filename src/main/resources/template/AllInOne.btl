@@ -17,7 +17,7 @@ ${revisionLog.version}|${revisionLog.revisionTime}|${revisionLog.status}|${revis
 for(apiGroup in apiDocList){
 %>
 <%
-if(apiGroupLP.size > 1) {%>
+if(apiGroupLP.size > 1 || !apiDocListHasDefaultGroup) {%>
 # ${apiGroup.group}
 <%}%>
 <%
@@ -117,7 +117,11 @@ ${doc.responseUsage}
 <% } %>
 <% } %>
 <%if(isNotEmpty(errorCodeList)){%>
+<%if(apiDocList.~size == 1 && apiDocListHasDefaultGroup) { %>
 ## ${errorListTitle}
+<% } else { %>
+# ${errorListTitle}
+<% } %>
 Error code |Description
 ---|---
 <%
@@ -128,11 +132,21 @@ ${error.value}|${error.desc}
 <%}%>
 
 <%if(isNotEmpty(dictList)){%>
+<%if(apiDocList.~size == 1 && apiDocListHasDefaultGroup) { %>
 ## ${dictListTitle}
+<% } else { %>
+# ${dictListTitle}
+<% } %>
+
 <%
 for(dict in dictList){
 %>
+
+<%if(apiDocList.~size == 1 && apiDocListHasDefaultGroup) { %>
 ### ${dict.title}
+<% } else { %>
+## ${dict.title}
+<% } %>
 
 Code |Type|Description
 ---|---|---

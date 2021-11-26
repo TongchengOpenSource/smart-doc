@@ -30,6 +30,7 @@ public enum TemplateVariable {
     NAME("name"),
     LIST("list"),
     API_DOC_LIST("apiDocList"),
+    API_DOC_LIST_HAS_DEFAULT_GROUP("apiDocListHasDefaultGroup"),
     ERROR_CODE_LIST("errorCodeList"),
     VERSION_LIST("revisionLogList"),
     DEPENDENCY_LIST("dependencyList"),

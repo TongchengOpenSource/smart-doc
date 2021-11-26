@@ -20,7 +20,7 @@ for(revisionLog in revisionLogList){
 for(apiGroup in apiDocList){
 %>
 <%
-if(apiGroupLP.size > 1) {%>
+if(apiGroupLP.size > 1 || !apiDocListHasDefaultGroup) {%>
 ==${apiGroup.group}
 <%} %>
 <%

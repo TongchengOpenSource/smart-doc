@@ -26,6 +26,7 @@ import com.power.common.util.CollectionUtil;
 import com.power.common.util.StringUtil;
 import com.power.doc.builder.ProjectDocConfigBuilder;
 import com.power.doc.constants.DocTags;
+import com.power.doc.constants.TornaConstants;
 import com.power.doc.helper.ParamsBuildHelper;
 import com.power.doc.model.*;
 import com.power.doc.utils.*;
@@ -116,19 +117,21 @@ public interface IDocBuildTemplate<T> {
             return apiDocList;
         }
         List<ApiGroup> groups = apiConfig.getGroups();
-        ApiDoc defaultGroup = ApiDoc.buildGroupApiDoc("default");
         List<ApiDoc> finalApiDocs = new ArrayList<>();
-        finalApiDocs.add(defaultGroup);
+
+        ApiDoc defaultGroup = ApiDoc.buildGroupApiDoc(TornaConstants.DEFAULT_GROUP_CODE);
+        // show default group
         AtomicInteger order = new AtomicInteger(1);
-        defaultGroup.setOrder(order.getAndIncrement());
+        finalApiDocs.add(defaultGroup);
+
         if (CollectionUtil.isEmpty(groups)) {
+            defaultGroup.setOrder(order.getAndIncrement());
             defaultGroup.getChildrenApiDocs().addAll(apiDocList);
             return finalApiDocs;
         }
         Map<String, String> hasInsert = new HashMap<>();
         for (ApiGroup group : groups) {
             ApiDoc groupApiDoc = ApiDoc.buildGroupApiDoc(group.getName());
-            groupApiDoc.setOrder(order.getAndIncrement());
             finalApiDocs.add(groupApiDoc);
             for (ApiDoc doc : apiDocList) {
                 if (hasInsert.containsKey(doc.getAlias())) {
@@ -159,6 +162,10 @@ public interface IDocBuildTemplate<T> {
                 hasInsert.put(doc.getAlias(), null);
             }
         }
+        if (CollectionUtil.isEmpty(defaultGroup.getChildrenApiDocs())) {
+            finalApiDocs.remove(defaultGroup);
+        }
+        finalApiDocs.forEach(group -> group.setOrder(order.getAndIncrement()));
         return finalApiDocs;
     }
 

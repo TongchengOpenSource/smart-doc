@@ -28,6 +28,7 @@ import com.power.common.util.FileUtil;
 import com.power.doc.constants.DocLanguage;
 import com.power.doc.constants.HighlightStyle;
 import com.power.doc.constants.TemplateVariable;
+import com.power.doc.constants.TornaConstants;
 import com.power.doc.factory.BuildTemplateFactory;
 import com.power.doc.model.*;
 import com.power.doc.template.IDocBuildTemplate;
@@ -127,6 +128,8 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
         tpl.binding(TemplateVariable.HIGH_LIGHT_CSS_LINK.getVariable(), config.getHighlightStyleLink());
         tpl.binding(TemplateVariable.BACKGROUND.getVariable(), HighlightStyle.getBackgroundColor(style));
         tpl.binding(TemplateVariable.API_DOC_LIST.getVariable(), apiDocList);
+        boolean anyMatch = apiDocList.stream().anyMatch(doc -> Objects.equals(TornaConstants.DEFAULT_GROUP_CODE, doc.getGroup()));
+        tpl.binding(TemplateVariable.API_DOC_LIST_HAS_DEFAULT_GROUP.getVariable(), anyMatch);
         tpl.binding(TemplateVariable.ERROR_CODE_LIST.getVariable(), errorCodeList);
         tpl.binding(TemplateVariable.VERSION_LIST.getVariable(), config.getRevisionLogs());
         tpl.binding(TemplateVariable.VERSION.getVariable(), now);

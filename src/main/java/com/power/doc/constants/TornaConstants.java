@@ -45,6 +45,8 @@ public class TornaConstants {
     public static final String DATA = "data";
     public static final String SUCCESS_CODE = "0";
 
+    public static final String DEFAULT_GROUP_CODE = "default";
+
 
     public static final String YES = "1";
     public static final String NO = "0";
