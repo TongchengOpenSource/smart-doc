@@ -89,8 +89,8 @@
       "value":"token请求头的值",//不设置默认null
       "required": false,//是否必须
       "since": "-",//什么版本添加的改请求头
-      "pathPatterns": "/app/test/**",//请看https://gitee.com/smart-doc-team/smart-doc/wikis/请求头高级配置?sort_id=4178978
-      "excludePathPatterns":"/app/page/**"//请看https://gitee.com/smart-doc-team/smart-doc/wikis/请求头高级配置?sort_id=4178978
+      "pathPatterns": "/app/test/**",//请看https://smart-doc-group.github.io/#/zh-cn/diy/advancedFeatures?id=公共请求头
+      "excludePathPatterns":"/app/page/**"//请看https://smart-doc-group.github.io/#/zh-cn/diy/advancedFeatures?id=公共请求头
   },{
       "name": "appkey",//请求头
       "type": "string",//请求头类型
