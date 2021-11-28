@@ -202,12 +202,23 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
             apiDoc1.setDesc(titleMap.get(TemplateVariable.DICT_LIST_TITLE.getVariable()));
             apiDoc1.setGroup(apiDoc1.getDesc());
             List<ApiMethodDoc> methodDocs = new ArrayList<>();
+            List<ApiDoc> childrenApiDocs = new ArrayList<>();
             for (ApiDocDict apiDocDict : apiDocDictList) {
                 ApiMethodDoc methodDoc = new ApiMethodDoc();
                 methodDoc.setOrder(apiDocDict.getOrder());
                 methodDoc.setDesc(apiDocDict.getTitle());
                 methodDocs.add(methodDoc);
+
+                ApiDoc childrenApiDoc = new ApiDoc();
+                childrenApiDoc.setOrder(apiDocDict.getOrder());
+                childrenApiDoc.setAlias(apiDocDict.getTitle());
+                childrenApiDoc.setDesc(apiDocDict.getTitle());
+                childrenApiDoc.setName(apiDocDict.getTitle());
+                childrenApiDoc.setList(new ArrayList<>(0));
+                childrenApiDocs.add(childrenApiDoc);
+
             }
+            apiDoc1.setChildrenApiDocs(childrenApiDocs);
             apiDoc1.setList(methodDocs);
             if (isOnlyDefaultGroup) {
                 apiDocs.get(0).getChildrenApiDocs().add(apiDoc1);
