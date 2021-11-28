@@ -20,7 +20,7 @@ for(revisionLog in revisionLogList){
 for(apiGroup in apiDocList){
 %>
 <%
-if(apiGroupLP.size > 1 || !apiDocListHasDefaultGroup) {%>
+if(!apiDocListOnlyHasDefaultGroup) {%>
 ==${apiGroup.group}
 <%} %>
 <%
@@ -133,7 +133,11 @@ ${doc.responseUsage}
 <% } %>
 <% } %>
 <%if(isNotEmpty(errorCodeList)){%>
+<%if(apiDocListOnlyHasDefaultGroup) { %>
+=== ${errorListTitle}
+<% } else { %>
 == ${errorListTitle}
+<% } %>
 
 [width="100%",options="header"]
 [stripes=even]
@@ -148,7 +152,13 @@ for(error in errorCodeList){
 <%}%>
 
 <%if(isNotEmpty(dictList)){%>
+
+<%if(apiDocListOnlyHasDefaultGroup) { %>
+=== ${dictListTitle}
+<% } else { %>
 == ${dictListTitle}
+<% } %>
+
 <%
 for(dict in dictList){
 %>

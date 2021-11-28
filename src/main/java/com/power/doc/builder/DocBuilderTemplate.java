@@ -128,8 +128,6 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
         tpl.binding(TemplateVariable.HIGH_LIGHT_CSS_LINK.getVariable(), config.getHighlightStyleLink());
         tpl.binding(TemplateVariable.BACKGROUND.getVariable(), HighlightStyle.getBackgroundColor(style));
         tpl.binding(TemplateVariable.API_DOC_LIST.getVariable(), apiDocList);
-        boolean anyMatch = apiDocList.stream().anyMatch(doc -> Objects.equals(TornaConstants.DEFAULT_GROUP_CODE, doc.getGroup()));
-        tpl.binding(TemplateVariable.API_DOC_LIST_HAS_DEFAULT_GROUP.getVariable(), anyMatch);
         tpl.binding(TemplateVariable.ERROR_CODE_LIST.getVariable(), errorCodeList);
         tpl.binding(TemplateVariable.VERSION_LIST.getVariable(), config.getRevisionLogs());
         tpl.binding(TemplateVariable.VERSION.getVariable(), now);
@@ -141,19 +139,28 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
         tpl.binding(TemplateVariable.DISPLAY_REQUEST_PARAMS.getVariable(), config.isRequestParamsTable());
         tpl.binding(TemplateVariable.DISPLAY_RESPONSE_PARAMS.getVariable(), config.isResponseParamsTable());
         setCssCDN(config, tpl);
-        if (CollectionUtil.isEmpty(errorCodeList)) {
-            tpl.binding(TemplateVariable.DICT_ORDER.getVariable(), apiDocList.size() + 1);
-        } else {
-            tpl.binding(TemplateVariable.DICT_ORDER.getVariable(), apiDocList.size() + 2);
+
+        setDirectoryLanguageVariable(config, tpl);
+        List<ApiDocDict> apiDocDictList = DocUtil.buildDictionary(config, javaProjectBuilder);
+        tpl.binding(TemplateVariable.DICT_LIST.getVariable(), apiDocDictList);
+
+        boolean onlyHasDefaultGroup = apiDocList.stream().allMatch(doc -> Objects.equals(TornaConstants.DEFAULT_GROUP_CODE, doc.getGroup()));
+        int codeIndex = onlyHasDefaultGroup ? apiDocList.get(0).getChildrenApiDocs().size(): apiDocList.size();
+        tpl.binding(TemplateVariable.API_DOC_LIST_ONLY_HAS_DEFAULT_GROUP.getVariable(), onlyHasDefaultGroup);
+
+        if (CollectionUtil.isNotEmpty(errorCodeList)) {
+            tpl.binding(TemplateVariable.ERROR_CODE_ORDER.getVariable(), ++codeIndex);
         }
+
+        if (CollectionUtil.isNotEmpty(apiDocDictList)) {
+            tpl.binding(TemplateVariable.DICT_ORDER.getVariable(), ++codeIndex);
+        }
+
         if (Objects.nonNull(apiDoc)) {
             tpl.binding(TemplateVariable.DESC.getVariable(), apiDoc.getDesc());
             tpl.binding(TemplateVariable.ORDER.getVariable(), apiDoc.order);
             tpl.binding(TemplateVariable.LIST.getVariable(), apiDoc.getList());//类名
         }
-        setDirectoryLanguageVariable(config, tpl);
-        List<ApiDocDict> apiDocDictList = DocUtil.buildDictionary(config, javaProjectBuilder);
-        tpl.binding(TemplateVariable.DICT_LIST.getVariable(), apiDocDictList);
         FileUtil.nioWriteFile(tpl.render(), outPath + FILE_SEPARATOR + outPutFileName);
     }
 
