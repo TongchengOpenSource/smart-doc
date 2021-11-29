@@ -95,8 +95,10 @@ public class JavaClassValidateUtil {
             case "localdatetime":
             case "localdate":
             case "zoneddatetime":
+            case "offsetdatetime":
             case "java.time.localdate":
             case "java.time.zoneddatetime":
+            case "java.time.offsetdatetime":
             case "java.math.bigdecimal":
             case "java.math.biginteger":
             case "java.util.uuid":
