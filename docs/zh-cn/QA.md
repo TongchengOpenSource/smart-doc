@@ -213,6 +213,18 @@ smart-doc的核心维护者中也有同学是从在校生开始加入开发，�
 因此我们非常欢迎愿意参与开源的同学加入，即便你是菜鸟都不用担心。
 smart-doc当前已经被国内许多一二线大厂所采用，未来只会更多。参与开源对菜鸟和萌新的帮助都是蛮大的。
 
+# could not match input？
+
+```java
+Exception in thread "main" java.lang.Error: Error: could not match input
+        at com.thoughtworks.qdox.parser.impl.JFlexLexer.zzScanError(JFlexLexer.java:1984)
+        at com.thoughtworks.qdox.parser.impl.JFlexLexer.yylex(JFlexLexer.java:3328)
+```
+在2.3.3开始smart-doc升级了qdox版本，这个qdox版本支持record特性，但是升级后也出现一个问题。
+就是qdox在解析一些版本比较老的jar包源码的时候出出现问题，这些老版本的代码中通常包含一些奇怪的特殊字符。
+如果你在使用中遇到该错误，建议在使用smart-doc的maven或者是gradle插件的时候明确通过插件的`include`配置项
+来加载必要的源码。避免插件自动加载了一些和API文档生成无关的旧依赖，同时也可以显著提升生成文档的速度。
+
 # smart-doc适用设计先行的开发吗？
 一些老派的程序员或者所谓有多年经验的架构师觉得，smart-doc这种基于代码扫描工具对于设计先行的开发模式并没有什么作用。
 真的是这样的吗？我们来看看吧。
@@ -239,10 +251,5 @@ smart-doc当前已经被国内许多一二线大厂所采用，未来只会更�
 ## 总结
 总之，使用文档工具和团队采用哪种模式并没有半点关系。工具是为了在某些方面去帮助团队更好的完成工作或者是提高效率。作为技术人员也要向前看，总会有新的技术、新的框架、新的工具出来去解决过去的一些问题。对新事物持有好奇心也是一种人生态度。
 
-# could not match input？
-在2.3.3开始smart-doc升级了qdox版本，这个qdox版本支持record特性，但是升级后也出现一个问题。
-就是qdox在解析一些版本比较老的jar包源码的时候出出现问题，这些老版本的代码中通常包含一些奇怪的特殊字符。
-如果你在使用中遇到该错误，建议在使用smart-doc的maven或者是gradle插件的时候明确通过插件的`include`配置项
-来加载必要的源码。避免插件自动加载了一些和API文档生成无关的旧依赖，同时也可以显著提升生成文档的速度。
 
   
