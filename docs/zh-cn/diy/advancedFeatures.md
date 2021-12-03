@@ -44,7 +44,7 @@
     ]
 }
 ```
-> smart-doc完全借鉴了Spring的PathMatcher的匹配，因此相关的路径正则规则也是和因此PathMatcher一致的，
+> smart-doc完全借鉴了Spring的PathMatcher的匹配，因此相关的路径正则规则也是和PathMatcher一致的，
 使用时请自行研究下PathMatcher并书写正确正则表达式，否则可能配置了后效果和你想的不一样。
 
 
