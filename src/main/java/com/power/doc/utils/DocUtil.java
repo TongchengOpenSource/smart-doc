@@ -333,7 +333,7 @@ public class DocUtil {
             case "RequestMethod.PATCH":
                 return "PATCH";
             default:
-                return "GET";
+                return method;
         }
     }
 

@@ -234,7 +234,6 @@ public class ParamsBuildHelper {
                         } else if (CollectionUtil.isEmpty(groupClasses)) {
                             strRequired = true;
                         }
-                        break an;
                     }
                 }
                 String fieldValue = "";
