@@ -23,7 +23,7 @@
   "packageFilters": "",//controller包过滤，多个包用英文逗号隔开，2.2.2开始需要采用正则：com.test.controller.*
   "md5EncryptedHtmlName": false,//只有每个controller生成一个html文件是才使用
   "style":"xt256", //基于highlight.js的代码高设置,可选值很多可查看码云wiki，喜欢配色统一简洁的同学可以不设置
-  "projectName": "smart-doc",//配置自己的项目名称
+  "projectName": "smart-doc",//配置自己的项目名称，不设置则插件自动获取pom中的projectName
   "framework": "spring",//smart-doc默认支持spring和dubbo框架的文档，使用默认框架不用配置，当前支持spring、dubbo、JAX-RS(待完善)
   "skipTransientField": true,//目前未实现
   "sortByTitle":false,//接口标题排序，默认为false,@since 1.8.7版本开始
@@ -283,6 +283,8 @@ controller包过滤，多个包用英文逗号隔开。
 * 默认值: `null`
 
 只有每个controller生成一个html文件是才使用。
+如果`smart-doc.json`中和插件中都未设置`projectName`，2.3.4开始，插件自动采用pom中的`projectName`作为默认填充，
+因此使用插件时可以不配置。
 ```json
 {
     "projectName": "smart-doc"

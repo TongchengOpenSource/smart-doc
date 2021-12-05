@@ -19,8 +19,9 @@
     <configuration>
         <!--指定生成文档的使用的配置文件,配置文件放在自己的项目中-->
         <configFile>./src/main/resources/smart-doc.json</configFile>
-        <!--指定项目名称-->
-        <projectName>测试</projectName>
+        <!--指定项目名称，推荐使用动态参数，例如${project.description}-->
+        <!--如果smart-doc.json中和此处都未设置projectName，2.3.4开始，插件自动采用pom中的projectName作为设置-->
+        <projectName>${project.description}</projectName>
         <!--smart-doc实现自动分析依赖树加载第三方依赖的源码，如果一些框架依赖库加载不到导致报错，这时请使用excludes排除掉-->
         <excludes>
             <!--格式为：groupId:artifactId;参考如下-->
@@ -76,7 +77,7 @@
   "packageFilters": "",//controller包过滤，多个包用英文逗号隔开，2.2.2开始需要采用正则：com.test.controller.*
   "md5EncryptedHtmlName": false,//只有每个controller生成一个html文件是才使用
   "style":"xt256", //基于highlight.js的代码高设置,可选值很多可查看码云wiki，喜欢配色统一简洁的同学可以不设置
-  "projectName": "smart-doc",//配置自己的项目名称
+  "projectName": "smart-doc",//配置自己的项目名称，不设置则插件自动获取pom中的projectName
   "skipTransientField": true,//目前未实现
   "sortByTitle":false,//接口标题排序，默认为false,@since 1.8.7版本开始
   "showAuthor":true,//是否显示接口作者名称，默认是true,不想显示可关闭
