@@ -281,7 +281,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             if (apiConfig.isShowAuthor() && StringUtil.isEmpty(authorValue)) {
                 apiMethodDoc.setAuthor(classAuthor);
             }
-            apiMethodDoc.setDetail(apiNoteValue);
+            apiMethodDoc.setDetail(apiNoteValue != null ? apiNoteValue : "");
             //handle headers
             List<ApiReqParam> apiReqHeaders = new SpringMVCRequestHeaderHandler().handle(method, projectBuilder);
 

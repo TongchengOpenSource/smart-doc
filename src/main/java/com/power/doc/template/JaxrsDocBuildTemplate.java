@@ -1,28 +1,68 @@
 package com.power.doc.template;
 
-import com.power.common.util.*;
+import com.power.common.util.CollectionUtil;
+import com.power.common.util.RandomUtil;
+import com.power.common.util.StringUtil;
+import com.power.common.util.UrlUtil;
+import com.power.common.util.ValidateUtil;
 import com.power.doc.builder.ProjectDocConfigBuilder;
-import com.power.doc.constants.*;
+import com.power.doc.constants.DocAnnotationConstants;
+import com.power.doc.constants.DocGlobalConstants;
+import com.power.doc.constants.DocTags;
+import com.power.doc.constants.JAXRSAnnotations;
+import com.power.doc.constants.Methods;
 import com.power.doc.handler.JaxrsHeaderHandler;
 import com.power.doc.handler.JaxrsPathHandler;
 import com.power.doc.helper.FormDataBuildHelper;
 import com.power.doc.helper.JsonBuildHelper;
 import com.power.doc.helper.ParamsBuildHelper;
-import com.power.doc.model.*;
+import com.power.doc.model.ApiConfig;
+import com.power.doc.model.ApiDoc;
+import com.power.doc.model.ApiMethodDoc;
+import com.power.doc.model.ApiMethodReqParam;
+import com.power.doc.model.ApiParam;
+import com.power.doc.model.ApiReqParam;
+import com.power.doc.model.DocJavaMethod;
+import com.power.doc.model.FormData;
 import com.power.doc.model.request.ApiRequestExample;
 import com.power.doc.model.request.CurlRequest;
 import com.power.doc.model.request.JaxrsPathMapping;
-import com.power.doc.utils.*;
-import com.thoughtworks.qdox.model.*;
+import com.power.doc.utils.ApiParamTreeUtil;
+import com.power.doc.utils.CurlUtil;
+import com.power.doc.utils.DocClassUtil;
+import com.power.doc.utils.DocPathUtil;
+import com.power.doc.utils.DocUtil;
+import com.power.doc.utils.JavaClassUtil;
+import com.power.doc.utils.JavaClassValidateUtil;
+import com.power.doc.utils.JsonUtil;
+import com.thoughtworks.qdox.model.DocletTag;
+import com.thoughtworks.qdox.model.JavaAnnotation;
+import com.thoughtworks.qdox.model.JavaClass;
+import com.thoughtworks.qdox.model.JavaMethod;
+import com.thoughtworks.qdox.model.JavaParameter;
+import com.thoughtworks.qdox.model.JavaType;
 import com.thoughtworks.qdox.model.expression.AnnotationValue;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.power.doc.constants.DocGlobalConstants.*;
+import static com.power.doc.constants.DocGlobalConstants.FILE_CONTENT_TYPE;
+import static com.power.doc.constants.DocGlobalConstants.JAX_PATH_FULLY;
+import static com.power.doc.constants.DocGlobalConstants.JSON_CONTENT_TYPE;
+import static com.power.doc.constants.DocGlobalConstants.OBJECT;
+import static com.power.doc.constants.DocGlobalConstants.REQUEST_BODY_FULLY;
 import static com.power.doc.constants.DocTags.IGNORE;
 import static com.power.doc.constants.DocTags.IGNORE_REQUEST_BODY_ADVICE;
 
@@ -187,7 +227,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             if (apiConfig.isShowAuthor() && StringUtil.isEmpty(authorValue)) {
                 apiMethodDoc.setAuthor(classAuthor);
             }
-            apiMethodDoc.setDetail(apiNoteValue);
+            apiMethodDoc.setDetail(apiNoteValue != null ? apiNoteValue : "");
             List<ApiReqParam> ApiReqParams = new JaxrsHeaderHandler().handle(method, projectBuilder);
             apiMethodDoc.setType(jaxPathMapping.getMethodType());
             apiMethodDoc.setUrl(jaxPathMapping.getUrl());
@@ -381,7 +421,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                     continue out;
                 }
                 // path param
-                if (JAXRSAnnotations.JAX_PATH_PARAM.equals(annotationName) ) {
+                if (JAXRSAnnotations.JAX_PATH_PARAM.equals(annotationName)) {
                     isPathVariable = true;
                     paramName = getParamName(paramName, annotation);
                     for (Map.Entry<String, String> entry : constantsMap.entrySet()) {
@@ -705,7 +745,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                                     .append("}");
                             requestExample.setJsonBody(JsonUtil.toPrettyFormat(builder.toString())).setJson(true);
                         } else {
-                            String json = JsonBuildHelper.buildJson(typeName, gicTypeName, Boolean.FALSE, 0, new HashMap<>(),groupClasses, configBuilder);
+                            String json = JsonBuildHelper.buildJson(typeName, gicTypeName, Boolean.FALSE, 0, new HashMap<>(), groupClasses, configBuilder);
                             requestExample.setJsonBody(JsonUtil.toPrettyFormat(json)).setJson(true);
                         }
                         paramAdded = true;
