@@ -29,7 +29,18 @@ $("[contenteditable=plaintext-only]").on('blur', function (e) {
   } else {
     content = e.originalEvent.clipboardData.getData('text/plain')
   }
-  content = JSON.stringify(JSON.parse(content), null, 4);
+  let parseItem = JSON.parse(content,function (key,val) {
+    if (Number.isFinite(val)) {
+      let temp= new BigNumber(val);
+      if (val> Number.MAX_SAFE_INTEGER){
+        alert("字段["+key+"]的数值超过最大安全值,会丢失精度，帮你修改为字符串");
+        return temp.toFixed().toString();
+      }
+      return temp.toNumber();
+    }
+    return  val;
+  })
+  content = JSON.stringify(parseItem, null, 4);
   const highlightedCode = hljs.highlight('json', content).value;
   $this.html(highlightedCode);
 })

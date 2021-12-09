@@ -75,6 +75,7 @@ public class HtmlApiDocBuilder {
         builderTemplate.copyJarFile("js/" + HIGH_LIGHT_JS, config.getOutPath() + FILE_SEPARATOR + HIGH_LIGHT_JS);
         builderTemplate.copyJarFile("css/" + FONT_STYLE, config.getOutPath() + FILE_SEPARATOR + FONT_STYLE);
         builderTemplate.copyJarFile("js/" + JQUERY, config.getOutPath() + FILE_SEPARATOR + JQUERY);
+        builderTemplate.copyJarFile("js/" + BIGNUMBER, config.getOutPath() + FILE_SEPARATOR + BIGNUMBER);
         builderTemplate.copyJarFile("css/" + HIGH_LIGHT_STYLE, config.getOutPath() + FILE_SEPARATOR + HIGH_LIGHT_STYLE);
         if (config.isAllInOne()) {
             apiDocList = docBuildTemplate.handleApiGroup(apiDocList, config);

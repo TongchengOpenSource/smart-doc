@@ -101,6 +101,8 @@ public interface DocGlobalConstants {
 
     String JQUERY = "jquery.min.js";
 
+    String BIGNUMBER = "bignumber.min.js";
+
     String HIGH_LIGHT_STYLE = "xt256.min.css";
 
     String RPC_OUT_DIR = "rpc";
