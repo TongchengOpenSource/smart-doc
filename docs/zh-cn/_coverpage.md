@@ -11,5 +11,5 @@
 
 [GitHub](https://github.com/smart-doc-group/smart-doc)
 [Getting Started](#smart-doc)
-[给smart-doc投票](https://www.oschina.net/project/top_cn_2021?top=507)
+[给smart-doc投票](https://www.oschina.net/project/top_cn_2021?id=507)
 
