@@ -35,10 +35,25 @@ import com.power.doc.model.ApiParam;
 import com.power.doc.model.DocJavaMethod;
 import com.power.doc.model.JavaMethodDoc;
 import com.power.doc.model.rpc.RpcApiDoc;
-import com.power.doc.utils.*;
-import com.thoughtworks.qdox.model.*;
+import com.power.doc.utils.ApiParamTreeUtil;
+import com.power.doc.utils.DocClassUtil;
+import com.power.doc.utils.DocUtil;
+import com.power.doc.utils.JavaClassUtil;
+import com.power.doc.utils.JavaClassValidateUtil;
+import com.thoughtworks.qdox.model.DocletTag;
+import com.thoughtworks.qdox.model.JavaAnnotation;
+import com.thoughtworks.qdox.model.JavaClass;
+import com.thoughtworks.qdox.model.JavaMethod;
+import com.thoughtworks.qdox.model.JavaParameter;
+import com.thoughtworks.qdox.model.JavaType;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -68,7 +83,7 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
                 }
             }
             DocletTag ignoreTag = cls.getTagByName(DocTags.IGNORE);
-            if (!checkDubboInterface(cls)|| Objects.nonNull(ignoreTag)) {
+            if (!checkDubboInterface(cls) || Objects.nonNull(ignoreTag)) {
                 continue;
             }
             String strOrder = JavaClassUtil.getClassTagsValue(cls, DocTags.ORDER, Boolean.TRUE);
@@ -145,7 +160,7 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
             if (apiConfig.isShowAuthor() && StringUtil.isNotEmpty(authorValue)) {
                 apiMethodDoc.setAuthor(authorValue);
             }
-            apiMethodDoc.setDetail(apiNoteValue);
+            apiMethodDoc.setDetail(apiNoteValue != null ? apiNoteValue : "");
             if (Objects.nonNull(method.getTagByName(IGNORE))) {
                 continue;
             }

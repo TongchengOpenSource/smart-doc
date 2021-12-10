@@ -62,7 +62,7 @@ public class JaxrsPathHandler {
         this.constantsMap = projectBuilder.getConstantsMap();
         String url;
         String methodType = null;
-        String shortUrl = null;
+        String shortUrl = "";
         String mediaType = null;
         String serverUrl = projectBuilder.getServerUrl();
         String contextPath = projectBuilder.getApiConfig().getPathPrefix();
