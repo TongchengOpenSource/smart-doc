@@ -484,14 +484,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 if (!springMvcRequestAnnotations.contains(fullName) || paramAdded) {
                     continue;
                 }
-                if (SpringMvcAnnotations.SESSION_ATTRIBUTE.equals(annotationName)) {
-                    continue out;
-                }
-                if(SpringMvcAnnotations.REQUEST_ATTRIBUTE.equals(annotationName))
-                {
-                    continue out;
-                }
-                if (SpringMvcAnnotations.REQUEST_HERDER.equals(annotationName)) {
+                if (JavaClassValidateUtil.ignoreSpringMvcParamWithAnnotation(annotationName)) {
                     continue out;
                 }
 
@@ -776,14 +769,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             boolean isRequestBody = false;
             for (JavaAnnotation annotation : annotations) {
                 String annotationName = annotation.getType().getValue();
-                if (SpringMvcAnnotations.SESSION_ATTRIBUTE.equals(annotationName)) {
-                    continue out;
-                }
-                if(SpringMvcAnnotations.REQUEST_ATTRIBUTE.equals(annotationName))
-                {
-                    continue out;
-                }
-                if (SpringMvcAnnotations.REQUEST_HERDER.equals(annotationName)) {
+                if (JavaClassValidateUtil.ignoreSpringMvcParamWithAnnotation(annotationName)) {
                     continue out;
                 }
                 if (SpringMvcAnnotations.REQUEST_PARAM.equals(annotationName) ||

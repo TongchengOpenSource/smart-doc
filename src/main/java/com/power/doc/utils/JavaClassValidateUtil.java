@@ -23,6 +23,7 @@
 package com.power.doc.utils;
 
 import com.power.common.util.CollectionUtil;
+import com.power.doc.constants.SpringMvcAnnotations;
 
 import java.util.List;
 import java.util.Objects;
@@ -219,10 +220,11 @@ public class JavaClassValidateUtil {
 
     /**
      * Download
+     *
      * @param typeName return type name
      * @return boolean
      */
-    public static boolean isFileDownloadResource(String typeName){
+    public static boolean isFileDownloadResource(String typeName) {
         switch (typeName) {
             case "org.springframework.core.io.Resource":
             case "org.springframework.core.io.InputStreamSource":
@@ -314,6 +316,22 @@ public class JavaClassValidateUtil {
         switch (typeName) {
             case "reactor.core.publisher.Mono":
             case "reactor.core.publisher.Flux":
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    /**
+     * ignore param with annotation
+     * @param annotation Spring Mvc's annotation
+     * @return boolean
+     */
+    public static boolean ignoreSpringMvcParamWithAnnotation(String annotation) {
+        switch (annotation) {
+            case SpringMvcAnnotations.SESSION_ATTRIBUTE:
+            case SpringMvcAnnotations.REQUEST_ATTRIBUTE:
+            case SpringMvcAnnotations.REQUEST_HERDER:
                 return true;
             default:
                 return false;
