@@ -24,7 +24,6 @@ package com.power.doc.handler;
 
 import com.power.common.util.StringUtil;
 import com.power.doc.builder.ProjectDocConfigBuilder;
-import com.power.doc.constants.DocAnnotationConstants;
 import com.power.doc.constants.DocTags;
 import com.power.doc.constants.JAXRSAnnotations;
 import com.power.doc.model.ApiReqParam;
@@ -66,21 +65,26 @@ public class JaxrsHeaderHandler {
 
             String defaultValue = "";
             for (JavaAnnotation annotation : annotations) {
-                Map<String, Object> requestHeaderMap = annotation.getNamedParameterMap();
                 //Obtain header default value
-                defaultValue = handleDefaultValue(constantsMap, apiReqHeader, defaultValue, annotation, requestHeaderMap);
+                if (JAXRSAnnotations.JAX_DEFAULT_VALUE.equals(annotation.getType().getValue())) {
+                    defaultValue = StringUtil.removeQuotes(DocUtil.getRequestHeaderValue(annotation));
+                    defaultValue = handleConstants(constantsMap, defaultValue, true);
+                }
+                apiReqHeader.setValue(defaultValue);
 
                 // Obtain header value
                 if (JAXRSAnnotations.JAX_HEADER_PARAM.equals(annotation.getType().getValue())) {
-                    apiReqHeader.setName(getName(constantsMap, requestHeaderMap));
+                    String name = StringUtil.removeQuotes(DocUtil.getRequestHeaderValue(annotation));
+                    name = handleConstants(constantsMap, name, false);
+                    apiReqHeader.setName(name);
 
                     String typeName = javaParameter.getType().getValue().toLowerCase();
                     apiReqHeader.setType(DocClassUtil.processTypeNameForParams(typeName));
 
                     String className = method.getDeclaringClass().getCanonicalName();
                     Map<String, String> paramMap = DocUtil.getParamsComments(method, DocTags.PARAM, className);
-                    String comments = paramMap.get(paramName);
-                    apiReqHeader.setDesc(getComments(defaultValue, comments));
+                    String paramComments = paramMap.get(paramName);
+                    apiReqHeader.setDesc(getComments(defaultValue, paramComments));
                     apiReqHeaders.add(apiReqHeader);
                 }
             }
@@ -88,10 +92,18 @@ public class JaxrsHeaderHandler {
         return apiReqHeaders;
     }
 
-    private String getComments(String defaultValue, String comments) {
-        if (Objects.nonNull(comments)) {
+    private String handleConstants(Map<String, String> constantsMap, String name, boolean defaultValue) {
+        Object constantsValue = constantsMap.get(name);
+        if (Objects.nonNull(constantsValue)) {
+            return constantsValue.toString();
+        }
+        return defaultValue ? "" : name;
+    }
+
+    private String getComments(String defaultValue, String paramComments) {
+        if (Objects.nonNull(paramComments)) {
             StringBuilder desc = new StringBuilder();
-            desc.append(comments);
+            desc.append(paramComments);
             if (StringUtils.isNotBlank(defaultValue)) {
                 desc.append("(defaultValue: ")
                         .append(defaultValue)
@@ -100,28 +112,6 @@ public class JaxrsHeaderHandler {
             return desc.toString();
         }
         return "";
-    }
-
-    private String getName(Map<String, String> constantsMap, Map<String, Object> requestHeaderMap) {
-        String name = StringUtil.removeQuotes((String) requestHeaderMap.get(DocAnnotationConstants.VALUE_PROP));
-        Object constantsValue = constantsMap.get(name);
-        if (Objects.nonNull(constantsValue)) {
-            return constantsValue.toString();
-        } else {
-            return name;
-        }
-    }
-
-    private String handleDefaultValue(Map<String, String> constantsMap, ApiReqParam apiReqHeader, String defaultValue, JavaAnnotation annotation, Map<String, Object> requestHeaderMap) {
-        if (JAXRSAnnotations.JAX_DEFAULT_VALUE.equals(annotation.getType().getValue())) {
-            defaultValue = StringUtil.removeQuotes((String) requestHeaderMap.get(DocAnnotationConstants.VALUE_PROP));
-            Object constantsValue = constantsMap.get(defaultValue);
-            if (Objects.nonNull(constantsValue)) {
-                defaultValue = constantsValue.toString();
-            }
-            apiReqHeader.setValue(defaultValue);
-        }
-        return defaultValue;
     }
 
 }
