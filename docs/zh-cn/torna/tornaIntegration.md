@@ -17,7 +17,7 @@ smart-doc + [Torna](http://torna.cn) 组成行业领先的文档生成和管理�
 {
   "serverUrl": "http://127.0.0.1", //服务器地址,非必须。导出postman建议设置成http://{{server}}方便直接在postman直接设置环境变量
   "isStrict": false, //是否开启严格模式
-  "outPath": "", //指定文档的输出路径
+  "outPath": "", //指定文档的输出路径,maven插件不需要，gradle插件必须
   "packageFilters": "",//controller包过滤，多个包用英文逗号隔开
   "projectName": "smart-doc",//配置自己的项目名称
   "appToken": "c16931fa6590483fb7a4e85340fcbfef", //torna平台appToken,@since 2.0.9
