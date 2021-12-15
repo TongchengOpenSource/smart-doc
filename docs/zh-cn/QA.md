@@ -239,6 +239,25 @@ Exception in thread "main" java.lang.Error: Error: could not match input
 就是qdox在解析一些版本比较老的jar包源码的时候出出现问题，这些老版本的代码中通常包含一些奇怪的特殊字符。
 如果你在使用中遇到该错误，建议在使用smart-doc的maven或者是gradle插件的时候明确通过插件的`include`配置项
 来加载必要的源码。避免插件自动加载了一些和API文档生成无关的旧依赖，同时也可以显著提升生成文档的速度。
+# syntax error ?
+在使用smart-doc时有同学经常会看到`[WARNING] syntax error`的告警信息输出，例如：
+```java
+[WARNING] syntax error @[17,20] in file:/D:/MyConfiguration/USER/IdeaProjects/smart-doc-example-cn/src/main/java/com/power/doc/model/PersonCreateDto.java
+```
+如果错误是来自第三方依赖的代码，基本不用管，因为生成文档时很少会需要用到第三方库的类。
+当错误来自我们自身的业务代码时就需要关心下了，因为会影响文档的生成。这个通常是我们代码中使用到了java的保留关键字，例如方法的参数名、类的字段名。
+可以根据告警信息去查看具体带代码行和字符起是位置 ，例如上面的提示是因为代码17行定义了
+```
+    private String record;
+```
+然后第20个字符r，这就是字段触发了jdk 14的保留关键字。代码行比较长的话可以用复制代码去打印。查看字符
+```
+String code = "    private String record";
+char[] arr = code.toCharArray();
+for(int i=0;i<arr.length;i++){
+    System.out.println("index:"+(i+1)+" value:"+arr[i]);
+}
+```
 
 # smart-doc适用设计先行的开发吗？
 一些老派的程序员或者所谓有多年经验的架构师觉得，smart-doc这种基于代码扫描工具对于设计先行的开发模式并没有什么作用。
