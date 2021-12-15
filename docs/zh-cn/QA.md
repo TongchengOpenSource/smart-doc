@@ -239,7 +239,7 @@ Exception in thread "main" java.lang.Error: Error: could not match input
 就是qdox在解析一些版本比较老的jar包源码的时候出出现问题，这些老版本的代码中通常包含一些奇怪的特殊字符。
 如果你在使用中遇到该错误，建议在使用smart-doc的maven或者是gradle插件的时候明确通过插件的`include`配置项
 来加载必要的源码。避免插件自动加载了一些和API文档生成无关的旧依赖，同时也可以显著提升生成文档的速度。
-# syntax error ?
+# syntax error？
 在使用smart-doc时有同学经常会看到`[WARNING] syntax error`的告警信息输出，例如：
 ```java
 [WARNING] syntax error @[17,20] in file:/D:/MyConfiguration/USER/IdeaProjects/smart-doc-example-cn/src/main/java/com/power/doc/model/PersonCreateDto.java
