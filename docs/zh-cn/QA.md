@@ -240,6 +240,13 @@ Exception in thread "main" java.lang.Error: Error: could not match input
 就是qdox在解析一些版本比较老的jar包源码的时候出出现问题，这些老版本的代码中通常包含一些奇怪的特殊字符。
 如果你在使用中遇到该错误，建议在使用smart-doc的maven或者是gradle插件的时候明确通过插件的`include`配置项
 来加载必要的源码。避免插件自动加载了一些和API文档生成无关的旧依赖，同时也可以显著提升生成文档的速度。
+
+大仙上面错误是，如果使用maven插件，你可以试用`mvn -X`参数让插件打印debug，然后查看是到加载那个resource出现了错误，例如：
+```java
+mvn -X -Dfile.encoding=UTF-8 smart-doc:html
+```
+通过添加`-X`然后通过命令行去让smart-doc生成文档时，插件会自动打印debug信息。然后从控制台日志中搜索`smart-doc loaded jar source:`,
+最后一个`smart-doc loaded jar source:`日志后面加载的jar就有问题的jar。然后自己去查看插件的配置把这个jar包排除掉即可。
 # syntax error？
 在使用smart-doc时有同学经常会看到`[WARNING] syntax error`的告警信息输出，例如：
 ```java
