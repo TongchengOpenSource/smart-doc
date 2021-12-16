@@ -247,6 +247,9 @@ mvn -X -Dfile.encoding=UTF-8 smart-doc:html
 ```
 通过添加`-X`然后通过命令行去让smart-doc生成文档时，插件会自动打印debug信息。然后从控制台日志中搜索`smart-doc loaded jar source:`,
 最后一个`smart-doc loaded jar source:`日志后面加载的jar就有问题的jar。然后自己去查看插件的配置把这个jar包排除掉即可。
+
+> 当然找到这些报错的包后也建议给官方提报错的依赖，我们可以在后续的升级当中自动排除这些导致错误的包。
+
 # syntax error？
 在使用smart-doc时有同学经常会看到`[WARNING] syntax error`的告警信息输出，例如：
 ```java
