@@ -137,64 +137,66 @@ public class JavaClassUtil {
                     addedFields.put(methodName, docJavaField);
                 }
             }
-            for (JavaField javaField : cls1.getFields()) {
-                String fieldName = javaField.getName();
-                String subTypeName = javaField.getType().getFullyQualifiedName();
+            if (!cls1.isInterface()) {
+                for (JavaField javaField : cls1.getFields()) {
+                    String fieldName = javaField.getName();
+                    String subTypeName = javaField.getType().getFullyQualifiedName();
 
-                if (javaField.isStatic() || "this$0".equals(fieldName) ||
-                        JavaClassValidateUtil.isIgnoreFieldTypes(subTypeName)) {
-                    continue;
-                }
-                if (fieldName.startsWith("is") && ("boolean".equals(subTypeName))) {
-                    fieldName = StringUtil.firstToLowerCase(fieldName.substring(2));
-                }
-
-                DocJavaField docJavaField = DocJavaField.builder();
-                boolean typeChecked = false;
-                String gicName = javaField.getType().getGenericCanonicalName();
-
-                String actualType = null;
-                if (JavaClassValidateUtil.isCollection(subTypeName) &&
-                        !JavaClassValidateUtil.isCollection(gicName)) {
-                    String[] gNameArr = DocClassUtil.getSimpleGicName(gicName);
-                    actualType = JavaClassUtil.getClassSimpleName(gNameArr[0]);
-                    docJavaField.setArray(true);
-                    typeChecked = true;
-                }
-                if (JavaClassValidateUtil.isPrimitive(subTypeName) && !typeChecked) {
-                    docJavaField.setPrimitive(true);
-                    typeChecked = true;
-                }
-                if (JavaClassValidateUtil.isFile(subTypeName) && !typeChecked) {
-                    docJavaField.setFile(true);
-                    typeChecked = true;
-                }
-                if (javaField.getType().isEnum() && !typeChecked) {
-                    docJavaField.setEnum(true);
-                }
-                for (Map.Entry<String, JavaType> entry : actualJavaTypes.entrySet()) {
-                    String key = entry.getKey();
-                    JavaType value = entry.getValue();
-                    if (gicName.equals(key)) {
-                        subTypeName = subTypeName.replaceAll(key, value.getFullyQualifiedName());
-                        gicName = gicName.replaceAll(key, value.getGenericCanonicalName());
-                        actualType = value.getFullyQualifiedName();
+                    if (javaField.isStatic() || "this$0".equals(fieldName) ||
+                            JavaClassValidateUtil.isIgnoreFieldTypes(subTypeName)) {
+                        continue;
                     }
-                }
-                docJavaField.setComment(javaField.getComment())
-                        .setJavaField(javaField).setFullyQualifiedName(subTypeName)
-                        .setGenericCanonicalName(gicName).setActualJavaType(actualType)
-                        .setAnnotations(javaField.getAnnotations())
-                        .setFieldName(fieldName);
-                if (addedFields.containsKey(fieldName)) {
+                    if (fieldName.startsWith("is") && ("boolean".equals(subTypeName))) {
+                        fieldName = StringUtil.firstToLowerCase(fieldName.substring(2));
+                    }
+
+                    DocJavaField docJavaField = DocJavaField.builder();
+                    boolean typeChecked = false;
+                    String gicName = javaField.getType().getGenericCanonicalName();
+
+                    String actualType = null;
+                    if (JavaClassValidateUtil.isCollection(subTypeName) &&
+                            !JavaClassValidateUtil.isCollection(gicName)) {
+                        String[] gNameArr = DocClassUtil.getSimpleGicName(gicName);
+                        actualType = JavaClassUtil.getClassSimpleName(gNameArr[0]);
+                        docJavaField.setArray(true);
+                        typeChecked = true;
+                    }
+                    if (JavaClassValidateUtil.isPrimitive(subTypeName) && !typeChecked) {
+                        docJavaField.setPrimitive(true);
+                        typeChecked = true;
+                    }
+                    if (JavaClassValidateUtil.isFile(subTypeName) && !typeChecked) {
+                        docJavaField.setFile(true);
+                        typeChecked = true;
+                    }
+                    if (javaField.getType().isEnum() && !typeChecked) {
+                        docJavaField.setEnum(true);
+                    }
+                    for (Map.Entry<String, JavaType> entry : actualJavaTypes.entrySet()) {
+                        String key = entry.getKey();
+                        JavaType value = entry.getValue();
+                        if (gicName.equals(key)) {
+                            subTypeName = subTypeName.replaceAll(key, value.getFullyQualifiedName());
+                            gicName = gicName.replaceAll(key, value.getGenericCanonicalName());
+                            actualType = value.getFullyQualifiedName();
+                        }
+                    }
+                    docJavaField.setComment(javaField.getComment())
+                            .setJavaField(javaField).setFullyQualifiedName(subTypeName)
+                            .setGenericCanonicalName(gicName).setActualJavaType(actualType)
+                            .setAnnotations(javaField.getAnnotations())
+                            .setFieldName(fieldName);
+                    if (addedFields.containsKey(fieldName)) {
+                        addedFields.put(fieldName, docJavaField);
+                        continue;
+                    }
                     addedFields.put(fieldName, docJavaField);
-                    continue;
                 }
-                addedFields.put(fieldName, docJavaField);
             }
             List<DocJavaField> parentFieldList = addedFields.values()
                     .stream()
-                    .filter(v -> Objects.nonNull(v))
+                    .filter(Objects::nonNull)
                     .collect(Collectors.toList());
             fieldList.addAll(parentFieldList);
         }
