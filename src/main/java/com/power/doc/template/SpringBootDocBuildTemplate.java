@@ -276,7 +276,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             Map<String, String> authorMap = DocUtil.getParamsComments(method, DocTags.AUTHOR, cls.getName());
             String authorValue = String.join(", ", new ArrayList<>(authorMap.keySet()));
             if (apiConfig.isShowAuthor() && StringUtil.isNotEmpty(authorValue)) {
-                apiMethodDoc.setAuthor(JsonUtil.toPrettyFormat(authorValue));
+                apiMethodDoc.setAuthor(StringUtil.removeQuotes(authorValue));
             }
             if (apiConfig.isShowAuthor() && StringUtil.isEmpty(authorValue)) {
                 apiMethodDoc.setAuthor(classAuthor);
