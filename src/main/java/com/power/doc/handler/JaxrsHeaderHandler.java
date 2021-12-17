@@ -22,44 +22,96 @@
  */
 package com.power.doc.handler;
 
+import com.power.common.util.StringUtil;
 import com.power.doc.builder.ProjectDocConfigBuilder;
+import com.power.doc.constants.DocTags;
 import com.power.doc.constants.JAXRSAnnotations;
 import com.power.doc.model.ApiReqParam;
+import com.power.doc.utils.DocClassUtil;
 import com.power.doc.utils.DocUtil;
 import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaMethod;
+import com.thoughtworks.qdox.model.JavaParameter;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 /**
- *
- *
  * @author Zxq
  */
 public class JaxrsHeaderHandler {
 
     /**
      * Handle JAX RS Header
-     * @param method method
+     *
+     * @param method         method
      * @param projectBuilder ProjectDocConfigBuilder
      * @return list of ApiReqParam
      */
     public List<ApiReqParam> handle(JavaMethod method, ProjectDocConfigBuilder projectBuilder) {
-        List<JavaAnnotation> annotations = method.getAnnotations();
-        List<ApiReqParam> ApiReqParams = new ArrayList<>();
-        for (JavaAnnotation annotation : annotations) {
+        Map<String, String> constantsMap = projectBuilder.getConstantsMap();
+
+        List<ApiReqParam> apiReqHeaders = new ArrayList<>();
+        List<JavaParameter> parameters = method.getParameters();
+        for (JavaParameter javaParameter : parameters) {
+            List<JavaAnnotation> annotations = javaParameter.getAnnotations();
+            String paramName = javaParameter.getName();
+
             // hit target head annotation
-            if (JAXRSAnnotations.JAX_HEADER_PARAM.equals(annotation.getType().getName())) {
-                ApiReqParam ApiReqParam = new ApiReqParam();
+            ApiReqParam apiReqHeader = new ApiReqParam();
+
+            String defaultValue = "";
+            for (JavaAnnotation annotation : annotations) {
+                //Obtain header default value
+                if (JAXRSAnnotations.JAX_DEFAULT_VALUE.equals(annotation.getType().getValue())) {
+                    defaultValue = StringUtil.removeQuotes(DocUtil.getRequestHeaderValue(annotation));
+                    defaultValue = handleConstants(constantsMap, defaultValue, true);
+                }
+                apiReqHeader.setValue(defaultValue);
+
                 // Obtain header value
-                ApiReqParam.setValue(DocUtil.getRequestHeaderValue(annotation).replaceAll("\"", ""));
-                ApiReqParam.setName(DocUtil.getRequestHeaderValue(annotation).replaceAll("\"", ""));
-                ApiReqParam.setType("string");
-                ApiReqParam.setDesc("desc");
-                ApiReqParams.add(ApiReqParam);
+                if (JAXRSAnnotations.JAX_HEADER_PARAM.equals(annotation.getType().getValue())) {
+                    String name = StringUtil.removeQuotes(DocUtil.getRequestHeaderValue(annotation));
+                    name = handleConstants(constantsMap, name, false);
+                    apiReqHeader.setName(name);
+
+                    String typeName = javaParameter.getType().getValue().toLowerCase();
+                    apiReqHeader.setType(DocClassUtil.processTypeNameForParams(typeName));
+
+                    String className = method.getDeclaringClass().getCanonicalName();
+                    Map<String, String> paramMap = DocUtil.getParamsComments(method, DocTags.PARAM, className);
+                    String paramComments = paramMap.get(paramName);
+                    apiReqHeader.setDesc(getComments(defaultValue, paramComments));
+                    apiReqHeaders.add(apiReqHeader);
+                }
             }
         }
-        return ApiReqParams;
+        return apiReqHeaders;
     }
+
+    private String handleConstants(Map<String, String> constantsMap, String name, boolean defaultValue) {
+        Object constantsValue = constantsMap.get(name);
+        if (Objects.nonNull(constantsValue)) {
+            return constantsValue.toString();
+        }
+        return defaultValue ? "" : name;
+    }
+
+    private String getComments(String defaultValue, String paramComments) {
+        if (Objects.nonNull(paramComments)) {
+            StringBuilder desc = new StringBuilder();
+            desc.append(paramComments);
+            if (StringUtils.isNotBlank(defaultValue)) {
+                desc.append("(defaultValue: ")
+                        .append(defaultValue)
+                        .append(")");
+            }
+            return desc.toString();
+        }
+        return "";
+    }
+
 }

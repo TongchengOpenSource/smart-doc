@@ -5,50 +5,60 @@ package com.power.doc.constants;
  *
  * @author Zxq
  */
-public interface JAXRSAnnotations {
+public final class JAXRSAnnotations {
+
+    private JAXRSAnnotations() {
+        throw new IllegalStateException("Utility class");
+    }
+
     /**
      * JAX-RS@PATH
      */
-    String JAX_PATH = "Path";
+    public static final String JAX_PATH = "Path";
     /**
      * JAX-RS@Produces
      */
-    String JAX_PRODUCES = "Produces";
+    public static final String JAX_PRODUCES = "Produces";
+
+    /**
+     * JAX-RS@DefaultValue
+     */
+    public static final String JAX_DEFAULT_VALUE = "DefaultValue";
     /**
      * JAX-RS@HeaderParam
      */
-    String JAX_HEADER_PARAM = "HeaderParam";
+    public static final String JAX_HEADER_PARAM = "HeaderParam";
     /**
      * JAX-RS@PathParam
      */
-    String JAX_PATH_PARAM = "PathParam";
+    public static final String JAX_PATH_PARAM = "PathParam";
     /**
      * JAX-RS@QueryParam
      */
-    String JAX_QUERY_PARAM = "QueryParam";
+    public static final String JAX_QUERY_PARAM = "QueryParam";
     /**
      * JAX-RS@FormParam
      */
-    String JAX_FORM_PARAM = "FormParam";
+    public static final String JAX_FORM_PARAM = "FormParam";
     /**
      * JAX-RS@Consumes
      */
-    String JAX_CONSUMES = "Consumes";
+    public static final String JAX_CONSUMES = "Consumes";
 
     /**
      * JAX-RS@GET
      */
-    String GET = "GET";
+    public static final String GET = "GET";
     /**
      * JAX-RS@POST
      */
-    String POST = "POST";
+    public static final String POST = "POST";
     /**
      * JAX-RS@PUT
      */
-    String PUT = "PUT";
+    public static final String PUT = "PUT";
     /**
      * JAX-RS@DELETE
      */
-    String DELETE = "DELETE";
+    public static final String DELETE = "DELETE";
 }
