@@ -59,11 +59,13 @@ public class UrlBean {
         if (StringUtil.isEmpty(serverUrl)) {
             return;
         }
-        Pattern pattern = Pattern.compile("(https?://)([^:^/]*)(:[a-zA-Z-z0-9|^{{\\}}$]*)?(.*)?");
+        Pattern pattern = Pattern.compile("(https?://)?([^:^/]*)?(:[a-zA-Z-z0-9|^{{\\}}$]*)?(.*)?");
         Matcher matcher = pattern.matcher(serverUrl);
         if (matcher.find()) {
             String protocol = matcher.group(1);
-            protocol = protocol.substring(0, protocol.indexOf(":"));
+            if (StringUtil.isNotEmpty(protocol)) {
+                protocol = protocol.substring(0, protocol.indexOf(":"));
+            }
 
             String domain = matcher.group(2);
             List<String> hosts = new ArrayList<>();
