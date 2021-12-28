@@ -124,7 +124,6 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                     .peek(p -> p.setOrder(atomicInteger.getAndAdd(1))).collect(Collectors.toList());
         }
         return apiDocList;
-
     }
 
     @Override
@@ -412,33 +411,45 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             JavaClass javaClass = builder.getJavaProjectBuilder().getClassByName(fullTypeName);
             List<JavaAnnotation> annotations = parameter.getAnnotations();
             List<String> groupClasses = JavaClassUtil.getParamGroupJavaClass(annotations);
-            String strRequired = "false";
             boolean isPathVariable = false;
             boolean isRequestBody = false;
-            for (JavaAnnotation annotation : annotations) {
-                String annotationName = annotation.getType().getValue();
-                if (JAXRSAnnotations.JAX_HEADER_PARAM.equals(annotationName)) {
-                    continue out;
-                }
-                // path param
-                if (JAXRSAnnotations.JAX_PATH_PARAM.equals(annotationName)) {
-                    isPathVariable = true;
-                    paramName = getParamName(paramName, annotation);
-                    for (Map.Entry<String, String> entry : constantsMap.entrySet()) {
-                        String key = entry.getKey();
-                        String value = entry.getValue();
-                        if (paramName.contains(key)) {
-                            paramName = paramName.replace(key, value);
-                        }
-                        // replace mockValue
-                        if (mockValue.contains(key)) {
-                            mockValue = mockValue.replace(key, value);
+            String strRequired = "false";
+            if (CollectionUtil.isNotEmpty(annotations)) {
+                for (JavaAnnotation annotation : annotations) {
+                    String annotationName = annotation.getType().getValue();
+                    if (JAXRSAnnotations.JAX_HEADER_PARAM.equals(annotationName)) {
+                        continue out;
+                    }
+                    // path param
+                    if (JAXRSAnnotations.JAX_PATH_PARAM.equals(annotationName)) {
+                        isPathVariable = true;
+                        strRequired = "true";
+                        paramName = getParamName(paramName, annotation);
+                        for (Map.Entry<String, String> entry : constantsMap.entrySet()) {
+                            String key = entry.getKey();
+                            String value = entry.getValue();
+                            if (paramName.contains(key)) {
+                                paramName = paramName.replace(key, value);
+                            }
+                            // replace mockValue
+                            if (mockValue.contains(key)) {
+                                mockValue = mockValue.replace(key, value);
+                            }
                         }
                     }
+                    if (JavaClassValidateUtil.isJSR303Required(annotationName)) {
+                        strRequired = "true";
+                    }
                 }
+            } else {
+                isRequestBody = true;
             }
-            boolean required = false;
-            boolean queryParam = !isPathVariable;
+
+            boolean required = Boolean.parseBoolean(strRequired);
+            boolean queryParam = false;
+            if (!isRequestBody && !isPathVariable) {
+                queryParam = true;
+            }
             if (JavaClassValidateUtil.isCollection(fullTypeName) || JavaClassValidateUtil.isArray(fullTypeName)) {
                 if (JavaClassValidateUtil.isCollection(typeName)) {
                     typeName = typeName + "<T>";
@@ -549,9 +560,12 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             if (param.isPathParam()) {
                 param.setId(pathParams.size() + 1);
                 pathParams.add(param);
-            } else {
+            } else if (param.isQueryParam()) {
                 param.setId(queryParams.size() + 1);
                 queryParams.add(param);
+            } else {
+                param.setId(bodyParams.size() + 1);
+                bodyParams.add(param);
             }
         }
         return ApiMethodReqParam.builder()
