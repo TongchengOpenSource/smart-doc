@@ -46,6 +46,9 @@ public class CurlRequest {
     }
 
     public String getType() {
+        if (type.contains(".")) {
+            return type.substring(type.indexOf(".") + 1);
+        }
         return type;
     }
 
