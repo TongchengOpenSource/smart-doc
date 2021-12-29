@@ -10,7 +10,6 @@ import com.power.doc.constants.DocAnnotationConstants;
 import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.constants.DocTags;
 import com.power.doc.constants.JAXRSAnnotations;
-import com.power.doc.constants.Methods;
 import com.power.doc.handler.JaxrsHeaderHandler;
 import com.power.doc.handler.JaxrsPathHandler;
 import com.power.doc.helper.FormDataBuildHelper;
@@ -60,11 +59,11 @@ import java.util.stream.Stream;
 
 import static com.power.doc.constants.DocGlobalConstants.FILE_CONTENT_TYPE;
 import static com.power.doc.constants.DocGlobalConstants.JAX_PATH_FULLY;
-import static com.power.doc.constants.DocGlobalConstants.JSON_CONTENT_TYPE;
+import static com.power.doc.constants.DocGlobalConstants.JAX_POST_FULLY;
+import static com.power.doc.constants.DocGlobalConstants.JAX_PUT_FULLY;
 import static com.power.doc.constants.DocGlobalConstants.OBJECT;
 import static com.power.doc.constants.DocGlobalConstants.REQUEST_BODY_FULLY;
 import static com.power.doc.constants.DocTags.IGNORE;
-import static com.power.doc.constants.DocTags.IGNORE_REQUEST_BODY_ADVICE;
 
 /**
  * Build documents for JAX RS
@@ -74,7 +73,7 @@ import static com.power.doc.constants.DocTags.IGNORE_REQUEST_BODY_ADVICE;
  */
 public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
 
-    private static Logger log = Logger.getLogger(SpringBootDocBuildTemplate.class.getName());
+    private static Logger log = Logger.getLogger(JaxrsDocBuildTemplate.class.getName());
     /**
      * api index
      */
@@ -123,6 +122,9 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                     .sorted(Comparator.comparing(ApiDoc::getOrder))
                     .peek(p -> p.setOrder(atomicInteger.getAndAdd(1))).collect(Collectors.toList());
         }
+        System.out.println("--------");
+        System.out.println(JsonUtil.toPrettyJson(apiDocList));
+        System.out.println("--------");
         return apiDocList;
     }
 
@@ -146,7 +148,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
      */
     private List<ApiMethodDoc> buildControllerMethod(final JavaClass cls, ApiConfig apiConfig,
                                                      ProjectDocConfigBuilder projectBuilder) {
-        String clazName = cls.getCanonicalName();
+        String clzName = cls.getCanonicalName();
         boolean paramsDataToTree = projectBuilder.getApiConfig().isParamsDataToTree();
         String group = JavaClassUtil.getClassTagsValue(cls, DocTags.GROUP, Boolean.TRUE);
         String classAuthor = JavaClassUtil.getClassTagsValue(cls, DocTags.AUTHOR, Boolean.TRUE);
@@ -212,7 +214,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             apiMethodDoc.setOrder(methodOrder);
             String comment = DocUtil.getEscapeAndCleanComment(method.getComment());
             apiMethodDoc.setDesc(comment);
-            String methodUid = DocUtil.generateId(clazName + method.getName());
+            String methodUid = DocUtil.generateId(clzName + method.getName());
             apiMethodDoc.setMethodId(methodUid);
             String apiNoteValue = DocUtil.getNormalTagComments(method, DocTags.API_NOTE, cls.getName());
             if (StringUtil.isEmpty(apiNoteValue)) {
@@ -349,7 +351,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         Map<String, String> paramsComments = DocUtil.getParamsComments(javaMethod, DocTags.PARAM, null);
         List<ApiParam> paramList = new ArrayList<>();
         List<JavaParameter> parameterList = javaMethod.getParameters();
-        if (parameterList.size() < 1) {
+        if (parameterList.isEmpty()) {
             return ApiMethodReqParam.builder()
                     .setPathParams(new ArrayList<>(0))
                     .setQueryParams(paramList)
@@ -420,26 +422,21 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                     if (JAXRSAnnotations.JAX_HEADER_PARAM.equals(annotationName)) {
                         continue out;
                     }
+                    //default value
+                    if (JAXRSAnnotations.JAX_DEFAULT_VALUE.equals(annotation.getType().getValue())) {
+                        mockValue = StringUtil.removeQuotes(DocUtil.getRequestHeaderValue(annotation));
+                        mockValue = DocUtil.handleConstants(constantsMap, mockValue, true);
+                    }
                     // path param
                     if (JAXRSAnnotations.JAX_PATH_PARAM.equals(annotationName)) {
                         isPathVariable = true;
                         strRequired = "true";
-                        paramName = getParamName(paramName, annotation);
-                        for (Map.Entry<String, String> entry : constantsMap.entrySet()) {
-                            String key = entry.getKey();
-                            String value = entry.getValue();
-                            if (paramName.contains(key)) {
-                                paramName = paramName.replace(key, value);
-                            }
-                            // replace mockValue
-                            if (mockValue.contains(key)) {
-                                mockValue = mockValue.replace(key, value);
-                            }
-                        }
                     }
                     if (JavaClassValidateUtil.isJSR303Required(annotationName)) {
                         strRequired = "true";
                     }
+
+
                 }
             } else {
                 isRequestBody = true;
@@ -482,7 +479,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                             .setValue(DocUtil.getValByTypeAndFieldName(gicName, paramName));
                     paramList.add(param);
                 } else {
-                    throw new RuntimeException("Dubbo Rest can't support binding Collection on method "
+                    throw new RuntimeException("JAX-RS can't support binding Collection on method "
                             + javaMethod.getName() + ",Check it in " + javaMethod.getDeclaringClass()
                             .getCanonicalName());
                 }
@@ -657,10 +654,9 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                                            ProjectDocConfigBuilder configBuilder) {
         JavaMethod method = javaMethod.getJavaMethod();
         Map<String, String> pathParamsMap = new LinkedHashMap<>();
-        List<JavaAnnotation> methodAnnotations = method.getAnnotations();
         List<JavaParameter> parameterList = method.getParameters();
         List<ApiReqParam> reqHeaderList = apiMethodDoc.getRequestHeaders();
-        if (parameterList.size() < 1) {
+        if (parameterList.isEmpty()) {
             CurlRequest curlRequest = CurlRequest.builder()
                     .setContentType(apiMethodDoc.getContentType())
                     .setType(methodType)
@@ -671,7 +667,6 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         }
         Set<String> ignoreSets = ignoreParamsSets(method);
         Map<String, JavaType> actualTypesMap = javaMethod.getActualTypesMap();
-        Map<String, String> constantsMap = configBuilder.getConstantsMap();
         boolean requestFieldToUnderline = configBuilder.getApiConfig().isRequestFieldToUnderline();
         Map<String, String> replacementMap = configBuilder.getReplaceClassMap();
         Map<String, String> paramsComments = DocUtil.getParamsComments(method, DocTags.PARAM, null);
@@ -721,111 +716,80 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             List<JavaAnnotation> annotations = parameter.getAnnotations();
             List<String> groupClasses = JavaClassUtil.getParamGroupJavaClass(annotations);
             boolean paramAdded = false;
-            for (JavaAnnotation annotation : methodAnnotations) {
-                String annotationName = annotation.getType().getValue();
-                if (JAXRSAnnotations.JAX_CONSUMES.equals(annotationName) || paramAdded) {
-                    AnnotationValue avalue = annotation.getProperty(DocAnnotationConstants.VALUE_PROP);
-                    if (avalue != null && avalue.toString().contains("json") || avalue.toString().contains("JSON")) {
-                        paramName = getParamName(paramName, annotation);
-                        for (Map.Entry<String, String> entry : constantsMap.entrySet()) {
-                            String key = entry.getKey();
-                            String value = entry.getValue();
-                            // replace param
-                            if (paramName.contains(key)) {
-                                paramName = paramName.replace(key, value);
-                            }
-                            // replace mockValue
-                            if (mockValue.contains(key)) {
-                                mockValue = mockValue.replace(key, value);
-                            }
-                        }
+            if (CollectionUtil.isNotEmpty(annotations)) {
+                for (JavaAnnotation annotation : annotations) {
+                    String annotationName = annotation.getType().getValue();
 
-                        apiMethodDoc.setContentType(JSON_CONTENT_TYPE);
-                        if (Objects.nonNull(configBuilder.getApiConfig().getRequestBodyAdvice())
-                                && Objects.isNull(method.getTagByName(IGNORE_REQUEST_BODY_ADVICE))) {
-                            String requestBodyAdvice = configBuilder.getApiConfig()
-                                    .getRequestBodyAdvice()
-                                    .getClassName();
-                            typeName = configBuilder.getApiConfig().getRequestBodyAdvice().getClassName();
-                            gicTypeName = requestBodyAdvice + "<" + gicTypeName + ">";
+                    if (JAXRSAnnotations.JAX_PATH_PARAM.equals(annotationName)) {
+                        if (javaClass.isEnum()) {
+                            Object value = JavaClassUtil.getEnumValue(javaClass, Boolean.TRUE);
+                            mockValue = StringUtil.removeQuotes(String.valueOf(value));
                         }
-
-                        if (JavaClassValidateUtil.isPrimitive(simpleTypeName)) {
-                            StringBuilder builder = new StringBuilder();
-                            builder.append("{\"")
-                                    .append(paramName)
-                                    .append("\":")
-                                    .append(DocUtil.handleJsonStr(mockValue))
-                                    .append("}");
-                            requestExample.setJsonBody(JsonUtil.toPrettyFormat(builder.toString())).setJson(true);
-                        } else {
-                            String json = JsonBuildHelper.buildJson(typeName, gicTypeName, Boolean.FALSE, 0, new HashMap<>(), groupClasses, configBuilder);
-                            requestExample.setJsonBody(JsonUtil.toPrettyFormat(json)).setJson(true);
-                        }
+                        pathParamsMap.put(paramName, mockValue);
                         paramAdded = true;
                     }
-                }
-
-                if (JAXRSAnnotations.JAX_PATH_PARAM.equals(annotationName)) {
-                    if (javaClass.isEnum()) {
+                    if (paramAdded) {
+                        continue;
+                    }
+//file upload
+                    if (JavaClassValidateUtil.isFile(gicTypeName)) {
+                        apiMethodDoc.setContentType(FILE_CONTENT_TYPE);
+                        FormData formData = new FormData();
+                        formData.setKey(paramName);
+                        formData.setType("file");
+                        formData.setDescription(comment);
+                        formData.setValue(mockValue);
+                        formDataList.add(formData);
+                    } else if (JavaClassValidateUtil.isPrimitive(typeName)) {
+                        FormData formData = new FormData();
+                        formData.setKey(paramName);
+                        formData.setDescription(comment);
+                        formData.setType("text");
+                        formData.setValue(mockValue);
+                        formDataList.add(formData);
+                    } else if (JavaClassValidateUtil.isArray(typeName) || JavaClassValidateUtil.isCollection(typeName)) {
+                        String gicName = globGicName[0];
+                        if (JavaClassValidateUtil.isArray(gicName)) {
+                            gicName = gicName.substring(0, gicName.indexOf("["));
+                        }
+                        if (!JavaClassValidateUtil.isPrimitive(gicName)
+                                && !configBuilder.getJavaProjectBuilder().getClassByName(gicName).isEnum()) {
+                            throw new RuntimeException("Jaxrs rest can't support binding Collection on method "
+                                    + method.getName() + "Check it in " + method.getDeclaringClass().getCanonicalName());
+                        }
+                        FormData formData = new FormData();
+                        formData.setKey(paramName);
+                        if (!paramName.contains("[]")) {
+                            formData.setKey(paramName + "[]");
+                        }
+                        formData.setDescription(comment);
+                        formData.setType("text");
+                        formData.setValue(RandomUtil.randomValueByType(gicName));
+                        formDataList.add(formData);
+                    } else if (javaClass.isEnum()) {
+                        // do nothing
                         Object value = JavaClassUtil.getEnumValue(javaClass, Boolean.TRUE);
-                        mockValue = StringUtil.removeQuotes(String.valueOf(value));
+                        String strVal = StringUtil.removeQuotes(String.valueOf(value));
+                        FormData formData = new FormData();
+                        formData.setKey(paramName);
+                        formData.setType("text");
+                        formData.setDescription(comment);
+                        formData.setValue(strVal);
+                        formDataList.add(formData);
+                    } else {
+                        formDataList.addAll(FormDataBuildHelper.getFormData(gicTypeName, new HashMap<>(), 0, configBuilder, DocGlobalConstants.EMPTY));
                     }
-                    pathParamsMap.put(paramName, mockValue);
-                    paramAdded = true;
                 }
-                if (paramAdded) {
-                    continue;
-                }
-                //file upload
-                if (JavaClassValidateUtil.isFile(gicTypeName)) {
-                    apiMethodDoc.setContentType(FILE_CONTENT_TYPE);
-                    FormData formData = new FormData();
-                    formData.setKey(paramName);
-                    formData.setType("file");
-                    formData.setDescription(comment);
-                    formData.setValue(mockValue);
-                    formDataList.add(formData);
-                } else if (JavaClassValidateUtil.isPrimitive(typeName)) {
-                    FormData formData = new FormData();
-                    formData.setKey(paramName);
-                    formData.setDescription(comment);
-                    formData.setType("text");
-                    formData.setValue(mockValue);
-                    formDataList.add(formData);
-                } else if (JavaClassValidateUtil.isArray(typeName) || JavaClassValidateUtil.isCollection(typeName)) {
-                    String gicName = globGicName[0];
-                    if (JavaClassValidateUtil.isArray(gicName)) {
-                        gicName = gicName.substring(0, gicName.indexOf("["));
-                    }
-                    if (!JavaClassValidateUtil.isPrimitive(gicName)
-                            && !configBuilder.getJavaProjectBuilder().getClassByName(gicName).isEnum()) {
-                        throw new RuntimeException("Dubbo rest can't support binding Collection on method "
-                                + method.getName() + "Check it in " + method.getDeclaringClass().getCanonicalName());
-                    }
-                    FormData formData = new FormData();
-                    formData.setKey(paramName);
-                    if (!paramName.contains("[]")) {
-                        formData.setKey(paramName + "[]");
-                    }
-                    formData.setDescription(comment);
-                    formData.setType("text");
-                    formData.setValue(RandomUtil.randomValueByType(gicName));
-                    formDataList.add(formData);
-                } else if (javaClass.isEnum()) {
-                    // do nothing
-                    Object value = JavaClassUtil.getEnumValue(javaClass, Boolean.TRUE);
-                    String strVal = StringUtil.removeQuotes(String.valueOf(value));
-                    FormData formData = new FormData();
-                    formData.setKey(paramName);
-                    formData.setType("text");
-                    formData.setDescription(comment);
-                    formData.setValue(strVal);
-                    formDataList.add(formData);
+            } else {
+                if (JavaClassValidateUtil.isPrimitive(simpleTypeName)) {
+                    requestExample.setJsonBody(mockValue).setJson(true);
                 } else {
-                    formDataList.addAll(FormDataBuildHelper.getFormData(gicTypeName, new HashMap<>(), 0, configBuilder, DocGlobalConstants.EMPTY));
+                    String json = JsonBuildHelper.buildJson(typeName, gicTypeName, Boolean.FALSE, 0, new HashMap<>(), groupClasses, configBuilder);
+                    requestExample.setJsonBody(JsonUtil.toPrettyFormat(json)).setJson(true);
                 }
             }
+
+
         }
         requestExample.setFormDataList(formDataList);
         String[] paths = apiMethodDoc.getPath().split(";");
@@ -833,9 +797,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         String body;
         String exampleBody;
         String url;
-        if (Methods.POST.getValue()
-                .equals(methodType) || Methods.PUT.getValue()
-                .equals(methodType)) {
+        if (JAX_POST_FULLY.equals(methodType) || JAX_PUT_FULLY.equals(methodType)) {
             //for post put
             path = DocUtil.formatAndRemove(path, pathParamsMap);
             body = UrlUtil.urlJoin(DocGlobalConstants.EMPTY, DocUtil.formDataToMap(formDataList))

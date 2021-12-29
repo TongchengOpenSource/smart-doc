@@ -28,14 +28,32 @@ import com.power.doc.builder.ProjectDocConfigBuilder;
 import com.power.doc.constants.DocTags;
 import com.power.doc.constants.TornaConstants;
 import com.power.doc.helper.ParamsBuildHelper;
-import com.power.doc.model.*;
-import com.power.doc.utils.*;
+import com.power.doc.model.ApiConfig;
+import com.power.doc.model.ApiDoc;
+import com.power.doc.model.ApiGroup;
+import com.power.doc.model.ApiMethodDoc;
+import com.power.doc.model.ApiParam;
+import com.power.doc.model.ApiReqParam;
+import com.power.doc.model.ApiReturn;
+import com.power.doc.model.DocJavaMethod;
+import com.power.doc.utils.DocClassUtil;
+import com.power.doc.utils.DocPathUtil;
+import com.power.doc.utils.DocUtil;
+import com.power.doc.utils.JavaClassUtil;
+import com.power.doc.utils.JavaClassValidateUtil;
+import com.power.doc.utils.OpenApiSchemaUtil;
 import com.thoughtworks.qdox.model.DocletTag;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaMethod;
 import com.thoughtworks.qdox.model.JavaType;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -108,9 +126,9 @@ public interface IDocBuildTemplate<T> {
      * handle group api docs
      *
      * @param apiDocList list of apiDocList
-     * @param apiConfig ApiConfig apiConfig
-     * @author cqmike
+     * @param apiConfig  ApiConfig apiConfig
      * @return List of ApiDoc
+     * @author cqmike
      */
     default List<ApiDoc> handleApiGroup(List<ApiDoc> apiDocList, ApiConfig apiConfig) {
         if (CollectionUtil.isEmpty(apiDocList) || apiConfig == null) {

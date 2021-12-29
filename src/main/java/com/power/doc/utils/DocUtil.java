@@ -763,4 +763,12 @@ public class DocUtil {
         return fieldGicName;
     }
 
+    public static String handleConstants(Map<String, String> constantsMap, String name, boolean defaultValue) {
+        Object constantsValue = constantsMap.get(name);
+        if (Objects.nonNull(constantsValue)) {
+            return constantsValue.toString();
+        }
+        return defaultValue ? "" : name;
+    }
+
 }
