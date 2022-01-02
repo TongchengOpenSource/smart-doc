@@ -26,14 +26,7 @@ import com.power.doc.model.FormData;
 import com.power.doc.model.request.ApiRequestExample;
 import com.power.doc.model.request.CurlRequest;
 import com.power.doc.model.request.JaxrsPathMapping;
-import com.power.doc.utils.ApiParamTreeUtil;
-import com.power.doc.utils.CurlUtil;
-import com.power.doc.utils.DocClassUtil;
-import com.power.doc.utils.DocPathUtil;
-import com.power.doc.utils.DocUtil;
-import com.power.doc.utils.JavaClassUtil;
-import com.power.doc.utils.JavaClassValidateUtil;
-import com.power.doc.utils.JsonUtil;
+import com.power.doc.utils.*;
 import com.thoughtworks.qdox.model.DocletTag;
 import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaClass;
@@ -237,7 +230,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             apiMethodDoc.setDeprecated(jaxPathMapping.isDeprecated());
             List<JavaParameter> javaParameters = method.getParameters();
 
-            setTornaArrayTags(javaParameters, apiMethodDoc, docJavaMethod.getJavaMethod().getReturns());
+            TornaUtil.setTornaArrayTags(javaParameters, apiMethodDoc, docJavaMethod.getJavaMethod().getReturns(),apiConfig);
             // apiMethodDoc.setIsRequestArray();
             ApiMethodReqParam apiMethodReqParam = requestParams(docJavaMethod, projectBuilder);
             // build request params
@@ -599,56 +592,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         return mockValue;
     }
 
-    private static void setTornaArrayTags(List<JavaParameter> javaParameters, ApiMethodDoc apiMethodDoc, JavaClass returnClass) {
 
-        apiMethodDoc.setIsResponseArray(0);
-        apiMethodDoc.setIsRequestArray(0);
-        //response tags
-        if (JavaClassValidateUtil.isCollection(returnClass.getFullyQualifiedName()) ||
-                JavaClassValidateUtil.isArray(returnClass.getFullyQualifiedName())) {
-            apiMethodDoc.setIsResponseArray(1);
-            String gicType;
-            String simpleGicType;
-            String typeName = returnClass.getGenericFullyQualifiedName();
-            gicType = getType(typeName);
-            simpleGicType = gicType.substring(gicType.lastIndexOf(".") + 1).toLowerCase();
-            apiMethodDoc.setResponseArrayType(JavaClassValidateUtil.isPrimitive(gicType) ? simpleGicType : OBJECT);
-        }
-        //request tags
-        if (CollectionUtil.isNotEmpty(javaParameters)) {
-            for (JavaParameter parameter : javaParameters) {
-                String gicType;
-                String simpleGicType;
-                String typeName = parameter.getType().getGenericFullyQualifiedName();
-                String name = parameter.getType().getFullyQualifiedName();
-                gicType = getType(typeName);
-                simpleGicType = gicType.substring(gicType.lastIndexOf(".") + 1).toLowerCase();
-                // is array
-                if (JavaClassValidateUtil.isCollection(name) || JavaClassValidateUtil.isArray(name)) {
-                    boolean hasRequestBody = false;
-                    //param has @RequestBody ?
-                    List<JavaAnnotation> annotations = parameter.getAnnotations();
-                    for (JavaAnnotation annotation : annotations) {
-                        if (REQUEST_BODY_FULLY.equals(annotation.getType().getName())) {
-                            hasRequestBody = true;
-                            break;
-                        }
-                    }
-                    //formData - multiple data
-                    if (!hasRequestBody && javaParameters.size() > 1) {
-                        return;
-                    } else {
-                        apiMethodDoc.setIsRequestArray(1);
-                        if (JavaClassValidateUtil.isPrimitive(gicType)) {
-                            apiMethodDoc.setRequestArrayType(simpleGicType);
-                        } else {
-                            apiMethodDoc.setRequestArrayType(OBJECT);
-                        }
-                    }
-                }
-            }
-        }
-    }
 
     private ApiRequestExample buildReqJson(DocJavaMethod javaMethod, ApiMethodDoc apiMethodDoc, String methodType,
                                            ProjectDocConfigBuilder configBuilder) {

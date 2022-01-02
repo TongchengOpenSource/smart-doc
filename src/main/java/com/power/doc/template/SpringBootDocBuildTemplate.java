@@ -292,7 +292,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             apiMethodDoc.setDeprecated(requestMapping.isDeprecated());
             List<JavaParameter> javaParameters = method.getParameters();
 
-            setTornaArrayTags(javaParameters, apiMethodDoc, docJavaMethod.getJavaMethod().getReturns());
+            TornaUtil.setTornaArrayTags(javaParameters, apiMethodDoc, docJavaMethod.getJavaMethod().getReturns(),apiConfig);
             // apiMethodDoc.setIsRequestArray();
             final List<ApiReqParam> apiReqParamList = this.configApiReqParams.stream()
                     .filter(param -> filterPath(requestMapping, param)).collect(Collectors.toList());
@@ -1130,57 +1130,6 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             annotationsList.addAll(getAnnotations(superJavaClass));
         }
         return annotationsList;
-    }
-
-    private static void setTornaArrayTags(List<JavaParameter> javaParameters, ApiMethodDoc apiMethodDoc, JavaClass returnClass) {
-
-        apiMethodDoc.setIsResponseArray(0);
-        apiMethodDoc.setIsRequestArray(0);
-        //response tags
-        if (JavaClassValidateUtil.isCollection(returnClass.getFullyQualifiedName()) ||
-                JavaClassValidateUtil.isArray(returnClass.getFullyQualifiedName())) {
-            apiMethodDoc.setIsResponseArray(1);
-            String gicType;
-            String simpleGicType;
-            String typeName = returnClass.getGenericFullyQualifiedName();
-            gicType = getType(typeName);
-            simpleGicType = gicType.substring(gicType.lastIndexOf(".") + 1).toLowerCase();
-            apiMethodDoc.setResponseArrayType(JavaClassValidateUtil.isPrimitive(gicType) ? simpleGicType : OBJECT);
-        }
-        //request tags
-        if (CollectionUtil.isNotEmpty(javaParameters)) {
-            for (JavaParameter parameter : javaParameters) {
-                String gicType;
-                String simpleGicType;
-                String typeName = parameter.getType().getGenericFullyQualifiedName();
-                String name = parameter.getType().getFullyQualifiedName();
-                gicType = getType(typeName);
-                simpleGicType = gicType.substring(gicType.lastIndexOf(".") + 1).toLowerCase();
-                // is array
-                if (JavaClassValidateUtil.isCollection(name) || JavaClassValidateUtil.isArray(name)) {
-                    apiMethodDoc.setIsRequestArray(1);
-                    if (JavaClassValidateUtil.isPrimitive(gicType)) {
-                        apiMethodDoc.setRequestArrayType(simpleGicType);
-                    } else {
-                        apiMethodDoc.setRequestArrayType(OBJECT);
-                    }
-                }
-            }
-        }
-    }
-
-    private static String getType(String typeName) {
-        String gicType;
-        //get generic type
-        if (typeName.contains("<")) {
-            gicType = typeName.substring(typeName.indexOf("<") + 1, typeName.lastIndexOf(">"));
-        } else {
-            gicType = typeName;
-        }
-        if (gicType.contains("[")) {
-            gicType = gicType.substring(0, gicType.indexOf("["));
-        }
-        return gicType;
     }
 
 }

@@ -10,11 +10,15 @@ import com.power.doc.constants.TornaConstants;
 import com.power.doc.model.*;
 import com.power.doc.model.rpc.RpcApiDependency;
 import com.power.doc.model.torna.*;
+import com.thoughtworks.qdox.model.JavaClass;
+import com.thoughtworks.qdox.model.JavaParameter;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import static com.power.doc.constants.DocGlobalConstants.OBJECT;
 
 /**
  * @author xingzi 2021/4/28 16:15
@@ -249,4 +253,64 @@ public class TornaUtil {
         }
         return apis;
     }
+
+    /**
+     * set torna responseArray
+     * @param javaParameters params
+     * @param apiMethodDoc methodDoc
+     * @param returnClass return class
+     * @param apiConfig config
+     */
+    public static void setTornaArrayTags(List<JavaParameter> javaParameters, ApiMethodDoc apiMethodDoc, JavaClass returnClass, ApiConfig apiConfig) {
+
+        apiMethodDoc.setIsResponseArray(0);
+        apiMethodDoc.setIsRequestArray(0);
+        //response tags
+        if ((JavaClassValidateUtil.isCollection(returnClass.getFullyQualifiedName()) ||
+                JavaClassValidateUtil.isArray(returnClass.getFullyQualifiedName())) &&
+                apiConfig.getResponseBodyAdvice() == null) {
+            apiMethodDoc.setIsResponseArray(1);
+            String gicType;
+            String simpleGicType;
+            String typeName = returnClass.getGenericFullyQualifiedName();
+            gicType = getType(typeName);
+            simpleGicType = gicType.substring(gicType.lastIndexOf(".") + 1).toLowerCase();
+            apiMethodDoc.setResponseArrayType(JavaClassValidateUtil.isPrimitive(gicType) ? simpleGicType : OBJECT);
+        }
+        //request tags
+        if (CollectionUtil.isNotEmpty(javaParameters) && apiConfig.getRequestBodyAdvice() == null) {
+            for (JavaParameter parameter : javaParameters) {
+                String gicType;
+                String simpleGicType;
+                String typeName = parameter.getType().getGenericFullyQualifiedName();
+                String name = parameter.getType().getFullyQualifiedName();
+                gicType = getType(typeName);
+                simpleGicType = gicType.substring(gicType.lastIndexOf(".") + 1).toLowerCase();
+                // is array
+                if (JavaClassValidateUtil.isCollection(name) || JavaClassValidateUtil.isArray(name)) {
+                    apiMethodDoc.setIsRequestArray(1);
+                    if (JavaClassValidateUtil.isPrimitive(gicType)) {
+                        apiMethodDoc.setRequestArrayType(simpleGicType);
+                    } else {
+                        apiMethodDoc.setRequestArrayType(OBJECT);
+                    }
+                }
+            }
+        }
+    }
+
+    private static String getType(String typeName) {
+        String gicType;
+        //get generic type
+        if (typeName.contains("<")) {
+            gicType = typeName.substring(typeName.indexOf("<") + 1, typeName.lastIndexOf(">"));
+        } else {
+            gicType = typeName;
+        }
+        if (gicType.contains("[")) {
+            gicType = gicType.substring(0, gicType.indexOf("["));
+        }
+        return gicType;
+    }
+
 }
