@@ -68,14 +68,14 @@ public class JaxrsHeaderHandler {
                 //Obtain header default value
                 if (JAXRSAnnotations.JAX_DEFAULT_VALUE.equals(annotation.getType().getValue())) {
                     defaultValue = StringUtil.removeQuotes(DocUtil.getRequestHeaderValue(annotation));
-                    defaultValue = handleConstants(constantsMap, defaultValue, true);
+                    defaultValue = DocUtil.handleConstants(constantsMap, defaultValue, true);
                 }
                 apiReqHeader.setValue(defaultValue);
 
                 // Obtain header value
                 if (JAXRSAnnotations.JAX_HEADER_PARAM.equals(annotation.getType().getValue())) {
                     String name = StringUtil.removeQuotes(DocUtil.getRequestHeaderValue(annotation));
-                    name = handleConstants(constantsMap, name, false);
+                    name = DocUtil.handleConstants(constantsMap, name, false);
                     apiReqHeader.setName(name);
 
                     String typeName = javaParameter.getType().getValue().toLowerCase();
@@ -92,13 +92,6 @@ public class JaxrsHeaderHandler {
         return apiReqHeaders;
     }
 
-    private String handleConstants(Map<String, String> constantsMap, String name, boolean defaultValue) {
-        Object constantsValue = constantsMap.get(name);
-        if (Objects.nonNull(constantsValue)) {
-            return constantsValue.toString();
-        }
-        return defaultValue ? "" : name;
-    }
 
     private String getComments(String defaultValue, String paramComments) {
         if (Objects.nonNull(paramComments)) {

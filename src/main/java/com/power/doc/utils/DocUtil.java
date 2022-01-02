@@ -24,16 +24,46 @@ package com.power.doc.utils;
 
 import com.github.javafaker.Faker;
 import com.mifmif.common.regex.Generex;
-import com.power.common.util.*;
+import com.power.common.util.CollectionUtil;
+import com.power.common.util.DateTimeUtil;
+import com.power.common.util.EnumUtil;
+import com.power.common.util.IDCardUtil;
+import com.power.common.util.RandomUtil;
+import com.power.common.util.StringUtil;
+import com.power.common.util.ValidateUtil;
 import com.power.doc.constants.DocAnnotationConstants;
 import com.power.doc.constants.DocGlobalConstants;
-import com.power.doc.model.*;
+import com.power.doc.model.ApiConfig;
+import com.power.doc.model.ApiDataDictionary;
+import com.power.doc.model.ApiDocDict;
+import com.power.doc.model.ApiErrorCode;
+import com.power.doc.model.ApiErrorCodeDictionary;
+import com.power.doc.model.DataDict;
+import com.power.doc.model.DocJavaField;
+import com.power.doc.model.FormData;
 import com.thoughtworks.qdox.JavaProjectBuilder;
-import com.thoughtworks.qdox.model.*;
+import com.thoughtworks.qdox.model.DocletTag;
+import com.thoughtworks.qdox.model.JavaAnnotation;
+import com.thoughtworks.qdox.model.JavaClass;
+import com.thoughtworks.qdox.model.JavaField;
+import com.thoughtworks.qdox.model.JavaMethod;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.IdentityHashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.Stack;
+import java.util.UUID;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -55,7 +85,7 @@ public class DocUtil {
 
     static {
         fieldValue.put("uuid-string", UUID.randomUUID().toString());
-        fieldValue.put("traceid-string",UUID.randomUUID().toString());
+        fieldValue.put("traceid-string", UUID.randomUUID().toString());
         fieldValue.put("id-string", String.valueOf(RandomUtil.randomInt(1, 200)));
         fieldValue.put("nickname-string", enFaker.name().username());
         fieldValue.put("hostname-string", faker.internet().ipV4Address());
@@ -63,8 +93,8 @@ public class DocUtil {
         fieldValue.put("author-string", faker.book().author());
         fieldValue.put("url-string", faker.internet().url());
         fieldValue.put("username-string", faker.name().username());
-        fieldValue.put("index-int","1");
-        fieldValue.put("index-integer","1");
+        fieldValue.put("index-int", "1");
+        fieldValue.put("index-integer", "1");
         fieldValue.put("page-int", "1");
         fieldValue.put("page-integer", "1");
         fieldValue.put("age-int", String.valueOf(RandomUtil.randomInt(0, 70)));
@@ -144,7 +174,7 @@ public class DocUtil {
      */
     public static String getValByTypeAndFieldName(String typeName, String filedName) {
         boolean isArray = true;
-        String type = typeName.contains("java.lang") ? typeName.substring(typeName.lastIndexOf(".") + 1, typeName.length()) : typeName;
+        String type = typeName.contains("java.lang") ? typeName.substring(typeName.lastIndexOf(".") + 1) : typeName;
         String key = filedName.toLowerCase() + "-" + type.toLowerCase();
         StringBuilder value = null;
         if (!type.contains("[")) {
@@ -252,11 +282,11 @@ public class DocUtil {
      */
     public static String formatAndRemove(String str, Map<String, String> values) {
         // /detail/{id:[a-zA-Z0-9]{3}}/{name:[a-zA-Z0-9]{3}}
-        if (str.indexOf(":") >= 0) {
+        if (str.contains(":")) {
             String[] strArr = str.split("/");
             for (int i = 0; i < strArr.length; i++) {
                 String pathParam = strArr[i];
-                if (pathParam.indexOf(":") >= 0) {
+                if (pathParam.contains(":")) {
                     int length = pathParam.length();
                     if (length < 1) {
                         length = 1;
@@ -266,9 +296,7 @@ public class DocUtil {
                     // Generate random String
                     String randomStr = generex.random();
                     String key = pathParam.substring(1, pathParam.indexOf(":"));
-                    if (values.containsKey(key)) {
-                        values.put(key, randomStr);
-                    }
+                    values.computeIfPresent(key, (k, v) -> v = randomStr);
                     strArr[i] = pathParam.substring(0, pathParam.indexOf(":")) + "}";
                 }
             }
@@ -281,7 +309,7 @@ public class DocUtil {
             Map.Entry<String, String> next = iteratorMap.next();
             int start;
             String pattern = "{" + next.getKey() + "}";
-            String value = next.getValue().toString();
+            String value = next.getValue();
             // values.remove(next.getKey());
             // Replace every occurence of {key} with value
             while ((start = builder.indexOf(pattern)) != -1) {
@@ -324,6 +352,8 @@ public class DocUtil {
      */
     public static String handleHttpMethod(String method) {
         switch (method) {
+            case "RequestMethod.GET":
+                return "GET";
             case "RequestMethod.POST":
                 return "POST";
             case "RequestMethod.PUT":
@@ -731,6 +761,14 @@ public class DocUtil {
             }
         }
         return fieldGicName;
+    }
+
+    public static String handleConstants(Map<String, String> constantsMap, String name, boolean defaultValue) {
+        Object constantsValue = constantsMap.get(name);
+        if (Objects.nonNull(constantsValue)) {
+            return constantsValue.toString();
+        }
+        return defaultValue ? "" : name;
     }
 
 }

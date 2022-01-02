@@ -61,4 +61,17 @@ public final class JAXRSAnnotations {
      * JAX-RS@DELETE
      */
     public static final String DELETE = "DELETE";
+    /**
+     * JAX-RS@HEAD
+     */
+    public static final String HEAD = "HEAD";
+    /**
+     * JAX-RS@PATCH
+     */
+    public static final String PATCH = "PATCH";
+    /**
+     * JAX-RS@OPTIONS
+     */
+    public static final String OPTIONS = "OPTIONS";
+
 }

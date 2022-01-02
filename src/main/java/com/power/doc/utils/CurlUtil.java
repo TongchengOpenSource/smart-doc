@@ -34,10 +34,14 @@ import com.power.doc.model.request.CurlRequest;
 public class CurlUtil {
 
     public static String toCurl(CurlRequest request) {
+        String methodType = request.getType();
+        if (methodType.contains(".")) {
+            methodType = methodType.substring(methodType.indexOf(".") + 1);
+        }
         StringBuilder sb = new StringBuilder();
         sb.append("curl");
         sb.append(" -X");
-        sb.append(" ").append(request.getType());
+        sb.append(" ").append(methodType);
         if (request.getUrl().indexOf("https") == 0) {
             sb.append(" -k");
         }
