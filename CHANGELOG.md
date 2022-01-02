@@ -1,5 +1,11 @@
 ## smart-doc版本
 
+#### 版本号：2.3.6
+- 更新日期: 2022-01-02
+- 更新内容：
+  1. 导出postman时serverUrl不再强制要求设置协议。
+  2. 修改设置responseBodyAdvice后推送torna数据错误。
+  3. 解决gradle插件不能在kts脚本中添加include和exclude的问题。
 #### 版本号：2.3.5
 - 更新日期: 2021-12-18
 - 更新内容：
