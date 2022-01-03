@@ -793,7 +793,7 @@ torna环境名称。
 ResponseBodyAdvice统一返回设置(不要随便配置根据项目的技术来配置)，可用`ignoreResponseBodyAdvice` tag来忽略。
 ```json
 {
-    "rpcApiDependencies": {
+    "responseBodyAdvice": {
         "className": "com.power.common.model.CommonResult" //通用响应体
     }
 }
@@ -809,7 +809,7 @@ ResponseBodyAdvice统一返回设置(不要随便配置根据项目的技术来�
 设置RequestBodyAdvice统一请求包装类。
 ```json
 {
-    "rpcApiDependencies": {
+    "requestBodyAdvice": {
         "className": "com.power.common.model.CommonResult" //通用请求体
     }
 }
