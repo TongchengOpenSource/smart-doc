@@ -168,12 +168,13 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         String classAuthor = JavaClassUtil.getClassTagsValue(cls, DocTags.AUTHOR, Boolean.TRUE);
         List<JavaAnnotation> classAnnotations = this.getAnnotations(cls);
         String baseUrl = "";
+        String mediaType = null;
         for (JavaAnnotation annotation : classAnnotations) {
-            String annotationName = annotation.getType().getValue();
-            if (JAXRSAnnotations.JAX_PATH.equals(annotationName) ||
-                    DocGlobalConstants.JAX_PATH_FULLY.equals(annotationName)) {
+            String annotationName = annotation.getType().getFullyQualifiedName();
+            if (DocGlobalConstants.JAX_PATH_FULLY.equals(annotationName)) {
                 baseUrl = StringUtil.removeQuotes(DocUtil.getRequestHeaderValue(annotation));
             }
+            mediaType = DocUtil.handleContentType(mediaType, annotation, annotationName);
         }
 
         List<JavaMethod> methods = cls.getMethods();
@@ -201,7 +202,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             // new api doc
             //handle request mapping
             JaxrsPathMapping jaxPathMapping = new JaxrsPathHandler()
-                    .handle(projectBuilder, baseUrl, method);
+                    .handle(projectBuilder, baseUrl, method, mediaType);
             if (Objects.isNull(jaxPathMapping)) {
                 continue;
             }
@@ -249,6 +250,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             apiMethodDoc.setServerUrl(projectBuilder.getServerUrl());
             apiMethodDoc.setPath(jaxPathMapping.getShortUrl());
             apiMethodDoc.setDeprecated(jaxPathMapping.isDeprecated());
+            apiMethodDoc.setContentType(jaxPathMapping.getMediaType());
             List<JavaParameter> javaParameters = method.getParameters();
 
             TornaUtil.setTornaArrayTags(javaParameters, apiMethodDoc, docJavaMethod.getJavaMethod().getReturns(), apiConfig);
@@ -315,6 +317,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         }
         return methodDocList;
     }
+
 
     /**
      * @param method method
@@ -439,7 +442,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                     //default value
                     if (JAXRSAnnotations.JAX_DEFAULT_VALUE.equals(annotation.getType().getValue())) {
                         mockValue = StringUtil.removeQuotes(DocUtil.getRequestHeaderValue(annotation));
-                        mockValue = DocUtil.handleConstants(constantsMap, mockValue, true);
+                        mockValue = DocUtil.handleConstants(constantsMap, mockValue);
                     }
                     // path param
                     if (JAXRSAnnotations.JAX_PATH_PARAM.equals(annotationName)) {
@@ -683,7 +686,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                     if (paramAdded) {
                         continue;
                     }
-//file upload
+                    //file upload
                     if (JavaClassValidateUtil.isFile(gicTypeName)) {
                         apiMethodDoc.setContentType(FILE_CONTENT_TYPE);
                         FormData formData = new FormData();

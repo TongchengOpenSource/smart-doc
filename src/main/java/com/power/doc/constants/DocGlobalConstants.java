@@ -148,7 +148,7 @@ public interface DocGlobalConstants {
     String MODE_AND_VIEW_FULLY = "org.springframework.web.servlet.ModelAndView";
 
     String FEIGN_CLIENT_FULLY = "org.springframework.cloud.netflix.feign.FeignClient";
-    
+
     String FEIGN_CLIENT = "FeignClient";
 
     String MULTIPART_FILE_FULLY = "org.springframework.web.multipart.MultipartFile";
@@ -162,6 +162,8 @@ public interface DocGlobalConstants {
     String JAVA_MAP_FULLY = "java.util.Map";
 
     String JAVA_LIST_FULLY = "java.util.List";
+
+    String JAVA_DEPRECATED_FULLY = "java.lang.Deprecated";
 
     String DEFAULT_VERSION = "-";
 
@@ -233,7 +235,10 @@ public interface DocGlobalConstants {
 
     String PATH_DELIMITER = "/";
 
-
+    /**
+     * JAX-RS@PathParam
+     */
+    String JAX_PATH_PARAM_FULLY = "javax.ws.rs.PathParam";
     /**
      * JAX-RS@PATH
      */
@@ -243,7 +248,7 @@ public interface DocGlobalConstants {
      */
     String JAX_PRODUCES_FULLY = "javax.ws.rs.Produces";
     /**
-     * JAX-RS@Produces
+     * JAX-RS@Consumes
      */
     String JAX_CONSUMES_FULLY = "javax.ws.rs.Consumes";
     /**
