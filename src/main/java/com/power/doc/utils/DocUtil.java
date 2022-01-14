@@ -67,6 +67,8 @@ import java.util.UUID;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import static com.power.doc.constants.DocGlobalConstants.JSON_CONTENT_TYPE;
+
 /**
  * Description:
  * DocUtil
@@ -763,12 +765,23 @@ public class DocUtil {
         return fieldGicName;
     }
 
-    public static String handleConstants(Map<String, String> constantsMap, String name, boolean defaultValue) {
-        Object constantsValue = constantsMap.get(name);
+    public static String handleConstants(Map<String, String> constantsMap, String value) {
+        Object constantsValue = constantsMap.get(value);
         if (Objects.nonNull(constantsValue)) {
             return constantsValue.toString();
         }
-        return defaultValue ? "" : name;
+        return value;
+    }
+
+    public static String handleContentType(String mediaType, JavaAnnotation annotation, String annotationName) {
+        if (DocGlobalConstants.JAX_PRODUCES_FULLY.equals(annotationName)) {
+            String annotationValue = StringUtil.removeQuotes(DocUtil.getRequestHeaderValue(annotation));
+            if ("MediaType.APPLICATION_JSON".equals(annotationValue) || "application/json".equals(annotationValue)
+                    || "MediaType.TEXT_PLAIN".equals(annotationValue) || "text/plain".equals(annotationValue)) {
+                mediaType = JSON_CONTENT_TYPE;
+            }
+        }
+        return mediaType;
     }
 
 }

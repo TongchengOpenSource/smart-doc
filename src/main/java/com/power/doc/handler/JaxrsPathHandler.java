@@ -25,7 +25,6 @@ package com.power.doc.handler;
 import com.power.common.util.StringUtil;
 import com.power.common.util.UrlUtil;
 import com.power.doc.builder.ProjectDocConfigBuilder;
-import com.power.doc.constants.DocAnnotationConstants;
 import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.constants.JAXRSAnnotations;
 import com.power.doc.model.request.JaxrsPathMapping;
@@ -64,34 +63,29 @@ public class JaxrsPathHandler {
 
     Map<String, String> constantsMap;
 
-    public JaxrsPathMapping handle(ProjectDocConfigBuilder projectBuilder, String baseUrl, JavaMethod method) {
+    public JaxrsPathMapping handle(ProjectDocConfigBuilder projectBuilder, String baseUrl, JavaMethod method, String mediaType) {
 
         List<JavaAnnotation> annotations = method.getAnnotations();
         this.constantsMap = projectBuilder.getConstantsMap();
         String url;
         String methodType = null;
         String shortUrl = "";
-        String mediaType = null;
         String serverUrl = projectBuilder.getServerUrl();
         String contextPath = projectBuilder.getApiConfig().getPathPrefix();
         boolean deprecated = false;
         for (JavaAnnotation annotation : annotations) {
-            String annotationName = annotation.getType().getName();
-            if (JAXRSAnnotations.JAX_PRODUCES.equals(annotationName)) {
-                mediaType = DocUtil.getRequestHeaderValue(annotation);
-            }
+            String annotationName = annotation.getType().getFullyQualifiedName();
+            mediaType = DocUtil.handleContentType(mediaType, annotation, annotationName);
             // Deprecated annotation on method
-            if (DocAnnotationConstants.DEPRECATED.equals(annotationName)) {
+            if (DocGlobalConstants.JAVA_DEPRECATED_FULLY.equals(annotationName)) {
                 deprecated = true;
             }
-            if (JAXRSAnnotations.JAX_PATH.equals(annotationName) ||
-                    JAXRSAnnotations.JAX_PATH_PARAM.equals(annotationName) ||
-                    DocGlobalConstants.JAX_PATH_FULLY
-                            .equals(annotationName)) {
+            if (DocGlobalConstants.JAX_PATH_FULLY.equals(annotationName) ||
+                    DocGlobalConstants.JAX_PATH_PARAM_FULLY.equals(annotationName)) {
                 shortUrl = DocUtil.handleMappingValue(annotation);
             }
             if (ANNOTATION_NAMES.contains(annotationName)) {
-                methodType = annotationName;
+                methodType = annotation.getType().getName();
             }
         }
         // @deprecated tag on method
