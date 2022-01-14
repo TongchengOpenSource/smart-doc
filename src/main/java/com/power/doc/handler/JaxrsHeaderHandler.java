@@ -68,14 +68,14 @@ public class JaxrsHeaderHandler {
                 //Obtain header default value
                 if (JAXRSAnnotations.JAX_DEFAULT_VALUE.equals(annotation.getType().getValue())) {
                     defaultValue = StringUtil.removeQuotes(DocUtil.getRequestHeaderValue(annotation));
-                    defaultValue = DocUtil.handleConstants(constantsMap, defaultValue, true);
+                    defaultValue = DocUtil.handleConstants(constantsMap, defaultValue);
                 }
                 apiReqHeader.setValue(defaultValue);
 
                 // Obtain header value
                 if (JAXRSAnnotations.JAX_HEADER_PARAM.equals(annotation.getType().getValue())) {
                     String name = StringUtil.removeQuotes(DocUtil.getRequestHeaderValue(annotation));
-                    name = DocUtil.handleConstants(constantsMap, name, false);
+                    name = DocUtil.handleConstants(constantsMap, name);
                     apiReqHeader.setName(name);
 
                     String typeName = javaParameter.getType().getValue().toLowerCase();
