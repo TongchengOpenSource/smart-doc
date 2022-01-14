@@ -30,9 +30,13 @@ import com.power.doc.constants.HighlightStyle;
 import com.power.doc.model.*;
 import com.power.doc.utils.JavaClassUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
+import com.thoughtworks.qdox.directorywalker.DirectoryScanner;
+import com.thoughtworks.qdox.directorywalker.SuffixFilter;
 import com.thoughtworks.qdox.model.JavaClass;
+import com.thoughtworks.qdox.parser.ParseException;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
@@ -120,10 +124,22 @@ public class ProjectDocConfigBuilder {
                 String strPath = path.getPath();
                 if (StringUtil.isNotEmpty(strPath)) {
                     strPath = strPath.replace("\\", "/");
-                    builder.addSourceTree(new File(strPath));
+                    loadJavaSource(strPath, builder);
                 }
             }
         }
+    }
+
+    private void loadJavaSource(String strPath, JavaProjectBuilder builder){
+        DirectoryScanner scanner = new DirectoryScanner(new File(strPath));
+        scanner.addFilter(new SuffixFilter(".java"));
+        scanner.scan(currentFile -> {
+            try {
+                builder.addSource(currentFile);
+            } catch (ParseException | IOException e) {
+                log.warning(e.getMessage());
+            }
+        });
     }
 
     private void initClassFilesMap() {
