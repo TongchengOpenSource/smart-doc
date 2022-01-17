@@ -145,7 +145,14 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
         tpl.binding(TemplateVariable.DICT_LIST.getVariable(), apiDocDictList);
 
         boolean onlyHasDefaultGroup = apiDocList.stream().allMatch(doc -> Objects.equals(TornaConstants.DEFAULT_GROUP_CODE, doc.getGroup()));
-        int codeIndex = onlyHasDefaultGroup ? apiDocList.get(0).getChildrenApiDocs().size(): apiDocList.size();
+        int codeIndex = 0;
+        if (onlyHasDefaultGroup) {
+            if (apiDocList.size() > 0) {
+                codeIndex = apiDocList.get(0).getChildrenApiDocs().size();
+            }
+        } else {
+            codeIndex = apiDocList.size();
+        }
         tpl.binding(TemplateVariable.API_DOC_LIST_ONLY_HAS_DEFAULT_GROUP.getVariable(), onlyHasDefaultGroup);
 
         if (CollectionUtil.isNotEmpty(errorCodeList)) {
@@ -175,12 +182,19 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
         }
 
         boolean isOnlyDefaultGroup = apiDocList.size() == 1;
-
         Map<String, String> titleMap = setDirectoryLanguageVariable(config, tpl);
         // set error code
         if (CollectionUtil.isNotEmpty(errorCodeList)) {
             ApiDoc apiDoc1 = new ApiDoc();
-            apiDoc1.setOrder((isOnlyDefaultGroup ? apiDocs.get(0).getChildrenApiDocs().size() : apiDocs.size()) + 1);
+            int codeIndex = 0;
+            if (isOnlyDefaultGroup) {
+                if (apiDocs.size() > 0) {
+                    codeIndex = apiDocs.get(0).getChildrenApiDocs().size();
+                }
+            } else {
+                codeIndex = apiDocList.size();
+            }
+            apiDoc1.setOrder(codeIndex + 1);
             apiDoc1.setDesc(titleMap.get(TemplateVariable.ERROR_LIST_TITLE.getVariable()));
             apiDoc1.setList(new ArrayList<>(0));
             apiDoc1.setLink("error_code_list");
@@ -196,7 +210,15 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
         List<ApiDocDict> apiDocDictList = DocUtil.buildDictionary(config, javaProjectBuilder);
         if (CollectionUtil.isNotEmpty(apiDocDictList)) {
             ApiDoc apiDoc1 = new ApiDoc();
-            apiDoc1.setOrder((isOnlyDefaultGroup ? apiDocs.get(0).getChildrenApiDocs().size() : apiDocs.size()) + 1);
+            int codeIndex = 0;
+            if (isOnlyDefaultGroup) {
+                if (apiDocs.size() > 0) {
+                    codeIndex = apiDocs.get(0).getChildrenApiDocs().size();
+                }
+            } else {
+                codeIndex = apiDocList.size();
+            }
+            apiDoc1.setOrder(codeIndex + 1);
             apiDoc1.setLink("dict_list");
             apiDoc1.setAlias("dict");
             apiDoc1.setDesc(titleMap.get(TemplateVariable.DICT_LIST_TITLE.getVariable()));
@@ -221,7 +243,9 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
             apiDoc1.setChildrenApiDocs(childrenApiDocs);
             apiDoc1.setList(methodDocs);
             if (isOnlyDefaultGroup) {
-                apiDocs.get(0).getChildrenApiDocs().add(apiDoc1);
+                if (apiDocs.size() > 0) {
+                    apiDocs.get(0).getChildrenApiDocs().add(apiDoc1);
+                }
             } else {
                 apiDocs.add(apiDoc1);
             }
