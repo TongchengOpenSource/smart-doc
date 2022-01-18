@@ -56,7 +56,42 @@ public SimpleEnum resp(@RequestBody Pageable pageable){
 @param pageable com.power.doc.model.PageRequestDto<com.power.doc.model.User>
 ```
 > 尽量少采用这种参数替换的形式，代码书写很不方便，建议直接自己定义对象作为入参
+## 1.2 @apiNote
+@apiNote是java新增的文档tag,smart-doc使用@apiNote的注释作为方法的详细描述，因此可以使用apiNote来写一段长注释。如果一个方法不写 @apiNote注释说明，
+smart-doc直接使用方法默认注释填充。@apiNote详细使用参考如下：
 
+```java
+/**
+ * 查询用户信息
+ * @param name 用户名
+ * @apiNote 通过用户的名称去查询到用户的详细信息                
+ * @return
+ */
+@PostMapping(value = "/query")
+public String resp(@RequestBody String name){
+    return null;
+}
+```
+## 1.3 @deprecated
+注意注解是@Deprecated，首字母是大写，这里说的是javadoc tag里面的。
+官方文档是这样描述的
+```shell
+Adds a comment indicating that this API should no longer be used.
+```
+意思就是在注释里使用@deprecated标记该api已经弃用。
+```java
+/**
+ * 查询用户信息
+ * @param name 用户名
+ * @apiNote 通过用户的名称去查询到用户的详细信息  
+ * @deprecated
+ * @return
+ */
+@PostMapping(value = "/query")
+public String resp(@RequestBody String name){
+    return null;
+}
+```
 # smart-doc自定义注释tag
 
 tag名称 | 描述
