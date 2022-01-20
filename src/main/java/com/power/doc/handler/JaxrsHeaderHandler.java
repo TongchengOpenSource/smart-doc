@@ -39,6 +39,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+
 /**
  * @author Zxq
  */
@@ -65,15 +66,16 @@ public class JaxrsHeaderHandler {
 
             String defaultValue = "";
             for (JavaAnnotation annotation : annotations) {
+                String annotationName = annotation.getType().getFullyQualifiedName();
                 //Obtain header default value
-                if (JAXRSAnnotations.JAX_DEFAULT_VALUE.equals(annotation.getType().getValue())) {
+                if (JAXRSAnnotations.JAX_DEFAULT_VALUE_FULLY.equals(annotationName)) {
                     defaultValue = StringUtil.removeQuotes(DocUtil.getRequestHeaderValue(annotation));
                     defaultValue = DocUtil.handleConstants(constantsMap, defaultValue);
                 }
                 apiReqHeader.setValue(defaultValue);
 
                 // Obtain header value
-                if (JAXRSAnnotations.JAX_HEADER_PARAM.equals(annotation.getType().getValue())) {
+                if (JAXRSAnnotations.JAX_HEADER_PARAM_FULLY.equals(annotationName)) {
                     String name = StringUtil.removeQuotes(DocUtil.getRequestHeaderValue(annotation));
                     name = DocUtil.handleConstants(constantsMap, name);
                     apiReqHeader.setName(name);

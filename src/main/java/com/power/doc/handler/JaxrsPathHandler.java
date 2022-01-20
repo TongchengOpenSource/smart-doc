@@ -54,11 +54,9 @@ public class JaxrsPathHandler {
      * ANNOTATION_NAMES
      */
     private static final Set<String> ANNOTATION_NAMES = Collections.unmodifiableSet(new HashSet<>(
-            Arrays.asList(JAXRSAnnotations.DELETE,
-                    DocGlobalConstants.JAXB_DELETE_FULLY,
-                    JAXRSAnnotations.PUT, DocGlobalConstants.JAX_PUT_FULLY,
-                    JAXRSAnnotations.GET, DocGlobalConstants.JAX_GET_FULLY,
-                    JAXRSAnnotations.POST, DocGlobalConstants.JAX_POST_FULLY
+            Arrays.asList(
+                    JAXRSAnnotations.JAXB_DELETE_FULLY, JAXRSAnnotations.JAX_PUT_FULLY,
+                    JAXRSAnnotations.JAX_GET_FULLY, JAXRSAnnotations.JAX_POST_FULLY
             )));
 
     Map<String, String> constantsMap;
@@ -67,7 +65,6 @@ public class JaxrsPathHandler {
 
         List<JavaAnnotation> annotations = method.getAnnotations();
         this.constantsMap = projectBuilder.getConstantsMap();
-        String url;
         String methodType = null;
         String shortUrl = "";
         String serverUrl = projectBuilder.getServerUrl();
@@ -80,8 +77,8 @@ public class JaxrsPathHandler {
             if (DocGlobalConstants.JAVA_DEPRECATED_FULLY.equals(annotationName)) {
                 deprecated = true;
             }
-            if (DocGlobalConstants.JAX_PATH_FULLY.equals(annotationName) ||
-                    DocGlobalConstants.JAX_PATH_PARAM_FULLY.equals(annotationName)) {
+            if (JAXRSAnnotations.JAX_PATH_FULLY.equals(annotationName)
+                    || JAXRSAnnotations.JAX_PATH_PARAM_FULLY.equals(annotationName)) {
                 shortUrl = DocUtil.handleMappingValue(annotation);
             }
             if (ANNOTATION_NAMES.contains(annotationName)) {

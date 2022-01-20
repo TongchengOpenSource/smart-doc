@@ -12,39 +12,29 @@ public final class JAXRSAnnotations {
     }
 
     /**
-     * JAX-RS@PATH
-     */
-    public static final String JAX_PATH = "Path";
-    /**
-     * JAX-RS@Produces
-     */
-    public static final String JAX_PRODUCES = "Produces";
-
-    /**
      * JAX-RS@DefaultValue
      */
-    public static final String JAX_DEFAULT_VALUE = "DefaultValue";
+    public static final String JAX_DEFAULT_VALUE_FULLY = "javax.ws.rs.DefaultValue";
     /**
      * JAX-RS@HeaderParam
      */
-    public static final String JAX_HEADER_PARAM = "HeaderParam";
+    public static final String JAX_HEADER_PARAM_FULLY = "javax.ws.rs.HeaderParam";
     /**
      * JAX-RS@PathParam
      */
-    public static final String JAX_PATH_PARAM = "PathParam";
+    public static final String JAX_PATH_PARAM_FULLY = "javax.ws.rs.PathParam";
     /**
-     * JAX-RS@QueryParam
+     * JAX-RS@PATH
      */
-    public static final String JAX_QUERY_PARAM = "QueryParam";
+    public static final String JAX_PATH_FULLY = "javax.ws.rs.Path";
     /**
-     * JAX-RS@FormParam
+     * JAX-RS@Produces
      */
-    public static final String JAX_FORM_PARAM = "FormParam";
+    public static final String JAX_PRODUCES_FULLY = "javax.ws.rs.Produces";
     /**
      * JAX-RS@Consumes
      */
-    public static final String JAX_CONSUMES = "Consumes";
-
+    public static final String JAX_CONSUMES_FULLY = "javax.ws.rs.Consumes";
     /**
      * JAX-RS@GET
      */
@@ -61,17 +51,22 @@ public final class JAXRSAnnotations {
      * JAX-RS@DELETE
      */
     public static final String DELETE = "DELETE";
+
     /**
-     * JAX-RS@HEAD
+     * JAX-RS@GET
      */
-    public static final String HEAD = "HEAD";
+    public static final String JAX_GET_FULLY = "javax.ws.rs.GET";
     /**
-     * JAX-RS@PATCH
+     * JAX-RS@POST
      */
-    public static final String PATCH = "PATCH";
+    public static final String JAX_POST_FULLY = "javax.ws.rs.POST";
     /**
-     * JAX-RS@OPTIONS
+     * JAX-RS@PUT
      */
-    public static final String OPTIONS = "OPTIONS";
+    public static final String JAX_PUT_FULLY = "javax.ws.rs.PUT";
+    /**
+     * JAX-RS@DELETE
+     */
+    public static final String JAXB_DELETE_FULLY = "javax.ws.rs.DELETE";
 
 }
