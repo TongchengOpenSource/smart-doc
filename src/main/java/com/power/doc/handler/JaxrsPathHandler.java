@@ -78,7 +78,8 @@ public class JaxrsPathHandler {
                 deprecated = true;
             }
             if (JAXRSAnnotations.JAX_PATH_FULLY.equals(annotationName)
-                    || JAXRSAnnotations.JAX_PATH_PARAM_FULLY.equals(annotationName)) {
+                    || JAXRSAnnotations.JAX_PATH_PARAM_FULLY.equals(annotationName)
+                    || JAXRSAnnotations.JAXB_REST_PATH_FULLY.equals(annotationName)) {
                 shortUrl = DocUtil.handleMappingValue(annotation);
             }
             if (ANNOTATION_NAMES.contains(annotationName)) {

@@ -443,7 +443,8 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                         mockValue = DocUtil.handleConstants(constantsMap, mockValue);
                     }
                     // path param
-                    if (JAXRSAnnotations.JAX_PATH_PARAM_FULLY.equals(annotationName)) {
+                    if (JAXRSAnnotations.JAX_PATH_PARAM_FULLY.equals(annotationName)
+                            || JAXRSAnnotations.JAXB_REST_PATH_FULLY.equals(annotationName)) {
                         isPathVariable = true;
                         strRequired = "true";
                     }
@@ -672,7 +673,8 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             if (CollectionUtil.isNotEmpty(annotations)) {
                 for (JavaAnnotation annotation : annotations) {
                     String annotationName = annotation.getType().getFullyQualifiedName();
-                    if (JAXRSAnnotations.JAX_PATH_PARAM_FULLY.equals(annotationName)) {
+                    if (JAXRSAnnotations.JAX_PATH_PARAM_FULLY.equals(annotationName)
+                            || JAXRSAnnotations.JAXB_REST_PATH_FULLY.equals(annotationName)) {
                         if (javaClass.isEnum()) {
                             Object value = JavaClassUtil.getEnumValue(javaClass, Boolean.TRUE);
                             mockValue = StringUtil.removeQuotes(String.valueOf(value));

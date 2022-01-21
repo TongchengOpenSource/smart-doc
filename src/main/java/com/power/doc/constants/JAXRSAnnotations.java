@@ -68,5 +68,9 @@ public final class JAXRSAnnotations {
      * JAX-RS@DELETE
      */
     public static final String JAXB_DELETE_FULLY = "javax.ws.rs.DELETE";
+    /**
+     * JAX-RS@RestPath
+     */
+    public static final String JAXB_REST_PATH_FULLY = "org.jboss.resteasy.reactive.RestPath";
 
 }
