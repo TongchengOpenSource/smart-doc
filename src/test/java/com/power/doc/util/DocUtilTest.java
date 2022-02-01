@@ -26,8 +26,7 @@ public class DocUtilTest {
         Map<String, String> params = new HashMap<>();
         params.put("name", "dd");
         params.put("age", "0");
-        String url = "http://localhost:8080/test/{name}";
-        String url2 = "http://localhost:8080/user/getUserById/{name};\thttp://localhost:8080/user/findUserById/{name}";
+        String url2 = "/user/getUserById/{name}/{age}";
         String me = DocUtil.formatAndRemove(url2, params);
         System.out.println(params.size());
         System.out.println(me);

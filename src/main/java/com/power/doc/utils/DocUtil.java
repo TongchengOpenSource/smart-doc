@@ -22,7 +22,7 @@
  */
 package com.power.doc.utils;
 
-import com.github.javafaker.Faker;
+import net.datafaker.Faker;
 import com.mifmif.common.regex.Generex;
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.DateTimeUtil;
@@ -78,7 +78,6 @@ import static com.power.doc.constants.DocGlobalConstants.JSON_CONTENT_TYPE;
 public class DocUtil {
 
     private static Faker faker = new Faker(new Locale("en-US"));
-    //private static Faker faker = new Faker(new Locale("smart-doc_language"));
     private static Faker enFaker = new Faker(new Locale("en-US"));
 
     private static String CLASS_PATTERN = "^([A-Za-z]{1}[A-Za-z\\d_]*\\.)+[A-Za-z][A-Za-z\\d_]*$";
@@ -290,9 +289,6 @@ public class DocUtil {
                 String pathParam = strArr[i];
                 if (pathParam.contains(":")) {
                     int length = pathParam.length();
-                    if (length < 1) {
-                        length = 1;
-                    }
                     String reg = pathParam.substring(pathParam.indexOf(":") + 1, length - 1);
                     Generex generex = new Generex(reg);
                     // Generate random String
