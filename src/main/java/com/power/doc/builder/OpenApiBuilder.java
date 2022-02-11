@@ -416,9 +416,9 @@ public class OpenApiBuilder {
                 schema.put("format", "binary");
             } else if ("enum".equals(apiParam.getType())) {
                 schema.put("enum", apiParam.getEnumValues());
-            }else if("array".equals(apiParam.getType())) {
-                schema.put("type","array");
-                schema.put("items",new HashMap<>());
+            } else if ("array".equals(apiParam.getType())) {
+                schema.put("type", "array");
+                schema.put("items", new HashMap<>());
             }
         } else {
             schema.put("format", "int16".equals(apiParam.getType()) ? "int32" : apiParam.getType());
@@ -480,18 +480,20 @@ public class OpenApiBuilder {
                     apiMethodDocs.forEach(
                             method -> {
                                 //request components
+                                String requestSchema = method.getPath().replaceAll(PATH_REGEX, "_") + "request";
                                 List<ApiParam> requestParams = method.getRequestParams();
                                 if (CollectionUtil.isNotEmpty(requestParams)) {
-                                    Map<String, Object> prop = buildProperties(requestParams);
+                                    Map<String, Object> prop = buildProperties(requestParams, requestSchema);
                                     if (Objects.nonNull(prop) && prop.size() > 0) {
-                                        component.put(method.getPath().replaceAll(PATH_REGEX, "_") + "request", buildProperties(requestParams));
+                                        component.put(requestSchema, buildProperties(requestParams, requestSchema));
                                     }
                                 } else {
-                                    component.put(method.getPath().replaceAll(PATH_REGEX, "_") + "request", new HashMap<>(0));
+                                    component.put(requestSchema, new HashMap<>(0));
                                 }
                                 //response components
                                 List<ApiParam> responseParams = method.getResponseParams();
-                                component.put(method.getPath().replaceAll(PATH_REGEX, "_") + "response", buildProperties(responseParams));
+                                String schemaName = method.getPath().replaceAll(PATH_REGEX, "_") + "response";
+                                component.put(schemaName, buildProperties(responseParams, schemaName));
                             }
                     );
                 }
@@ -503,10 +505,11 @@ public class OpenApiBuilder {
     /**
      * component schema properties
      *
-     * @param apiParam list of ApiParam
+     * @param apiParam   list of ApiParam
+     * @param schemaName component schema name
      * @return
      */
-    private static Map<String, Object> buildProperties(List<ApiParam> apiParam) {
+    private static Map<String, Object> buildProperties(List<ApiParam> apiParam, String schemaName) {
         Map<String, Object> component = new HashMap<>();
         Map<String, Object> propertiesData = new LinkedHashMap<>();
         List<String> requiredList = new ArrayList<>();
@@ -523,7 +526,7 @@ public class OpenApiBuilder {
                     continue;
                 }
                 String field = param.getField();
-                propertiesData.put(field, buildPropertiesData(param));
+                propertiesData.put(field, buildPropertiesData(param, schemaName));
             }
             if (!propertiesData.isEmpty()) {
                 component.put("properties", propertiesData);
@@ -544,7 +547,7 @@ public class OpenApiBuilder {
      * @param apiParam ApiParam
      * @return
      */
-    private static Map<String, Object> buildPropertiesData(ApiParam apiParam) {
+    private static Map<String, Object> buildPropertiesData(ApiParam apiParam, String schemaName) {
         Map<String, Object> propertiesData = new HashMap<>();
         String openApiType = DocUtil.javaTypeToOpenApiTypeConvert(apiParam.getType());
         //array object file map
@@ -562,16 +565,20 @@ public class OpenApiBuilder {
             if (apiParam.getChildren() != null) {
                 propertiesData.put("type", "object");
                 propertiesData.put("description", apiParam.getDesc() + "(object)");
-                propertiesData.put("properties", buildProperties(apiParam.getChildren()).get("properties"));
-                propertiesData.put("requires", buildProperties(apiParam.getChildren()).get("requires"));
+                propertiesData.put("properties", buildProperties(apiParam.getChildren(), schemaName).get("properties"));
+                propertiesData.put("requires", buildProperties(apiParam.getChildren(), schemaName).get("requires"));
             }
         }
         if ("array".equals(apiParam.getType())) {
-            if (apiParam.getChildren() != null) {
+            if (CollectionUtil.isNotEmpty(apiParam.getChildren())) {
                 propertiesData.put("type", "array");
-                propertiesData.put("items", buildProperties(apiParam.getChildren()));
+                propertiesData.put("items", buildProperties(apiParam.getChildren(), schemaName));
+            } else {
+                propertiesData.put("type", "array");
+                Map<String, String> ref = new HashMap<>();
+                ref.put("$ref", "#/components/schemas/" + schemaName);
+                propertiesData.put("items", ref);
             }
-
         }
         if ("file".equals(apiParam.getType())) {
             propertiesData.put("type", "string");
