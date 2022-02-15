@@ -26,6 +26,7 @@ import com.power.common.util.CollectionUtil;
 import com.power.common.util.FileUtil;
 import com.power.common.util.StringUtil;
 import com.power.doc.constants.DocGlobalConstants;
+import com.power.doc.constants.Methods;
 import com.power.doc.factory.BuildTemplateFactory;
 import com.power.doc.model.*;
 import com.power.doc.model.postman.InfoBean;
@@ -61,7 +62,7 @@ public class PostmanJsonBuilder {
      */
     public static void buildPostmanCollection(ApiConfig config) {
         DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
-        builderTemplate.checkAndInit(config,false);
+        builderTemplate.checkAndInit(config, false);
         JavaProjectBuilder javaProjectBuilder = new JavaProjectBuilder();
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
         postManCreate(config, configBuilder);
@@ -75,7 +76,7 @@ public class PostmanJsonBuilder {
      */
     public static void buildPostmanCollection(ApiConfig config, JavaProjectBuilder projectBuilder) {
         DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
-        builderTemplate.checkAndInit(config,false);
+        builderTemplate.checkAndInit(config, false);
         config.setParamsDataToTree(false);
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, projectBuilder);
         postManCreate(config, configBuilder);
@@ -120,7 +121,9 @@ public class PostmanJsonBuilder {
         requestBean.setHeader(buildHeaderBeanList(apiMethodDoc));
 
         requestBean.setBody(buildBodyBean(apiMethodDoc));
-        requestBean.setUrl(buildUrlBean(apiMethodDoc));
+        if (Methods.GET.getValue().equals(requestBean.getMethod())) {
+            requestBean.setUrl(buildUrlBean(apiMethodDoc));
+        }
 
         item.setRequest(requestBean);
         return item;
