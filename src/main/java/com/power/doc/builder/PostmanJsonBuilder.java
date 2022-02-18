@@ -26,9 +26,12 @@ import com.power.common.util.CollectionUtil;
 import com.power.common.util.FileUtil;
 import com.power.common.util.StringUtil;
 import com.power.doc.constants.DocGlobalConstants;
-import com.power.doc.constants.Methods;
 import com.power.doc.factory.BuildTemplateFactory;
-import com.power.doc.model.*;
+import com.power.doc.model.ApiConfig;
+import com.power.doc.model.ApiDoc;
+import com.power.doc.model.ApiMethodDoc;
+import com.power.doc.model.ApiParam;
+import com.power.doc.model.ApiReqParam;
 import com.power.doc.model.postman.InfoBean;
 import com.power.doc.model.postman.ItemBean;
 import com.power.doc.model.postman.RequestItem;
@@ -121,9 +124,7 @@ public class PostmanJsonBuilder {
         requestBean.setHeader(buildHeaderBeanList(apiMethodDoc));
 
         requestBean.setBody(buildBodyBean(apiMethodDoc));
-        if (Methods.GET.getValue().equals(requestBean.getMethod())) {
-            requestBean.setUrl(buildUrlBean(apiMethodDoc));
-        }
+        requestBean.setUrl(buildUrlBean(apiMethodDoc));
 
         item.setRequest(requestBean);
         return item;
