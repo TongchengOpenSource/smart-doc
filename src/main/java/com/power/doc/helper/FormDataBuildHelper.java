@@ -38,7 +38,11 @@ import com.power.doc.utils.JavaClassValidateUtil;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaField;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author yu 2019/12/25.
@@ -55,7 +59,9 @@ public class FormDataBuildHelper {
      * @param pre             pre
      * @return list of FormData
      */
-    public static List<FormData> getFormData(String className, Map<String, String> registryClasses, int counter, ProjectDocConfigBuilder builder, String pre) {
+    public static List<FormData> getFormData(String className, Map<String, String> registryClasses, int counter
+            , ProjectDocConfigBuilder builder, String pre) {
+
         if (StringUtil.isEmpty(className)) {
             throw new RuntimeException("Class name can't be null or empty.");
         }

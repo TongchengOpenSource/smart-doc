@@ -34,7 +34,23 @@ import org.beetl.core.Template;
 
 import java.util.List;
 
-import static com.power.doc.constants.DocGlobalConstants.*;
+import static com.power.doc.constants.DocGlobalConstants.ALL_IN_ONE_CSS;
+import static com.power.doc.constants.DocGlobalConstants.ALL_IN_ONE_CSS_OUT;
+import static com.power.doc.constants.DocGlobalConstants.ALL_IN_ONE_HTML_TPL;
+import static com.power.doc.constants.DocGlobalConstants.DEBUG_JS_OUT;
+import static com.power.doc.constants.DocGlobalConstants.DEBUG_JS_TPL;
+import static com.power.doc.constants.DocGlobalConstants.DEBUG_PAGE_ALL_TPL;
+import static com.power.doc.constants.DocGlobalConstants.DEBUG_PAGE_SINGLE_TPL;
+import static com.power.doc.constants.DocGlobalConstants.FILE_SEPARATOR;
+import static com.power.doc.constants.DocGlobalConstants.FONT_STYLE;
+import static com.power.doc.constants.DocGlobalConstants.HIGH_LIGHT_JS;
+import static com.power.doc.constants.DocGlobalConstants.HIGH_LIGHT_STYLE;
+import static com.power.doc.constants.DocGlobalConstants.JQUERY;
+import static com.power.doc.constants.DocGlobalConstants.SEARCH_ALL_JS_TPL;
+import static com.power.doc.constants.DocGlobalConstants.SEARCH_JS_TPL;
+import static com.power.doc.constants.DocGlobalConstants.SINGLE_DICT_HTML_TPL;
+import static com.power.doc.constants.DocGlobalConstants.SINGLE_ERROR_HTML_TPL;
+import static com.power.doc.constants.DocGlobalConstants.SINGLE_INDEX_HTML_TPL;
 
 /**
  * @author yu 2019/9/20.
@@ -65,7 +81,7 @@ public class HtmlApiDocBuilder {
      */
     public static void buildApiDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
         DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
-        builderTemplate.checkAndInit(config,false);
+        builderTemplate.checkAndInit(config, false);
         config.setParamsDataToTree(false);
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
         IDocBuildTemplate docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework());
@@ -123,9 +139,8 @@ public class HtmlApiDocBuilder {
      * @param template           template
      * @param indexHtml          indexHtml
      */
-    private static void buildDoc(DocBuilderTemplate builderTemplate, List<ApiDoc> apiDocList,
-                                 ApiConfig config, JavaProjectBuilder javaProjectBuilder,
-                                 String template, String indexHtml) {
+    private static void buildDoc(DocBuilderTemplate builderTemplate, List<ApiDoc> apiDocList, ApiConfig config
+            , JavaProjectBuilder javaProjectBuilder, String template, String indexHtml) {
         FileUtil.mkdirs(config.getOutPath());
         int index = 0;
         for (ApiDoc doc : apiDocList) {
