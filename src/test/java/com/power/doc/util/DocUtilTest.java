@@ -31,7 +31,7 @@ public class DocUtilTest {
         String me = DocUtil.formatAndRemove(url2, params);
 
         System.out.println(params.size());
-        System.out.println(me);*/
+        System.out.println(me);
     }
 
     @Test
