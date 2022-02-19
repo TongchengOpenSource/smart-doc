@@ -59,7 +59,7 @@ public class SolonRequestMappingHandler {
     public RequestMapping handle(ProjectDocConfigBuilder projectBuilder, String controllerBaseUrl, JavaMethod method, Map<String, String> constantsMap) {
         List<JavaAnnotation> annotations = method.getAnnotations();
         String url;
-        String methodType = null;
+        String methodType = "GET";//默认为get
         String shortUrl = null;
         String mediaType = null;
         String serverUrl = projectBuilder.getServerUrl();
@@ -74,35 +74,28 @@ public class SolonRequestMappingHandler {
             if (DocAnnotationConstants.DEPRECATED.equals(annotationName)) {
                 deprecated = true;
             }
+
             if (SolonAnnotations.REQUEST_MAPPING.equals(annotationName) || SolonAnnotations.REQUEST_MAPPING_FULLY.equals(annotationName)) {
                 shortUrl = DocUtil.handleMappingValue(annotation);
-                Object nameParam = annotation.getNamedParameter("method");
-                if (Objects.nonNull(nameParam)) {
-                    methodType = nameParam.toString();
-                    methodType = DocUtil.handleHttpMethod(methodType);
-                } else {
-                    methodType = Methods.GET.getValue();
-                }
-            } else if (SolonAnnotations.GET_MAPPING.equals(annotationName) || SolonAnnotations.GET_MAPPING_FULLY.equals(annotationName)) {
-                shortUrl = DocUtil.handleMappingValue(annotation);
+            }
+
+            if (SolonAnnotations.GET_MAPPING.equals(annotationName) || SolonAnnotations.GET_MAPPING_FULLY.equals(annotationName)) {
                 methodType = Methods.GET.getValue();
             } else if (SolonAnnotations.POST_MAPPING.equals(annotationName) || SolonAnnotations.POST_MAPPING_FULLY.equals(annotationName)) {
-                shortUrl = DocUtil.handleMappingValue(annotation);
                 methodType = Methods.POST.getValue();
             } else if (SolonAnnotations.PUT_MAPPING.equals(annotationName) || SolonAnnotations.PUT_MAPPING_FULLY.equals(annotationName)) {
-                shortUrl = DocUtil.handleMappingValue(annotation);
                 methodType = Methods.PUT.getValue();
             } else if (SolonAnnotations.PATCH_MAPPING.equals(annotationName) || SolonAnnotations.PATCH_MAPPING_FULLY.equals(annotationName)) {
-                shortUrl = DocUtil.handleMappingValue(annotation);
                 methodType = Methods.PATCH.getValue();
             } else if (SolonAnnotations.DELETE_MAPPING.equals(annotationName) || SolonAnnotations.DELETE_MAPPING_FULLY.equals(annotationName)) {
-                shortUrl = DocUtil.handleMappingValue(annotation);
                 methodType = Methods.DELETE.getValue();
             }
         }
+
         if (Objects.nonNull(method.getTagByName(DEPRECATED))) {
             deprecated = true;
         }
+
         if (Objects.nonNull(shortUrl)) {
             if (Objects.nonNull(method.getTagByName(IGNORE))) {
                 return null;
