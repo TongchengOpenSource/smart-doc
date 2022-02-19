@@ -67,16 +67,18 @@ public class SolonRequestMappingHandler {
         boolean deprecated = false;
         for (JavaAnnotation annotation : annotations) {
             String annotationName = annotation.getType().getName();
-            Object produces = annotation.getNamedParameter("produces");
-            if (Objects.nonNull(produces)) {
-                mediaType = produces.toString();
-            }
+
             if (DocAnnotationConstants.DEPRECATED.equals(annotationName)) {
                 deprecated = true;
             }
 
             if (SolonAnnotations.REQUEST_MAPPING.equals(annotationName) || SolonAnnotations.REQUEST_MAPPING_FULLY.equals(annotationName)) {
                 shortUrl = DocUtil.handleMappingValue(annotation);
+
+                Object produces = annotation.getNamedParameter("produces");
+                if (Objects.nonNull(produces)) {
+                    mediaType = produces.toString();
+                }
             }
 
             if (SolonAnnotations.GET_MAPPING.equals(annotationName) || SolonAnnotations.GET_MAPPING_FULLY.equals(annotationName)) {
