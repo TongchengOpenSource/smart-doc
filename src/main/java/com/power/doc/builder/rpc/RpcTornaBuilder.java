@@ -36,7 +36,6 @@ import com.power.doc.model.torna.DubboInfo;
 import com.power.doc.model.torna.TornaApi;
 import com.power.doc.model.torna.TornaDic;
 import com.power.doc.template.IDocBuildTemplate;
-import com.power.doc.template.RpcDocBuildTemplate;
 import com.power.doc.utils.DocUtil;
 import com.power.doc.utils.TornaUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;

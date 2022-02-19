@@ -22,30 +22,73 @@
  */
 package com.power.doc.template;
 
-import com.power.common.util.*;
+import com.power.common.util.CollectionUtil;
+import com.power.common.util.RandomUtil;
+import com.power.common.util.StringUtil;
+import com.power.common.util.UrlUtil;
+import com.power.common.util.ValidateUtil;
 import com.power.doc.builder.ProjectDocConfigBuilder;
-import com.power.doc.constants.*;
+import com.power.doc.constants.ApiReqParamInTypeEnum;
+import com.power.doc.constants.DocAnnotationConstants;
+import com.power.doc.constants.DocGlobalConstants;
+import com.power.doc.constants.DocTags;
+import com.power.doc.constants.Methods;
+import com.power.doc.constants.SpringMvcAnnotations;
+import com.power.doc.constants.SpringMvcRequestAnnotationsEnum;
 import com.power.doc.handler.SpringMVCRequestHeaderHandler;
 import com.power.doc.handler.SpringMVCRequestMappingHandler;
 import com.power.doc.helper.FormDataBuildHelper;
 import com.power.doc.helper.JsonBuildHelper;
 import com.power.doc.helper.ParamsBuildHelper;
-import com.power.doc.model.*;
+import com.power.doc.model.ApiConfig;
+import com.power.doc.model.ApiDoc;
+import com.power.doc.model.ApiMethodDoc;
+import com.power.doc.model.ApiMethodReqParam;
+import com.power.doc.model.ApiParam;
+import com.power.doc.model.ApiReqParam;
+import com.power.doc.model.DocJavaMethod;
+import com.power.doc.model.FormData;
 import com.power.doc.model.request.ApiRequestExample;
 import com.power.doc.model.request.CurlRequest;
 import com.power.doc.model.request.RequestMapping;
-import com.power.doc.utils.*;
-import com.thoughtworks.qdox.model.*;
+import com.power.doc.utils.ApiParamTreeUtil;
+import com.power.doc.utils.CurlUtil;
+import com.power.doc.utils.DocClassUtil;
+import com.power.doc.utils.DocPathUtil;
+import com.power.doc.utils.DocUtil;
+import com.power.doc.utils.JavaClassUtil;
+import com.power.doc.utils.JavaClassValidateUtil;
+import com.power.doc.utils.JsonUtil;
+import com.power.doc.utils.OpenApiSchemaUtil;
+import com.power.doc.utils.TornaUtil;
+import com.thoughtworks.qdox.model.DocletTag;
+import com.thoughtworks.qdox.model.JavaAnnotation;
+import com.thoughtworks.qdox.model.JavaClass;
+import com.thoughtworks.qdox.model.JavaMethod;
+import com.thoughtworks.qdox.model.JavaParameter;
+import com.thoughtworks.qdox.model.JavaType;
 import com.thoughtworks.qdox.model.expression.AnnotationValue;
 import org.apache.commons.lang3.ArrayUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.power.doc.constants.DocGlobalConstants.*;
+import static com.power.doc.constants.DocGlobalConstants.FILE_CONTENT_TYPE;
+import static com.power.doc.constants.DocGlobalConstants.JSON_CONTENT_TYPE;
 import static com.power.doc.constants.DocTags.IGNORE;
 import static com.power.doc.constants.DocTags.IGNORE_REQUEST_BODY_ADVICE;
 
@@ -233,8 +276,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 continue;
             }
             //handle request mapping
-            RequestMapping requestMapping = new SpringMVCRequestMappingHandler()
-                    .handle(projectBuilder, baseUrl, method, constantsMap);
+            RequestMapping requestMapping = new SpringMVCRequestMappingHandler().handle(projectBuilder, baseUrl, method, constantsMap);
             if (Objects.isNull(requestMapping)) {
                 continue;
             }
@@ -292,7 +334,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             apiMethodDoc.setDeprecated(requestMapping.isDeprecated());
             List<JavaParameter> javaParameters = method.getParameters();
 
-            TornaUtil.setTornaArrayTags(javaParameters, apiMethodDoc, docJavaMethod.getJavaMethod().getReturns(),apiConfig);
+            TornaUtil.setTornaArrayTags(javaParameters, apiMethodDoc, docJavaMethod.getJavaMethod().getReturns(), apiConfig);
             // apiMethodDoc.setIsRequestArray();
             final List<ApiReqParam> apiReqParamList = this.configApiReqParams.stream()
                     .filter(param -> filterPath(requestMapping, param)).collect(Collectors.toList());
@@ -454,8 +496,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 gicTypeName = rewriteClassName;
                 typeName = DocClassUtil.getSimpleName(rewriteClassName);
             }
-            if (JavaClassValidateUtil.isMvcIgnoreParams(typeName, configBuilder.getApiConfig()
-                    .getIgnoreRequestParams())) {
+            if (JavaClassValidateUtil.isMvcIgnoreParams(typeName, configBuilder.getApiConfig().getIgnoreRequestParams())) {
                 continue;
             }
             String simpleTypeName = javaType.getValue();
@@ -478,6 +519,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             List<JavaAnnotation> annotations = parameter.getAnnotations();
             List<String> groupClasses = JavaClassUtil.getParamGroupJavaClass(annotations);
             boolean paramAdded = false;
+            boolean requestParam = false;
             for (JavaAnnotation annotation : annotations) {
                 String annotationName = annotation.getType().getValue();
                 String fullName = annotation.getType().getSimpleName();
@@ -531,6 +573,20 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                     }
                     pathParamsMap.put(paramName, mockValue);
                     paramAdded = true;
+                } else if (SpringMvcAnnotations.REQUEST_PARAM.contains(annotationName)) {
+                    if (javaClass.isEnum()) {
+                        Object value = JavaClassUtil.getEnumValue(javaClass, Boolean.TRUE);
+                        mockValue = StringUtil.removeQuotes(String.valueOf(value));
+                    }
+                    if (queryParamsMap.containsKey(paramName)) {
+                        mockValue = queryParamsMap.get(paramName);
+                    }
+                    if (JavaClassValidateUtil.isPrimitive(simpleTypeName)) {
+                        requestExample.setJsonBody(mockValue);
+                    }
+                    queryParamsMap.put(paramName, mockValue);
+                    requestParam = true;
+                    paramAdded = true;
                 }
             }
             if (paramAdded) {
@@ -545,7 +601,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 formData.setDescription(comment);
                 formData.setValue(mockValue);
                 formDataList.add(formData);
-            } else if (JavaClassValidateUtil.isPrimitive(typeName)) {
+            } else if (JavaClassValidateUtil.isPrimitive(typeName) && !requestParam) {
                 FormData formData = new FormData();
                 formData.setKey(paramName);
                 formData.setDescription(comment);
@@ -592,13 +648,10 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         String exampleBody;
         String url;
         final Map<String, String> formDataToMap = DocUtil.formDataToMap(formDataList);
-        if (Methods.POST.getValue()
-                .equals(methodType) || Methods.PUT.getValue()
-                .equals(methodType)) {
+        if (Methods.POST.getValue().equals(methodType) || Methods.PUT.getValue().equals(methodType)) {
             //for post put
             path = DocUtil.formatAndRemove(path, pathParamsMap);
-            formDataToMap.putAll(queryParamsMap);
-            body = UrlUtil.urlJoin(DocGlobalConstants.EMPTY, formDataToMap)
+            body = UrlUtil.urlJoin(DocGlobalConstants.EMPTY, queryParamsMap)
                     .replace("?", DocGlobalConstants.EMPTY);
             body = StringUtil.removeQuotes(body);
             url = apiMethodDoc.getServerUrl() + "/" + path;
@@ -691,7 +744,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         final Map<String, ApiReqParam> pathReqParamMap = collect.getOrDefault(ApiReqParamInTypeEnum.PATH.getValue(), Collections.emptyMap());
         final Map<String, ApiReqParam> queryReqParamMap = collect.getOrDefault(ApiReqParamInTypeEnum.QUERY.getValue(), Collections.emptyMap());
         List<JavaParameter> parameterList = javaMethod.getParameters();
-        if (parameterList.size() < 1) {
+        if (parameterList.isEmpty()) {
             AtomicInteger querySize = new AtomicInteger(paramList.size() + 1);
             paramList.addAll(queryReqParamMap.values().stream()
                     .map(p -> ApiReqParam.convertToApiParam(p).setQueryParam(true).setId(querySize.getAndIncrement()))
@@ -712,12 +765,10 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         out:
         for (JavaParameter parameter : parameterList) {
             String paramName = parameter.getName();
-            if (ignoreSets.contains(paramName)) {
+            if (ignoreSets.contains(paramName) || mappingParams.containsKey(paramName)) {
                 continue;
             }
-            if (mappingParams.containsKey(paramName)) {
-                continue;
-            }
+
             JavaType javaType = parameter.getType();
             if (Objects.nonNull(actualTypesMap) && Objects.nonNull(actualTypesMap.get(javaType.getCanonicalName()))) {
                 javaType = actualTypesMap.get(javaType.getCanonicalName());
@@ -870,8 +921,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                                 groupClasses, 0, Boolean.TRUE));
                     } else {
                         throw new RuntimeException("Spring MVC can't support binding Collection on method "
-                                + javaMethod.getName() + ",Check it in " + javaMethod.getDeclaringClass()
-                                .getCanonicalName());
+                                + javaMethod.getName() + ",Check it in " + javaMethod.getDeclaringClass().getCanonicalName());
                     }
                 }
             } else if (JavaClassValidateUtil.isPrimitive(fullTypeName)) {

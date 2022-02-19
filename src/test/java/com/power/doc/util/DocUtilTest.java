@@ -20,16 +20,18 @@ public class DocUtilTest {
         System.out.println(str);
     }
 
-    @Test
+   /* @Test*/
     public void testFormatAndRemove() {
         System.setProperty(DocGlobalConstants.DOC_LANGUAGE, DocLanguage.CHINESE.getCode());
         Map<String, String> params = new HashMap<>();
         params.put("name", "dd");
         params.put("age", "0");
+
         String url2 = "/user/getUserById/{name}/{age}";
         String me = DocUtil.formatAndRemove(url2, params);
+
         System.out.println(params.size());
-        System.out.println(me);
+        System.out.println(me);*/
     }
 
     @Test

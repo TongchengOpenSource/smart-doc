@@ -25,11 +25,18 @@ package com.power.doc.utils;
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.StringUtil;
 import com.power.doc.constants.DocAnnotationConstants;
-import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.constants.DocValidatorAnnotationEnum;
 import com.power.doc.constants.ValidatorAnnotations;
 import com.power.doc.model.DocJavaField;
-import com.thoughtworks.qdox.model.*;
+import com.thoughtworks.qdox.model.DocletTag;
+import com.thoughtworks.qdox.model.JavaAnnotation;
+import com.thoughtworks.qdox.model.JavaClass;
+import com.thoughtworks.qdox.model.JavaField;
+import com.thoughtworks.qdox.model.JavaGenericDeclaration;
+import com.thoughtworks.qdox.model.JavaMethod;
+import com.thoughtworks.qdox.model.JavaParameterizedType;
+import com.thoughtworks.qdox.model.JavaType;
+import com.thoughtworks.qdox.model.JavaTypeVariable;
 import com.thoughtworks.qdox.model.expression.AnnotationValue;
 import com.thoughtworks.qdox.model.expression.AnnotationValueList;
 import com.thoughtworks.qdox.model.expression.Expression;
@@ -39,7 +46,13 @@ import com.thoughtworks.qdox.model.impl.DefaultJavaParameterizedType;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -58,6 +71,30 @@ public class JavaClassUtil {
      * @return list of JavaField
      */
     public static List<DocJavaField> getFields(JavaClass cls1, int counter, Map<String, DocJavaField> addedFields) {
+        Map<String, JavaType> actualJavaTypes = new HashMap<>(10);
+        List<DocJavaField> fields = getFields(cls1, counter, addedFields, actualJavaTypes);
+        fields.stream().filter(f -> f.getGenericCanonicalName() != null)
+                .forEach(f -> actualJavaTypes.entrySet().stream()
+                        .filter(e -> f.getGenericCanonicalName().equals(e.getKey()))
+                        .forEach(e ->
+                                f.setGenericCanonicalName(f.getGenericCanonicalName()
+                                                .replace(e.getKey(), e.getValue().getGenericCanonicalName()))
+                                        .setFullyQualifiedName(f.getFullyQualifiedName()
+                                                .replace(e.getKey(), e.getValue().getFullyQualifiedName()))
+                                        .setActualJavaType(e.getValue().getFullyQualifiedName())));
+        return fields;
+    }
+
+    /**
+     * Get fields
+     *
+     * @param cls1            The JavaClass object
+     * @param counter         Recursive counter
+     * @param addedFields     added fields,Field deduplication
+     * @param actualJavaTypes collected actualJavaTypes
+     * @return list of JavaField
+     */
+    private static List<DocJavaField> getFields(JavaClass cls1, int counter, Map<String, DocJavaField> addedFields, Map<String, JavaType> actualJavaTypes) {
         List<DocJavaField> fieldList = new ArrayList<>();
         if (null == cls1) {
             return fieldList;
@@ -103,16 +140,19 @@ public class JavaClassUtil {
                 }
             }
             // ignore enum parent class
+            if (actualJavaTypes == null) {
+                actualJavaTypes = new HashMap<>(10);
+            }
             if (!cls1.isEnum()) {
                 JavaClass parentClass = cls1.getSuperJavaClass();
-                getFields(parentClass, counter, addedFields);
+                getFields(parentClass, counter, addedFields, actualJavaTypes);
                 List<JavaType> implClasses = cls1.getImplements();
                 for (JavaType type : implClasses) {
                     JavaClass javaClass = (JavaClass) type;
-                    getFields(javaClass, counter, addedFields);
+                    getFields(javaClass, counter, addedFields, actualJavaTypes);
                 }
             }
-            Map<String, JavaType> actualJavaTypes = getActualTypesMap(cls1);
+            actualJavaTypes.putAll(getActualTypesMap(cls1));
             List<JavaMethod> javaMethods = cls1.getMethods();
             for (JavaMethod method : javaMethods) {
                 String methodName = method.getName();
@@ -172,15 +212,6 @@ public class JavaClassUtil {
                     }
                     if (javaField.getType().isEnum() && !typeChecked) {
                         docJavaField.setEnum(true);
-                    }
-                    for (Map.Entry<String, JavaType> entry : actualJavaTypes.entrySet()) {
-                        String key = entry.getKey();
-                        JavaType value = entry.getValue();
-                        if (gicName.equals(key)) {
-                            subTypeName = subTypeName.replaceAll(key, value.getFullyQualifiedName());
-                            gicName = gicName.replaceAll(key, value.getGenericCanonicalName());
-                            actualType = value.getFullyQualifiedName();
-                        }
                     }
                     docJavaField.setComment(javaField.getComment())
                             .setJavaField(javaField).setFullyQualifiedName(subTypeName)
@@ -567,4 +598,3 @@ public class JavaClassUtil {
         return ignoreFields;
     }
 }
-

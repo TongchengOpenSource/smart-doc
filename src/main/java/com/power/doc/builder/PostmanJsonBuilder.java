@@ -26,6 +26,7 @@ import com.power.common.util.CollectionUtil;
 import com.power.common.util.FileUtil;
 import com.power.common.util.StringUtil;
 import com.power.doc.constants.DocGlobalConstants;
+import com.power.doc.constants.Methods;
 import com.power.doc.factory.BuildTemplateFactory;
 import com.power.doc.model.*;
 import com.power.doc.model.postman.InfoBean;
@@ -61,7 +62,7 @@ public class PostmanJsonBuilder {
      */
     public static void buildPostmanCollection(ApiConfig config) {
         DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
-        builderTemplate.checkAndInit(config,false);
+        builderTemplate.checkAndInit(config, false);
         JavaProjectBuilder javaProjectBuilder = new JavaProjectBuilder();
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
         postManCreate(config, configBuilder);
@@ -75,7 +76,7 @@ public class PostmanJsonBuilder {
      */
     public static void buildPostmanCollection(ApiConfig config, JavaProjectBuilder projectBuilder) {
         DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
-        builderTemplate.checkAndInit(config,false);
+        builderTemplate.checkAndInit(config, false);
         config.setParamsDataToTree(false);
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, projectBuilder);
         postManCreate(config, configBuilder);
@@ -151,14 +152,21 @@ public class PostmanJsonBuilder {
         }
 
         urlBean.setPath(pathList);
+
         List<ParamBean> queryParams = new ArrayList<>();
-        for (ApiParam apiParam : apiMethodDoc.getQueryParams()) {
-            ParamBean queryParam = new ParamBean();
-            queryParam.setDescription(apiParam.getDesc());
-            queryParam.setKey(apiParam.getField());
-            queryParam.setValue(apiParam.getValue());
-            queryParams.add(queryParam);
+        if (!apiMethodDoc.getType().equals(Methods.POST.getValue()) ||
+                apiMethodDoc.getContentType().contains(DocGlobalConstants.JSON_CONTENT_TYPE)) {
+            for (ApiParam apiParam : apiMethodDoc.getQueryParams()) {
+                ParamBean queryParam = new ParamBean();
+                queryParam.setDescription(apiParam.getDesc());
+                queryParam.setKey(apiParam.getField());
+                queryParam.setValue(apiParam.getValue());
+                queryParams.add(queryParam);
+            }
         }
+        urlBean.setQuery(queryParams);
+
+
         List<ParamBean> variables = new ArrayList<>();
         for (ApiParam apiParam : apiMethodDoc.getPathParams()) {
             ParamBean queryParam = new ParamBean();
@@ -168,7 +176,6 @@ public class PostmanJsonBuilder {
             variables.add(queryParam);
         }
         urlBean.setVariable(variables);
-        urlBean.setQuery(queryParams);
         return urlBean;
     }
 
@@ -186,12 +193,30 @@ public class PostmanJsonBuilder {
                 bodyBean.setRaw(apiMethodDoc.getRequestExample().getJsonBody());
             }
         } else {
-            bodyBean = new BodyBean(Boolean.TRUE); //Formdata
-            bodyBean.setMode(DocGlobalConstants.POSTMAN_MODE_FORMDATA);
-            bodyBean.setFormdata(apiMethodDoc.getRequestExample().getFormDataList());
+            if (apiMethodDoc.getType().equals(Methods.POST.getValue())) {
+                bodyBean = new BodyBean(Boolean.TRUE); //Formdata
+                bodyBean.setMode(DocGlobalConstants.POSTMAN_MODE_FORMDATA);
+                if (CollectionUtil.isNotEmpty(apiMethodDoc.getRequestExample().getFormDataList())) {
+                    bodyBean.setFormdata(apiMethodDoc.getRequestExample().getFormDataList());
+                } else {
+                    // if method is post and formdata list size is 0, convert query param to formdata
+                    List<ApiParam> queryParams = apiMethodDoc.getQueryParams();
+                    List<FormData> formDataList = new ArrayList<>(queryParams.size());
+                    for (ApiParam apiParam : queryParams) {
+                        FormData formData = new FormData();
+                        formData.setDescription(apiParam.getDesc());
+                        formData.setKey(apiParam.getField());
+                        formData.setType(apiParam.getType());
+                        formData.setValue(apiParam.getValue());
+                        formDataList.add(formData);
+                    }
+                    bodyBean.setFormdata(formDataList);
+                }
+            } else {
+                bodyBean = new BodyBean(Boolean.FALSE);
+            }
         }
         return bodyBean;
-
     }
 
     /**

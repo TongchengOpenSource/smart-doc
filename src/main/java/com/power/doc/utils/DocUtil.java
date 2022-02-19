@@ -33,6 +33,7 @@ import com.power.common.util.StringUtil;
 import com.power.common.util.ValidateUtil;
 import com.power.doc.constants.DocAnnotationConstants;
 import com.power.doc.constants.DocGlobalConstants;
+import com.power.doc.constants.JAXRSAnnotations;
 import com.power.doc.model.ApiConfig;
 import com.power.doc.model.ApiDataDictionary;
 import com.power.doc.model.ApiDocDict;
@@ -770,7 +771,7 @@ public class DocUtil {
     }
 
     public static String handleContentType(String mediaType, JavaAnnotation annotation, String annotationName) {
-        if (DocGlobalConstants.JAX_PRODUCES_FULLY.equals(annotationName)) {
+        if (JAXRSAnnotations.JAX_PRODUCES_FULLY.equals(annotationName)) {
             String annotationValue = StringUtil.removeQuotes(DocUtil.getRequestHeaderValue(annotation));
             if ("MediaType.APPLICATION_JSON".equals(annotationValue) || "application/json".equals(annotationValue)
                     || "MediaType.TEXT_PLAIN".equals(annotationValue) || "text/plain".equals(annotationValue)) {
