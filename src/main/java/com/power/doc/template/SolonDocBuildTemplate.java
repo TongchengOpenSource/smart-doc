@@ -746,8 +746,8 @@ public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 String annotationName = annotation.getType().getValue();
 
                 if (SolonAnnotations.REQUEST_PARAM.equals(annotationName) ||
-                        DocAnnotationConstants.SHORT_PATH_VARIABLE.equals(annotationName)) {
-                    if (DocAnnotationConstants.SHORT_PATH_VARIABLE.equals(annotationName)) {
+                        SolonAnnotations.PATH_VAR.equals(annotationName)) {
+                    if (SolonAnnotations.PATH_VAR.equals(annotationName)) {
                         isPathVariable = true;
                     }
                     AnnotationValue annotationDefaultVal = annotation.getProperty(DocAnnotationConstants.DEFAULT_VALUE_PROP);
