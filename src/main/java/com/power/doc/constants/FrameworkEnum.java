@@ -42,6 +42,11 @@ public enum FrameworkEnum {
     SPRING("spring", "com.power.doc.template.SpringBootDocBuildTemplate"),
 
     /**
+     * Solon
+     */
+    SOLON("solon", "com.power.doc.template.SolonDocBuildTemplate"),
+
+    /**
      * JAX-RS
      */
     JAX_RS("JAX-RS", "com.power.doc.template.JaxrsDocBuildTemplate");

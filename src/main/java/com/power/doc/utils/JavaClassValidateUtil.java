@@ -23,6 +23,7 @@
 package com.power.doc.utils;
 
 import com.power.common.util.CollectionUtil;
+import com.power.doc.constants.SolonAnnotations;
 import com.power.doc.constants.SpringMvcAnnotations;
 
 import java.util.List;
@@ -229,6 +230,7 @@ public class JavaClassValidateUtil {
             case "org.springframework.core.io.Resource":
             case "org.springframework.core.io.InputStreamSource":
             case "org.springframework.core.io.ByteArrayResource":
+            case "org.noear.solon.core.handle.DownloadedFile":
                 return true;
             default:
                 return false;
@@ -263,6 +265,8 @@ public class JavaClassValidateUtil {
             case "org.springframework.core.io.Resource":
             case "org.springframework.core.io.InputStreamSource":
             case "org.springframework.core.io.ByteArrayResource":
+            case "org.noear.solon.core.handle.Context":
+            case "org.noear.solon.core.handle.ModelAndView":
                 return true;
             default:
                 return false;
@@ -300,6 +304,8 @@ public class JavaClassValidateUtil {
             case "org.springframework.web.multipart.commons.CommonsMultipartFile":
             case "org.springframework.web.multipart.commons.CommonsMultipartFile[]":
             case "java.util.List<org.springframework.web.multipart.commons.CommonsMultipartFile>":
+            case "org.noear.solon.core.handle.UploadedFile":
+            case "org.noear.solon.core.handle.DownloadedFile":
                 return true;
             default:
                 return false;
@@ -332,6 +338,15 @@ public class JavaClassValidateUtil {
             case SpringMvcAnnotations.SESSION_ATTRIBUTE:
             case SpringMvcAnnotations.REQUEST_ATTRIBUTE:
             case SpringMvcAnnotations.REQUEST_HERDER:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    public static boolean ignoreSolonMvcParamWithAnnotation(String annotation) {
+        switch (annotation) {
+            case SolonAnnotations.REQUEST_HERDER:
                 return true;
             default:
                 return false;
