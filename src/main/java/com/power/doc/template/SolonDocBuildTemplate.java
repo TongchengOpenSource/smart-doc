@@ -272,7 +272,7 @@ public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             final List<ApiReqParam> apiReqParamList = this.configApiReqParams.stream()
                     .filter(param -> filterPath(requestMapping, param)).collect(Collectors.toList());
 
-            ApiMethodReqParam apiMethodReqParam = requestParams(docJavaMethod, projectBuilder, apiReqParamList);
+            ApiMethodReqParam apiMethodReqParam = requestParams(requestMapping.getMethodType(),docJavaMethod, projectBuilder, apiReqParamList);
             // build request params
             if (paramsDataToTree) {
                 apiMethodDoc.setPathParams(ApiParamTreeUtil.apiParamToTree(apiMethodReqParam.getPathParams()));
@@ -633,8 +633,9 @@ public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
     }
 
 
-    private ApiMethodReqParam requestParams(final DocJavaMethod docJavaMethod, ProjectDocConfigBuilder builder, List<ApiReqParam> configApiReqParams) {
+    private ApiMethodReqParam requestParams(final String methodType,final DocJavaMethod docJavaMethod, ProjectDocConfigBuilder builder, List<ApiReqParam> configApiReqParams) {
         JavaMethod javaMethod = docJavaMethod.getJavaMethod();
+        boolean isGet = "GET".equals(methodType);
         boolean isStrict = builder.getApiConfig().isStrict();
         String className = javaMethod.getDeclaringClass().getCanonicalName();
         Map<String, String> replacementMap = builder.getReplaceClassMap();
@@ -793,7 +794,7 @@ public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             }
             boolean required = Boolean.parseBoolean(strRequired);
             boolean queryParam = false;
-            if (!isRequestBody && !isPathVariable) {
+            if (!isRequestBody && !isPathVariable && isGet) {
                 queryParam = true;
             }
             if (JavaClassValidateUtil.isCollection(fullTypeName) || JavaClassValidateUtil.isArray(fullTypeName)) {
@@ -937,7 +938,7 @@ public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 }
                 param.setId(pathParams.size() + 1);
                 pathParams.add(param);
-            } else if (param.isQueryParam() || requestBodyCounter < 1) {
+            } else if (param.isQueryParam() && isGet) {
                 if (queryReqParamMap.containsKey(param.getField())) {
                     param.setConfigParam(true).setValue(queryReqParamMap.get(param.getField()).getValue());
                 }

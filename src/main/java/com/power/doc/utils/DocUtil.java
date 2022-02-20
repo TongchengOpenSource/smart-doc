@@ -351,15 +351,20 @@ public class DocUtil {
      */
     public static String handleHttpMethod(String method) {
         switch (method) {
-            case "RequestMethod.GET":
+            case "RequestMethod.GET": //for spring
+            case "MethodType.GET": //for solon
                 return "GET";
             case "RequestMethod.POST":
+            case "MethodType.POST":
                 return "POST";
             case "RequestMethod.PUT":
+            case "MethodType.PUT":
                 return "PUT";
             case "RequestMethod.DELETE":
+            case "MethodType.DELETE":
                 return "DELETE";
             case "RequestMethod.PATCH":
+            case "MethodType.PATCH":
                 return "PATCH";
             default:
                 return method;
