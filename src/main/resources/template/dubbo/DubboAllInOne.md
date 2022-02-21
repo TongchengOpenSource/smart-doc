@@ -105,3 +105,31 @@ for(error in errorCodeList){
 ${error.value}|${error.desc}
 <%}%>
 <%}%>
+
+
+<%if(isNotEmpty(dictList)){%>
+<%if(apiDocListOnlyHasDefaultGroup) { %>
+## ${dictListTitle}
+<% } else { %>
+# ${dictListTitle}
+<% } %>
+
+<%
+for(dict in dictList){
+%>
+
+<%if(apiDocListOnlyHasDefaultGroup) { %>
+### ${dict.title}
+<% } else { %>
+## ${dict.title}
+<% } %>
+
+Code |Type|Description
+---|---|---
+<%
+for(dataDict in dict.dataDictList){
+%>
+${dataDict.value}|${dataDict.type}|${dataDict.desc}
+<%}%>
+<%}%>
+<%}%>

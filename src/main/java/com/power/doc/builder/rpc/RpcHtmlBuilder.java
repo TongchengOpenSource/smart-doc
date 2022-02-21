@@ -34,7 +34,13 @@ import org.beetl.core.Template;
 
 import java.util.List;
 
-import static com.power.doc.constants.DocGlobalConstants.*;
+import static com.power.doc.constants.DocGlobalConstants.ALL_IN_ONE_CSS;
+import static com.power.doc.constants.DocGlobalConstants.ALL_IN_ONE_CSS_OUT;
+import static com.power.doc.constants.DocGlobalConstants.FILE_SEPARATOR;
+import static com.power.doc.constants.DocGlobalConstants.FONT_STYLE;
+import static com.power.doc.constants.DocGlobalConstants.JQUERY;
+import static com.power.doc.constants.DocGlobalConstants.RPC_ALL_IN_ONE_HTML_TPL;
+import static com.power.doc.constants.DocGlobalConstants.RPC_ALL_IN_ONE_SEARCH_TPL;
 
 /**
  * @author yu 2020/5/17.
@@ -76,6 +82,6 @@ public class RpcHtmlBuilder {
         builderTemplate.copyJarFile("css/" + FONT_STYLE, config.getOutPath() + FILE_SEPARATOR + FONT_STYLE);
         builderTemplate.copyJarFile("js/" + JQUERY, config.getOutPath() + FILE_SEPARATOR + JQUERY);
         builderTemplate.buildAllInOne(apiDocList, config, javaProjectBuilder, RPC_ALL_IN_ONE_HTML_TPL, INDEX_HTML);
-        builderTemplate.buildSearchJs(apiDocList, config, RPC_ALL_IN_ONE_SEARCH_TPL, SEARCH_JS);
+        builderTemplate.buildSearchJs(apiDocList, config, javaProjectBuilder, RPC_ALL_IN_ONE_SEARCH_TPL, SEARCH_JS);
     }
 }
