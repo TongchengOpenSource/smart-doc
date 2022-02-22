@@ -119,11 +119,8 @@ public class RpcDocBuilderTemplate extends BaseDocBuilderTemplate {
         tpl.binding(TemplateVariable.RPC_CONSUMER_CONFIG.getVariable(), rpcConfigConfigContent);
         setDirectoryLanguageVariable(config, tpl);
 
-        tpl.binding(TemplateVariable.ERROR_CODE_LIST.getVariable(), errorCodeList);
         List<ApiDocDict> apiDocDictList = DocUtil.buildDictionary(config, javaProjectBuilder);
         tpl.binding(TemplateVariable.DICT_LIST.getVariable(), apiDocDictList);
-
-        tpl.binding(TemplateVariable.API_DOC_LIST_ONLY_HAS_DEFAULT_GROUP.getVariable(), false);
 
         int codeIndex = apiDocList.isEmpty() ? 1 : apiDocDictList.size();
 

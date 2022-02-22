@@ -1,17 +1,20 @@
 <%if(isNotEmpty(projectName)){%>
+
 # ${projectName}
+
 <%}%>
 
 <%if(isNotEmpty(revisionLogList)){%>
-
-Version|Update Time|Status|Author|Description
+Version |Update Time |Status |Author |Description
 ---|---|---|---|---
 <% for(revisionLog in revisionLogList){ %>
-${revisionLog.version}|${revisionLog.revisionTime}|${revisionLog.status}|${revisionLog.author}|${revisionLog.remarks}
+${revisionLog.version} |${revisionLog.revisionTime} |${revisionLog.status} |${revisionLog.author} |${revisionLog.remarks}
 <%}%>
+
 <%}%>
 
 <%if(isNotEmpty(dependencyList)){%>
+
 ## Add dependency
 
 ```
@@ -29,15 +32,16 @@ for(dependency in dependencyList){
 
 <%if(isNotEmpty(consumerConfigExample)){%>
 Consumer config
+
 ```
 ${consumerConfigExample}
 ```
+
 <%}%>
 <%}%>
 
-<%
-for(api in apiDocList){
-%>
+<% for(api in apiDocList){ %>
+
 ## ${api.desc}
 
 **URI:** ${api.uri}
@@ -49,13 +53,15 @@ for(api in apiDocList){
 **Author:** ${api.author}
 
 **Version:** ${api.version}
-<%
-for(doc in api.list){
-%>
+<% for(doc in api.list){ %>
 <%if(doc.deprecated){%>
+
 ### ~~${doc.desc}~~
+
 <%}else{%>
+
 ### ${doc.desc}
+
 <%}%>
 
 **Definition：** ${doc.methodDefinition}
@@ -71,9 +77,8 @@ for(doc in api.list){
 
 Parameter|Type|Description|Required|Since
 ---|---|---|---|---
-<%
-for(param in doc.requestParams){
-%>
+
+<% for(param in doc.requestParams){ %>
 ${param.field}|${param.type}|${param.desc}|${param.required}|${param.version}
 <%}%>
 <%}%>
@@ -83,14 +88,11 @@ ${param.field}|${param.type}|${param.desc}|${param.required}|${param.version}
 
 Field | Type|Description|Since
 ---|---|---|---
-<%
-for(param in doc.responseParams){
-%>
+
+<% for(param in doc.responseParams){ %>
 ${param.field}|${param.type}|${param.desc}|${param.version}
 <%}%>
 <%}%>
-
-
 
 <%}%>
 <%}%>
@@ -99,37 +101,22 @@ ${param.field}|${param.type}|${param.desc}|${param.version}
 
 Error code |Description
 ---|---
-<%
-for(error in errorCodeList){
-%>
+<% for(error in errorCodeList){ %>
 ${error.value}|${error.desc}
 <%}%>
-<%}%>
 
+<%}%>
 
 <%if(isNotEmpty(dictList)){%>
-<%if(apiDocListOnlyHasDefaultGroup) { %>
 ## ${dictListTitle}
-<% } else { %>
-# ${dictListTitle}
-<% } %>
 
-<%
-for(dict in dictList){
-%>
-
-<%if(apiDocListOnlyHasDefaultGroup) { %>
+<% for(dict in dictList){ %>
 ### ${dict.title}
-<% } else { %>
-## ${dict.title}
-<% } %>
-
-Code |Type|Description
+Code |Type|Description 
 ---|---|---
-<%
-for(dataDict in dict.dataDictList){
-%>
+<% for(dataDict in dict.dataDictList){ %>
 ${dataDict.value}|${dataDict.type}|${dataDict.desc}
 <%}%>
+
 <%}%>
 <%}%>
