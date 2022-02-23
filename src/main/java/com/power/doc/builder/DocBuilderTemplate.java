@@ -30,7 +30,12 @@ import com.power.doc.constants.HighlightStyle;
 import com.power.doc.constants.TemplateVariable;
 import com.power.doc.constants.TornaConstants;
 import com.power.doc.factory.BuildTemplateFactory;
-import com.power.doc.model.*;
+import com.power.doc.model.ApiAllData;
+import com.power.doc.model.ApiConfig;
+import com.power.doc.model.ApiDoc;
+import com.power.doc.model.ApiDocDict;
+import com.power.doc.model.ApiErrorCode;
+import com.power.doc.model.ApiMethodDoc;
 import com.power.doc.template.IDocBuildTemplate;
 import com.power.doc.utils.BeetlTemplateUtil;
 import com.power.doc.utils.DocUtil;
@@ -42,7 +47,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import static com.power.doc.constants.DocGlobalConstants.*;
+import static com.power.doc.constants.DocGlobalConstants.CSS_CDN;
+import static com.power.doc.constants.DocGlobalConstants.CSS_CDN_CH;
+import static com.power.doc.constants.DocGlobalConstants.FILE_SEPARATOR;
+import static com.power.doc.constants.DocGlobalConstants.SEARCH_JS_OUT;
 
 /**
  * @author yu 2019/9/26.

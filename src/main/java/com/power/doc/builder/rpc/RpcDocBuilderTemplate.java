@@ -32,6 +32,7 @@ import com.power.doc.constants.FrameworkEnum;
 import com.power.doc.constants.TemplateVariable;
 import com.power.doc.factory.BuildTemplateFactory;
 import com.power.doc.model.ApiConfig;
+import com.power.doc.model.ApiDocDict;
 import com.power.doc.model.ApiErrorCode;
 import com.power.doc.model.rpc.RpcApiAllData;
 import com.power.doc.model.rpc.RpcApiDoc;
@@ -61,7 +62,7 @@ public class RpcDocBuilderTemplate extends BaseDocBuilderTemplate {
         if (StringUtil.isEmpty(config.getFramework())) {
             config.setFramework(FrameworkEnum.DUBBO.getFramework());
         }
-        super.checkAndInit(config,false);
+        super.checkAndInit(config, false);
         config.setOutPath(config.getOutPath() + FILE_SEPARATOR + RPC_OUT_DIR);
     }
 
@@ -117,6 +118,21 @@ public class RpcDocBuilderTemplate extends BaseDocBuilderTemplate {
         tpl.binding(TemplateVariable.PROJECT_NAME.getVariable(), config.getProjectName());
         tpl.binding(TemplateVariable.RPC_CONSUMER_CONFIG.getVariable(), rpcConfigConfigContent);
         setDirectoryLanguageVariable(config, tpl);
+
+        List<ApiDocDict> apiDocDictList = DocUtil.buildDictionary(config, javaProjectBuilder);
+        tpl.binding(TemplateVariable.DICT_LIST.getVariable(), apiDocDictList);
+
+        int codeIndex = apiDocList.isEmpty() ? 1 : apiDocDictList.size();
+
+
+        if (CollectionUtil.isNotEmpty(errorCodeList)) {
+            tpl.binding(TemplateVariable.ERROR_CODE_ORDER.getVariable(), ++codeIndex);
+        }
+
+        if (CollectionUtil.isNotEmpty(apiDocDictList)) {
+            tpl.binding(TemplateVariable.DICT_ORDER.getVariable(), ++codeIndex);
+        }
+
         setCssCDN(config, tpl);
         FileUtil.nioWriteFile(tpl.render(), outPath + FILE_SEPARATOR + outPutFileName);
     }
@@ -124,12 +140,14 @@ public class RpcDocBuilderTemplate extends BaseDocBuilderTemplate {
     /**
      * Build search js
      *
-     * @param apiDocList     list  data of Api doc
-     * @param config         api config
-     * @param template       template
-     * @param outPutFileName output file
+     * @param apiDocList         list  data of Api doc
+     * @param config             api config
+     * @param javaProjectBuilder projectBuilder
+     * @param template           template
+     * @param outPutFileName     output file
      */
-    public void buildSearchJs(List<RpcApiDoc> apiDocList, ApiConfig config, String template, String outPutFileName) {
+    public void buildSearchJs(List<RpcApiDoc> apiDocList, ApiConfig config, JavaProjectBuilder javaProjectBuilder
+            , String template, String outPutFileName) {
         List<ApiErrorCode> errorCodeList = DocUtil.errorCodeDictToList(config);
         Template tpl = BeetlTemplateUtil.getByName(template);
         // directory tree
@@ -153,6 +171,10 @@ public class RpcDocBuilderTemplate extends BaseDocBuilderTemplate {
             apiDoc1.setList(new ArrayList<>(0));
             apiDocs.add(apiDoc1);
         }
+
+        // set dict list
+        List<ApiDocDict> apiDocDictList = DocUtil.buildDictionary(config, javaProjectBuilder);
+        tpl.binding(TemplateVariable.DICT_LIST.getVariable(), apiDocDictList);
         tpl.binding(TemplateVariable.DIRECTORY_TREE.getVariable(), apiDocs);
         FileUtil.nioWriteFile(tpl.render(), config.getOutPath() + FILE_SEPARATOR + outPutFileName);
     }
@@ -186,6 +208,7 @@ public class RpcDocBuilderTemplate extends BaseDocBuilderTemplate {
         apiAllData.setApiDocList(listOfApiData(config, javaProjectBuilder));
         apiAllData.setErrorCodeList(DocUtil.errorCodeDictToList(config));
         apiAllData.setRevisionLogs(config.getRevisionLogs());
+        apiAllData.setApiDocDictList(DocUtil.buildDictionary(config, javaProjectBuilder));
         apiAllData.setDependencyList(config.getRpcApiDependencies());
         return apiAllData;
     }
