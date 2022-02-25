@@ -3,6 +3,8 @@ package com.power.doc;
 import com.power.common.util.DateTimeUtil;
 import com.power.doc.builder.HtmlApiDocBuilder;
 import com.power.doc.builder.OpenApiBuilder;
+import com.power.doc.builder.TornaBuilder;
+import com.power.doc.builder.rpc.RpcTornaBuilder;
 import com.power.doc.enums.OrderEnum;
 import com.power.doc.model.*;
 import com.power.doc.model.rpc.RpcApiDependency;
@@ -32,10 +34,10 @@ public class ApiDocTest {
         ApiConfig config = new ApiConfig();
         config.setServerUrl("http://127.0.0.1:8899");
         //config.setStrict(true);
-        config.setOpenUrl("http://demo.torna.cn/api");
-        config.setAppKey("20210617855226428617129984");
-        config.setAppToken("b3e291ed6a75452f9a467d420583082c");
-        config.setSecret("^^As.tU#XpK=FATTpY<Vj0PFLt9iak!2");
+        config.setOpenUrl("http://localhost:7700/api");
+        config.setAppToken("be4211613a734b45888c075741680e49");
+        //config.setAppToken("7b0935531d1144e58a86d7b4f2ad23c6");
+
         config.setDebugEnvName("测试环境");
         config.setStyle("randomLight");
         config.setCreateDebugPage(true);
@@ -56,6 +58,8 @@ public class ApiDocTest {
                 //SourcePath.path().setDesc("加载项目外代码").setPath("E:\\ApplicationPower\\ApplicationPower\\Common-util\\src\\main\\java")
         );
 //        config.setPackageFilters("com.power.doc.dubbo.*");
+        config.setPackageFilters("com.power.doc.controller.UserController");
+
         config.setDataDictionaries(
                 ApiDataDictionary.builder().setTitle("订单字典").setEnumClass(OrderEnum.class).setCodeField("code").setDescField("desc")
         );
@@ -82,7 +86,6 @@ public class ApiDocTest {
 
 
         );
-        config.setPackageFilters("com.power.doc.controller.UserController");
         //非必须只有当setAllInOne设置为true时文档变更记录才生效，https://gitee.com/sunyurepository/ApplicationPower/issues/IPS4O
         config.setRevisionLogs(
                 RevisionLog.builder().setRevisionTime("2018/12/15").setAuthor("chen").setRemarks("测试").setStatus("创建").setVersion("V1.0"),
@@ -104,8 +107,9 @@ public class ApiDocTest {
 
         //TornaBuilder.buildApiDoc(config);
         //OpenApiBuilder.buildOpenApi(config);
-        HtmlApiDocBuilder.buildApiDoc(config);
-        OpenApiBuilder.buildOpenApi(config);
+       // HtmlApiDocBuilder.buildApiDoc(config);
+        RpcTornaBuilder.buildApiDoc(config);
+        //TornaBuilder.buildApiDoc(config);
         //RpcTornaBuilder.buildApiDoc(config);
 //        TornaBuilder.buildApiDoc(config);
         // RpcHtmlBuilder.buildApiDoc(config);

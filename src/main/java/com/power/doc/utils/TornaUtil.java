@@ -49,12 +49,6 @@ public class TornaUtil {
                     "\n" +
                     "appToken: " +
                     apiConfig.getAppToken() +
-                    "\n" +
-                    "appKey: " +
-                    apiConfig.getAppKey() +
-                    "\n" +
-                    "Secret: " +
-                    apiConfig.getSecret() +
                     "\n";
             System.out.println(sb);
             JsonElement element = JsonParser.parseString(responseMsg);

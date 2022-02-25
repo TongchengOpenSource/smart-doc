@@ -35,11 +35,7 @@ import com.power.doc.model.ApiParam;
 import com.power.doc.model.DocJavaMethod;
 import com.power.doc.model.JavaMethodDoc;
 import com.power.doc.model.rpc.RpcApiDoc;
-import com.power.doc.utils.ApiParamTreeUtil;
-import com.power.doc.utils.DocClassUtil;
-import com.power.doc.utils.DocUtil;
-import com.power.doc.utils.JavaClassUtil;
-import com.power.doc.utils.JavaClassValidateUtil;
+import com.power.doc.utils.*;
 import com.thoughtworks.qdox.model.DocletTag;
 import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaClass;
@@ -196,6 +192,7 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
         }
         List<ApiParam> paramList = new ArrayList<>();
         for (JavaParameter parameter : parameterList) {
+
             String paramName = parameter.getName();
             String typeName = parameter.getType().getGenericCanonicalName();
             String simpleName = parameter.getType().getValue().toLowerCase();
@@ -206,6 +203,7 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
                         + paramName + "\" in method " + javaMethod.getName() + " from " + className);
             }
             String comment = this.paramCommentResolve(paramTagMap.get(paramName));
+            String mockValue = JavaFieldUtil.createMockValue(paramTagMap, paramName, typeName, typeName);
             JavaClass javaClass = builder.getJavaProjectBuilder().getClassByName(fullTypeName);
             List<JavaAnnotation> annotations = parameter.getAnnotations();
             List<String> groupClasses = JavaClassUtil.getParamGroupJavaClass(annotations);
@@ -231,7 +229,10 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
             } else if (JavaClassValidateUtil.isPrimitive(fullTypeName)) {
                 ApiParam param = ApiParam.of().setField(paramName)
                         .setType(JavaClassUtil.getClassSimpleName(typeName))
-                        .setDesc(comment).setRequired(true).setVersion(DocGlobalConstants.DEFAULT_VERSION);
+                        .setDesc(comment).setRequired(true)
+                        .setMaxLength(JavaFieldUtil.getParamMaxlength(parameter.getAnnotations()))
+                        .setValue(mockValue)
+                        .setVersion(DocGlobalConstants.DEFAULT_VERSION);
                 paramList.add(param);
             } else if (JavaClassValidateUtil.isMap(fullTypeName)) {
                 if (JavaClassValidateUtil.isMap(typeName)) {

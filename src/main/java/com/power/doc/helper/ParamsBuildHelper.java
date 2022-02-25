@@ -35,10 +35,7 @@ import com.power.doc.model.ApiDataDictionary;
 import com.power.doc.model.ApiParam;
 import com.power.doc.model.CustomField;
 import com.power.doc.model.DocJavaField;
-import com.power.doc.utils.DocClassUtil;
-import com.power.doc.utils.DocUtil;
-import com.power.doc.utils.JavaClassUtil;
-import com.power.doc.utils.JavaClassValidateUtil;
+import com.power.doc.utils.*;
 import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaField;
@@ -146,8 +143,8 @@ public class ParamsBuildHelper {
 
             out:
             for (DocJavaField docField : fields) {
-                String maxLength = null;
                 JavaField field = docField.getJavaField();
+                String maxLength = JavaFieldUtil.getParamMaxlength(field.getAnnotations());
                 if (field.isTransient() && skipTransientField) {
                     continue;
                 }
@@ -195,20 +192,6 @@ public class ParamsBuildHelper {
                 an:
                 for (JavaAnnotation annotation : javaAnnotations) {
                     String simpleAnnotationName = annotation.getType().getValue();
-                    AnnotationValue annotationValue = null;
-                    if (DocAnnotationConstants.MAX.equalsIgnoreCase(simpleAnnotationName)) {
-                        annotationValue = annotation.getProperty(DocAnnotationConstants.VALUE_PROP);
-                    }
-                    if (DocAnnotationConstants.SIZE.equalsIgnoreCase(simpleAnnotationName)) {
-                        annotationValue = annotation.getProperty(DocAnnotationConstants.MAX);
-                    }
-                    if (DocAnnotationConstants.LENGTH.equalsIgnoreCase(simpleAnnotationName)) {
-                        annotationValue = annotation.getProperty(DocAnnotationConstants.MAX);
-                    }
-                    if (!Objects.isNull(annotationValue)) {
-                        maxLength = annotationValue.toString();
-                    }
-
                     if (DocAnnotationConstants.JSON_PROPERTY.equalsIgnoreCase(simpleAnnotationName)) {
                         AnnotationValue value = annotation.getProperty("access");
                         if (Objects.nonNull(value)) {

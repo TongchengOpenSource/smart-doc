@@ -91,17 +91,17 @@ public class TornaRequestInfo {
 
     public String buildInfo() {
         StringBuilder sb = new StringBuilder();
-        sb.append("---------------------------START---------------------------\n")
+        sb.append("---------------------------PUSH START---------------------------\n")
                 .append("API: ")
                 .append(category)
                 .append("\n")
-                .append("Request: \n")
+                .append("Request Param: \n")
                 .append(TornaConstants.GSON.toJson(requestInfo))
                 .append("\n")
                 .append("Response: \n")
                 .append(TornaConstants.GSON.fromJson(responseInfo, HashMap.class))
                 .append("\n")
-                .append("---------------------------END---------------------------\n");
+                .append("---------------------------PUSH END---------------------------\n");
         try {
             return URLDecoder.decode(sb.toString(), "utf-8");
         } catch (UnsupportedEncodingException e) {

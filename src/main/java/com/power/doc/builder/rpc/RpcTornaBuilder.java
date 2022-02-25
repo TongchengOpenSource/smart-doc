@@ -110,7 +110,6 @@ public class RpcTornaBuilder {
         tornaApi.setApis(apisList);
         //Build push document information
         Map<String, String> requestJson = TornaConstants.buildParams(PUSH, new Gson().toJson(tornaApi), apiConfig);
-
         //Push dictionary information
         Map<String, Object> dicMap = new HashMap<>(2);
         List<TornaDic> docDicts = TornaUtil.buildTornaDic(DocUtil.buildDictionary(apiConfig, builder));
@@ -121,7 +120,6 @@ public class RpcTornaBuilder {
             String dicResponseMsg = OkHttp3Util.syncPostJson(apiConfig.getOpenUrl(), new Gson().toJson(dicRequestJson));
             TornaUtil.printDebugInfo(apiConfig, dicResponseMsg, dicRequestJson, ENUM_PUSH);
         }
-        Map<String, String> dicRequestJson = TornaConstants.buildParams(ENUM_PUSH, new Gson().toJson(dicMap), apiConfig);
         //Get the response result
         String responseMsg = OkHttp3Util.syncPostJson(apiConfig.getOpenUrl(), new Gson().toJson(requestJson));
         //Print the log of pushing documents to Torna
