@@ -50,6 +50,7 @@ public class Apis {
     private String requestArrayType;
     private Integer isResponseArray;
     private String responseArrayType;
+    private String deprecated;
 
     public Integer getIsRequestArray() {
         return isRequestArray;
@@ -226,5 +227,13 @@ public class Apis {
 
     public void setDubboInfo(DubboInfo dubboInfo) {
         this.dubboInfo = dubboInfo;
+    }
+
+    public String getDeprecated() {
+        return deprecated;
+    }
+
+    public void setDeprecated(String deprecated) {
+        this.deprecated = deprecated;
     }
 }
