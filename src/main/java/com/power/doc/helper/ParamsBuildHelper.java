@@ -429,7 +429,7 @@ public class ParamsBuildHelper {
                                 commonHandleParam(paramList, param, isRequired, NO_COMMENTS_FOUND + appendComment, since, strRequired);
                             }
                             fieldPid = paramList.size() + pid;
-                            if (!simpleName.equals(gName) && !gName.equals(simpleName)) {
+                            if (!simpleName.equals(gName)) {
                                 JavaClass arraySubClass = projectBuilder.getJavaProjectBuilder().getClassByName(gName);
                                 if (arraySubClass.isEnum()) {
                                     Object value = JavaClassUtil.getEnumValue(arraySubClass, Boolean.FALSE);
@@ -452,6 +452,9 @@ public class ParamsBuildHelper {
                                     paramList.addAll(buildParams(gName, preBuilder.toString(), nextLevel, isRequired
                                             , isResp, registryClasses, projectBuilder, groupClasses, fieldPid, jsonRequest));
                                 }
+                            }
+                            else{
+                                param.setSelfReferenceLoop(true);
                             }
                         }
 
