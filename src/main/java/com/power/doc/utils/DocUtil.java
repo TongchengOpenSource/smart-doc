@@ -749,18 +749,17 @@ public class DocUtil {
      */
     public static String formatFieldTypeGicName(Map<String, String> genericMap, String[] globGicName, String fieldGicName) {
         String[] gNameArr = DocClassUtil.getSimpleGicName(fieldGicName);
-        if (gNameArr.length > 0) {
-            String gName = gNameArr[0];
-            if (gName.length() == 1) {
+        for(String g : gNameArr){
+            if (g.length() == 1) {
                 String gicName = "";
-                if (Objects.nonNull(genericMap.get(gName))) {
-                    gicName = genericMap.get(gName);
+                if (Objects.nonNull(genericMap.get(g))) {
+                    gicName = genericMap.get(g);
                 }
                 if (globGicName.length > 0) {
                     gicName = globGicName[0];
                 }
                 if (StringUtil.isNotEmpty(gicName)) {
-                    fieldGicName = fieldGicName.replace(gName, gicName);
+                    fieldGicName = fieldGicName.replace(g, gicName);
                 }
             }
         }
