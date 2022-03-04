@@ -748,15 +748,12 @@ public class DocUtil {
      * @return string
      */
     public static String formatFieldTypeGicName(Map<String, String> genericMap, String[] globGicName, String fieldGicName) {
+        String gicName = "";
         String[] gNameArr = DocClassUtil.getSimpleGicName(fieldGicName);
         for(String g : gNameArr){
             if (g.length() == 1) {
-                String gicName = "";
                 if (Objects.nonNull(genericMap.get(g))) {
                     gicName = genericMap.get(g);
-                }
-                if (globGicName.length > 0) {
-                    gicName = globGicName[0];
                 }
                 if (StringUtil.isNotEmpty(gicName)) {
                     fieldGicName = fieldGicName.replace(g, gicName);
