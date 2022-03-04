@@ -21,8 +21,10 @@
   - [maven插件调试](zh-cn/plugins/maven-plugin-debug.md "maven插件调试")
   - [gradle插件使用进阶](zh-cn/plugins/gradle_plugin.md "maven插件")
   - [gradle插件调试](zh-cn/plugins/gradle_plugin_debug.md "maven插件调试")
-- QA
+- FAQ
   - [使用问题集](zh-cn/QA.md)
 - [文档效果](zh-cn/docsImages.md)
 - [扩展开发](zh-cn/expand.md)
 - [变更日志](zh-cn/changelog.md)
+- 社区
+  - [团队](zh-cn/community/team.md)
