@@ -12,10 +12,21 @@ JAX-RS在网上的资料非常丰富，例如下面的入门教程：
 - 云原生时代的JAVA微服务框架Quarkus : https://quarkus.io/
 - Eclipse MicroProfile 是一个 Java 微服务开发的基础编程模型，它致力于定义企业 Java 微服务规范
 
-## JAX-RS规范支持开源招募
-当前smart-doc已经完成JAX-RS规范支持基础代码的开发。但是还有很多工作未完善，
-因此这里非常欢迎愿意学习Quarkus这些框架的研发人员加入smart-doc开源小组，
-编写相关的测试用例并且逐步完善smart-doc对JAX-RS规范的支持。完成该项支持后，
-smart-doc已将快速的开展国际化推广，提升开源影响力。
-
-愿意参与这请发送邮件至：836575280@qq.com
+当前已经发布了对Quarkus的支持。大多数的JAX-RS注解已经支持，欢迎正在使用JAR-RS的同学使用并提出issue
+## JAX-RS支持配置
+主要是在smart-doc.json配置文件中增加framework配置。
+```json
+{
+  "serverUrl": "http://localhost:8080/",
+  "outPath": "target/doc",
+  "isStrict": false,
+  "allInOne": true,
+  "coverOld": true,
+  "createDebugPage": true,
+  "style":"xt256",
+  "packageFilters": "",
+  "projectName": "smart-doc-quarkus-example",
+  "framework": "JAX-RS"
+}
+```
+更多配置请参请查阅其它部分的文档了解。
