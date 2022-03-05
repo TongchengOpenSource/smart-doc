@@ -23,6 +23,7 @@
 package com.power.doc.builder;
 
 import com.power.doc.factory.BuildTemplateFactory;
+import com.power.doc.helper.JavaProjectBuilderHelper;
 import com.power.doc.model.ApiConfig;
 import com.power.doc.model.ApiDoc;
 import com.power.doc.template.IDocBuildTemplate;
@@ -49,7 +50,7 @@ public class AdocDocBuilder {
      * @param config ApiConfig
      */
     public static void buildApiDoc(ApiConfig config) {
-        JavaProjectBuilder javaProjectBuilder = new JavaProjectBuilder();
+        JavaProjectBuilder javaProjectBuilder = JavaProjectBuilderHelper.create();
         buildApiDoc(config, javaProjectBuilder);
     }
 
@@ -86,7 +87,7 @@ public class AdocDocBuilder {
      */
     public static void buildSingleApiDoc(ApiConfig config, String controllerName) {
         config.setAdoc(false);
-        ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, new JavaProjectBuilder());
+        ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, JavaProjectBuilderHelper.create());
         DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
         builderTemplate.checkAndInit(config,false);
         builderTemplate.buildSingleApi(configBuilder, controllerName, API_DOC_ADOC_TPL, API_EXTENSION);

@@ -22,6 +22,10 @@
  */
 package com.power.doc.utils;
 
+import com.power.doc.qdox.model.expression.MyFieldRef;
+import com.thoughtworks.qdox.model.expression.Add;
+import com.thoughtworks.qdox.model.expression.AnnotationValue;
+import com.thoughtworks.qdox.model.expression.FieldRef;
 import net.datafaker.Faker;
 import com.mifmif.common.regex.Generex;
 import com.power.common.util.CollectionUtil;
@@ -628,13 +632,44 @@ public class DocUtil {
      */
     public static String getPathUrl(JavaAnnotation annotation, String... props) {
         for (String prop : props) {
-            Object url = annotation.getNamedParameter(prop);
+            AnnotationValue annotationValue = annotation.getProperty(prop);
+            Object url;
+            if (annotationValue instanceof Add) {
+                url = resolveAnnotationValue(annotationValue);
+            } else {
+                url = annotation.getNamedParameter(prop);
+            }
             if (Objects.nonNull(url)) {
                 return url.toString();
             }
         }
         return StringUtil.EMPTY;
     }
+
+    /**
+     * resolve the string of {@link Add} which has {@link FieldRef}(to be exact is {@link MyFieldRef}) children,
+     * the value of {@link MyFieldRef} will be resolved with the real value of it if it is the static final member of any other class
+     * @param annotationValue
+     * @return
+     */
+    private static String resolveAnnotationValue(AnnotationValue annotationValue) {
+        if (annotationValue instanceof Add) {
+            Add add = (Add) annotationValue;
+            String leftValue = resolveAnnotationValue(add.getLeft());
+            String rightValue = resolveAnnotationValue(add.getRight());
+            return leftValue + rightValue;
+        } else {
+            if (annotationValue instanceof FieldRef) {
+                FieldRef fieldRef = (FieldRef) annotationValue;
+                JavaField javaField = fieldRef.getField();
+                if (javaField != null) {
+                    return javaField.getInitializationExpression();
+                }
+            }
+            return annotationValue.getParameterValue().toString();
+        }
+    }
+
 
     /**
      * handle spring mvc RequestHeader value

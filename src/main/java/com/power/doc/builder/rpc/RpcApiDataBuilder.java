@@ -24,6 +24,7 @@ package com.power.doc.builder.rpc;
 
 import com.power.common.util.StringUtil;
 import com.power.doc.constants.FrameworkEnum;
+import com.power.doc.helper.JavaProjectBuilderHelper;
 import com.power.doc.model.ApiConfig;
 import com.power.doc.model.rpc.RpcApiAllData;
 import com.thoughtworks.qdox.JavaProjectBuilder;
@@ -46,7 +47,7 @@ public class RpcApiDataBuilder {
         }
         RpcDocBuilderTemplate builderTemplate = new RpcDocBuilderTemplate();
         builderTemplate.checkAndInitForGetApiData(config);
-        JavaProjectBuilder javaProjectBuilder = new JavaProjectBuilder();
+        JavaProjectBuilder javaProjectBuilder = JavaProjectBuilderHelper.create();
         builderTemplate.getApiData(config, javaProjectBuilder);
         return builderTemplate.getApiData(config, javaProjectBuilder);
     }

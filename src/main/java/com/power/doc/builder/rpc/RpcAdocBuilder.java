@@ -25,6 +25,7 @@ package com.power.doc.builder.rpc;
 import com.power.doc.builder.ProjectDocConfigBuilder;
 import com.power.doc.constants.FrameworkEnum;
 import com.power.doc.factory.BuildTemplateFactory;
+import com.power.doc.helper.JavaProjectBuilderHelper;
 import com.power.doc.model.ApiConfig;
 import com.power.doc.model.rpc.RpcApiDoc;
 import com.power.doc.template.IDocBuildTemplate;
@@ -49,7 +50,7 @@ public class RpcAdocBuilder {
      * @param config ApiConfig
      */
     public static void buildApiDoc(ApiConfig config) {
-        JavaProjectBuilder javaProjectBuilder = new JavaProjectBuilder();
+        JavaProjectBuilder javaProjectBuilder = JavaProjectBuilderHelper.create();
         buildApiDoc(config, javaProjectBuilder);
     }
 

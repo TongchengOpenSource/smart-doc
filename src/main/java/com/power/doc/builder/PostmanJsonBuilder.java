@@ -28,6 +28,7 @@ import com.power.common.util.StringUtil;
 import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.constants.Methods;
 import com.power.doc.factory.BuildTemplateFactory;
+import com.power.doc.helper.JavaProjectBuilderHelper;
 import com.power.doc.model.*;
 import com.power.doc.model.postman.InfoBean;
 import com.power.doc.model.postman.ItemBean;
@@ -63,7 +64,7 @@ public class PostmanJsonBuilder {
     public static void buildPostmanCollection(ApiConfig config) {
         DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
         builderTemplate.checkAndInit(config, false);
-        JavaProjectBuilder javaProjectBuilder = new JavaProjectBuilder();
+        JavaProjectBuilder javaProjectBuilder = JavaProjectBuilderHelper.create();
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
         postManCreate(config, configBuilder);
     }
