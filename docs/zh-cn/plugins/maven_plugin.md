@@ -72,10 +72,10 @@
   "isStrict": false, //是否开启严格模式
   "allInOne": true,  //是否将文档合并到一个文件中，一般推荐为true
   "outPath": "D://md2", //指定文档的输出路径
-  "coverOld": true,  //是否覆盖旧的文件，主要用于mardown文件覆盖
+  "coverOld": true,  //是否覆盖旧的文件，主要用于markdown文件覆盖
   "createDebugPage": true,//@since 2.0.0 smart-doc支持创建可以测试的html页面，仅在AllInOne模式中起作用。
   "packageFilters": "",//controller包过滤，多个包用英文逗号隔开，2.2.2开始需要采用正则：com.test.controller.*
-  "md5EncryptedHtmlName": false,//只有每个controller生成一个html文件是才使用
+  "md5EncryptedHtmlName": false,//只有每个controller生成一个html文件时才使用
   "style":"xt256", //基于highlight.js的代码高设置,可选值很多可查看码云wiki，喜欢配色统一简洁的同学可以不设置
   "projectName": "smart-doc",//配置自己的项目名称，不设置则插件自动获取pom中的projectName
   "skipTransientField": true,//目前未实现
