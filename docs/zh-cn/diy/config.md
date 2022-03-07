@@ -516,7 +516,7 @@ torna环境名称。
 * 默认值: `true`
 * @since `2.2.4`
 
-推送torna时替换旧的文档。
+推送torna时替换旧的文档。改动还是会推送过去覆盖的，这个功能主要是保证代码删除了，torna上没有删除。
 ```json
 {
     "replace": false
