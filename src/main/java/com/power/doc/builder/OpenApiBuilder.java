@@ -578,6 +578,14 @@ public class OpenApiBuilder {
                 propertiesData.put("type", "array");
                 Map<String, String> ref = new HashMap<>();
                 ref.put("$ref", "#/components/schemas/" + schemaName);
+                //自循环引用数组
+                if(apiParam.isSelfReferenceLoop()){
+                    List<Map<String,Object>> sRLExample = new ArrayList<>();
+                    HashMap<String,Object> example = new HashMap<>(4);
+                    example.put("$ref","...");
+                    sRLExample.add(example);
+                propertiesData.put("example",sRLExample);
+                }
                 propertiesData.put("items", ref);
             }
         }

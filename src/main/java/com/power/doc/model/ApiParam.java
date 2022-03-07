@@ -109,6 +109,10 @@ public class ApiParam {
      *  default false
      */
     private boolean configParam;
+    /**
+     * 自循环引用
+     */
+    private boolean selfReferenceLoop;
 
     public static ApiParam of() {
         return new ApiParam();
@@ -258,30 +262,34 @@ public class ApiParam {
         return this;
     }
 
+    public boolean isSelfReferenceLoop() {
+        return selfReferenceLoop;
+    }
+
+    public void setSelfReferenceLoop(boolean selfReferenceLoop) {
+        this.selfReferenceLoop = selfReferenceLoop;
+    }
+
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("{");
-        sb.append("\"id\":")
-                .append(id);
-        sb.append(",\"field\":\"")
-                .append(field).append('\"');
-        sb.append(",\"type\":\"")
-                .append(type).append('\"');
-        sb.append(",\"desc\":\"")
-                .append(desc).append('\"');
-        sb.append(",\"required\":")
-                .append(required);
-        sb.append(",\"version\":\"")
-                .append(version).append('\"');
-        sb.append(",\"pid\":")
-                .append(pid);
-        sb.append(",\"pathParam\":")
-                .append(pathParam);
-        sb.append(",\"queryParam\":")
-                .append(queryParam);
-        sb.append(",\"children\":")
-                .append(children);
-        sb.append('}');
-        return sb.toString();
+        return "ApiParam{" +
+                "id=" + id +
+                ", field='" + field + '\'' +
+                ", type='" + type + '\'' +
+                ", desc='" + desc + '\'' +
+                ", required=" + required +
+                ", version='" + version + '\'' +
+                ", pid=" + pid +
+                ", pathParam=" + pathParam +
+                ", queryParam=" + queryParam +
+                ", value='" + value + '\'' +
+                ", children=" + children +
+                ", hasItems=" + hasItems +
+                ", enumValues=" + enumValues +
+                ", enumInfo=" + enumInfo +
+                ", maxLength='" + maxLength + '\'' +
+                ", configParam=" + configParam +
+                ", selfReferenceLoop=" + selfReferenceLoop +
+                '}';
     }
 }
