@@ -5,8 +5,13 @@ import com.thoughtworks.qdox.builder.impl.ModelBuilder;
 import com.thoughtworks.qdox.library.ClassLibrary;
 import com.thoughtworks.qdox.model.DocletTagFactory;
 import com.thoughtworks.qdox.model.JavaAnnotation;
+import com.thoughtworks.qdox.model.JavaClass;
+import com.thoughtworks.qdox.model.JavaGenericDeclaration;
 import com.thoughtworks.qdox.model.impl.*;
 import com.thoughtworks.qdox.parser.structs.AnnoDef;
+import com.thoughtworks.qdox.parser.structs.ClassDef;
+import com.thoughtworks.qdox.parser.structs.TypeDef;
+import com.thoughtworks.qdox.parser.structs.TypeVariableDef;
 import com.thoughtworks.qdox.type.TypeResolver;
 import com.thoughtworks.qdox.writer.ModelWriterFactory;
 
@@ -14,6 +19,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * replace {@link ModelBuilder}, in order to replace {@link DefaultJavaAnnotationAssembler}
@@ -41,6 +47,67 @@ public class MyModelBuilder extends ModelBuilder {
             throw new RuntimeException(e.getMessage(), e);
         }
         this.classLibrary = classLibrary;
+    }
+
+    @Override
+    public void beginClass(ClassDef def) {
+        DefaultJavaClass newClass = new DefaultJavaClass( source );
+        newClass.setLineNumber( def.getLineNumber() );
+        newClass.setModelWriterFactory( modelWriterFactory );
+
+        // basic details
+        newClass.setName( def.getName() );
+        newClass.setInterface( ClassDef.INTERFACE.equals( def.getType() ) );
+        newClass.setEnum( ClassDef.ENUM.equals( def.getType() ) );
+        newClass.setAnnotation( ClassDef.ANNOTATION_TYPE.equals( def.getType() ) );
+
+        // superclass
+        if ( newClass.isInterface() )
+        {
+            newClass.setSuperClass( null );
+        }
+        else if ( !newClass.isEnum() )
+        {
+            newClass.setSuperClass( def.getExtends().size() > 0 ? createType( def.getExtends().iterator().next(), 0 )
+                : null );
+        }
+
+        // implements
+        Set<TypeDef> implementSet = newClass.isInterface() ? def.getExtends() : def.getImplements();
+        List<JavaClass> implementz = new LinkedList<JavaClass>();
+        for ( TypeDef implementType : implementSet )
+        {
+            implementz.add( createType( implementType, 0 ) );
+        }
+        newClass.setImplementz( implementz );
+
+        // modifiers
+        newClass.setModifiers( new LinkedList<String>( def.getModifiers() ) );
+
+        // typeParameters
+        if ( def.getTypeParameters() != null )
+        {
+            List<DefaultJavaTypeVariable<JavaClass>> typeParams = new LinkedList<DefaultJavaTypeVariable<JavaClass>>();
+            for ( TypeVariableDef typeVariableDef : def.getTypeParameters() )
+            {
+                typeParams.add( createTypeVariable( typeVariableDef, (JavaClass) newClass ) );
+            }
+            newClass.setTypeParameters( typeParams );
+        }
+
+        // javadoc
+        addJavaDoc( newClass );
+
+//        // ignore annotation types (for now)
+//        if (ClassDef.ANNOTATION_TYPE.equals(def.type)) {
+//        	System.out.println( currentClass.getFullyQualifiedName() );
+//            return;
+//        }
+
+        // annotations
+        setAnnotations( newClass );
+
+        classStack.addFirst( bindClass( newClass ) );
     }
 
     @Override
@@ -104,6 +171,23 @@ public class MyModelBuilder extends ModelBuilder {
         }
     }
 
+    private DefaultJavaType createType( TypeDef typeDef, int dimensions ) {
+        try {
+            return (DefaultJavaType) createTypeMethod.invoke(this, typeDef, dimensions);
+        } catch (ReflectiveOperationException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private <G extends JavaGenericDeclaration> DefaultJavaTypeVariable<G> createTypeVariable(TypeVariableDef typeVariableDef, G genericDeclaration) {
+        try {
+            return (DefaultJavaTypeVariable<G>) createTypeVariableMethod.invoke(this, typeVariableDef, genericDeclaration);
+        } catch (ReflectiveOperationException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
     private void addJavaDoc(AbstractBaseJavaEntity entity) {
         try {
             addJavaDocMethod.invoke(this, entity);
@@ -132,6 +216,8 @@ public class MyModelBuilder extends ModelBuilder {
     private static final Field classStackField;
     private static final Method addJavaDocMethod;
     private static final Field currentAnnoDefsField;
+    private static final Method createTypeMethod;
+    private static final Method createTypeVariableMethod;
 
     static {
         Class<ModelBuilder> clazz = ModelBuilder.class;
@@ -146,6 +232,10 @@ public class MyModelBuilder extends ModelBuilder {
             addJavaDocMethod.setAccessible(true);
             currentAnnoDefsField = clazz.getDeclaredField("currentAnnoDefs");
             currentAnnoDefsField.setAccessible(true);
+            createTypeMethod = clazz.getDeclaredMethod("createType", TypeDef.class, int.class);
+            createTypeMethod.setAccessible(true);
+            createTypeVariableMethod = clazz.getDeclaredMethod("createTypeVariable", TypeVariableDef.class, JavaGenericDeclaration.class);
+            createTypeVariableMethod.setAccessible(true);
         } catch (ReflectiveOperationException e) {
             throw new RuntimeException(e.getMessage(), e);
         }

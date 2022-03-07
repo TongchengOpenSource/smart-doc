@@ -21,6 +21,10 @@ public class MyFieldRef extends FieldRef {
      * which is part of the final url of <code>RequestMapping</code>
      */
     private TypeResolver typeResolver;
+    /**
+     * save a copy, then can read it without reflection
+     */
+    private JavaClass declaringClass;
 
     /**
      * create with the name and the <code>TypeResolver</code> object of the declaring class
@@ -42,7 +46,10 @@ public class MyFieldRef extends FieldRef {
 
     @Override
     public JavaField getField() {
-        JavaField javaField = super.getField();
+        JavaField javaField = null;
+        if (this.declaringClass != null) {
+            javaField = super.getField();
+        }
         if (javaField == null) {
             // the field may in any other class, try to resolve it
             for (int i = 0; i < parts.length - 1; ++i) {
@@ -60,6 +67,12 @@ public class MyFieldRef extends FieldRef {
 
         }
         return javaField;
+    }
+
+    @Override
+    public void setDeclaringClass(JavaClass declaringClass) {
+        super.setDeclaringClass(declaringClass);
+        this.declaringClass = declaringClass;
     }
 
     private void setField(JavaField field) {

@@ -20,6 +20,10 @@ public class JavaProjectBuilderHelper {
         return new MyJavaProjectBuilder();
     }
 
+    public static JavaProjectBuilder create(ClassLibraryBuilder classLibraryBuilder) {
+        return new MyJavaProjectBuilder(classLibraryBuilder);
+    }
+
     /**
      * replace the default {@link JavaProjectBuilder}
      */
