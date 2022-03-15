@@ -33,7 +33,7 @@ public void testRequestParam(@RequestParam String author, @RequestParam String t
 例如一些对象在框架底层做了特殊处理，smart-doc根据原始参数对象依赖过于强大的分析处理后的文档可能并不符合要求，这时你可以定义一个参数对象来
 替换，然后smart-doc按照你指定的对象来输出文档。
 
-例如：使用jpa的Pageable作为接口参数接收对象时spring框架做了处理，实际生真正的属性是PageRequest,不过smart-doc如果采用PageRequest会推到出一些不必要的属性，该功能从smart-doc 1.8.5开始提供。
+例如：使用jpa的Pageable作为接口参数接收对象时spring框架做了处理，实际上真正的属性是PageRequest,不过smart-doc如果采用PageRequest会推导出一些不必要的属性，该功能从smart-doc 1.8.5开始提供。
 
 ```java
 /**
