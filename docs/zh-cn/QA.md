@@ -10,7 +10,7 @@
 No plugin found for prefix 'smart-doc' in the current project and in the plugin groups [org.apache.maven.plugins, org.codehaus.mojo] available from the repositories
 ```
 这个问题其实和smart-doc没有任务关系，但是一些对maven不是很懂(只会简单使用)的同学会误认为是smart-doc的插件有问题。
-实际上这个是应为在项目中添加了smart-doc的maven插件后，自己的网络有些问题，导致并没有从maven仓库中下载到官方的插件。
+实际上这个是因为在项目中添加了smart-doc的maven插件后，自己的网络有些问题，导致并没有从maven仓库中下载到官方的插件。
 # smart-doc和swagger的区别
 尤其是新手，一定要了解smart-doc和swagger的本质区别：
 - smart-doc主要是基于源代码和JAVADOC标注注释来生成文档，是在开发期或者是项目的编译期执行生成文档， 
