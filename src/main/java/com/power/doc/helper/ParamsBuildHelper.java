@@ -258,6 +258,8 @@ public class ParamsBuildHelper {
                         break doc;
                     }
                 }
+
+
                 // cover response value
                 if (Objects.nonNull(customResponseField) && isResp && Objects.nonNull(customResponseField.getValue())
                         && JavaClassUtil.isTargetChildClass(simpleName, customResponseField.getOwnerClassName())) {
@@ -283,6 +285,17 @@ public class ParamsBuildHelper {
                         && JavaClassUtil.isTargetChildClass(simpleName, customResponseField.getOwnerClassName()) && isResp) {
                     comment = customResponseField.getDesc();
                 }
+                //cover fieldName
+                if (null != customRequestField && StringUtil.isNotEmpty(customRequestField.getReplaceName())
+                        && JavaClassUtil.isTargetChildClass(simpleName, customRequestField.getOwnerClassName()) && !isResp) {
+                    fieldName = customRequestField.getReplaceName();
+                }
+                if (null != customResponseField && StringUtil.isNotEmpty(customResponseField.getReplaceName())
+                        && JavaClassUtil.isTargetChildClass(simpleName, customResponseField.getOwnerClassName()) && isResp) {
+                    fieldName = customResponseField.getReplaceName();
+                }
+
+
                 if (StringUtils.isBlank(comment)) {
                     comment = docField.getComment();
                 }

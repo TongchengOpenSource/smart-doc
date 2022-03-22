@@ -49,6 +49,17 @@ public class CustomField {
 
     private boolean ignore;
 
+    private String replaceName;
+
+    public String getReplaceName() {
+        return replaceName;
+    }
+
+    public CustomField setReplaceName(String replaceName) {
+        this.replaceName = replaceName;
+        return this;
+    }
+
     public static CustomField builder() {
         return new CustomField();
     }
