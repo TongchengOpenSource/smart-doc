@@ -32,6 +32,7 @@ apply(plugin = "com.github.shalousun.smart-doc")
 **buildscript配置添加到build.gradle的顶部** 。
 ### Plugin options
 是smart-doc插件使用还需要在build.gradle添加一些常见本身的配置
+
 | Option | Default value | Required|Description |
 | ------ | ------------- | -------------|----------- |
 |configFile|src/main/resources/default.json|true|插件配置文件|

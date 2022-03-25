@@ -276,6 +276,7 @@ for(int i=0;i<arr.length;i++){
     System.out.println("index:"+(i+1)+" value:"+arr[i]);
 }
 ```
+> 这个最直接的办法就是看到报错代码的包直接通过插件的exclude配置项把报错的依赖排除掉。
 
 # smart-doc适用设计先行的开发吗？
 一些老派的程序员或者所谓有多年经验的架构师觉得，smart-doc这种基于代码扫描工具对于设计先行的开发模式并没有什么作用。
