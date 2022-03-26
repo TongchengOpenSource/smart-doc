@@ -27,6 +27,7 @@ import com.power.common.util.CollectionUtil;
 import com.power.common.util.StringUtil;
 import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.constants.HighlightStyle;
+import com.power.doc.helper.JavaProjectBuilderHelper;
 import com.power.doc.model.*;
 import com.power.doc.utils.JavaClassUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
@@ -73,7 +74,7 @@ public class ProjectDocConfigBuilder {
         }
         this.apiConfig = apiConfig;
         if (Objects.isNull(javaProjectBuilder)) {
-            javaProjectBuilder = new JavaProjectBuilder();
+            javaProjectBuilder = JavaProjectBuilderHelper.create();
         }
 
         if (StringUtil.isEmpty(apiConfig.getServerUrl())) {

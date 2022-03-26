@@ -29,6 +29,7 @@ import com.power.common.util.StringUtil;
 import com.power.doc.builder.ProjectDocConfigBuilder;
 import com.power.doc.constants.TornaConstants;
 import com.power.doc.factory.BuildTemplateFactory;
+import com.power.doc.helper.JavaProjectBuilderHelper;
 import com.power.doc.model.ApiConfig;
 import com.power.doc.model.rpc.RpcApiDoc;
 import com.power.doc.model.torna.Apis;
@@ -62,7 +63,7 @@ public class RpcTornaBuilder {
      * @param config config
      */
     public static void buildApiDoc(ApiConfig config) {
-        JavaProjectBuilder javaProjectBuilder = new JavaProjectBuilder();
+        JavaProjectBuilder javaProjectBuilder = JavaProjectBuilderHelper.create();
         buildApiDoc(config, javaProjectBuilder);
     }
 
