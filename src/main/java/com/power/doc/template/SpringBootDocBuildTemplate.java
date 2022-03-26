@@ -58,6 +58,7 @@ import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaMethod;
 import com.thoughtworks.qdox.model.JavaParameter;
 import com.thoughtworks.qdox.model.JavaType;
+import com.thoughtworks.qdox.model.expression.Add;
 import com.thoughtworks.qdox.model.expression.AnnotationValue;
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -820,7 +821,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                     }
                     AnnotationValue annotationDefaultVal = annotation.getProperty(DocAnnotationConstants.DEFAULT_VALUE_PROP);
                     if (Objects.nonNull(annotationDefaultVal)) {
-                        mockValue = StringUtil.removeQuotes(annotationDefaultVal.toString());
+                        mockValue = DocUtil.resolveAnnotationValue(annotationDefaultVal);
                     }
                     paramName = getParamName(paramName, annotation);
                     for (Map.Entry<String, String> entry : constantsMap.entrySet()) {
@@ -1045,12 +1046,12 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
 
     private String getParamName(String paramName, JavaAnnotation annotation) {
         AnnotationValue annotationValue = annotation.getProperty(DocAnnotationConstants.VALUE_PROP);
-        if (Objects.nonNull(annotationValue)) {
-            paramName = StringUtil.removeQuotes(annotationValue.toString());
+        if (annotationValue instanceof Add) {
+            paramName = DocUtil.resolveAnnotationValue(annotationValue);
         }
         AnnotationValue annotationOfName = annotation.getProperty(DocAnnotationConstants.NAME_PROP);
-        if (Objects.nonNull(annotationOfName)) {
-            paramName = StringUtil.removeQuotes(annotationOfName.toString());
+        if (annotationValue instanceof Add) {
+            paramName = DocUtil.resolveAnnotationValue(annotationOfName);
         }
         return paramName;
     }

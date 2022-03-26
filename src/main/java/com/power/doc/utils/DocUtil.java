@@ -628,7 +628,7 @@ public class DocUtil {
      * @param annotationValue
      * @return
      */
-    private static String resolveAnnotationValue(AnnotationValue annotationValue) {
+    public static String resolveAnnotationValue(AnnotationValue annotationValue) {
         if (annotationValue instanceof Add) {
             Add add = (Add) annotationValue;
             String leftValue = resolveAnnotationValue(add.getLeft());
