@@ -84,7 +84,7 @@ public class JaxrsHeaderHandler {
                     apiReqHeader.setType(DocClassUtil.processTypeNameForParams(typeName));
 
                     String className = method.getDeclaringClass().getCanonicalName();
-                    Map<String, String> paramMap = DocUtil.getParamsComments(method, DocTags.PARAM, className);
+                    Map<String, String> paramMap = DocUtil.getCommentsByTag(method, DocTags.PARAM, className);
                     String paramComments = paramMap.get(paramName);
                     apiReqHeader.setDesc(getComments(defaultValue, paramComments));
                     apiReqHeaders.add(apiReqHeader);

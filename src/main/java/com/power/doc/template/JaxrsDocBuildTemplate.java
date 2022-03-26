@@ -234,7 +234,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             if (StringUtil.isEmpty(apiNoteValue)) {
                 apiNoteValue = method.getComment();
             }
-            Map<String, String> authorMap = DocUtil.getParamsComments(method, DocTags.AUTHOR, cls.getName());
+            Map<String, String> authorMap = DocUtil.getCommentsByTag(method, DocTags.AUTHOR, cls.getName());
             String authorValue = String.join(", ", new ArrayList<>(authorMap.keySet()));
             if (apiConfig.isShowAuthor() && StringUtil.isNotEmpty(authorValue)) {
                 apiMethodDoc.setAuthor(JsonUtil.toPrettyFormat(authorValue));
@@ -362,8 +362,8 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         boolean isStrict = builder.getApiConfig().isStrict();
         String className = javaMethod.getDeclaringClass().getCanonicalName();
         Map<String, String> replacementMap = builder.getReplaceClassMap();
-        Map<String, String> paramTagMap = DocUtil.getParamsComments(javaMethod, DocTags.PARAM, className);
-        Map<String, String> paramsComments = DocUtil.getParamsComments(javaMethod, DocTags.PARAM, null);
+        Map<String, String> paramTagMap = DocUtil.getCommentsByTag(javaMethod, DocTags.PARAM, className);
+        Map<String, String> paramsComments = DocUtil.getCommentsByTag(javaMethod, DocTags.PARAM, null);
         List<ApiParam> paramList = new ArrayList<>();
         List<JavaParameter> parameterList = javaMethod.getParameters();
         if (parameterList.isEmpty()) {
@@ -623,7 +623,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         Map<String, JavaType> actualTypesMap = javaMethod.getActualTypesMap();
         boolean requestFieldToUnderline = configBuilder.getApiConfig().isRequestFieldToUnderline();
         Map<String, String> replacementMap = configBuilder.getReplaceClassMap();
-        Map<String, String> paramsComments = DocUtil.getParamsComments(method, DocTags.PARAM, null);
+        Map<String, String> paramsComments = DocUtil.getCommentsByTag(method, DocTags.PARAM, null);
         List<FormData> formDataList = new ArrayList<>();
         ApiRequestExample requestExample = ApiRequestExample.builder();
         for (JavaParameter parameter : parameterList) {

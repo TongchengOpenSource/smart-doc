@@ -22,53 +22,24 @@
  */
 package com.power.doc.utils;
 
+import com.mifmif.common.regex.Generex;
+import com.power.common.util.*;
+import com.power.doc.constants.DocAnnotationConstants;
+import com.power.doc.constants.DocGlobalConstants;
+import com.power.doc.constants.DocTags;
+import com.power.doc.constants.JAXRSAnnotations;
+import com.power.doc.model.*;
 import com.power.doc.qdox.model.expression.MyFieldRef;
+import com.thoughtworks.qdox.JavaProjectBuilder;
+import com.thoughtworks.qdox.model.*;
 import com.thoughtworks.qdox.model.expression.Add;
 import com.thoughtworks.qdox.model.expression.AnnotationValue;
 import com.thoughtworks.qdox.model.expression.FieldRef;
 import net.datafaker.Faker;
-import com.mifmif.common.regex.Generex;
-import com.power.common.util.CollectionUtil;
-import com.power.common.util.DateTimeUtil;
-import com.power.common.util.EnumUtil;
-import com.power.common.util.IDCardUtil;
-import com.power.common.util.RandomUtil;
-import com.power.common.util.StringUtil;
-import com.power.common.util.ValidateUtil;
-import com.power.doc.constants.DocAnnotationConstants;
-import com.power.doc.constants.DocGlobalConstants;
-import com.power.doc.constants.JAXRSAnnotations;
-import com.power.doc.model.ApiConfig;
-import com.power.doc.model.ApiDataDictionary;
-import com.power.doc.model.ApiDocDict;
-import com.power.doc.model.ApiErrorCode;
-import com.power.doc.model.ApiErrorCodeDictionary;
-import com.power.doc.model.DataDict;
-import com.power.doc.model.DocJavaField;
-import com.power.doc.model.FormData;
-import com.thoughtworks.qdox.JavaProjectBuilder;
-import com.thoughtworks.qdox.model.DocletTag;
-import com.thoughtworks.qdox.model.JavaAnnotation;
-import com.thoughtworks.qdox.model.JavaClass;
-import com.thoughtworks.qdox.model.JavaField;
-import com.thoughtworks.qdox.model.JavaMethod;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.IdentityHashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.Stack;
-import java.util.UUID;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -429,7 +400,7 @@ public class DocUtil {
      * @param className  class name
      * @return Map
      */
-    public static Map<String, String> getParamsComments(final JavaMethod javaMethod, final String tagName, final String className) {
+    public static Map<String, String> getCommentsByTag(final JavaMethod javaMethod, final String tagName, final String className) {
         List<DocletTag> paramTags = javaMethod.getTagsByName(tagName);
         Map<String, String> paramTagMap = new HashMap<>();
         for (DocletTag docletTag : paramTags) {
@@ -439,15 +410,19 @@ public class DocUtil {
                         + "() - bad @" + tagName + " javadoc from " + javaMethod.getDeclaringClass()
                         .getCanonicalName() + ", must be add comment if you use it.");
             }
-            String pName = value;
-            String pValue = DocGlobalConstants.NO_COMMENTS_FOUND;
-            int idx = value.indexOf(" ");
-            //existed \n
-            if (idx > -1) {
-                pName = value.substring(0, idx);
-                pValue = value.substring(idx + 1);
+            if (DocTags.PARAM.equals(tagName)) {
+                String pName = value;
+                String pValue = DocGlobalConstants.NO_COMMENTS_FOUND;
+                int idx = value.indexOf(" ");
+                //existed \n
+                if (idx > -1) {
+                    pName = value.substring(0, idx);
+                    pValue = value.substring(idx + 1);
+                }
+                paramTagMap.put(pName, pValue);
+            } else {
+                paramTagMap.put(value, DocGlobalConstants.EMPTY);
             }
-            paramTagMap.put(pName, pValue);
         }
         return paramTagMap;
     }
@@ -461,7 +436,7 @@ public class DocUtil {
      * @return Map
      */
     public static String getNormalTagComments(final JavaMethod javaMethod, final String tagName, final String className) {
-        Map<String, String> map = getParamsComments(javaMethod, tagName, className);
+        Map<String, String> map = getCommentsByTag(javaMethod, tagName, className);
         return getFirstKeyAndValue(map);
     }
 
@@ -649,6 +624,7 @@ public class DocUtil {
     /**
      * resolve the string of {@link Add} which has {@link FieldRef}(to be exact is {@link MyFieldRef}) children,
      * the value of {@link MyFieldRef} will be resolved with the real value of it if it is the static final member of any other class
+     *
      * @param annotationValue
      * @return
      */
@@ -785,7 +761,7 @@ public class DocUtil {
     public static String formatFieldTypeGicName(Map<String, String> genericMap, String[] globGicName, String fieldGicName) {
         String gicName = "";
         String[] gNameArr = DocClassUtil.getSimpleGicName(fieldGicName);
-        for(String g : gNameArr){
+        for (String g : gNameArr) {
             if (g.length() == 1) {
                 if (Objects.nonNull(genericMap.get(g))) {
                     gicName = genericMap.get(g);

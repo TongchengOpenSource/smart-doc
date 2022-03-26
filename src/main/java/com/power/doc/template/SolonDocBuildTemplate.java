@@ -248,7 +248,7 @@ public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             if (StringUtil.isEmpty(apiNoteValue)) {
                 apiNoteValue = method.getComment();
             }
-            Map<String, String> authorMap = DocUtil.getParamsComments(method, DocTags.AUTHOR, cls.getName());
+            Map<String, String> authorMap = DocUtil.getCommentsByTag(method, DocTags.AUTHOR, cls.getName());
             String authorValue = String.join(", ", new ArrayList<>(authorMap.keySet()));
             if (apiConfig.isShowAuthor() && StringUtil.isNotEmpty(authorValue)) {
                 apiMethodDoc.setAuthor(StringUtil.removeQuotes(authorValue));
@@ -401,7 +401,7 @@ public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         Map<String, String> constantsMap = configBuilder.getConstantsMap();
         boolean requestFieldToUnderline = configBuilder.getApiConfig().isRequestFieldToUnderline();
         Map<String, String> replacementMap = configBuilder.getReplaceClassMap();
-        Map<String, String> paramsComments = DocUtil.getParamsComments(method, DocTags.PARAM, null);
+        Map<String, String> paramsComments = DocUtil.getCommentsByTag(method, DocTags.PARAM, null);
         List<String> mvcRequestAnnotations = SolonRequestAnnotationsEnum.listMvcRequestAnnotations();
         List<FormData> formDataList = new ArrayList<>();
         ApiRequestExample requestExample = ApiRequestExample.builder();
@@ -639,8 +639,8 @@ public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         boolean isStrict = builder.getApiConfig().isStrict();
         String className = javaMethod.getDeclaringClass().getCanonicalName();
         Map<String, String> replacementMap = builder.getReplaceClassMap();
-        Map<String, String> paramTagMap = DocUtil.getParamsComments(javaMethod, DocTags.PARAM, className);
-        Map<String, String> paramsComments = DocUtil.getParamsComments(javaMethod, DocTags.PARAM, null);
+        Map<String, String> paramTagMap = DocUtil.getCommentsByTag(javaMethod, DocTags.PARAM, className);
+        Map<String, String> paramsComments = DocUtil.getCommentsByTag(javaMethod, DocTags.PARAM, null);
         List<ApiParam> paramList = new ArrayList<>();
         Map<String, String> mappingParams = new HashMap<>();
         List<JavaAnnotation> methodAnnotations = javaMethod.getAnnotations();

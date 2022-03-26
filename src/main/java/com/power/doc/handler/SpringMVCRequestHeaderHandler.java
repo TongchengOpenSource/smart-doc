@@ -78,7 +78,7 @@ public class SpringMVCRequestHeaderHandler {
         for (JavaParameter javaParameter : method.getParameters()) {
             List<JavaAnnotation> javaAnnotations = javaParameter.getAnnotations();
             String className = method.getDeclaringClass().getCanonicalName();
-            Map<String, String> paramMap = DocUtil.getParamsComments(method, DocTags.PARAM, className);
+            Map<String, String> paramMap = DocUtil.getCommentsByTag(method, DocTags.PARAM, className);
             String paramName = javaParameter.getName();
             ApiReqParam apiReqHeader;
             for (JavaAnnotation annotation : javaAnnotations) {
