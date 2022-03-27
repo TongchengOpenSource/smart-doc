@@ -5,6 +5,7 @@
   1. customResponseFields新增replaceName配置支持替换字段名。
   2. 修复获取非@param注释tag值错误bug。
   3. 支持静态常量自动解析，无需再使用apiConstants来配置。
+  4. 修复dubbo rpc
 #### 版本号：2.4.0
 - 更新日期: 2022-03-06
 - 更新内容：
