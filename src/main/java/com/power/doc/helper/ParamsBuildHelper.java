@@ -313,11 +313,11 @@ public class ParamsBuildHelper {
                 }
                 if (JavaClassValidateUtil.isPrimitive(subTypeName)) {
                     if (StringUtil.isEmpty(fieldValue)) {
-                        fieldValue = DocUtil.getValByTypeAndFieldName(typeSimpleName, field.getName());
+                        fieldValue = DocUtil.getValByTypeAndFieldName(subTypeName, field.getName());
                     }
                     ApiParam param = ApiParam.of().setField(pre + fieldName);
                     param.setPid(pid).setMaxLength(maxLength).setValue(fieldValue);
-                    String processedType = isShowJavaType ? typeSimpleName : DocClassUtil.processTypeNameForParams(typeSimpleName.toLowerCase());
+                    String processedType = isShowJavaType ? subTypeName : DocClassUtil.processTypeNameForParams(subTypeName.toLowerCase());
                     param.setType(processedType);
                     if (StringUtil.isNotEmpty(comment)) {
                         commonHandleParam(paramList, param, isRequired, comment, since, strRequired);
