@@ -608,14 +608,11 @@ public class DocUtil {
     public static String getPathUrl(JavaAnnotation annotation, String... props) {
         for (String prop : props) {
             AnnotationValue annotationValue = annotation.getProperty(prop);
-            Object url;
-            if (annotationValue instanceof Add) {
-                url = resolveAnnotationValue(annotationValue);
-            } else {
-                url = annotation.getNamedParameter(prop);
-            }
-            if (Objects.nonNull(url)) {
-                return url.toString();
+            if (Objects.nonNull(annotationValue)) {
+                Object url = resolveAnnotationValue(annotationValue);
+                if (Objects.nonNull(url)) {
+                    return url.toString();
+                }
             }
         }
         return StringUtil.EMPTY;
