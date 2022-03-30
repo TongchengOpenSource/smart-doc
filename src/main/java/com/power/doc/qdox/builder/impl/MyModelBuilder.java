@@ -8,10 +8,7 @@ import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaGenericDeclaration;
 import com.thoughtworks.qdox.model.impl.*;
-import com.thoughtworks.qdox.parser.structs.AnnoDef;
-import com.thoughtworks.qdox.parser.structs.ClassDef;
-import com.thoughtworks.qdox.parser.structs.TypeDef;
-import com.thoughtworks.qdox.parser.structs.TypeVariableDef;
+import com.thoughtworks.qdox.parser.structs.*;
 import com.thoughtworks.qdox.type.TypeResolver;
 import com.thoughtworks.qdox.writer.ModelWriterFactory;
 
@@ -125,6 +122,27 @@ public class MyModelBuilder extends ModelBuilder {
         setAnnotations(currentMethod);
     }
 
+    /** {@inheritDoc} */
+    public void addParameter( FieldDef fieldDef )
+    {
+        DefaultJavaParameter jParam =
+            new DefaultJavaParameter( createType( fieldDef.getType(), fieldDef.getDimensions() ), fieldDef.getName(),
+                fieldDef.isVarArgs() );
+        DefaultJavaMethod currentMethod = this.getCurrentMethod();
+        if( currentMethod != null )
+        {
+            jParam.setExecutable( currentMethod );
+        }
+        else
+        {
+            jParam.setExecutable( this.getCurrentConstructor() );
+        }
+        jParam.setModelWriterFactory( modelWriterFactory );
+        addJavaDoc( jParam );
+        setAnnotations( jParam );
+        getParameterList().add( jParam );
+    }
+
     private void setAnnotations(final AbstractBaseJavaEntity entity) {
         List<AnnoDef> currentAnnoDefs = this.getCurrentAnnoDefs();
         if (!currentAnnoDefs.isEmpty()) {
@@ -147,9 +165,34 @@ public class MyModelBuilder extends ModelBuilder {
         }
     }
 
+    @SuppressWarnings("unchecked")
+    private List<DefaultJavaParameter> getParameterList() {
+        try {
+            return (List<DefaultJavaParameter>) parameterListField.get(this);
+        } catch (ReflectiveOperationException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+    private DefaultJavaConstructor getCurrentConstructor() {
+        try {
+            return (DefaultJavaConstructor) currentConstructorField.get(this);
+        } catch (ReflectiveOperationException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
     private void setCurrentMethod(DefaultJavaMethod javaMethod) {
         try {
             currentMethodField.set(this, javaMethod);
+        } catch (ReflectiveOperationException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+    private DefaultJavaMethod getCurrentMethod() {
+        try {
+            return (DefaultJavaMethod) currentMethodField.get(this);
         } catch (ReflectiveOperationException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
@@ -211,6 +254,8 @@ public class MyModelBuilder extends ModelBuilder {
         this.modelWriterFactory = modelWriterFactory;
     }
 
+    private static final Field parameterListField;
+    private static final Field currentConstructorField;
     private static final Field currentMethodField;
     private static final Field currentFieldField;
     private static final Field classStackField;
@@ -222,6 +267,10 @@ public class MyModelBuilder extends ModelBuilder {
     static {
         Class<ModelBuilder> clazz = ModelBuilder.class;
         try {
+            parameterListField = clazz.getDeclaredField("parameterList");
+            parameterListField.setAccessible(true);
+            currentConstructorField = clazz.getDeclaredField("currentConstructor");
+            currentConstructorField.setAccessible(true);
             currentMethodField = clazz.getDeclaredField("currentMethod");
             currentMethodField.setAccessible(true);
             currentFieldField = clazz.getDeclaredField("currentField");
