@@ -165,6 +165,7 @@ public class DocClassUtil {
      * @return String
      */
     public static String processTypeNameForParams(String javaTypeName) {
+        javaTypeName = javaTypeName.toLowerCase();
         if (StringUtil.isEmpty(javaTypeName)) {
             return "object";
         }
@@ -175,57 +176,58 @@ public class DocClassUtil {
             return "array";
         }
         switch (javaTypeName) {
-            case "java.lang.String":
+            case "java.lang.string":
             case "string":
             case "char":
             case "date":
-            case "java.util.UUID":
+            case "java.util.uuid":
             case "uuid":
             case "localdatetime":
+            case "java.time.localdatetime":
+            case "java.time.localdate":
             case "localdate":
             case "offsetdatetime":
             case "localtime":
             case "timestamp":
             case "zoneddatetime":
             case "java.time.zoneddatetime":
-            case "java.time.ZonedDateTime":
-            case "java.time.OffsetDateTime":
-            case "java.lang.Character":
+            case "java.time.offsetdatetime":
+            case "java.lang.character":
             case "character":
                 return "string";
-            case "java.util.List":
+            case "java.util.list":
             case "list":
-            case "java.util.Set":
+            case "java.util.set":
             case "set":
-            case "java.util.LinkedList":
+            case "java.util.linkedlist":
             case "linkedlist":
-            case "java.util.ArrayList":
+            case "java.util.arraylist":
             case "arraylist":
-            case "java.util.TreeSet":
+            case "java.util.treeset":
             case "treeset":
                 return "array";
-            case "java.util.Byte":
+            case "java.util.byte":
             case "byte":
                 return "int8";
-            case "java.lang.Integer":
+            case "java.lang.integer":
             case "integer":
             case "int":
                 return "int32";
             case "short":
-            case "java.lang.Short":
+            case "java.lang.short":
                 return "int16";
             case "double":
                 return "double";
-            case "java.lang.Long":
+            case "java.lang.long":
             case "long":
                 return "int64";
-            case "java.lang.Float":
+            case "java.lang.float":
             case "float":
                 return "float";
             case "bigdecimal":
             case "biginteger":
                 return "number";
-            case "java.lang.Boolean":
+            case "java.lang.boolean":
             case "boolean":
                 return "boolean";
             case "map":
