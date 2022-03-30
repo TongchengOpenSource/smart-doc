@@ -30,10 +30,12 @@ import com.power.doc.constants.DocTags;
 import com.power.doc.constants.JAXRSAnnotations;
 import com.power.doc.model.*;
 import com.power.doc.qdox.model.expression.MyFieldRef;
+import com.sun.istack.internal.Nullable;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import com.thoughtworks.qdox.model.*;
 import com.thoughtworks.qdox.model.expression.Add;
 import com.thoughtworks.qdox.model.expression.AnnotationValue;
+import com.thoughtworks.qdox.model.expression.Expression;
 import com.thoughtworks.qdox.model.expression.FieldRef;
 import net.datafaker.Faker;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -625,7 +627,7 @@ public class DocUtil {
      * @param annotationValue
      * @return
      */
-    public static String resolveAnnotationValue(AnnotationValue annotationValue) {
+    public static String resolveAnnotationValue(@Nullable AnnotationValue annotationValue) {
         if (annotationValue instanceof Add) {
             Add add = (Add) annotationValue;
             String leftValue = resolveAnnotationValue(add.getLeft());
@@ -639,7 +641,7 @@ public class DocUtil {
                     return javaField.getInitializationExpression();
                 }
             }
-            return annotationValue.getParameterValue().toString();
+            return Optional.ofNullable(annotationValue).map(Expression::getParameterValue).map(Object::toString).orElse(StringUtil.EMPTY);
         }
     }
 

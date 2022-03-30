@@ -22,58 +22,25 @@
  */
 package com.power.doc.template;
 
-import com.power.common.util.CollectionUtil;
-import com.power.common.util.RandomUtil;
-import com.power.common.util.StringUtil;
-import com.power.common.util.UrlUtil;
-import com.power.common.util.ValidateUtil;
+import com.power.common.util.*;
 import com.power.doc.builder.ProjectDocConfigBuilder;
-import com.power.doc.constants.ApiReqParamInTypeEnum;
-import com.power.doc.constants.DocAnnotationConstants;
-import com.power.doc.constants.DocGlobalConstants;
-import com.power.doc.constants.DocTags;
-import com.power.doc.constants.Methods;
-import com.power.doc.constants.SpringMvcAnnotations;
-import com.power.doc.constants.SpringMvcRequestAnnotationsEnum;
+import com.power.doc.constants.*;
 import com.power.doc.handler.SpringMVCRequestHeaderHandler;
 import com.power.doc.handler.SpringMVCRequestMappingHandler;
 import com.power.doc.helper.FormDataBuildHelper;
 import com.power.doc.helper.JsonBuildHelper;
 import com.power.doc.helper.ParamsBuildHelper;
-import com.power.doc.model.ApiConfig;
-import com.power.doc.model.ApiDoc;
-import com.power.doc.model.ApiMethodDoc;
-import com.power.doc.model.ApiMethodReqParam;
-import com.power.doc.model.ApiParam;
-import com.power.doc.model.ApiReqParam;
-import com.power.doc.model.DocJavaMethod;
-import com.power.doc.model.FormData;
+import com.power.doc.model.*;
 import com.power.doc.model.request.ApiRequestExample;
 import com.power.doc.model.request.CurlRequest;
 import com.power.doc.model.request.RequestMapping;
 import com.power.doc.utils.*;
-import com.thoughtworks.qdox.model.DocletTag;
-import com.thoughtworks.qdox.model.JavaAnnotation;
-import com.thoughtworks.qdox.model.JavaClass;
-import com.thoughtworks.qdox.model.JavaMethod;
-import com.thoughtworks.qdox.model.JavaParameter;
-import com.thoughtworks.qdox.model.JavaType;
-import com.thoughtworks.qdox.model.expression.Add;
+import com.thoughtworks.qdox.model.*;
 import com.thoughtworks.qdox.model.expression.AnnotationValue;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -1045,15 +1012,14 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
     }
 
     private String getParamName(String paramName, JavaAnnotation annotation) {
-        AnnotationValue annotationValue = annotation.getProperty(DocAnnotationConstants.VALUE_PROP);
-        if (annotationValue instanceof Add) {
-            paramName = DocUtil.resolveAnnotationValue(annotationValue);
+        String resolvedParamName = DocUtil.resolveAnnotationValue(annotation.getProperty(DocAnnotationConstants.VALUE_PROP));
+        if (StringUtils.isBlank(resolvedParamName)) {
+            resolvedParamName = DocUtil.resolveAnnotationValue(annotation.getProperty(DocAnnotationConstants.NAME_PROP));
         }
-        AnnotationValue annotationOfName = annotation.getProperty(DocAnnotationConstants.NAME_PROP);
-        if (annotationValue instanceof Add) {
-            paramName = DocUtil.resolveAnnotationValue(annotationOfName);
+        if (!StringUtils.isBlank(resolvedParamName)) {
+            paramName = StringUtil.removeQuotes(resolvedParamName);
         }
-        return paramName;
+        return StringUtil.removeQuotes(paramName);
     }
 
     private boolean checkController(JavaClass cls) {
