@@ -288,7 +288,7 @@ config.setSourceCodePaths(
 #### 通过`maven`的`classifier`来指定源码包(不推荐)
 
 > 官方不推荐这样使用，如果你们团队比较规范，领导要求严格，下面的配置纯属找骂，
-请使用smart-doc提供的官方插件来集成，保持项目pom配置的清爽整洁。
+请使用smart-doc提供的官方插件来集成，最好保持项目pom配置的清爽整洁。
 
 这里先看如何使用classifier来加载源码包。
 
@@ -313,7 +313,7 @@ config.setSourceCodePaths(
 
  **注意：** 在加载jar包和source源码jar包时，如出现代码导入错误可尝试变更二者依赖顺序，推荐使用smart-doc最新的maven插件或者gradle插件。
 
-#### 公有jar包打规范(推荐)
+#### 公有jar打包规范(推荐)
 当你发布公共jar包或者dubbo应用api接口共有jar包时，在maven的plugs中加入`maven-source-plugin`,示例如下：
 
 ```xml
@@ -336,7 +336,9 @@ config.setSourceCodePaths(
 
 **注意：** 经测试验证，如果只是通过`install`到本地，即便是指定了`sources`也无法读取到源码，只有将公用的模块`deploy`到`nexus`这样的私服上才能正常使用。
 
-
+对于什么时候需要自己发布jar包，很多新手是不知道的，这里介绍主要的场景：
+- A工程里写了一个通用的模块，例如通用工具类模块，想在B工程里直接依赖使用。
+- Dubbo的RPC API模块这种场景，其项目业务要调用你的Dubbo，如果都使用JAVA开发直接依赖dubbo api模块就可以。
 
 ### 第三方源码示例
 
