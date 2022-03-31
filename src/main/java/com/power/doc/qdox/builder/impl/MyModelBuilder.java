@@ -20,6 +20,7 @@ import java.util.Set;
 
 /**
  * replace {@link ModelBuilder}, in order to replace {@link DefaultJavaAnnotationAssembler}
+ *
  * @author luchuanbaker@qq.com
  */
 public class MyModelBuilder extends ModelBuilder {
@@ -48,52 +49,46 @@ public class MyModelBuilder extends ModelBuilder {
 
     @Override
     public void beginClass(ClassDef def) {
-        DefaultJavaClass newClass = new DefaultJavaClass( source );
-        newClass.setLineNumber( def.getLineNumber() );
-        newClass.setModelWriterFactory( modelWriterFactory );
+        DefaultJavaClass newClass = new DefaultJavaClass(source);
+        newClass.setLineNumber(def.getLineNumber());
+        newClass.setModelWriterFactory(modelWriterFactory);
 
         // basic details
-        newClass.setName( def.getName() );
-        newClass.setInterface( ClassDef.INTERFACE.equals( def.getType() ) );
-        newClass.setEnum( ClassDef.ENUM.equals( def.getType() ) );
-        newClass.setAnnotation( ClassDef.ANNOTATION_TYPE.equals( def.getType() ) );
+        newClass.setName(def.getName());
+        newClass.setInterface(ClassDef.INTERFACE.equals(def.getType()));
+        newClass.setEnum(ClassDef.ENUM.equals(def.getType()));
+        newClass.setAnnotation(ClassDef.ANNOTATION_TYPE.equals(def.getType()));
 
         // superclass
-        if ( newClass.isInterface() )
-        {
-            newClass.setSuperClass( null );
-        }
-        else if ( !newClass.isEnum() )
-        {
-            newClass.setSuperClass( def.getExtends().size() > 0 ? createType( def.getExtends().iterator().next(), 0 )
-                : null );
+        if (newClass.isInterface()) {
+            newClass.setSuperClass(null);
+        } else if (!newClass.isEnum()) {
+            newClass.setSuperClass(def.getExtends().size() > 0 ? createType(def.getExtends().iterator().next(), 0)
+                    : null);
         }
 
         // implements
         Set<TypeDef> implementSet = newClass.isInterface() ? def.getExtends() : def.getImplements();
-        List<JavaClass> implementz = new LinkedList<JavaClass>();
-        for ( TypeDef implementType : implementSet )
-        {
-            implementz.add( createType( implementType, 0 ) );
+        List<JavaClass> implementz = new LinkedList<>();
+        for (TypeDef implementType : implementSet) {
+            implementz.add(createType(implementType, 0));
         }
-        newClass.setImplementz( implementz );
+        newClass.setImplementz(implementz);
 
         // modifiers
-        newClass.setModifiers( new LinkedList<String>( def.getModifiers() ) );
+        newClass.setModifiers(new LinkedList<>(def.getModifiers()));
 
         // typeParameters
-        if ( def.getTypeParameters() != null )
-        {
-            List<DefaultJavaTypeVariable<JavaClass>> typeParams = new LinkedList<DefaultJavaTypeVariable<JavaClass>>();
-            for ( TypeVariableDef typeVariableDef : def.getTypeParameters() )
-            {
-                typeParams.add( createTypeVariable( typeVariableDef, (JavaClass) newClass ) );
+        if (def.getTypeParameters() != null) {
+            List<DefaultJavaTypeVariable<JavaClass>> typeParams = new LinkedList<>();
+            for (TypeVariableDef typeVariableDef : def.getTypeParameters()) {
+                typeParams.add(createTypeVariable(typeVariableDef, newClass));
             }
-            newClass.setTypeParameters( typeParams );
+            newClass.setTypeParameters(typeParams);
         }
 
         // javadoc
-        addJavaDoc( newClass );
+        addJavaDoc(newClass);
 
 //        // ignore annotation types (for now)
 //        if (ClassDef.ANNOTATION_TYPE.equals(def.type)) {
@@ -102,9 +97,9 @@ public class MyModelBuilder extends ModelBuilder {
 //        }
 
         // annotations
-        setAnnotations( newClass );
+        setAnnotations(newClass);
 
-        classStack.addFirst( bindClass( newClass ) );
+        classStack.addFirst(bindClass(newClass));
     }
 
     @Override
@@ -122,25 +117,23 @@ public class MyModelBuilder extends ModelBuilder {
         setAnnotations(currentMethod);
     }
 
-    /** {@inheritDoc} */
-    public void addParameter( FieldDef fieldDef )
-    {
+    /**
+     * {@inheritDoc}
+     */
+    public void addParameter(FieldDef fieldDef) {
         DefaultJavaParameter jParam =
-            new DefaultJavaParameter( createType( fieldDef.getType(), fieldDef.getDimensions() ), fieldDef.getName(),
-                fieldDef.isVarArgs() );
+                new DefaultJavaParameter(createType(fieldDef.getType(), fieldDef.getDimensions()), fieldDef.getName(),
+                        fieldDef.isVarArgs());
         DefaultJavaMethod currentMethod = this.getCurrentMethod();
-        if( currentMethod != null )
-        {
-            jParam.setExecutable( currentMethod );
+        if (currentMethod != null) {
+            jParam.setExecutable(currentMethod);
+        } else {
+            jParam.setExecutable(this.getCurrentConstructor());
         }
-        else
-        {
-            jParam.setExecutable( this.getCurrentConstructor() );
-        }
-        jParam.setModelWriterFactory( modelWriterFactory );
-        addJavaDoc( jParam );
-        setAnnotations( jParam );
-        getParameterList().add( jParam );
+        jParam.setModelWriterFactory(modelWriterFactory);
+        addJavaDoc(jParam);
+        setAnnotations(jParam);
+        getParameterList().add(jParam);
     }
 
     private void setAnnotations(final AbstractBaseJavaEntity entity) {
@@ -156,7 +149,7 @@ public class MyModelBuilder extends ModelBuilder {
             // replace by our implementation
             MyJavaAnnotationAssembler assembler = new MyJavaAnnotationAssembler(entity.getDeclaringClass(), classLibrary, typeResolver);
 
-            List<JavaAnnotation> annotations = new LinkedList<JavaAnnotation>();
+            List<JavaAnnotation> annotations = new LinkedList<>();
             for (AnnoDef annoDef : currentAnnoDefs) {
                 annotations.add(assembler.assemble(annoDef));
             }
@@ -214,7 +207,7 @@ public class MyModelBuilder extends ModelBuilder {
         }
     }
 
-    private DefaultJavaType createType( TypeDef typeDef, int dimensions ) {
+    private DefaultJavaType createType(TypeDef typeDef, int dimensions) {
         try {
             return (DefaultJavaType) createTypeMethod.invoke(this, typeDef, dimensions);
         } catch (ReflectiveOperationException e) {

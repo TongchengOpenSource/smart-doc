@@ -443,7 +443,7 @@ public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             JavaClass javaClass = configBuilder.getJavaProjectBuilder().getClassByName(typeName);
             String[] globGicName = DocClassUtil.getSimpleGicName(gicTypeName);
             String comment = this.paramCommentResolve(paramsComments.get(paramName));
-            String mockValue = createMockValue(paramsComments, paramName, typeName, simpleTypeName);
+            String mockValue = JavaFieldUtil.createMockValue(paramsComments, paramName, typeName, simpleTypeName);
             if (queryParamsMap.containsKey(paramName)) {
                 mockValue = queryParamsMap.get(paramName);
             }
@@ -736,7 +736,7 @@ public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 paramList.add(param);
                 continue;
             }
-            String mockValue = createMockValue(paramsComments, paramName, typeName, simpleTypeName);
+            String mockValue = JavaFieldUtil.createMockValue(paramsComments, paramName, typeName, simpleTypeName);
             JavaClass javaClass = builder.getJavaProjectBuilder().getClassByName(fullTypeName);
             List<JavaAnnotation> annotations = parameter.getAnnotations();
             List<String> groupClasses = JavaClassUtil.getParamGroupJavaClass(annotations);
@@ -1028,61 +1028,7 @@ public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         return replacementMap.get(fullTypeName);
     }
 
-    private String createMockValue(Map<String, String> paramsComments, String paramName, String typeName, String simpleTypeName) {
-        String mockValue = "";
-        if (JavaClassValidateUtil.isPrimitive(typeName)) {
-            mockValue = paramsComments.get(paramName);
-            if (Objects.nonNull(mockValue) && mockValue.contains("|")) {
-                mockValue = mockValue.substring(mockValue.lastIndexOf("|") + 1);
-            } else {
-                mockValue = "";
-            }
-            if (StringUtil.isEmpty(mockValue)) {
-                mockValue = DocUtil.getValByTypeAndFieldName(simpleTypeName, paramName, Boolean.TRUE);
-            }
-        }
-        return mockValue;
-    }
 
-    private void mappingParamProcess(String str, Map<String, String> pathParamsMap) {
-        String param = StringUtil.removeQuotes(str);
-        String paramName;
-        String paramValue;
-        if (param.contains("=")) {
-            int index = param.indexOf("=");
-            paramName = param.substring(0, index);
-            paramValue = param.substring(index + 1);
-            pathParamsMap.put(paramName, paramValue);
-        } else {
-            paramName = param;
-            pathParamsMap.put(paramName, DocUtil.getValByTypeAndFieldName("string", paramName, Boolean.TRUE));
-        }
-    }
-
-    private void mappingParamToApiParam(String str, List<ApiParam> paramList, Map<String, String> mappingParams) {
-        String param = StringUtil.removeQuotes(str);
-        String paramName;
-        String paramValue;
-
-        if (param.contains("=")) {
-            int index = param.indexOf("=");
-            paramName = param.substring(0, index);
-            paramValue = param.substring(index + 1);
-        } else {
-            paramName = param;
-            paramValue = DocUtil.getValByTypeAndFieldName("string", paramName, Boolean.TRUE);
-        }
-        String type = ValidateUtil.isPositiveInteger(paramValue) ? "int32" : "string";
-        ApiParam apiParam = ApiParam.of().setField(paramName)
-                .setId(paramList.size() + 1)
-                .setQueryParam(true)
-                .setValue(paramValue)
-                .setType(type).setDesc("parameter condition")
-                .setRequired(true)
-                .setVersion(DocGlobalConstants.DEFAULT_VERSION);
-        paramList.add(apiParam);
-        mappingParams.put(paramName, null);
-    }
 
     private List<JavaAnnotation> getAnnotations(JavaClass cls) {
         List<JavaAnnotation> annotationsList = new ArrayList<>();

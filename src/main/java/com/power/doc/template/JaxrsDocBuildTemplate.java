@@ -47,15 +47,7 @@ import com.power.doc.model.FormData;
 import com.power.doc.model.request.ApiRequestExample;
 import com.power.doc.model.request.CurlRequest;
 import com.power.doc.model.request.JaxrsPathMapping;
-import com.power.doc.utils.ApiParamTreeUtil;
-import com.power.doc.utils.CurlUtil;
-import com.power.doc.utils.DocClassUtil;
-import com.power.doc.utils.DocPathUtil;
-import com.power.doc.utils.DocUtil;
-import com.power.doc.utils.JavaClassUtil;
-import com.power.doc.utils.JavaClassValidateUtil;
-import com.power.doc.utils.JsonUtil;
-import com.power.doc.utils.TornaUtil;
+import com.power.doc.utils.*;
 import com.thoughtworks.qdox.model.DocletTag;
 import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaClass;
@@ -424,7 +416,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 paramList.add(param);
                 continue;
             }
-            String mockValue = createMockValue(paramsComments, paramName, typeName, simpleTypeName);
+            String mockValue = JavaFieldUtil.createMockValue(paramsComments, paramName, typeName, simpleTypeName);
             JavaClass javaClass = builder.getJavaProjectBuilder().getClassByName(fullTypeName);
             List<JavaAnnotation> annotations = parameter.getAnnotations();
             List<String> groupClasses = JavaClassUtil.getParamGroupJavaClass(annotations);
@@ -587,23 +579,6 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 .setQueryParams(queryParams);
     }
 
-    private String createMockValue(Map<String, String> paramsComments, String paramName, String typeName, String simpleTypeName) {
-        String mockValue = "";
-        if (JavaClassValidateUtil.isPrimitive(typeName)) {
-            mockValue = paramsComments.get(paramName);
-            if (Objects.nonNull(mockValue) && mockValue.contains("|")) {
-                mockValue = mockValue.substring(mockValue.lastIndexOf("|") + 1);
-            } else {
-                mockValue = "";
-            }
-            if (StringUtil.isEmpty(mockValue)) {
-                mockValue = DocUtil.getValByTypeAndFieldName(simpleTypeName, paramName, Boolean.TRUE);
-            }
-        }
-        return mockValue;
-    }
-
-
     private ApiRequestExample buildReqJson(DocJavaMethod javaMethod, ApiMethodDoc apiMethodDoc, String methodType,
                                            ProjectDocConfigBuilder configBuilder) {
         JavaMethod method = javaMethod.getJavaMethod();
@@ -663,7 +638,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             JavaClass javaClass = configBuilder.getJavaProjectBuilder().getClassByName(typeName);
             String[] globGicName = DocClassUtil.getSimpleGicName(gicTypeName);
             String comment = this.paramCommentResolve(paramsComments.get(paramName));
-            String mockValue = createMockValue(paramsComments, paramName, typeName, simpleTypeName);
+            String mockValue = JavaFieldUtil.createMockValue(paramsComments, paramName, typeName, simpleTypeName);
             if (requestFieldToUnderline) {
                 paramName = StringUtil.camelToUnderline(paramName);
             }

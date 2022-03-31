@@ -116,12 +116,6 @@ public class SpringMVCRequestMappingHandler {
                 url = String.join(DocGlobalConstants.PATH_DELIMITER, serverUrl, contextPath, controllerBaseUrl, shortUrl);
                 shortUrl = String.join(DocGlobalConstants.PATH_DELIMITER, DocGlobalConstants.PATH_DELIMITER, contextPath, controllerBaseUrl, shortUrl);
             }
-            for (Map.Entry<String, String> entry : constantsMap.entrySet()) {
-                String key = entry.getKey();
-                String value = entry.getValue();
-                url = delConstantsUrl(url, key, value);
-                shortUrl = delConstantsUrl(shortUrl, key, value);
-            }
             String urlSuffix = projectBuilder.getApiConfig().getUrlSuffix();
             if (StringUtil.isNotEmpty(urlSuffix)) {
                 url = UrlUtil.simplifyUrl(StringUtil.trim(url)) + urlSuffix;

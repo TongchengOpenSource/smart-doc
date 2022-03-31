@@ -24,7 +24,9 @@ package com.power.doc.template;
 
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.StringUtil;
+import com.power.common.util.ValidateUtil;
 import com.power.doc.builder.ProjectDocConfigBuilder;
+import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.constants.DocTags;
 import com.power.doc.constants.TornaConstants;
 import com.power.doc.helper.ParamsBuildHelper;
@@ -267,6 +269,46 @@ public interface IDocBuildTemplate<T> {
             }
         }
         return ignoreSets;
+    }
+
+    default void mappingParamToApiParam(String str, List<ApiParam> paramList, Map<String, String> mappingParams) {
+        String param = StringUtil.removeQuotes(str);
+        String paramName;
+        String paramValue;
+
+        if (param.contains("=")) {
+            int index = param.indexOf("=");
+            paramName = param.substring(0, index);
+            paramValue = param.substring(index + 1);
+        } else {
+            paramName = param;
+            paramValue = DocUtil.getValByTypeAndFieldName("string", paramName, Boolean.TRUE);
+        }
+        String type = ValidateUtil.isPositiveInteger(paramValue) ? "int32" : "string";
+        ApiParam apiParam = ApiParam.of().setField(paramName)
+                .setId(paramList.size() + 1)
+                .setQueryParam(true)
+                .setValue(paramValue)
+                .setType(type).setDesc("parameter condition")
+                .setRequired(true)
+                .setVersion(DocGlobalConstants.DEFAULT_VERSION);
+        paramList.add(apiParam);
+        mappingParams.put(paramName, null);
+    }
+
+    default void mappingParamProcess(String str, Map<String, String> pathParamsMap) {
+        String param = StringUtil.removeQuotes(str);
+        String paramName;
+        String paramValue;
+        if (param.contains("=")) {
+            int index = param.indexOf("=");
+            paramName = param.substring(0, index);
+            paramValue = param.substring(index + 1);
+            pathParamsMap.put(paramName, paramValue);
+        } else {
+            paramName = param;
+            pathParamsMap.put(paramName, DocUtil.getValByTypeAndFieldName("string", paramName, Boolean.TRUE));
+        }
     }
 
     List<T> getApiData(ProjectDocConfigBuilder projectBuilder);
