@@ -16,6 +16,7 @@ import com.power.doc.utils.*;
 import com.thoughtworks.qdox.model.*;
 import com.thoughtworks.qdox.model.expression.AnnotationValue;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -398,7 +399,6 @@ public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         }
         Set<String> ignoreSets = ignoreParamsSets(method);
         Map<String, JavaType> actualTypesMap = javaMethod.getActualTypesMap();
-        Map<String, String> constantsMap = configBuilder.getConstantsMap();
         boolean requestFieldToUnderline = configBuilder.getApiConfig().isRequestFieldToUnderline();
         Map<String, String> replacementMap = configBuilder.getReplaceClassMap();
         Map<String, String> paramsComments = DocUtil.getCommentsByTag(method, DocTags.PARAM, null);
@@ -465,21 +465,9 @@ public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
 
                 AnnotationValue annotationDefaultVal = annotation.getProperty(DocAnnotationConstants.DEFAULT_VALUE_PROP);
                 if (null != annotationDefaultVal) {
-                    mockValue = StringUtil.removeQuotes(annotationDefaultVal.toString());
+                    mockValue = DocUtil.resolveAnnotationValue(annotationDefaultVal);
                 }
                 paramName = getParamName(paramName, annotation);
-                for (Map.Entry<String, String> entry : constantsMap.entrySet()) {
-                    String key = entry.getKey();
-                    String value = entry.getValue();
-                    // replace param
-                    if (paramName.contains(key)) {
-                        paramName = paramName.replace(key, value);
-                    }
-                    // replace mockValue
-                    if (mockValue.contains(key)) {
-                        mockValue = mockValue.replace(key, value);
-                    }
-                }
                 if (SolonAnnotations.REQUEST_BODY.equals(annotationName) || SolonAnnotations.REQUEST_BODY_FULLY.equals(annotationName)) {
                     apiMethodDoc.setContentType(JSON_CONTENT_TYPE);
                     if (Objects.nonNull(configBuilder.getApiConfig().getRequestBodyAdvice())
@@ -487,7 +475,6 @@ public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                         String requestBodyAdvice = configBuilder.getApiConfig().getRequestBodyAdvice().getClassName();
                         typeName = configBuilder.getApiConfig().getRequestBodyAdvice().getClassName();
                         gicTypeName = requestBodyAdvice + "<" + gicTypeName + ">";
-
                     }
                     if (JavaClassValidateUtil.isPrimitive(simpleTypeName)) {
                         requestExample.setJsonBody(mockValue).setJson(true);
@@ -753,20 +740,9 @@ public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                     }
                     AnnotationValue annotationDefaultVal = annotation.getProperty(DocAnnotationConstants.DEFAULT_VALUE_PROP);
                     if (Objects.nonNull(annotationDefaultVal)) {
-                        mockValue = StringUtil.removeQuotes(annotationDefaultVal.toString());
+                        mockValue = DocUtil.resolveAnnotationValue(annotationDefaultVal);
                     }
                     paramName = getParamName(paramName, annotation);
-                    for (Map.Entry<String, String> entry : constantsMap.entrySet()) {
-                        String key = entry.getKey();
-                        String value = entry.getValue();
-                        if (paramName.contains(key)) {
-                            paramName = paramName.replace(key, value);
-                        }
-                        // replace mockValue
-                        if (mockValue.contains(key)) {
-                            mockValue = mockValue.replace(key, value);
-                        }
-                    }
                     AnnotationValue annotationRequired = annotation.getProperty(DocAnnotationConstants.REQUIRED_PROP);
                     if (Objects.nonNull(annotationRequired)) {
                         strRequired = annotationRequired.toString();
@@ -978,15 +954,14 @@ public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
     }
 
     private String getParamName(String paramName, JavaAnnotation annotation) {
-        AnnotationValue annotationValue = annotation.getProperty(DocAnnotationConstants.VALUE_PROP);
-        if (Objects.nonNull(annotationValue)) {
-            paramName = StringUtil.removeQuotes(annotationValue.toString());
+        String resolvedParamName = DocUtil.resolveAnnotationValue(annotation.getProperty(DocAnnotationConstants.VALUE_PROP));
+        if (StringUtils.isBlank(resolvedParamName)) {
+            resolvedParamName = DocUtil.resolveAnnotationValue(annotation.getProperty(DocAnnotationConstants.NAME_PROP));
         }
-        AnnotationValue annotationOfName = annotation.getProperty(DocAnnotationConstants.NAME_PROP);
-        if (Objects.nonNull(annotationOfName)) {
-            paramName = StringUtil.removeQuotes(annotationOfName.toString());
+        if (!StringUtils.isBlank(resolvedParamName)) {
+            paramName = StringUtil.removeQuotes(resolvedParamName);
         }
-        return paramName;
+        return StringUtil.removeQuotes(paramName);
     }
 
     private boolean checkController(JavaClass cls) {
