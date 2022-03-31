@@ -22,6 +22,9 @@ public interface SolonAnnotations {
     String REQUEST_PARAM = "Param";
     String REQUEST_PARAM_FULL = "org.noear.solon.annotation.Param";
 
+    String PATH_VAR = "PathVar";
+    String PATH_VAR_FULL = "org.noear.solon.annotation.PathVar";
+
     String REQUEST_HERDER = "Header";
     String REQUEST_HERDER_FULL = "org.noear.solon.annotation.Header";
 
@@ -31,9 +34,12 @@ public interface SolonAnnotations {
     String CONTROLLER = "Controller";
     String CONTROLLER_FULL = "org.noear.solon.annotation.Controller";
 
+    String COMPONENT = "Component";
+    String COMPONENT_FULL = "org.noear.solon.annotation.Component";
+
+    String REMOTING = "Remoting";
+    String REMOTING_FULL = "org.noear.solon.annotation.Remoting";
+
     String MODE_AND_VIEW_FULLY = "org.noear.solon.core.handle.ModelAndView";
 
-
-    String PATH_VAR = "PathVar";
-    String PATH_VAR_FULL = "org.noear.solon.annotation.PathVar";
 }

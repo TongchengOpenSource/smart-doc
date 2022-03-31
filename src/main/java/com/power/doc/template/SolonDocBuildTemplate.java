@@ -976,7 +976,8 @@ public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         classAnnotations.addAll(cls.getAnnotations());
         for (JavaAnnotation annotation : classAnnotations) {
             String name = annotation.getType().getValue();
-            if (SolonAnnotations.CONTROLLER.equals(name)) {
+            if (SolonAnnotations.CONTROLLER.equals(name) ||
+                    SolonAnnotations.REMOTING.equals(name)) {
                 return true;
             }
         }
