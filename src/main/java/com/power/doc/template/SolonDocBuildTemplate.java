@@ -203,6 +203,7 @@ public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         }
         List<ApiMethodDoc> methodDocList = new ArrayList<>(methods.size());
         int methodOrder = 0;
+        boolean isRemoting = checkRemoting(cls);
         for (DocJavaMethod docJavaMethod : docJavaMethods) {
             JavaMethod method = docJavaMethod.getJavaMethod();
             if (method.isPrivate() || Objects.nonNull(method.getTagByName(IGNORE))) {
@@ -210,7 +211,7 @@ public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             }
             //handle request mapping
             RequestMapping requestMapping = new SolonRequestMappingHandler()
-                    .handle(projectBuilder, baseUrl, method, constantsMap);
+                    .handle(projectBuilder, baseUrl, method, constantsMap, isRemoting);
             if (Objects.isNull(requestMapping)) {
                 continue;
             }
@@ -989,6 +990,26 @@ public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 return true;
             }
         }
+        return false;
+    }
+
+    private boolean checkRemoting(JavaClass cls) {
+        if (cls.isAnnotation() || cls.isEnum()) {
+            return false;
+        }
+        JavaClass superClass = cls.getSuperJavaClass();
+        List<JavaAnnotation> classAnnotations = new ArrayList<>();
+        if (Objects.nonNull(superClass)) {
+            classAnnotations.addAll(superClass.getAnnotations());
+        }
+        classAnnotations.addAll(cls.getAnnotations());
+        for (JavaAnnotation annotation : classAnnotations) {
+            String name = annotation.getType().getValue();
+            if (SolonAnnotations.REMOTING.equals(name)) {
+                return true;
+            }
+        }
+
         return false;
     }
 

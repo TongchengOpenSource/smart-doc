@@ -56,7 +56,7 @@ public class SolonRequestMappingHandler {
      * @param constantsMap      project constant container
      * @return RequestMapping
      */
-    public RequestMapping handle(ProjectDocConfigBuilder projectBuilder, String controllerBaseUrl, JavaMethod method, Map<String, String> constantsMap) {
+    public RequestMapping handle(ProjectDocConfigBuilder projectBuilder, String controllerBaseUrl, JavaMethod method, Map<String, String> constantsMap, boolean isRemoting) {
         List<JavaAnnotation> annotations = method.getAnnotations();
         String url;
         String methodType = "GET";//默认为get
@@ -91,6 +91,18 @@ public class SolonRequestMappingHandler {
                 methodType = Methods.PATCH.getValue();
             } else if (SolonAnnotations.DELETE_MAPPING.equals(annotationName) || SolonAnnotations.DELETE_MAPPING_FULLY.equals(annotationName)) {
                 methodType = Methods.DELETE.getValue();
+            }
+        }
+
+        if(isRemoting) {
+            methodType = Methods.POST.getValue();
+
+            if (shortUrl == null) {
+                shortUrl = method.getName();
+            }
+
+            if (mediaType == null) {
+                mediaType = "text/json";
             }
         }
 
