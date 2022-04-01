@@ -983,7 +983,7 @@ public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             String name = annotation.getType().getValue();
             if (SolonAnnotations.CONTROLLER.equals(name) || //@Controller! +@Mapping! (mvc)
                     SolonAnnotations.REMOTING.equals(name) || //@Remoting! +@Mapping? (rpc)
-                    SolonAnnotations.COMPONENT.equals(name)) { //@Component! +@Mapping! (mvc || api || gateway)
+                    SolonAnnotations.REQUEST_MAPPING.equals(name)) { //@Component! +@Mapping! (mvc || api || gateway)
                 return true;
             }
         }
