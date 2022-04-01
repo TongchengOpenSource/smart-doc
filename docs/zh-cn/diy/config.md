@@ -24,7 +24,7 @@
   "md5EncryptedHtmlName": false,//只有每个controller生成一个html文件是才使用
   "style":"xt256", //基于highlight.js的代码高设置,可选值很多可查看码云wiki，喜欢配色统一简洁的同学可以不设置
   "projectName": "smart-doc",//配置自己的项目名称，不设置则插件自动获取pom中的projectName
-  "framework": "spring",//smart-doc默认支持spring和dubbo框架的文档，使用默认框架不用配置，当前支持spring、dubbo、JAX-RS(待完善)
+  "framework": "spring",//smart-doc默认支持spring和dubbo框架的文档，使用默认框架不用配置，当前支持spring、dubbo、JAX-RS、solon 
   "skipTransientField": true,//目前未实现
   "sortByTitle":false,//接口标题排序，默认为false,@since 1.8.7版本开始
   "showAuthor":true,//是否显示接口作者名称，默认是true,不想显示可关闭
@@ -866,11 +866,11 @@ ResponseBodyAdvice统一返回设置(不要随便配置根据项目的技术来�
 * 必填：`false`
 * 类型：`String`
 * 默认值: `spring` or `dubbo`
-* 可选值: `spring`,`dubbo`,`JAX-RS`
+* 可选值: `spring`,`dubbo`,`JAX-RS`,`solon`
 * @since `2.2.5` :new:
 
-Spring和Apache Dubbo是smart-doc默认支持解析生成文档的框架，不配置framework时根据触发的文档构建场景自动选择spring或者
-dubbo，smart-doc目前也支持JAX-RS的标准，因此使用支持JAX-RS标准的框架(如：Quarkus)可以作为体验使用，但是还不完善。
+`Spring`和`Apache Dubbo`是`smart-doc`默认支持解析生成文档的框架，不配置`framework`时根据触发的文档构建场景自动选择`Spring`或者
+`Dubbo`，`smart-doc`目前也支持`JAX-RS`的标准，因此使用支持`JAX-RS`标准的框架(如：`Quarkus`)可以作为体验使用，但是还不完善。
 ```json
 {
     "framework": "JAX-RS"
