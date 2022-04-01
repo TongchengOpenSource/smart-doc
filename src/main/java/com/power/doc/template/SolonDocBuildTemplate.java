@@ -67,6 +67,12 @@ public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 order = Integer.parseInt(strOrder);
             }
             List<ApiMethodDoc> apiMethodDocs = buildControllerMethod(cls, apiConfig, projectBuilder);
+
+            if(apiMethodDocs.size() == 0 && checkComponent(cls)){
+                //If it's a component and there are no methods; pass; by noear
+                continue;
+            }
+
             this.handleApiDoc(cls, apiDocList, apiMethodDocs, order, apiConfig.isMd5EncryptedHtmlName());
         }
         // handle TagsApiDoc
@@ -983,7 +989,7 @@ public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             String name = annotation.getType().getValue();
             if (SolonAnnotations.CONTROLLER.equals(name) || //@Controller! +@Mapping! (mvc)
                     SolonAnnotations.REMOTING.equals(name) || //@Remoting! +@Mapping? (rpc)
-                    SolonAnnotations.REQUEST_MAPPING.equals(name)) { //@Component! +@Mapping! (mvc || api || gateway)
+                    SolonAnnotations.COMPONENT.equals(name)) { //@Component! +@Mapping! (mvc || api || gateway)
                 return true;
             }
         }
@@ -1002,18 +1008,25 @@ public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         if (cls.isAnnotation() || cls.isEnum()) {
             return false;
         }
-        List<JavaAnnotation> classAnnotations = new ArrayList<>();
 
-        //There is no need to scan the parent class; by noear
-//        JavaClass superClass = cls.getSuperJavaClass();
-//        if (Objects.nonNull(superClass)) {
-//            classAnnotations.addAll(superClass.getAnnotations());
-//        }
-
-        classAnnotations.addAll(cls.getAnnotations());
-        for (JavaAnnotation annotation : classAnnotations) {
+        for (JavaAnnotation annotation : cls.getAnnotations()) {
             String name = annotation.getType().getValue();
             if (SolonAnnotations.REMOTING.equals(name)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private boolean checkComponent(JavaClass cls) {
+        if (cls.isAnnotation() || cls.isEnum()) {
+            return false;
+        }
+
+        for (JavaAnnotation annotation : cls.getAnnotations()) {
+            String name = annotation.getType().getValue();
+            if (SolonAnnotations.COMPONENT.equals(name)) {
                 return true;
             }
         }
