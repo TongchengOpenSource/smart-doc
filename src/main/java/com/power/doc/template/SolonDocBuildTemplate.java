@@ -969,16 +969,21 @@ public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         if (cls.isAnnotation() || cls.isEnum()) {
             return false;
         }
-        JavaClass superClass = cls.getSuperJavaClass();
         List<JavaAnnotation> classAnnotations = new ArrayList<>();
-        if (Objects.nonNull(superClass)) {
-            classAnnotations.addAll(superClass.getAnnotations());
-        }
+
+
+        //There is no need to scan the parent class; by noear
+//        JavaClass superClass = cls.getSuperJavaClass();
+//        if (Objects.nonNull(superClass)) {
+//            classAnnotations.addAll(superClass.getAnnotations());
+//        }
+
         classAnnotations.addAll(cls.getAnnotations());
         for (JavaAnnotation annotation : classAnnotations) {
             String name = annotation.getType().getValue();
-            if (SolonAnnotations.CONTROLLER.equals(name) ||
-                    SolonAnnotations.REMOTING.equals(name)) {
+            if (SolonAnnotations.CONTROLLER.equals(name) || //@Controller! +@Mapping! (mvc)
+                    SolonAnnotations.REMOTING.equals(name) || //@Remoting! +@Mapping? (rpc)
+                    SolonAnnotations.COMPONENT.equals(name)) { //@Component! +@Mapping! (mvc || api || gateway)
                 return true;
             }
         }
@@ -997,11 +1002,14 @@ public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         if (cls.isAnnotation() || cls.isEnum()) {
             return false;
         }
-        JavaClass superClass = cls.getSuperJavaClass();
         List<JavaAnnotation> classAnnotations = new ArrayList<>();
-        if (Objects.nonNull(superClass)) {
-            classAnnotations.addAll(superClass.getAnnotations());
-        }
+
+        //There is no need to scan the parent class; by noear
+//        JavaClass superClass = cls.getSuperJavaClass();
+//        if (Objects.nonNull(superClass)) {
+//            classAnnotations.addAll(superClass.getAnnotations());
+//        }
+
         classAnnotations.addAll(cls.getAnnotations());
         for (JavaAnnotation annotation : classAnnotations) {
             String name = annotation.getType().getValue();
