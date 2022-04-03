@@ -23,10 +23,16 @@
 package com.power.doc.utils;
 
 import com.power.common.util.CollectionUtil;
+import com.power.common.util.StringUtil;
+import com.power.doc.model.ApiMethodReqParam;
 import com.power.doc.model.ApiParam;
+import com.power.doc.model.ApiReqParam;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author yu 2020/8/8.
@@ -80,6 +86,68 @@ public class ApiParamTreeUtil {
             return new ArrayList<>(0);
         }
         return childList;
+    }
+
+    /**
+     * buildMethodReqParam handle configParam
+     * @param paramList unConfigParam
+     * @param queryReqParamMap configQueryParam
+     * @param pathReqParamMap configPathParam
+     * @param requestBodyCounter hasRequestBody
+     * @return
+     */
+    public static ApiMethodReqParam buildMethodReqParam(List<ApiParam> paramList, final Map<String, ApiReqParam> queryReqParamMap,
+                                                        final Map<String, ApiReqParam> pathReqParamMap,int requestBodyCounter){
+        List<ApiParam> pathParams = new ArrayList<>();
+        List<ApiParam> queryParams = new ArrayList<>();
+        List<ApiParam> bodyParams = new ArrayList<>();
+        int bodyNum = Math.toIntExact(paramList.stream().filter(p-> !(p.isPathParam() || p.isQueryParam())).count());
+        int pathNum = Math.toIntExact(paramList.stream().filter(ApiParam::isPathParam).count());
+        int queryNum = paramList.size() - pathNum;
+        for (ApiParam param : paramList) {
+            param.setValue(StringUtil.removeDoubleQuotes(param.getValue()));
+            if (param.isPathParam()) {
+                if (pathReqParamMap.containsKey(param.getField())) {
+                    param.setConfigParam(true).setValue(pathReqParamMap.get(param.getField()).getValue());
+                }
+                param.setId(pathNum + 1);
+                pathParams.add(param);
+            } else if (param.isQueryParam() || requestBodyCounter < 1) {
+                if (queryReqParamMap.containsKey(param.getField())) {
+                    param.setConfigParam(true).setValue(queryReqParamMap.get(param.getField()).getValue());
+                }
+                param.setId(queryNum + 1);
+                queryParams.add(param);
+            } else {
+                param.setId(bodyNum + 1);
+                bodyParams.add(param);
+            }
+        }
+
+        final Set<String> queryParamSet = queryParams.stream().map(ApiParam::getField).collect(Collectors.toSet());
+        for (ApiReqParam value : queryReqParamMap.values()) {
+            if (queryParamSet.contains(value.getName())) {
+                continue;
+            }
+            final ApiParam apiParam = ApiReqParam.convertToApiParam(value)
+                    .setQueryParam(true).setId(queryNum);
+            queryParams.add(apiParam);
+        }
+
+        final Set<String> pathParamSet = pathParams.stream().map(ApiParam::getField).collect(Collectors.toSet());
+        for (ApiReqParam value : pathReqParamMap.values()) {
+            if (pathParamSet.contains(value.getName())) {
+                continue;
+            }
+            final ApiParam apiParam = ApiReqParam.convertToApiParam(value)
+                    .setPathParam(true).setId(pathNum);
+            pathParams.add(apiParam);
+        }
+
+        return ApiMethodReqParam.builder()
+                .setRequestParams(bodyParams)
+                .setPathParams(pathParams)
+                .setQueryParams(queryParams);
     }
 
 }

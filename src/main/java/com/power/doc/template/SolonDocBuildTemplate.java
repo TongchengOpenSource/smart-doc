@@ -910,54 +910,7 @@ public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                         "true", Boolean.FALSE, new HashMap<>(), builder, groupClasses, 0, Boolean.FALSE));
             }
         }
-        List<ApiParam> pathParams = new ArrayList<>();
-        List<ApiParam> queryParams = new ArrayList<>();
-        List<ApiParam> bodyParams = new ArrayList<>();
-        for (ApiParam param : paramList) {
-            param.setValue(StringUtil.removeDoubleQuotes(param.getValue()));
-            if (param.isPathParam()) {
-                if (pathReqParamMap.containsKey(param.getField())) {
-                    param.setConfigParam(true).setValue(pathReqParamMap.get(param.getField()).getValue());
-                }
-                param.setId(pathParams.size() + 1);
-                pathParams.add(param);
-            } else if (param.isQueryParam() && isGet) {
-                if (queryReqParamMap.containsKey(param.getField())) {
-                    param.setConfigParam(true).setValue(queryReqParamMap.get(param.getField()).getValue());
-                }
-                param.setId(queryParams.size() + 1);
-                queryParams.add(param);
-            } else {
-                param.setId(bodyParams.size() + 1);
-                bodyParams.add(param);
-            }
-        }
-
-        final Set<String> queryParamSet = queryParams.stream().map(ApiParam::getField).collect(Collectors.toSet());
-        for (ApiReqParam value : queryReqParamMap.values()) {
-            if (queryParamSet.contains(value.getName())) {
-                continue;
-            }
-            final ApiParam apiParam = ApiReqParam.convertToApiParam(value)
-                    .setQueryParam(true).setId(queryParams.size());
-            queryParams.add(apiParam);
-        }
-
-        final Set<String> pathParamSet = pathParams.stream().map(ApiParam::getField).collect(Collectors.toSet());
-        for (ApiReqParam value : pathReqParamMap.values()) {
-            if (pathParamSet.contains(value.getName())) {
-                continue;
-            }
-            final ApiParam apiParam = ApiReqParam.convertToApiParam(value)
-                    .setPathParam(true).setId(pathParams.size());
-            pathParams.add(apiParam);
-        }
-
-        ApiMethodReqParam apiMethodReqParam = ApiMethodReqParam.builder()
-                .setRequestParams(bodyParams)
-                .setPathParams(pathParams)
-                .setQueryParams(queryParams);
-        return apiMethodReqParam;
+        return  ApiParamTreeUtil.buildMethodReqParam(paramList,queryReqParamMap,pathReqParamMap,requestBodyCounter);
     }
 
     private String getParamName(String paramName, JavaAnnotation annotation) {
