@@ -87,17 +87,17 @@ public class SpringMVCRequestHeaderHandler {
                     apiReqHeader = new ApiReqParam();
                     Map<String, Object> requestHeaderMap = annotation.getNamedParameterMap();
                     if (requestHeaderMap.get(DocAnnotationConstants.VALUE_PROP) != null) {
-                        String attribute = DocUtil.handleRequestHeaderValue(annotation);
+                        String attrValue = DocUtil.handleRequestHeaderValue(annotation);
                         String constValue = ((String) requestHeaderMap.get(DocAnnotationConstants.VALUE_PROP)).replaceAll("\"", "");
-                        if (StringUtil.isEmpty(attribute)) {
-                            apiReqHeader.setName(constValue);
-                        } else {
-                            Object value = constantsMap.get(attribute);
-                            if (value == null) {
-                                apiReqHeader.setName(constValue);
+                        if (StringUtil.isEmpty(attrValue)) {
+                            Object value = constantsMap.get(constValue);
+                            if (value != null) {
+                                apiReqHeader.setName(value.toString());
                             } else {
-                                apiReqHeader.setName((String) value);
+                                apiReqHeader.setName(constValue);
                             }
+                        } else {
+                            apiReqHeader.setName(attrValue);
                         }
                     } else {
                         apiReqHeader.setName(paramName);

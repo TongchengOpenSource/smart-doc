@@ -631,13 +631,13 @@ public class DocUtil {
             Add add = (Add) annotationValue;
             String leftValue = resolveAnnotationValue(add.getLeft());
             String rightValue = resolveAnnotationValue(add.getRight());
-            return leftValue + rightValue;
+            return StringUtil.removeQuotes(leftValue + rightValue);
         } else {
             if (annotationValue instanceof FieldRef) {
                 FieldRef fieldRef = (FieldRef) annotationValue;
                 JavaField javaField = fieldRef.getField();
                 if (javaField != null) {
-                    return javaField.getInitializationExpression();
+                    return StringUtil.removeQuotes(javaField.getInitializationExpression());
                 }
             }
             return Optional.ofNullable(annotationValue).map(Expression::getParameterValue).map(Object::toString).orElse(StringUtil.EMPTY);
@@ -667,11 +667,8 @@ public class DocUtil {
      * @return The constant value
      */
     public static String getRequestHeaderValue(JavaAnnotation annotation) {
-        Object constantValue = annotation.getNamedParameter(DocAnnotationConstants.VALUE_PROP);
-        if (null != constantValue) {
-            return constantValue.toString();
-        }
-        return "";
+        AnnotationValue annotationValue = annotation.getProperty(DocAnnotationConstants.VALUE_PROP);
+        return resolveAnnotationValue(annotationValue);
     }
 
     public static List<ApiErrorCode> errorCodeDictToList(ApiConfig config) {
