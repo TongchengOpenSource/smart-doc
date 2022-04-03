@@ -1,5 +1,6 @@
 package com.power.doc.function;
 
+import com.power.doc.utils.DocUtil;
 import org.beetl.core.Context;
 import org.beetl.core.Function;
 
@@ -13,6 +14,6 @@ public class RemoveLineBreaks implements Function {
     String str = String.valueOf(paras[0])
         .replaceAll("\n", " ")
         .replaceAll("\r"," ");
-    return str;
+    return DocUtil.getEscapeAndCleanComment(str);
   }
 }
