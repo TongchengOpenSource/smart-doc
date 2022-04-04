@@ -55,7 +55,7 @@ public class ApiParamTreeUtil {
         }
         for (ApiParam apiParam : params) {
             // remove pre of field
-            apiParam.setChildren(getChild(apiParam.getId(), apiParamList,0));
+            apiParam.setChildren(getChild(apiParam.getId(), apiParamList, 0));
         }
         return params;
     }
@@ -90,14 +90,15 @@ public class ApiParamTreeUtil {
 
     /**
      * buildMethodReqParam handle configParam
-     * @param paramList unConfigParam
-     * @param queryReqParamMap configQueryParam
-     * @param pathReqParamMap configPathParam
+     *
+     * @param paramList          unConfigParam
+     * @param queryReqParamMap   configQueryParam
+     * @param pathReqParamMap    configPathParam
      * @param requestBodyCounter hasRequestBody
      * @return
      */
     public static ApiMethodReqParam buildMethodReqParam(List<ApiParam> paramList, final Map<String, ApiReqParam> queryReqParamMap,
-                                                        final Map<String, ApiReqParam> pathReqParamMap,int requestBodyCounter){
+                                                        final Map<String, ApiReqParam> pathReqParamMap, int requestBodyCounter) {
         List<ApiParam> pathParams = new ArrayList<>();
         List<ApiParam> queryParams = new ArrayList<>();
         List<ApiParam> bodyParams = new ArrayList<>();
@@ -127,7 +128,7 @@ public class ApiParamTreeUtil {
                 continue;
             }
             final ApiParam apiParam = ApiReqParam.convertToApiParam(value)
-                    .setQueryParam(true).setId(queryParams.size()+1);
+                    .setQueryParam(true).setId(queryParams.size() + 1);
             queryParams.add(apiParam);
         }
 
@@ -137,7 +138,7 @@ public class ApiParamTreeUtil {
                 continue;
             }
             final ApiParam apiParam = ApiReqParam.convertToApiParam(value)
-                    .setPathParam(true).setId(pathParams.size()+1);
+                    .setPathParam(true).setId(pathParams.size() + 1);
             pathParams.add(apiParam);
         }
 
