@@ -101,25 +101,22 @@ public class ApiParamTreeUtil {
         List<ApiParam> pathParams = new ArrayList<>();
         List<ApiParam> queryParams = new ArrayList<>();
         List<ApiParam> bodyParams = new ArrayList<>();
-        int bodyNum = Math.toIntExact(paramList.stream().filter(p-> !(p.isPathParam() || p.isQueryParam())).count());
-        int pathNum = Math.toIntExact(paramList.stream().filter(ApiParam::isPathParam).count());
-        int queryNum = paramList.size() - pathNum;
         for (ApiParam param : paramList) {
             param.setValue(StringUtil.removeDoubleQuotes(param.getValue()));
             if (param.isPathParam()) {
                 if (pathReqParamMap.containsKey(param.getField())) {
                     param.setConfigParam(true).setValue(pathReqParamMap.get(param.getField()).getValue());
                 }
-                param.setId(pathNum + 1);
+                param.setId(pathParams.size() + 1);
                 pathParams.add(param);
             } else if (param.isQueryParam() || requestBodyCounter < 1) {
                 if (queryReqParamMap.containsKey(param.getField())) {
                     param.setConfigParam(true).setValue(queryReqParamMap.get(param.getField()).getValue());
                 }
-                param.setId(queryNum + 1);
+                param.setId(queryParams.size() + 1);
                 queryParams.add(param);
             } else {
-                param.setId(bodyNum + 1);
+                param.setId(bodyParams.size() + 1);
                 bodyParams.add(param);
             }
         }
@@ -130,7 +127,7 @@ public class ApiParamTreeUtil {
                 continue;
             }
             final ApiParam apiParam = ApiReqParam.convertToApiParam(value)
-                    .setQueryParam(true).setId(queryNum);
+                    .setQueryParam(true).setId(queryParams.size()+1);
             queryParams.add(apiParam);
         }
 
@@ -140,7 +137,7 @@ public class ApiParamTreeUtil {
                 continue;
             }
             final ApiParam apiParam = ApiReqParam.convertToApiParam(value)
-                    .setPathParam(true).setId(pathNum);
+                    .setPathParam(true).setId(pathParams.size()+1);
             pathParams.add(apiParam);
         }
 
