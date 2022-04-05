@@ -103,6 +103,7 @@ public CommonResult<Void> configQueryParamPost(String configQueryParam) {
 ```
 
 ## 静态常量替换
+>2.4.2版本开始，这个配置无需在手动添加，smart-doc可以自动识别静态常量的使用。
 
 在java web接口开发的过程中，有用户会在controller的path中使用静态场景。因此也是希望smart-doc能够解析静态常量获取到真实的值。
 下面来看下例子：

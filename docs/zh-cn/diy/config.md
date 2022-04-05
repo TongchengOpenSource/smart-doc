@@ -109,7 +109,7 @@
       "value":"testPath",//不设置默认null
       "required": false,//是否必须
       "since": "-",//什么版本添加的改请求参数
-      "pathPatterns": "*",//正则表达式过滤请求参数
+      "pathPatterns": "**",//正则表达式过滤请求参数
       "excludePathPatterns":"/app/page/**" //参考请求头中的用法
     },
     {
@@ -120,7 +120,7 @@
       "value":"testQuery",//不设置默认null
       "required": false,//是否必须
       "since": "-",//什么版本添加的改请求参数
-      "pathPatterns": "*",//正则表达式过滤请求参数
+      "pathPatterns": "**",//正则表达式过滤请求参数
       "excludePathPatterns":"/app/page/**"
     }
   ],
@@ -134,7 +134,7 @@
       "className": "org.springframework.data.domain.Pageable",
       "replacementClassName": "com.power.doc.model.PageRequestDto" //自定义的PageRequestDto替换Pageable做文档渲染
   }],
-  "apiConstants": [{//从1.8.9开始配置自己的常量类，smart-doc在解析到常量时自动替换为具体的值，非必须
+  "apiConstants": [{//smart-doc在解析到常量时自动替换为具体的值，非必须，2.4.2开始不用配置，smart-doc支持自动解析常用
         "constantsClassName": "com.power.doc.constants.RequestParamConstant"
   }],
   "responseBodyAdvice":{ //自smart-doc 1.9.8起，非必须项，ResponseBodyAdvice统一返回设置(不要随便配置根据项目的技术来配置)，可用ignoreResponseBodyAdvice tag来忽略
@@ -773,6 +773,7 @@ torna环境名称。
 * @since `1.8.9`
 
 [配置自己的常量类](zh-cn/diy/advancedFeatures#静态常量替换)，smart-doc在解析到常量时自动替换为具体的值。
+2.4.2版本开始使用到常量也无需配置，smart-doc已经能够自动解析。
 ```json
 {
     "apiConstants": [
