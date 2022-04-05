@@ -48,7 +48,7 @@ smart-doc + [Torna](http://torna.cn/) 组成行业领先的文档生成和管理
 
 ## Contact
 
-愿意参与构建smart-doc或者是需要交流问题可以加入qq群：
+愿意参与构建smart-doc或者是需要交流问题可以加入qq群，[常见问题答疑](https://smart-doc-group.github.io/#/zh-cn/QA)
 
 <img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/smart-doc-qq.png" title="qq群" width="200px" height="210px"/>
 <img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/smart-doc-qq2.jpeg" title="qq群2" width="200px" height="210px"/>
