@@ -157,7 +157,7 @@ public interface IDocBuildTemplate<T> {
                 if (hasInsert.containsKey(doc.getAlias())) {
                     continue;
                 }
-                if (!DocUtil.isMatch(group.getApis(), doc.getPackageName())) {
+                if (!DocUtil.isMatch(group.getApis(), doc.getPackageName()+"."+doc.getName())) {
                     continue;
                 }
                 hasInsert.put(doc.getAlias(), null);

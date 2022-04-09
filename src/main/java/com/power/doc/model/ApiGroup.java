@@ -9,6 +9,9 @@ package com.power.doc.model;
  */
 public class ApiGroup {
 
+    public static ApiGroup builder(){
+        return new ApiGroup();
+    }
     /**
      * group name
      */
