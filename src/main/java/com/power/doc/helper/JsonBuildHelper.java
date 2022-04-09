@@ -290,11 +290,19 @@ public class JsonBuildHelper {
                 CustomField customResponseField = builder.getCustomRespFieldMap().get(typeName + "." + fieldName);
                 CustomField customRequestField = builder.getCustomReqFieldMap().get(typeName + "." + fieldName);
 
-                if (customRequestField != null && JavaClassUtil.isTargetChildClass(typeName, customRequestField.getOwnerClassName()) && (customRequestField.isIgnore()) && !isResp) {
-                    continue;
+                if (customRequestField != null) {
+                    if (JavaClassUtil.isTargetChildClass(typeName, customRequestField.getOwnerClassName()) && (customRequestField.isIgnore()) && !isResp) {
+                        continue;
+                    } else {
+                        fieldName = StringUtil.isEmpty(customRequestField.getReplaceName()) ? fieldName : customRequestField.getReplaceName();
+                    }
                 }
-                if (customResponseField != null && JavaClassUtil.isTargetChildClass(typeName, customResponseField.getOwnerClassName()) && (customResponseField.isIgnore()) && isResp) {
-                    continue;
+                if (customResponseField != null) {
+                    if (JavaClassUtil.isTargetChildClass(typeName, customResponseField.getOwnerClassName()) && (customResponseField.isIgnore()) && isResp) {
+                        continue;
+                    } else {
+                        fieldName = StringUtil.isEmpty(customResponseField.getReplaceName()) ? fieldName : customResponseField.getReplaceName();
+                    }
                 }
                 data0.append("\"").append(fieldName).append("\":");
                 String fieldValue = "";
