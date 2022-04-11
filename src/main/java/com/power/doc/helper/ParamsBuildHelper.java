@@ -103,7 +103,8 @@ public class ParamsBuildHelper {
                         , registryClasses, projectBuilder, groupClasses, pid, jsonRequest));
             }
         } else if (JavaClassValidateUtil.isMap(simpleName)) {
-            buildMapParam(pre, level, isRequired, isResp, registryClasses, projectBuilder, groupClasses, pid, jsonRequest, nextLevel, paramList, globGicName);
+            paramList.addAll(buildMapParam(globGicName, pre, level, isRequired, isResp,
+                    registryClasses, projectBuilder, groupClasses, pid, jsonRequest, nextLevel));
         } else if (DocGlobalConstants.JAVA_OBJECT_FULLY.equals(className)) {
             ApiParam param = ApiParam.of()
                     .setId(pid + 1)
@@ -523,12 +524,6 @@ public class ParamsBuildHelper {
                                             paramList.addAll(buildParams(gName, preBuilder.toString(), nextLevel, isRequired
                                                     , isResp, registryClasses, projectBuilder, groupClasses, fieldPid, jsonRequest));
                                         }
-                                    } else if (JavaClassValidateUtil.isMap(simple)) {
-                                        String valType = DocClassUtil.getMapKeyValueType(gicName)[1];
-                                        if (!JavaClassValidateUtil.isPrimitive(valType)) {
-                                            paramList.addAll(buildParams(valType, preBuilder.toString(), nextLevel, isRequired
-                                                    , isResp, registryClasses, projectBuilder, groupClasses, fieldPid, jsonRequest));
-                                        }
                                     } else {
                                         paramList.addAll(buildParams(gicName, preBuilder.toString(), nextLevel, isRequired
                                                 , isResp, registryClasses, projectBuilder, groupClasses, fieldPid, jsonRequest));
@@ -562,17 +557,18 @@ public class ParamsBuildHelper {
         return paramList;
     }
 
-    private static void buildMapParam(String pre, int level, String isRequired, boolean isResp, Map<String, String> registryClasses,
+    private static List<ApiParam> buildMapParam(String[] globGicName, String pre, int level, String isRequired, boolean isResp, Map<String, String> registryClasses,
                                       ProjectDocConfigBuilder projectBuilder, List<String> groupClasses, int pid, boolean jsonRequest,
-                                      int nextLevel, List<ApiParam> paramList, String[] globGicName) {
+                                      int nextLevel) {
         if (globGicName.length != 2) {
-            return;
+            return Collections.emptyList();
         }
 
         // mock map key param
         String mapKeySimpleName = DocClassUtil.getSimpleName(globGicName[0]);
         String valueSimpleName = DocClassUtil.getSimpleName(globGicName[1]);
 
+        List<ApiParam> paramList = new ArrayList<>();
         if (JavaClassValidateUtil.isPrimitive(mapKeySimpleName)) {
             boolean isShowJavaType = projectBuilder.getApiConfig().getShowJavaType();
             String valueSimpleNameType = isShowJavaType ? valueSimpleName : DocClassUtil.processTypeNameForParams(valueSimpleName.toLowerCase());
@@ -585,7 +581,7 @@ public class ParamsBuildHelper {
         }
         // build param when map value is not primitive
         if (JavaClassValidateUtil.isPrimitive(valueSimpleName)) {
-            return;
+            return paramList;
         }
         StringBuilder preBuilder = new StringBuilder();
         for (int j = 0; j < level; j++) {
@@ -594,6 +590,7 @@ public class ParamsBuildHelper {
         preBuilder.append("└─");
         paramList.addAll(buildParams(globGicName[1], preBuilder.toString(), ++nextLevel, isRequired, isResp
                 , registryClasses, projectBuilder, groupClasses, pid, jsonRequest));
+        return paramList;
     }
 
     public static String dictionaryListComment(ApiDataDictionary dictionary) {

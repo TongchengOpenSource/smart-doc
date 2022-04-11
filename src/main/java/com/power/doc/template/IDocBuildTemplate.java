@@ -245,11 +245,7 @@ public interface IDocBuildTemplate<T> {
             if (keyValue.length == 0) {
                 return new ArrayList<>(0);
             }
-            if (JavaClassValidateUtil.isPrimitive(keyValue[1])) {
-                docJavaMethod.setReturnSchema(OpenApiSchemaUtil.mapTypeSchema(keyValue[1]));
-                return new ArrayList<>(0);
-            }
-            return ParamsBuildHelper.buildParams(keyValue[1], "", 0, null, Boolean.TRUE,
+            return ParamsBuildHelper.buildParams(returnType, "", 0, null, Boolean.TRUE,
                     new HashMap<>(), projectBuilder, null, 0, Boolean.FALSE);
         }
         if (StringUtil.isNotEmpty(returnType)) {
