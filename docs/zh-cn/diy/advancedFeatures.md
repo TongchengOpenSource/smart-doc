@@ -136,6 +136,10 @@ public void testConstantsRequestParams(@RequestParam(required = false,
    }]
 }
 ```
+**注意：** 如果配置类名时使用到内部类不要写错了，子类是使用`$`符号相连，
+例如：`com.power.doc.controller.UserController$ErrorCodeEnum`
+
+
 如果是单元测试，配置参考如下
 
 ```java
@@ -153,8 +157,9 @@ config.setApiConstants(
 
 ## 响应字段忽略
 
-有同学在使用smart-doc时提问：“如何忽略响应实体中的某个字段？”，例如像密码`password`这种字段敏感字段，smart-doc在一开始开发的时候就考虑到了这种情况，因此我们对java的一些json序列化库做了支持，像Spring框架默认使用的`jackson`和国内用户使用较多的`Fastjson`都是支持的。
-- 为什么不用@ignore来标注返回字段忽略？这是一种掩耳盗铃的做法，仅仅是表面文档不展示，数据依旧返回了，因此这是smart-doc不支持的原因。还是使用框架的注解来控制吧。
+有同学在使用`smart-doc`时提问：“如何忽略响应实体中的某个字段？”，例如像密码`password`这种字段敏感字段，`smart-doc`在一开始开发的时候就考虑到了这种情况，
+因此我们对java的一些json序列化库做了支持，像Spring框架默认使用的`Jackson`和国内用户使用较多的`Fastjson`都是支持的。
+- 为什么不用`@ignore`来标注返回字段忽略？这是一种掩耳盗铃的做法，仅仅是表面文档不展示，数据依旧返回了，因此这是`smart-doc`不支持的原因。还是使用框架的注解来控制吧。
 
 ### 使用jackson注解忽略
 
@@ -178,9 +183,9 @@ public class JacksonAnnotation {
     private String idCard;
 }
 ```
-像这个idCard使用@JsonIgnore注解后，接口不会看到该字段，smart-doc发现该注解也不会把该字段显示在接口文档中。
+像这个`idCard`使用`@JsonIgnore`注解后，接口不会看到该字段，`smart-doc`发现该注解也不会把该字段显示在接口文档中。
 ### Fastjson忽略响应字段
-Fastjson也自己用于忽略字段的注解，Fastjson使用 `@JSONField(serialize = false)`,起关键作用的是`serialize = false`
+`Fastjson`也自己用于忽略字段的注解，`Fastjson`使用 `@JSONField(serialize = false)`,起关键作用的是`serialize = false`
 
 ```java
 public class FastJson {
@@ -199,11 +204,11 @@ public class FastJson {
     private String idCard;
 }
 ```
-如果你在项目中使用了Fastjson替代默认的Jackson，按照上面的`idCard`字段这样写上注解后，无论是真实的数据响应还是smart-doc的文档都能帮你
+如果你在项目中使用了`Fastjson`替代默认的`Jackson`，按照上面的`idCard`字段这样写上注解后，无论是真实的数据响应还是`smart-doc`的文档都能帮你
 忽略掉相关字段。
 
 ### 忽略高级设置
-smart-doc官方还支持Fastjson和Jackson的高级忽略配置，例子如下：
+`smart-doc`官方还支持`Fastjson`和`Jackson`的高级忽略配置，例子如下：
 ```java
 /**
 * 测试mybatis-plugs page字段忽略
@@ -217,7 +222,7 @@ public class MybatisPlusPage<T> extends Page<T> {
 }
 ```
 ## 导出数据字典
-在swagger中针对国内的场景，是很难做到字典导出的。但是smart-doc中可以很容易的把枚举字典导出到文档中。
+在`Swagger`中针对国内的场景，是很难做到字典导出的。但是`smart-doc`中可以很容易的把枚举字典导出到文档中。
 例如代码中有一个订单状态枚举字典。
 ```java
 
@@ -261,6 +266,9 @@ public enum OrderEnum {
     ]
 }
 ```
+**注意：** 如果配置类名时使用到内部类不要写错了，子类是使用`$`符号相连，
+例如：`com.power.doc.controller.UserController$ErrorCodeEnum`
+
 > 由于smart-doc为了减少用户去配置字典项，因此使用的反射原理去遍历的枚举项，反射是不能获取到注释的，
 这里就要求字典的描述直接定义在编码中。当然错误字典也是同理来处理。
 
@@ -271,7 +279,7 @@ public enum OrderEnum {
 ### 如何让smart-doc加载源码
 Smart-doc作为一款完全依赖源码注释来分析生成文档的工具。如果没有源代码，那么在生成文档时将只能看到字段名和字段类型等信息，注释相关的信息都将无法生成，对于一个所有代码都在一个单独项目中的情况，你不需要考虑任何东西，Smart-doc能完美的完成你想要的文档，但是对一个多模块项目，或者项目依赖了一个独立的jar包的情况，smart-doc将无法加载到它所运行模块之外的代码。下面将会介绍如何来让Smart-doc加载到运行模块外的项目代码。
 
- **注意：自smart-doc-maven-plugin 1.0.2版本开始，使用maven的插件能够实现自动源码加载。** 
+ **注意：自`smart-doc-maven-plugin 1.0.2`版本开始，使用`maven`的插件能够实现自动源码加载。** 
 #### 通过`ApiConfig`类设置(不推荐)
 代码示例如下：
 
@@ -284,14 +292,14 @@ config.setSourceCodePaths(
         SourceCodePath.path().setDesc("加载外部项目源码").setPath("E:\\Test\\Mybatis-PageHelper-master\\src\\main\\java")
 );
 ```
-这样smart-doc就能将外部的源码载入。
+这样`smart-doc`就能将外部的源码载入。
 
 #### 通过`maven`的`classifier`来指定源码包(不推荐)
 
 > 官方不推荐这样使用，如果你们团队比较规范，领导要求严格，下面的配置纯属找骂，
 请使用smart-doc提供的官方插件来集成，最好保持项目pom配置的清爽整洁。
 
-这里先看如何使用classifier来加载源码包。
+这里先看如何使用`classifier`来加载源码包。
 
 ```xml
 <!--依赖的库-->

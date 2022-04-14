@@ -153,6 +153,8 @@
   "responseParamsTable": true //是否将响应参数表展示在文档中, 默认true，@since 2.2.5
 }
 ```
+**注意：** 如果配置类名时使用到内部类不要写错了，子类是使用`$`符号相连，
+例如：`com.power.doc.controller.UserController$ErrorCodeEnum`
 
 ## serverUrl
 * 必填：`false`
