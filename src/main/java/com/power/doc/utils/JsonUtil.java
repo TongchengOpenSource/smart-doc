@@ -42,8 +42,7 @@ public class JsonUtil {
         try {
             JsonElement jsonElement = JsonParser.parseString(jsonString);
             Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
-            String prettyJson = gson.toJson(jsonElement);
-            return prettyJson;
+            return gson.toJson(jsonElement);
         } catch (Exception e) {
             return jsonString;
         }
@@ -56,8 +55,7 @@ public class JsonUtil {
      * @return Format json string
      */
     public static String toPrettyJson(Object src) {
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        String prettyJson = gson.toJson(src);
-        return prettyJson;
+        Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
+        return gson.toJson(src);
     }
 }
