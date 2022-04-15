@@ -70,7 +70,7 @@ smart-doc better.
 <img src="https://raw.githubusercontent.com/shalousun/smart-doc/dev/images/known-users/tianbo-tech.png" title="tianbo tech" width="127px" height="70px"/>
 
 ## Acknowledgements
-Thanks to [JetBrains SoftWare](https://www.jetbrains.com) for providing free Open Source license for this open source project.
+Thanks to [JetBrains SoftWare](https://www.jetbrains.com) for providing free Open Source license for this project.
 <img src="https://raw.githubusercontent.com/shalousun/smart-doc/dev/images/jetbrains-variant-3.png" width="260px" height="220px"/>
 ## License
 
