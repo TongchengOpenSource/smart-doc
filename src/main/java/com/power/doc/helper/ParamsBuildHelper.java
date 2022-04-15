@@ -450,8 +450,7 @@ public class ParamsBuildHelper {
                                     paramList.addAll(buildParams(gName, preBuilder.toString(), nextLevel, isRequired
                                             , isResp, registryClasses, projectBuilder, groupClasses, fieldPid, jsonRequest));
                                 }
-                            }
-                            else{
+                            } else {
                                 param.setSelfReferenceLoop(true);
                             }
                         }
@@ -558,8 +557,8 @@ public class ParamsBuildHelper {
     }
 
     private static List<ApiParam> buildMapParam(String[] globGicName, String pre, int level, String isRequired, boolean isResp, Map<String, String> registryClasses,
-                                      ProjectDocConfigBuilder projectBuilder, List<String> groupClasses, int pid, boolean jsonRequest,
-                                      int nextLevel) {
+                                                ProjectDocConfigBuilder projectBuilder, List<String> groupClasses, int pid, boolean jsonRequest,
+                                                int nextLevel) {
         if (globGicName.length != 2) {
             return Collections.emptyList();
         }
@@ -574,7 +573,7 @@ public class ParamsBuildHelper {
             String valueSimpleNameType = isShowJavaType ? valueSimpleName : DocClassUtil.processTypeNameForParams(valueSimpleName.toLowerCase());
             ApiParam apiParam = ApiParam.of().setField(pre + "mapKey")
                     .setType(valueSimpleNameType)
-                    .setDesc(Optional.ofNullable(projectBuilder.getClassByName(valueSimpleName)).map(JavaClass::getComment).orElse(""))
+                    .setDesc(Optional.ofNullable(projectBuilder.getClassByName(valueSimpleName)).map(JavaClass::getComment).orElse("A map key."))
                     .setVersion(DEFAULT_VERSION)
                     .setPid(pid).setId(++pid);
             paramList.addAll(Collections.singletonList(apiParam));

@@ -85,7 +85,7 @@ public class OpenApiBuilder {
         json.put("openapi", "3.0.3");
         json.put("info", buildInfo(config));
         json.put("servers", buildServers(config));
-        json.put("paths", buildPaths(apiDocList));
+        json.put("paths", buildPaths(config, apiDocList));
         json.put("components", buildComponentsSchema(apiDocList));
 
         String filePath = config.getOutPath();
@@ -124,10 +124,11 @@ public class OpenApiBuilder {
     /**
      * Build openapi paths
      *
+     * @param apiConfig  ApiConfig
      * @param apiDocList List of api
      * @return
      */
-    private static Map<String, Object> buildPaths(List<ApiDoc> apiDocList) {
+    private static Map<String, Object> buildPaths(ApiConfig apiConfig, List<ApiDoc> apiDocList) {
         Map<String, Object> pathMap = new HashMap<>(500);
         apiDocList.forEach(
                 a -> {
@@ -136,7 +137,7 @@ public class OpenApiBuilder {
                             method -> {
                                 //replace '//' to '/'
                                 String url = method.getPath().replace("//", "/");
-                                Map<String, Object> request = buildPathUrls(method, a);
+                                Map<String, Object> request = buildPathUrls(apiConfig, method, a);
                                 //pathMap.put(method.getPath().replace("//", "/"), buildPathUrls(method, a));
                                 if (!pathMap.containsKey(url)) {
                                     pathMap.put(url, request);
@@ -154,24 +155,26 @@ public class OpenApiBuilder {
     /**
      * Build path urls
      *
+     * @param apiConfig    ApiConfig
      * @param apiMethodDoc Method
      * @param apiDoc       ApiDoc
      * @return
      */
-    private static Map<String, Object> buildPathUrls(ApiMethodDoc apiMethodDoc, ApiDoc apiDoc) {
+    private static Map<String, Object> buildPathUrls(ApiConfig apiConfig, ApiMethodDoc apiMethodDoc, ApiDoc apiDoc) {
         Map<String, Object> request = new HashMap<>(4);
-        request.put(apiMethodDoc.getType().toLowerCase(), buildPathUrlsRequest(apiMethodDoc, apiDoc));
+        request.put(apiMethodDoc.getType().toLowerCase(), buildPathUrlsRequest(apiConfig, apiMethodDoc, apiDoc));
         return request;
     }
 
     /**
-     * url的基本信息 信息简介summary 详情description 所属分类tags 请求参数parameter 请求体request 返回值responses
+     * Build request
      *
-     * @param apiMethodDoc 方法参数
-     * @param apiDoc       类参数
+     * @param apiConfig    ApiConfig
+     * @param apiMethodDoc ApiMethodDoc
+     * @param apiDoc       apiDoc
      * @return
      */
-    private static Map<String, Object> buildPathUrlsRequest(ApiMethodDoc apiMethodDoc, ApiDoc apiDoc) {
+    private static Map<String, Object> buildPathUrlsRequest(ApiConfig apiConfig, ApiMethodDoc apiMethodDoc, ApiDoc apiDoc) {
         Map<String, Object> request = new HashMap<>(20);
         request.put("summary", apiMethodDoc.getDesc());
         request.put("description", apiMethodDoc.getDetail());
@@ -180,9 +183,9 @@ public class OpenApiBuilder {
         } else {
             request.put("tags", new String[]{apiDoc.getDesc()});
         }
-        request.put("requestBody", buildRequestBody(apiMethodDoc));
+        request.put("requestBody", buildRequestBody(apiConfig, apiMethodDoc));
         request.put("parameters", buildParameters(apiMethodDoc));
-        request.put("responses", buildResponses(apiMethodDoc));
+        request.put("responses", buildResponses(apiConfig, apiMethodDoc));
         request.put("deprecated", apiMethodDoc.isDeprecated());
         request.put("operationId", apiMethodDoc.getMethodId());
         return request;
@@ -194,46 +197,47 @@ public class OpenApiBuilder {
      * @param apiMethodDoc ApiMethodDoc
      * @return
      */
-    private static Map<String, Object> buildRequestBody(ApiMethodDoc apiMethodDoc) {
+    private static Map<String, Object> buildRequestBody(ApiConfig apiConfig, ApiMethodDoc apiMethodDoc) {
         Map<String, Object> requestBody = new HashMap<>(8);
         boolean isPost = (apiMethodDoc.getType().equals(Methods.POST.getValue())
                 || apiMethodDoc.getType().equals(Methods.PUT.getValue()) ||
                 apiMethodDoc.getType().equals(Methods.PATCH.getValue()));
         //add content of post method
         if (isPost) {
-            requestBody.put("content", buildContent(apiMethodDoc, false));
+            requestBody.put("content", buildContent(apiConfig, apiMethodDoc, false));
             return requestBody;
         }
-
         return null;
     }
 
     /**
-     * 构建content信息 responses 和 requestBody 都需要content信息
+     * Build content for responses and requestBody
      *
-     * @param apiMethodDoc 方法参数
-     * @param isRep        是否是返回数据
+     * @param apiConfig    ApiConfig
+     * @param apiMethodDoc ApiMethodDoc
+     * @param isRep        is response
      * @return
      */
-    private static Map<String, Object> buildContent(ApiMethodDoc apiMethodDoc, boolean isRep) {
+    private static Map<String, Object> buildContent(ApiConfig apiConfig, ApiMethodDoc apiMethodDoc, boolean isRep) {
         Map<String, Object> content = new HashMap<>(8);
         String contentType = apiMethodDoc.getContentType();
         if (isRep) {
             contentType = "*/*";
         }
-        content.put(contentType, buildContentBody(apiMethodDoc, isRep));
+        content.put(contentType, buildContentBody(apiConfig, apiMethodDoc, isRep));
         return content;
 
     }
 
     /**
-     * 构建content的数据内容
+     * Build data of content
      *
-     * @param apiMethodDoc 方法参数
-     * @param isRep        是否是返回数据
+     * @param apiConfig    ApiConfig
+     * @param apiMethodDoc ApiMethodDoc
+     * @param isRep        is response
      * @return
      */
-    private static Map<String, Object> buildContentBody(ApiMethodDoc apiMethodDoc, boolean isRep) {
+    private static Map<String, Object> buildContentBody(ApiConfig apiConfig, ApiMethodDoc apiMethodDoc, boolean isRep) {
         Map<String, Object> content = new HashMap<>(8);
         if (Objects.nonNull(apiMethodDoc.getReturnSchema()) && isRep) {
             content.put("schema", apiMethodDoc.getReturnSchema());
@@ -273,26 +277,27 @@ public class OpenApiBuilder {
                 content.put("schema", buildBodySchema(apiMethodDoc, isRep));
             }
         }
-        content.put("examples", buildBodyExample(apiMethodDoc, isRep));
+        if ((!isRep && apiConfig.isRequestExample()) || (isRep && apiConfig.isResponseExample())) {
+            content.put("examples", buildBodyExample(apiMethodDoc, isRep));
+        }
         return content;
 
     }
 
     /**
-     * content body 的schema 信息
+     * Build schema of Body
      *
-     * @param apiMethodDoc 请求方法参数 去除server
-     * @param isRep        是否是返回数据
+     * @param apiMethodDoc ApiMethodDoc
+     * @param isRep        is response
      * @return
      */
     private static Map<String, Object> buildBodySchema(ApiMethodDoc apiMethodDoc, boolean isRep) {
         Map<String, Object> schema = new HashMap<>(10);
-        //当类型为数组时使用
         Map<String, Object> innerScheme = new HashMap<>(10);
-        //去除url中的特殊字符
+        //remove special characters in url
         String responseRef = "#/components/schemas/" + apiMethodDoc.getPath().replaceAll(PATH_REGEX, "_") + "response";
         String requestRef = "#/components/schemas/" + apiMethodDoc.getPath().replaceAll(PATH_REGEX, "_") + "request";
-        //如果是数组类型
+        //List param
         if (apiMethodDoc.isListParam()) {
             schema.put("type", DocGlobalConstants.ARRAY);
             if (isRep) {
@@ -313,10 +318,10 @@ public class OpenApiBuilder {
     }
 
     /**
-     * 信息样例  请求和返回的信息样例
+     * Build body example
      *
-     * @param apiMethodDoc 方法参数
-     * @param isRep        是否是返回数据
+     * @param apiMethodDoc ApiMethodDoc
+     * @param isRep        is response
      * @return
      */
     private static Map<String, Object> buildBodyExample(ApiMethodDoc apiMethodDoc, boolean isRep) {
@@ -327,10 +332,10 @@ public class OpenApiBuilder {
     }
 
     /**
-     * 信息样例数据构建 此处请求体requestBody构建完成
+     * Build example data
      *
-     * @param apiMethodDoc 方法参数
-     * @param isRep        是否为返回数据
+     * @param apiMethodDoc ApiMethodDoc
+     * @param isRep        is response
      * @return
      */
     private static Map<String, Object> buildExampleData(ApiMethodDoc apiMethodDoc, boolean isRep) {
@@ -348,14 +353,15 @@ public class OpenApiBuilder {
     }
 
     /**
-     * 构建请求参数 用于get请求 @PathVariable Header 参数构建
+     * Build request parameters
      *
-     * @param apiMethodDoc 方法体
+     * @param apiMethodDoc API data for the method
      * @return
      */
     private static List<Map<String, Object>> buildParameters(ApiMethodDoc apiMethodDoc) {
         Map<String, Object> parameters;
         List<Map<String, Object>> parametersList = new ArrayList<>();
+        // Handling path parameters
         for (ApiParam apiParam : apiMethodDoc.getPathParams()) {
             parameters = getStringParams(apiParam);
             parameters.put("in", "path");
@@ -364,7 +370,7 @@ public class OpenApiBuilder {
                 parametersList.add(parameters);
             }
         }
-        // not handle form data
+        //  not process formdata
         if (!apiMethodDoc.getContentType().equals(DocGlobalConstants.MULTIPART_TYPE)) {
             for (ApiParam apiParam : apiMethodDoc.getQueryParams()) {
                 parameters = getStringParams(apiParam);
@@ -375,7 +381,7 @@ public class OpenApiBuilder {
                 }
             }
         }
-        //如果包含请求头
+        //with headers
         if (!CollectionUtil.isEmpty(apiMethodDoc.getRequestHeaders())) {
             for (ApiReqParam header : apiMethodDoc.getRequestHeaders()) {
                 parameters = new HashMap<>(20);
@@ -403,9 +409,9 @@ public class OpenApiBuilder {
     }
 
     /**
-     * 如果是get请求或者是@PathVariable 设置请求参数
+     * If it is a get request or @PathVariable set the request parameters
      *
-     * @param apiParam 参数信息
+     * @param apiParam Parameter information
      * @return
      */
     private static Map<String, Object> buildParametersSchema(ApiParam apiParam) {
@@ -428,9 +434,9 @@ public class OpenApiBuilder {
     }
 
     /**
-     * 如果包含header 设置请求参数
+     * If the header is included, set the request parameters
      *
-     * @param header 参数信息
+     * @param header header
      * @return
      */
     private static Map<String, Object> buildParametersSchema(ApiReqParam header) {
@@ -447,9 +453,9 @@ public class OpenApiBuilder {
      * @param apiMethodDoc ApiMethodDoc
      * @return
      */
-    private static Map<String, Object> buildResponses(ApiMethodDoc apiMethodDoc) {
+    private static Map<String, Object> buildResponses(ApiConfig apiConfig, ApiMethodDoc apiMethodDoc) {
         Map<String, Object> response = new HashMap<>(10);
-        response.put("200", buildResponsesBody(apiMethodDoc));
+        response.put("200", buildResponsesBody(apiConfig, apiMethodDoc));
         return response;
     }
 
@@ -459,10 +465,10 @@ public class OpenApiBuilder {
      * @param apiMethodDoc ApiMethodDoc
      * @return
      */
-    private static Map<String, Object> buildResponsesBody(ApiMethodDoc apiMethodDoc) {
+    private static Map<String, Object> buildResponsesBody(ApiConfig apiConfig, ApiMethodDoc apiMethodDoc) {
         Map<String, Object> responseBody = new HashMap<>(10);
         responseBody.put("description", "OK");
-        responseBody.put("content", buildContent(apiMethodDoc, true));
+        responseBody.put("content", buildContent(apiConfig, apiMethodDoc, true));
         return responseBody;
     }
 
@@ -578,13 +584,13 @@ public class OpenApiBuilder {
                 propertiesData.put("type", "array");
                 Map<String, String> ref = new HashMap<>();
                 ref.put("$ref", "#/components/schemas/" + schemaName);
-                //自循环引用数组
-                if(apiParam.isSelfReferenceLoop()){
-                    List<Map<String,Object>> sRLExample = new ArrayList<>();
-                    HashMap<String,Object> example = new HashMap<>(4);
-                    example.put("$ref","...");
+                //self reference loop
+                if (apiParam.isSelfReferenceLoop()) {
+                    List<Map<String, Object>> sRLExample = new ArrayList<>();
+                    HashMap<String, Object> example = new HashMap<>(4);
+                    example.put("$ref", "...");
                     sRLExample.add(example);
-                propertiesData.put("example",sRLExample);
+                    propertiesData.put("example", sRLExample);
                 }
                 propertiesData.put("items", ref);
             }
