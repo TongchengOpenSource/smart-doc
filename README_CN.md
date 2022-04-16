@@ -84,7 +84,7 @@ the [LICENSE](https://gitee.com/smart-doc-team/smart-doc/blob/master/LICENSE) fi
 
 - 2020 年度 OSC 中国开源项目评选”活动中获得「最积极运营项目」
 ## Acknowledgements
-感谢[JetBrains SoftWare](https://www.jetbrains.com) 为本开源项目提供的免费Open Source license。
+感谢[JetBrains SoftWare](https://www.jetbrains.com) 免费的开源授权。
 <img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/jetbrains-variant-3.png" width="260px" height="220px"/>
 ## Contact
 
