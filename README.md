@@ -19,7 +19,7 @@ need to inject annotations into the code like Swagger.
 
 - Zero annotation, zero learning cost, only need to write standard JAVA document comments.
 - Automatic derivation based on source code interface definition, powerful return structure derivation support.
-- Support Spring MVC, Spring Boot, Spring Boot Web Flux (Not support endpoint), Feign.
+- Support Spring MVC, Spring Boot, Spring Boot Web Flux (Not support endpoint), Feign ,JAX-RS.
 - Supports the derivation of asynchronous interface returns such as Callable, Future, CompletableFuture.
 - Support JSR-303 parameter verification specification.
 - Support for automatic generation of request examples based on request parameters.
