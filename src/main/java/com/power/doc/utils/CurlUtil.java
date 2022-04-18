@@ -26,7 +26,10 @@ import com.power.common.util.CollectionUtil;
 import com.power.common.util.StringUtil;
 import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.model.ApiReqParam;
+import com.power.doc.model.FormData;
 import com.power.doc.model.request.CurlRequest;
+
+import java.util.List;
 
 /**
  * @author yu 2020/12/21.
@@ -60,6 +63,12 @@ public class CurlUtil {
                 }
             }
         }
+
+        List<FormData> fileFormDataList = request.getFileFormDataList();
+        if (CollectionUtil.isNotEmpty(fileFormDataList)) {
+            fileFormDataList.forEach(file -> sb.append(" -F '").append(file.getKey()).append("='"));
+        }
+
         sb.append(" -i");
         // append request url
         sb.append(" ").append(request.getUrl());

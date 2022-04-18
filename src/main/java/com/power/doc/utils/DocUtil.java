@@ -527,6 +527,15 @@ public class DocUtil {
         return formDataMap;
     }
 
+    /**
+     * 判断是否为torna的表单文件类型
+     * @param type
+     * @return
+     */
+    public static boolean isFileOrFileArray(String type) {
+        return Objects.equals(type, DocGlobalConstants.PARAM_TYPE_FILE) || Objects.equals(type, DocGlobalConstants.PARAM_TYPE_FILE_ARRAY);
+    }
+
     public static boolean javaPrimaryType(String type) {
         switch (type) {
             case "Integer":

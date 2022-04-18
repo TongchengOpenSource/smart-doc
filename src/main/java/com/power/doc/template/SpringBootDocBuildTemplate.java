@@ -529,6 +529,9 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                     if (JavaClassValidateUtil.isPrimitive(simpleTypeName)) {
                         requestExample.setJsonBody(mockValue);
                     }
+                    if (JavaClassValidateUtil.isFile(typeName)) {
+                        break;
+                    }
                     queryParamsMap.put(paramName, mockValue);
                     requestParam = true;
                     paramAdded = true;
@@ -592,8 +595,11 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         }
 
         // set content-type to fromData
-        if (formDataList.stream().anyMatch(form -> Objects.equals(form.getType(), DocGlobalConstants.PARAM_TYPE_FILE_ARRAY)
-                || Objects.equals(form.getType(), DocGlobalConstants.PARAM_TYPE_FILE))) {
+        boolean hasFormDataUploadFile = formDataList.stream().anyMatch(form -> DocUtil.isFileOrFileArray(form.getType()));
+        Map<Boolean, List<FormData>> formDataGroupMap = formDataList.stream().collect(Collectors.groupingBy(e -> DocUtil.isFileOrFileArray(e.getType())));
+        List<FormData> fileFormDataList = formDataGroupMap.getOrDefault(Boolean.TRUE, new ArrayList<>());
+        if (hasFormDataUploadFile) {
+            formDataList = formDataGroupMap.getOrDefault(Boolean.FALSE, new ArrayList<>());
             apiMethodDoc.setContentType(FILE_CONTENT_TYPE);
         }
 
@@ -603,8 +609,10 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         String body;
         String exampleBody;
         String url;
-        // TODO: 2022-04-18 curl传文件转换
+        //curl send file to convert
         final Map<String, String> formDataToMap = DocUtil.formDataToMap(formDataList);
+        // formData add to params '--data'
+        queryParamsMap.putAll(formDataToMap);
         if (Methods.POST.getValue().equals(methodType) || Methods.PUT.getValue().equals(methodType)) {
             //for post put
             path = DocUtil.formatAndRemove(path, pathParamsMap);
@@ -631,6 +639,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                     curlRequest = CurlRequest.builder()
                             .setBody(body)
                             .setContentType(apiMethodDoc.getContentType())
+                            .setFileFormDataList(fileFormDataList)
                             .setType(methodType)
                             .setReqHeaders(reqHeaderList)
                             .setUrl(url);
@@ -638,6 +647,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                     curlRequest = CurlRequest.builder()
                             .setBody(requestExample.getJsonBody())
                             .setContentType(apiMethodDoc.getContentType())
+                            .setFileFormDataList(fileFormDataList)
                             .setType(methodType)
                             .setReqHeaders(reqHeaderList)
                             .setUrl(url);
@@ -647,7 +657,6 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             requestExample.setExampleBody(exampleBody).setUrl(url);
         } else {
             // for get delete
-            queryParamsMap.putAll(formDataToMap);
             path = DocUtil.formatAndRemove(path, pathParamsMap);
             url = UrlUtil.urlJoin(path, queryParamsMap);
             url = StringUtil.removeQuotes(url);
