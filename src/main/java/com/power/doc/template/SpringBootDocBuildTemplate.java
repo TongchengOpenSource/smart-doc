@@ -543,6 +543,10 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 FormData formData = new FormData();
                 formData.setKey(paramName);
                 formData.setType("file");
+                if (typeName.contains("[]") || typeName.endsWith(">")) {
+                    comment = comment + "(array of file)";
+                    formData.setType(DocGlobalConstants.PARAM_TYPE_FILE_ARRAY);
+                }
                 formData.setDescription(comment);
                 formData.setValue(mockValue);
                 formDataList.add(formData);
@@ -586,12 +590,20 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 formDataList.addAll(FormDataBuildHelper.getFormData(gicTypeName, new HashMap<>(), 0, configBuilder, DocGlobalConstants.EMPTY));
             }
         }
+
+        // set content-type to fromData
+        if (formDataList.stream().anyMatch(form -> Objects.equals(form.getType(), DocGlobalConstants.PARAM_TYPE_FILE_ARRAY)
+                || Objects.equals(form.getType(), DocGlobalConstants.PARAM_TYPE_FILE))) {
+            apiMethodDoc.setContentType(FILE_CONTENT_TYPE);
+        }
+
         requestExample.setFormDataList(formDataList);
         String[] paths = apiMethodDoc.getPath().split(";");
         String path = paths[0];
         String body;
         String exampleBody;
         String url;
+        // TODO: 2022-04-18 curl传文件转换
         final Map<String, String> formDataToMap = DocUtil.formDataToMap(formDataList);
         if (Methods.POST.getValue().equals(methodType) || Methods.PUT.getValue().equals(methodType)) {
             //for post put
@@ -749,6 +761,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                         .setDesc(comment);
                 if (typeName.contains("[]") || typeName.endsWith(">")) {
                     comment = comment + "(array of file)";
+                    param.setType(DocGlobalConstants.PARAM_TYPE_FILE_ARRAY);
                     param.setDesc(comment);
                     param.setHasItems(true);
                 }

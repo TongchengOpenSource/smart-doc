@@ -186,10 +186,19 @@ function getInputData(element, returnFormDate) {
         "input").is(':checked');
     if (checked) {
       const input = $(this).find('td:eq(2) input');
-      console.log("input type:" + $(input).attr("type"))
+      let attr = $(input).attr("type");
+      let multiple = $(input).attr("multiple");
+      console.log("input type:" + attr)
       const name = $(input).attr("name");
-      if ($(input).attr("type") == "file") {
-        formData.append(name, $(input)[0].files[0]);
+      if (attr === "file") {
+        let files = $(input)[0].files;
+        if (multiple) {
+          $.each(files, function (i, file) {
+            formData.append(name, file);
+          })
+        } else {
+          formData.append(name, files[0]);
+        }
       } else {
         const val = $(input).val();
         if (isValidUrl(val)) {
