@@ -31,6 +31,19 @@ public class FormData {
     private String description;
     private String src;
     private String value;
+    /**
+     * openapi items
+     */
+    private boolean hasItems;
+
+    public boolean isHasItems() {
+        return hasItems;
+    }
+
+    public FormData setHasItems(boolean hasItems) {
+        this.hasItems = hasItems;
+        return this;
+    }
 
     public String getKey() {
         return key;

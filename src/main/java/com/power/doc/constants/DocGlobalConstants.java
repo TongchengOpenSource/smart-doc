@@ -224,10 +224,6 @@ public final class DocGlobalConstants {
     public static final String DUBBO_SWAGGER = "org.apache.dubbo.rpc.protocol.rest.integration.swagger.DubboSwaggerApiListingResource";
 
     public static final String ARRAY = "array";
-    /**
-     * 文件数组类型
-     */
-    public static final String PARAM_TYPE_FILE_ARRAY = "file[]";
     public static final String PARAM_TYPE_FILE = "file";
 
     public static final String OBJECT = "object";

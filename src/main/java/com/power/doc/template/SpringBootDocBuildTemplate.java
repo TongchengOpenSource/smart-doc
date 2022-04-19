@@ -548,7 +548,8 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 formData.setType("file");
                 if (typeName.contains("[]") || typeName.endsWith(">")) {
                     comment = comment + "(array of file)";
-                    formData.setType(DocGlobalConstants.PARAM_TYPE_FILE_ARRAY);
+                    formData.setType(DocGlobalConstants.PARAM_TYPE_FILE);
+                    formData.setHasItems(true);
                 }
                 formData.setDescription(comment);
                 formData.setValue(mockValue);
@@ -595,8 +596,8 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         }
 
         // set content-type to fromData
-        boolean hasFormDataUploadFile = formDataList.stream().anyMatch(form -> DocUtil.isFileOrFileArray(form.getType()));
-        Map<Boolean, List<FormData>> formDataGroupMap = formDataList.stream().collect(Collectors.groupingBy(e -> DocUtil.isFileOrFileArray(e.getType())));
+        boolean hasFormDataUploadFile = formDataList.stream().anyMatch(form -> Objects.equals(form.getType(), DocGlobalConstants.PARAM_TYPE_FILE));
+        Map<Boolean, List<FormData>> formDataGroupMap = formDataList.stream().collect(Collectors.groupingBy(e -> Objects.equals(e.getType(), DocGlobalConstants.PARAM_TYPE_FILE)));
         List<FormData> fileFormDataList = formDataGroupMap.getOrDefault(Boolean.TRUE, new ArrayList<>());
         if (hasFormDataUploadFile) {
             formDataList = formDataGroupMap.getOrDefault(Boolean.FALSE, new ArrayList<>());
@@ -770,7 +771,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                         .setDesc(comment);
                 if (typeName.contains("[]") || typeName.endsWith(">")) {
                     comment = comment + "(array of file)";
-                    param.setType(DocGlobalConstants.PARAM_TYPE_FILE_ARRAY);
+                    param.setType(DocGlobalConstants.PARAM_TYPE_FILE);
                     param.setDesc(comment);
                     param.setHasItems(true);
                 }

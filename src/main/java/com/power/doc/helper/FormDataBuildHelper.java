@@ -139,7 +139,7 @@ public class FormDataBuildHelper {
                 formData.setType("file");
                 if (fieldGicName.contains("[]") || fieldGicName.endsWith(">")) {
                     comment = comment + "(array of file)";
-                    formData.setType(DocGlobalConstants.PARAM_TYPE_FILE_ARRAY);
+                    formData.setType(DocGlobalConstants.PARAM_TYPE_FILE);
                 }
                 formData.setDescription(comment);
                 formData.setValue("");
