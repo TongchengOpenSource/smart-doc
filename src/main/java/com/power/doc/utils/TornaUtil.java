@@ -80,7 +80,7 @@ public class TornaUtil {
             methodApi = new Apis();
             methodApi.setIsFolder(TornaConstants.NO);
             methodApi.setName(apiMethodDoc.getDesc());
-            methodApi.setUrl(hasDebugEnv ? apiMethodDoc.getPath() : apiMethodDoc.getUrl());
+            methodApi.setUrl(hasDebugEnv ? subFirstUrlOrPath(apiMethodDoc.getPath()) : subFirstUrlOrPath(apiMethodDoc.getUrl()));
             methodApi.setHttpMethod(apiMethodDoc.getType());
             methodApi.setContentType(apiMethodDoc.getContentType());
             methodApi.setDescription(apiMethodDoc.getDetail());
@@ -313,5 +313,20 @@ public class TornaUtil {
         }
         return gicType;
     }
+
+    private static String subFirstUrlOrPath(String url) {
+
+        if (StringUtil.isEmpty(url)) {
+            return StringUtil.EMPTY;
+        }
+
+        if (!url.contains(DocGlobalConstants.MULTI_URL_SEPARATOR)) {
+            return url;
+        }
+
+        String[] split = StringUtil.split(url, DocGlobalConstants.MULTI_URL_SEPARATOR);
+        return split[0];
+    }
+
 
 }
