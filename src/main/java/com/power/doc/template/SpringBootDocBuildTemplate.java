@@ -527,7 +527,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                         mockValue = queryParamsMap.get(paramName);
                     }
                     if (JavaClassValidateUtil.isPrimitive(simpleTypeName)) {
-                        requestExample.setJsonBody(mockValue);
+                        requestExample.addJsonBody(mockValue);
                     }
                     if (JavaClassValidateUtil.isFile(typeName)) {
                         break;
