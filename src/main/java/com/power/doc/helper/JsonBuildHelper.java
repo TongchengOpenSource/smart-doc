@@ -110,7 +110,7 @@ public class JsonBuildHelper {
 
 
         return JsonUtil.toPrettyFormat(buildJson(typeName, returnType, Boolean.TRUE, 0,
-                new HashMap<>(), new ArrayList<>(0), builder));
+                new HashMap<>(), new HashSet<>(0), builder));
     }
 
     /**
@@ -124,7 +124,7 @@ public class JsonBuildHelper {
      * @return String
      */
     public static String buildJson(String typeName, String genericCanonicalName,
-                                   boolean isResp, int counter, Map<String, String> registryClasses, List<String> groupClasses, ProjectDocConfigBuilder builder) {
+                                   boolean isResp, int counter, Map<String, String> registryClasses, Set<String> groupClasses, ProjectDocConfigBuilder builder) {
 
         Map<String, String> genericMap = new HashMap<>(10);
         JavaClass javaClass = builder.getJavaProjectBuilder().getClassByName(typeName);
@@ -251,7 +251,7 @@ public class JsonBuildHelper {
                 for (JavaAnnotation annotation : annotations) {
                     String annotationName = annotation.getType().getValue();
                     if (ValidatorAnnotations.NULL.equals(annotationName) && !isResp) {
-                        List<String> groupClassList = JavaClassUtil.getParamGroupJavaClass(annotation);
+                        Set<String> groupClassList = JavaClassUtil.getParamGroupJavaClass(annotation);
                         for (String groupClass : groupClassList) {
                             if (groupClasses.contains(groupClass)) {
                                 continue out;
