@@ -50,7 +50,7 @@ import static com.power.doc.constants.DocGlobalConstants.*;
 public class ParamsBuildHelper {
 
     public static List<ApiParam> buildParams(String className, String pre, int level, String isRequired, boolean isResp
-            , Map<String, String> registryClasses, ProjectDocConfigBuilder projectBuilder, List<String> groupClasses
+            , Map<String, String> registryClasses, ProjectDocConfigBuilder projectBuilder, Set<String> groupClasses
             , int pid, boolean jsonRequest) {
         Map<String, String> genericMap = new HashMap<>(10);
 
@@ -203,7 +203,7 @@ public class ParamsBuildHelper {
                             fieldName = StringUtil.removeQuotes(annotation.getProperty(DocAnnotationConstants.VALUE_PROP).toString());
                         }
                     } else if (ValidatorAnnotations.NULL.equals(simpleAnnotationName) && !isResp) {
-                        List<String> groupClassList = JavaClassUtil.getParamGroupJavaClass(annotation);
+                        Set<String> groupClassList = JavaClassUtil.getParamGroupJavaClass(annotation);
                         for (String javaClass : groupClassList) {
                             if (groupClasses.contains(javaClass)) {
                                 strRequired = false;
@@ -213,7 +213,7 @@ public class ParamsBuildHelper {
                     } else if (JavaClassValidateUtil.isJSR303Required(simpleAnnotationName) && !isResp) {
                         annotationCounter++;
                         boolean hasGroup = false;
-                        List<String> groupClassList = JavaClassUtil.getParamGroupJavaClass(annotation);
+                        Set<String> groupClassList = JavaClassUtil.getParamGroupJavaClass(annotation);
                         for (String javaClass : groupClassList) {
                             if (groupClasses.contains(javaClass)) {
                                 hasGroup = true;
