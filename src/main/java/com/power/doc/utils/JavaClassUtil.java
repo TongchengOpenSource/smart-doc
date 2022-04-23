@@ -491,7 +491,7 @@ public class JavaClassUtil {
         for (AnnotationValue annotationValue : annotationValueList) {
             TypeRef typeRef = (TypeRef) annotationValue;
             DefaultJavaParameterizedType annotationValueType = (DefaultJavaParameterizedType) typeRef.getType();
-            javaClassList.add(annotationValueType.getGenericCanonicalName());
+            javaClassList.add(annotationValueType.getGenericFullyQualifiedName());
         }
     }
 
@@ -503,7 +503,7 @@ public class JavaClassUtil {
         for (AnnotationValue annotationValue : annotationValueList) {
             TypeRef typeRef = (TypeRef) annotationValue;
             DefaultJavaParameterizedType annotationValueType = (DefaultJavaParameterizedType) typeRef.getType();
-            String genericCanonicalName = annotationValueType.getGenericCanonicalName();
+            String genericCanonicalName = annotationValueType.getGenericFullyQualifiedName();
             JavaClass classByName = builder.getClassByName(genericCanonicalName);
             recursionGetAllValidInterface(classByName, javaClassList, builder);
             javaClassList.add(genericCanonicalName);
