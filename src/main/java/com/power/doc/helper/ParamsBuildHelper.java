@@ -563,7 +563,7 @@ public class ParamsBuildHelper {
     }
 
     private static List<ApiParam> buildMapParam(String[] globGicName, String pre, int level, String isRequired, boolean isResp, Map<String, String> registryClasses,
-                                                ProjectDocConfigBuilder projectBuilder, List<String> groupClasses, int pid, boolean jsonRequest,
+                                                ProjectDocConfigBuilder projectBuilder, Set<String> groupClasses, int pid, boolean jsonRequest,
                                                 int nextLevel) {
         if (globGicName.length != 2) {
             return Collections.emptyList();
