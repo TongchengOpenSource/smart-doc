@@ -17,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import static com.power.doc.constants.DocGlobalConstants.OBJECT;
 
@@ -179,7 +180,11 @@ public class TornaUtil {
             httpParam = new HttpParam();
             httpParam.setName(apiParam.getField());
             httpParam.setMaxLength(apiParam.getMaxLength());
-            httpParam.setType(apiParam.getType());
+            String type = apiParam.getType();
+            if (Objects.equals(type, DocGlobalConstants.PARAM_TYPE_FILE) && apiParam.isHasItems()) {
+                type = TornaConstants.PARAM_TYPE_FILE_ARRAY;
+            }
+            httpParam.setType(type);
             httpParam.setRequired(apiParam.isRequired() ? TornaConstants.YES : TornaConstants.NO);
             httpParam.setExample(StringUtil.removeQuotes(apiParam.getValue()));
             httpParam.setDescription(apiParam.getDesc());

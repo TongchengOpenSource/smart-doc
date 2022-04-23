@@ -292,7 +292,13 @@ public class ParamsBuildHelper {
                     ApiParam param = ApiParam.of().setField(pre + fieldName).setType("file")
                             .setPid(pid).setId(paramList.size() + pid + 1)
                             .setMaxLength(maxLength)
-                            .setDesc(comment).setRequired(Boolean.valueOf(isRequired)).setVersion(since);
+                            .setDesc(comment).setRequired(Boolean.parseBoolean(isRequired)).setVersion(since);
+                    if (fieldGicName.contains("[]") || fieldGicName.endsWith(">")) {
+                        comment = comment + "(array of file)";
+                        param.setType(DocGlobalConstants.PARAM_TYPE_FILE);
+                        param.setDesc(comment);
+                        param.setHasItems(true);
+                    }
                     paramList.add(param);
                     continue;
                 }

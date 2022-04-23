@@ -289,9 +289,9 @@ public class DocUtil {
             // Replace every occurence of {key} with value
             while ((start = builder.indexOf(pattern)) != -1) {
                 builder.replace(start, start + pattern.length(), value);
-                iteratorMap.remove();
-                values.remove(next.getKey());
             }
+            iteratorMap.remove();
+            values.remove(next.getKey());
 
         }
         return builder.toString();
@@ -526,6 +526,7 @@ public class DocUtil {
         }
         return formDataMap;
     }
+
 
     public static boolean javaPrimaryType(String type) {
         switch (type) {

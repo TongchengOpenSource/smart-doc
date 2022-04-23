@@ -56,6 +56,10 @@ public class TornaConstants {
     public static final String PUSH = "doc.push";
 
     public static final String ENUM_PUSH = "enum.batch.push";
+    /**
+     * torna文件数组类型
+     */
+    public static final String PARAM_TYPE_FILE_ARRAY = "file[]";
 
     public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 

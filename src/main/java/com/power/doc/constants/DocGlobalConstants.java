@@ -22,6 +22,8 @@
  */
 package com.power.doc.constants;
 
+import java.io.File;
+
 /**
  * @author yu 2018/12/15.
  */
@@ -224,6 +226,7 @@ public final class DocGlobalConstants {
     public static final String DUBBO_SWAGGER = "org.apache.dubbo.rpc.protocol.rest.integration.swagger.DubboSwaggerApiListingResource";
 
     public static final String ARRAY = "array";
+    public static final String PARAM_TYPE_FILE = "file";
 
     public static final String OBJECT = "object";
 
@@ -249,5 +252,9 @@ public final class DocGlobalConstants {
     public static final String HIGH_LIGHT_CSS_RANDOM_LIGHT = "randomLight";
 
     public static final String HIGH_LIGHT_CSS_RANDOM_DARK = "randomDark";
+    /**
+     * 多个url的分隔符
+     */
+    public static final String MULTI_URL_SEPARATOR = ";\t";
 
 }

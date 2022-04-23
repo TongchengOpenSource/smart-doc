@@ -527,7 +527,10 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                         mockValue = queryParamsMap.get(paramName);
                     }
                     if (JavaClassValidateUtil.isPrimitive(simpleTypeName)) {
-                        requestExample.setJsonBody(mockValue);
+                        requestExample.addJsonBody(mockValue);
+                    }
+                    if (JavaClassValidateUtil.isFile(typeName)) {
+                        break;
                     }
                     queryParamsMap.put(paramName, mockValue);
                     requestParam = true;
@@ -543,6 +546,11 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 FormData formData = new FormData();
                 formData.setKey(paramName);
                 formData.setType("file");
+                if (typeName.contains("[]") || typeName.endsWith(">")) {
+                    comment = comment + "(array of file)";
+                    formData.setType(DocGlobalConstants.PARAM_TYPE_FILE);
+                    formData.setHasItems(true);
+                }
                 formData.setDescription(comment);
                 formData.setValue(mockValue);
                 formDataList.add(formData);
@@ -586,13 +594,26 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 formDataList.addAll(FormDataBuildHelper.getFormData(gicTypeName, new HashMap<>(), 0, configBuilder, DocGlobalConstants.EMPTY));
             }
         }
+
+        // set content-type to fromData
+        boolean hasFormDataUploadFile = formDataList.stream().anyMatch(form -> Objects.equals(form.getType(), DocGlobalConstants.PARAM_TYPE_FILE));
+        Map<Boolean, List<FormData>> formDataGroupMap = formDataList.stream().collect(Collectors.groupingBy(e -> Objects.equals(e.getType(), DocGlobalConstants.PARAM_TYPE_FILE)));
+        List<FormData> fileFormDataList = formDataGroupMap.getOrDefault(Boolean.TRUE, new ArrayList<>());
+        if (hasFormDataUploadFile) {
+            formDataList = formDataGroupMap.getOrDefault(Boolean.FALSE, new ArrayList<>());
+            apiMethodDoc.setContentType(FILE_CONTENT_TYPE);
+        }
+
         requestExample.setFormDataList(formDataList);
         String[] paths = apiMethodDoc.getPath().split(";");
         String path = paths[0];
         String body;
         String exampleBody;
         String url;
+        //curl send file to convert
         final Map<String, String> formDataToMap = DocUtil.formDataToMap(formDataList);
+        // formData add to params '--data'
+        queryParamsMap.putAll(formDataToMap);
         if (Methods.POST.getValue().equals(methodType) || Methods.PUT.getValue().equals(methodType)) {
             //for post put
             path = DocUtil.formatAndRemove(path, pathParamsMap);
@@ -619,6 +640,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                     curlRequest = CurlRequest.builder()
                             .setBody(body)
                             .setContentType(apiMethodDoc.getContentType())
+                            .setFileFormDataList(fileFormDataList)
                             .setType(methodType)
                             .setReqHeaders(reqHeaderList)
                             .setUrl(url);
@@ -626,6 +648,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                     curlRequest = CurlRequest.builder()
                             .setBody(requestExample.getJsonBody())
                             .setContentType(apiMethodDoc.getContentType())
+                            .setFileFormDataList(fileFormDataList)
                             .setType(methodType)
                             .setReqHeaders(reqHeaderList)
                             .setUrl(url);
@@ -635,7 +658,6 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             requestExample.setExampleBody(exampleBody).setUrl(url);
         } else {
             // for get delete
-            queryParamsMap.putAll(formDataToMap);
             path = DocUtil.formatAndRemove(path, pathParamsMap);
             url = UrlUtil.urlJoin(path, queryParamsMap);
             url = StringUtil.removeQuotes(url);
@@ -749,6 +771,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                         .setDesc(comment);
                 if (typeName.contains("[]") || typeName.endsWith(">")) {
                     comment = comment + "(array of file)";
+                    param.setType(DocGlobalConstants.PARAM_TYPE_FILE);
                     param.setDesc(comment);
                     param.setHasItems(true);
                 }
