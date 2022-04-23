@@ -28,6 +28,7 @@ import com.power.doc.constants.DocAnnotationConstants;
 import com.power.doc.constants.DocValidatorAnnotationEnum;
 import com.power.doc.constants.ValidatorAnnotations;
 import com.power.doc.model.DocJavaField;
+import com.thoughtworks.qdox.JavaProjectBuilder;
 import com.thoughtworks.qdox.model.DocletTag;
 import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaClass;
@@ -46,13 +47,7 @@ import com.thoughtworks.qdox.model.impl.DefaultJavaParameterizedType;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -399,15 +394,15 @@ public class JavaClassUtil {
      * @param annotations the annotations of controller method param
      * @return the group annotation value
      */
-    public static List<String> getParamGroupJavaClass(List<JavaAnnotation> annotations) {
+    public static Set<String> getParamGroupJavaClass(List<JavaAnnotation> annotations, JavaProjectBuilder builder) {
         if (CollectionUtil.isEmpty(annotations)) {
-            return new ArrayList<>(0);
+            return new HashSet<>(0);
         }
-        List<String> javaClassList = new ArrayList<>();
+        Set<String> javaClassList = new HashSet<>();
         List<String> validates = DocValidatorAnnotationEnum.listValidatorAnnotations();
         for (JavaAnnotation javaAnnotation : annotations) {
             List<AnnotationValue> annotationValueList = getAnnotationValues(validates, javaAnnotation);
-            addGroupClass(annotationValueList, javaClassList);
+            addGroupClass(annotationValueList, javaClassList, builder);
         }
         return javaClassList;
     }
@@ -418,11 +413,11 @@ public class JavaClassUtil {
      * @param javaAnnotation the annotation of controller method param
      * @return the group annotation value
      */
-    public static List<String> getParamGroupJavaClass(JavaAnnotation javaAnnotation) {
+    public static Set<String> getParamGroupJavaClass(JavaAnnotation javaAnnotation) {
         if (Objects.isNull(javaAnnotation)) {
-            return new ArrayList<>(0);
+            return new HashSet<>(0);
         }
-        List<String> javaClassList = new ArrayList<>();
+        Set<String> javaClassList = new HashSet<>();
         List<String> validates = DocValidatorAnnotationEnum.listValidatorAnnotations();
         List<AnnotationValue> annotationValueList = getAnnotationValues(validates, javaAnnotation);
         addGroupClass(annotationValueList, javaClassList);
@@ -489,7 +484,7 @@ public class JavaClassUtil {
         return constants;
     }
 
-    private static void addGroupClass(List<AnnotationValue> annotationValueList, List<String> javaClassList) {
+    private static void addGroupClass(List<AnnotationValue> annotationValueList, Set<String> javaClassList) {
         if (CollectionUtil.isEmpty(annotationValueList)) {
             return;
         }
@@ -497,6 +492,37 @@ public class JavaClassUtil {
             TypeRef typeRef = (TypeRef) annotationValue;
             DefaultJavaParameterizedType annotationValueType = (DefaultJavaParameterizedType) typeRef.getType();
             javaClassList.add(annotationValueType.getGenericCanonicalName());
+        }
+    }
+
+
+    private static void addGroupClass(List<AnnotationValue> annotationValueList, Set<String> javaClassList, JavaProjectBuilder builder) {
+        if (CollectionUtil.isEmpty(annotationValueList)) {
+            return;
+        }
+        for (AnnotationValue annotationValue : annotationValueList) {
+            TypeRef typeRef = (TypeRef) annotationValue;
+            DefaultJavaParameterizedType annotationValueType = (DefaultJavaParameterizedType) typeRef.getType();
+            String genericCanonicalName = annotationValueType.getGenericCanonicalName();
+            JavaClass classByName = builder.getClassByName(genericCanonicalName);
+            recursionGetAllValidInterface(classByName, javaClassList, builder);
+            javaClassList.add(genericCanonicalName);
+        }
+    }
+
+    private static void recursionGetAllValidInterface(JavaClass classByName, Set<String> javaClassSet, JavaProjectBuilder builder) {
+        List<JavaType> anImplements = classByName.getImplements();
+        if (CollectionUtil.isEmpty(anImplements)) {
+            return;
+        }
+        for (JavaType javaType : anImplements) {
+            String genericFullyQualifiedName = javaType.getGenericFullyQualifiedName();
+            javaClassSet.add(genericFullyQualifiedName);
+            if (Objects.equals("javax.validation.groups.Default", genericFullyQualifiedName)) {
+                continue;
+            }
+            JavaClass implementJavaClass = builder.getClassByName(genericFullyQualifiedName);
+            recursionGetAllValidInterface(implementJavaClass, javaClassSet, builder);
         }
     }
 
