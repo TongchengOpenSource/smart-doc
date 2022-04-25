@@ -465,7 +465,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             JavaClass javaClass = configBuilder.getJavaProjectBuilder().getClassByName(typeName);
             String[] globGicName = DocClassUtil.getSimpleGicName(gicTypeName);
             String comment = this.paramCommentResolve(paramsComments.get(paramName));
-            String mockValue = JavaFieldUtil.createMockValue(paramsComments, paramName, typeName, simpleTypeName);
+            String mockValue = JavaFieldUtil.createMockValue(paramsComments, paramName, gicTypeName, simpleTypeName, typeName);
             if (queryParamsMap.containsKey(paramName)) {
                 mockValue = queryParamsMap.get(paramName);
             }
@@ -778,7 +778,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 paramList.add(param);
                 continue;
             }
-            String mockValue = JavaFieldUtil.createMockValue(paramsComments, paramName, typeName, simpleTypeName);
+            String mockValue = JavaFieldUtil.createMockValue(paramsComments, paramName, typeName, simpleTypeName, fullTypeName);
             JavaClass javaClass = builder.getJavaProjectBuilder().getClassByName(fullTypeName);
             List<JavaAnnotation> annotations = parameter.getAnnotations();
             Set<String> groupClasses = JavaClassUtil.getParamGroupJavaClass(annotations, builder.getJavaProjectBuilder());
@@ -863,7 +863,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                             .setQueryParam(queryParam)
                             .setId(paramList.size() + 1)
                             .setType("array")
-                            .setValue(DocUtil.getValByTypeAndFieldName(gicName, paramName));
+                            .setValue(mockValue);
                     paramList.add(param);
                     if (requestBodyCounter > 0) {
                         Map<String, Object> map = OpenApiSchemaUtil.arrayTypeSchema(gicName);

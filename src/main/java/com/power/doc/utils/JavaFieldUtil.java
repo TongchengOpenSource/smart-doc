@@ -69,15 +69,22 @@ public class JavaFieldUtil {
     }
 
     /**
-     *
      * @param paramsComments 参数列表
-     * @param paramName 参数名称
-     * @param typeName 参数数据类型
+     * @param paramName      参数名称
+     * @param typeName       参数数据类型
      * @param simpleTypeName 参数简单数据类型
+     * @param fullTypeName
      * @return
      */
-    public static String createMockValue(Map<String, String> paramsComments, String paramName, String typeName, String simpleTypeName) {
+    public static String createMockValue(Map<String, String> paramsComments, String paramName, String typeName, String simpleTypeName, String fullTypeName) {
         String mockValue = "";
+        if (JavaClassValidateUtil.isArray(typeName)) {
+            typeName = typeName.substring(0, typeName.indexOf("["));
+        }
+        if (JavaClassValidateUtil.isCollection(fullTypeName)) {
+            String[] simpleGicName = DocClassUtil.getSimpleGicName(fullTypeName);
+            typeName = simpleGicName[0];
+        }
         if (JavaClassValidateUtil.isPrimitive(typeName)) {
             mockValue = paramsComments.get(paramName);
             if (Objects.nonNull(mockValue) && mockValue.contains("|")) {

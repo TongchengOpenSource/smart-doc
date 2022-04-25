@@ -450,7 +450,7 @@ public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             JavaClass javaClass = configBuilder.getJavaProjectBuilder().getClassByName(typeName);
             String[] globGicName = DocClassUtil.getSimpleGicName(gicTypeName);
             String comment = this.paramCommentResolve(paramsComments.get(paramName));
-            String mockValue = JavaFieldUtil.createMockValue(paramsComments, paramName, typeName, simpleTypeName);
+            String mockValue = JavaFieldUtil.createMockValue(paramsComments, paramName, gicTypeName, simpleTypeName, typeName);
             if (queryParamsMap.containsKey(paramName)) {
                 mockValue = queryParamsMap.get(paramName);
             }
@@ -730,7 +730,7 @@ public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 paramList.add(param);
                 continue;
             }
-            String mockValue = JavaFieldUtil.createMockValue(paramsComments, paramName, typeName, simpleTypeName);
+            String mockValue = JavaFieldUtil.createMockValue(paramsComments, paramName, typeName, simpleTypeName, fullTypeName);
             JavaClass javaClass = builder.getJavaProjectBuilder().getClassByName(fullTypeName);
             List<JavaAnnotation> annotations = parameter.getAnnotations();
             Set<String> groupClasses = JavaClassUtil.getParamGroupJavaClass(annotations, builder.getJavaProjectBuilder());

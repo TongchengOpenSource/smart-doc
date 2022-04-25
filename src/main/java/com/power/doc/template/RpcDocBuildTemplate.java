@@ -196,7 +196,7 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
                         + paramName + "\" in method " + javaMethod.getName() + " from " + className);
             }
             String comment = this.paramCommentResolve(paramTagMap.get(paramName));
-            String mockValue = JavaFieldUtil.createMockValue(paramTagMap, paramName, typeName, typeName);
+            String mockValue = JavaFieldUtil.createMockValue(paramTagMap, paramName, typeName, typeName, fullTypeName);
             JavaClass javaClass = builder.getJavaProjectBuilder().getClassByName(fullTypeName);
             List<JavaAnnotation> annotations = parameter.getAnnotations();
             Set<String> groupClasses = JavaClassUtil.getParamGroupJavaClass(annotations, builder.getJavaProjectBuilder());
