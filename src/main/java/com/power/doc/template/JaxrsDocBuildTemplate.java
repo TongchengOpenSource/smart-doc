@@ -416,7 +416,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 paramList.add(param);
                 continue;
             }
-            String mockValue = JavaFieldUtil.createMockValue(paramsComments, paramName, typeName, simpleTypeName, fullTypeName);
+            String mockValue = JavaFieldUtil.createMockValue(paramsComments, paramName, typeName, simpleTypeName);
             JavaClass javaClass = builder.getJavaProjectBuilder().getClassByName(fullTypeName);
             List<JavaAnnotation> annotations = parameter.getAnnotations();
             Set<String> groupClasses = JavaClassUtil.getParamGroupJavaClass(annotations, builder.getJavaProjectBuilder());
@@ -638,7 +638,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             JavaClass javaClass = configBuilder.getJavaProjectBuilder().getClassByName(typeName);
             String[] globGicName = DocClassUtil.getSimpleGicName(gicTypeName);
             String comment = this.paramCommentResolve(paramsComments.get(paramName));
-            String mockValue = JavaFieldUtil.createMockValue(paramsComments, paramName, gicTypeName, simpleTypeName, typeName);
+            String mockValue = JavaFieldUtil.createMockValue(paramsComments, paramName, gicTypeName, simpleTypeName);
             if (requestFieldToUnderline) {
                 paramName = StringUtil.camelToUnderline(paramName);
             }

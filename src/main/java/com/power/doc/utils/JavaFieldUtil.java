@@ -27,7 +27,6 @@ import com.power.doc.constants.DocAnnotationConstants;
 import com.power.doc.model.CustomField;
 import com.power.doc.model.DocJavaField;
 import com.thoughtworks.qdox.model.JavaAnnotation;
-import com.thoughtworks.qdox.model.JavaField;
 import com.thoughtworks.qdox.model.expression.AnnotationValue;
 
 import java.util.List;
@@ -73,18 +72,10 @@ public class JavaFieldUtil {
      * @param paramName      参数名称
      * @param typeName       参数数据类型
      * @param simpleTypeName 参数简单数据类型
-     * @param fullTypeName
      * @return
      */
-    public static String createMockValue(Map<String, String> paramsComments, String paramName, String typeName, String simpleTypeName, String fullTypeName) {
+    public static String createMockValue(Map<String, String> paramsComments, String paramName, String typeName, String simpleTypeName) {
         String mockValue = "";
-        if (JavaClassValidateUtil.isArray(typeName)) {
-            typeName = typeName.substring(0, typeName.indexOf("["));
-        }
-        if (JavaClassValidateUtil.isCollection(fullTypeName)) {
-            String[] simpleGicName = DocClassUtil.getSimpleGicName(fullTypeName);
-            typeName = simpleGicName[0];
-        }
         if (JavaClassValidateUtil.isPrimitive(typeName)) {
             mockValue = paramsComments.get(paramName);
             if (Objects.nonNull(mockValue) && mockValue.contains("|")) {

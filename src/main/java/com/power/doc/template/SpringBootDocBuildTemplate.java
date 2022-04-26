@@ -465,7 +465,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             JavaClass javaClass = configBuilder.getJavaProjectBuilder().getClassByName(typeName);
             String[] globGicName = DocClassUtil.getSimpleGicName(gicTypeName);
             String comment = this.paramCommentResolve(paramsComments.get(paramName));
-            String mockValue = JavaFieldUtil.createMockValue(paramsComments, paramName, gicTypeName, simpleTypeName, typeName);
+            String mockValue = JavaFieldUtil.createMockValue(paramsComments, paramName, gicTypeName, simpleTypeName);
             if (queryParamsMap.containsKey(paramName)) {
                 mockValue = queryParamsMap.get(paramName);
             }
@@ -532,6 +532,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                     if (JavaClassValidateUtil.isFile(typeName)) {
                         break;
                     }
+                    // TODO: 2022-04-26 array and list
                     queryParamsMap.put(paramName, mockValue);
                     requestParam = true;
                     paramAdded = true;
@@ -778,7 +779,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 paramList.add(param);
                 continue;
             }
-            String mockValue = JavaFieldUtil.createMockValue(paramsComments, paramName, typeName, simpleTypeName, fullTypeName);
+            String mockValue = JavaFieldUtil.createMockValue(paramsComments, paramName, typeName, simpleTypeName);
             JavaClass javaClass = builder.getJavaProjectBuilder().getClassByName(fullTypeName);
             List<JavaAnnotation> annotations = parameter.getAnnotations();
             Set<String> groupClasses = JavaClassUtil.getParamGroupJavaClass(annotations, builder.getJavaProjectBuilder());
@@ -810,7 +811,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 if (JavaClassValidateUtil.isJSR303Required(annotationName)) {
                     strRequired = "true";
                 }
-                if (SpringMvcAnnotations.REQUEST_BODY.equals(annotationName)) {
+                if (SpringMvcAnnotations.REQUEST_BODY.equals(annotationName) || DocGlobalConstants.REQUEST_BODY_FULLY.equals(annotationName)) {
                     if (requestBodyCounter > 0) {
                         throw new RuntimeException("You have use @RequestBody Passing multiple variables  for method "
                                 + javaMethod.getName() + " in " + className + ",@RequestBody annotation could only bind one variables.");
@@ -818,9 +819,11 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                     if (Objects.nonNull(builder.getApiConfig().getRequestBodyAdvice())
                             && Objects.isNull(javaMethod.getTagByName(IGNORE_REQUEST_BODY_ADVICE))) {
                         String requestBodyAdvice = builder.getApiConfig().getRequestBodyAdvice().getClassName();
-                        fullTypeName = typeName = requestBodyAdvice + "<" + typeName + ">";
+                        fullTypeName = requestBodyAdvice;
+                        typeName = requestBodyAdvice + "<" + typeName + ">";
 
                     }
+                    mockValue = JsonBuildHelper.buildJson(fullTypeName, typeName, Boolean.FALSE, 0, new HashMap<>(), groupClasses, builder);
                     requestBodyCounter++;
                     isRequestBody = true;
                 }
@@ -838,6 +841,11 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 String gicName = gicNameArr[0];
                 if (JavaClassValidateUtil.isArray(gicName)) {
                     gicName = gicName.substring(0, gicName.indexOf("["));
+                }
+                // handle array and list mock value
+                mockValue = JavaFieldUtil.createMockValue(paramsComments, paramName, gicName, gicName);
+                if (StringUtil.isNotEmpty(mockValue) && !mockValue.contains(",")) {
+                    mockValue = StringUtils.join(mockValue, ",", JavaFieldUtil.createMockValue(paramsComments, paramName, gicName, gicName));
                 }
                 JavaClass gicJavaClass = builder.getJavaProjectBuilder().getClassByName(gicName);
                 if (gicJavaClass.isEnum()) {
