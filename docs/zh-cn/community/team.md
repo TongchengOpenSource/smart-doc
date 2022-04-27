@@ -3,4 +3,4 @@
 |GitHub ID|Name|Organization
 ---|---|---
 shalousun|Yu Sun|同程旅行
-netdied|Xing Li|小米
+netdied|XingZhi Li|小米

@@ -1,4 +1,73 @@
 # Changelog
+## Version: 2.4.2
+- Update date: 2022-04-04
+- update content:
+ 1. Modify the problem of incomplete automatic resolution of static constants in 2.4.1. 
+ 2. Add header automatic constant resolution. 
+ 3. Modify the https://github.com/smart-doc-group/smart-doc/issues/215 of generic inheritance resolution in some special cases. 
+ 4. Optimizes the handling of special greater-than and less-than symbols in documents.
+
+## Version: 2.4.1
+- Update date: 2022-03-26
+- update content:
+  1. Custom ResponseFields New replaceName configuration supports replacement of field names. 
+  2. Fix the error bug of getting non-@ param annotation tag value. 
+  3. Supports automatic parsing of static constants without using apiConstants for configuration. 
+  4. Fix dubbo RPC
+
+## Version: 2.4.0
+- Update date: 2022-03-06
+- update content:
+ 1. Support the resolution of field multi-generic nested private B < K, V > body
+
+## Version: 2.3.9
+- Update date: 2022-02-26
+- update content:
+ 1. Supports pushing deprecated interface tags to torna. 
+ 2. The RPC mock is perfect. 
+ 3. The dubbo interface documentation supports exporting dictionaries. 4. Support for Solon, https://gitee.com/noear/solon.
+
+## Version: 2.3.8
+- Update date: 2022-02-19
+- update content:
+ 1. Multi-level inheritance resolution is supported. 
+ 2. Optimize the generation of postman post request documents.
+
+## Version: 2.3.7
+- Update date: 2022-01-17
+- update content:
+ 1. JAX-RS is supported.
+ 2. Optimize the loading of project files. 
+ 3. Solve the bug that the file data is not obtained is a data error.
+
+## Version: 2.3.6
+- Update date: 2022-01-02
+- update content:
+ 1. The serverUrl no longer forces the protocol to be set when exporting postman. 
+ 2. Error in pushing torna data after modifying responseBody Advice.   
+ 3. Fixes an issue where the gradle plugin cannot add include and exclude to KTs scripts.
+
+## Version: 2.3.5
+- Update date: 2021-12-18
+- update content:
+ 1. Modify the extra double quotes for the author name. 
+ 2. Fixed an issue where interface constants were treated as fields.  
+ 3. Enhance the plug-in's filtering of the old version's dependent jar to prevent the new version's qdox parsing error.
+
+## Version: 2.3.4
+- Update date: 2021-12-05
+- update content:
+ 1. Fix the bug that @NotEmpty is placed at the front of the field, and other annotations behind it will not be analyzed. 
+ 2. The plugin enhances the projectName setting. 
+ 3. Enhance the filtering of the plug-in to the old version dependency jar to prevent the new version qdox from resolving to some old dependencies with errors.
+
+## Version: 2.3.3
+- Update date: 2021-11-29
+- update content:
+ 1. Offset DateTime is supported. 
+ 2. Fix the bug that the directory is not displayed completely after the HTML document search is cleared. 
+ 3. Fix the problem of HTML document directory sequence disorder when non-grouping is used. 
+ 4. Fix English request header escaping problem.
 
 ## Version: 2.3.2
 - Update date: 2021-11-21
