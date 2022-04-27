@@ -19,31 +19,32 @@ Example of a complete configuration file
   "allInOne": true, // whether to merge documents into one file, generally recommended as true
   "outPath": "D: // md2", // Specify the output path of the document
   "coverOld": true, // Whether to overwrite old files, mainly used for mardown file overwrite
-  "style":"xt256", //set highlight
-  "createDebugPage": true,//Create a page that can be used to test your APIs like swagger
-  "language":"ENGLISH",//support ENGLISH and CHINESE
-  "packageFilters": "", // controller package filtering, multiple package names separated by commas
+   "createDebugPage": true,//Create a page that can be used to test your APIs like swagger
+   "packageFilters": "", // controller package filtering, multiple package names separated by commas
   "md5EncryptedHtmlName": false, // only used if each controller generates an html file
+  "style":"xt256", //set highlight
   "projectName": "smart-doc", // Configure your own project name
+  "framework": "spring",//smart-doc supports the documents of spring and dubbo frameworks by default. The default framework is used without configuration. Currently, spring, dubbo, JAX-RS, and Solon are supported
   "skipTransientField": true, // Not currently implemented
-  "requestFieldToUnderline":true, //convert request field to underline
-  "responseFieldToUnderline":true,//convert response field to underline
   "sortByTitle":false,//Sort by interface title, the default value is false
   "showAuthor":true,// display author,default is true
-  "inlineEnum":true,// Set to true to display enumeration details in the parameter table
-  "recursionLimit":7,// Set the number of recursive executions to avoid stack overflow, the default is 7
-  "allInOneDocFileName":"index.html",//Customize the output document name
-  "requestExample":"true",//Whether to display the request example in the document, the default value is true.
-  "responseExample":"true",//Whether to display the response example in the document, the default is true.
+  "requestFieldToUnderline":true, //convert request field to underline since 1.8.7
+  "responseFieldToUnderline":true,//convert response field to underline since 1.8.7
+  "inlineEnum":true,// Set to true to display enumeration details in the parameter table since 1.8.8
+  "recursionLimit":7,// Set the number of recursive executions to avoid stack overflow, the default is 7 since 1.8.8
+  "allInOneDocFileName":"index.html",//Customize the output document name since 1.9.0
+  "requestExample":"true",//Whether to display the request example in the document, the default value is true. since 1.9.0
+  "responseExample":"true",//Whether to display the response example in the document, the default is true. since 1.9.0
+  "urlSuffix":".do",//Support URL suffixes for Spring MVC legacy projects,@since 2.1.0
   "requestParamsTable": true, //@since 2.2.5,Whether to display the request params table in the document, the default value is true.
   "responseParamsTable": true, //@since 2.2.5,Whether to display the response params table in the document, the default is true.
-  "displayActualType": false,//display actual type of generic,
   "urlSuffix":".do",//Support the url suffix of the old SpringMVC project,@since 2.1.0
-  "appKey": "xxx",// torna appKey, @since 2.0.9
+  "displayActualType": false,//display actual type of generic,
   "appToken": "xxx", //torna appToken,@since 2.0.9
-  "secret": "xx",//torna secret，@since 2.0.9
   "isReplace":true, //torna replace doc @since 2.2.4
   "openUrl": "torna server/api/",//torna server url,@since 2.0.9
+  "debugEnvName":"test", //torna test environment name
+  "debugEnvUrl":"http://127.0.0.1",//torna test url
   "tornaDebug":false, // show log while set true
   "ignoreRequestParams":[ //The request parameter object will be discarded when generating the document.@since 1.9.2
        "org.springframework.ui.ModelMap"

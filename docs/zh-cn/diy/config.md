@@ -35,11 +35,12 @@
   "allInOneDocFileName":"index.html",//自定义设置输出文档名称, @since 1.9.0
   "requestExample":"true",//是否将请求示例展示在文档中，默认true，@since 1.9.0
   "responseExample":"true",//是否将响应示例展示在文档中，默认为true，@since 1.9.0
+  "requestParamsTable": true, //@since 2.2.5,是否在文档中显示请求参数表，默认值为 true。
+  "responseParamsTable": true, //@since 2.2.5,是否在文档中显示返回参数表，默认值为 true。
   "urlSuffix":".do",//支持SpringMVC旧项目的url后缀,@since 2.1.0
-  "displayActualType":false,//配置true会在注释栏自动显示泛型的真实类型短类名，@since 1.9.6
-  "appKey": "20201216788835306945118208",// torna平台对接appKey,, @since 2.0.9
+  "displayActualType":false,//配置true会在注释栏自动显示泛型的真实类型短类名，
   "appToken": "c16931fa6590483fb7a4e85340fcbfef", //torna平台appToken,@since 2.0.9
-  "secret": "W.ZyGMOB9Q0UqujVxnfi@.I#V&tUUYZR",//torna平台secret，@since 2.0.9
+  "isReplace":true, //torna 是否覆盖历史推送 @since 2.2.4
   "openUrl": "http://localhost:7700/api",//torna平台地址，填写自己的私有化部署地址@since 2.0.9
   "debugEnvName":"测试环境", //torna环境名称
   "debugEnvUrl":"http://127.0.0.1",//推送torna配置接口服务地址
