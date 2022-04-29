@@ -43,6 +43,8 @@ public class HttpParam {
     private String solution;
     private List<HttpParam> children;
 
+    private Integer orderIndex;
+
     public List<EnumInfo> getEnumInfo() {
         return enumInfo;
     }
@@ -146,5 +148,14 @@ public class HttpParam {
 
     public void setChildren(List<HttpParam> children) {
         this.children = children;
+    }
+
+    public Integer getOrderIndex() {
+        return orderIndex;
+    }
+
+    public HttpParam setOrderIndex(Integer orderIndex) {
+        this.orderIndex = orderIndex;
+        return this;
     }
 }

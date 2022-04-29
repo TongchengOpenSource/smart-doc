@@ -214,6 +214,7 @@ public class JavaClassUtil {
                             .setAnnotations(javaField.getAnnotations())
                             .setFieldName(fieldName);
                     if (addedFields.containsKey(fieldName)) {
+                        addedFields.remove(fieldName);
                         addedFields.put(fieldName, docJavaField);
                         continue;
                     }

@@ -184,6 +184,7 @@ public class TornaUtil {
         for (ApiParam apiParam : apiParams) {
             httpParam = new HttpParam();
             httpParam.setName(apiParam.getField());
+            httpParam.setOrderIndex(apiParam.getId());
             httpParam.setMaxLength(apiParam.getMaxLength());
             String type = apiParam.getType();
             if (Objects.equals(type, DocGlobalConstants.PARAM_TYPE_FILE) && apiParam.isHasItems()) {
