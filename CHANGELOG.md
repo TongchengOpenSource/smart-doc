@@ -1,5 +1,19 @@
 ## smart-doc版本
 
+#### 版本号：2.4.4
+- 更新日期: 2022-05-03
+- 更新内容：
+  1. 优化对mongodb ObjectId类型的解析，#240。
+  2. 优化OpenAPI生成时operationId值的填充，改为方法名，#235。
+  3. 修复请求参数为Long类型数组时自定义mock提取错误，#244。
+  4. 修复文档说明生成输出多个br标签, #248。
+  5. 修复query param参数显示在Request-body中的问题。#242
+  6. 修复Controller类上RequestMapping多path包含parameter时的解析错误。#206
+  7. 修复多文件上传，推送到torna的类型错误，#234
+  8. 修复分组验证在OpenAPI中不生效问题, #243
+  9. 修复OpenAPI数据类型设置错误，#253
+  10. 支持在smart-doc.json配置中对@RequestHeader进行忽略了，#250
+
 #### 版本号：2.4.3
 - 更新日期: 2022-04-17
 - 更新内容：
