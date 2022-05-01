@@ -33,7 +33,7 @@ public class OpenApiSchemaUtil {
 
     public static Map<String, Object> primaryTypeSchema(String primaryType) {
         Map<String, Object> map = new HashMap<>();
-        map.put("type", DocClassUtil.processTypeNameForParams(primaryType));
+        map.put("type", DocUtil.javaTypeToOpenApiTypeConvert(primaryType));
         return map;
     }
 
@@ -41,7 +41,7 @@ public class OpenApiSchemaUtil {
         Map<String, Object> map = new LinkedHashMap<>();
         map.put("type", "object");
         Map<String, Object> items = new HashMap<>();
-        items.put("type", DocClassUtil.processTypeNameForParams(primaryType));
+        items.put("type", DocUtil.javaTypeToOpenApiTypeConvert(primaryType));
         map.put("additionalProperties", items);
         return map;
     }
@@ -50,7 +50,7 @@ public class OpenApiSchemaUtil {
         Map<String, Object> map = new HashMap<>();
         map.put("type", "array");
         Map<String, Object> items = new HashMap<>();
-        items.put("type", DocClassUtil.processTypeNameForParams(primaryType));
+        items.put("type", DocUtil.javaTypeToOpenApiTypeConvert(primaryType));
         map.put("items", items);
         return map;
     }

@@ -554,24 +554,75 @@ public class DocUtil {
         }
     }
 
-    public static String javaTypeToOpenApiTypeConvert(String type) {
-        switch (type) {
-            case "int8":
-            case "int32":
-            case "int16":
-            case "int64":
+    public static String javaTypeToOpenApiTypeConvert(String javaTypeName) {
+        javaTypeName = javaTypeName.toLowerCase();
+        if (StringUtil.isEmpty(javaTypeName)) {
+            return "object";
+        }
+        if (javaTypeName.length() == 1) {
+            return "object";
+        }
+        if (javaTypeName.contains("[]")) {
+            return "array";
+        }
+        switch (javaTypeName) {
+            case "java.lang.string":
+            case "string":
+            case "char":
+            case "date":
+            case "java.util.uuid":
+            case "uuid":
+            case "enum":
+            case "localdatetime":
+            case "java.time.localdatetime":
+            case "java.time.localdate":
+            case "localdate":
+            case "offsetdatetime":
+            case "localtime":
+            case "timestamp":
+            case "zoneddatetime":
+            case "java.time.zoneddatetime":
+            case "java.time.offsetdatetime":
+            case "java.lang.character":
+            case "character":
+            case "org.bson.types.objectid":
+                return "string";
+            case "java.util.list":
+            case "list":
+            case "java.util.set":
+            case "set":
+            case "java.util.linkedlist":
+            case "linkedlist":
+            case "java.util.arraylist":
+            case "arraylist":
+            case "java.util.treeset":
+            case "treeset":
+                return "array";
+            case "java.util.byte":
+            case "byte":
+            case "java.lang.integer":
+            case "integer":
+            case "int":
+            case "short":
+            case "java.lang.short":
                 return "integer";
             case "double":
+            case "java.lang.long":
+            case "long":
+            case "java.lang.float":
             case "float":
-            case "number":
+            case "bigdecimal":
+            case "biginteger":
                 return "number";
+            case "java.lang.boolean":
             case "boolean":
                 return "boolean";
-            case "enum":
-            case "string":
-                return "string";
+            case "map":
+                return "map";
+            case "multipartfile":
+                return "file";
             default:
-                return "object"; //array object file
+                return "object";
         }
     }
 
