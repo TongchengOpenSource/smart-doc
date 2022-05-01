@@ -29,6 +29,7 @@ import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.constants.DocTags;
 import com.power.doc.constants.JAXRSAnnotations;
 import com.power.doc.model.*;
+import com.power.doc.model.request.RequestMapping;
 import com.power.doc.qdox.model.expression.MyFieldRef;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import com.thoughtworks.qdox.model.*;
@@ -708,7 +709,7 @@ public class DocUtil {
         if (StringUtil.isEmpty(header)) {
             return header;
         }
-        return StringUtil.trimBlank(header);
+        return StringUtil.removeDoubleQuotes(StringUtil.trimBlank(header));
 
     }
 
@@ -840,4 +841,13 @@ public class DocUtil {
         return mediaType;
     }
 
+    public static boolean filterPath(RequestMapping requestMapping, ApiReqParam apiReqHeader) {
+        if (StringUtil.isEmpty(apiReqHeader.getPathPatterns())
+                && StringUtil.isEmpty(apiReqHeader.getExcludePathPatterns())) {
+            return true;
+        }
+        return DocPathUtil.matches(requestMapping.getShortUrl(), apiReqHeader.getPathPatterns()
+                , apiReqHeader.getExcludePathPatterns());
+
+    }
 }

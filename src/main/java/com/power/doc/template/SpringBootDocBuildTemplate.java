@@ -284,6 +284,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             apiMethodDoc.setDetail(apiNoteValue != null ? apiNoteValue : "");
             //handle headers
             List<ApiReqParam> apiReqHeaders = new SpringMVCRequestHeaderHandler().handle(method, projectBuilder);
+            apiReqHeaders = apiReqHeaders.stream().filter(param -> DocUtil.filterPath(requestMapping, param)).collect(Collectors.toList());
 
             apiMethodDoc.setType(requestMapping.getMethodType());
             apiMethodDoc.setUrl(requestMapping.getUrl());
@@ -294,7 +295,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
 
             TornaUtil.setTornaArrayTags(javaParameters, apiMethodDoc, docJavaMethod.getJavaMethod().getReturns(), apiConfig);
             final List<ApiReqParam> apiReqParamList = this.configApiReqParams.stream()
-                    .filter(param -> filterPath(requestMapping, param)).collect(Collectors.toList());
+                    .filter(param -> DocUtil.filterPath(requestMapping, param)).collect(Collectors.toList());
 
             ApiMethodReqParam apiMethodReqParam = requestParams(docJavaMethod, projectBuilder, apiReqParamList);
             // build request params
@@ -310,12 +311,12 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
 
             List<ApiReqParam> allApiReqHeaders;
             if (this.configApiReqParams != null) {
-                final Map<String, List<ApiReqParam>> reqParamMap = apiReqParamList.stream().collect(Collectors.groupingBy(ApiReqParam::getParamIn));
+                final Map<String, List<ApiReqParam>> reqParamMap = this.configApiReqParams.stream().collect(Collectors.groupingBy(ApiReqParam::getParamIn));
                 final List<ApiReqParam> headerParamList = reqParamMap.getOrDefault(ApiReqParamInTypeEnum.HEADER.getValue(), Collections.emptyList());
-                allApiReqHeaders = Stream.of(apiReqHeaders, headerParamList).filter(Objects::nonNull)
-                        .flatMap(Collection::stream).distinct().collect(Collectors.toList());
+                allApiReqHeaders = Stream.of(headerParamList,apiReqHeaders).filter(Objects::nonNull)
+                        .flatMap(Collection::stream).distinct().filter(param -> DocUtil.filterPath(requestMapping, param)).collect(Collectors.toList());
             } else {
-                allApiReqHeaders = apiReqHeaders.stream().filter(param -> filterPath(requestMapping, param)).collect(Collectors.toList());
+                allApiReqHeaders = apiReqHeaders.stream().filter(param -> DocUtil.filterPath(requestMapping, param)).collect(Collectors.toList());
             }
 
             //reduce create in template
@@ -362,15 +363,6 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         return methodDocList;
     }
 
-    private boolean filterPath(RequestMapping requestMapping, ApiReqParam apiReqHeader) {
-        if (StringUtil.isEmpty(apiReqHeader.getPathPatterns())
-                && StringUtil.isEmpty(apiReqHeader.getExcludePathPatterns())) {
-            return true;
-        }
-        return DocPathUtil.matches(requestMapping.getShortUrl(), apiReqHeader.getPathPatterns()
-                , apiReqHeader.getExcludePathPatterns());
-
-    }
 
     private ApiRequestExample buildReqJson(DocJavaMethod javaMethod, ApiMethodDoc apiMethodDoc, String methodType,
                                            ProjectDocConfigBuilder configBuilder) {
@@ -968,7 +960,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                         "true", Boolean.FALSE, new HashMap<>(), builder, groupClasses, 0, Boolean.FALSE));
             }
         }
-        return  ApiParamTreeUtil.buildMethodReqParam(paramList,queryReqParamMap,pathReqParamMap,requestBodyCounter);
+        return ApiParamTreeUtil.buildMethodReqParam(paramList, queryReqParamMap, pathReqParamMap, requestBodyCounter);
 
     }
 

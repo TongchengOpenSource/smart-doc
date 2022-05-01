@@ -278,7 +278,7 @@ public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             TornaUtil.setTornaArrayTags(javaParameters, apiMethodDoc, docJavaMethod.getJavaMethod().getReturns(),apiConfig);
             // apiMethodDoc.setIsRequestArray();
             final List<ApiReqParam> apiReqParamList = this.configApiReqParams.stream()
-                    .filter(param -> filterPath(requestMapping, param)).collect(Collectors.toList());
+                    .filter(param -> DocUtil.filterPath(requestMapping, param)).collect(Collectors.toList());
 
             ApiMethodReqParam apiMethodReqParam = requestParams(requestMapping.getMethodType(),docJavaMethod, projectBuilder, apiReqParamList);
             // build request params
@@ -294,12 +294,12 @@ public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
 
             List<ApiReqParam> allApiReqHeaders;
             if (this.configApiReqParams != null) {
-                final Map<String, List<ApiReqParam>> reqParamMap = apiReqParamList.stream().collect(Collectors.groupingBy(ApiReqParam::getParamIn));
+                final Map<String, List<ApiReqParam>> reqParamMap =this.configApiReqParams.stream().collect(Collectors.groupingBy(ApiReqParam::getParamIn));
                 final List<ApiReqParam> headerParamList = reqParamMap.getOrDefault(ApiReqParamInTypeEnum.HEADER.getValue(), Collections.emptyList());
-                allApiReqHeaders = Stream.of(apiReqHeaders, headerParamList).filter(Objects::nonNull)
-                        .flatMap(Collection::stream).distinct().collect(Collectors.toList());
+                allApiReqHeaders = Stream.of(headerParamList,apiReqHeaders).filter(Objects::nonNull)
+                        .flatMap(Collection::stream).distinct().filter(param -> DocUtil.filterPath(requestMapping, param)).collect(Collectors.toList());
             } else {
-                allApiReqHeaders = apiReqHeaders.stream().filter(param -> filterPath(requestMapping, param)).collect(Collectors.toList());
+                allApiReqHeaders = apiReqHeaders.stream().filter(param -> DocUtil.filterPath(requestMapping, param)).collect(Collectors.toList());
             }
 
             //reduce create in template
@@ -344,16 +344,6 @@ public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             methodDocList.add(apiMethodDoc);
         }
         return methodDocList;
-    }
-
-    private boolean filterPath(RequestMapping requestMapping, ApiReqParam apiReqHeader) {
-        if (StringUtil.isEmpty(apiReqHeader.getPathPatterns())
-                && StringUtil.isEmpty(apiReqHeader.getExcludePathPatterns())) {
-            return true;
-        }
-        return DocPathUtil.matches(requestMapping.getShortUrl(), apiReqHeader.getPathPatterns()
-                , apiReqHeader.getExcludePathPatterns());
-
     }
 
     private ApiRequestExample buildReqJson(DocJavaMethod javaMethod, ApiMethodDoc apiMethodDoc, String methodType,
