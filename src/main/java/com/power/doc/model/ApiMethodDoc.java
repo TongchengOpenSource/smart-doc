@@ -198,7 +198,7 @@ public class ApiMethodDoc implements Serializable, Cloneable {
      */
     private String responseArrayType;
     /**
-     * 是否为List数据 openApi
+     * is List data . openApi
      */
     private boolean listParam = false;
 
