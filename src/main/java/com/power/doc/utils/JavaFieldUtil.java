@@ -27,7 +27,6 @@ import com.power.doc.constants.DocAnnotationConstants;
 import com.power.doc.model.CustomField;
 import com.power.doc.model.DocJavaField;
 import com.thoughtworks.qdox.model.JavaAnnotation;
-import com.thoughtworks.qdox.model.JavaField;
 import com.thoughtworks.qdox.model.expression.AnnotationValue;
 
 import java.util.List;
@@ -69,10 +68,9 @@ public class JavaFieldUtil {
     }
 
     /**
-     *
      * @param paramsComments 参数列表
-     * @param paramName 参数名称
-     * @param typeName 参数数据类型
+     * @param paramName      参数名称
+     * @param typeName       参数数据类型
      * @param simpleTypeName 参数简单数据类型
      * @return
      */
