@@ -107,6 +107,7 @@ public class JavaClassValidateUtil {
             case "java.util.UUID":
             case "java.io.serializable":
             case "java.lang.character":
+            case "org.bson.types.objectid":
                 return true;
             default:
                 return false;
