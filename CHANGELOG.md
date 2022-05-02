@@ -3,27 +3,27 @@
 #### 版本号：2.4.4
 - 更新日期: 2022-05-03
 - 更新内容：
-  1. 优化对mongodb ObjectId类型的解析#240。
-  2. 优化OpenAPI生成时operationId值的填充，改为方法名#235。
-  3. 修复请求参数为Long类型数组时自定义mock提取错误#244。
-  4. 修复文档说明生成输出多个br标签#248。
-  5. 修复query param参数显示在Request-body中的问题#242
-  6. 修复Controller类上RequestMapping多path包含parameter时的解析错误#206
-  7. 修复多文件上传，推送到torna的类型错误#234
-  8. 修复分组验证在OpenAPI中不生效问题#243
-  9. 修复OpenAPI数据类型设置错误#253
-  10. 支持在smart-doc.json配置中对@RequestHeader进行忽略了#250
-  11. 修复controller注释html文档导航链接无效的问题#255
+  1. 优化对mongodb ObjectId类型的解析[git #240](https://github.com/smart-doc-group/smart-doc/issues/240)。
+  2. 优化OpenAPI生成时operationId值的填充，改为方法名https://github.com/smart-doc-group/smart-doc/issues/235。
+  3. 修复请求参数为Long类型数组时自定义mock提取错误https://github.com/smart-doc-group/smart-doc/issues/244。
+  4. 修复文档说明生成输出多个br标签https://github.com/smart-doc-group/smart-doc/issues/248。
+  5. 修复query param参数显示在Request-body中的问题https://github.com/smart-doc-group/smart-doc/issues/242
+  6. 修复Controller类上RequestMapping多path包含parameter时的解析错误https://github.com/smart-doc-group/smart-doc/issues/206
+  7. 修复多文件上传，推送到torna的类型错误https://github.com/smart-doc-group/smart-doc/issues/234
+  8. 修复分组验证在OpenAPI中不生效问题https://github.com/smart-doc-group/smart-doc/issues/243
+  9. 修复OpenAPI数据类型设置错误https://github.com/smart-doc-group/smart-doc/issues/253
+  10. 支持在smart-doc.json配置中对@RequestHeader进行忽略了https://github.com/smart-doc-group/smart-doc/issues/250
+  11. 修复controller注释html文档导航链接无效的问题https://github.com/smart-doc-group/smart-doc/issues/255
   12. 支持内部类枚举私有属性解析。
   13. 移除Spring标记过时的`application/json;charset=UTF-8`，默认改为`application/json`
 
 #### 版本号：2.4.3
 - 更新日期: 2022-04-17
 - 更新内容：
-  1. 支持生成openapi时不生成请求和返回用例#233。
-  2. 优化对map返回结构的解析#223。
-  3. 修复生成openapi的时候对contentType的处理转义#232。
-  4. 修改分组归档处理#226。
+  1. 支持生成openapi时不生成请求和返回用例https://github.com/smart-doc-group/smart-doc/issues/233。
+  2. 优化对map返回结构的解析https://github.com/smart-doc-group/smart-doc/issues/223。
+  3. 修复生成openapi的时候对contentType的处理转义https://github.com/smart-doc-group/smart-doc/issues/232。
+  4. 修改分组归档处理https://github.com/smart-doc-group/smart-doc/issues/226。
 #### 版本号：2.4.2
 - 更新日期: 2022-04-04
 - 更新内容：
@@ -149,7 +149,7 @@
   1. 支持在html文档中不显示参数列表。
   2. html文档使用的资源全部改成本地引用。
   3. 修复Boolean类型字段命名为is前缀时，is前缀被去除的bug。
-  4. 修复配置了字典码列表后枚举字段注释显示错误#139 。
+  4. 修复配置了字典码列表后枚举字段注释显示错误https://github.com/smart-doc-group/smart-doc/issues/139 。
   5. 修复分析过程中出现的数组越界异常 。
   6. 新增接口分组支持。
 #### 版本号：2.2.4
@@ -169,7 +169,7 @@
   1. 增加pathPrefix配置项用于配置上下文，引入该配置项后serverUrl仅用于配置服务器地址。
   2. 支持请求头常量设置解析。
   3. 支持使用JsonIgnoreProperties和JSONType注解去忽略多字段。
-  4. 修改部分文档设置allInOneDocFileName无效的问题,#131 。
+  4. 修改部分文档设置allInOneDocFileName无效的问题,https://github.com/smart-doc-group/smart-doc/issues/131 。
   5. 修复dubbo rpc文档模板格式错误 #https://gitee.com/smart-doc-team/smart-doc/issues/I40ZGE .
   6. 支持配置添加拦截器中设置全局请求参数，#https://github.com/smart-doc-group/smart-doc/issues/132 .
   7. 修复部分类型mock未推送到torna的问题。
@@ -185,7 +185,7 @@
   5. 优化了maven插件的提示，优化后可以将加载了那些目录模块代码路径打印。
   6. 提供了其它框架扩展文档解析的能力。
   7. 修复doc模板错误，gitee #I3Y640。
-  8. 修复字典模板错误，#119。
+  8. 修复字典模板错误，https://github.com/smart-doc-group/smart-doc/issues/119。
   9. 添加忽略HttpServlet对象。
   10. 支持内置替换Jpa Pageable分页对象，去除不必要的请求参数替换配置。
   11. packageFilters增强，可使用正则进行匹配，gitee #I3YKZ4 。
@@ -272,7 +272,7 @@
 - 更新日期: 2021-04-11
 - 更新内容：
     1. 增强对文件上传的支持。
-    2. 增加customRequestFields配置项，#97。
+    2. 增加customRequestFields配置项，https://github.com/smart-doc-group/smart-doc/issues/97。
     3. 修复往torna推送漏掉pathParams的问题。
     4. 修改debug测试页面，支持post表单请求
     5. 修改表单请求对象中枚举字段默认值错误的bug
@@ -305,7 +305,7 @@
 
 - 更新日期: 2021-03-12
 - 更新内容：
-    1. 支持UUID和ZonedDateTime字段类型，#89。
+    1. 支持UUID和ZonedDateTime字段类型，https://github.com/smart-doc-group/smart-doc/issues/89。
     2. 对map参数增加开关来兼容旧项目，还是不建议使用map参数。
     3. 完成和Torna的对接。
 
@@ -348,7 +348,7 @@
     1. 修改页面的错误列表标题显示。
     2. 修改debug页面curl header语法错误。
     3. 修改debug页面json参数输入框，允许粘贴小段文本。
-    4. 解决使用dubbo 2.7+，在provider中生成文档出错问题 github #77.
+    4. 解决使用dubbo 2.7+，在provider中生成文档出错问题 github https://github.com/smart-doc-group/smart-doc/issues/77.
 
 #### 版本号：2.0.2
 
@@ -465,14 +465,14 @@
     4. 修复一些泛型例子解析错误bug。
     5. 优化MultipartFile文件上传参数处理，不对该参数进行展开分析。
 
-#### 版本号：1.9.2
+###https://github.com/smart-doc-group/smart-doc/issues/ 版本号：1.9.2
 
 - 更新日期: 2020-08-23
 - 更新内容：
     1. 修改前面版本修改引发的普通jsr 303验证解析错误问题。
     2. 新增忽略请求参数对象的配置gitee #I1RBJO。
     3. 修改smart-doc的beetl配置避免和用户的业务中beetl配置冲突。
-    4. 新增ApiDataBuilder中获取树形格式参数数据的接口#40。
+    4. 新增ApiDataBuilder中获取树形格式参数数据的接口https://github.com/smart-doc-group/smart-doc/issues/40。
     5. 新增对Open Api 3.0的支持。
     6. 修改字典表空时内部发生空指针的问题。
     7. 优化curl用例，增加请求头。
@@ -500,7 +500,7 @@
 
 - 更新日期: 2020-07-05
 - 更新内容：
-    1. 修改git #38。
+    1. 修改git https://github.com/smart-doc-group/smart-doc/issues/38。
     2. 修改gitee #I1LBKO。
     3. 修改fix #39多泛型解析顺序问题。
     4. 优化支持gitee #I1IQKY常量解析需求
@@ -525,7 +525,7 @@
     3. 增加dubbo rpc文档生成支持。
     4. 增加将驼峰字段格式转化为下划线格式。
     5. maven插件和gradle插件提供includes支持，方便自行配置加载第三方库。
-    6. fix #32.
+    6. fix https://github.com/smart-doc-group/smart-doc/issues/32.
     7. 增加文档接口根据接口标题排序功能。
 
 #### 版本号：1.8.6
@@ -612,7 +612,7 @@
     1. 修改request请求参数中嵌套对象不能解析的bug，参考gitee #I16AN2.
     2. controller参数是数组时添加@PathVariable注解会报空指针,参考gitee #I16F6G
     3. 新增ApiDataBuilder用于获取smart-doc生成的文档数据，包含header、字典、错误码等。
-    4. 修改github #9 文档错误bug.
+    4. 修改github https://github.com/smart-doc-group/smart-doc/issues/9 文档错误bug.
     5. 新增接口的@author展示，方法从文档中查到找到接口负责人，生成文档可以选择关闭显示。
     6. 重点：smart-doc的maven插件smart-doc-maven-plugin 1.0.0版本发布。
 
@@ -624,8 +624,8 @@
     2. 修改使用mybatis-plus实体继承Model对象时将log字段输出到文档的问题。
     3. 添加对transient修饰字段文档输出开关，默认不输出。
     4. html文档添加项目名称显示
-    5. 修改github #4 泛型中Void类型解析死循环
-    6. 修改github #5 简单枚举参数解析空指针异常
+    5. 修改github https://github.com/smart-doc-group/smart-doc/issues/4 泛型中Void类型解析死循环
+    6. 修改github https://github.com/smart-doc-group/smart-doc/issues/5 简单枚举参数解析空指针异常
     7. 添加导出PostMan json数据
 
 #### 版本号：1.7.7
