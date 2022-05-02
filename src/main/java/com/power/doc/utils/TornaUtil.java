@@ -52,15 +52,20 @@ public class TornaUtil {
                     apiConfig.getAppToken() +
                     "\n";
             System.out.println(sb);
-            JsonElement element = JsonParser.parseString(responseMsg);
-            TornaRequestInfo info = new TornaRequestInfo()
-                    .of()
-                    .setCategory(category)
-                    .setCode(element.getAsJsonObject().get(TornaConstants.CODE).getAsString())
-                    .setMessage(element.getAsJsonObject().get(TornaConstants.MESSAGE).getAsString())
-                    .setRequestInfo(requestJson)
-                    .setResponseInfo(responseMsg);
-            System.out.println(info.buildInfo());
+            try {
+                JsonElement element = JsonParser.parseString(responseMsg);
+                TornaRequestInfo info = new TornaRequestInfo()
+                        .of()
+                        .setCategory(category)
+                        .setCode(element.getAsJsonObject().get(TornaConstants.CODE).getAsString())
+                        .setMessage(element.getAsJsonObject().get(TornaConstants.MESSAGE).getAsString())
+                        .setRequestInfo(requestJson)
+                        .setResponseInfo(responseMsg);
+                System.out.println(info.buildInfo());
+            }catch (Exception e){
+                //Ex : Nginx Error,Tomcat Error
+                System.out.println("Response Error : \n"+ responseMsg);
+            }
         }
     }
 
@@ -179,6 +184,7 @@ public class TornaUtil {
         for (ApiParam apiParam : apiParams) {
             httpParam = new HttpParam();
             httpParam.setName(apiParam.getField());
+            httpParam.setOrderIndex(apiParam.getId());
             httpParam.setMaxLength(apiParam.getMaxLength());
             String type = apiParam.getType();
             if (Objects.equals(type, DocGlobalConstants.PARAM_TYPE_FILE) && apiParam.isHasItems()) {

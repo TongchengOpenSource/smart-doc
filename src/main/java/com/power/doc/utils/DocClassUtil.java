@@ -194,6 +194,7 @@ public class DocClassUtil {
             case "java.time.offsetdatetime":
             case "java.lang.character":
             case "character":
+            case "org.bson.types.objectid":
                 return "string";
             case "java.util.list":
             case "list":

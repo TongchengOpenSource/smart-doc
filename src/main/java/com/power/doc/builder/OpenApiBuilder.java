@@ -188,7 +188,7 @@ public class OpenApiBuilder {
         request.put("parameters", buildParameters(apiMethodDoc));
         request.put("responses", buildResponses(apiConfig, apiMethodDoc));
         request.put("deprecated", apiMethodDoc.isDeprecated());
-        request.put("operationId", apiMethodDoc.getMethodId());
+        request.put("operationId", apiMethodDoc.getName());
         return request;
     }
 

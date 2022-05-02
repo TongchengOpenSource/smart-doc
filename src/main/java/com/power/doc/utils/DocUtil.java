@@ -29,6 +29,8 @@ import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.constants.DocTags;
 import com.power.doc.constants.JAXRSAnnotations;
 import com.power.doc.model.*;
+import com.power.doc.model.request.RequestMapping;
+import com.power.doc.qdox.model.expression.MyFieldRef;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import com.thoughtworks.qdox.model.*;
 import com.thoughtworks.qdox.model.expression.Add;
@@ -553,24 +555,75 @@ public class DocUtil {
         }
     }
 
-    public static String javaTypeToOpenApiTypeConvert(String type) {
-        switch (type) {
-            case "int8":
-            case "int32":
-            case "int16":
-            case "int64":
+    public static String javaTypeToOpenApiTypeConvert(String javaTypeName) {
+        javaTypeName = javaTypeName.toLowerCase();
+        if (StringUtil.isEmpty(javaTypeName)) {
+            return "object";
+        }
+        if (javaTypeName.length() == 1) {
+            return "object";
+        }
+        if (javaTypeName.contains("[]")) {
+            return "array";
+        }
+        switch (javaTypeName) {
+            case "java.lang.string":
+            case "string":
+            case "char":
+            case "date":
+            case "java.util.uuid":
+            case "uuid":
+            case "enum":
+            case "localdatetime":
+            case "java.time.localdatetime":
+            case "java.time.localdate":
+            case "localdate":
+            case "offsetdatetime":
+            case "localtime":
+            case "timestamp":
+            case "zoneddatetime":
+            case "java.time.zoneddatetime":
+            case "java.time.offsetdatetime":
+            case "java.lang.character":
+            case "character":
+            case "org.bson.types.objectid":
+                return "string";
+            case "java.util.list":
+            case "list":
+            case "java.util.set":
+            case "set":
+            case "java.util.linkedlist":
+            case "linkedlist":
+            case "java.util.arraylist":
+            case "arraylist":
+            case "java.util.treeset":
+            case "treeset":
+                return "array";
+            case "java.util.byte":
+            case "byte":
+            case "java.lang.integer":
+            case "integer":
+            case "int":
+            case "short":
+            case "java.lang.short":
                 return "integer";
             case "double":
+            case "java.lang.long":
+            case "long":
+            case "java.lang.float":
             case "float":
-            case "number":
+            case "bigdecimal":
+            case "biginteger":
                 return "number";
+            case "java.lang.boolean":
             case "boolean":
                 return "boolean";
-            case "enum":
-            case "string":
-                return "string";
+            case "map":
+                return "map";
+            case "multipartfile":
+                return "file";
             default:
-                return "object"; //array object file
+                return "object";
         }
     }
 
@@ -620,8 +673,8 @@ public class DocUtil {
     }
 
     /**
-     * resolve the string of {@link Add} which has {@link FieldRef} children,
-     * the value of {@link FieldRef} will be resolved with the real value of it if it is the static final member of any other class
+     * resolve the string of {@link Add} which has {@link FieldRef}(to be exact is {@link MyFieldRef}) children,
+     * the value of {@link MyFieldRef} will be resolved with the real value of it if it is the static final member of any other class
      *
      * @param annotationValue
      * @return
@@ -656,7 +709,7 @@ public class DocUtil {
         if (StringUtil.isEmpty(header)) {
             return header;
         }
-        return StringUtil.trimBlank(header);
+        return StringUtil.removeDoubleQuotes(StringUtil.trimBlank(header));
 
     }
 
@@ -788,4 +841,13 @@ public class DocUtil {
         return mediaType;
     }
 
+    public static boolean filterPath(RequestMapping requestMapping, ApiReqParam apiReqHeader) {
+        if (StringUtil.isEmpty(apiReqHeader.getPathPatterns())
+                && StringUtil.isEmpty(apiReqHeader.getExcludePathPatterns())) {
+            return true;
+        }
+        return DocPathUtil.matches(requestMapping.getShortUrl(), apiReqHeader.getPathPatterns()
+                , apiReqHeader.getExcludePathPatterns());
+
+    }
 }

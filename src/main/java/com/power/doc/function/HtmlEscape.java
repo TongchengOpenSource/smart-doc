@@ -33,8 +33,8 @@ public class HtmlEscape implements Function {
 
     @Override
     public String call(Object[] paras, Context ctx) {
-        String str = String.valueOf(paras[0]).replaceAll("&", "&amp;")
-                .replaceAll("\"","&quot;");
+        String str = String.valueOf(paras[0]).replaceAll("\"","&quot;");
+        str = str.replaceAll("<p>","").replaceAll("</p>"," ");
         return DocUtil.getEscapeAndCleanComment(str);
     }
 }
