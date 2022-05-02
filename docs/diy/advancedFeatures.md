@@ -102,6 +102,7 @@ public CommonResult<Void> configQueryParamPost(String configQueryParam) {
 ```
 
 ## Static constant replacement
+>Starting with version 2.4.2, this configuration does not need to be added manually, and smart-doc can automatically recognize the use of static constants.
 
 In the process of java web interface development, some users will use static scenes in the controller's path. Therefore, it is also hoped that smart-doc can parse static constants to obtain real values.
 Let's look at an example:
@@ -135,6 +136,8 @@ Configuration reference input:
 }
 ```
 If it is a unit test, the configuration reference is as follows
+
+**Note: ** If the internal class is used when configuring the class name, don't make a mistake. The subclasses are connected with the symbol`$`. For example: `com.power.doc.controller.userController$ErrorCodeEnum`
 
 ```java
 ApiConfig config = new ApiConfig();
@@ -176,9 +179,9 @@ public class JacksonAnnotation {
     private String idCard;
 }
 ```
-Like this idCard using @JsonIgnore annotation, the interface will not see the field, and smart-doc will find that the annotation will not display the field in the interface document.
+Like this idCard using `@JsonIgnore` annotation, the interface will not see the field, and `smart-doc` will find that the annotation will not display the field in the interface document.
 ### Ignore using fastjson annotations 
-Fastjson is also used to ignore field annotations. Fastjson uses `@JSONField(serialize = false)`, and the key role is `serialize = false`
+Fastjson is also used to ignore field annotations. `Fastjson` uses `@JSONField(serialize = false)`, and the key role is `serialize = false`
 
 ```java
 public class FastJson {
@@ -197,8 +200,67 @@ public class FastJson {
     private String idCard;
 }
 ```
-If you use Fastjson instead of the default Jackson in your project, after writing the annotations in the `idCard` field above, whether it is a real data response or a smart-doc document, it can help you ignore the relevant fields.
+If you use `Fastjson`instead of the default `Jackson` in your project, after writing the annotations in the `idCard` field above, whether it is a real data response or a `smart-doc` document, it can help you ignore the relevant fields.
 
+### Advanced
+`smart-doc`support the advanced ignore configuration of`Fastjson `and`Jackson`. Examples are as follows:
+```java
+/**
+* innore mybatis-plugs page field
+* @author yu 2021/7/11.
+*/
+@JSONType(ignores ={"current", "size", "orders", "hitCount", "searchCount", "pages","optimizeCountSql"})
+@JsonIgnoreProperties({"current", "size", "orders", "hitCount", "searchCount", "pages","optimizeCountSql"})
+public class MybatisPlusPage<T> extends Page<T> {
+
+}
+```
+## Export data dictionary
+In Swagger, it is very difficult to export a dictionary for domestic scenarios. But`smart-doc`makes it easy to export the enumeration dictionary to the document. For example, there is an order status enumeration dictionary in the code.
+```java
+
+public enum OrderEnum {
+
+    WAIT_PAY("0", "Paid"),
+
+    PAID("1", "UnPaid"),
+
+    EXPIRED("2","Losed");
+
+    private String code;
+
+    private String desc;
+
+    OrderEnum(String code, String desc) {
+        this.code = code;
+        this.desc = desc;
+    }
+
+    public String getCode() {
+        return this.code;
+    }
+
+
+    public String getDesc() {
+        return this.desc;
+    }
+}
+```
+just add config like this:
+```json
+{
+    "dataDictionaries": [
+        {
+            "title": "Order status code dictionary", //name
+            "enumClassName": "com.xx.OrderEnum", //Enum ClassName
+            "codeField": "code", //fieldName(reflect field code)
+            "descField": "message" //fieldName(reflect field description)
+        }
+    ]
+}
+```
+**Note: ** If the internal class is used when configuring the class name, don't make a mistake. The subclasses are connected with the symbol`$`. For example: `com.power.doc.controller.userController$ErrorCodeEnum`
+> Since smart-doc uses the reflection principle to traverse the enumeration items in order to reduce the user's need to configure the dictionary items, reflection cannot obtain annotations. Here, the description of the dictionary is required to be defined directly in the code. Of course, the wrong dictionary is also handled in the same way.
 
 ## Source code loading
 
@@ -304,6 +366,28 @@ Of course, the source code of mybatis-plus must also be introduced into the proj
      <scope>test</scope>
 </dependency>
 ```
+## Postman Document 
+Starting from smart-doc version 1.7.8, smart-doc supports the generation of Postman JSON files. You can use smart-doc to generate Postman JSON files for the entire project or all interfaces of a microservice. Then test by importing the JSON file into Postman's Collections. Export JSON.
+
+```java
+ApiConfig config = new ApiConfig();
+//To export postman, it is recommended to set the server like this, and then establish a server environment variable in postman. When debugging, you only need to modify the value of server according to the actual server.
+config.setServerUrl("http://{{server}}");
+//The config has been omitted, please refer to other documents for detailed configuration
+PostmanJsonBuilder.buildPostmanApi(config);
+//The following method is used since smart-doc 1.8.1
+PostmanJsonBuilder.buildPostmanCollection(config);
+```
+
+
+example：
+![输入图片说明](../../_images/095300_24a7f126_144669.png "postman.png")
+
+### postman中设置环境变量
+
+![输入图片说明](../../_images/141540_aed7de0b_144669.png "postman_set_env.png")
+** Note: ** Do not forget to set the name of the environment in Add Environment (for example: local development test), otherwise the environment cannot be saved successfully according to the above figure.
+
 
 
 
