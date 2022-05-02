@@ -29,8 +29,8 @@ import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.constants.DocTags;
 import com.power.doc.constants.JAXRSAnnotations;
 import com.power.doc.model.*;
+
 import com.power.doc.model.request.RequestMapping;
-import com.power.doc.qdox.model.expression.MyFieldRef;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import com.thoughtworks.qdox.model.*;
 import com.thoughtworks.qdox.model.expression.Add;
@@ -673,8 +673,8 @@ public class DocUtil {
     }
 
     /**
-     * resolve the string of {@link Add} which has {@link FieldRef}(to be exact is {@link MyFieldRef}) children,
-     * the value of {@link MyFieldRef} will be resolved with the real value of it if it is the static final member of any other class
+     * resolve the string of {@link Add} which has {@link FieldRef}(to be exact is {@link FieldRef}) children,
+     * the value of {@link FieldRef} will be resolved with the real value of it if it is the static final member of any other class
      *
      * @param annotationValue
      * @return
