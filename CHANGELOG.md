@@ -15,6 +15,7 @@
   10. 支持在smart-doc.json配置中对@RequestHeader进行忽略了，#250
   11. 修复controller注释html文档导航链接无效的问题，#255
   12. 支持内部类枚举私有属性解析。
+  13. 移除Spring标记过时的`application/json;charset=UTF-8`，默认改为`application/json`
 
 #### 版本号：2.4.3
 - 更新日期: 2022-04-17
