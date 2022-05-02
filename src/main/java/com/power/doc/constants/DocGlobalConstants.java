@@ -197,7 +197,7 @@ public final class DocGlobalConstants {
 
     public static final String JSON_CONTENT_TYPE = "application/json";
 
-    public static final String URL_CONTENT_TYPE = "application/x-www-form-urlencoded;charset=utf-8";
+    public static final String URL_CONTENT_TYPE = "application/x-www-form-urlencoded;charset=UTF-8";
 
     public static final String POSTMAN_MODE_FORMDATA = "formdata";
 
@@ -213,7 +213,7 @@ public final class DocGlobalConstants {
 
     public static final String CURL_REQUEST_TYPE_DATA = "curl -X %s %s -i %s --data '%s'";
 
-    public static final String CURL_POST_PUT_JSON = "curl -X %s -H 'Content-Type: application/json;charset=utf-8' %s -i %s --data '%s'";
+    public static final String CURL_POST_PUT_JSON = "curl -X %s -H 'Content-Type: application/json;charset=UTF-8' %s -i %s --data '%s'";
 
     public static final String EMPTY = "";
 
