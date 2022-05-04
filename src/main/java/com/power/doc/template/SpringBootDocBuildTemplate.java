@@ -492,14 +492,25 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                         String requestBodyAdvice = configBuilder.getApiConfig().getRequestBodyAdvice().getClassName();
                         typeName = configBuilder.getApiConfig().getRequestBodyAdvice().getClassName();
                         gicTypeName = requestBodyAdvice + "<" + gicTypeName + ">";
-
                     }
+
+                    boolean isArrayOrCollection = false;
+                    if (JavaClassValidateUtil.isArray(typeName) || JavaClassValidateUtil.isCollection(typeName)) {
+                        simpleTypeName = globGicName[0];
+                        isArrayOrCollection = true;
+                    }
+
                     if (JavaClassValidateUtil.isPrimitive(simpleTypeName)) {
+                        if (isArrayOrCollection) {
+                            mockValue = "[" + mockValue + "]";
+                            mockValue = JsonUtil.toPrettyFormat(mockValue);
+                        }
                         requestExample.setJsonBody(mockValue).setJson(true);
                     } else {
                         String json = JsonBuildHelper.buildJson(typeName, gicTypeName, Boolean.FALSE, 0, new HashMap<>(), groupClasses, configBuilder);
                         requestExample.setJsonBody(JsonUtil.toPrettyFormat(json)).setJson(true);
                     }
+                    queryParamsMap.remove(paramName);
                     paramAdded = true;
                 } else if (SpringMvcAnnotations.PATH_VARIABLE.contains(annotationName)) {
                     if (javaClass.isEnum()) {
@@ -525,7 +536,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                     if (JavaClassValidateUtil.isFile(typeName)) {
                         break;
                     }
-                    // TODO: 2022-04-26 array and list
+                    // array and list
                     queryParamsMap.put(paramName, mockValue);
                     requestParam = true;
                     paramAdded = true;
