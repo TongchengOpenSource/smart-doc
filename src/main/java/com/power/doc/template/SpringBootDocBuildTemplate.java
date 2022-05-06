@@ -313,7 +313,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             if (this.configApiReqParams != null) {
                 final Map<String, List<ApiReqParam>> reqParamMap = this.configApiReqParams.stream().collect(Collectors.groupingBy(ApiReqParam::getParamIn));
                 final List<ApiReqParam> headerParamList = reqParamMap.getOrDefault(ApiReqParamInTypeEnum.HEADER.getValue(), Collections.emptyList());
-                allApiReqHeaders = Stream.of(headerParamList,apiReqHeaders).filter(Objects::nonNull)
+                allApiReqHeaders = Stream.of(headerParamList, apiReqHeaders).filter(Objects::nonNull)
                         .flatMap(Collection::stream).distinct().filter(param -> DocUtil.filterPath(requestMapping, param)).collect(Collectors.toList());
             } else {
                 allApiReqHeaders = apiReqHeaders.stream().filter(param -> DocUtil.filterPath(requestMapping, param)).collect(Collectors.toList());
@@ -768,21 +768,6 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             if (requestFieldToUnderline) {
                 paramName = StringUtil.camelToUnderline(paramName);
             }
-            //file upload
-            if (JavaClassValidateUtil.isFile(typeName)) {
-                ApiParam param = ApiParam.of().setField(paramName).setType("file")
-                        .setId(paramList.size() + 1).setQueryParam(true)
-                        .setRequired(true).setVersion(DocGlobalConstants.DEFAULT_VERSION)
-                        .setDesc(comment);
-                if (typeName.contains("[]") || typeName.endsWith(">")) {
-                    comment = comment + "(array of file)";
-                    param.setType(DocGlobalConstants.PARAM_TYPE_FILE);
-                    param.setDesc(comment);
-                    param.setHasItems(true);
-                }
-                paramList.add(param);
-                continue;
-            }
             String mockValue = JavaFieldUtil.createMockValue(paramsComments, paramName, typeName, simpleTypeName);
             JavaClass javaClass = builder.getJavaProjectBuilder().getClassByName(fullTypeName);
             List<JavaAnnotation> annotations = parameter.getAnnotations();
@@ -886,7 +871,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                     if (requestBodyCounter > 0) {
                         //for json
                         paramList.addAll(ParamsBuildHelper.buildParams(gicNameArr[0], DocGlobalConstants.EMPTY, 0,
-                                "true", Boolean.FALSE, new HashMap<>(), builder,
+                                String.valueOf(required), Boolean.FALSE, new HashMap<>(), builder,
                                 groupClasses, 0, Boolean.TRUE));
                     } else {
                         throw new RuntimeException("Spring MVC can't support binding Collection on method "
@@ -948,13 +933,25 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                     }
                 } else {
                     paramList.addAll(ParamsBuildHelper.buildParams(gicNameArr[1], DocGlobalConstants.EMPTY, 0,
-                            "true", Boolean.FALSE, new HashMap<>(),
+                            String.valueOf(required), Boolean.FALSE, new HashMap<>(),
                             builder, groupClasses, 0, Boolean.FALSE));
                 }
 
-            }
-            // param is enum
-            else if (javaClass.isEnum()) {
+            } else if (JavaClassValidateUtil.isFile(typeName)) {
+                //file upload
+                ApiParam param = ApiParam.of().setField(paramName)
+                        .setType(DocGlobalConstants.PARAM_TYPE_FILE)
+                        .setId(paramList.size() + 1).setQueryParam(true)
+                        .setRequired(required).setVersion(DocGlobalConstants.DEFAULT_VERSION)
+                        .setDesc(comment);
+                if (typeName.contains("[]") || typeName.endsWith(">")) {
+                    comment = comment + "(array of file)";
+                    param.setDesc(comment);
+                    param.setHasItems(true);
+                }
+                paramList.add(param);
+            } else if (javaClass.isEnum()) {
+                // param is enum
                 String o = JavaClassUtil.getEnumParams(javaClass);
                 Object value = JavaClassUtil.getEnumValue(javaClass, isPathVariable || queryParam);
                 ApiParam param = ApiParam.of().setField(paramName)
@@ -969,7 +966,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 paramList.add(param);
             } else {
                 paramList.addAll(ParamsBuildHelper.buildParams(typeName, DocGlobalConstants.EMPTY, 0,
-                        "true", Boolean.FALSE, new HashMap<>(), builder, groupClasses, 0, Boolean.FALSE));
+                        String.valueOf(required), Boolean.FALSE, new HashMap<>(), builder, groupClasses, 0, Boolean.FALSE));
             }
         }
         return ApiParamTreeUtil.buildMethodReqParam(paramList, queryReqParamMap, pathReqParamMap, requestBodyCounter);
