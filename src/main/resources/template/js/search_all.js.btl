@@ -28,7 +28,7 @@ document.onkeydown = keyDownSearch;
 function keyDownSearch(e) {
     const theEvent = e;
     const code = theEvent.keyCode || theEvent.which || theEvent.charCode;
-    if (code == 13) {
+    if (code === 13) {
         const search = document.getElementById('search');
         const searchValue = search.value.toLocaleLowerCase();
 
@@ -88,7 +88,7 @@ function keyDownSearch(e) {
             });
         }
         let html;
-        if (searchValue == '') {
+        if (searchValue === '') {
             const liClass = "";
             const display = "display: none";
             html = buildAccordion(api,liClass,display);
@@ -122,7 +122,7 @@ function buildAccordion(apiGroups, liClass, display) {
     let html = "";
     let doc;
     if (apiGroups.length > 0) {
-         if (apiDocListSize == 1) {
+         if (apiDocListSize === 1) {
             let apiData = apiGroups[0].list;
             let order = apiGroups[0].order;
             for (let j = 0; j < apiData.length; j++) {
@@ -145,7 +145,6 @@ function buildAccordion(apiGroups, liClass, display) {
         } else {
             for (let i = 0; i < apiGroups.length; i++) {
                 let apiGroup = apiGroups[i];
-                let order = apiGroups[i].order;
                 html += '<li class="'+liClass+'">';
                 html += '<a class="dd" href="#_'+apiGroup.order+'_' + apiGroup.name + '">' + apiGroup.order + '.&nbsp;' + apiGroup.name + '</a>';
                 html += '<ul class="sectlevel1">';
@@ -158,7 +157,7 @@ function buildAccordion(apiGroups, liClass, display) {
                     doc = apiData[j].list;
                     for (let m = 0; m < doc.length; m++) {
                        let spanString;
-                       if (doc[m].deprecated == 'true') {
+                       if (doc[m].deprecated === 'true') {
                            spanString='<span class="line-through">';
                        } else {
                            spanString='<span>';

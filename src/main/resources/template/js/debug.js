@@ -23,7 +23,7 @@ $("[contenteditable=plaintext-only]").on('blur', function (e) {
   e.preventDefault();
   const $this = $(this);
   const data = $this.text();
-  let content = "";
+  let content;
   if (undefined === e.originalEvent.clipboardData) {
     content = data;
   } else {
@@ -65,7 +65,7 @@ $("button").on("click", function () {
   console.log("body-params=>" + JSON.stringify(bodyParamData))
   console.log("json-body=>" + body);
   let finalUrl = "";
-  let queryParamData = "";
+  let queryParamData;
   if (!isEmpty(page)) {
     queryParamData = getInputData($queryElement)
     finalUrl = castToGetUri(page, pathParamData, queryParamData)
@@ -80,13 +80,13 @@ $("button").on("click", function () {
   }
   const ajaxOptions = {};
 
-  if ("multipart/form-data" == contentType) {
+  if ("multipart/form-data" === contentType) {
     finalUrl = castToGetUri(url, pathParamData);
     queryParamData = getInputData($queryElement, true)
     body = queryParamData;
     ajaxOptions.processData = false;
     ajaxOptions.contentType = false;
-  } else if ("POST" == method && contentType !== "multipart/form-data"
+  } else if ("POST" === method && contentType !== "multipart/form-data"
       && contentType !== "application/json") {
     finalUrl = castToGetUri(url, pathParamData);
     queryParamData = getInputData($queryElement)
@@ -226,14 +226,14 @@ String.prototype.format = function (args) {
   let reg;
   if (arguments.length > 0) {
     let result = this;
-    if (arguments.length == 1 && typeof (args) == "object") {
+    if (arguments.length === 1 && typeof (args) == "object") {
       for (const key in args) {
         reg = new RegExp("({" + key + "})", "g");
         result = result.replace(reg, args[key]);
       }
     } else {
       for (let i = 0; i < arguments.length; i++) {
-        if (arguments[i] == undefined) {
+        if (arguments[i] === undefined) {
           return "";
         } else {
           reg = new RegExp("({[" + i + "]})", "g");
@@ -303,7 +303,7 @@ function toCurl(request) {
   // default is a GET request
   const cmd = ["curl", "-X", request.type || "GET"];
 
-  if (request.url.indexOf('https') == 0) {
+  if (request.url.indexOf('https') === 0) {
     cmd.push("-k");
   }
 
@@ -320,7 +320,7 @@ function toCurl(request) {
       if (Object.prototype.hasOwnProperty.call(request.headers, key)) {
         cmd.push("-H");
         headerValue = request.headers[key];
-        if (headerValue.value == '') {
+        if (headerValue.value === '') {
           cmd.push("'" + key + "'");
         } else {
           cmd.push("'" + key + ':' + headerValue + "'");
@@ -383,7 +383,7 @@ function toCurl(request) {
 }
 
 function isEmpty(obj) {
-  return obj === undefined || obj === null || new String(obj).trim() === '';
+  return obj === undefined || obj === null || String(obj).trim() === '';
 }
 
 function hasChinese(_string) {
