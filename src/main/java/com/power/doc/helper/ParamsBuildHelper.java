@@ -439,7 +439,8 @@ public class ParamsBuildHelper {
                                     Object value = JavaClassUtil.getEnumValue(arraySubClass, Boolean.FALSE);
                                     StringBuilder sb = new StringBuilder();
                                     sb.append("[\"").append(value).append("\"]");
-                                    param.setValue(sb.toString());
+                                    param.setValue(sb.toString())
+                                            .setEnumValues(JavaClassUtil.getEnumValues(arraySubClass));
                                 } else if (gName.length() == 1) {
                                     // handle generic
                                     int len = globGicName.length;

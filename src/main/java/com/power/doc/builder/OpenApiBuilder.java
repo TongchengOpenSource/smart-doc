@@ -425,8 +425,13 @@ public class OpenApiBuilder {
             } else if ("enum".equals(apiParam.getType())) {
                 schema.put("enum", apiParam.getEnumValues());
             } else if ("array".equals(apiParam.getType())) {
-                schema.put("type", "array");
-                schema.put("items", new HashMap<>());
+                if (CollectionUtil.isNotEmpty(apiParam.getEnumValues())) {
+                    schema.put("type", "string");
+                    schema.put("items", apiParam.getEnumValues());
+                } else {
+                    schema.put("type", "array");
+                    schema.put("items", new HashMap<>());
+                }
             }
         } else {
             schema.put("format", "int16".equals(apiParam.getType()) ? "int32" : apiParam.getType());
@@ -581,7 +586,12 @@ public class OpenApiBuilder {
             if (CollectionUtil.isNotEmpty(apiParam.getChildren())) {
                 propertiesData.put("type", "array");
                 propertiesData.put("items", buildProperties(apiParam.getChildren(), schemaName));
-            } else {
+            } else if (CollectionUtil.isNotEmpty(apiParam.getEnumValues())) {
+                Map<String, Object> items = new HashMap<>();
+                items.put("type", "string");
+                items.put("enum", apiParam.getEnumValues());
+                propertiesData.put("items", items);
+            } else{
                 propertiesData.put("type", "array");
                 Map<String, String> ref = new HashMap<>();
                 ref.put("$ref", "#/components/schemas/" + schemaName);

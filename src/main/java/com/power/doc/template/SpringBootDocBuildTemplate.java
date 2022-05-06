@@ -859,7 +859,8 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                             .setPathParam(isPathVariable)
                             .setQueryParam(queryParam)
                             .setId(paramList.size() + 1)
-                            .setType("array").setValue(String.valueOf(value));
+                            .setEnumValues(JavaClassUtil.getEnumValues(gicJavaClass))
+                            .setType("array").setValue(Arrays.toString(ArrayUtils.toArray(value)));
                     paramList.add(param);
                     if (requestBodyCounter > 0) {
                         Map<String, Object> map = OpenApiSchemaUtil.arrayTypeSchema(gicName);
