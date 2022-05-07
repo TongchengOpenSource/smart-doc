@@ -165,7 +165,6 @@ public class DocClassUtil {
      * @return String
      */
     public static String processTypeNameForParams(String javaTypeName) {
-        javaTypeName = javaTypeName.toLowerCase();
         if (StringUtil.isEmpty(javaTypeName)) {
             return "object";
         }
@@ -175,6 +174,7 @@ public class DocClassUtil {
         if (javaTypeName.contains("[]")) {
             return "array";
         }
+        javaTypeName = javaTypeName.toLowerCase();
         switch (javaTypeName) {
             case "java.lang.string":
             case "string":
