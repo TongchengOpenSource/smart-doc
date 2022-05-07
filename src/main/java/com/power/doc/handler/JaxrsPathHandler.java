@@ -45,7 +45,7 @@ import static com.power.doc.constants.DocTags.DEPRECATED;
 import static com.power.doc.constants.DocTags.IGNORE;
 
 /**
- * dubbo Rest 注解处理器
+ * Jaxrs Path Handler
  *
  * @author Zxq
  */

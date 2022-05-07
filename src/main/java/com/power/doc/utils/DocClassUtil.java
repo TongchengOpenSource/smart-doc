@@ -145,6 +145,9 @@ public class DocClassUtil {
      * @return array of string
      */
     public static String[] getMapKeyValueType(String gName) {
+        if (StringUtil.isNotEmpty(gName)) {
+            return new String[0];
+        }
         if (gName.contains("<")) {
             String[] arr = new String[2];
             String key = gName.substring(gName.indexOf("<") + 1, gName.indexOf(","));

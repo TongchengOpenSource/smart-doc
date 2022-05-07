@@ -206,7 +206,6 @@ public class ParamsBuildHelper {
                         Set<String> groupClassList = JavaClassUtil.getParamGroupJavaClass(annotation);
                         for (String javaClass : groupClassList) {
                             if (groupClasses.contains(javaClass)) {
-                                strRequired = false;
                                 continue out;
                             }
                         }

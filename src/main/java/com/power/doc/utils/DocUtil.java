@@ -556,7 +556,6 @@ public class DocUtil {
     }
 
     public static String javaTypeToOpenApiTypeConvert(String javaTypeName) {
-        javaTypeName = javaTypeName.toLowerCase();
         if (StringUtil.isEmpty(javaTypeName)) {
             return "object";
         }
@@ -566,6 +565,7 @@ public class DocUtil {
         if (javaTypeName.contains("[]")) {
             return "array";
         }
+        javaTypeName = javaTypeName.toLowerCase();
         switch (javaTypeName) {
             case "java.lang.string":
             case "string":

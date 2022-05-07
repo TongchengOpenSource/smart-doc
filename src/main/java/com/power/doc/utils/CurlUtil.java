@@ -30,6 +30,7 @@ import com.power.doc.model.FormData;
 import com.power.doc.model.request.CurlRequest;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author yu 2020/12/21.
@@ -37,8 +38,11 @@ import java.util.List;
 public class CurlUtil {
 
     public static String toCurl(CurlRequest request) {
+        if (Objects.isNull(request)) {
+            return "";
+        }
         String methodType = request.getType();
-        if (methodType.contains(".")) {
+        if (Objects.nonNull(methodType) && methodType.contains(".")) {
             methodType = methodType.substring(methodType.indexOf(".") + 1);
         }
         StringBuilder sb = new StringBuilder();
