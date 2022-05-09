@@ -29,7 +29,6 @@ import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.constants.DocTags;
 import com.power.doc.constants.JAXRSAnnotations;
 import com.power.doc.model.*;
-
 import com.power.doc.model.request.RequestMapping;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import com.thoughtworks.qdox.model.*;
@@ -381,7 +380,11 @@ public class DocUtil {
                 stack.push(s);
             }
             if ('}' == s) {
-                stack.pop();
+                if (stack.isEmpty()) {
+                    throw new RuntimeException("Invalid mapping pattern detected: " + url);
+                } else {
+                    stack.pop();
+                }
             }
             if (',' == s && stack.isEmpty()) {
                 result.add(sb.toString());
