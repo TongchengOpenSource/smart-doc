@@ -22,6 +22,8 @@
  */
 package com.power.doc.utils;
 
+import com.power.common.util.StringUtil;
+
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -54,4 +56,20 @@ public class OpenApiSchemaUtil {
         map.put("items", items);
         return map;
     }
+
+    public static Map<String, Object> returnSchema(String returnGicName) {
+        if (StringUtil.isEmpty(returnGicName)) {
+            return null;
+        }
+        returnGicName = returnGicName.replace(">", "");
+        String[] types = returnGicName.split("<");
+        StringBuilder builder = new StringBuilder();
+        for (String str : types) {
+            builder.append(DocClassUtil.getSimpleName(str).replace(",", ""));
+        }
+        Map<String, Object> map = new HashMap<>();
+        map.put("$ref", builder.toString());
+        return map;
+    }
+
 }

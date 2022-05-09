@@ -180,9 +180,9 @@ public class OpenApiBuilder {
         request.put("summary", apiMethodDoc.getDesc());
         request.put("description", apiMethodDoc.getDetail());
         if (StringUtil.isNotEmpty(apiMethodDoc.getGroup())) {
-            request.put("tags", new String[]{apiMethodDoc.getGroup()});
+            request.put("tags", new String[]{apiDoc.getName()});
         } else {
-            request.put("tags", new String[]{apiDoc.getDesc()});
+            request.put("tags", new String[]{apiDoc.getName()});
         }
         request.put("requestBody", buildRequestBody(apiConfig, apiMethodDoc));
         request.put("parameters", buildParameters(apiMethodDoc));

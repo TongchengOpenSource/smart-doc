@@ -38,12 +38,7 @@ import com.power.doc.model.ApiParam;
 import com.power.doc.model.ApiReqParam;
 import com.power.doc.model.ApiReturn;
 import com.power.doc.model.DocJavaMethod;
-import com.power.doc.utils.DocClassUtil;
-import com.power.doc.utils.DocPathUtil;
-import com.power.doc.utils.DocUtil;
-import com.power.doc.utils.JavaClassUtil;
-import com.power.doc.utils.JavaClassValidateUtil;
-import com.power.doc.utils.OpenApiSchemaUtil;
+import com.power.doc.utils.*;
 import com.thoughtworks.qdox.model.DocletTag;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaMethod;
@@ -213,6 +208,8 @@ public interface IDocBuildTemplate<T> {
         Map<String, JavaType> actualTypesMap = docJavaMethod.getActualTypesMap();
         ApiReturn apiReturn = DocClassUtil.processReturnType(returnTypeGenericCanonicalName);
         String returnType = apiReturn.getGenericCanonicalName();
+        System.out.println("反复泛型："+returnType);
+        System.out.println("gic:"+ JsonUtil.toPrettyJson(DocClassUtil.getSimpleGicName(returnType)));
         if (Objects.nonNull(actualTypesMap)) {
             for (Map.Entry<String, JavaType> entry : actualTypesMap.entrySet()) {
                 returnType = returnType.replace(entry.getKey(), entry.getValue().getCanonicalName());
