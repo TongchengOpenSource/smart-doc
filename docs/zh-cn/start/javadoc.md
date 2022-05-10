@@ -356,7 +356,7 @@ public class DownloadController extends BaseController {
 > smart-doc 2.0.2版本将会自动从下载响应头`Content-Disposition: attachment; filename=xx`中读取文件名，
 不再需要在响应头中设置`response.setHeader("filename", urlEncode(fileName));`。当然即便是Content-Disposition也记得使用urlEncode处理下文档名，否则会出现中文文件名乱码。如果你是直接使用浏览器打开生成的smart-doc生成的测试页面，测试并不能获取到Content-Disposition，生成的是随机文件名，要验证正确性请通过服务的方式访问页面。
 
-当然许多时候是不需要手动标记的，`smart-doc`作为一款智能化的文档，一直就是为了尽快能的让程序员少去手动操作，因此`smart-doc`在扫描到下面的
+当然许多时候是不需要手动标记的，`smart-doc`作为一款智能化的文档，一直就是为了尽可能的让程序员少去手动标记，因此`smart-doc`在扫描到下面的
 一些返回类的时候会自动标记为下载接口，能识别的返回类如下：
 - `org.springframework.core.io.Resource`
 - `org.springframework.core.io.InputStreamSource`
