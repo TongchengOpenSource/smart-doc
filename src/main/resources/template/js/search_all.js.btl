@@ -107,7 +107,7 @@ function keyDownSearch(e) {
         };
         Accordion.prototype.dropdown = function (e) {
             const $el = e.data.el;
-            $this = $(this), $next = $this.next();
+            let $this = $(this), $next = $this.next();
             $next.slideToggle();
             $this.parent().toggleClass('open');
             if (!e.data.multiple) {
@@ -120,19 +120,18 @@ function keyDownSearch(e) {
 
 function buildAccordion(apiGroups, liClass, display) {
     let html = "";
-    let doc;
     if (apiGroups.length > 0) {
-         if (apiDocListSize === 1) {
+        if (apiDocListSize === 1) {
             let apiData = apiGroups[0].list;
             let order = apiGroups[0].order;
             for (let j = 0; j < apiData.length; j++) {
                 html += '<li class="'+liClass+'">';
                 html += '<a class="dd" href="#_'+order+'_'+apiData[j].order+'_' + apiData[j].link + '">' + apiData[j].order + '.&nbsp;' + apiData[j].desc + '</a>';
                 html += '<ul class="sectlevel2" style="'+display+'">';
-                doc = apiData[j].list;
+                let doc = apiData[j].list;
                 for (let m = 0; m < doc.length; m++) {
                     let spanString;
-                    if (doc[m].deprecated == 'true') {
+                    if (doc[m].deprecated === 'true') {
                         spanString='<span class="line-through">';
                     } else {
                         spanString='<span>';
@@ -154,7 +153,7 @@ function buildAccordion(apiGroups, liClass, display) {
                     html += '<li class="'+liClass+'">';
                     html += '<a class="dd" href="#_'+apiGroup.order+'_'+ apiData[j].order + '_'+ apiData[j].link + '">' +apiGroup.order+'.'+ apiData[j].order + '.&nbsp;' + apiData[j].desc + '</a>';
                     html += '<ul class="sectlevel2" style="'+display+'">';
-                    doc = apiData[j].list;
+                    let doc = apiData[j].list;
                     for (let m = 0; m < doc.length; m++) {
                        let spanString;
                        if (doc[m].deprecated === 'true') {
