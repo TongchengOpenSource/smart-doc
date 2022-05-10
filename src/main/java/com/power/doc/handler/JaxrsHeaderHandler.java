@@ -41,6 +41,7 @@ import java.util.Objects;
 
 
 /**
+ * Jaxrs Header Handler
  * @author Zxq
  */
 public class JaxrsHeaderHandler {

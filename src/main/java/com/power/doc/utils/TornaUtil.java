@@ -142,7 +142,7 @@ public class TornaUtil {
             methodApi.setUrl(apiMethodDoc.getMethodDefinition());
             methodApi.setResponseParams(buildParams(apiMethodDoc.getResponseParams()));
             methodApi.setOrderIndex(apiMethodDoc.getOrder());
-            methodApi.setDeprecated(apiMethodDoc.isDeprecated() ? "该接口已废弃" : null);
+            methodApi.setDeprecated(apiMethodDoc.isDeprecated() ? "Deprecated" : null);
             //Json
             if (CollectionUtil.isNotEmpty(apiMethodDoc.getRequestParams())) {
                 methodApi.setRequestParams(buildParams(apiMethodDoc.getRequestParams()));

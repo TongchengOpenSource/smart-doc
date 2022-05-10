@@ -145,6 +145,9 @@ public class DocClassUtil {
      * @return array of string
      */
     public static String[] getMapKeyValueType(String gName) {
+        if (StringUtil.isEmpty(gName)) {
+            return new String[0];
+        }
         if (gName.contains("<")) {
             String[] arr = new String[2];
             String key = gName.substring(gName.indexOf("<") + 1, gName.indexOf(","));
@@ -165,7 +168,6 @@ public class DocClassUtil {
      * @return String
      */
     public static String processTypeNameForParams(String javaTypeName) {
-        javaTypeName = javaTypeName.toLowerCase();
         if (StringUtil.isEmpty(javaTypeName)) {
             return "object";
         }
@@ -175,6 +177,7 @@ public class DocClassUtil {
         if (javaTypeName.contains("[]")) {
             return "array";
         }
+        javaTypeName = javaTypeName.toLowerCase();
         switch (javaTypeName) {
             case "java.lang.string":
             case "string":
