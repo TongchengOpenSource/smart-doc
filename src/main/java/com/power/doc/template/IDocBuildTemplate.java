@@ -208,8 +208,6 @@ public interface IDocBuildTemplate<T> {
         Map<String, JavaType> actualTypesMap = docJavaMethod.getActualTypesMap();
         ApiReturn apiReturn = DocClassUtil.processReturnType(returnTypeGenericCanonicalName);
         String returnType = apiReturn.getGenericCanonicalName();
-        System.out.println("反复泛型："+returnType);
-        System.out.println("gic:"+ JsonUtil.toPrettyJson(DocClassUtil.getSimpleGicName(returnType)));
         if (Objects.nonNull(actualTypesMap)) {
             for (Map.Entry<String, JavaType> entry : actualTypesMap.entrySet()) {
                 returnType = returnType.replace(entry.getKey(), entry.getValue().getCanonicalName());
