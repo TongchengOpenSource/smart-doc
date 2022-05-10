@@ -162,7 +162,7 @@
 * 类型：`String`
 * 默认值: `http://127.0.0.1`
 
-服务器地址, 导出postman建议设置成http://{{server}}方便直接在postman直接设置环境变量。
+服务器地址, 导出`postman`建议设置成`http://{{server}}`方便直接在`postman`直接设置环境变量。
 ```json
 {
     "serverUrl": "http://127.0.0.1"
@@ -175,7 +175,7 @@
 * 默认值: `null`
 * @since `2.2.3`
 
-设置path前缀, 如配置Servlet ContextPath。
+设置`path`前缀, 如配置`Servlet ContextPath`。
 ```json
 {
     "pathPrefix": "myProject"
@@ -199,7 +199,7 @@
 * 类型：`Boolean`
 * 默认值: `false`
 
-是否将文档合并到一个文件中，一般推荐为true。
+是否将文档合并到一个文件中，一般推荐为`true`。
 ```json
 {
     "allInOne": false
@@ -223,7 +223,7 @@
 * 类型：`Boolean`
 * 默认值: `false`
 
-是否覆盖旧的文件，主要用于mardown文件覆盖。
+是否覆盖旧的文件，主要用于`Markdown`文件覆盖。
 ```json
 {
     "coverOld": false
@@ -236,7 +236,7 @@
 * 默认值: `false`
 * @since `2.0.0`
 
-smart-doc支持创建可以测试的html页面，仅在AllInOne模式中起作用。
+`smart-doc`支持创建可以测试的`HTML`页面，仅在`AllInOne`模式中起作用。
 ```json
 {
     "createDebugPage": false
@@ -248,7 +248,7 @@ smart-doc支持创建可以测试的html页面，仅在AllInOne模式中起作�
 * 类型：`String`
 * 默认值: `null`
 
-controller包过滤，多个包用英文逗号隔开。
+`Controller`包过滤，多个包用英文逗号隔开。
 > PS: 2.2.2开始需要采用正则：com.test.controller.*
 ```json
 {
@@ -261,7 +261,7 @@ controller包过滤，多个包用英文逗号隔开。
 * 类型：`Boolean`
 * 默认值: `false`
 
-只有每个controller生成一个html文件是才使用。
+只有每个`Controller`生成一个`HTML`文件是才使用。
 ```json
 {
     "md5EncryptedHtmlName": false
@@ -273,7 +273,7 @@ controller包过滤，多个包用英文逗号隔开。
 * 类型：`String`
 * 默认值: `null`
 
-基于highlight.js的[代码高亮](zh-cn/diy/highlight.md)设置。
+基于`highlight.js`的[代码高亮](zh-cn/diy/highlight.md)设置。
 ```json
 {
     "style": "xt256"
@@ -285,8 +285,8 @@ controller包过滤，多个包用英文逗号隔开。
 * 类型：`String`
 * 默认值: `null`
 
-只有每个controller生成一个html文件是才使用。
-如果`smart-doc.json`中和插件中都未设置`projectName`，2.3.4开始，插件自动采用pom中的`projectName`作为默认填充，
+只有每个`Controller`生成一个`HTML`文件是才使用。
+如果`smart-doc.json`中和插件中都未设置`projectName`，`2.3.4`开始，插件自动采用`pom`中的`projectName`作为默认填充，
 因此使用插件时可以不配置。
 ```json
 {
@@ -378,7 +378,7 @@ controller包过滤，多个包用英文逗号隔开。
 * 默认值: `index.html`
 * @since `1.9.0`
 
-只有每个controller生成一个html文件是才使用。
+只有配置项目所有`Controller`生成一个`HTML`文件时才生效。
 ```json
 {
     "allInOneDocFileName": "index.html"
@@ -417,7 +417,7 @@ controller包过滤，多个包用英文逗号隔开。
 * 默认值: `true`
 * @since `2.1.0`
 
-支持SpringMVC旧项目的url后缀。
+支持`SpringMVC`旧项目的`url`后缀。
 ```json
 {
     "urlSuffix": ".do"
@@ -455,7 +455,7 @@ mock值的国际化支持。
 * 默认值: `null`
 * @since `2.0.9`
 
-torna平台对接appKey。
+`torna`平台对接`appKey`。
 ```json
 {
     "appKey": "20201216788835306945118208"
@@ -468,7 +468,7 @@ torna平台对接appKey。
 * 默认值: `null`
 * @since `2.0.9`
 
-torna平台appToken。
+`torna`平台`appToken`。
 ```json
 {
     "appToken": "c16931fa6590483fb7a4e85340fcbfef"
@@ -481,7 +481,7 @@ torna平台appToken。
 * 默认值: `null`
 * @since `2.0.9`
 
-torna平台secret。
+`torna`平台`secret`。
 ```json
 {
     "secret": "W.ZyGMOB9Q0UqujVxnfi@.I#V&tUUYZR"
@@ -494,7 +494,7 @@ torna平台secret。
 * 默认值: `null`
 * @since `2.0.9`
 
-torna平台地址，填写自己的私有化部署地址。
+`torna`平台地址，填写自己的私有化部署地址。
 ```json
 {
     "openUrl": "http://localhost:7700/api"
@@ -519,7 +519,7 @@ torna环境名称。
 * 默认值: `true`
 * @since `2.2.4`
 
-推送torna时替换旧的文档。改动还是会推送过去覆盖的，这个功能主要是保证代码删除了，torna上没有删除。
+推送`torna`时替换旧的文档。改动还是会推送过去覆盖的，这个功能主要是保证代码删除了，`torna`上没有删除。
 ```json
 {
     "replace": false
@@ -532,7 +532,7 @@ torna环境名称。
 * 默认值: `null`
 * @since `2.0.9`
 
-推送torna配置接口服务地址。
+推送`torna`配置接口服务地址。
 ```json
 {
     "debugEnvUrl": "http://127.0.0.1"
@@ -545,7 +545,7 @@ torna环境名称。
 * 默认值: `true`
 * @since `2.0.9`
 
-是否打印torna推送日志。
+是否打印`torna`推送日志。
 ```json
 {
     "tornaDebug": true
@@ -629,7 +629,7 @@ torna环境名称。
 * 类型：`List<Object>`
 * 默认值: `null`
 
-自定义添加字段和注释，一般用户处理第三方jar包库。
+自定义添加字段和注释，一般用户处理第三方`jar`包库。
 ```json
 {
     "customResponseFields": [
@@ -723,7 +723,7 @@ torna环境名称。
 * 类型：`List<Object>`
 * 默认值: `null`
 
-项目开放的dubbo api接口模块依赖，配置后输出到文档方便使用者集成。
+项目开放的`Dubbo API`接口模块依赖，配置后输出到文档方便使用者集成。
 ```json
 {
     "rpcApiDependencies": [
@@ -742,7 +742,7 @@ torna环境名称。
 * 类型：`String`
 * 默认值: `null`
 
-文档中添加dubbo consumer集成配置，用于方便集成方可以快速集成。
+文档中添加`Dubbo Consumer`集成配置，用于方便集成方可以快速集成。
 ```json
 {
     "rpcConsumerConfig": "src/main/resources/consumer-example.conf"
@@ -775,8 +775,8 @@ torna环境名称。
 * 默认值: `null`
 * @since `1.8.9`
 
-[配置自己的常量类](zh-cn/diy/advancedFeatures#静态常量替换)，smart-doc在解析到常量时自动替换为具体的值。
-2.4.2版本开始使用到常量也无需配置，smart-doc已经能够自动解析。
+[配置自己的常量类](zh-cn/diy/advancedFeatures#静态常量替换)，`smart-doc`在解析到常量时自动替换为具体的值。
+`2.4.2`版本开始使用到常量也无需配置，`smart-doc`已经能够自动解析。
 ```json
 {
     "apiConstants": [
@@ -794,7 +794,7 @@ torna环境名称。
 * 默认值: `null`
 * @since `1.8.9`
 
-ResponseBodyAdvice统一返回设置(不要随便配置根据项目的技术来配置)，可用`ignoreResponseBodyAdvice` tag来忽略。
+`ResponseBodyAdvice`统一返回设置(不要随便配置根据项目的技术来配置)，可用`ignoreResponseBodyAdvice` tag来忽略。
 ```json
 {
     "responseBodyAdvice": {
@@ -810,7 +810,7 @@ ResponseBodyAdvice统一返回设置(不要随便配置根据项目的技术来�
 * 默认值: `null`
 * @since `2.1.4`
 
-设置RequestBodyAdvice统一请求包装类。
+设置`RequestBodyAdvice`统一请求包装类。
 ```json
 {
     "requestBodyAdvice": {
@@ -826,7 +826,7 @@ ResponseBodyAdvice统一返回设置(不要随便配置根据项目的技术来�
 * 默认值: `null`
 * @since `2.2.5` :new:
 
-对不同的controller进行分组。
+对不同的`Controller`进行分组。
 > PS: 分组不对postman.json和openApi.json生效
 ```json
 {
