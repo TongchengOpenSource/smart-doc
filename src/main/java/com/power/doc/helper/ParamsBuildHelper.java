@@ -191,11 +191,15 @@ public class ParamsBuildHelper {
                     if (DocAnnotationConstants.SHORT_JSON_IGNORE.equals(simpleAnnotationName)) {
                         continue out;
                     } else if (DocAnnotationConstants.SHORT_JSON_FIELD.equals(simpleAnnotationName)) {
-                        if (null != annotation.getProperty(DocAnnotationConstants.SERIALIZE_PROP)) {
-                            if (Boolean.FALSE.toString().equals(annotation.getProperty(DocAnnotationConstants.SERIALIZE_PROP).toString())) {
-                                continue out;
-                            }
-                        } else if (null != annotation.getProperty(DocAnnotationConstants.NAME_PROP)) {
+                        AnnotationValue serialize = annotation.getProperty(DocAnnotationConstants.SERIALIZE_PROP);
+                        AnnotationValue deserialize = annotation.getProperty(DocAnnotationConstants.DESERIALIZE_PROP);
+                        if (!isResp && Objects.nonNull(serialize) && Boolean.FALSE.toString().equals(serialize.toString())) {
+                            continue out;
+                        }
+                        if (isResp && Objects.nonNull(deserialize) && Boolean.FALSE.toString().equals(deserialize.toString())) {
+                            continue out;
+                        }
+                        if (null != annotation.getProperty(DocAnnotationConstants.NAME_PROP)) {
                             fieldName = StringUtil.removeQuotes(annotation.getProperty(DocAnnotationConstants.NAME_PROP).toString());
                         }
                     } else if (DocAnnotationConstants.SHORT_JSON_PROPERTY.equals(simpleAnnotationName)) {

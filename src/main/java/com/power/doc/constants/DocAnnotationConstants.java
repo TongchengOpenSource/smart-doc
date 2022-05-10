@@ -51,6 +51,7 @@ public interface DocAnnotationConstants {
     String REQUIRED_PROP = "required";
 
     String SERIALIZE_PROP = "serialize";
+    String DESERIALIZE_PROP = "deserialize";
 
     String NAME_PROP = "name";
 
