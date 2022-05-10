@@ -10,20 +10,20 @@
     }
 </style>
 
-使用[hightlight.js](https://github.com/highlightjs/highlight.js/)为生成的html文档增加代码高亮
+使用[hightlight.js](https://github.com/highlightjs/highlight.js/)为生成的`HTML`文档增加代码高亮
 
-- 用户在smart-doc配置文件中配置style(可选)
+- 用户在`smart-doc`配置文件中配置`style`(可选)
 
-- 配置指定值(95种可选)，但是有些浅色背景因为和模板颜色有冲突，smart-doc已经剔除了。
+- 配置指定值(`95`种可选)，但是有些浅色背景因为和模板颜色有冲突，`smart-doc`已经剔除了。
 
 - 如果是喜欢高亮，则参考下面的列表设置一款自己喜欢的高亮，不建议随机生成，因为每个高亮都需要单独去网上自动下载样式。
 
-style可配置值参考如下：
+`style`可配置值参考如下：
 
 | Style | Color |描述
 |-------|-------|------
-|randomLight|随机浅色|style的值为randomLight会随机生成浅色背景(不推荐)
-|randomDar|随机浅色|style的值为randomDar会随机生成深色背景(不推荐)
+|randomLight|随机浅色|`style`的值为`randomLight`会随机生成浅色背景(不推荐)
+|randomDar|随机浅色|`style`的值为`randomDar`会随机生成深色背景(不推荐)
 |a11y-dark|#2b2b2b|<div class="color-lump" style="--color: #2b2b2b">
 |agate|#333|<div class="color-lump" style="--color: #333">
 |an-old-hope|#1c1d21|<div class="color-lump" style="--color: #1c1d21">

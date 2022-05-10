@@ -1,8 +1,8 @@
 ## Introduce
-smart-doc-gradle-plugin是smart-doc官方团队开发的`gradle`插件，该插件从smart-doc 1.8.6版本开始提供，
-使用smart-doc-gradle-plugin更方便用户集成到自己的项目中，集成也更加轻量，你不再需要在项目中编写单元测试来
-启动smart-doc扫描代码分析生成接口文档。可以直接运行`gradle`命令
-或者是IDE中点击smart-doc-gradle-plugin预设好的`goal`即可生成接口文档。
+`smart-doc-gradle-plugin`是`smart-doc`官方团队开发的`gradle`插件，该插件从`smart-doc 1.8.6`版本开始提供，
+使用`smart-doc-gradle-plugin`更方便用户集成到自己的项目中，集成也更加轻量，你不再需要在项目中编写单元测试来
+启动`smart-doc`扫描代码分析生成接口文档。可以直接运行`gradle`命令
+或者是`IDEA`中点击`smart-doc-gradle-plugin`预设好的`goal`即可生成接口文档。
 
 [关于smart-doc](https://gitee.com/smart-doc-team/smart-doc)
 
@@ -29,15 +29,15 @@ buildscript {
 apply(plugin = "com.github.shalousun.smart-doc")
 ```
 
-**buildscript配置添加到build.gradle的顶部** 。
+**`buildscript`配置添加到`build.gradle`的顶部** 。
 ### Plugin options
-是smart-doc插件使用还需要在build.gradle添加一些常见本身的配置
+是`smart-do`c插件使用还需要在`build.gradle`添加一些常见本身的配置
 
-| Option | Default value | Required|Description |
-| ------ | ------------- | -------------|----------- |
-|configFile|src/main/resources/default.json|true|插件配置文件|
-|exclude|无|false|排除一些无法自定下载的java lib sources,例如:exclude 'org.springframework.boot:spring-boot-starter-tomcat' |
-|include|无|false|让插件自定下载指定的java lib sources,例如:include 'org.springframework.boot:spring-boot-starter-tomcat' |
+| Option | Default value | Required| Description                                                                                     |
+| ------ | ------------- | -------------|-------------------------------------------------------------------------------------------------|
+|configFile|`src/main/resources/default.json`|`true`| 插件配置文件                                                                                          |
+|exclude|无|`false`| 排除一些无法自动下载的`java lib sources`,例如:`exclude 'org.springframework.boot:spring-boot-starter-tomcat'` |
+|include|无|`false`| 让插件自定下载指定的`java lib sources`,例如:`include 'org.springframework.boot:spring-boot-starter-tomcat'`   |
 
 Example setting of options:
 ```
@@ -53,7 +53,7 @@ smartdoc {
     include 'org.springframework.boot:spring-boot-starter-tomcat'
 }
 ```
-对于多模块的gradle，把smart-doc插件相关配置放到根目录build.gradle的subprojects中。
+对于多模块的`gradle`，把`smart-doc`插件相关配置放到根目录`build.gradle`的`subprojects`中。
 
 ```
 subprojects{
@@ -69,13 +69,13 @@ subprojects{
     }
 }
 ```
-多模块smart-doc的实战demo参考
+多模块`smart-doc`的实战`demo`参考
 ```
 https://gitee.com/smart-doc-team/smart-doc-gradle-plugin-demo
 ```
 > 多模块和单模块项目是有区别，多模块不从根目录使用命令构建可能会导致模块间源代码加载失败，生成文档出现各种问题。
 ### Create a json config
-在自己的项目中创建一个json配置文件，如果是多个模块则放到需要生成文档的模块中，smart-doc-gradle-plugin插件会根据这个配置生成项目的接口文档。
+在自己的项目中创建一个`json`配置文件，如果是多个模块则放到需要生成文档的模块中，`smart-doc-gradle-plugin`插件会根据这个配置生成项目的接口文档。
 例如在项目中创建`/src/main/resources/smart-doc.json`。配置内容参考如下。
 
 **最小配置单元:**
@@ -194,7 +194,7 @@ https://gitee.com/smart-doc-team/smart-doc-gradle-plugin-demo
   }
 }
 ```
-**注意：** 上面的json配置完全使用smart-doc的`ApiConfig`转化成json而来。因此项目配置也可以参考smart-doc的介绍。
+**注意：** 上面的`json`配置完全使用`smart-doc`的`ApiConfig`转化成`json`而来。因此项目配置也可以参考`smart-doc`的介绍。
 
 使用可参考[【smart-doc-gradle-plugin集成demo】](https://gitee.com/smart-doc-team/smart-doc-gradle-plugin-demo)
 ### Generated document
@@ -224,9 +224,9 @@ gradle smartDocRpcAdoc
 gradle tornaRpc
 ```
 #### Use IDEA
-当你使用Idea时，可以通过maven Helper插件选择生成何种文档。
+当你使用`Idea`时，可以通过`Gradle Helper`插件选择生成何种文档。
 
-![idea中smart-doc-gradle插件使用](https://gitee.com/smart-doc-team/smart-doc-gradle-plugin/raw/master/images/idea.png "usage.png")
+![idea中smart-doc-gradle插件使用](../../_images/idea-gradle-plugin.png "usage.png")
 
 # 插件源码
 https://gitee.com/smart-doc-team/smart-doc-gradle-plugin

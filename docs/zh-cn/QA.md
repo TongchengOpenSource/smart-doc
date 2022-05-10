@@ -30,8 +30,8 @@ No plugin found for prefix 'smart-doc' in the current project and in the plugin 
 对于开源软件的版本获取，有好几种方式可以查到：
 
 - [Maven Repository](https://mvnrepository.com)：但是这个并不是没个都能直接通过`artifactId`搜索到，
-原因是这取决与这个java开发组件的搜索率已经这个站点的搜索算法，一般都是非常流行的才能直接搜索到。 
-  如果你搜索不到可以换成group去搜索。
+原因是这取决与这个`Java`开发组件的搜索率已经这个站点的搜索算法，一般都是非常流行的才能直接搜索到。 
+  如果你搜索不到可以换成`group`去搜索。
   
 - [Maven Central Repository](https://search.maven.org)：这才是正儿八经发布公有组件的仓库，大部分`JAVA`
 开源都是从这个站点发布后被其它仓库同步过去，因此这里一定能搜索到。
@@ -42,7 +42,7 @@ No plugin found for prefix 'smart-doc' in the current project and in the plugin 
 - **项目仓库首页徽标：** 你打开`smart-doc`或者是`smart-doc-maven-plugin`以及`smart-doc-gradle`插件代码仓库的首页都能看到
   最新版的版本徽标。这也是大多数标准开源项目的做法。
   
-- **项目的tag列表：** 一般项目开源项目发布版本的时候作者都会给代码打上`tag`。即便是作者不把`tag`做`release`写`release`日志。
+- **项目的`tag`列表：** 一般项目开源项目发布版本的时候作者都会给代码打上`tag`。即便是作者不把`tag`做`release`写`release`日志。
   但是这个也是可以参考的。
   
 只要你掌握了上面几种方法什么开源软件版本查找都难不倒你。

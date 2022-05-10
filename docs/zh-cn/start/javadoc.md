@@ -59,7 +59,7 @@ public SimpleEnum resp(@RequestBody Pageable pageable){
 @param pageable com.power.doc.model.PageRequestDto<com.power.doc.model.User>
 ```
 > 尽量少采用这种参数替换的形式，代码书写很不方便，建议直接自己定义对象作为入参
-## 1.2 @apiNote
+## 1.2 `@apiNote`
 `@apiNote`是`JAVA`新增的文档`tag`,`smart-doc`使用`@apiNote`的注释作为方法的详细描述，
 因此可以使用`@apiNote`来写一段长注释。如果一个方法不写`@apiNote`注释说明，
 `smart-doc`直接使用方法默认注释填充。`@apiNote`详细使用参考如下：
@@ -119,7 +119,7 @@ tag名称 | 描述
 首先我们是一个非常尊重编码规范的工具，我们不会去随便乱加一个东西来误导人，当前主流框架不提供的东西，我们不会在提供，
 以后对tag的使用只会更加谨慎。
 
-## 2.1 @ignore使用
+## 2.1 `@ignore`使用
 
 ```java
 /**
@@ -168,7 +168,7 @@ public class SubUser {
 | idCard | string | 身份证 | false |
 | gender | int | 性别 | false|
 
-## 2.2 @required使用(不推荐)
+## 2.2 `@required`使用(不推荐)
 官方已经支持`JSR-303`，未来的版本中这个会被移除。 不建议采用这种无法做到表现和行为一致的方式，
 请使用`JSR-303`参数验证规范。`smart-doc`原生支持`JSR-303`，甚至是`JSR-303`的分组验证
 也是支持的。
@@ -212,7 +212,7 @@ public class SubUser {
 | gender | int | 性别 | true |
 
 
-## 2.3 @mock使用
+## 2.3 `@mock`使用
 
 ```java
 public class SimpleUser {
@@ -243,7 +243,7 @@ public class SimpleUser {
     "password":"12356"
 }
 ```
-## 2.4 @download使用
+## 2.4 `@download`使用
 用于告诉`smart-doc`。你的`Controller`中某一个方法是文件下载接口，
 `smart-doc`在生成`debug`调试页面时，可以生成一个文件下载的请求。后台参考代码如下：
 
@@ -356,7 +356,7 @@ public class DownloadController extends BaseController {
 > smart-doc 2.0.2版本将会自动从下载响应头`Content-Disposition: attachment; filename=xx`中读取文件名，
 不再需要在响应头中设置`response.setHeader("filename", urlEncode(fileName));`。当然即便是Content-Disposition也记得使用urlEncode处理下文档名，否则会出现中文文件名乱码。如果你是直接使用浏览器打开生成的smart-doc生成的测试页面，测试并不能获取到Content-Disposition，生成的是随机文件名，要验证正确性请通过服务的方式访问页面。
 
-## 2.4 @page使用
+## 2.4 `@page`使用
 
 ```java
 /**
@@ -379,7 +379,7 @@ public String render() {
 会返回渲染后的界面，如果你想在debug页面中点击请求直接访问该页面，
 那么你可以用@page来告诉smart-doc你的渲染页面名称。这样在debug页面上就可以直接帮你打开新的页签来访问页面。
 
-## 2.5 @ignoreParams使用
+## 2.5 `@ignoreParams`使用
 
 ```java
 /**
@@ -397,7 +397,7 @@ public CommonResult<DateEntity> test(int id,@RequestBody DateEntity dateEntity){
 
 >如果你要忽略的是一个Spring或者是JAX-RS这种顶级开源项目或者统一规范的参数时，请给官方提issue。例如你发现smart-doc不能忽略Spring
 的@SessionAttribute注解的参数，那么你完成可以给官方提issue。
-## 2.6 @response使用(不推荐)
+## 2.6 `@response`使用(不推荐)
 
 ```java
 /**
@@ -422,7 +422,7 @@ public CommonResult<String> create() {
 >对于使用@response的用户，我们只能认为你的代码是在太不清晰了，最好的就是代码写规范，让smart-doc能够自动生成返回样例。
 
 
-## 2.7 @tag使用
+## 2.7 `@tag`使用
 ```java
 /**
  * json file config test

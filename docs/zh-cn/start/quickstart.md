@@ -152,7 +152,7 @@ smartdoc {
     include 'org.springframework.boot:spring-boot-starter-tomcat'
 }
 ```
-对于多模块的`Gradle`，把`smart-do`c插件相关配置放到根目录`build.gradle`的`subprojects`中。
+对于多模块的`Gradle`，把`smart-doc`插件相关配置放到根目录`build.gradle`的`subprojects`中。
 ```
 subprojects{
     apply plugin: 'com.github.shalousun.smart-doc'
