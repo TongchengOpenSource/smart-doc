@@ -54,11 +54,11 @@ public class WebConfig implements WebMvcConfigurer {
 >如果采用服务器方式来访问页面，则无需配置。
 
 ### 界面效果
-<img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/screen/mock.png">
+![mock](../../_images/mock.png "1.png")
 
 ### debug页面调试
 在使用smart-doc生成的html调试页面做接口调试时，你可能会碰到一下问题，通常当点击`Send Request`按钮后，按钮变成了红色就说明接口出错或者是debug页面出现错误。这时请打开浏览器的调试控制台查看问题或者是调试。smart-doc创建的页面中只是用了jquery和原生js来开发的，`debug.js`是用于处理接口测试请求的，`search.js`是用于处理文档目录标题搜索的。源码都未做压缩，可以直接调试页面的js源码。调试操作参考如下图：
-<img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/screen/debug-console.png">
+![mock](../../_images/debug-console.png "1.png")
 
 ## `swagger UI`集成
 
