@@ -8,7 +8,7 @@
   - [配置项](zh-cn/diy/config.md "配置项")
   - [高级特性](zh-cn/diy/advancedFeatures.md)
   - [代码高亮](zh-cn/diy/highlight.md)
-  - [接口UI集成](zh-cn/diy/integrated.md)
+  - [接口调试集成](zh-cn/diy/integrated.md)
   
 - Torna集成
   - [torna企业级接口管理](zh-cn/torna/tornaIntegration.md "torna企业级接口管理")

@@ -233,7 +233,7 @@ Default locale: zh_CN, platform encoding: GBK
 OS name: "windows 10", version: "10.0", arch: "amd64", family: "dos"
 ```
 ## 5.2 在idea中生成文档
-![idea中smart-doc-maven插件使用](https://gitee.com/smart-doc-team/smart-doc-maven-plugin/raw/master/images/idea.png "maven_plugin_tasks.png")
+![idea中smart-doc-maven插件使用](../../_images/idea-maven-plugin.png "maven_plugin_tasks.png")
 
 # 插件项目
 [smart-doc的maven插件源代码](https://gitee.com/smart-doc-team/smart-doc-maven-plugin)

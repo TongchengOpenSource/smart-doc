@@ -383,27 +383,5 @@ public Page<Order> queryPage(@PathVariable int pageIndex , @PathVariable int pag
 ```
 >classifier这种方式都不推荐使用，请使用maven插件或者gradle插件，插件可以实现自动加载。
 
-## Postman文档
-
-
-从Smart-doc 1.7.8版本开始，smart-doc支持生成Postman的json文件，你可以使用Smart-doc生成整个项目的或者某个微服务所有接口的Postman json文件，然后通过将这个json文件导入Postman的Collections做测试。导出json.
-
-```java
-ApiConfig config = new ApiConfig();
-//导出postman建议将server设置成这样，然后在postman中建立一个server环境变量，调试时只需根据实际服务器来修改server的值。
-config.setServerUrl("http://{{server}}");
-//已省略config，详细配置请参考其它文档
-PostmanJsonBuilder.buildPostmanApi(config);
-//自smart-doc 1.8.1开始使用下面的方法
-PostmanJsonBuilder.buildPostmanCollection(config);
-```
-
-导入json到Postman效果如下图：
-![输入图片说明](../../_images/095300_24a7f126_144669.png "postman.png")
-
-### postman中设置环境变量
-
-![输入图片说明](../../_images/141540_aed7de0b_144669.png "postman_set_env.png")
- **注意：** 在Add Environment中不要忘记给环境设置名称(例如：本地开发测试)，否则按上图不能保存成功。
 
 
