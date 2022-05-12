@@ -61,14 +61,14 @@ smart-doc + [Torna](http://torna.cn/) 组成行业领先的文档生成和管理
 
 > 排名不分先后，更多接入公司，欢迎在[此处](https://github.com/smart-doc-group/smart-doc/issues/12)登记（仅供开源用户参考）
 
-![IFLYTEK](https://gitee.com/smart-doc-team/smart-doc/raw/master/images/known-users/iflytek.png)
-&nbsp;&nbsp;<img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/known-users/oneplus.png" title="一加" width="83px" height="83px"/>
-&nbsp;&nbsp;<img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/known-users/xiaomi.png" title="小米" width="170px" height="83px"/>
-&nbsp;&nbsp;<img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/known-users/neusoft.png" title="东软集团" width="180px" height="83px"/>
-&nbsp;&nbsp;<img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/known-users/zhongkezhilian.png" title="中科智链" width="272px" height="83px"/>
+<img src="../_images/known-users/iflytek.png">
+&nbsp;&nbsp;<img src="../_images/known-users/oneplus.png" title="一加" width="83px" height="83px"/>
+&nbsp;&nbsp;<img src="../_images/known-users/xiaomi.png" title="小米" width="170px" height="83px"/>
+&nbsp;&nbsp;<img src="../_images/known-users/neusoft.png" title="东软集团" width="180px" height="83px"/>
+&nbsp;&nbsp;<img src="../_images/known-users/zhongkezhilian.png" title="中科智链" width="272px" height="83px"/>
 &nbsp;&nbsp;<img src="https://www.hand-china.com/static/img/hand-logo.svg" title="上海汉得信息技术股份有限公司" width="260px" height="83px"/>
-&nbsp;&nbsp;<img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/known-users/shunfeng.png" title="顺丰" width="83px" height="83px"/>
-&nbsp;&nbsp;<img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/known-users/yuanmengjiankang.png" title="远盟健康" width="260px" height="83px"/>
+&nbsp;&nbsp;<img src="../_images/known-users/shunfeng.png" title="顺丰" width="83px" height="83px"/>
+&nbsp;&nbsp;<img src="../_images/known-users/yuanmengjiankang.png" title="远盟健康" width="260px" height="83px"/>
 
 ## 获奖情况
 
