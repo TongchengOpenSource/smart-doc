@@ -76,11 +76,11 @@ smart-doc + [Torna](http://torna.cn/) 组成行业领先的文档生成和管理
 
 
 ## 致谢
-感谢[JetBrains SoftWare](https://www.jetbrains.com) 为本开源项目提供的免费Open Source license。
+感谢[JetBrains SoftWare](https://www.jetbrains.com) 为本开源项目提供的免费Open Source license。<br/>
 <img src="../_images/jetbrains-variant-3.png" width="260px" height="220px"/>
 
 ## License
 
-smart-doc is under the Apache 2.0 license. See the [LICENSE](https://github.com/smart-doc-group/smart-doc/blob/master/LICENSE) file for details.
+`smart-doc` is under the Apache 2.0 license. See the [LICENSE](https://github.com/smart-doc-group/smart-doc/blob/master/LICENSE) file for details.
 
-**注意：** smart-doc源代码文件全部带有版权注释，使用关键代码二次开源请保留原始版权，否则后果自负！
+**注意：** `smart-doc`源代码文件全部带有版权注释，使用关键代码二次开源请保留原始版权，否则后果自负！
