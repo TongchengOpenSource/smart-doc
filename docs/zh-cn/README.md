@@ -36,7 +36,7 @@
 
 ## 最佳实践
 
-smart-doc + [Torna](http://torna.cn/) 组成行业领先的文档生成和管理解决方案，使用smart-doc无侵入完成Java源代码分析和提取注释生成API文档，自动将文档推送到Torna企业级接口文档管理平台。
+smart-doc + [Torna](http://torna.cn/) 组成行业领先的文档生成和管理解决方案，使用`smart-doc`无侵入完成`JAVA`源代码分析和提取注释生成`API`文档，自动将文档推送到`Torna`企业级接口文档管理平台。
 ![smart-doc + Torna](../_images/smart-to-torna.png)
 
 [smart-doc+Torna文档自动化](zh-cn/diy/integrated.md)
@@ -51,8 +51,8 @@ smart-doc + [Torna](http://torna.cn/) 组成行业领先的文档生成和管理
 
 愿意参与构建`smart-doc`或者是需要交流问题可以加入qq群，[常见问题答疑](https://smart-doc-group.github.io/#/zh-cn/QA)
 
-<img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/smart-doc-qq.png" title="qq群" width="200px" height="210px"/>
-<img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/smart-doc-qq2.jpeg" title="qq群2" width="200px" height="210px"/>
+<img src="../_images/smart-doc-qq.jpg" title="qq群" width="200px" height="210px"/>
+<img src="../_images/smart-doc-qq2.jpeg" title="qq群2" width="200px" height="210px"/>
 
 > 1群已满，有问题请加2群。
 
@@ -77,7 +77,7 @@ smart-doc + [Torna](http://torna.cn/) 组成行业领先的文档生成和管理
 
 ## 致谢
 感谢[JetBrains SoftWare](https://www.jetbrains.com) 为本开源项目提供的免费Open Source license。
-<img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/jetbrains-variant-3.png" width="260px" height="220px"/>
+<img src="../_images/jetbrains-variant-3.png" width="260px" height="220px"/>
 
 ## License
 
