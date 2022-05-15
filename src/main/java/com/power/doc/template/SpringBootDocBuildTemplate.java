@@ -1012,6 +1012,9 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         String rewriteClassName;
         if (Objects.nonNull(commentClass) && !DocGlobalConstants.NO_COMMENTS_FOUND.equals(commentClass)) {
             String[] comments = commentClass.split("\\|");
+            if (comments.length < 1) {
+                return replacementMap.get(fullTypeName);
+            }
             rewriteClassName = comments[comments.length - 1];
             if (DocUtil.isClassName(rewriteClassName)) {
                 return rewriteClassName;

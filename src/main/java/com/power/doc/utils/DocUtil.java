@@ -413,7 +413,7 @@ public class DocUtil {
             if (StringUtil.isEmpty(value) && StringUtil.isNotEmpty(className)) {
                 throw new RuntimeException("ERROR: #" + javaMethod.getName()
                         + "() - bad @" + tagName + " javadoc from " + javaMethod.getDeclaringClass()
-                        .getCanonicalName() + ", must be add comment if you use it.");
+                        .getCanonicalName() + ", This is an invalid comment.");
             }
             if (DocTags.PARAM.equals(tagName)) {
                 String pName = value;
@@ -423,6 +423,10 @@ public class DocUtil {
                 if (idx > -1) {
                     pName = value.substring(0, idx);
                     pValue = value.substring(idx + 1);
+                }
+                if ("|".equals(StringUtil.trim(pValue))&& StringUtil.isNotEmpty(className)) {
+                    throw new RuntimeException("ERROR: An invalid comment was written [@" + tagName +" |]," +
+                            "Please @see "+javaMethod.getDeclaringClass().getCanonicalName()+"."+javaMethod.getName()+"()");
                 }
                 paramTagMap.put(pName, pValue);
             } else {
