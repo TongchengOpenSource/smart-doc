@@ -149,7 +149,7 @@ $(".check-all").on("click", function () {
     }
     $('input[name="' + checkboxName + '"]').each(function () {
         if (!checked) {
-            $(this).removeAttr("checked");
+            $(this).prop("checked", false);
         } else {
             $(this).prop("checked", true);
         }
