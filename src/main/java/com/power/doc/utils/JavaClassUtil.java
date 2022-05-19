@@ -25,9 +25,12 @@ package com.power.doc.utils;
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.StringUtil;
 import com.power.doc.constants.DocAnnotationConstants;
+import com.power.doc.constants.DocTags;
 import com.power.doc.constants.DocValidatorAnnotationEnum;
 import com.power.doc.constants.ValidatorAnnotations;
 import com.power.doc.model.DocJavaField;
+import com.power.doc.model.torna.EnumInfo;
+import com.power.doc.model.torna.Item;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import com.thoughtworks.qdox.model.DocletTag;
 import com.thoughtworks.qdox.model.JavaAnnotation;
@@ -306,6 +309,42 @@ public class JavaClassUtil {
             enums.add(javaField.getName());
         }
         return enums;
+    }
+
+    /**
+     * get enum info by java class
+     *
+     * @author chen qi
+     * @param javaClass the java class info
+     * @since 1.0.0
+     * @return
+     */
+    public static EnumInfo getEnumInfo(JavaClass javaClass) {
+        if (Objects.isNull(javaClass) || !javaClass.isEnum()) {
+            return null;
+        }
+        // todo: support the field described by @see
+        EnumInfo enumInfo = new EnumInfo();
+        String comment = javaClass.getComment();
+        DocletTag apiNoteTag = javaClass.getTagByName(DocTags.API_NOTE);
+        enumInfo.setName(comment);
+        enumInfo.setDescription(DocUtil.getEscapeAndCleanComment(Optional.ofNullable(apiNoteTag).map(DocletTag::getValue).orElse(StringUtil.EMPTY)));
+        List<JavaField> enumConstants = javaClass.getEnumConstants();
+        List<Item> collect = enumConstants.stream().map(cons -> {
+            Item item = new Item();
+            String name = cons.getName();
+            String enumComment = cons.getComment();
+            enumComment = DocUtil.replaceNewLineToHtmlBr(enumComment);
+            item.setName(name);
+            item.setType("string");
+            // todo: value can use invoke method to get value, desc too
+            item.setValue(name);
+            item.setDescription(enumComment);
+
+            return item;
+        }).collect(Collectors.toList());
+        enumInfo.setItems(collect);
+        return enumInfo;
     }
 
 

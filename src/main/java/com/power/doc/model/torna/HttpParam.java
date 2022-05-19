@@ -37,7 +37,7 @@ public class HttpParam {
     private String example;
     private String description;
     private String parentId;
-    private List<EnumInfo> enumInfo;
+    private EnumInfo enumInfo;
     private String code;
     private String msg;
     private String solution;
@@ -45,11 +45,11 @@ public class HttpParam {
 
     private Integer orderIndex;
 
-    public List<EnumInfo> getEnumInfo() {
+    public EnumInfo getEnumInfo() {
         return enumInfo;
     }
 
-    public HttpParam setEnumInfo(List<EnumInfo> enumInfo) {
+    public HttpParam setEnumInfo(EnumInfo enumInfo) {
         this.enumInfo = enumInfo;
         return this;
     }

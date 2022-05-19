@@ -194,6 +194,7 @@ public class TornaUtil {
             httpParam.setRequired(apiParam.isRequired() ? TornaConstants.YES : TornaConstants.NO);
             httpParam.setExample(StringUtil.removeQuotes(apiParam.getValue()));
             httpParam.setDescription(apiParam.getDesc());
+            httpParam.setEnumInfo(apiParam.getEnumInfo());
             if (apiParam.getChildren() != null) {
                 httpParam.setChildren(buildParams(apiParam.getChildren()));
             }

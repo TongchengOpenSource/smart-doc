@@ -98,7 +98,7 @@ public class ApiParam {
     /**
      * enum
      */
-    private List<EnumInfo> enumInfo;
+    private EnumInfo enumInfo;
     /**
      * Valid @Max
      */
@@ -118,11 +118,11 @@ public class ApiParam {
         return new ApiParam();
     }
 
-    public List<EnumInfo> getEnumInfo() {
+    public EnumInfo getEnumInfo() {
         return enumInfo;
     }
 
-    public ApiParam setEnumInfo(List<EnumInfo> enumInfo) {
+    public ApiParam setEnumInfo(EnumInfo enumInfo) {
         this.enumInfo = enumInfo;
         return this;
     }

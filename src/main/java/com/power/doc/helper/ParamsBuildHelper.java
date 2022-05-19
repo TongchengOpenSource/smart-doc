@@ -31,6 +31,7 @@ import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.constants.DocTags;
 import com.power.doc.constants.ValidatorAnnotations;
 import com.power.doc.model.*;
+import com.power.doc.model.torna.EnumInfo;
 import com.power.doc.utils.*;
 import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaClass;
@@ -382,6 +383,7 @@ public class ParamsBuildHelper {
                             Object value = JavaClassUtil.getEnumValue(javaClass, !jsonRequest);
                             param.setValue(String.valueOf(value));
                             param.setEnumValues(JavaClassUtil.getEnumValues(javaClass));
+                            param.setEnumInfo(JavaClassUtil.getEnumInfo(javaClass));
                         }
                         // Override old value
                         if (tagsMap.containsKey(DocTags.MOCK) && StringUtil.isNotEmpty(tagsMap.get(DocTags.MOCK))) {
@@ -443,6 +445,7 @@ public class ParamsBuildHelper {
                                     StringBuilder sb = new StringBuilder();
                                     sb.append("[\"").append(value).append("\"]");
                                     param.setValue(sb.toString())
+                                            .setEnumInfo(JavaClassUtil.getEnumInfo(arraySubClass))
                                             .setEnumValues(JavaClassUtil.getEnumValues(arraySubClass));
                                 } else if (gName.length() == 1) {
                                     // handle generic
