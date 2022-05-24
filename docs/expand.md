@@ -2,7 +2,7 @@
 
 ## Custom development extension
 
-smart-doc makes a data open interface for the data after scanning and analysis, and opens two types of api data structures, one is tiled and can be directly rendered, and the other api parameter relationship is quasi changed to a tree structure The way. You can choose to use different data interfaces according to your needs.
+`smart-doc` makes a data open interface for the data after scanning and analysis, and opens two types of api data structures, one is tiled and can be directly rendered, and the other api parameter relationship is quasi changed to a tree structure The way. You can choose to use different data interfaces according to your needs.
 
 Development case：
 1. For example, after the data is obtained using the open interface of smart-doc, the development tool generates a jemeter performance test script.
