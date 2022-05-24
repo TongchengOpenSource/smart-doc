@@ -55,6 +55,8 @@ public class ProjectDocConfigBuilder {
 
     private Map<String, JavaClass> classFilesMap = new ConcurrentHashMap<>();
 
+    private Map<String, Class<? extends Enum>> enumClassMap = new ConcurrentHashMap<>();
+
     private Map<String, CustomField> customRespFieldMap = new ConcurrentHashMap<>();
 
     private Map<String, CustomField> customReqFieldMap = new ConcurrentHashMap<>();
@@ -69,6 +71,7 @@ public class ProjectDocConfigBuilder {
 
 
     public ProjectDocConfigBuilder(ApiConfig apiConfig, JavaProjectBuilder javaProjectBuilder) {
+        // TODO: 2022-05-22  扫描所有枚举源码， 查找属于字典和错误码接口的枚举然后收集再使用类加载器加载
         if (null == apiConfig) {
             throw new NullPointerException("ApiConfig can't be null.");
         }
@@ -95,8 +98,39 @@ public class ProjectDocConfigBuilder {
         this.initCustomRequestFieldsMap(apiConfig);
         this.initReplaceClassMap(apiConfig);
         this.initConstants(apiConfig);
+        this.initDict(apiConfig);
         this.checkBodyAdvice(apiConfig.getRequestBodyAdvice());
         this.checkBodyAdvice(apiConfig.getResponseBodyAdvice());
+    }
+
+    private void initDict(ApiConfig apiConfig) {
+        if (Objects.isNull(enumClassMap) || enumClassMap.size() == 0) {
+            return;
+        }
+        List<ApiDataDictionary> dataDictionaries = apiConfig.getDataDictionaries();
+
+        for (ApiDataDictionary dataDictionary : dataDictionaries) {
+            dataDictionary.setEnumImplementSet(getEnumImplementsByInterface(dataDictionary.getEnumClass()));
+        }
+
+        List<ApiErrorCodeDictionary> errorCodeDictionaries = apiConfig.getErrorCodeDictionaries();
+
+        for (ApiErrorCodeDictionary errorCodeDictionary : errorCodeDictionaries) {
+            errorCodeDictionary.setEnumImplementSet(getEnumImplementsByInterface(errorCodeDictionary.getEnumClass()));
+        }
+    }
+
+    private Set<Class<? extends Enum>> getEnumImplementsByInterface(Class<?> enumClass) {
+        if (!enumClass.isInterface()) {
+            return Collections.emptySet();
+        }
+        Set<Class<? extends Enum>> set = new HashSet<>();
+        enumClassMap.forEach((k, v) -> {
+            if (enumClass.isAssignableFrom(v)) {
+                set.add(v);
+            }
+        });
+        return set;
     }
 
     public JavaClass getClassByName(String simpleName) {
@@ -131,7 +165,7 @@ public class ProjectDocConfigBuilder {
         }
     }
 
-    private void loadJavaSource(String strPath, JavaProjectBuilder builder){
+    private void loadJavaSource(String strPath, JavaProjectBuilder builder) {
         DirectoryScanner scanner = new DirectoryScanner(new File(strPath));
         scanner.addFilter(new SuffixFilter(".java"));
         scanner.scan(currentFile -> {
@@ -146,6 +180,15 @@ public class ProjectDocConfigBuilder {
     private void initClassFilesMap() {
         Collection<JavaClass> javaClasses = javaProjectBuilder.getClasses();
         for (JavaClass cls : javaClasses) {
+            if (cls.isEnum()) {
+                ClassLoader classLoader = apiConfig.getClassLoader();
+                try {
+                    Class enumClass = classLoader.loadClass(cls.getFullyQualifiedName());
+                    enumClassMap.put(cls.getFullyQualifiedName(), enumClass);
+                } catch (ClassNotFoundException e) {
+                    continue;
+                }
+            }
             classFilesMap.put(cls.getFullyQualifiedName(), cls);
         }
     }
@@ -245,6 +288,7 @@ public class ProjectDocConfigBuilder {
 
         }
     }
+
     public JavaProjectBuilder getJavaProjectBuilder() {
         return javaProjectBuilder;
     }
@@ -273,6 +317,10 @@ public class ProjectDocConfigBuilder {
 
     public Map<String, String> getReplaceClassMap() {
         return replaceClassMap;
+    }
+
+    public Map<String, Class<? extends Enum>> getEnumClassMap() {
+        return enumClassMap;
     }
 
     public Map<String, String> getConstantsMap() {

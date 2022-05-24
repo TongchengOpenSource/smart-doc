@@ -39,6 +39,16 @@ public class Item {
     private String value;
     private String description;
 
+    public Item() {
+    }
+
+    public Item(String name, String type, String value, String description) {
+        this.name = name;
+        this.type = type;
+        this.value = value;
+        this.description = description;
+    }
+
     public String getName() {
         return name;
     }

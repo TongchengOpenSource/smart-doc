@@ -842,7 +842,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                             .setQueryParam(queryParam)
                             .setId(paramList.size() + 1)
                             .setEnumValues(JavaClassUtil.getEnumValues(gicJavaClass))
-                            .setEnumInfo(JavaClassUtil.getEnumInfo(gicJavaClass))
+                            .setEnumInfo(JavaClassUtil.getEnumInfo(gicJavaClass, builder))
                             .setType("array").setValue(Arrays.toString(ArrayUtils.toArray(value)));
                     paramList.add(param);
                     if (requestBodyCounter > 0) {
@@ -960,7 +960,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                         .setType("enum").setDesc(StringUtil.removeQuotes(o))
                         .setRequired(required)
                         .setVersion(DocGlobalConstants.DEFAULT_VERSION)
-                        .setEnumInfo(JavaClassUtil.getEnumInfo(javaClass))
+                        .setEnumInfo(JavaClassUtil.getEnumInfo(javaClass, builder))
                         .setEnumValues(JavaClassUtil.getEnumValues(javaClass));
                 paramList.add(param);
             } else {

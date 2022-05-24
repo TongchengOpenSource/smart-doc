@@ -383,7 +383,7 @@ public class ParamsBuildHelper {
                             Object value = JavaClassUtil.getEnumValue(javaClass, !jsonRequest);
                             param.setValue(String.valueOf(value));
                             param.setEnumValues(JavaClassUtil.getEnumValues(javaClass));
-                            param.setEnumInfo(JavaClassUtil.getEnumInfo(javaClass));
+                            param.setEnumInfo(JavaClassUtil.getEnumInfo(javaClass, projectBuilder));
                         }
                         // Override old value
                         if (tagsMap.containsKey(DocTags.MOCK) && StringUtil.isNotEmpty(tagsMap.get(DocTags.MOCK))) {
@@ -445,7 +445,7 @@ public class ParamsBuildHelper {
                                     StringBuilder sb = new StringBuilder();
                                     sb.append("[\"").append(value).append("\"]");
                                     param.setValue(sb.toString())
-                                            .setEnumInfo(JavaClassUtil.getEnumInfo(arraySubClass))
+                                            .setEnumInfo(JavaClassUtil.getEnumInfo(arraySubClass, projectBuilder))
                                             .setEnumValues(JavaClassUtil.getEnumValues(arraySubClass));
                                 } else if (gName.length() == 1) {
                                     // handle generic

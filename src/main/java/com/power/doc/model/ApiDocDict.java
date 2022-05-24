@@ -41,6 +41,11 @@ public class ApiDocDict {
     private String title;
 
     /**
+     * dict description
+     */
+    private String description;
+
+    /**
      * data dict
      */
     private List<DataDict> dataDictList;
@@ -67,6 +72,15 @@ public class ApiDocDict {
 
     public void setDataDictList(List<DataDict> dataDictList) {
         this.dataDictList = dataDictList;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public ApiDocDict setDescription(String description) {
+        this.description = description;
+        return this;
     }
 
     @Override

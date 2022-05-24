@@ -38,6 +38,7 @@ import com.thoughtworks.qdox.model.expression.Expression;
 import com.thoughtworks.qdox.model.expression.FieldRef;
 import net.datafaker.Faker;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
@@ -784,20 +785,45 @@ public class DocUtil {
                     }
                     clazz = Class.forName(apiDataDictionary.getEnumClassName());
                 }
-                ApiDocDict apiDocDict = new ApiDocDict();
-                apiDocDict.setOrder(order);
-                apiDocDict.setTitle(apiDataDictionary.getTitle());
-                JavaClass javaClass = javaProjectBuilder.getClassByName(clazz.getCanonicalName());
-                if (apiDataDictionary.getTitle() == null) {
-                    apiDocDict.setTitle(javaClass.getComment());
+
+                if (clazz.isInterface()) {
+                    Set<Class<? extends Enum>> enumImplementSet = apiDataDictionary.getEnumImplementSet();
+                    if (CollectionUtil.isEmpty(enumImplementSet)) {
+                        continue;
+                    }
+
+                    for (Class<? extends Enum> enumClass : enumImplementSet) {
+                        ApiDocDict apiDocDict = new ApiDocDict();
+                        apiDocDict.setOrder(order++);
+                        JavaClass javaClass = javaProjectBuilder.getClassByName(enumClass.getCanonicalName());
+                        apiDocDict.setTitle(DocUtil.replaceNewLineToHtmlBr(javaClass.getComment()));
+                        DocletTag apiNoteTag = javaClass.getTagByName(DocTags.API_NOTE);
+                        apiDocDict.setDescription(DocUtil.getEscapeAndCleanComment(Optional.ofNullable(apiNoteTag).map(DocletTag::getValue).orElse(StringUtil.EMPTY)));
+                        List<DataDict> enumDictionaryList = EnumUtil.getEnumInformation(enumClass, apiDataDictionary.getCodeField(),
+                                apiDataDictionary.getDescField());
+                        apiDocDict.setDataDictList(enumDictionaryList);
+                        apiDocDictList.add(apiDocDict);
+                    }
+
+                } else {
+                    ApiDocDict apiDocDict = new ApiDocDict();
+                    apiDocDict.setOrder(order);
+                    apiDocDict.setTitle(apiDataDictionary.getTitle());
+                    JavaClass javaClass = javaProjectBuilder.getClassByName(clazz.getCanonicalName());
+                    DocletTag apiNoteTag = javaClass.getTagByName(DocTags.API_NOTE);
+                    apiDocDict.setDescription(DocUtil.getEscapeAndCleanComment(Optional.ofNullable(apiNoteTag).map(DocletTag::getValue).orElse(StringUtil.EMPTY)));
+                    if (apiDataDictionary.getTitle() == null) {
+                        apiDocDict.setTitle(DocUtil.replaceNewLineToHtmlBr(javaClass.getComment()));
+                    }
+                    List<DataDict> enumDictionaryList = EnumUtil.getEnumInformation(clazz, apiDataDictionary.getCodeField(),
+                            apiDataDictionary.getDescField());
+                    if (!clazz.isEnum()) {
+                        throw new RuntimeException(clazz.getCanonicalName() + " is not an enum class.");
+                    }
+                    apiDocDict.setDataDictList(enumDictionaryList);
+                    apiDocDictList.add(apiDocDict);
                 }
-                List<DataDict> enumDictionaryList = EnumUtil.getEnumInformation(clazz, apiDataDictionary.getCodeField(),
-                        apiDataDictionary.getDescField());
-                if (!clazz.isEnum()) {
-                    throw new RuntimeException(clazz.getCanonicalName() + " is not an enum class.");
-                }
-                apiDocDict.setDataDictList(enumDictionaryList);
-                apiDocDictList.add(apiDocDict);
+
             }
         } catch (ClassNotFoundException e) {
             e.printStackTrace();

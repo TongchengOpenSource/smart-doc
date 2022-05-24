@@ -22,12 +22,17 @@
  */
 package com.power.doc.utils;
 
+import com.power.common.model.EnumDictionary;
 import com.power.common.util.CollectionUtil;
+import com.power.common.util.EnumUtil;
 import com.power.common.util.StringUtil;
+import com.power.doc.builder.ProjectDocConfigBuilder;
 import com.power.doc.constants.DocAnnotationConstants;
 import com.power.doc.constants.DocTags;
 import com.power.doc.constants.DocValidatorAnnotationEnum;
 import com.power.doc.constants.ValidatorAnnotations;
+import com.power.doc.model.ApiConfig;
+import com.power.doc.model.ApiDataDictionary;
 import com.power.doc.model.DocJavaField;
 import com.power.doc.model.torna.EnumInfo;
 import com.power.doc.model.torna.Item;
@@ -319,17 +324,39 @@ public class JavaClassUtil {
      * @since 1.0.0
      * @return
      */
-    public static EnumInfo getEnumInfo(JavaClass javaClass) {
+    public static EnumInfo getEnumInfo(JavaClass javaClass, ProjectDocConfigBuilder builder) {
         if (Objects.isNull(javaClass) || !javaClass.isEnum()) {
             return null;
         }
-        // todo: support the field described by @see
+        //todo support the field described by @see
+
+        ApiConfig apiConfig = builder.getApiConfig();
+        ClassLoader classLoader = apiConfig.getClassLoader();
+        ApiDataDictionary dataDictionary = apiConfig.getDataDictionary(javaClass.getFullyQualifiedName());
+
         EnumInfo enumInfo = new EnumInfo();
         String comment = javaClass.getComment();
         DocletTag apiNoteTag = javaClass.getTagByName(DocTags.API_NOTE);
         enumInfo.setName(comment);
         enumInfo.setDescription(DocUtil.getEscapeAndCleanComment(Optional.ofNullable(apiNoteTag).map(DocletTag::getValue).orElse(StringUtil.EMPTY)));
         List<JavaField> enumConstants = javaClass.getEnumConstants();
+
+        // value can use invoke method to get value, desc too
+        if (Objects.nonNull(dataDictionary)) {
+            Class<?> enumClass = dataDictionary.getEnumClass();
+            if (enumClass.isInterface()) {
+                try {
+                    enumClass = classLoader.loadClass(javaClass.getFullyQualifiedName());
+                } catch (ClassNotFoundException e) {
+                    return enumInfo;
+                }
+            }
+            List<EnumDictionary> enumInformation = EnumUtil.getEnumInformation(enumClass, dataDictionary.getCodeField(), dataDictionary.getDescField());
+            List<Item> itemList = enumInformation.stream().map(i -> new Item(i.getName(), i.getType(), i.getValue(), i.getDesc())).collect(Collectors.toList());
+            enumInfo.setItems(itemList);
+            return enumInfo;
+        }
+
         List<Item> collect = enumConstants.stream().map(cons -> {
             Item item = new Item();
             String name = cons.getName();
@@ -337,10 +364,8 @@ public class JavaClassUtil {
             enumComment = DocUtil.replaceNewLineToHtmlBr(enumComment);
             item.setName(name);
             item.setType("string");
-            // todo: value can use invoke method to get value, desc too
             item.setValue(name);
             item.setDescription(enumComment);
-
             return item;
         }).collect(Collectors.toList());
         enumInfo.setItems(collect);

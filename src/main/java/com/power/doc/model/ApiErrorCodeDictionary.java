@@ -22,6 +22,8 @@
  */
 package com.power.doc.model;
 
+import java.util.Set;
+
 /**
  * @author yu 2019/12/7.
  * @since 1.7.9
@@ -31,7 +33,13 @@ public class ApiErrorCodeDictionary {
     /**
      * enumClass
      */
-    private Class<? extends Enum> enumClass;
+    private Class<?> enumClass;
+
+    /**
+     * enum implements
+     * when enumClass is interface
+     */
+    private Set<Class<? extends Enum>> enumImplementSet;
 
     /**
      * enum class name
@@ -62,6 +70,15 @@ public class ApiErrorCodeDictionary {
 
     public ApiErrorCodeDictionary setEnumClass(Class enumClass) {
         this.enumClass = enumClass;
+        return this;
+    }
+
+    public Set<Class<? extends Enum>> getEnumImplementSet() {
+        return enumImplementSet;
+    }
+
+    public ApiErrorCodeDictionary setEnumImplementSet(Set<Class<? extends Enum>> enumImplementSet) {
+        this.enumImplementSet = enumImplementSet;
         return this;
     }
 

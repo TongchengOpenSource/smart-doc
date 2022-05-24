@@ -29,6 +29,7 @@ import com.power.doc.model.rpc.RpcApiDependency;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -136,6 +137,18 @@ public class ApiConfig {
      * api data dictionary
      */
     private List<ApiDataDictionary> dataDictionaries;
+
+
+    private ClassLoader classLoader;
+
+    public ClassLoader getClassLoader() {
+        return classLoader;
+    }
+
+    public ApiConfig setClassLoader(ClassLoader classLoader) {
+        this.classLoader = classLoader;
+        return this;
+    }
 
     /**
      * @since 1.7.9
@@ -599,7 +612,16 @@ public class ApiConfig {
             return null;
         }
         return this.dataDictionaries.stream().filter((apiDataDictionary ->
-                enumClassName.equalsIgnoreCase(apiDataDictionary.getEnumClassName())))
+        {
+            boolean equalsName = enumClassName.equalsIgnoreCase(apiDataDictionary.getEnumClassName());
+
+            Set<Class<? extends Enum>> enumImplementSet = apiDataDictionary.getEnumImplementSet();
+            if (CollectionUtil.isEmpty(enumImplementSet)) {
+                return equalsName;
+            }
+            Set<String> collect = enumImplementSet.stream().map(Class::getName).collect(Collectors.toSet());
+            return equalsName || collect.contains(enumClassName);
+        }))
                 .findFirst().orElse(null);
     }
 
