@@ -3,7 +3,7 @@ package com.power.doc.enums;
 /**
  * @author yu 2019/10/31.
  */
-public enum OrderEnum {
+public enum OrderEnum implements BaseEnum {
     SUCCESS("0000", "success"),
 
     PARAM_EMPTY("1001", "必选参数为空"),

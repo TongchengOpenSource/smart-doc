@@ -2,10 +2,14 @@ package com.power.doc.util;
 
 import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.constants.DocLanguage;
+import com.power.doc.enums.BaseEnum;
+import com.power.doc.enums.IEnum;
+import com.power.doc.enums.OrderEnum;
 import com.power.doc.utils.DocUtil;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -32,6 +36,11 @@ public class DocUtilTest {
 
         System.out.println(params.size());
         System.out.println(me);
+    }
+
+    @Test
+    public void testGetInterfacesEnum() throws ClassNotFoundException {
+        System.out.println(IEnum.class.isAssignableFrom(OrderEnum.class));
     }
 
     @Test
