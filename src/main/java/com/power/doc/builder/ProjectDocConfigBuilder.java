@@ -71,7 +71,6 @@ public class ProjectDocConfigBuilder {
 
 
     public ProjectDocConfigBuilder(ApiConfig apiConfig, JavaProjectBuilder javaProjectBuilder) {
-        // TODO: 2022-05-22  扫描所有枚举源码， 查找属于字典和错误码接口的枚举然后收集再使用类加载器加载
         if (null == apiConfig) {
             throw new NullPointerException("ApiConfig can't be null.");
         }
