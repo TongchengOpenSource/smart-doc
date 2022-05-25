@@ -217,7 +217,7 @@ public interface DocGlobalConstants {
 
     String JSON_PROPERTY_WRITE_ONLY = "JsonProperty.Access.WRITE_ONLY";
 
-    String CSS_CDN_CH = "https://fonts.googleapis.cnpmjs.org";
+    String CSS_CDN_CH = "https://fonts.googleapis.cn";
 
     String CSS_CDN = "https://fonts.googleapis.com";
 
