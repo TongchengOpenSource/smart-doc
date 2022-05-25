@@ -38,7 +38,6 @@ import com.thoughtworks.qdox.model.expression.Expression;
 import com.thoughtworks.qdox.model.expression.FieldRef;
 import net.datafaker.Faker;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
@@ -740,6 +739,7 @@ public class DocUtil {
         if (CollectionUtil.isEmpty(errorCodeDictionaries)) {
             return new ArrayList<>(0);
         } else {
+            ClassLoader classLoader = config.getClassLoader();
             List<ApiErrorCode> errorCodeList = new ArrayList<>();
             try {
                 for (ApiErrorCodeDictionary dictionary : errorCodeDictionaries) {
@@ -748,11 +748,27 @@ public class DocUtil {
                         if (StringUtil.isEmpty(dictionary.getEnumClassName())) {
                             throw new RuntimeException("Enum class name can't be null.");
                         }
-                        clzz = Class.forName(dictionary.getEnumClassName());
+                        clzz = classLoader.loadClass(dictionary.getEnumClassName());
                     }
-                    List<ApiErrorCode> enumDictionaryList = EnumUtil.getEnumInformation(clzz, dictionary.getCodeField(),
-                            dictionary.getDescField());
-                    errorCodeList.addAll(enumDictionaryList);
+
+                    if (clzz.isInterface()) {
+                        Set<Class<? extends Enum>> enumImplementSet = dictionary.getEnumImplementSet();
+                        if (CollectionUtil.isEmpty(enumImplementSet)) {
+                            continue;
+                        }
+
+                        for (Class<? extends Enum> enumClass : enumImplementSet) {
+                            List<ApiErrorCode> enumDictionaryList = EnumUtil.getEnumInformation(enumClass, dictionary.getCodeField(),
+                                    dictionary.getDescField());
+                            errorCodeList.addAll(enumDictionaryList);
+                        }
+
+                    } else {
+                        List<ApiErrorCode> enumDictionaryList = EnumUtil.getEnumInformation(clzz, dictionary.getCodeField(),
+                                dictionary.getDescField());
+                        errorCodeList.addAll(enumDictionaryList);
+                    }
+
                 }
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
@@ -775,6 +791,8 @@ public class DocUtil {
         }
         List<ApiDocDict> apiDocDictList = new ArrayList<>();
         try {
+
+            ClassLoader classLoader = config.getClassLoader();
             int order = 0;
             for (ApiDataDictionary apiDataDictionary : apiDataDictionaryList) {
                 order++;
@@ -783,7 +801,7 @@ public class DocUtil {
                     if (StringUtil.isEmpty(apiDataDictionary.getEnumClassName())) {
                         throw new RuntimeException("Enum class name can't be null.");
                     }
-                    clazz = Class.forName(apiDataDictionary.getEnumClassName());
+                    clazz = classLoader.loadClass(apiDataDictionary.getEnumClassName());
                 }
 
                 if (clazz.isInterface()) {
