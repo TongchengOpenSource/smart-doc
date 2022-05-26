@@ -871,12 +871,8 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                             .setType(DocGlobalConstants.PARAM_TYPE_FILE)
                             .setId(paramList.size() + 1).setQueryParam(true)
                             .setRequired(required).setVersion(DocGlobalConstants.DEFAULT_VERSION)
-                            .setDesc(comment);
-                    if (gicName.contains("[]") || gicName.endsWith(">")) {
-                        comment = comment + "(array of file)";
-                        param.setDesc(comment);
-                        param.setHasItems(true);
-                    }
+                            .setHasItems(true)
+                            .setDesc(comment + "(array of file)");
                     paramList.add(param);
                 } else {
                     if (requestBodyCounter > 0) {
