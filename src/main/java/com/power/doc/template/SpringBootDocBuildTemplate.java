@@ -865,15 +865,25 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                         Map<String, Object> map = OpenApiSchemaUtil.arrayTypeSchema(gicName);
                         docJavaMethod.setRequestSchema(map);
                     }
+                } else if (JavaClassValidateUtil.isFile(gicName)) {
+                    //file upload
+                    ApiParam param = ApiParam.of().setField(paramName)
+                            .setType(DocGlobalConstants.PARAM_TYPE_FILE)
+                            .setId(paramList.size() + 1).setQueryParam(true)
+                            .setRequired(required).setVersion(DocGlobalConstants.DEFAULT_VERSION)
+                            .setDesc(comment);
+                    if (gicName.contains("[]") || gicName.endsWith(">")) {
+                        comment = comment + "(array of file)";
+                        param.setDesc(comment);
+                        param.setHasItems(true);
+                    }
+                    paramList.add(param);
                 } else {
                     if (requestBodyCounter > 0) {
                         //for json
                         paramList.addAll(ParamsBuildHelper.buildParams(gicNameArr[0], DocGlobalConstants.EMPTY, 0,
                                 String.valueOf(required), Boolean.FALSE, new HashMap<>(), builder,
                                 groupClasses, 0, Boolean.TRUE));
-                    } else {
-                        throw new RuntimeException("Spring MVC can't support binding Collection on method "
-                                + javaMethod.getName() + ",Check it in " + javaMethod.getDeclaringClass().getCanonicalName());
                     }
                 }
             } else if (JavaClassValidateUtil.isPrimitive(fullTypeName)) {
