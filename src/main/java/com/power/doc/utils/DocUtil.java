@@ -656,7 +656,7 @@ public class DocUtil {
      * @return the url
      */
     public static String getRequestMappingUrl(JavaAnnotation annotation) {
-        return getPathUrl(annotation, DocAnnotationConstants.VALUE_PROP, DocAnnotationConstants.PATH_PROP);
+        return getPathUrl(annotation, DocAnnotationConstants.VALUE_PROP, DocAnnotationConstants.NAME_PROP, DocAnnotationConstants.PATH_PROP);
     }
 
     /**
