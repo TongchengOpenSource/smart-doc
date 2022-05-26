@@ -228,6 +228,7 @@ public class DocClassUtil {
             case "java.lang.float":
             case "float":
                 return "float";
+            case "java.math.bigdecimal":
             case "bigdecimal":
             case "biginteger":
                 return "number";
