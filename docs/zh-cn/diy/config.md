@@ -794,7 +794,9 @@ torna环境名称。
 * 默认值: `null`
 * @since `1.8.9`
 
-`ResponseBodyAdvice`统一返回设置(不要随便配置根据项目的技术来配置)，可用`ignoreResponseBodyAdvice` tag来忽略。
+`ResponseBodyAdvice`是`Spring`框架中预留的钩子，它作用在`Controller`方法执行完成之后，`http`响应体写回客户端之前，
+它能方便的织入一些自己的业务逻辑处理了，因此`smart-doc`也提供了对`ResponseBodyAdvice`统一返回设置(不要随便配置根据项目的技术来配置)支持，
+可用`ignoreResponseBodyAdvice` tag来忽略。
 ```json
 {
     "responseBodyAdvice": {
