@@ -1,15 +1,17 @@
 # 简介
 
-smart-doc从1.8.7版本开始支持dubbo api文档的生成，下面介绍如何利用smart-doc工具来生成dubbo的rpc内部接口文档。
+`smart-doc`从`1.8.7`版本开始支持`Dubbo API`文档的生成，下面介绍如何利用`smart-doc`工具来生成`Dubbo`的`RPC`内部接口文档。
 ## dubbo文档集成
-smart-doc本着使用简单的原则开发了maven插件和gradle，通过插件来降低smart-doc的集成难度和去除依赖侵入性。您可以根据自己使用的依赖构建管理工具来选择相关的插件，下面以使用smart-doc-maven-plugin插件集成smart-doc生成dubbo为例。当然集成smart-doc来生成dubbo rpc接口文档你有两种可选方式：
+`smart-doc`本着使用简单的原则开发了`maven`插件和`gradle`，通过插件来降低`smart-do`c的集成难度和去除依赖侵入性。
+您可以根据自己使用的依赖构建管理工具来选择相关的插件，下面以使用`smart-doc-maven-plugin`插件集成`smart-doc`生成`dubbo`为例。
+当然集成`smart-doc`来生成`Dubbo RPC`接口文档你有两种可选方式：
 
-- 使用smart-doc扫描dubbo api模块
-- 使用smart-doc扫描dubbo provider模块
+- 使用`smart-doc`扫描`dubbo api`模块
+- 使用`smart-doc`扫描`dubbo provider`模块
 
 下面来看下集成方式。
 ### 添加插件
-在你的dubbo api或者或者是dubbo provider模块中添加smart-doc-maven-plugin。当然你只需要选中一种方式即可
+在你的`dubbo api`或者或者是`dubbo provider`模块中添加`smart-doc-maven-plugin`。当然你只需要选中一种方式即可
 ```xml
 <plugin>
     <groupId>com.github.shalousun</groupId>
@@ -45,7 +47,7 @@ smart-doc本着使用简单的原则开发了maven插件和gradle，通过插件
 </plugin>
 ```
 ### 添加smart-doc所需配置文件
-在你的dubbo api或者或者是dubbo provider模块reources中添加smart-doc.json配置文件
+在你的`Dubbo API`或者或者是`dubbo provider`模块`reources`中添加`smart-doc.json`配置文件
 
 ```json
 {
@@ -61,11 +63,12 @@ smart-doc本着使用简单的原则开发了maven插件和gradle，通过插件
   "rpcConsumerConfig":"src/main/resources/consumer-example.conf"//文档中添加dubbo consumer集成配置，用于方便集成方可以快速集成
 }
 ```
-关于smart-doc如果你生成文档需要更详细的配置请常看官方项目wiki的其它文档
+关于`smart-doc`如果你生成文档需要更详细的配置请常看官方其它文档
 
 **rpcConsumerConfig：**
 
-如果下你想让dubbo consumer集成更加快速，你可以将集成配置示例`consumer-example.conf`中，Smart-doc会将该示例直接输出到文档中。
+如果下你想让`dubbo consumer`集成更加快速，你可以将集成配置示例`consumer-example.conf`中，
+`smart-doc`会将该示例直接输出到文档中。
 
 ```
 dubbo:
@@ -79,10 +82,11 @@ dubbo:
     name: dubbo-consumer
 ```
 ## dubbo接口扫描
-上面提到了smart-doc支持单独去扫描dubbo api或者dubbo provider。在扫描原理是主要通过识别@dubbo注释tag(idea可以支持添加自定义注释tag提示可以参考smart-doc wiki文档介绍)或dubbo的 @service注解。
+上面提到了`smart-doc`支持单独去扫描`dubbo api`或者`dubbo provider`。在
+扫描原理是主要通过识别`smart-doc`官方自定义`@dubbo`注释`tag`或`Dubbo`官方的`@service`注解。
 
 ### 扫描dubbo api
-dubbo api通常都是很简洁的dubbo接口定义，如果你需要让smart-doc扫描到dubbo接口，那么需要加上@dubbo注释tag。示例如下：
+`dubbo api`通常都是很简洁的`Dubbo`接口定义，如果你需要让`smart-doc`扫描到`Dubbo`接口，那么需要加上`@dubbo`注释`tag`。示例如下：
 
 ```java
 /**
@@ -112,7 +116,7 @@ public interface UserService {
 }
 ```
 #### 扫描dubbo provider
-如果想通过dubbo provider生成rpc接口文档的情况，你不需要加任何的其他注释tag，smart-doc自动扫描@service注解完成。
+如果想通过`dubbo provider`生成`RPC`接口文档的情况，你不需要加任何的其他注释`tag`，`smart-doc`自动扫描`@service`注解完成。
 
 ```java
 /**
@@ -152,8 +156,8 @@ public class UserServiceImpl implements UserService {
 }
 ```
 ## 生成操作
-直接通过maven命令运行插件的文档生成命令或者在idea中直接单击插件的可视化命令即可。
+直接通过`mvc`命令运行插件的文档生成命令或者在`IDEA`中直接单击插件的可视化命令即可。
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20200705230512435.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3NoYWxvdXN1bg==,size_16,color_FFFFFF,t_70)
 
-运行rpc-html等就能生成dubbo rpc文档
+运行`rpc-html`等就能生成`Dubbo RPC`文档
 

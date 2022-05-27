@@ -1,4 +1,130 @@
 # Changelog
+## Version: 2.4.2
+- Update date: 2022-04-04
+- update content:
+ 1. Modify the problem of incomplete automatic resolution of static constants in 2.4.1. 
+ 2. Add header automatic constant resolution. 
+ 3. Modify the https://github.com/smart-doc-group/smart-doc/issues/215 of generic inheritance resolution in some special cases. 
+ 4. Optimizes the handling of special greater-than and less-than symbols in documents.
+
+## Version: 2.4.1
+- Update date: 2022-03-26
+- update content:
+  1. Custom ResponseFields New replaceName configuration supports replacement of field names. 
+  2. Fix the error bug of getting non-@ param annotation tag value. 
+  3. Supports automatic parsing of static constants without using apiConstants for configuration. 
+  4. Fix dubbo RPC
+
+## Version: 2.4.0
+- Update date: 2022-03-06
+- update content:
+ 1. Support the resolution of field multi-generic nested private B < K, V > body
+
+## Version: 2.3.9
+- Update date: 2022-02-26
+- update content:
+ 1. Supports pushing deprecated interface tags to torna. 
+ 2. The RPC mock is perfect. 
+ 3. The dubbo interface documentation supports exporting dictionaries. 4. Support for Solon, https://gitee.com/noear/solon.
+
+## Version: 2.3.8
+- Update date: 2022-02-19
+- update content:
+ 1. Multi-level inheritance resolution is supported. 
+ 2. Optimize the generation of postman post request documents.
+
+## Version: 2.3.7
+- Update date: 2022-01-17
+- update content:
+ 1. JAX-RS is supported.
+ 2. Optimize the loading of project files. 
+ 3. Solve the bug that the file data is not obtained is a data error.
+
+## Version: 2.3.6
+- Update date: 2022-01-02
+- update content:
+ 1. The serverUrl no longer forces the protocol to be set when exporting postman. 
+ 2. Error in pushing torna data after modifying responseBody Advice.   
+ 3. Fixes an issue where the gradle plugin cannot add include and exclude to KTs scripts.
+
+## Version: 2.3.5
+- Update date: 2021-12-18
+- update content:
+ 1. Modify the extra double quotes for the author name. 
+ 2. Fixed an issue where interface constants were treated as fields.  
+ 3. Enhance the plug-in's filtering of the old version's dependent jar to prevent the new version's qdox parsing error.
+
+## Version: 2.3.4
+- Update date: 2021-12-05
+- update content:
+ 1. Fix the bug that @NotEmpty is placed at the front of the field, and other annotations behind it will not be analyzed. 
+ 2. The plugin enhances the projectName setting. 
+ 3. Enhance the filtering of the plug-in to the old version dependency jar to prevent the new version qdox from resolving to some old dependencies with errors.
+
+## Version: 2.3.3
+- Update date: 2021-11-29
+- update content:
+ 1. Offset DateTime is supported. 
+ 2. Fix the bug that the directory is not displayed completely after the HTML document search is cleared. 
+ 3. Fix the problem of HTML document directory sequence disorder when non-grouping is used. 
+ 4. Fix English request header escaping problem.
+
+## Version: 2.3.2
+- Update date: 2021-11-21
+- update content:
+  1. Fix the directory anchor error after searching on the debug page.
+  2. Fix the type conversion error when inputting basic type arrays such as List<String> when generating openapi.
+  3. Optimize the display of generic types. When the actual parameter type of the generic type is the basic type, it is directly displayed as the basic type.
+  4. Added ignoring of @RequestAttribute parameter.
+  5. Fix the request parameter example error when @RequstBody uses basic types
+
+## Version: 2.3.1
+- Update date: 2021-11-13
+- update content:
+  1. Fix the bug that the Chinese value of the request header is not supported for debugging.
+  2. Fix the problem that the response custom tag setting returns unformatted line break.
+  3. Fix the problem that the designated mock of the enumeration type field does not take effect.
+  4. Added ignoring the @SessionAttribute parameter.
+  5. Support the controller to implement the interface and use the default method.
+
+## Version: 2.3.0
+- Update date: 2021-11-07
+- update content:
+  1. Fix the problem of missing search.js files when creating html documents.
+  2. Fix the problem that only the first one takes effect when multiple packages are configured in packageFilters.
+  3. Fix the curl command error on the debug page.
+  4. Fix the bug that the data does not take effect after setting the download file interface and the download mark.
+  5. Optimize the random value generation of some common fields.
+
+## Version: 2.2.9
+- Update date: 2021-10-31
+- update content:
+  1. Fix the problem of uploading errors when generating openapi files.
+  2. Fix the problem that the torna parameter pushed by the file upload interface is placed in the query parameter list.
+  3. Modify the problem that the List<T> type parameter is pushed to Torna incorrectly
+  4. Optimize the outPath configuration. When only using torna push, it is no longer required to configure the outPath item.
+
+## Version: 2.2.8
+- Update date: 2021-10-07
+- update content:
+  1. Fix the problem that the anchor point jumps incorrectly when there is no interface comment in the html document.
+  2. Fix the problem that the service port is configured as a variable when exporting postman.
+
+## Version: 2.2.7
+- Update date: 2021-09-12
+- update content:
+  1. Fix the css connection error of dubbo document.
+  2. Fix the grouping error after grouping.
+  3. Fix the bug that the path constant similarity is replaced incorrectly.
+  4. JSR303 group optimization, the group field marked with Null will no longer be displayed in the document.
+
+## Version: 2.2.6
+- Update date: 2021-09-05
+- update content:
+  1. Fix the link error of html document static resource.
+  2. The group is not displayed when the group is not configured.
+  3. Fix the search error of the catalog item after grouping.
+  4. Optimize the maven plugin prompt.
 
 ## Version: 2.2.5
 - Update date: 2021-08-28

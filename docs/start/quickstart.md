@@ -31,12 +31,14 @@ For multi-module maven, put the smart-doc plug-in configuration into the pom of 
         <!--smart-doc implements automatic analysis of the dependency tree to load the source code of third-party dependencies. If some framework dependency libraries are not loaded, an error is reported, then use excludes to exclude-->
         <excludes>
             <!--The format is: groupId: artifactId; refer to the following-->
+            <!--Regular expressions can also be used, such as: com.google:.* -->
             <exclude>com.google.guava:guava</exclude>
         </excludes>
         <!--Since version 1.0.8, the plugin provides includes support-->
         <!--smart-doc can automatically analyze the dependency tree to load all dependent source code. In principle, it will affect the efficiency of document construction, so you can use includes to let the plugin load the components you configure.-->
         <includes>
             <!--The format is: groupId: artifactId; refer to the following-->
+            <!--Regular expressions can also be used, such as: com.google:.* -->
             <include>com.alibaba:fastjson</include>
             <!-- If includes is configured, paging using mybatis-plus requires the source package used by include -->
             <include>com.baomidou:mybatis-plus-extension</include>
@@ -88,7 +90,7 @@ mvn -Dfile.encoding=UTF-8 smart-doc:torna-rpc
 
 #### Use in IDEA
 
-![idea中smart-doc-maven插件使用](https://gitee.com/smart-doc-team/smart-doc-maven-plugin/raw/master/images/idea.png "maven_plugin_tasks.png")
+![use smart-doc-maven in idea](https://gitee.com/smart-doc-team/smart-doc-maven-plugin/raw/master/images/idea.png "maven_plugin_tasks.png")
 
 #### Building
 
@@ -97,8 +99,8 @@ You could build with the following commands. (Java 1.8 is required to build the 
 ```bash
 mvn clean install -Dmaven.test.skip=true
 ```
-
-
+The official provides an example of SpringBoot integrating smart-doc to generate documentation, which you can download to experience.
+[Smart-doc Samples](https://github.com/shalousun/smart-doc-demo.git)
 ## Gradle plugin
 
 Using the plugins DSL:
@@ -195,7 +197,7 @@ gradle smartDocRpcAdoc
 #### Use IDEA
 On Use IntelliJ IDE, if you have added smart-doc-gradle-plugin to the project, you can directly find the plugin smart-doc plugin and click to generate API documentation.
 
-![idea中smart-doc-gradle插件使用](../_images/idea.png "usage.png")
+![smart-doc-gradle in idea](../_images/idea.png "usage.png")
 
 #### Building
 you can build with the following commands. (Java 1.8 is required to build the master branch)

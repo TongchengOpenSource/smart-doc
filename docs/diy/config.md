@@ -19,31 +19,32 @@ Example of a complete configuration file
   "allInOne": true, // whether to merge documents into one file, generally recommended as true
   "outPath": "D: // md2", // Specify the output path of the document
   "coverOld": true, // Whether to overwrite old files, mainly used for mardown file overwrite
-  "style":"xt256", //set highlight
-  "createDebugPage": true,//Create a page that can be used to test your APIs like swagger
-  "language":"ENGLISH",//support ENGLISH and CHINESE
-  "packageFilters": "", // controller package filtering, multiple package names separated by commas
+   "createDebugPage": true,//Create a page that can be used to test your APIs like swagger
+   "packageFilters": "", // controller package filtering, multiple package names separated by commas
   "md5EncryptedHtmlName": false, // only used if each controller generates an html file
+  "style":"xt256", //set highlight
   "projectName": "smart-doc", // Configure your own project name
+  "framework": "spring",//smart-doc supports the documents of spring and dubbo frameworks by default. The default framework is used without configuration. Currently, spring, dubbo, JAX-RS, and Solon are supported
   "skipTransientField": true, // Not currently implemented
-  "requestFieldToUnderline":true, //convert request field to underline
-  "responseFieldToUnderline":true,//convert response field to underline
   "sortByTitle":false,//Sort by interface title, the default value is false
   "showAuthor":true,// display author,default is true
-  "inlineEnum":true,// Set to true to display enumeration details in the parameter table
-  "recursionLimit":7,// Set the number of recursive executions to avoid stack overflow, the default is 7
-  "allInOneDocFileName":"index.html",//Customize the output document name
-  "requestExample":"true",//Whether to display the request example in the document, the default value is true.
-  "responseExample":"true",//Whether to display the response example in the document, the default is true.
+  "requestFieldToUnderline":true, //convert request field to underline since 1.8.7
+  "responseFieldToUnderline":true,//convert response field to underline since 1.8.7
+  "inlineEnum":true,// Set to true to display enumeration details in the parameter table since 1.8.8
+  "recursionLimit":7,// Set the number of recursive executions to avoid stack overflow, the default is 7 since 1.8.8
+  "allInOneDocFileName":"index.html",//Customize the output document name since 1.9.0
+  "requestExample":"true",//Whether to display the request example in the document, the default value is true. since 1.9.0
+  "responseExample":"true",//Whether to display the response example in the document, the default is true. since 1.9.0
+  "urlSuffix":".do",//Support URL suffixes for Spring MVC legacy projects,@since 2.1.0
   "requestParamsTable": true, //@since 2.2.5,Whether to display the request params table in the document, the default value is true.
   "responseParamsTable": true, //@since 2.2.5,Whether to display the response params table in the document, the default is true.
-  "displayActualType": false,//display actual type of generic,
   "urlSuffix":".do",//Support the url suffix of the old SpringMVC project,@since 2.1.0
-  "appKey": "xxx",// torna appKey, @since 2.0.9
+  "displayActualType": false,//display actual type of generic,
   "appToken": "xxx", //torna appToken,@since 2.0.9
-  "secret": "xx",//torna secret，@since 2.0.9
   "isReplace":true, //torna replace doc @since 2.2.4
   "openUrl": "torna server/api/",//torna server url,@since 2.0.9
+  "debugEnvName":"test", //torna test environment name
+  "debugEnvUrl":"http://127.0.0.1",//torna test url
   "tornaDebug":false, // show log while set true
   "ignoreRequestParams":[ //The request parameter object will be discarded when generating the document.@since 1.9.2
        "org.springframework.ui.ModelMap"
@@ -173,7 +174,8 @@ Set the path prefix, such as configuring Servlet ContextPath.
 * type:`Boolean`
 * default: `flase`
 
-Whether to enable strict mode.
+If strict mode is set to true, 
+Smart-doc enforces that the public methods of every interface in the code have comments.
 ```json
 {
     "isStrict": true
@@ -197,7 +199,7 @@ Whether to merge the documents into one file, it is generally recommended to be 
 * type:`String`
 * default: `null`
 
-Specify the output path of the document.
+Used to set the output path of the API document.
 ```json
 {
     "outPath": "D://md2"
@@ -222,7 +224,8 @@ Whether to overwrite old files, mainly used for markdown file overwriting.
 * default: `false`
 * @since `2.0.0`
 
-smart-doc supports the creation of testable html pages and only works in AllInOne mode.
+smart-doc supports the creation of pages for debugging interfaces similar to swagger ui.
+Of course, this can only be used in AllInOne mode.
 ```json
 {
     "createDebugPage": false
@@ -234,7 +237,7 @@ smart-doc supports the creation of testable html pages and only works in AllInOn
 * type:`String`
 * default: `null`
 
-Controller packet filtering, multiple packets are separated by English commas.
+controller package filtering, multiple package names separated by commas.
 > PS: Since 2.2.2, we need to adopt regularity: com.test.controller.*
 ```json
 {
@@ -271,7 +274,7 @@ It is only used when each controller generates an html file.
 * type:`String`
 * default: `null`
 
-It is only used when each controller generates an html file.
+Configure your own project name.
 ```json
 {
     "projectName": "smart-doc"
@@ -296,7 +299,7 @@ Sort by interface title.
 * type:`Boolean`
 * default: `true`
 
-Whether to display the name of the interface author.
+Display the name of the interface author.
 ```json
 {
      "showAuthor": false
@@ -334,7 +337,7 @@ Automatically convert the camel case input parameter field to underscore format 
 * default: `false`
 * @since `1.8.8`
 
-Whether to display the enumeration details in the parameter table.
+Display the enumeration details in the parameter table.
 ```json
 {
     "inlineEnum": true
@@ -347,7 +350,7 @@ Whether to display the enumeration details in the parameter table.
 * default: `7`
 * @since `1.8.8`
 
-Set the number of allowed recursive executions to avoid some object resolution card owners.
+Set the number of recursive executions to avoid stack overflow.
 ```json
 {
     "recursionLimit": 7
@@ -360,7 +363,7 @@ Set the number of allowed recursive executions to avoid some object resolution c
 * default: `index.html`
 * @since `1.9.0`
 
-It is only used when each controller generates an html file.
+Customize the output document name.
 ```json
 {
     "allInOneDocFileName": "index.html"
@@ -438,7 +441,7 @@ Whether to automatically display the real short class name of the generic type i
 * default: `null`
 * @since `2.0.9`
 
-Torna platform docks appKey.
+AppKey required to push documents to TORNA platform.
 ```json
 {
     "appKey": "20201216788835306945118208"
@@ -451,7 +454,7 @@ Torna platform docks appKey.
 * default: `null`
 * @since `2.0.9`
 
-torna platform appToken.
+AppToken required to push documents to TORNA platform.
 ```json
 {
     "appToken": "c16931fa6590483fb7a4e85340fcbfef"
@@ -529,7 +532,7 @@ Push torna configuration interface service address.
 * default: `true`
 * @since `2.0.9`
 
-Whether to print the torna push log.
+Print log when pushing documents to TORNA platform .
 ```json
 {
     "tornaDebug": true

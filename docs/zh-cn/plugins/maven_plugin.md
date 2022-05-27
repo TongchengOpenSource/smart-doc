@@ -1,17 +1,22 @@
-从smart-doc 1.7.9开始官方提供了maven插件，可以通过在项目中集成smart-doc的maven插件，然后运行插件直接生成文档。smart-doc-maven-plugin 1.0.8开始支持dubbo rpc文档生成。
+从`smart-doc 1.7.9`开始官方提供了`Maven`插件，可以通过在项目中集成`smart-doc`的`Maven`插件，然后运行插件直接生成文档。
+`smart-doc-maven-plugin 1.0.8`开始支持`Dubbo RPC`文档生成。
 # 环境要求
-- maven 3.3.9+
-- jdk 1.8+
+- `Maven` 3.3.9+
+- `JDK`1.8+
 
 # 插件使用范围
-在smart-doc-maven-plugin 1.0.2以前的版本，在多模块的maven项目中使用插件后，smart-doc的文档解析存在着各种问题，自smart-doc-maven-plugin 1.0.2插件开始，我们在插件上做了很多努力，从1.0.2版本开发的插件不仅解决了maven多模块的问题，并且使用插件后更会为smart-doc带来更强的源码加载能力，插件为smart-doc赋能，使得在使用插件的情况下，smart-doc的文档分析能力增强的很多。也建议使用旧版本smart-doc-maven-plugin旧版本的用户立即升级到最新版本。后续在使用smart-doc时推荐采用插件的方式。
+在`smart-doc-maven-plugin 1.0.2`以前的版本，在多模块的`Maven`项目中使用插件后，`smart-doc`的文档解析存在着各种问题，
+自`smart-doc-maven-plugin 1.0.2`插件开始，我们在插件上做了很多努力，
+从`1.0.2`版本开发的插件不仅解决了`Maven`多模块的问题，并且使用插件后更会为`smart-doc`带来更强的源码加载能力，
+插件为`smart-doc`赋能，使得在使用插件的情况下，`smart-doc`的文档分析能力增强的很多。也建议使用旧版本`smart-doc-maven-plugin`旧版本的
+用户立即升级到最新版本。后续在使用`smart-doc`时推荐采用插件的方式。
 
 
 使用参考如下：
 
 # 添加插件
 
-```
+```xml
 <plugin>
     <groupId>com.github.shalousun</groupId>
     <artifactId>smart-doc-maven-plugin</artifactId>
@@ -19,17 +24,20 @@
     <configuration>
         <!--指定生成文档的使用的配置文件,配置文件放在自己的项目中-->
         <configFile>./src/main/resources/smart-doc.json</configFile>
-        <!--指定项目名称-->
-        <projectName>测试</projectName>
+        <!--指定项目名称，推荐使用动态参数，例如${project.description}-->
+        <!--如果smart-doc.json中和此处都未设置projectName，2.3.4开始，插件自动采用pom中的projectName作为设置-->
+        <projectName>${project.description}</projectName>
         <!--smart-doc实现自动分析依赖树加载第三方依赖的源码，如果一些框架依赖库加载不到导致报错，这时请使用excludes排除掉-->
         <excludes>
             <!--格式为：groupId:artifactId;参考如下-->
+            <!--也可以支持正则式如：com.alibaba:.* -->
             <exclude>com.alibaba:fastjson</exclude>
         </excludes>
-        <!--自1.0.8版本开始，插件提供includes支持,配置了includes后插件会按照用户配置加载而不是自动加载，因此使用时需要注意-->
+        <!--includes配置用于配置加载外部依赖源码,配置后插件会按照配置项加载外部源代码而不是自动加载所有，因此使用时需要注意-->
         <!--smart-doc能自动分析依赖树加载所有依赖源码，原则上会影响文档构建效率，因此你可以使用includes来让插件加载你配置的组件-->
         <includes>
             <!--格式为：groupId:artifactId;参考如下-->
+            <!--也可以支持正则式如：com.alibaba:.* -->
             <include>com.alibaba:fastjson</include>
         </includes>
     </configuration>
@@ -45,11 +53,16 @@
     </executions>
 </plugin>
 ```
-使用插件后就不需要在项目的`maven dependencies`中添加smart-doc的依赖了，直接使用插件即可。如果需要保留原有单元测试，需要引用smart-doc的依赖。
+使用插件后就不需要在项目的`maven dependencies`中添加`smart-doc`的依赖了，直接使用插件即可。如果需要保留原有单元测试，
+需要引用`smart-doc`的依赖。
 
-**提示：** smart-doc-maven-plugin 1.0.2以下版本强烈建议升级到最新。
+> 请勿盲目复制上述maven插件的配置项，请先仔细阅读每个配置项的注释，然后根据自己项目情况去配置。
+否则可能造成生成文档时无法加载源代码注释。
+
+
 # 添加smart-doc生成文档的配置
-在项目中添加创建一个`smart-doc.json`配置文件，插件读取这个配置来生成项目的文档，这个配置内容实际上就是以前采用单元测试编写的`ApiConfig`转成json后的结果，因此关于配置项说明可以参考原来单元测试的配置。
+在项目中添加创建一个`smart-doc.json`配置文件，插件读取这个配置来生成项目的文档，
+这个配置内容实际上就是以前采用单元测试编写的`ApiConfig`转成`json`后的结果，因此关于配置项说明可以参考原来单元测试的配置。
 
 **最小配置单元：**
 ```
@@ -66,12 +79,12 @@
   "isStrict": false, //是否开启严格模式
   "allInOne": true,  //是否将文档合并到一个文件中，一般推荐为true
   "outPath": "D://md2", //指定文档的输出路径
-  "coverOld": true,  //是否覆盖旧的文件，主要用于mardown文件覆盖
+  "coverOld": true,  //是否覆盖旧的文件，主要用于markdown文件覆盖
   "createDebugPage": true,//@since 2.0.0 smart-doc支持创建可以测试的html页面，仅在AllInOne模式中起作用。
   "packageFilters": "",//controller包过滤，多个包用英文逗号隔开，2.2.2开始需要采用正则：com.test.controller.*
-  "md5EncryptedHtmlName": false,//只有每个controller生成一个html文件是才使用
+  "md5EncryptedHtmlName": false,//只有每个controller生成一个html文件时才使用
   "style":"xt256", //基于highlight.js的代码高设置,可选值很多可查看码云wiki，喜欢配色统一简洁的同学可以不设置
-  "projectName": "smart-doc",//配置自己的项目名称
+  "projectName": "smart-doc",//配置自己的项目名称，不设置则插件自动获取pom中的projectName
   "skipTransientField": true,//目前未实现
   "sortByTitle":false,//接口标题排序，默认为false,@since 1.8.7版本开始
   "showAuthor":true,//是否显示接口作者名称，默认是true,不想显示可关闭
@@ -180,8 +193,8 @@
   }
 }
 ```
-上面的json配置实例中只有"outPath"是必填项。其它的配置根据自身项目需要来配置。
-**注意：** 对于老用户完全可以通过`Fastjson`或者是`Gson`库将`ApiConfig`转化成json配置。
+上面的`json`配置实例中只有`"outPath"`是必填项。其它的配置根据自身项目需要来配置。
+**注意：** 对于老用户完全可以通过`Fastjson`或者是`Gson`库将`ApiConfig`转化成`json`配置。
 # 运行插件生成文档
 ## 5.1 使用maven命令行
 ```
@@ -209,14 +222,14 @@ mvn -Dfile.encoding=UTF-8 smart-doc:rpc-adoc
 // 生成dubbo接口文档推送到torna
 mvn -Dfile.encoding=UTF-8 smart-doc:torna-rpc
 ```
-在使用mvn命令构建是如果想查看debug日志，debug日志也能够帮助你去分析smart-doc-maven插件的源码加载情况，可以加一个`-X`参数。例如：
+在使用`mvn`命令构建是如果想查看`debug`日志，`debug`日志也能够帮助你去分析`smart-doc-maven`插件的源码加载情况，可以加一个`-X`参数。例如：
 ```
 mvn -X -Dfile.encoding=UTF-8 smart-doc:html
 ```
 
-**注意：** 尤其在window系统下，如果实际使用maven命令行执行文档生成，可能会出现乱码，因此需要在执行时指定`-Dfile.encoding=UTF-8`。
+**注意：** 尤其在`window`系统下，如果实际使用`mvn`命令行执行文档生成，可能会出现乱码，因此需要在执行时指定`-Dfile.encoding=UTF-8`。
 
-查看maven的编码
+查看`maven`的编码
 ```
 # mvn -version
 Apache Maven 3.3.3 (7994120775791599e205a5524ec3e0dfe41d4a06; 2015-04-22T19:57:37+08:00)
@@ -226,17 +239,18 @@ Java home: D:\ProgramFiles\Java\jdk1.8.0_191\jre
 Default locale: zh_CN, platform encoding: GBK
 OS name: "windows 10", version: "10.0", arch: "amd64", family: "dos"
 ```
-## 5.2 在idea中生成文档
-![idea中smart-doc-maven插件使用](https://gitee.com/smart-doc-team/smart-doc-maven-plugin/raw/master/images/idea.png "maven_plugin_tasks.png")
+## 5.2 在`IDEA`中生成文档
+![idea中smart-doc-maven插件使用](../../_images/idea-maven-plugin.png "maven_plugin_tasks.png")
 
 # 插件项目
 [smart-doc的maven插件源代码](https://gitee.com/smart-doc-team/smart-doc-maven-plugin)
-# maven多模块中使用插件
+# `Maven`多模块中使用插件
 
-在独立的maven项目中使用smart-doc，当前可以说是如丝般爽滑。但是在maven的多模块项目中使用smart-doc-maven-plugin时，很多同学就有疑问了，
-smart-doc插件我到底是放在什么地方合适？是放在maven的根pom中？还是说各个需要生成api接口文档的模块中呢？下面就来说说根据不同的项目结构应该怎么放插件。
+在独立的`Maven`项目中使用`smart-doc`，当前可以说是如丝般爽滑。但是在`Maven`的多模块项目中使用`smart-doc-maven-plugin`时，很多同学就有疑问了，
+`smart-doc`插件我到底是放在什么地方合适？是放在`Maven`的根`pom.xml`中？还是说各个需要生成`API`接口文档的模块中呢？
+下面就来说说根据不同的项目结构应该怎么放插件。
 
-完全的父子级关系的maven项目(如果不知道着什么是完全父子级就去搜索学习吧)：
+完全的父子级关系的`maven`项目(如果不知道着什么是完全父子级就去搜索学习吧)：
 
 ```
 ├─parent
@@ -248,9 +262,11 @@ smart-doc插件我到底是放在什么地方合适？是放在maven的根pom中
 │   pom.xml
 └─pom.xml
 ```
-上面的maven结构假设是严格按照父子级来配置的，然后web1和web2都依赖于common，这种情况下如果跑到web1下或者web2目录下直接执行mvn命令来编译
-都是无法完成的。需要在根目录上去执行命令编译命令才能通过，而smart-doc插件会通过类加载器去加载用户配置的一些类，因此是需要调用编译的和执行命令
-是一样的。这种情况下建议你建smart-doc-maven-plugin放到根pom中，在web1和web2中放置各自的smart-doc.json配置。然后通过-pl去指定让smart-doc生成指定
+上面的`maven`结构假设是严格按照父子级来配置的，然后`web1`和`web2`都依赖于`common`，
+这种情况下如果跑到`web1`下或者`web2`目录下直接执行`mvn`命令来编译
+都是无法完成的。需要在根目录上去执行命令编译命令才能通过，而`smart-doc`插件会通过类加载器去加载用户配置的一些类，因此是需要调用编译的和执行命令
+是一样的。这种情况下建议你建`smart-doc-maven-plugin`放到根`pom.xml`中，在`web1`和`web2`中放置各自的`smart-doc.json`配置。
+然后通过`-pl`去指定让`smart-doc`生成指定
 模块的文档。操作命令如下：
 
 ```
@@ -260,14 +276,15 @@ mvn smart-doc:markdown -Dfile.encoding=UTF-8  -pl :web1 -am
 mvn smart-doc:markdown -Dfile.encoding=UTF-8  -pl :web2 -am
 ```
 
-如果不是按照严格父子级构建的项目，还是以上面的结构例子来说。common模块放在类parent中，但是common的pom并没有定义parent。
-common模块也很少变更，很多公司内部可能就直接把common单独depoly上传到了公司的nexus仓库中，这种情况下web1和web2虽然依赖于common，
-但是web1和web2都可以在web1和web2目录下用命令编译，这种情况下直接将smart-doc-maven-plugin单独放到web1和web2中是可以做构建生成文档的。
+如果不是按照严格父子级构建的项目，还是以上面的结构例子来说。`common`模块放在类`parent`中，但是`common`的`pom.xml`并没有定义`parent`。
+`common`模块也很少变更，很多公司内部可能就直接把`common`单独`depoly`上传到了公司的`Nexus`仓库中，这种情况下`web1`和`web2`虽然依赖于`common`，
+但是`web1`和`web2`都可以在`web1`和`web2`目录下用命令编译，这种情况下直接将`smart-doc-maven-plugin`单独放到`web1`和`web2`中是可以做构建生成文档的。
 
 [【多模块测试用例参考】](https://gitee.com/smart-doc-team/spring-boot-maven-multiple-module)
 
-**注意：**   **怎么去使用插件并没有固定的模式，最重要的是熟练maven的一些列操作，然后根据自己的项目情况来调整。技巧娴熟就能应对自如。
-对于插件的使用，从smart-doc-maven-plugin 1.2.0开始，插件是能够自动分析生成模块的依赖来加载必要的源码，并不会将所有模块的接口文档合并到一个文档中。** 
+**注意：**   **怎么去使用插件并没有固定的模式，最重要的是熟练`Maven`的一些列操作，然后根据自己的项目情况来调整。技巧娴熟就能应对自如。
+对于插件的使用，从`smart-doc-maven-plugin 1.2.0`开始，插件是能够自动分析生成模块的依赖来加载必要的源码，
+并不会将所有模块的接口文档合并到一个文档中。** 
 
 
 

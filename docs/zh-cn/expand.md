@@ -2,17 +2,20 @@
 
 ## 自定义开发扩展
 
-smart-doc将扫描后分析后的数据做了数据开放接口，开放了两种类型的api数据结构，一种是平铺可直接渲染的，另外一种api的参数关系准换成了树状结构的方式。可以根据自己需要去选择使用不同的数据接口。
+`smart-doc`将扫描后分析后的数据做了数据开放接口，开放了两种类型的`API`数据结构，一种是平铺可直接渲染的，
+另外一种`API`的参数关系准换成了树状结构的方式。可以根据自己需要去选择使用不同的数据接口。
 
 开发案例：
-1. 如使用smart-doc的开放接口获取到数据后，开发工具生成一个jemeter性能测试脚本。
-2. 获取到api接口文档的数据后，开发工具生成自动化测试脚本
-3. 开发工具将smart-doc的数据导入到一些api文档管理系统( **ps:不要过多指望smart-doc官方去对接市面上的开源文档管理系统，因为没有谁成为了行业技术标准而让我们可以动心去支持** )
+1. 如使用`smart-doc`的开放接口获取到数据后，开发工具生成一个`Jemeter`性能测试脚本。
+2. 获取到`API`接口文档的数据后，开发工具生成自动化测试脚本
+3. 开发工具将`smart-doc`的数据导入到一些`API`文档管理系统( **ps:不要过多指望`smart-doc`官方去对接市面上的开源文档管理系统，因为没有谁成为了行业技术标准而让我们可以动心去支持** )
 
-开发集成推荐：对于使用smart-doc的开放数据来开发工具的同学，建议自己单独建工具项目将smart-doc作为开源组件依赖进入。如果你fork后修改很难跟随官方升级smart-doc这个底层组件。
+开发集成推荐：对于使用`smart-doc`的开放数据来开发工具的同学，建议自己单独建工具项目将`smart-doc`作为开源组件依赖进入。
+如果你`fork`后修改很难跟随官方升级`smart-doc`这个底层组件。
 ### 文档数据获取
-自1.7.0版本开始smart-doc开放了扫描源代码后生成的api接口相关信息数据，即smart-doc当前用于渲染markdown、html等格式文档的数据，获取数据
-的操作很简单,如果自己团队有能力自己开发文档管理系统，那你完全从smart-doc获取到的接口文档数据存入到自己的文档管理系统中，smart-doc对每个Controller的名称和每个接口方法名称都自动做了md5签名，基本保证了唯一性，你完全可以直接将文档数据结构化后存入到文档管理系统在做管理和展示。
+自`1.7.0`版本开始`smart-doc`开放了扫描源代码后生成的`API`接口相关信息数据，即`smart-doc`当前用于渲染`markdown`、`html`等格式文档的数据，
+获取数据 的操作很简单,如果自己团队有能力自己开发文档管理系统，那你完全从`smart-doc`获取到的接口文档数据存入到自己的文档管理系统中，
+`smart-doc`对每个`Controller`的名称和每个接口方法名称都自动做了`md5`签名，基本保证了唯一性，你完全可以直接将文档数据结构化后存入到文档管理系统在做管理和展示。
 
 ```java
 /**
@@ -96,21 +99,22 @@ revisionLogs|array|文档变更记录|-
 └─remarks|string|description|-
 
 
- **注意：** 1.7.9后获取数据接口有变更，需要自行渲染模板的，以最终数据为重。`ApiDataBuilder`。
+ **注意：** `1.7.9`后获取数据接口有变更，需要自行渲染模板的，以最终数据为重。`ApiDataBuilder`。
 
 
 
  ## 其他框架文档解析开发
 
 
- smart-doc目前支持Spring技术栈web和Apache Dubbo层面的解析。由于官方开源人力有限，因此无法去满足解析其他的web层框架。
-当然要web层面的框架，一般需要框架需要满足下面的条件：
-- 框架使用明确的注解路由(通俗就是说类似Spring的Controller有明确的注解申明path路径)，也可以是类似Jakarta RS-API 2.x规范的实现框架。
+ `smart-doc`目前支持`Spring`技术栈`Web`和`Apache Dubbo`层面的解析。由于官方开源人力有限，因此无法去满足解析其他的`web`层框架。
+当然要`Web`层面的框架，一般需要框架需要满足下面的条件：
+- 框架使用明确的注解路由(通俗就是说类似`Spring`的`Controller`有明确的注解申明`path`路径)，也可以是类似`Jakarta RS-API 2.x`规范的实现框架。
 
 下面来看下实现支持编写。
 
 ### 编写框架的文档构建解析实现模板
-这里拿当前Java比较火的一个云原生框架`Quarkus`为例。如果在smart-doc上支持`Quarkus`。那么首先在smart-doc的`com.power.doc.template`包下新建一个`QuarkusDocBuildTemplate`, `QuarkusDocBuildTemplate`实现`IDocBuildTemplate`接口。代码如下：
+这里拿当前`Java`比较火的一个云原生框架`Quarkus`为例。如果在`smart-doc`上支持`Quarkus`。
+那么首先在`smart-doc`的`com.power.doc.template`包下新建一个`QuarkusDocBuildTemplate`, `QuarkusDocBuildTemplate`实现`IDocBuildTemplate`接口。代码如下：
 
 ```java
 /**
@@ -145,10 +149,10 @@ public class QuarkusDocBuildTemplate implements IDocBuildTemplate<ApiDoc>{
     }
 }
 ```
-然后自己结合Quarkus的使用和参照目前的SpringBootDocBuildTemplate实现把QuarkusDocBuildTemplate生成接口数据的实现补充完整。
+然后自己结合`Quarkus`的使用和参照目前的`SpringBootDocBuildTemplate`实现把`QuarkusDocBuildTemplate`生成接口数据的实现补充完整。
 
 ### 修改框架支持枚举
-修改com.power.doc.constants中的FrameworkEnum, 添加Quarkus。
+修改`com.power.doc.constants`中的`FrameworkEnum`, 添加`Quarkus`。
 
 ```java
 /**
@@ -179,7 +183,7 @@ public enum FrameworkEnum {
 ```
 
 ### 使用新添加的框架解析
-然后在项目中使用smart-doc时配置自己使用的框架名称。smart-doc默认是spring, 因此新加的框架使用时需要配置中指定。
+然后在项目中使用`smart-doc`时配置自己使用的框架名称。`smart-doc`默认是`Spring`, 因此新加的框架使用时需要配置中指定。
 
 ```json
 {
@@ -190,6 +194,6 @@ public enum FrameworkEnum {
   "framework": "quarkus"
 }
 ```
-开发流程就是这样，主要的难点在于IDocBuildTemplate的实现处理。
+开发流程就是这样，主要的难点在于`IDocBuildTemplate`的实现处理。
 
 

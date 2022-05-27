@@ -5,19 +5,20 @@
 
 ## 最小配置单元
 
-在自己的项目中创建一个json配置文件，smart-doc-maven-plugin/smart-doc-gradle-plugin插件会根据这个配置生成项目的接口文档。 例如在项目中创建/src/main/resources/smart-doc.json。配置内容参考如下。
+在自己的项目中创建一个`json`配置文件，`smart-doc-maven-plugin`或`smart-doc-gradle-plugin`插件会根据这个配置生成项目的接口文档。
+例如在项目中创建`/src/main/resources/smart-doc.json`。配置内容参考如下。
 > **outPath**: 指定文档的输出路径,相对路径时请用./开头，eg:./src/main/resources/static/doc
 ```json
 {
    "outPath": "D://md2" 
 }
 ```
-1. 如果你想把html文档也打包到应用中一起访问，则建议你配置路径为：src/main/resources/static/doc
+1. 如果你想把`html`文档也打包到应用中一起访问，则建议你配置路径为：`src/main/resources/static/doc`
 2. 如果是多个模块则放到需要生成文档的模块中。
 
 ## Maven插件
 
-对于多模块的maven，把smart-doc插件相关配置放到启动模块的pom中。
+对于多模块的`Maven`，把`smart-doc`插件相关配置放到启动模块的`pom.xml`中。
 
 ```xml
 <plugin>
@@ -32,9 +33,10 @@
         <!--smart-doc实现自动分析依赖树加载第三方依赖的源码，如果一些框架依赖库加载不到导致报错，这时请使用excludes排除掉-->
         <excludes>
             <!--格式为：groupId:artifactId;参考如下-->
+            <!--也可以支持正则式如：com.alibaba:.* -->
             <exclude>com.alibaba:fastjson</exclude>
         </excludes>
-        <!--自1.0.8版本开始，插件提供includes支持,配置了includes后插件会按照用户配置加载而不是自动加载，因此使用时需要注意-->
+        <!--includes配置用于配置加载外部依赖源码,配置后插件会按照配置项加载外部源代码而不是自动加载所有，因此使用时需要注意-->
         <!--smart-doc能自动分析依赖树加载所有依赖源码，原则上会影响文档构建效率，因此你可以使用includes来让插件加载你配置的组件-->
         <includes>
             <!--格式为：groupId:artifactId;参考如下-->
@@ -58,10 +60,13 @@
     </executions>
 </plugin>
 ```
+> 请勿盲目复制上述maven插件的配置项，请先仔细阅读每个配置项的注释，然后根据自己项目情况去配置。
+否则可能造成生成文档时无法加载源代码注释。
+
 
 #### Use Maven Command
 
-添加好插件和配置文件后可以直接运行Maven命令生成文档。
+添加好插件和配置文件后可以直接运行`Maven`命令生成文档。
 ```bash
 //生成html
 mvn -Dfile.encoding=UTF-8 smart-doc:html
@@ -93,13 +98,13 @@ mvn -Dfile.encoding=UTF-8 smart-doc:torna-rpc
 
 #### Use in IDEA
 
-![idea中smart-doc-maven插件使用](https://gitee.com/smart-doc-team/smart-doc-maven-plugin/raw/master/images/idea.png "maven_plugin_tasks.png")
+![idea中smart-doc-maven插件使用](../../_images/idea-maven-plugin.png "maven_plugin_tasks.png")
 
 #### Building
 
-如果你需要自己构建smart-doc，那可以使用下面命令，构建需要依赖Java 1.8。
+如果你需要自己构建`smart-doc`，那可以使用下面命令，构建需要依赖`JDK 1.8`及以上版本。
 
-```bash
+```shell
 mvn clean install -Dmaven.test.skip=true
 ```
 
@@ -130,11 +135,11 @@ apply(plugin = "com.github.shalousun.smart-doc")
 
 **插件配置项**
 
-| Option | Default value | Description |
-| ------ | ------------- | ----------- |
-|configFile|src/main/resources/smart-doc.json|插件配置文件|
-|exclude|	无|排除一些无法自定下载的java lib sources,例如:exclude 'org.springframework.boot:spring-boot-starter-tomcat' |
-|include|	无|让插件自定下载指定的java lib sources,例如:include 'org.springframework.boot:spring-boot-starter-tomcat' |
+| Option | Default value                     | Description                                                                                       |
+| ------ |-----------------------------------|---------------------------------------------------------------------------------------------------|
+|configFile| `src/main/resources/smart-doc.json` | 插件配置文件                                                                                            |
+|exclude| 	无                                | 排除一些无法或者是无需自动下载的`java lib sources`,例如:`exclude 'org.springframework.boot:spring-boot-starter-tomcat'` |
+|include| 	无                                | 让插件自动下载指定的`java lib sources`,例如:`include 'org.springframework.boot:spring-boot-starter-tomcat' `     |
 
 Example setting of options:
 ```
@@ -155,7 +160,7 @@ smartdoc {
     include 'com.baomidou:mybatis-plus-extension'
 }
 ```
-对于多模块的gradle，把smart-doc插件相关配置放到根目录build.gradle的subprojects中。
+对于多模块的`Gradle`，把`smart-doc`插件相关配置放到根目录`build.gradle`的`subprojects`中。
 ```
 subprojects{
     apply plugin: 'com.github.shalousun.smart-doc'
@@ -195,12 +200,12 @@ gradle smartDocRpcMarkdown
 gradle smartDocRpcAdoc
 ```
 #### Use IDEA
-当你使用Idea时，可以通过maven Helper插件选择生成何种文档。
+当你使用`IDEA`时，可以通过`Gradle Helper`插件选择生成何种文档。
 
-![idea中smart-doc-gradle插件使用](https://gitee.com/smart-doc-team/smart-doc-gradle-plugin/raw/master/images/idea.png "usage.png")
+![idea中smart-doc-gradle插件使用](../../_images/idea-gradle-plugin.png "usage.png")
 
 #### Building
-如果你需要自己构建，那可以使用下面命令，构建需要依赖Java 1.8。
+如果你需要自己构建，那可以使用下面命令，构建需要依赖`JDK 1.8`及以上版本。
 ```
 // 将gradle插件暗转到本地
 gradle publishToMavenLocal
