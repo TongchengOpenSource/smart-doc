@@ -5,7 +5,7 @@ package com.power.doc.constants;
  *
  * @author Zxq
  *
- * @deprecated 由于Java EE已改名为Jakarta EE，建议升级。
+ * @deprecated Java EE has been renamed to Jakarta EE, an upgrade is recommended.
  * @see JakartaJaxrsAnnotations
  */
 @Deprecated

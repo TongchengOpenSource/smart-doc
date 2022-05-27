@@ -1,7 +1,7 @@
 package com.power.doc.constants;
 
 /**
- * 由于Java EE已改名为Jakarta EE，此类作为{@link JAXRSAnnotations}的升级替换，建议尽快。
+ * Java EE has been renamed Jakarta EE, this class is an upgraded replacement for {@link JAXRSannotations}
  *
  * JAX-RS Annotations
  *
