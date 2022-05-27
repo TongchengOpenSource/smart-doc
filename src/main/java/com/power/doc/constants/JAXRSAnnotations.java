@@ -4,7 +4,11 @@ package com.power.doc.constants;
  * JAX-RS Annotations
  *
  * @author Zxq
+ *
+ * @deprecated 由于Java EE已改名为Jakarta EE，建议升级。
+ * @see JakartaJaxrsAnnotations
  */
+@Deprecated
 public final class JAXRSAnnotations {
 
     private JAXRSAnnotations() {
