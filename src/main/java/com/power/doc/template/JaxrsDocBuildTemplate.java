@@ -31,6 +31,7 @@ import com.power.doc.builder.ProjectDocConfigBuilder;
 import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.constants.DocTags;
 import com.power.doc.constants.JAXRSAnnotations;
+import com.power.doc.constants.JakartaJaxrsAnnotations;
 import com.power.doc.handler.JaxrsHeaderHandler;
 import com.power.doc.handler.JaxrsPathHandler;
 import com.power.doc.helper.FormDataBuildHelper;
@@ -810,7 +811,8 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         classAnnotations.addAll(cls.getAnnotations());
         for (JavaAnnotation annotation : classAnnotations) {
             String annotationName = annotation.getType().getFullyQualifiedName();
-            if (JAXRSAnnotations.JAX_PATH_FULLY.equals(annotationName)) {
+            if (JakartaJaxrsAnnotations.JAX_PATH_FULLY.equals(annotationName)
+                    || JAXRSAnnotations.JAX_PATH_FULLY.equals(annotationName)) {
                 return true;
             }
         }
