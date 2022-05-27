@@ -184,7 +184,7 @@ subprojects{
 }
 ```
 #### Use Gradle command
-```
+```bash
 //生成html
 gradle smartDocRestHtml
 //生成markdown
@@ -213,7 +213,7 @@ gradle smartDocRpcAdoc
 
 #### Building
 如果你需要自己构建，那可以使用下面命令，构建需要依赖`JDK 1.8`及以上版本。
-```
+```bash
 // 将gradle插件暗转到本地
 gradle publishToMavenLocal
 // 将gradle插件发布到自己nexus仓库，自己修改build.gradle中的仓库地址配置
