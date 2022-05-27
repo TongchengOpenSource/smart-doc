@@ -105,14 +105,14 @@ The official provides an example of SpringBoot integrating smart-doc to generate
 `Gradle`中添加插件有两种方式: 一种是`DSL`，高版本`Gradle`推荐直接使用`DSL`，另一种是`legacy`。
 ### Using the plugins DSL
 Using the plugins DSL:
-```
+```gradle
 plugins {
   id "com.github.shalousun.smart-doc" version "[最新版本]"
 }
 ```
 ### Using legacy plugin application
 Using legacy plugin application:
-```
+```gradle
 buildscript {
     repositories {
         maven { 
