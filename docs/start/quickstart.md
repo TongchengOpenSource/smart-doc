@@ -102,32 +102,24 @@ mvn clean install -Dmaven.test.skip=true
 The official provides an example of SpringBoot integrating smart-doc to generate documentation, which you can download to experience.
 [Smart-doc Samples](https://github.com/shalousun/smart-doc-demo.git)
 ## Gradle plugin
-`Gradle`中添加插件有两种方式: 一种是`DSL`，高版本`Gradle`推荐直接使用`DSL`，另一种是`legacy`。
-### Using the plugins DSL
+
 Using the plugins DSL:
 ```gradle
 plugins {
-  id "com.github.shalousun.smart-doc" version "[最新版本]"
+  id "com.github.shalousun.smart-doc" version "[latest]"
 }
 ```
-### Using legacy plugin application
+
 Using legacy plugin application:
 ```gradle
 buildscript {
     repositories {
-        maven { 
-            url 'https://maven.aliyun.com/repository/public' 
-        }
-        maven {
-            url 'https://maven.aliyun.com/repository/gradle-plugin'
-        }
-        maven { 
-            url = uri("https://plugins.gradle.org/m2/") 
-        }
+        maven { url 'https://maven.aliyun.com/nexus/content/groups/public/' }
+        maven { url = uri("https://plugins.gradle.org/m2/") }
         mavenCentral()
     }
     dependencies {
-        classpath 'com.github.shalousun:smart-doc-gradle-plugin:[最新版本]'
+        classpath 'com.github.shalousun:smart-doc-gradle-plugin:[latest]'
     }
 }
 apply(plugin = "com.github.shalousun.smart-doc")
@@ -142,7 +134,7 @@ apply(plugin = "com.github.shalousun.smart-doc")
 |include|	without|Let the plug-in download the specified java lib sources,eg:include 'org.springframework.boot:spring-boot-starter-tomcat' |
 
 Example setting of options:
-```
+```gradle
 smartdoc {
     configFile = file("src/main/resources/smart-doc.json")
     

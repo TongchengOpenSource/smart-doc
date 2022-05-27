@@ -110,20 +110,27 @@ mvn clean install -Dmaven.test.skip=true
 
 
 ## Gradle插件
-
-Using the plugins DSL:
+`Gradle`中添加插件有两种方式: 一种是`DSL`，高版本`Gradle`推荐直接使用`DSL`， 另一种是`legacy`。
+### Using the plugins DSL:
 ```gradle
 plugins {
   id "com.github.shalousun.smart-doc" version "[最新版本]"
 }
 ```
 
-Using legacy plugin application:
+### Using legacy plugin application:
 ```gradle
 buildscript {
     repositories {
-        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
-        maven { url = uri("https://plugins.gradle.org/m2/") }
+        maven { 
+            url 'https://maven.aliyun.com/repository/public' 
+        }
+        maven {
+            url 'https://maven.aliyun.com/repository/gradle-plugin'
+        }
+        maven { 
+            url = uri("https://plugins.gradle.org/m2/") 
+        }
         mavenCentral()
     }
     dependencies {
@@ -142,7 +149,7 @@ apply(plugin = "com.github.shalousun.smart-doc")
 |include| 	无                                | 让插件自动下载指定的`java lib sources`,例如:`include 'org.springframework.boot:spring-boot-starter-tomcat' `     |
 
 Example setting of options:
-```
+```gradle
 smartdoc {
     configFile = file("src/main/resources/smart-doc.json")
     
@@ -161,7 +168,7 @@ smartdoc {
 }
 ```
 对于多模块的`Gradle`，把`smart-doc`插件相关配置放到根目录`build.gradle`的`subprojects`中。
-```
+```gradle
 subprojects{
     apply plugin: 'com.github.shalousun.smart-doc'
     smartdoc {
