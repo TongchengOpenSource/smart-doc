@@ -11,14 +11,14 @@
 `Gradle`中添加插件有两种方式: 一种是`DSL`，高版本`Gradle`推荐直接使用`DSL`，另一种是`legacy`。
 #### Using the plugins DSL
 Using the plugins DSL:
-```
+```gradle
 plugins {
   id "com.github.shalousun.smart-doc" version "[最新版本]"
 }
 ```
 #### Using legacy plugin application
 Using legacy plugin application:
-```
+```gradle
 buildscript {
     repositories {
         maven { 
@@ -50,7 +50,7 @@ apply(plugin = "com.github.shalousun.smart-doc")
 |include|无|`false`| 让插件自定下载指定的`java lib sources`,例如:`include 'org.springframework.boot:spring-boot-starter-tomcat'`   |
 
 Example setting of options:
-```
+```gradle
 smartdoc {
     configFile = file("src/main/resources/smart-doc.json")
     
@@ -65,7 +65,7 @@ smartdoc {
 ```
 对于多模块的`gradle`，把`smart-doc`插件相关配置放到根目录`build.gradle`的`subprojects`中。
 
-```
+```gradle
 subprojects{
     apply plugin: 'com.github.shalousun.smart-doc'
     smartdoc {
@@ -89,13 +89,13 @@ https://gitee.com/smart-doc-team/smart-doc-gradle-plugin-demo
 例如在项目中创建`/src/main/resources/smart-doc.json`。配置内容参考如下。
 
 **最小配置单元:**
-```
+```json
 {
    "outPath": "D://md2" //指定文档的输出路径 相对路径时请写 ./ 不要写 / eg:./src/main/resources/static/doc
 }
 ```
 **详细配置说明:**
-```
+```json
 {
   "serverUrl": "http://127.0.0.1", //服务器地址,非必须。导出postman建议设置成http://{{server}}方便直接在postman直接设置环境变量
   "pathPrefix": "", //设置path前缀,非必须。如配置Servlet ContextPath 。@since 2.2.3
@@ -209,7 +209,7 @@ https://gitee.com/smart-doc-team/smart-doc-gradle-plugin-demo
 使用可参考[【smart-doc-gradle-plugin集成demo】](https://gitee.com/smart-doc-team/smart-doc-gradle-plugin-demo)
 ### Generated document
 #### Use Gradle command
-```
+```bash
 //生成html
 gradle smartDocRestHtml
 //生成markdown
