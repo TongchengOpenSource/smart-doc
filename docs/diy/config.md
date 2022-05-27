@@ -104,7 +104,7 @@ Example of a complete configuration file
        "type": "string",
        "desc": "desc",
        "required": false,
-       "pathPatterns": "*",
+       "pathPatterns": "/**",
        "excludePathPatterns":"/app/page/**",
        "since": "-"
   }],
@@ -117,7 +117,7 @@ Example of a complete configuration file
       "value":"testPath",//default is null
       "required": false,
       "since": "-",
-      "pathPatterns": "*",
+      "pathPatterns": "/**",
       "excludePathPatterns":"/app/page/**"
     },
     {
@@ -128,7 +128,7 @@ Example of a complete configuration file
       "value":"testQuery",
       "required": false,
       "since": "-",
-      "pathPatterns": "*",
+      "pathPatterns": "/**",
       "excludePathPatterns":"/app/page/**"
     }
   ],

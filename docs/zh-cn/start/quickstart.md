@@ -40,6 +40,10 @@
             <!--格式为：groupId:artifactId;参考如下-->
             <!--也可以支持正则式如：com.alibaba:.* -->
             <include>com.alibaba:fastjson</include>
+            <!-- 如果配置了includes的情况下， 使用了mybatis-plus的分页需要include所使用的源码包 -->
+            <include>com.baomidou:mybatis-plus-extension</include>
+            <!-- 如果配置了includes的情况下， 使用了jpa的分页需要include所使用的源码包 -->
+            <include>org.springframework.data:spring-data-commons</include>
         </includes>
     </configuration>
     <executions>
@@ -145,6 +149,10 @@ smartdoc {
     // You can use the include configuration to let the plugin automatically load the specified source.
     // include example
     include 'org.springframework.boot:spring-boot-starter-tomcat'
+    // 使用jpa的分页
+    include 'org.springframework.data:spring-data-commons'
+    // 使用mybatis-plus的分页
+    include 'com.baomidou:mybatis-plus-extension'
 }
 ```
 对于多模块的gradle，把smart-doc插件相关配置放到根目录build.gradle的subprojects中。

@@ -38,6 +38,10 @@ For multi-module maven, put the smart-doc plug-in configuration into the pom of 
         <includes>
             <!--The format is: groupId: artifactId; refer to the following-->
             <include>com.alibaba:fastjson</include>
+            <!-- If includes is configured, paging using mybatis-plus requires the source package used by include -->
+            <include>com.baomidou:mybatis-plus-extension</include>
+            <!-- If includes is configured, paging using jpa requires the source package used by include -->
+            <include>org.springframework.data:spring-data-commons</include>
         </includes>
     </configuration>
     <executions>
@@ -140,6 +144,10 @@ smartdoc {
     // You can use the include configuration to let the plugin automatically load the specified source.
     // include example
     include 'org.springframework.boot:spring-boot-starter-tomcat'
+    // use jpa page
+    include 'org.springframework.data:spring-data-commons'
+    // use mybatis-plus page
+    include 'com.baomidou:mybatis-plus-extension'
 }
 ```
 For multi-module gradle, put the smart-doc plug-in configuration into subprojects of the root directory build.gradle.
