@@ -2,7 +2,7 @@
 
 `smart-doc`从`1.8.7`版本开始支持`Dubbo API`文档的生成，下面介绍如何利用`smart-doc`工具来生成`Dubbo`的`RPC`内部接口文档。
 ## dubbo文档集成
-`smart-doc`本着使用简单的原则开发了`maven`插件和`gradle`，通过插件来降低`smart-do`c的集成难度和去除依赖侵入性。
+`smart-doc`本着使用简单的原则开发了`maven`插件和`gradle`，通过插件来降低`smart-doc`的集成难度和去除依赖侵入性。
 您可以根据自己使用的依赖构建管理工具来选择相关的插件，下面以使用`smart-doc-maven-plugin`插件集成`smart-doc`生成`dubbo`为例。
 当然集成`smart-doc`来生成`Dubbo RPC`接口文档你有两种可选方式：
 
@@ -157,7 +157,7 @@ public class UserServiceImpl implements UserService {
 ```
 ## 生成操作
 直接通过`mvc`命令运行插件的文档生成命令或者在`IDEA`中直接单击插件的可视化命令即可。
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20200705230512435.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3NoYWxvdXN1bg==,size_16,color_FFFFFF,t_70)
+![maven-smart-doc](https://img-blog.csdnimg.cn/20200705230512435.png)
 
 运行`rpc-html`等就能生成`Dubbo RPC`文档
 
