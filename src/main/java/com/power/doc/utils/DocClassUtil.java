@@ -221,6 +221,7 @@ public class DocClassUtil {
             case "java.lang.short":
                 return "int16";
             case "double":
+            case "java.lang.double":
                 return "double";
             case "java.lang.long":
             case "long":
