@@ -1,5 +1,11 @@
 ## smart-doc版本
 
+### 版本号：2.4.6
+- 更新日期: 2022-05-29
+- 更新内容：
+  1. 新增枚举字典扫描，[#264](https://github.com/smart-doc-group/smart-doc/issues/264)
+  2. BigDecimal类型输出优化，[#268](https://github.com/smart-doc-group/smart-doc/issues/268)
+  3. 对不规范的mock注释增加检查，[#262](https://github.com/smart-doc-group/smart-doc/issues/262)
 ### 版本号：2.4.5
 - 更新日期: 2022-05-10
 - 更新内容：
