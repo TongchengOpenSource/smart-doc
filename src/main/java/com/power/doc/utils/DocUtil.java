@@ -731,7 +731,7 @@ public class DocUtil {
         return resolveAnnotationValue(annotationValue);
     }
 
-    public static List<ApiErrorCode> errorCodeDictToList(ApiConfig config) {
+    public static List<ApiErrorCode> errorCodeDictToList(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
         if (CollectionUtil.isNotEmpty(config.getErrorCodes())) {
             return config.getErrorCodes();
         }
@@ -758,12 +758,20 @@ public class DocUtil {
                         }
 
                         for (Class<? extends Enum> enumClass : enumImplementSet) {
+                            JavaClass interfaceClass = javaProjectBuilder.getClassByName(enumClass.getCanonicalName());
+                            if (Objects.nonNull(interfaceClass.getTagByName(DocTags.IGNORE))) {
+                                continue;
+                            }
                             List<ApiErrorCode> enumDictionaryList = EnumUtil.getEnumInformation(enumClass, dictionary.getCodeField(),
                                     dictionary.getDescField());
                             errorCodeList.addAll(enumDictionaryList);
                         }
 
                     } else {
+                        JavaClass javaClass = javaProjectBuilder.getClassByName(clzz.getCanonicalName());
+                        if (Objects.nonNull(javaClass.getTagByName(DocTags.IGNORE))) {
+                            continue;
+                        }
                         List<ApiErrorCode> enumDictionaryList = EnumUtil.getEnumInformation(clzz, dictionary.getCodeField(),
                                 dictionary.getDescField());
                         errorCodeList.addAll(enumDictionaryList);
@@ -811,11 +819,14 @@ public class DocUtil {
                     }
 
                     for (Class<? extends Enum> enumClass : enumImplementSet) {
+                        JavaClass javaClass = javaProjectBuilder.getClassByName(enumClass.getCanonicalName());
+                        if (Objects.nonNull(javaClass.getTagByName(DocTags.IGNORE))) {
+                            continue;
+                        }
+                        DocletTag apiNoteTag = javaClass.getTagByName(DocTags.API_NOTE);
                         ApiDocDict apiDocDict = new ApiDocDict();
                         apiDocDict.setOrder(order++);
-                        JavaClass javaClass = javaProjectBuilder.getClassByName(enumClass.getCanonicalName());
                         apiDocDict.setTitle(DocUtil.replaceNewLineToHtmlBr(javaClass.getComment()));
-                        DocletTag apiNoteTag = javaClass.getTagByName(DocTags.API_NOTE);
                         apiDocDict.setDescription(DocUtil.getEscapeAndCleanComment(Optional.ofNullable(apiNoteTag).map(DocletTag::getValue).orElse(StringUtil.EMPTY)));
                         List<DataDict> enumDictionaryList = EnumUtil.getEnumInformation(enumClass, apiDataDictionary.getCodeField(),
                                 apiDataDictionary.getDescField());
@@ -828,6 +839,9 @@ public class DocUtil {
                     apiDocDict.setOrder(order);
                     apiDocDict.setTitle(apiDataDictionary.getTitle());
                     JavaClass javaClass = javaProjectBuilder.getClassByName(clazz.getCanonicalName());
+                    if (Objects.nonNull(javaClass.getTagByName(DocTags.IGNORE))) {
+                        continue;
+                    }
                     DocletTag apiNoteTag = javaClass.getTagByName(DocTags.API_NOTE);
                     apiDocDict.setDescription(DocUtil.getEscapeAndCleanComment(Optional.ofNullable(apiNoteTag).map(DocletTag::getValue).orElse(StringUtil.EMPTY)));
                     if (apiDataDictionary.getTitle() == null) {

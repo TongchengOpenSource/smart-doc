@@ -10,6 +10,7 @@ import com.power.doc.constants.TornaConstants;
 import com.power.doc.model.*;
 import com.power.doc.model.rpc.RpcApiDependency;
 import com.power.doc.model.torna.*;
+import com.thoughtworks.qdox.JavaProjectBuilder;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaParameter;
 import org.apache.commons.lang3.StringUtils;
@@ -214,10 +215,10 @@ public class TornaUtil {
         return s.toString();
     }
 
-    public static List<CommonErrorCode> buildErrorCode(ApiConfig config) {
+    public static List<CommonErrorCode> buildErrorCode(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
         List<CommonErrorCode> commonErrorCodes = new ArrayList<>();
         CommonErrorCode commonErrorCode;
-        List<ApiErrorCode> errorCodes = DocUtil.errorCodeDictToList(config);
+        List<ApiErrorCode> errorCodes = DocUtil.errorCodeDictToList(config, javaProjectBuilder);
         if (CollectionUtil.isNotEmpty(errorCodes)) {
             for (EnumDictionary code : errorCodes) {
                 commonErrorCode = new CommonErrorCode();

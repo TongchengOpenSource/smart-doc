@@ -93,7 +93,6 @@ public class JavaFieldUtil {
     /**
      *
      * @param annotations annotation
-     * @return
      */
     public static String getParamMaxlength(List<JavaAnnotation> annotations){
         String maxLength = "";

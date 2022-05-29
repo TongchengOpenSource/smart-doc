@@ -72,7 +72,7 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
         apiAllData.setProjectId(DocUtil.generateId(config.getProjectName()));
         apiAllData.setLanguage(config.getLanguage().getCode());
         apiAllData.setApiDocList(listOfApiData(config, javaProjectBuilder));
-        apiAllData.setErrorCodeList(DocUtil.errorCodeDictToList(config));
+        apiAllData.setErrorCodeList(DocUtil.errorCodeDictToList(config, javaProjectBuilder));
         apiAllData.setRevisionLogs(config.getRevisionLogs());
         apiAllData.setApiDocDictList(DocUtil.buildDictionary(config, javaProjectBuilder));
         return apiAllData;
@@ -129,7 +129,7 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
         String outPath = config.getOutPath();
         String strTime = DateTimeUtil.long2Str(now, DateTimeUtil.DATE_FORMAT_SECOND);
         FileUtil.mkdirs(outPath);
-        List<ApiErrorCode> errorCodeList = DocUtil.errorCodeDictToList(config);
+        List<ApiErrorCode> errorCodeList = DocUtil.errorCodeDictToList(config, javaProjectBuilder);
         Template tpl = BeetlTemplateUtil.getByName(template);
         String style = config.getStyle();
         tpl.binding(TemplateVariable.STYLE.getVariable(), style);
@@ -180,7 +180,7 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
     }
 
     public void buildSearchJs(ApiConfig config, JavaProjectBuilder javaProjectBuilder, List<ApiDoc> apiDocList, String template) {
-        List<ApiErrorCode> errorCodeList = DocUtil.errorCodeDictToList(config);
+        List<ApiErrorCode> errorCodeList = DocUtil.errorCodeDictToList(config, javaProjectBuilder);
         Template tpl = BeetlTemplateUtil.getByName(template);
         // directory tree
         List<ApiDoc> apiDocs = new ArrayList<>();
@@ -266,12 +266,13 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
     /**
      * build error_code adoc
      *
-     * @param config         api config
-     * @param template       template
-     * @param outPutFileName output file
+     * @param config             api config
+     * @param template           template
+     * @param outPutFileName     output file
+     * @param javaProjectBuilder javaProjectBuilder
      */
-    public void buildErrorCodeDoc(ApiConfig config, String template, String outPutFileName) {
-        List<ApiErrorCode> errorCodeList = DocUtil.errorCodeDictToList(config);
+    public void buildErrorCodeDoc(ApiConfig config, String template, String outPutFileName, JavaProjectBuilder javaProjectBuilder) {
+        List<ApiErrorCode> errorCodeList = DocUtil.errorCodeDictToList(config, javaProjectBuilder);
         String strTime = DateTimeUtil.long2Str(now, DateTimeUtil.DATE_FORMAT_SECOND);
         Template tpl = BeetlTemplateUtil.getByName(template);
         setCssCDN(config, tpl);
@@ -292,7 +293,7 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
      */
     public void buildErrorCodeDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder,
                                   List<ApiDoc> apiDocList, String template, String outPutFileName, String indexAlias) {
-        List<ApiErrorCode> errorCodeList = DocUtil.errorCodeDictToList(config);
+        List<ApiErrorCode> errorCodeList = DocUtil.errorCodeDictToList(config, javaProjectBuilder);
         String strTime = DateTimeUtil.long2Str(now, DateTimeUtil.DATE_FORMAT_SECOND);
         Template errorTemplate = BeetlTemplateUtil.getByName(template);
         errorTemplate.binding(TemplateVariable.PROJECT_NAME.getVariable(), config.getProjectName());
@@ -338,7 +339,7 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
         String style = config.getStyle();
         mapper.binding(TemplateVariable.HIGH_LIGHT_CSS_LINK.getVariable(), config.getHighlightStyleLink());
         mapper.binding(TemplateVariable.STYLE.getVariable(), style);
-        List<ApiErrorCode> errorCodeList = DocUtil.errorCodeDictToList(config);
+        List<ApiErrorCode> errorCodeList = DocUtil.errorCodeDictToList(config, javaProjectBuilder);
         // set css cdn
         setCssCDN(config, mapper);
         if (DocLanguage.CHINESE.equals(config.getLanguage())) {

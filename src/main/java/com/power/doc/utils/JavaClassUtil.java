@@ -328,6 +328,9 @@ public class JavaClassUtil {
         if (Objects.isNull(javaClass) || !javaClass.isEnum()) {
             return null;
         }
+        if (Objects.nonNull(javaClass.getTagByName(DocTags.IGNORE))) {
+            return null;
+        }
         //todo support the field described by @see
 
         ApiConfig apiConfig = builder.getApiConfig();

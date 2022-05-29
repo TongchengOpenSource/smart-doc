@@ -72,7 +72,7 @@ public class RpcMarkdownBuilder {
             builderTemplate.buildAllInOne(apiDocList, apiConfig, javaProjectBuilder, RPC_ALL_IN_ONE_MD_TPL, docName);
         } else {
             builderTemplate.buildApiDoc(apiDocList, apiConfig, RPC_API_DOC_MD_TPL, API_EXTENSION);
-            builderTemplate.buildErrorCodeDoc(apiConfig, ERROR_CODE_LIST_MD_TPL, ERROR_CODE_LIST_MD);
+            builderTemplate.buildErrorCodeDoc(apiConfig, ERROR_CODE_LIST_MD_TPL, ERROR_CODE_LIST_MD, javaProjectBuilder);
         }
     }
 }

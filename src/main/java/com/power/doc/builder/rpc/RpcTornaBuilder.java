@@ -107,7 +107,7 @@ public class RpcTornaBuilder {
             api.setOrderIndex(a.getOrder());
             apisList.add(api);
         }
-        tornaApi.setCommonErrorCodes(buildErrorCode(apiConfig));
+        tornaApi.setCommonErrorCodes(buildErrorCode(apiConfig, builder));
         tornaApi.setApis(apisList);
         //Build push document information
         Map<String, String> requestJson = TornaConstants.buildParams(PUSH, new Gson().toJson(tornaApi), apiConfig);

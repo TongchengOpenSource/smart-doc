@@ -119,7 +119,7 @@ public class TornaBuilder {
             groupApiList.add(api);
 
         }
-        tornaApi.setCommonErrorCodes(buildErrorCode(apiConfig));
+        tornaApi.setCommonErrorCodes(buildErrorCode(apiConfig, builder));
         // delete default group when only default group
         tornaApi.setApis(groupApiList.size() == 1 ? groupApiList.get(0).getItems() : groupApiList);
         //Build push document information
