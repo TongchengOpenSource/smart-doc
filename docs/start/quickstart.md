@@ -114,7 +114,7 @@ Using legacy plugin application:
 ```gradle
 buildscript {
     repositories {
-        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+        maven { url 'https://maven.aliyun.com/nexus/content/groups/public/' }
         maven { url = uri("https://plugins.gradle.org/m2/") }
         mavenCentral()
     }
@@ -134,7 +134,7 @@ apply(plugin = "com.github.shalousun.smart-doc")
 |include|	without|Let the plug-in download the specified java lib sources,eg:include 'org.springframework.boot:spring-boot-starter-tomcat' |
 
 Example setting of options:
-```
+```gradle
 smartdoc {
     configFile = file("src/main/resources/smart-doc.json")
     
