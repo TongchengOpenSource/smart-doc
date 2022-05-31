@@ -24,10 +24,7 @@ package com.power.doc.utils;
 
 import com.mifmif.common.regex.Generex;
 import com.power.common.util.*;
-import com.power.doc.constants.DocAnnotationConstants;
-import com.power.doc.constants.DocGlobalConstants;
-import com.power.doc.constants.DocTags;
-import com.power.doc.constants.JAXRSAnnotations;
+import com.power.doc.constants.*;
 import com.power.doc.model.*;
 import com.power.doc.model.request.RequestMapping;
 import com.thoughtworks.qdox.JavaProjectBuilder;
@@ -896,7 +893,8 @@ public class DocUtil {
     }
 
     public static String handleContentType(String mediaType, JavaAnnotation annotation, String annotationName) {
-        if (JAXRSAnnotations.JAX_PRODUCES_FULLY.equals(annotationName)) {
+        if (JakartaJaxrsAnnotations.JAX_PRODUCES_FULLY.equals(annotationName)
+            || JAXRSAnnotations.JAX_PRODUCES_FULLY.equals(annotationName)) {
             String annotationValue = StringUtil.removeQuotes(DocUtil.getRequestHeaderValue(annotation));
             if ("MediaType.APPLICATION_JSON".equals(annotationValue) || "application/json".equals(annotationValue)
                     || "MediaType.TEXT_PLAIN".equals(annotationValue) || "text/plain".equals(annotationValue)) {
