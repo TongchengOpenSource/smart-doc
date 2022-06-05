@@ -481,7 +481,7 @@ public class DocUtil {
                 } else {
                     value = entry.getKey() + entry.getValue();
                 }
-                value = replaceNewLineToHtmlBr(value);
+//                value = replaceNewLineToHtmlBr(value);
             }
         }
         return value;
@@ -510,7 +510,7 @@ public class DocUtil {
         if (StringUtil.isNotEmpty(content)) {
             return content.replaceAll("(\r\n|\r|\n|\n\r)", "<br>");
         }
-        return null;
+        return StringUtils.EMPTY;
     }
 
     public static String handleJsonStr(String content) {
@@ -644,9 +644,9 @@ public class DocUtil {
         if (StringUtil.isEmpty(comment)) {
             return "";
         }
+        // TODO: 2022-06-01 去掉移除换行的代码。需要修改为在各种类型输出为文件的时候各自处理
         return comment.replaceAll("<", "&lt;")
-                .replaceAll(">", "&gt;")
-                .replaceAll(System.lineSeparator(), "");
+                .replaceAll(">", "&gt;");
     }
 
     /**
@@ -826,7 +826,7 @@ public class DocUtil {
                         DocletTag apiNoteTag = javaClass.getTagByName(DocTags.API_NOTE);
                         ApiDocDict apiDocDict = new ApiDocDict();
                         apiDocDict.setOrder(order++);
-                        apiDocDict.setTitle(DocUtil.replaceNewLineToHtmlBr(javaClass.getComment()));
+                        apiDocDict.setTitle(javaClass.getComment());
                         apiDocDict.setDescription(DocUtil.getEscapeAndCleanComment(Optional.ofNullable(apiNoteTag).map(DocletTag::getValue).orElse(StringUtil.EMPTY)));
                         List<DataDict> enumDictionaryList = EnumUtil.getEnumInformation(enumClass, apiDataDictionary.getCodeField(),
                                 apiDataDictionary.getDescField());
@@ -845,7 +845,7 @@ public class DocUtil {
                     DocletTag apiNoteTag = javaClass.getTagByName(DocTags.API_NOTE);
                     apiDocDict.setDescription(DocUtil.getEscapeAndCleanComment(Optional.ofNullable(apiNoteTag).map(DocletTag::getValue).orElse(StringUtil.EMPTY)));
                     if (apiDataDictionary.getTitle() == null) {
-                        apiDocDict.setTitle(DocUtil.replaceNewLineToHtmlBr(javaClass.getComment()));
+                        apiDocDict.setTitle(javaClass.getComment());
                     }
                     List<DataDict> enumDictionaryList = EnumUtil.getEnumInformation(clazz, apiDataDictionary.getCodeField(),
                             apiDataDictionary.getDescField());

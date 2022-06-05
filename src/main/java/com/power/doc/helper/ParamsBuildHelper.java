@@ -284,12 +284,8 @@ public class ParamsBuildHelper {
                     fieldName = customResponseField.getReplaceName();
                 }
 
-
                 if (StringUtils.isBlank(comment)) {
                     comment = docField.getComment();
-                }
-                if (StringUtil.isNotEmpty(comment)) {
-                    comment = DocUtil.replaceNewLineToHtmlBr(comment);
                 }
                 // file
                 if (JavaClassValidateUtil.isFile(fieldGicName)) {
@@ -655,7 +651,6 @@ public class ParamsBuildHelper {
                 comment = comment + "[enum:" + dictionaryListComment(dataDictionary) + "]";
             }
         } else {
-            enumComments = DocUtil.replaceNewLineToHtmlBr(enumComments);
             if (StringUtil.isNotEmpty(enumComments)) {
                 comment = comment + "(See: " + enumComments + ")";
             }

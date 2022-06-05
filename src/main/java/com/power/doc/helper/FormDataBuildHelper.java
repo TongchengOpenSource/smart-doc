@@ -130,9 +130,6 @@ public class FormDataBuildHelper {
                 continue;
             }
             String comment = docField.getComment();
-            if (StringUtil.isNotEmpty(comment)) {
-                comment = DocUtil.replaceNewLineToHtmlBr(comment);
-            }
             if (JavaClassValidateUtil.isFile(fieldGicName)) {
                 FormData formData = new FormData();
                 formData.setKey(pre + fieldName);
