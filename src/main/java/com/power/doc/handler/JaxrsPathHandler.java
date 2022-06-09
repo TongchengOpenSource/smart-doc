@@ -27,6 +27,7 @@ import com.power.common.util.UrlUtil;
 import com.power.doc.builder.ProjectDocConfigBuilder;
 import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.constants.JAXRSAnnotations;
+import com.power.doc.constants.JakartaJaxrsAnnotations;
 import com.power.doc.model.request.JaxrsPathMapping;
 import com.power.doc.utils.DocUrlUtil;
 import com.power.doc.utils.DocUtil;
@@ -55,6 +56,8 @@ public class JaxrsPathHandler {
      */
     private static final Set<String> ANNOTATION_NAMES = Collections.unmodifiableSet(new HashSet<>(
             Arrays.asList(
+                    JakartaJaxrsAnnotations.JAXB_DELETE_FULLY, JakartaJaxrsAnnotations.JAX_PUT_FULLY,
+                    JakartaJaxrsAnnotations.JAX_GET_FULLY, JakartaJaxrsAnnotations.JAX_POST_FULLY,
                     JAXRSAnnotations.JAXB_DELETE_FULLY, JAXRSAnnotations.JAX_PUT_FULLY,
                     JAXRSAnnotations.JAX_GET_FULLY, JAXRSAnnotations.JAX_POST_FULLY
             )));
@@ -77,9 +80,11 @@ public class JaxrsPathHandler {
             if (DocGlobalConstants.JAVA_DEPRECATED_FULLY.equals(annotationName)) {
                 deprecated = true;
             }
-            if (JAXRSAnnotations.JAX_PATH_FULLY.equals(annotationName)
-                    || JAXRSAnnotations.JAX_PATH_PARAM_FULLY.equals(annotationName)
-                    || JAXRSAnnotations.JAXB_REST_PATH_FULLY.equals(annotationName)) {
+            if (JakartaJaxrsAnnotations.JAX_PATH_FULLY.equals(annotationName)
+                || JakartaJaxrsAnnotations.JAX_PATH_PARAM_FULLY.equals(annotationName)
+                || JakartaJaxrsAnnotations.JAXB_REST_PATH_FULLY.equals(annotationName)
+                || JAXRSAnnotations.JAX_PATH_FULLY.equals(annotationName)
+                || JAXRSAnnotations.JAX_PATH_PARAM_FULLY.equals(annotationName)) {
                 shortUrl = DocUtil.handleMappingValue(annotation);
             }
             if (ANNOTATION_NAMES.contains(annotationName)) {

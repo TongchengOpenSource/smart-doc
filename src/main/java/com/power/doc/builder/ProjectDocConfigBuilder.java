@@ -186,9 +186,14 @@ public class ProjectDocConfigBuilder {
         Collection<JavaClass> javaClasses = javaProjectBuilder.getClasses();
         for (JavaClass cls : javaClasses) {
             if (cls.isEnum()) {
+                Class enumClass;
                 ClassLoader classLoader = apiConfig.getClassLoader();
                 try {
-                    Class enumClass = classLoader.loadClass(cls.getFullyQualifiedName());
+                    if (Objects.isNull(classLoader)) {
+                        enumClass = Class.forName(cls.getFullyQualifiedName());
+                    } else {
+                        enumClass = classLoader.loadClass(cls.getFullyQualifiedName());
+                    }
                     enumClassMap.put(cls.getFullyQualifiedName(), enumClass);
                 } catch (ClassNotFoundException e) {
                     continue;

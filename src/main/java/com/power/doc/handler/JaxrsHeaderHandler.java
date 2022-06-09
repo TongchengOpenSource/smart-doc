@@ -26,6 +26,7 @@ import com.power.common.util.StringUtil;
 import com.power.doc.builder.ProjectDocConfigBuilder;
 import com.power.doc.constants.DocTags;
 import com.power.doc.constants.JAXRSAnnotations;
+import com.power.doc.constants.JakartaJaxrsAnnotations;
 import com.power.doc.model.ApiReqParam;
 import com.power.doc.utils.DocClassUtil;
 import com.power.doc.utils.DocUtil;
@@ -69,14 +70,16 @@ public class JaxrsHeaderHandler {
             for (JavaAnnotation annotation : annotations) {
                 String annotationName = annotation.getType().getFullyQualifiedName();
                 //Obtain header default value
-                if (JAXRSAnnotations.JAX_DEFAULT_VALUE_FULLY.equals(annotationName)) {
+                if (JakartaJaxrsAnnotations.JAX_DEFAULT_VALUE_FULLY.equals(annotationName)
+                        || JAXRSAnnotations.JAX_DEFAULT_VALUE_FULLY.equals(annotationName)) {
                     defaultValue = StringUtil.removeQuotes(DocUtil.getRequestHeaderValue(annotation));
                     defaultValue = DocUtil.handleConstants(constantsMap, defaultValue);
                 }
                 apiReqHeader.setValue(defaultValue);
 
                 // Obtain header value
-                if (JAXRSAnnotations.JAX_HEADER_PARAM_FULLY.equals(annotationName)) {
+                if (JakartaJaxrsAnnotations.JAX_HEADER_PARAM_FULLY.equals(annotationName)
+                    || JAXRSAnnotations.JAX_HEADER_PARAM_FULLY.equals(annotationName)) {
                     String name = StringUtil.removeQuotes(DocUtil.getRequestHeaderValue(annotation));
                     name = DocUtil.handleConstants(constantsMap, name);
                     apiReqHeader.setName(name);

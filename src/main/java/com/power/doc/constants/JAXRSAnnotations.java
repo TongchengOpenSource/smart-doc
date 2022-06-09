@@ -39,22 +39,6 @@ public final class JAXRSAnnotations {
      * JAX-RS@Consumes
      */
     public static final String JAX_CONSUMES_FULLY = "javax.ws.rs.Consumes";
-    /**
-     * JAX-RS@GET
-     */
-    public static final String GET = "GET";
-    /**
-     * JAX-RS@POST
-     */
-    public static final String POST = "POST";
-    /**
-     * JAX-RS@PUT
-     */
-    public static final String PUT = "PUT";
-    /**
-     * JAX-RS@DELETE
-     */
-    public static final String DELETE = "DELETE";
 
     /**
      * JAX-RS@GET
@@ -72,9 +56,5 @@ public final class JAXRSAnnotations {
      * JAX-RS@DELETE
      */
     public static final String JAXB_DELETE_FULLY = "javax.ws.rs.DELETE";
-    /**
-     * JAX-RS@RestPath
-     */
-    public static final String JAXB_REST_PATH_FULLY = "org.jboss.resteasy.reactive.RestPath";
 
 }
