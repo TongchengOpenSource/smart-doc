@@ -42,7 +42,7 @@ ${consumerConfigExample}
 
 <% for(api in apiDocList){ %>
 
-## ${api.desc}
+## ${htmlEscape(api.desc)}
 
 **URI:** ${api.uri}
 
@@ -56,11 +56,11 @@ ${consumerConfigExample}
 <% for(doc in api.list){ %>
 <%if(doc.deprecated){%>
 
-### ~~${doc.desc}~~
+### ~~${htmlEscape(doc.desc)}~~
 
 <%}else{%>
 
-### ${doc.desc}
+### ${htmlEscape(doc.desc)}
 
 <%}%>
 
@@ -78,7 +78,7 @@ ${consumerConfigExample}
 Parameter|Type|Description|Required|Since
 ---|---|---|---|---
 <% for(param in doc.requestParams){ %>
-${param.field}|${param.type}|${param.desc}|${param.required}|${param.version}
+${param.field}|${param.type}|${htmlEscape(param.desc)}|${param.required}|${param.version}
 <%}%>
 <%}%>
 
@@ -88,7 +88,7 @@ ${param.field}|${param.type}|${param.desc}|${param.required}|${param.version}
 Field | Type|Description|Since
 ---|---|---|---
 <% for(param in doc.responseParams){ %>
-${param.field}|${param.type}|${param.desc}|${param.version}
+${param.field}|${param.type}|${htmlEscape(param.desc)}|${param.version}
 <%}%>
 <%}%>
 
@@ -100,7 +100,7 @@ ${param.field}|${param.type}|${param.desc}|${param.version}
 Error code |Description
 ---|---
 <% for(error in errorCodeList){ %>
-${error.value}|${error.desc}
+${error.value}|${htmlEscape(error.desc)}
 <%}%>
 
 <%}%>
@@ -113,7 +113,7 @@ ${error.value}|${error.desc}
 Code |Type|Description 
 ---|---|---
 <% for(dataDict in dict.dataDictList){ %>
-${dataDict.value}|${dataDict.type}|${dataDict.desc}
+${dataDict.value}|${dataDict.type}|${htmlEscape(dataDict.desc)}
 <%}%>
 
 <%}%>

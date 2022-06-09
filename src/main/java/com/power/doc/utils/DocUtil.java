@@ -644,7 +644,6 @@ public class DocUtil {
         if (StringUtil.isEmpty(comment)) {
             return "";
         }
-        // TODO: 2022-06-01 去掉移除换行的代码。需要修改为在各种类型输出为文件的时候各自处理
         return comment.replaceAll("<", "&lt;")
                 .replaceAll(">", "&gt;");
     }
