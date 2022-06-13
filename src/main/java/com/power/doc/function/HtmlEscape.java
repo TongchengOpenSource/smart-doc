@@ -35,6 +35,6 @@ public class HtmlEscape implements Function {
     public String call(Object[] paras, Context ctx) {
         String str = String.valueOf(paras[0]).replaceAll("\"","&quot;");
         str = str.replaceAll("<p>","").replaceAll("</p>"," ");
-        return DocUtil.getEscapeAndCleanComment(str);
+        return DocUtil.replaceNewLineToHtmlBr(DocUtil.getEscapeAndCleanComment(str));
     }
 }

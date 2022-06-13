@@ -364,7 +364,6 @@ public class JavaClassUtil {
             Item item = new Item();
             String name = cons.getName();
             String enumComment = cons.getComment();
-            enumComment = DocUtil.replaceNewLineToHtmlBr(enumComment);
             item.setName(name);
             item.setType("string");
             item.setValue(name);

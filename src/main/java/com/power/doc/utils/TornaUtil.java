@@ -194,7 +194,7 @@ public class TornaUtil {
             httpParam.setType(type);
             httpParam.setRequired(apiParam.isRequired() ? TornaConstants.YES : TornaConstants.NO);
             httpParam.setExample(StringUtil.removeQuotes(apiParam.getValue()));
-            httpParam.setDescription(apiParam.getDesc());
+            httpParam.setDescription(DocUtil.replaceNewLineToHtmlBr(apiParam.getDesc()));
             httpParam.setEnumInfo(apiParam.getEnumInfo());
             if (apiParam.getChildren() != null) {
                 httpParam.setChildren(buildParams(apiParam.getChildren()));
@@ -224,7 +224,7 @@ public class TornaUtil {
                 commonErrorCode = new CommonErrorCode();
                 commonErrorCode.setCode(code.getValue());
                 // commonErrorCode.setSolution(code.getDesc());
-                commonErrorCode.setMsg(code.getDesc());
+                commonErrorCode.setMsg(DocUtil.replaceNewLineToHtmlBr(code.getDesc()));
                 commonErrorCodes.add(commonErrorCode);
             }
         }
@@ -238,7 +238,7 @@ public class TornaUtil {
             for (ApiDocDict doc : apiDocDicts) {
                 tornaDic = new TornaDic();
                 tornaDic.setName(doc.getTitle())
-                        // .setDescription(doc.getTitle())
+                        .setDescription(DocUtil.replaceNewLineToHtmlBr(doc.getDescription()))
                         .setItems(buildTornaDicItems(doc.getDataDictList()));
                 dics.add(tornaDic);
             }

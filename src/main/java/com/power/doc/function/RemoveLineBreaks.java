@@ -14,6 +14,7 @@ public class RemoveLineBreaks implements Function {
     String str = String.valueOf(paras[0])
         .replaceAll("\n", " ")
         .replaceAll("\r"," ");
-    return DocUtil.getEscapeAndCleanComment(str);
+    return DocUtil.getEscapeAndCleanComment(str)
+            .replaceAll(System.lineSeparator(), "");
   }
 }

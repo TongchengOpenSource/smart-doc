@@ -21,7 +21,7 @@ for(apiGroup in apiDocList){
 %>
 <%
 if(!apiDocListOnlyHasDefaultGroup) {%>
-==${apiGroup.group}
+== ${apiGroup.group}
 <%} %>
 <%
 for(api in apiGroup.childrenApiDocs){

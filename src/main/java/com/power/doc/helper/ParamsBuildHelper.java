@@ -284,12 +284,8 @@ public class ParamsBuildHelper {
                     fieldName = customResponseField.getReplaceName();
                 }
 
-
                 if (StringUtils.isBlank(comment)) {
                     comment = docField.getComment();
-                }
-                if (StringUtil.isNotEmpty(comment)) {
-                    comment = DocUtil.replaceNewLineToHtmlBr(comment);
                 }
                 // file
                 if (JavaClassValidateUtil.isFile(fieldGicName)) {
@@ -512,12 +508,15 @@ public class ParamsBuildHelper {
                         } else {
                             commonHandleParam(paramList, param, isRequired, NO_COMMENTS_FOUND + appendComment, since, strRequired);
                         }
+                        boolean isGenerics = docField.getJavaField().getType().getFullyQualifiedName().length() == 1;
+
                         fieldPid = paramList.size() + pid;
                         // handle java generic or object
-                        if (DocGlobalConstants.JAVA_OBJECT_FULLY.equals(subTypeName) && StringUtil.isNotEmpty(field.getComment())) {
+                        if (isGenerics && DocGlobalConstants.JAVA_OBJECT_FULLY.equals(subTypeName) && StringUtil.isNotEmpty(field.getComment())) {
                             ApiParam param1 = ApiParam.of()
                                     .setField(preBuilder.toString() + "any object")
-                                    .setId(paramList.size())
+                                    .setId(fieldPid + 1)
+                                    .setPid(pid)
                                     .setMaxLength(maxLength)
                                     .setType("object")
                                     .setDesc(DocGlobalConstants.ANY_OBJECT_MSG)
@@ -652,7 +651,6 @@ public class ParamsBuildHelper {
                 comment = comment + "[enum:" + dictionaryListComment(dataDictionary) + "]";
             }
         } else {
-            enumComments = DocUtil.replaceNewLineToHtmlBr(enumComments);
             if (StringUtil.isNotEmpty(enumComments)) {
                 comment = comment + "(See: " + enumComments + ")";
             }
