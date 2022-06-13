@@ -253,13 +253,18 @@ public enum OrderEnum {
     }
 }
 ```
-配置一下就可以导出
+配置一下就可以导出， @since 2.4.6版本开始，此配置支持配置枚举所实现的接口来获取子类实现类， 如果有已经实现的枚举需要忽略的话，可以在实现枚举类上增加@ignore进行忽略。
 ```json
 {
     "dataDictionaries": [
         {
             "title": "订单状态码字典", //数据字典的名称
             "enumClassName": "com.xx.OrderEnum", //数据字典枚举类名称
+            "codeField": "code", //数据字典字典码对应的字段名称
+            "descField": "message" //数据字典对象的描述信息字典
+        },
+        {
+            "enumClassName": "com.xx.IEnum", //数据字典接口
             "codeField": "code", //数据字典字典码对应的字段名称
             "descField": "message" //数据字典对象的描述信息字典
         }

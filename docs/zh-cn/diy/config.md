@@ -48,18 +48,36 @@
   "ignoreRequestParams":[ //忽略请求参数对象，把不想生成文档的参数对象屏蔽掉，@since 1.9.2
      "org.springframework.ui.ModelMap"
    ],
-  "dataDictionaries": [{ //配置数据字典，没有需求可以不设置
-      "title": "http状态码字典", //数据字典的名称
-      "enumClassName": "com.power.common.enums.HttpCodeEnum", //数据字典枚举类名称
-      "codeField": "code",//数据字典字典码对应的字段名称
-      "descField": "message"//数据字典对象的描述信息字典
-  }],
-  "errorCodeDictionaries": [{ //错误码列表，没有需求可以不设置
-    "title": "title",
-    "enumClassName": "com.power.common.enums.HttpCodeEnum", //错误码枚举类
-    "codeField": "code",//错误码的code码字段名称
-    "descField": "message"//错误码的描述信息对应的字段名
-  }],
+  "dataDictionaries": [
+    {   //配置数据字典，没有需求可以不设置
+        "title": "http状态码字典", //数据字典的名称
+        "enumClassName": "com.power.common.enums.HttpCodeEnum", //数据字典枚举类名称
+        "codeField": "code",//数据字典字典码对应的字段名称
+        "descField": "message"//数据字典对象的描述信息字典
+    },
+    {
+         // @since 2.4.6开始可以配置枚举实现的接口， 当配置接口时title将使用实现枚举的类描述
+         // 如果有已经实现的枚举需要忽略的话，可以在实现枚举类上增加@ignore进行忽略
+        "enumClassName": "com.xx.IEnum", 
+        "codeField": "code", //数据字典字典码对应的字段名称
+        "descField": "message" //数据字典对象的描述信息字典
+    }
+  ],
+  "errorCodeDictionaries": [
+    {   //错误码列表，没有需求可以不设置
+        "title": "title",
+        "enumClassName": "com.power.common.enums.HttpCodeEnum", //错误码枚举类
+        "codeField": "code",//错误码的code码字段名称
+        "descField": "message"//错误码的描述信息对应的字段名
+    },
+    {
+         // @since 2.4.6开始可以配置枚举实现的接口， 当配置接口时title将使用实现枚举的类描述
+         // 如果有已经实现的枚举需要忽略的话，可以在实现枚举类上增加@ignore进行忽略
+        "enumClassName": "com.xx.IEnum", 
+        "codeField": "code", //数据字典字典码对应的字段名称
+        "descField": "message" //数据字典对象的描述信息字典
+    }
+  ],
   "revisionLogs": [{ //文档变更记录，非必须
       "version": "1.0", //文档版本号
       "revisionTime": "2020-12-31 10:30", //文档修订时间
@@ -570,7 +588,7 @@ torna环境名称。
 * 类型：`List<Object>`
 * 默认值: `null`
 
-配置数据字典。
+配置数据字典，@since 2.4.6开始可以配置枚举实现的接口， 当配置接口时title将使用实现枚举的类描述，如果有已经实现的枚举需要忽略的话，可以在实现枚举类上增加@ignore进行忽略。
 ```json
 {
     "dataDictionaries": [
@@ -589,7 +607,7 @@ torna环境名称。
 * 类型：`List<Object>`
 * 默认值: `null`
 
-错误码列表。
+错误码列表，@since 2.4.6开始可以配置枚举实现的接口， 当配置接口时title将使用实现枚举的类描述，如果有已经实现的枚举需要忽略的话，可以在实现枚举类上增加@ignore进行忽略。
 ```json
 {
     "errorCodeDictionaries": [
