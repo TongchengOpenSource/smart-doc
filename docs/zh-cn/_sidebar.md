@@ -28,3 +28,4 @@
 - [变更日志](zh-cn/changelog.md)
 - 社区
   - [团队](zh-cn/community/team.md)
+  - [开源贡献](zh-ch/community/contributing.md)
