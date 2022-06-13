@@ -139,7 +139,7 @@ public class ApiConfig {
     private List<ApiDataDictionary> dataDictionaries;
 
 
-    private ClassLoader classLoader;
+    private transient ClassLoader classLoader;
 
     public ClassLoader getClassLoader() {
         return classLoader;
