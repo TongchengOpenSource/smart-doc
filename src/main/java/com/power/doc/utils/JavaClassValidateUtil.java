@@ -305,6 +305,9 @@ public class JavaClassValidateUtil {
             case "org.springframework.web.multipart.commons.CommonsMultipartFile":
             case "org.springframework.web.multipart.commons.CommonsMultipartFile[]":
             case "java.util.List<org.springframework.web.multipart.commons.CommonsMultipartFile>":
+            case "javax.servlet.http.Part":
+            case "javax.servlet.http.Part[]":
+            case "java.util.List<javax.servlet.http.Part>":
             case "org.noear.solon.core.handle.UploadedFile":
             case "org.noear.solon.core.handle.DownloadedFile":
                 return true;
