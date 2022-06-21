@@ -371,9 +371,9 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         Map<String, String> queryParamsMap = new LinkedHashMap<>();
 
         apiMethodDoc.getPathParams().stream().filter(Objects::nonNull).filter(p -> StringUtil.isNotEmpty(p.getValue()) || p.isConfigParam())
-                .forEach(param -> pathParamsMap.put(param.getField(), param.getValue()));
+                .forEach(param -> pathParamsMap.put(param.getSourceField(), param.getValue()));
         apiMethodDoc.getQueryParams().stream().filter(Objects::nonNull).filter(p -> StringUtil.isNotEmpty(p.getValue()) || p.isConfigParam())
-                .forEach(param -> queryParamsMap.put(param.getField(), param.getValue()));
+                .forEach(param -> queryParamsMap.put(param.getSourceField(), param.getValue()));
         List<JavaAnnotation> methodAnnotations = method.getAnnotations();
         for (JavaAnnotation annotation : methodAnnotations) {
             String annotationName = annotation.getType().getName();

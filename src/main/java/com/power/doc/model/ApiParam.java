@@ -23,6 +23,7 @@
 package com.power.doc.model;
 
 import com.power.doc.model.torna.EnumInfo;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 
@@ -129,6 +130,13 @@ public class ApiParam {
 
     public String getField() {
         return field;
+    }
+
+    public String getSourceField() {
+        if (StringUtils.isEmpty(field)) {
+            return StringUtils.EMPTY;
+        }
+        return field.replaceAll("└─", "").replaceAll("&nbsp;", "");
     }
 
     public ApiParam setField(String field) {
