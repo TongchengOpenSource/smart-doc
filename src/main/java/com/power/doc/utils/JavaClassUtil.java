@@ -182,6 +182,13 @@ public class JavaClassUtil {
             }
             if (!cls1.isInterface()) {
                 for (JavaField javaField : cls1.getFields()) {
+                    long count = javaField.getAnnotations().stream()
+                            .filter(annotation -> DocAnnotationConstants.SHORT_JSON_IGNORE.equals(
+                                    annotation.getType().getSimpleName()))
+                            .count();
+                    if (count > 0) {
+                        continue;
+                    }
                     String fieldName = javaField.getName();
                     String subTypeName = javaField.getType().getFullyQualifiedName();
 
