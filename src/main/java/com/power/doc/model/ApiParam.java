@@ -33,6 +33,10 @@ import java.util.List;
 public class ApiParam {
 
     /**
+     * 所属实体类名
+     */
+    private String className;
+    /**
      * field id
      */
     private int id = 1;
@@ -268,6 +272,14 @@ public class ApiParam {
     public ApiParam setConfigParam(boolean configParam) {
         this.configParam = configParam;
         return this;
+    }
+
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
     }
 
     public boolean isSelfReferenceLoop() {

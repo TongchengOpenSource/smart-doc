@@ -22,10 +22,14 @@
  */
 package com.power.doc.utils;
 
+import com.power.common.util.MD6Util;
 import com.power.common.util.StringUtil;
+import com.power.doc.model.ApiParam;
+import org.apache.commons.codec.digest.DigestUtils;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -72,4 +76,11 @@ public class OpenApiSchemaUtil {
         return map;
     }
 
+    public static String encodeParam(List<ApiParam> apiParams) {
+       StringBuilder sb = new StringBuilder();
+        for(ApiParam a: apiParams){
+            sb.append(a.getField()).append(a.getType()).append(a.getDesc());
+       }
+        return DigestUtils.md5Hex(sb.toString());
+    }
 }
