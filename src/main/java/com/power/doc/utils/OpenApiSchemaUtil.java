@@ -76,11 +76,41 @@ public class OpenApiSchemaUtil {
         return map;
     }
 
-    public static String encodeParam(List<ApiParam> apiParams) {
-       StringBuilder sb = new StringBuilder();
-        for(ApiParam a: apiParams){
-            sb.append(a.getField()).append(a.getType()).append(a.getDesc());
-       }
-        return DigestUtils.md5Hex(sb.toString());
+    public static String getClassNameFromParams(List<ApiParam> apiParams) {
+        for(ApiParam a : apiParams){
+            if(StringUtil.isNotEmpty(a.getClassName())){
+                if(a.getClassName().contains("<") || a.getClassName().contains("[")){
+                   return JavaClassUtil.getClassSimpleName(a.getClassName()) +
+                           JavaClassUtil.getClassSimpleName(
+                                   a.getClassName().substring(a.getClassName().indexOf("<")+1,a.getClassName().lastIndexOf(">")));
+                }
+                else {
+                    return JavaClassUtil.getClassSimpleName(a.getClassName());
+                }
+
+            }
+        }
+        return "NULL";
+    }
+
+    public static String get(String a ) {
+
+            if(StringUtil.isNotEmpty(a)){
+                if(a.contains("<") || a.contains("[")){
+                    return JavaClassUtil.getClassSimpleName(a) +
+                           JavaClassUtil.getClassSimpleName(a.substring(a.indexOf("<")+1,a.lastIndexOf(">")));
+                }
+                else {
+                    return JavaClassUtil.getClassSimpleName(a);
+                }
+
+            }
+            return null;
+        }
+
+
+    public static void main(String[] args) {
+        String a = get("com.smartdoc.example.response.ResponseResult<com.smartdoc.example.model.Product>");
+        System.out.println(a);
     }
 }

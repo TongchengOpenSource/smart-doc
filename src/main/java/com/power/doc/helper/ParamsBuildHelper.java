@@ -290,6 +290,7 @@ public class ParamsBuildHelper {
                 // file
                 if (JavaClassValidateUtil.isFile(fieldGicName)) {
                     ApiParam param = ApiParam.of().setField(pre + fieldName).setType("file")
+                            .setClassName(className)
                             .setPid(pid).setId(paramList.size() + pid + 1)
                             .setMaxLength(maxLength)
                             .setDesc(comment).setRequired(Boolean.parseBoolean(isRequired)).setVersion(since);
@@ -306,7 +307,7 @@ public class ParamsBuildHelper {
                     if (StringUtil.isEmpty(fieldValue)) {
                         fieldValue = DocUtil.getValByTypeAndFieldName(subTypeName, field.getName());
                     }
-                    ApiParam param = ApiParam.of().setField(pre + fieldName);
+                    ApiParam param = ApiParam.of().setClassName(className).setField(pre + fieldName);
                     param.setPid(pid).setMaxLength(maxLength).setValue(fieldValue);
                     String processedType = isShowJavaType ? subTypeName : DocClassUtil.processTypeNameForParams(subTypeName.toLowerCase());
                     param.setType(processedType);
@@ -335,7 +336,7 @@ public class ParamsBuildHelper {
                     }
                     preBuilder.append("└─");
                     int fieldPid;
-                    ApiParam param = ApiParam.of().setField(pre + fieldName).setPid(pid).setMaxLength(maxLength);
+                    ApiParam param = ApiParam.of().setField(pre + fieldName).setClassName(className).setPid(pid).setMaxLength(maxLength);
 
                     String processedType;
                     if (typeSimpleName.length() == 1) {
@@ -483,6 +484,7 @@ public class ParamsBuildHelper {
                             ApiParam param1 = ApiParam.of()
                                     .setField(preBuilder.toString() + "any object")
                                     .setId(fieldPid + 1).setPid(fieldPid)
+                                    .setClassName(className)
                                     .setMaxLength(maxLength)
                                     .setType("object")
                                     .setDesc(DocGlobalConstants.ANY_OBJECT_MSG)
@@ -517,6 +519,7 @@ public class ParamsBuildHelper {
                                     .setField(preBuilder.toString() + "any object")
                                     .setId(fieldPid + 1)
                                     .setPid(pid)
+                                    .setClassName(className)
                                     .setMaxLength(maxLength)
                                     .setType("object")
                                     .setDesc(DocGlobalConstants.ANY_OBJECT_MSG)
@@ -586,6 +589,7 @@ public class ParamsBuildHelper {
             String valueSimpleNameType = isShowJavaType ? valueSimpleName : DocClassUtil.processTypeNameForParams(valueSimpleName.toLowerCase());
             ApiParam apiParam = ApiParam.of().setField(pre + "mapKey")
                     .setType(valueSimpleNameType)
+                    .setClassName(valueSimpleName)
                     .setDesc(Optional.ofNullable(projectBuilder.getClassByName(valueSimpleName)).map(JavaClass::getComment).orElse("A map key."))
                     .setVersion(DEFAULT_VERSION)
                     .setPid(pid).setId(++pid);

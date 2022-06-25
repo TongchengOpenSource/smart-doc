@@ -610,6 +610,7 @@ public class DocUtil {
             case "int":
             case "short":
             case "java.lang.short":
+            case "int32":
                 return "integer";
             case "double":
             case "java.lang.long":
@@ -617,6 +618,7 @@ public class DocUtil {
             case "java.lang.float":
             case "float":
             case "bigdecimal":
+            case "int64":
             case "biginteger":
                 return "number";
             case "java.lang.boolean":

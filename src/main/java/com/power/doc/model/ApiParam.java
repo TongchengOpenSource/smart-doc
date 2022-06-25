@@ -278,8 +278,9 @@ public class ApiParam {
         return className;
     }
 
-    public void setClassName(String className) {
+    public ApiParam setClassName(String className) {
         this.className = className;
+        return this;
     }
 
     public boolean isSelfReferenceLoop() {

@@ -32,6 +32,7 @@ import com.power.doc.helper.JavaProjectBuilderHelper;
 import com.power.doc.model.*;
 import com.power.doc.template.IDocBuildTemplate;
 import com.power.doc.utils.DocUtil;
+import com.power.doc.utils.JavaClassUtil;
 import com.power.doc.utils.JsonUtil;
 import com.power.doc.utils.OpenApiSchemaUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
@@ -297,8 +298,8 @@ public class OpenApiBuilder {
         Map<String, Object> schema = new HashMap<>(10);
         Map<String, Object> innerScheme = new HashMap<>(10);
         //remove special characters in url
-        String responseRef = "#/components/schemas/" + apiMethodDoc.getPath().replaceAll(PATH_REGEX, "_") + "response";
-        String requestRef = "#/components/schemas/" + apiMethodDoc.getPath().replaceAll(PATH_REGEX, "_") + "request";
+        String responseRef = "#/components/schemas/" + OpenApiSchemaUtil.getClassNameFromParams(apiMethodDoc.getResponseParams());
+        String requestRef = "#/components/schemas/" + OpenApiSchemaUtil.getClassNameFromParams(apiMethodDoc.getRequestParams());
         //List param
         if (apiMethodDoc.isListParam()) {
             schema.put("type", DocGlobalConstants.ARRAY);
@@ -309,9 +310,9 @@ public class OpenApiBuilder {
             }
             schema.put("items", innerScheme);
         } else {
-            if (isRep) {
+            if (isRep&& CollectionUtil.isNotEmpty(apiMethodDoc.getResponseParams())) {
                 schema.put("$ref", responseRef);
-            } else {
+            } else if(CollectionUtil.isNotEmpty(apiMethodDoc.getRequestParams())) {
                 schema.put("$ref", requestRef);
             }
         }
@@ -494,18 +495,19 @@ public class OpenApiBuilder {
                     apiMethodDocs.forEach(
                             method -> {
                                 //request components
-                                String requestSchema = method.getPath().replaceAll(PATH_REGEX, "_") + "request";
+                                String requestSchema = OpenApiSchemaUtil.getClassNameFromParams(method.getRequestParams());
                                 List<ApiParam> requestParams = method.getRequestParams();
-                                Map<String, Object> prop = buildProperties(requestParams, requestSchema,component);
+                                Map<String, Object> prop = buildProperties(requestParams,component);
                                 component.put(requestSchema, prop);
                                 //response components
                                 List<ApiParam> responseParams = method.getResponseParams();
-                                String schemaName = method.getPath().replaceAll(PATH_REGEX, "_") + "response";
-                                component.put(schemaName, buildProperties(responseParams, schemaName,component));
+                                String schemaName = OpenApiSchemaUtil.getClassNameFromParams(method.getResponseParams());
+                                component.put(schemaName, buildProperties(responseParams,component));
                             }
                     );
                 }
         );
+        component.remove("NULL");
         schemas.put("schemas", component);
         return schemas;
     }
@@ -514,10 +516,9 @@ public class OpenApiBuilder {
      * component schema properties
      *
      * @param apiParam   list of ApiParam
-     * @param schemaName component schema name
      * @return
      */
-    private static Map<String, Object> buildProperties(List<ApiParam> apiParam, String schemaName,Map<String, Object> component) {
+    private static Map<String, Object> buildProperties(List<ApiParam> apiParam,Map<String, Object> component) {
         Map<String, Object> properties = new HashMap<>();
         Map<String, Object> propertiesData = new LinkedHashMap<>();
         List<String> requiredList = new ArrayList<>();
@@ -534,7 +535,7 @@ public class OpenApiBuilder {
                     continue;
                 }
                 String field = param.getField();
-                propertiesData.put(field, buildPropertiesData(param, schemaName,component));
+                propertiesData.put(field, buildPropertiesData(param,component));
             }
             if (!propertiesData.isEmpty()) {
                 properties.put("properties", propertiesData);
@@ -555,7 +556,7 @@ public class OpenApiBuilder {
      * @param apiParam ApiParam
      * @return
      */
-    private static Map<String, Object> buildPropertiesData(ApiParam apiParam, String schemaName,Map<String, Object> component) {
+    private static Map<String, Object> buildPropertiesData(ApiParam apiParam,Map<String, Object> component) {
         Map<String, Object> propertiesData = new HashMap<>();
         String openApiType = DocUtil.javaTypeToOpenApiTypeConvert(apiParam.getType());
         //array object file map
@@ -569,14 +570,13 @@ public class OpenApiBuilder {
             propertiesData.put("type", "object");
             propertiesData.put("description", apiParam.getDesc() + "(map data)");
         }
-
         if ("array".equals(apiParam.getType())) {
             if (CollectionUtil.isNotEmpty(apiParam.getChildren())) {
                 propertiesData.put("type", "array");
                 if(!apiParam.isSelfReferenceLoop()) {
                     Map<String,Object> arrayRef = new HashMap<>(4);
-                    String childSchemaName = OpenApiSchemaUtil.encodeParam(apiParam.getChildren());
-                    component.put(childSchemaName, buildProperties(apiParam.getChildren(), childSchemaName,component));
+                    String childSchemaName = OpenApiSchemaUtil.getClassNameFromParams(apiParam.getChildren());
+                    component.put(childSchemaName, buildProperties(apiParam.getChildren(),component));
                     arrayRef.put("$ref","#/components/schemas/" +childSchemaName);
                     propertiesData.put("items",arrayRef);
                 }
@@ -592,12 +592,18 @@ public class OpenApiBuilder {
                 propertiesData.put("type", "object");
                 propertiesData.put("description", apiParam.getDesc() + "(object)");
                 if(!apiParam.isSelfReferenceLoop()){
-                    String childSchemaName = OpenApiSchemaUtil.encodeParam(apiParam.getChildren());
-                    component.put(childSchemaName, buildProperties(apiParam.getChildren(), childSchemaName,component));
+                    String childSchemaName = OpenApiSchemaUtil.getClassNameFromParams(apiParam.getChildren());
+                    component.put(childSchemaName, buildProperties(apiParam.getChildren(),component));
                     propertiesData.put("$ref", "#/components/schemas/" +childSchemaName);
                 }
             }
         }
+
+        if(!propertiesData.containsKey("type")){
+            propertiesData.put("type","string");
+            propertiesData.put("format","string");
+        }
+
         return propertiesData;
     }
 }
