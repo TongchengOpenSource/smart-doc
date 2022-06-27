@@ -74,5 +74,13 @@ public final class JakartaJaxrsAnnotations {
      * JAX-RS@RestPath
      */
     public static final String JAXB_REST_PATH_FULLY = "org.jboss.resteasy.reactive.RestPath";
+    /**
+     * JAX-RS@PATCH
+     */
+    public static final String JAX_PATCH_FULLY = "jakarta.ws.rs.PATCH";
+    /**
+     * JAX-RS@HEAD
+     */
+    public static final String JAX_HEAD_FULLY = "jakarta.ws.rs.HEAD";
 
 }

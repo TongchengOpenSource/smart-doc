@@ -58,8 +58,10 @@ public class JaxrsPathHandler {
             Arrays.asList(
                     JakartaJaxrsAnnotations.JAXB_DELETE_FULLY, JakartaJaxrsAnnotations.JAX_PUT_FULLY,
                     JakartaJaxrsAnnotations.JAX_GET_FULLY, JakartaJaxrsAnnotations.JAX_POST_FULLY,
+                    JakartaJaxrsAnnotations.JAX_PATCH_FULLY, JakartaJaxrsAnnotations.JAX_HEAD_FULLY,
                     JAXRSAnnotations.JAXB_DELETE_FULLY, JAXRSAnnotations.JAX_PUT_FULLY,
-                    JAXRSAnnotations.JAX_GET_FULLY, JAXRSAnnotations.JAX_POST_FULLY
+                    JAXRSAnnotations.JAX_GET_FULLY, JAXRSAnnotations.JAX_POST_FULLY,
+                    JAXRSAnnotations.JAXB_PATCH_FULLY, JAXRSAnnotations.JAXB_HEAD_FULLY
             )));
 
     Map<String, String> constantsMap;
