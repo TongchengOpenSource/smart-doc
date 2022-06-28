@@ -56,5 +56,13 @@ public final class JAXRSAnnotations {
      * JAX-RS@DELETE
      */
     public static final String JAXB_DELETE_FULLY = "javax.ws.rs.DELETE";
+    /**
+     * JAX-RS@PATCH
+     */
+    public static final String JAXB_PATCH_FULLY = "javax.ws.rs.PATCH";
+    /**
+     * JAX-RS@HEAD
+     */
+    public static final String JAXB_HEAD_FULLY = "javax.ws.rs.HEAD";
 
 }
