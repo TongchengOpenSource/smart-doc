@@ -54,6 +54,7 @@ public class SolonRequestMappingHandler {
      * @param controllerBaseUrl solon mvc controller base url
      * @param method            JavaMethod
      * @param constantsMap      project constant container
+     * @param isRemoting        isRemoting
      * @return RequestMapping
      */
     public RequestMapping handle(ProjectDocConfigBuilder projectBuilder, String controllerBaseUrl, JavaMethod method, Map<String, String> constantsMap, boolean isRemoting) {

@@ -321,8 +321,9 @@ public class JavaClassUtil {
      *
      * @author chen qi
      * @param javaClass the java class info
+     * @param builder builder
      * @since 1.0.0
-     * @return
+     * @return EnumInfo
      */
     public static EnumInfo getEnumInfo(JavaClass javaClass, ProjectDocConfigBuilder builder) {
         if (Objects.isNull(javaClass) || !javaClass.isEnum()) {
@@ -459,6 +460,7 @@ public class JavaClassUtil {
      * Obtain Validate Group classes
      *
      * @param annotations the annotations of controller method param
+     * @param builder builder
      * @return the group annotation value
      */
     public static Set<String> getParamGroupJavaClass(List<JavaAnnotation> annotations, JavaProjectBuilder builder) {

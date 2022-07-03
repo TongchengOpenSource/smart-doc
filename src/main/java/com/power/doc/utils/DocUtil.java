@@ -681,8 +681,8 @@ public class DocUtil {
      * resolve the string of {@link Add} which has {@link FieldRef}(to be exact is {@link FieldRef}) children,
      * the value of {@link FieldRef} will be resolved with the real value of it if it is the static final member of any other class
      *
-     * @param annotationValue
-     * @return
+     * @param annotationValue annotationValue
+     * @return annotation value
      */
     public static String resolveAnnotationValue(AnnotationValue annotationValue) {
         if (annotationValue instanceof Add) {

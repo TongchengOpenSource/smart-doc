@@ -95,7 +95,7 @@ public class ApiParamTreeUtil {
      * @param queryReqParamMap   configQueryParam
      * @param pathReqParamMap    configPathParam
      * @param requestBodyCounter hasRequestBody
-     * @return
+     * @return ApiMethodReqParam
      */
     public static ApiMethodReqParam buildMethodReqParam(List<ApiParam> paramList, final Map<String, ApiReqParam> queryReqParamMap,
                                                         final Map<String, ApiReqParam> pathReqParamMap, int requestBodyCounter) {

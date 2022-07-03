@@ -72,7 +72,7 @@ public class JavaFieldUtil {
      * @param paramName      参数名称
      * @param typeName       参数数据类型
      * @param simpleTypeName 参数简单数据类型
-     * @return
+     * @return mock value
      */
     public static String createMockValue(Map<String, String> paramsComments, String paramName, String typeName, String simpleTypeName) {
         String mockValue = "";
@@ -93,6 +93,7 @@ public class JavaFieldUtil {
     /**
      *
      * @param annotations annotation
+     * @return max length
      */
     public static String getParamMaxlength(List<JavaAnnotation> annotations){
         String maxLength = "";
