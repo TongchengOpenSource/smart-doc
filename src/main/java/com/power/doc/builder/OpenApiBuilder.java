@@ -30,9 +30,9 @@ import com.power.doc.constants.Methods;
 import com.power.doc.factory.BuildTemplateFactory;
 import com.power.doc.helper.JavaProjectBuilderHelper;
 import com.power.doc.model.*;
+import com.power.doc.model.openapi.OpenApiTag;
 import com.power.doc.template.IDocBuildTemplate;
 import com.power.doc.utils.DocUtil;
-import com.power.doc.utils.JavaClassUtil;
 import com.power.doc.utils.JsonUtil;
 import com.power.doc.utils.OpenApiSchemaUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
@@ -88,7 +88,9 @@ public class OpenApiBuilder {
         json.put("openapi", "3.0.3");
         json.put("info", buildInfo(config));
         json.put("servers", buildServers(config));
-        json.put("paths", buildPaths(config, apiDocList));
+        Set<OpenApiTag> tags = new HashSet<>();
+        json.put("tags", tags);
+        json.put("paths", buildPaths(config, apiDocList, tags));
         json.put("components", buildComponentsSchema(apiDocList));
 
         String filePath = config.getOutPath();
@@ -129,12 +131,14 @@ public class OpenApiBuilder {
      *
      * @param apiConfig  ApiConfig
      * @param apiDocList List of api
+     * @param tags tags
      * @return
      */
-    private static Map<String, Object> buildPaths(ApiConfig apiConfig, List<ApiDoc> apiDocList) {
+    private static Map<String, Object> buildPaths(ApiConfig apiConfig, List<ApiDoc> apiDocList, Set<OpenApiTag> tags) {
         Map<String, Object> pathMap = new HashMap<>(500);
         apiDocList.forEach(
                 a -> {
+                    tags.add(OpenApiTag.of(a.getDesc(), a.getDesc()));
                     List<ApiMethodDoc> apiMethodDocs = a.getList();
                     apiMethodDocs.forEach(
                             method -> {
@@ -182,9 +186,9 @@ public class OpenApiBuilder {
         request.put("summary", apiMethodDoc.getDesc());
         request.put("description", apiMethodDoc.getDetail());
         if (StringUtil.isNotEmpty(apiMethodDoc.getGroup())) {
-            request.put("tags", new String[]{apiDoc.getName()});
+            request.put("tags", new String[]{apiDoc.getDesc()});
         } else {
-            request.put("tags", new String[]{apiDoc.getName()});
+            request.put("tags", new String[]{apiDoc.getDesc()});
         }
         request.put("requestBody", buildRequestBody(apiConfig, apiMethodDoc));
         request.put("parameters", buildParameters(apiMethodDoc));
