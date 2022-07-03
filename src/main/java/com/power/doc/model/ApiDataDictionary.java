@@ -130,9 +130,9 @@ public class ApiDataDictionary {
         return this;
     }
 
-    public List<EnumDictionary> getEnumDataDict() {
-        if (this.enumClass != null) {
-            return EnumUtil.getEnumInformation(this.enumClass, this.getCodeField(),
+    public List<EnumDictionary> getEnumDataDict(Class enumClass) {
+        if (Objects.nonNull(enumClass)) {
+            return EnumUtil.getEnumInformation(enumClass, this.getCodeField(),
                     this.getDescField());
         } else {
             return new ArrayList<>();

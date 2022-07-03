@@ -361,27 +361,25 @@ public class ParamsBuildHelper {
                     if (javaClass.isEnum()) {
                         comment = comment + handleEnumComment(javaClass, projectBuilder);
                         param.setType(DocGlobalConstants.ENUM);
-                        if (!isResp) {
-                            List<JavaMethod> methods = javaClass.getMethods();
-                            int index = 0;
-                            enumOut:
-                            for (JavaMethod method : methods) {
-                                List<JavaAnnotation> javaAnnotationList = method.getAnnotations();
-                                for (JavaAnnotation annotation : javaAnnotationList) {
-                                    if (annotation.getType().getValue().contains("JsonValue")) {
-                                        break enumOut;
-                                    }
-                                }
-                                if (CollectionUtil.isEmpty(javaAnnotations) && index < 1) {
+                        List<JavaMethod> methods = javaClass.getMethods();
+                        int index = 0;
+                        enumOut:
+                        for (JavaMethod method : methods) {
+                            List<JavaAnnotation> javaAnnotationList = method.getAnnotations();
+                            for (JavaAnnotation annotation : javaAnnotationList) {
+                                if (annotation.getType().getValue().contains("JsonValue")) {
                                     break enumOut;
                                 }
-                                index++;
                             }
-                            Object value = JavaClassUtil.getEnumValue(javaClass, !jsonRequest);
-                            param.setValue(String.valueOf(value));
-                            param.setEnumValues(JavaClassUtil.getEnumValues(javaClass));
-                            param.setEnumInfo(JavaClassUtil.getEnumInfo(javaClass, projectBuilder));
+                            if (CollectionUtil.isEmpty(javaAnnotations) && index < 1) {
+                                break enumOut;
+                            }
+                            index++;
                         }
+                        Object value = JavaClassUtil.getEnumValue(javaClass, !jsonRequest);
+                        param.setValue(String.valueOf(value));
+                        param.setEnumValues(JavaClassUtil.getEnumValues(javaClass));
+                        param.setEnumInfo(JavaClassUtil.getEnumInfo(javaClass, projectBuilder));
                         // Override old value
                         if (tagsMap.containsKey(DocTags.MOCK) && StringUtil.isNotEmpty(tagsMap.get(DocTags.MOCK))) {
                             param.setValue(tagsMap.get(DocTags.MOCK));
@@ -609,8 +607,7 @@ public class ParamsBuildHelper {
         return paramList;
     }
 
-    public static String dictionaryListComment(ApiDataDictionary dictionary) {
-        List<EnumDictionary> enumDataDict = dictionary.getEnumDataDict();
+    public static String dictionaryListComment(List<EnumDictionary> enumDataDict) {
         return enumDataDict.stream().map(apiDataDictionary ->
                 apiDataDictionary.getName() + "-(\"" + apiDataDictionary.getValue() + "\",\"" + apiDataDictionary.getDesc() + "\")"
         ).collect(Collectors.joining(","));
@@ -652,7 +649,16 @@ public class ParamsBuildHelper {
             if (Objects.isNull(dataDictionary)) {
                 comment = comment + "<br/>" + JavaClassUtil.getEnumParams(javaClass);
             } else {
-                comment = comment + "[enum:" + dictionaryListComment(dataDictionary) + "]";
+                Class enumClass = dataDictionary.getEnumClass();
+                if (enumClass.isInterface()) {
+                    ClassLoader classLoader = projectBuilder.getApiConfig().getClassLoader();
+                    try {
+                        enumClass = classLoader.loadClass(javaClass.getFullyQualifiedName());
+                    } catch (ClassNotFoundException e) {
+                        return comment;
+                    }
+                }
+                comment = comment + "[enum:" + dictionaryListComment(dataDictionary.getEnumDataDict(enumClass)) + "]";
             }
         } else {
             if (StringUtil.isNotEmpty(enumComments)) {
