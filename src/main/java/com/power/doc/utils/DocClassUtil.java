@@ -188,11 +188,13 @@ public class DocClassUtil {
             case "localdatetime":
             case "java.time.localdatetime":
             case "java.time.localdate":
+            case "java.time.period":
             case "localdate":
             case "offsetdatetime":
             case "localtime":
             case "timestamp":
             case "zoneddatetime":
+            case "period":
             case "java.time.zoneddatetime":
             case "java.time.offsetdatetime":
             case "java.lang.character":

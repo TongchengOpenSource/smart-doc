@@ -94,10 +94,12 @@ public class JavaClassValidateUtil {
             case "java.util.date":
             case "java.time.localdatetime":
             case "java.time.localtime":
+            case "java.time.period":
             case "localdatetime":
             case "localdate":
             case "zoneddatetime":
             case "offsetdatetime":
+            case "period":
             case "java.time.localdate":
             case "java.time.zoneddatetime":
             case "java.time.offsetdatetime":
