@@ -9,6 +9,8 @@
   4. 修复实现接口的枚举作为字段时生成文档报错,[#292](https://github.com/smart-doc-group/smart-doc/issues/292)
   5. 修复Delete Option json请求没有request body的问题[#300](https://github.com/smart-doc-group/smart-doc/issues/300)
   6. 修复OpenAPI导出一级菜单未使用注释名的bug,[#296](https://github.com/smart-doc-group/smart-doc/issues/296)
+  7. 新增对JAX-RS @PATCH、@HEAD 的支持[#pr303](https://github.com/smart-doc-group/smart-doc/pull/303) 
+  8. 自增serverEnv配置用户支持在postman中设置服务器地址变量，[#280](https://github.com/smart-doc-group/smart-doc/issues/280)
 ### 版本号：2.4.7
 - 更新日期: 2022-06-13
 - 更新内容：

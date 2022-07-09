@@ -78,6 +78,9 @@ public class PostmanJsonBuilder {
     public static void buildPostmanCollection(ApiConfig config, JavaProjectBuilder projectBuilder) {
         DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
         builderTemplate.checkAndInit(config, false);
+        if (StringUtil.isNotEmpty(config.getServerEnv())) {
+            config.setServerUrl(config.getServerEnv());
+        }
         config.setParamsDataToTree(false);
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, projectBuilder);
         postManCreate(config, configBuilder);

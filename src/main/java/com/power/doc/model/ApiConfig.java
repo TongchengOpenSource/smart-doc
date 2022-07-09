@@ -46,6 +46,11 @@ public class ApiConfig {
     private String serverUrl;
 
     /**
+     *  Web server base url for postman
+     */
+    private String serverEnv;
+
+    /**
      * Path Prefix, eg: Servlet ContextPath
      */
     private String pathPrefix = "";
@@ -932,5 +937,13 @@ public class ApiConfig {
 
     public void setHighlightStyleLink(String highlightStyleLink) {
         this.highlightStyleLink = highlightStyleLink;
+    }
+
+    public String getServerEnv() {
+        return serverEnv;
+    }
+
+    public void setServerEnv(String serverEnv) {
+        this.serverEnv = serverEnv;
     }
 }
