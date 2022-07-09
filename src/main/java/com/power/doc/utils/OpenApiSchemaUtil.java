@@ -22,10 +22,8 @@
  */
 package com.power.doc.utils;
 
-import com.power.common.util.MD6Util;
 import com.power.common.util.StringUtil;
 import com.power.doc.model.ApiParam;
-import org.apache.commons.codec.digest.DigestUtils;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -77,14 +75,13 @@ public class OpenApiSchemaUtil {
     }
 
     public static String getClassNameFromParams(List<ApiParam> apiParams) {
-        for(ApiParam a : apiParams){
-            if(StringUtil.isNotEmpty(a.getClassName())){
-                if(a.getClassName().contains("<") || a.getClassName().contains("[")){
-                   return JavaClassUtil.getClassSimpleName(a.getClassName()) +
-                           JavaClassUtil.getClassSimpleName(
-                                   a.getClassName().substring(a.getClassName().indexOf("<")+1,a.getClassName().lastIndexOf(">")));
-                }
-                else {
+        for (ApiParam a : apiParams) {
+            if (StringUtil.isNotEmpty(a.getClassName())) {
+                if (a.getClassName().contains("<") || a.getClassName().contains("[")) {
+                    return JavaClassUtil.getClassSimpleName(a.getClassName()) +
+                            JavaClassUtil.getClassSimpleName(
+                                    a.getClassName().substring(a.getClassName().indexOf("<") + 1, a.getClassName().lastIndexOf(">")));
+                } else {
                     return JavaClassUtil.getClassSimpleName(a.getClassName());
                 }
 
@@ -93,24 +90,15 @@ public class OpenApiSchemaUtil {
         return "NULL";
     }
 
-    public static String get(String a ) {
-
-            if(StringUtil.isNotEmpty(a)){
-                if(a.contains("<") || a.contains("[")){
-                    return JavaClassUtil.getClassSimpleName(a) +
-                           JavaClassUtil.getClassSimpleName(a.substring(a.indexOf("<")+1,a.lastIndexOf(">")));
-                }
-                else {
-                    return JavaClassUtil.getClassSimpleName(a);
-                }
-
+    public static String get(String a) {
+        if (StringUtil.isNotEmpty(a)) {
+            if (a.contains("<") || a.contains("[")) {
+                return JavaClassUtil.getClassSimpleName(a) +
+                        JavaClassUtil.getClassSimpleName(a.substring(a.indexOf("<") + 1, a.lastIndexOf(">")));
+            } else {
+                return JavaClassUtil.getClassSimpleName(a);
             }
-            return null;
         }
-
-
-    public static void main(String[] args) {
-        String a = get("com.smartdoc.example.response.ResponseResult<com.smartdoc.example.model.Product>");
-        System.out.println(a);
+        return null;
     }
 }
