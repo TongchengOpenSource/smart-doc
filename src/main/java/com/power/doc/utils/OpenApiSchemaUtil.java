@@ -22,19 +22,24 @@
  */
 package com.power.doc.utils;
 
+import com.power.common.util.CollectionUtil;
+import com.power.common.util.MD6Util;
 import com.power.common.util.StringUtil;
 import com.power.doc.model.ApiParam;
+import com.thoughtworks.qdox.model.JavaParameter;
+import org.apache.commons.codec.digest.DigestUtils;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author yu 2020/11/29.
  */
 public class OpenApiSchemaUtil {
 
+    public final static String NO_BODY_PARAM = "NO_BODY_PARAM";
+    final static  Pattern  p =  Pattern.compile("[A-Z]\\w+.*?|[A-Z]");
     public static Map<String, Object> primaryTypeSchema(String primaryType) {
         Map<String, Object> map = new HashMap<>();
         map.put("type", DocUtil.javaTypeToOpenApiTypeConvert(primaryType));
@@ -75,30 +80,23 @@ public class OpenApiSchemaUtil {
     }
 
     public static String getClassNameFromParams(List<ApiParam> apiParams) {
-        for (ApiParam a : apiParams) {
-            if (StringUtil.isNotEmpty(a.getClassName())) {
-                if (a.getClassName().contains("<") || a.getClassName().contains("[")) {
-                    return JavaClassUtil.getClassSimpleName(a.getClassName()) +
-                            JavaClassUtil.getClassSimpleName(
-                                    a.getClassName().substring(a.getClassName().indexOf("<") + 1, a.getClassName().lastIndexOf(">")));
-                } else {
-                    return JavaClassUtil.getClassSimpleName(a.getClassName());
-                }
-
+        for(ApiParam a : apiParams){
+            if(StringUtil.isNotEmpty(a.getClassName())){
+                 return OpenApiSchemaUtil.delClassName(a.getClassName());
             }
         }
-        return "NULL";
+        return NO_BODY_PARAM;
     }
+    public static String  delClassName(String className){
+        Matcher m = p.matcher(className);
+        StringBuilder sb = new StringBuilder();
 
-    public static String get(String a) {
-        if (StringUtil.isNotEmpty(a)) {
-            if (a.contains("<") || a.contains("[")) {
-                return JavaClassUtil.getClassSimpleName(a) +
-                        JavaClassUtil.getClassSimpleName(a.substring(a.indexOf("<") + 1, a.lastIndexOf(">")));
-            } else {
-                return JavaClassUtil.getClassSimpleName(a);
-            }
+       while (m.find()){
+           sb.append(m.group());
+       }
+        if(StringUtil.isEmpty(sb.toString())){
+            System.out.println(className);
         }
-        return null;
+       return sb.toString();
     }
 }
