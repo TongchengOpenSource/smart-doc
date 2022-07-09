@@ -32,6 +32,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * @author yu 2020/11/29.
@@ -88,15 +89,24 @@ public class OpenApiSchemaUtil {
         return NO_BODY_PARAM;
     }
     public static String  delClassName(String className){
-        Matcher m = p.matcher(className);
-        StringBuilder sb = new StringBuilder();
+        return String.join("", getPatternResult(p, className));
+    }
 
-       while (m.find()){
-           sb.append(m.group());
-       }
-        if(StringUtil.isEmpty(sb.toString())){
-            System.out.println(className);
+    public static List<String> getPatternResult(Pattern p,String content){
+        List<String> matchers = new ArrayList<>();
+        Matcher m = p.matcher(content);
+        while (m.find()){
+            matchers.add(m.group());
         }
-       return sb.toString();
+        return matchers;
+    }
+    public static List<String> getPatternResult(String rex,String content){
+        Pattern p = Pattern.compile(rex);
+        List<String> matchers = new ArrayList<>();
+        Matcher m = p.matcher(content);
+        while (m.find()){
+            matchers.add(m.group());
+        }
+        return matchers;
     }
 }

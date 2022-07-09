@@ -627,8 +627,6 @@ public class DocUtil {
             case "java.lang.boolean":
             case "boolean":
                 return "boolean";
-            case "map":
-                return "map";
             case "multipartfile":
                 return "file";
             default:
