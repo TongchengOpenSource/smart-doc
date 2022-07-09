@@ -6,6 +6,7 @@
   1. 支持servlet 3.0 文件上传[#294](https://github.com/smart-doc-group/smart-doc/issues/294)
   2. 修复表单复杂对象嵌套Request-example错误问题[#284](https://github.com/smart-doc-group/smart-doc/issues/284)
   3. 修复注释换行导致html文档链接无法点击问题[#290](https://github.com/smart-doc-group/smart-doc/issues/290)
+  4. 修复实现接口的枚举作为字段时生成文档报错,[#292](https://github.com/smart-doc-group/smart-doc/issues/292)
 ### 版本号：2.4.7
 - 更新日期: 2022-06-13
 - 更新内容：
@@ -17,6 +18,7 @@
   1. 新增枚举字典扫描，[#264](https://github.com/smart-doc-group/smart-doc/issues/264)
   2. BigDecimal类型输出优化，[#268](https://github.com/smart-doc-group/smart-doc/issues/268)
   3. 对不规范的mock注释增加检查，[#262](https://github.com/smart-doc-group/smart-doc/issues/262)
+
 ### 版本号：2.4.5
 - 更新日期: 2022-05-10
 - 更新内容：

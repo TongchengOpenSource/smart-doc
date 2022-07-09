@@ -499,7 +499,11 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
 
                     if (JavaClassValidateUtil.isPrimitive(simpleTypeName)) {
                         if (isArrayOrCollection) {
-                            mockValue = "[" + mockValue + "]";
+                            if (StringUtil.isNotEmpty(mockValue)) {
+                                mockValue = "[" + mockValue + "]";
+                            } else {
+                                mockValue = "[" + DocUtil.getValByTypeAndFieldName(gicTypeName,paramName)+ "]";
+                            }
                             mockValue = JsonUtil.toPrettyFormat(mockValue);
                         }
                         requestExample.setJsonBody(mockValue).setJson(true);
@@ -672,8 +676,9 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                     .setReqHeaders(reqHeaderList)
                     .setUrl(url);
             exampleBody = CurlUtil.toCurl(curlRequest);
+
             requestExample.setExampleBody(exampleBody)
-                    .setJsonBody(DocGlobalConstants.EMPTY)
+                    .setJsonBody(requestExample.isJson() ? requestExample.getJsonBody() : DocGlobalConstants.EMPTY)
                     .setUrl(url);
         }
         return requestExample;
@@ -916,7 +921,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             } else if (JavaClassValidateUtil.isMap(fullTypeName)) {
                 log.warning("When using smart-doc, it is not recommended to use Map to receive parameters, Check it in "
                         + javaMethod.getDeclaringClass().getCanonicalName() + "#" + javaMethod.getName());
-                //如果typeName 是 map 但没加泛型 java.util.HashMap
+                //is map without Gic
                 if (JavaClassValidateUtil.isMap(typeName)) {
                     ApiParam apiParam = ApiParam.of()
                             .setField(paramName)
