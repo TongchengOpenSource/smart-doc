@@ -4,6 +4,8 @@
 - 更新日期: 2022-06-x
 - 更新内容：
   1. 支持servlet 3.0 文件上传[#294](https://github.com/smart-doc-group/smart-doc/issues/294)
+  2. 修复表单复杂对象嵌套Request-example错误问题[#284](https://github.com/smart-doc-group/smart-doc/issues/284)
+  3. 修复注释换行导致html文档链接无法点击问题[#290](https://github.com/smart-doc-group/smart-doc/issues/290)
 ### 版本号：2.4.7
 - 更新日期: 2022-06-13
 - 更新内容：
