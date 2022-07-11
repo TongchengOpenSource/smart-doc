@@ -194,10 +194,10 @@ public class ParamsBuildHelper {
                     } else if (DocAnnotationConstants.SHORT_JSON_FIELD.equals(simpleAnnotationName)) {
                         AnnotationValue serialize = annotation.getProperty(DocAnnotationConstants.SERIALIZE_PROP);
                         AnnotationValue deserialize = annotation.getProperty(DocAnnotationConstants.DESERIALIZE_PROP);
-                        if (!isResp && Objects.nonNull(serialize) && Boolean.FALSE.toString().equals(serialize.toString())) {
+                        if (!isResp && Objects.nonNull(deserialize) && Boolean.FALSE.toString().equals(deserialize.toString())) {
                             continue out;
                         }
-                        if (isResp && Objects.nonNull(deserialize) && Boolean.FALSE.toString().equals(deserialize.toString())) {
+                        if (isResp && Objects.nonNull(serialize) && Boolean.FALSE.toString().equals(serialize.toString())) {
                             continue out;
                         }
                         if (null != annotation.getProperty(DocAnnotationConstants.NAME_PROP)) {
