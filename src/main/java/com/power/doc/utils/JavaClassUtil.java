@@ -52,6 +52,7 @@ import com.thoughtworks.qdox.model.expression.Expression;
 import com.thoughtworks.qdox.model.expression.TypeRef;
 import com.thoughtworks.qdox.model.impl.DefaultJavaField;
 import com.thoughtworks.qdox.model.impl.DefaultJavaParameterizedType;
+import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -321,6 +322,29 @@ public class JavaClassUtil {
             enums.add(javaField.getName());
         }
         return enums;
+    }
+    public static JavaClass getSeeEnum(JavaField javaField, ProjectDocConfigBuilder builder) {
+        if (Objects.isNull(javaField)) {
+            return null;
+        }
+        JavaClass javaClass = javaField.getType();
+        if (javaClass.isEnum()) {
+            return javaClass;
+        }
+
+        DocletTag see = javaField.getTagByName(DocTags.SEE);
+        if (Objects.isNull(see)) {
+            return null;
+        }
+        String value = see.getValue();
+        // not FullyQualifiedName
+        if (!StringUtils.contains(value, ".")) {
+            List<String> imports = javaField.getDeclaringClass().getSource().getImports();
+            String finalValue = value;
+            value = imports.stream().filter(i -> StringUtils.endsWith(i, finalValue)).findFirst().orElse(StringUtils.EMPTY);
+        }
+
+        return builder.getJavaProjectBuilder().getClassByName(value);
     }
 
     /**

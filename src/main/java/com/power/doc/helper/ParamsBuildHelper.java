@@ -316,6 +316,13 @@ public class ParamsBuildHelper {
                     } else {
                         commonHandleParam(paramList, param, isRequired, NO_COMMENTS_FOUND, since, strRequired);
                     }
+
+                    JavaClass enumClass = ParamUtil.handleSeeEnum(param, field, projectBuilder, jsonRequest, tagsMap);
+                    if (Objects.nonNull(enumClass)) {
+                        comment = StringUtils.isEmpty(comment) ? enumClass.getComment() : comment;
+                        String enumComment = handleEnumComment(enumClass, projectBuilder);
+                        param.setDesc(comment + enumComment);
+                    }
                 } else {
                     String appendComment = "";
                     if (displayActualType) {
@@ -361,21 +368,6 @@ public class ParamsBuildHelper {
                     if (javaClass.isEnum()) {
                         comment = comment + handleEnumComment(javaClass, projectBuilder);
                         param.setType(DocGlobalConstants.ENUM);
-                        List<JavaMethod> methods = javaClass.getMethods();
-                        int index = 0;
-                        enumOut:
-                        for (JavaMethod method : methods) {
-                            List<JavaAnnotation> javaAnnotationList = method.getAnnotations();
-                            for (JavaAnnotation annotation : javaAnnotationList) {
-                                if (annotation.getType().getValue().contains("JsonValue")) {
-                                    break enumOut;
-                                }
-                            }
-                            if (CollectionUtil.isEmpty(javaAnnotations) && index < 1) {
-                                break enumOut;
-                            }
-                            index++;
-                        }
                         Object value = JavaClassUtil.getEnumValue(javaClass, !jsonRequest);
                         param.setValue(String.valueOf(value));
                         param.setEnumValues(JavaClassUtil.getEnumValues(javaClass));
