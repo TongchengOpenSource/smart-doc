@@ -1,5 +1,28 @@
 ## 变更日志
 
+### 版本号：2.4.8
+- 更新日期: 2022-07-09
+- 更新内容：
+  1. 支持servlet 3.0 文件上传[#294](https://github.com/smart-doc-group/smart-doc/issues/294)
+  2. 修复表单复杂对象嵌套Request-example错误问题[#284](https://github.com/smart-doc-group/smart-doc/issues/284)
+  3. 修复注释换行导致html文档链接无法点击问题[#290](https://github.com/smart-doc-group/smart-doc/issues/290)
+  4. 修复实现接口的枚举作为字段时生成文档报错,[#292](https://github.com/smart-doc-group/smart-doc/issues/292)
+  5. 修复Delete Option json请求没有request body的问题[#300](https://github.com/smart-doc-group/smart-doc/issues/300)
+  6. 修复OpenAPI导出一级菜单未使用注释名的bug,[#296](https://github.com/smart-doc-group/smart-doc/issues/296)
+  7. 新增对JAX-RS @PATCH、@HEAD 的支持[#pr303](https://github.com/smart-doc-group/smart-doc/pull/303)
+  8. 自增serverEnv配置用户支持在postman中设置服务器地址变量，[#280](https://github.com/smart-doc-group/smart-doc/issues/280)
+### 版本号：2.4.7
+- 更新日期: 2022-06-13
+- 更新内容：
+  1. 修复2.4.6版本使用高版本jdk出现module权限的问题
+  2. 修复bug[#283](https://github.com/smart-doc-group/smart-doc/issues/283)
+### 版本号：2.4.6
+- 更新日期: 2022-05-29
+- 更新内容：
+  1. 新增枚举字典扫描，[#264](https://github.com/smart-doc-group/smart-doc/issues/264)
+  2. BigDecimal类型输出优化，[#268](https://github.com/smart-doc-group/smart-doc/issues/268)
+  3. 对不规范的mock注释增加检查，[#262](https://github.com/smart-doc-group/smart-doc/issues/262)
+
 ### 版本号：2.4.5
 - 更新日期: 2022-05-10
 - 更新内容：
