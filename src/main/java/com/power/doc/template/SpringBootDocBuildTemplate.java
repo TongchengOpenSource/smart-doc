@@ -770,21 +770,6 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             if (requestFieldToUnderline) {
                 paramName = StringUtil.camelToUnderline(paramName);
             }
-            //file upload
-            if (JavaClassValidateUtil.isFile(typeName)) {
-                ApiParam param = ApiParam.of().setField(paramName).setType("file")
-                        .setId(paramList.size() + 1).setQueryParam(true)
-                        .setRequired(true).setVersion(DocGlobalConstants.DEFAULT_VERSION)
-                        .setDesc(comment);
-                if (typeName.contains("[]") || typeName.endsWith(">")) {
-                    comment = comment + "(array of file)";
-                    param.setType(DocGlobalConstants.PARAM_TYPE_FILE);
-                    param.setDesc(comment);
-                    param.setHasItems(true);
-                }
-                paramList.add(param);
-                continue;
-            }
             String mockValue = JavaFieldUtil.createMockValue(paramsComments, paramName, typeName, simpleTypeName);
             JavaClass javaClass = builder.getJavaProjectBuilder().getClassByName(fullTypeName);
             List<JavaAnnotation> annotations = parameter.getAnnotations();
@@ -835,6 +820,22 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 }
             }
             boolean required = Boolean.parseBoolean(strRequired);
+            //file upload
+            if (JavaClassValidateUtil.isFile(typeName)) {
+                ApiParam param = ApiParam.of().setField(paramName).setType(DocGlobalConstants.PARAM_TYPE_FILE)
+                        .setId(paramList.size() + 1).setQueryParam(true)
+                        .setRequired(required).setVersion(DocGlobalConstants.DEFAULT_VERSION)
+                        .setDesc(comment);
+                if (typeName.contains("[]") || typeName.endsWith(">")) {
+                    comment = comment + "(array of file)";
+                    param.setType(DocGlobalConstants.PARAM_TYPE_FILE);
+                    param.setDesc(comment);
+                    param.setHasItems(true);
+                }
+                paramList.add(param);
+                continue;
+            }
+
             boolean queryParam = false;
             if (!isRequestBody && !isPathVariable) {
                 queryParam = true;

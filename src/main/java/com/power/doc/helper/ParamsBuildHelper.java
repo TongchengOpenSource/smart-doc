@@ -151,18 +151,12 @@ public class ParamsBuildHelper {
                 //since tag value
                 String since = DocGlobalConstants.DEFAULT_VERSION;
 
-                if (!isResp) {
-                    pre:
-                    if (tagsMap.containsKey(DocTags.IGNORE)) {
-                        continue out;
-                    } else if (tagsMap.containsKey(DocTags.SINCE)) {
-                        since = tagsMap.get(DocTags.SINCE);
-                    }
-                } else {
-                    if (tagsMap.containsKey(DocTags.SINCE)) {
-                        since = tagsMap.get(DocTags.SINCE);
-                    }
+                if (tagsMap.containsKey(DocTags.IGNORE)) {
+                    continue out;
+                } else if (tagsMap.containsKey(DocTags.SINCE)) {
+                    since = tagsMap.get(DocTags.SINCE);
                 }
+
                 boolean strRequired = false;
                 int annotationCounter = 0;
                 CustomField customResponseField = responseFieldMap.get(simpleName + "." + fieldName);
