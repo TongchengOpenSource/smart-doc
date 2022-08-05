@@ -136,7 +136,19 @@ public class ApiConfig {
      * adoc flag
      */
     private boolean adoc;
+    /**
+     * default /src/main/java
+     */
+    private String codePath;
 
+    public String getCodePath() {
+        return codePath;
+    }
+
+    public ApiConfig setCodePath(String codePath) {
+        this.codePath = codePath;
+        return this;
+    }
 
     /**
      * api data dictionary
