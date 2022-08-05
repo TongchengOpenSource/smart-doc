@@ -14,6 +14,7 @@
 ```json
 {
   "serverUrl": "http://127.0.0.1", //服务器地址,非必须。导出postman建议设置成http://{{server}}方便直接在postman直接设置环境变量
+  "serverEnv": "http://{{server}}",//导出postman时系统的公共url全局变量设置 @since 2.4.8,解决导出postman需要修改serverUrl问题
   "pathPrefix": "", //设置path前缀,非必须。如配置Servlet ContextPath 。@since 2.2.3
   "isStrict": false, //是否开启严格模式
   "allInOne": true,  //是否将文档合并到一个文件中，一般推荐为true
@@ -181,9 +182,22 @@
 * 默认值: `http://127.0.0.1`
 
 服务器地址, 导出`postman`建议设置成`http://{{server}}`方便直接在`postman`直接设置环境变量。
+`2.4.8`后导出`postman`建议使用`serverEnv`,避免多出导出时修改配置。
 ```json
 {
     "serverUrl": "http://127.0.0.1"
+}
+```
+## serverEnv
+* 必填：`false`
+* 类型：`String`
+* 默认值: 无
+* @since `2.4.8`
+
+服务器地址, 导出`postman`建议设置成`http://{{server}}`方便直接在`postman`直接设置环境变量。改配置是为了支持postman导出时不用全局修改serverUrl
+```json
+{
+    "serverUrl": "http://{{server}}"
 }
 ```
 
@@ -254,7 +268,7 @@
 * 默认值: `false`
 * @since `2.0.0`
 
-`smart-doc`支持创一个类似swagger那种可调试接口的`HTML`文档页面，仅在`AllInOne`模式中起作用。
+`smart-doc`支持创一个类似`Swagger`那种可调试接口的`HTML`文档页面，仅在`AllInOne`模式中起作用。
 ```json
 {
     "createDebugPage": false
