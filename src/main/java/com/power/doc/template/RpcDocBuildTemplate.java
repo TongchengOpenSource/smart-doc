@@ -61,7 +61,7 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
     private final AtomicInteger atomicInteger = new AtomicInteger(1);
 
     @Override
-    public List<RpcApiDoc> getApiData(ProjectDocConfigBuilder projectBuilder) {
+    public List<RpcApiDoc>  getApiData(ProjectDocConfigBuilder projectBuilder) {
         ApiConfig apiConfig = projectBuilder.getApiConfig();
         List<RpcApiDoc> apiDocList = new ArrayList<>();
         int order = 0;
@@ -186,6 +186,7 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
         }
         List<ApiParam> paramList = new ArrayList<>();
         for (JavaParameter parameter : parameterList) {
+            boolean required = false;
             String paramName = parameter.getName();
             String typeName = parameter.getType().getGenericCanonicalName();
             String simpleName = parameter.getType().getValue().toLowerCase();
@@ -199,6 +200,11 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
             String mockValue = JavaFieldUtil.createMockValue(paramTagMap, paramName, typeName, typeName);
             JavaClass javaClass = builder.getJavaProjectBuilder().getClassByName(fullTypeName);
             List<JavaAnnotation> annotations = parameter.getAnnotations();
+            for (JavaAnnotation a: annotations){
+                if(JavaClassValidateUtil.isJSR303Required(a.getType().getValue())){
+                    required = true;
+                    break;
+                } }
             Set<String> groupClasses = JavaClassUtil.getParamGroupJavaClass(annotations, builder.getJavaProjectBuilder());
             if (JavaClassValidateUtil.isCollection(fullTypeName) || JavaClassValidateUtil.isArray(fullTypeName)) {
                 if (JavaClassValidateUtil.isCollection(typeName)) {
@@ -214,6 +220,7 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
                             JavaClassUtil.getClassSimpleName(typeName) : DocClassUtil.processTypeNameForParams(simpleName);
                     ApiParam param = ApiParam.of().setField(paramName)
                             .setDesc(comment+"   (children type : " + gicName+")")
+                            .setRequired(required)
                             .setType(processedType);
                     paramList.add(param);
                 } else {
@@ -224,6 +231,7 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
                 ApiParam param = ApiParam.of().setField(paramName)
                         .setType(JavaClassUtil.getClassSimpleName(typeName))
                         .setDesc(comment)
+                        .setRequired(required)
                         .setMaxLength(JavaFieldUtil.getParamMaxlength(parameter.getAnnotations()))
                         .setValue(mockValue)
                         .setVersion(DocGlobalConstants.DEFAULT_VERSION);
@@ -231,7 +239,7 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
             } else if (JavaClassValidateUtil.isMap(fullTypeName)) {
                 if (JavaClassValidateUtil.isMap(typeName)) {
                     ApiParam apiParam = ApiParam.of().setField(paramName).setType(typeName)
-                            .setDesc(comment).setVersion(DocGlobalConstants.DEFAULT_VERSION);
+                            .setDesc(comment).setRequired(required).setVersion(DocGlobalConstants.DEFAULT_VERSION);
                     paramList.add(apiParam);
                     continue;
                 }
@@ -240,7 +248,7 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
                         Boolean.FALSE, new HashMap<>(), builder, groupClasses, 0, Boolean.FALSE));
             } else if (javaClass.isEnum()) {
                 ApiParam param = ApiParam.of().setField(paramName)
-                        .setType("Enum").setDesc(comment).setVersion(DocGlobalConstants.DEFAULT_VERSION);
+                        .setType("Enum").setRequired(required).setDesc(comment).setVersion(DocGlobalConstants.DEFAULT_VERSION);
                 paramList.add(param);
             } else {
                 paramList.addAll(ParamsBuildHelper.buildParams(typeName, paramPre, 0, "true",
