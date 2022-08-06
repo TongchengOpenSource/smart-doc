@@ -290,8 +290,8 @@ public class ParamsBuildHelper {
                             .setDesc(comment).setRequired(Boolean.parseBoolean(isRequired)).setVersion(since);
                     if (fieldGicName.contains("[]") || fieldGicName.endsWith(">")) {
                         comment = comment + "(array of file)";
-                        param.setType(DocGlobalConstants.PARAM_TYPE_FILE);
                         param.setDesc(comment);
+                        param.setType(DocGlobalConstants.PARAM_TYPE_FILE);
                         param.setHasItems(true);
                     }
                     paramList.add(param);
