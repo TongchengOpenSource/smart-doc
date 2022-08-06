@@ -116,6 +116,11 @@ public class ApiConfig {
     private String packageFilters;
 
     /**
+     * controller package exclude filters
+     */
+    private String packageExcludeFilters;
+
+    /**
      * List of change log
      */
     private List<RevisionLog> revisionLogs;
@@ -405,6 +410,15 @@ public class ApiConfig {
      */
     private boolean responseParamsTable = Boolean.TRUE;
 
+
+    public String getPackageExcludeFilters() {
+        return packageExcludeFilters;
+    }
+
+    public ApiConfig setPackageExcludeFilters(String packageExcludeFilters) {
+        this.packageExcludeFilters = packageExcludeFilters;
+        return this;
+    }
 
     public String getPathPrefix() {
         return pathPrefix;

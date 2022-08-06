@@ -204,7 +204,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         List<JavaMethod> methods = cls.getMethods();
         List<DocJavaMethod> docJavaMethods = new ArrayList<>(methods.size());
         for (JavaMethod method : methods) {
-            if (method.isPrivate()) {
+            if (method.isPrivate()  || DocUtil.isMatch(apiConfig.getPackageExcludeFilters(),clazName + "." + method.getName())) {
                 continue;
             }
             docJavaMethods.add(DocJavaMethod.builder().setJavaMethod(method));
