@@ -1,7 +1,7 @@
 ## smart-doc版本
 
 ### 版本号：2.4.9
-- 更新日期: 2022-08-06
+- 更新日期: 2022-08-07
 - 更新内容：
   1. 支持使用@see指向枚举类，[#306](https://github.com/smart-doc-group/smart-doc/issues/306)
   2. 修复枚举请求的用例展示错误
