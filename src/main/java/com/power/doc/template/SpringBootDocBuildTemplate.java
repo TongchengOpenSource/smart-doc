@@ -577,6 +577,13 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                     throw new RuntimeException("Spring MVC can't support binding Collection on method "
                             + method.getName() + "Check it in " + method.getDeclaringClass().getCanonicalName());
                 }
+                String value = null;
+                JavaClass javaClass1 = configBuilder.getClassByName(gicName);
+                if (Objects.nonNull(javaClass1) && javaClass1.isEnum()) {
+                    value = String.valueOf(JavaClassUtil.getEnumValue(javaClass1, Boolean.TRUE));
+                } else {
+                    value = RandomUtil.randomValueByType(gicName);
+                }
                 FormData formData = new FormData();
                 formData.setKey(paramName);
                 if (!paramName.contains("[]")) {
@@ -584,7 +591,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 }
                 formData.setDescription(comment);
                 formData.setType("text");
-                formData.setValue(RandomUtil.randomValueByType(gicName));
+                formData.setValue(value);
                 formDataList.add(formData);
             } else if (javaClass.isEnum()) {
                 // do nothing
@@ -864,7 +871,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                             .setId(paramList.size() + 1)
                             .setEnumValues(JavaClassUtil.getEnumValues(gicJavaClass))
                             .setEnumInfo(JavaClassUtil.getEnumInfo(gicJavaClass, builder))
-                            .setType("array").setValue(Arrays.toString(ArrayUtils.toArray(value)));
+                            .setType("array").setValue(String.valueOf(value));
                     paramList.add(param);
                     if (requestBodyCounter > 0) {
                         Map<String, Object> map = OpenApiSchemaUtil.arrayTypeSchema(gicName);
