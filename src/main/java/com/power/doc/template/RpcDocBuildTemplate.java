@@ -25,10 +25,7 @@ package com.power.doc.template;
 import com.power.common.util.StringUtil;
 import com.power.common.util.ValidateUtil;
 import com.power.doc.builder.ProjectDocConfigBuilder;
-import com.power.doc.constants.DocAnnotationConstants;
-import com.power.doc.constants.DocGlobalConstants;
-import com.power.doc.constants.DocTags;
-import com.power.doc.constants.DubboAnnotationConstants;
+import com.power.doc.constants.*;
 import com.power.doc.helper.ParamsBuildHelper;
 import com.power.doc.model.ApiConfig;
 import com.power.doc.model.ApiParam;
@@ -196,15 +193,18 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
                 throw new RuntimeException("ERROR: Unable to find javadoc @param for actual param \""
                         + paramName + "\" in method " + javaMethod.getName() + " from " + className);
             }
-            String comment = this.paramCommentResolve(paramTagMap.get(paramName));
+            StringBuilder comment = new StringBuilder(this.paramCommentResolve(paramTagMap.get(paramName))).append("\n");;
             String mockValue = JavaFieldUtil.createMockValue(paramTagMap, paramName, typeName, typeName);
             JavaClass javaClass = builder.getJavaProjectBuilder().getClassByName(fullTypeName);
             List<JavaAnnotation> annotations = parameter.getAnnotations();
             for (JavaAnnotation a: annotations){
                 if(JavaClassValidateUtil.isJSR303Required(a.getType().getValue())){
                     required = true;
-                    break;
-                } }
+                }
+                if(DocValidatorAnnotationEnum.listValidatorAnnotations().contains(a.getType().getSimpleName())) {
+                    comment.append(JavaFieldUtil.getJsrComment(a));
+                }
+            }
             Set<String> groupClasses = JavaClassUtil.getParamGroupJavaClass(annotations, builder.getJavaProjectBuilder());
             if (JavaClassValidateUtil.isCollection(fullTypeName) || JavaClassValidateUtil.isArray(fullTypeName)) {
                 if (JavaClassValidateUtil.isCollection(typeName)) {
@@ -230,16 +230,16 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
             } else if (JavaClassValidateUtil.isPrimitive(fullTypeName)) {
                 ApiParam param = ApiParam.of().setField(paramName)
                         .setType(JavaClassUtil.getClassSimpleName(typeName))
-                        .setDesc(comment)
+                        .setDesc(comment.toString())
                         .setRequired(required)
-                        .setMaxLength(JavaFieldUtil.getParamMaxlength(parameter.getAnnotations()))
+                        .setMaxLength(JavaFieldUtil.getParamMaxLength(parameter.getAnnotations()))
                         .setValue(mockValue)
                         .setVersion(DocGlobalConstants.DEFAULT_VERSION);
                 paramList.add(param);
             } else if (JavaClassValidateUtil.isMap(fullTypeName)) {
                 if (JavaClassValidateUtil.isMap(typeName)) {
                     ApiParam apiParam = ApiParam.of().setField(paramName).setType(typeName)
-                            .setDesc(comment).setRequired(required).setVersion(DocGlobalConstants.DEFAULT_VERSION);
+                            .setDesc(comment.toString()).setRequired(required).setVersion(DocGlobalConstants.DEFAULT_VERSION);
                     paramList.add(apiParam);
                     continue;
                 }
@@ -248,7 +248,7 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
                         Boolean.FALSE, new HashMap<>(), builder, groupClasses, 0, Boolean.FALSE));
             } else if (javaClass.isEnum()) {
                 ApiParam param = ApiParam.of().setField(paramName)
-                        .setType("Enum").setRequired(required).setDesc(comment).setVersion(DocGlobalConstants.DEFAULT_VERSION);
+                        .setType("Enum").setRequired(required).setDesc(comment.toString()).setVersion(DocGlobalConstants.DEFAULT_VERSION);
                 paramList.add(param);
             } else {
                 paramList.addAll(ParamsBuildHelper.buildParams(typeName, paramPre, 0, "true",

@@ -773,7 +773,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 throw new RuntimeException("ERROR: Unable to find javadoc @param for actual param \""
                         + paramName + "\" in method " + javaMethod.getName() + " from " + className);
             }
-            String comment = this.paramCommentResolve(paramTagMap.get(paramName));
+            StringBuilder comment = new StringBuilder(this.paramCommentResolve(paramTagMap.get(paramName))).append("\n");
             if (requestFieldToUnderline) {
                 paramName = StringUtil.camelToUnderline(paramName);
             }
@@ -784,8 +784,10 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             String strRequired = "false";
             boolean isPathVariable = false;
             boolean isRequestBody = false;
+            boolean required = false;
             for (JavaAnnotation annotation : annotations) {
                 String annotationName = annotation.getType().getValue();
+
                 if (JavaClassValidateUtil.ignoreSpringMvcParamWithAnnotation(annotationName)) {
                     continue out;
                 }
@@ -825,18 +827,21 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                     requestBodyCounter++;
                     isRequestBody = true;
                 }
+                required = Boolean.parseBoolean(strRequired);
+                if(DocValidatorAnnotationEnum.listValidatorAnnotations().contains(annotation.getType().getSimpleName())) {
+                    comment.append(JavaFieldUtil.getJsrComment(annotation));
+                }
             }
-            boolean required = Boolean.parseBoolean(strRequired);
             //file upload
             if (JavaClassValidateUtil.isFile(typeName)) {
                 ApiParam param = ApiParam.of().setField(paramName).setType(DocGlobalConstants.PARAM_TYPE_FILE)
                         .setId(paramList.size() + 1).setQueryParam(true)
                         .setRequired(required).setVersion(DocGlobalConstants.DEFAULT_VERSION)
-                        .setDesc(comment);
+                        .setDesc(comment.toString());
                 if (typeName.contains("[]") || typeName.endsWith(">")) {
-                    comment = comment + "(array of file)";
+                    comment.append("(array of file)");
                     param.setType(DocGlobalConstants.PARAM_TYPE_FILE);
-                    param.setDesc(comment);
+                    param.setDesc(comment.toString());
                     param.setHasItems(true);
                 }
                 paramList.add(param);
@@ -918,7 +923,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                         .setPathParam(isPathVariable)
                         .setQueryParam(queryParam)
                         .setValue(mockValue)
-                        .setDesc(comment)
+                        .setDesc(comment.toString())
                         .setRequired(required)
                         .setVersion(DocGlobalConstants.DEFAULT_VERSION);
                 paramList.add(param);
@@ -937,7 +942,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                             .setId(paramList.size() + 1)
                             .setPathParam(isPathVariable)
                             .setQueryParam(queryParam)
-                            .setDesc(comment)
+                            .setDesc(comment.toString())
                             .setRequired(required)
                             .setVersion(DocGlobalConstants.DEFAULT_VERSION);
                     paramList.add(apiParam);
@@ -955,7 +960,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                             .setId(paramList.size() + 1)
                             .setPathParam(isPathVariable)
                             .setQueryParam(queryParam)
-                            .setDesc(comment)
+                            .setDesc(comment.toString())
                             .setRequired(required)
                             .setVersion(DocGlobalConstants.DEFAULT_VERSION);
                     paramList.add(apiParam);

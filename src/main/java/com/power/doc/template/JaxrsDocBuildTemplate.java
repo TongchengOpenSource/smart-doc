@@ -28,10 +28,7 @@ import com.power.common.util.StringUtil;
 import com.power.common.util.UrlUtil;
 import com.power.common.util.ValidateUtil;
 import com.power.doc.builder.ProjectDocConfigBuilder;
-import com.power.doc.constants.DocGlobalConstants;
-import com.power.doc.constants.DocTags;
-import com.power.doc.constants.JAXRSAnnotations;
-import com.power.doc.constants.JakartaJaxrsAnnotations;
+import com.power.doc.constants.*;
 import com.power.doc.handler.JaxrsHeaderHandler;
 import com.power.doc.handler.JaxrsPathHandler;
 import com.power.doc.helper.FormDataBuildHelper;
@@ -401,7 +398,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 throw new RuntimeException("ERROR: Unable to find javadoc @QueryParam for actual param \""
                         + paramName + "\" in method " + javaMethod.getName() + " from " + className);
             }
-            String comment = this.paramCommentResolve(paramTagMap.get(paramName));
+            StringBuilder comment = new StringBuilder(this.paramCommentResolve(paramTagMap.get(paramName))).append("\n");;
             if (requestFieldToUnderline) {
                 paramName = StringUtil.camelToUnderline(paramName);
             }
@@ -414,6 +411,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             String strRequired = "false";
             if (CollectionUtil.isNotEmpty(annotations)) {
                 for (JavaAnnotation annotation : annotations) {
+
                     String annotationName = annotation.getType().getFullyQualifiedName();
                     if (JakartaJaxrsAnnotations.JAX_HEADER_PARAM_FULLY.equals(annotationName)
                             || JAXRSAnnotations.JAX_HEADER_PARAM_FULLY.equals(annotationName)) {
@@ -435,8 +433,9 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                     if (JavaClassValidateUtil.isJSR303Required(annotation.getType().getValue())) {
                         strRequired = "true";
                     }
-
-
+                    if(DocValidatorAnnotationEnum.listValidatorAnnotations().contains(annotation.getType().getSimpleName())) {
+                        comment.append(JavaFieldUtil.getJsrComment(annotation));
+                    }
                 }
             } else {
                 isRequestBody = true;
@@ -491,7 +490,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                         .setPathParam(isPathVariable)
                         .setQueryParam(queryParam)
                         .setValue(mockValue)
-                        .setDesc(comment)
+                        .setDesc(comment.toString())
                         .setRequired(required)
                         .setVersion(DocGlobalConstants.DEFAULT_VERSION);
                 paramList.add(param);
@@ -505,7 +504,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                             .setId(paramList.size() + 1)
                             .setPathParam(isPathVariable)
                             .setQueryParam(queryParam)
-                            .setDesc(comment)
+                            .setDesc(comment.toString())
                             .setRequired(required)
                             .setVersion(DocGlobalConstants.DEFAULT_VERSION);
                     paramList.add(apiParam);
@@ -519,7 +518,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                             .setId(paramList.size() + 1)
                             .setPathParam(isPathVariable)
                             .setQueryParam(queryParam)
-                            .setDesc(comment)
+                            .setDesc(comment.toString())
                             .setRequired(required)
                             .setVersion(DocGlobalConstants.DEFAULT_VERSION);
                     paramList.add(apiParam);
@@ -534,10 +533,10 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 ApiParam param = ApiParam.of().setField(paramName).setType("file")
                         .setId(paramList.size() + 1).setQueryParam(true)
                         .setRequired(required).setVersion(DocGlobalConstants.DEFAULT_VERSION)
-                        .setDesc(comment);
+                        .setDesc(comment.toString());
                 if (typeName.contains("[]") || typeName.endsWith(">")) {
-                    comment = comment + "(array of file)";
-                    param.setDesc(comment);
+                    comment.append("(array of file)");
+                    param.setDesc(comment.toString());
                     param.setHasItems(true);
                 }
                 paramList.add(param);

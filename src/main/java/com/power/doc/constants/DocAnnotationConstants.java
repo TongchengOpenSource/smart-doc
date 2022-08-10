@@ -88,4 +88,12 @@ public interface DocAnnotationConstants {
      * Fastjson JSONType annotation  ignores prop
      */
     String IGNORE_PROP = "ignores";
+    /**
+     * Jsr303 param message
+     */
+    String MESSAGE = "message";
+    /**
+     * Jsr303 param regexp
+     */
+    String REGEXP = "regexp";
 }
