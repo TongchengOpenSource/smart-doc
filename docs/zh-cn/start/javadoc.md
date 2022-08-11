@@ -4,12 +4,12 @@
 因此`smart-doc`每增加一个功能首先都是去考虑`javadoc`原生的`tag`,
 下面对`smart-doc`使用的一些`javadoc`的注释`tag`做介绍。
 
-|  tag名称   | 使用描述                                                                                                                              |
-| --- |-----------------------------------------------------------------------------------------------------------------------------------|
-|  `@param`  | 对于在`Spring Boot`接口层，对于简单类型的参数必须在使用`@param`时写上注释描述，对于`Entity`类型`smart-doc`则不会检查                                                    |
-|  `@deprecated`  | 可以在注释中用于标记接口已经废弃，作用同`@Deprecated`注解                                                                                               |
+|  tag名称   | 使用描述                                                                                                                                   |
+| --- |----------------------------------------------------------------------------------------------------------------------------------------|
+|  `@param`  | 对于在`Spring Boot`接口层，对于简单类型的参数必须在使用`@param`时写上注释描述，对于`Entity`类型`smart-doc`则不会检查                                                         |
+|  `@deprecated` | 可以在注释中用于标记接口已经废弃，作用同`@Deprecated`注解                                                                                                    |
 |  `@apiNote` | `@apiNote`是`JAVA`新增的文档`tag`,`smart-doc`使用`@apiNote`的注释作为方法的详细描述，因此可以使用`@apiNote`来写一段长注释。如果一个方法不写 `@apiNote`注释说明，`smart-doc`直接使用方法默认注释填充 |
-
+|  `@author` | `smart-doc`会提取代码中`@author`标注到文档中，`@author`可以写在方法上也可以写到类上。例如：`@author sunyu on 2016/12/6.`                                                                           |
 
 # javadoc使用
 ## 1.1 `@param` 特殊用法
@@ -101,7 +101,7 @@ public String resp(@RequestBody String name){
 tag名称 | 描述
 ---|---
 `@ignore`| `@ignore` `tag`用于过滤请求参数对象上的某个字段，设置后`smart-doc`不输出改字段到请求参数列表中。关于响应字段忽略的请看[【忽略响应字段】](https://smart-doc-group.github.io/#/zh-cn/diy/advancedFeatures?id=响应字段忽略) 如果`@ignore`加到方法上，则接口方法不会输出到文档。从`1.8.4`开始`@ignore`支持添加到`Controller`上进行忽略不想生成文档的接口类。`@ignore`也可以用于方法上忽略某个请求参数。
-`@required`|如果你没有使用`JSR303`参数验证规范实现的方式来标注字段，就可以使用`@required`去标注请求参数对象的字段，标注`smart-doc`在输出参数列表时会设置为`true`。
+`@required`|如果你没有使用`JSR303`参数验证规范实现的方式来标注字段，就可以使用`@required`去标注请求参数对象的字段，标注`smart-doc`在输出参数列表时会设置为`true`。【不建议使用，以后会删除】
 `@mock`|从`smart-doc 1.8.0`开始，`@mock` `tag`用于在对象基本类型字段设置自定义文档展示值。设置值后`smart-doc`不再帮你生成随机值。方便可以通过`smart-doc`直接输出交付文档。
 `@dubbo`|从`smart-doc 1.8.7`开始，`@dubbo` `tag`用于在`Dubbo`的`API`接口类上添加让`smart-doc`可以扫描到`Dubbo RPC`的接口生成文档。
 `@restApi`|从`smart-doc 1.8.8`开始，`@restApi` `tag`用于支持`smart-doc`去扫描`Spring Cloud Feign`的定义接口生成文档。
@@ -111,7 +111,7 @@ tag名称 | 描述
 `@page`|从`smart-doc 2.0.2`开始，`@page` `tag`用于标注在`Controller`的方法上表示该方法用来渲染返回一个静态页面，生成`debug`页面时如果发起测试，测试页面会自动在浏览器开启新标签显示页面。
 `@ignoreParams`|从`smart-doc 2.1.0`开始，`@ignoreParams` `tag`用于标注在`Controller`方法上忽略掉不想显示在文档中的参数，例如：`@ignoreParams id name`，多个参数名用空格隔开
 `@response`|从`smart-doc 2.2.0`开始，`@response` `tag`标注在`Controller`方法上可以允许用这自己定义返回的`json example`。建议只在返回基础类型时使用，如：`Result<String>`类型这种泛型是简单原生类型的响应。
-`@tag`|`@since 2.2.5`, `@tag`用于将`Controller`方法分类, 可以将不同`Contoller`下的方法指定到多个分类下, 同时也可以直接指定`Controller`为一个分类或多个分类
+`@tag`|`@since 2.2.5`, `@tag`用于将`Controller`方法分类, 可以将不同`Contoller`下的方法指定到多个分类下, 同时也可以直接指定`Controller`为一个分类或多个分类，【不要使用，不支持，直接用分组配置代替】
 
 
 > 以上的一些自定义tag，我们建议国内的同学认真阅读这部分全部文档。包括后面对于一些tag的使用当中官方也给
@@ -454,6 +454,7 @@ public CommonResult<String> create() {
 
 
 ## 2.7 `@tag`使用
+不要使用`@tag`,不支持该配置
 ```java
 /**
  * json file config test

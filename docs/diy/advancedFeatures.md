@@ -90,7 +90,6 @@ public CommonResult<String[]> testPathVariable(@PathVariable("id") String[] id )
 /**
  * post request test query parameters
  *
- * @tag dddd
  * @author cqmike
  * @return
  */
