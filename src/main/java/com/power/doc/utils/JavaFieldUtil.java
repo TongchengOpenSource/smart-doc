@@ -24,6 +24,7 @@ package com.power.doc.utils;
 
 import com.power.common.util.StringUtil;
 import com.power.doc.constants.DocAnnotationConstants;
+import com.power.doc.constants.DocValidatorAnnotationEnum;
 import com.power.doc.model.CustomField;
 import com.power.doc.model.DocJavaField;
 import com.thoughtworks.qdox.model.JavaAnnotation;
@@ -95,7 +96,7 @@ public class JavaFieldUtil {
      * @param annotations annotation
      * @return max length
      */
-    public static String getParamMaxlength(List<JavaAnnotation> annotations){
+    public static String getParamMaxLength(List<JavaAnnotation> annotations){
         String maxLength = "";
         for (JavaAnnotation annotation : annotations) {
             String simpleAnnotationName = annotation.getType().getValue();
@@ -115,4 +116,29 @@ public class JavaFieldUtil {
         }
         return maxLength;
     }
+
+    /**
+     * getJsr303Comment
+     * @param annotation  annotation
+     * @return
+     */
+    public static String getJsrComment(JavaAnnotation annotation){
+            Map<String,AnnotationValue> values = annotation.getPropertyMap();
+            StringBuilder sb = new StringBuilder();
+            for(Map.Entry<String,AnnotationValue> m : values.entrySet()) {
+                if (DocAnnotationConstants.REGEXP.equals(m.getKey())) {
+                    sb.append("正则规则").append(" : ").append(StringUtil.removeDoubleQuotes(m.getValue().toString()));
+                }
+
+                if (DocAnnotationConstants.MESSAGE.equals(m.getKey())) {
+                    if(StringUtil.isNotEmpty(m.getValue().toString())) {
+                        sb.append("异常信息").append(" : ").append(StringUtil.removeDoubleQuotes(m.getValue().toString()));
+                    }
+                    sb.append("\n");
+                }
+
+            }
+                return sb.toString();
+    }
+
 }

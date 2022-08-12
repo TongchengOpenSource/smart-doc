@@ -26,10 +26,7 @@ import com.power.common.model.EnumDictionary;
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.StringUtil;
 import com.power.doc.builder.ProjectDocConfigBuilder;
-import com.power.doc.constants.DocAnnotationConstants;
-import com.power.doc.constants.DocGlobalConstants;
-import com.power.doc.constants.DocTags;
-import com.power.doc.constants.ValidatorAnnotations;
+import com.power.doc.constants.*;
 import com.power.doc.model.*;
 import com.power.doc.model.torna.EnumInfo;
 import com.power.doc.utils.*;
@@ -130,7 +127,9 @@ public class ParamsBuildHelper {
             out:
             for (DocJavaField docField : fields) {
                 JavaField field = docField.getJavaField();
-                String maxLength = JavaFieldUtil.getParamMaxlength(field.getAnnotations());
+                String maxLength = JavaFieldUtil.getParamMaxLength(field.getAnnotations());
+                StringBuilder comment = new StringBuilder();
+                comment.append(docField.getComment()).append("\n");
                 if (field.isTransient() && skipTransientField) {
                     continue;
                 }
@@ -209,6 +208,7 @@ public class ParamsBuildHelper {
                             }
                         }
                     } else if (JavaClassValidateUtil.isJSR303Required(simpleAnnotationName) && !isResp) {
+
                         annotationCounter++;
                         boolean hasGroup = false;
                         Set<String> groupClassList = JavaClassUtil.getParamGroupJavaClass(annotation);
@@ -221,6 +221,9 @@ public class ParamsBuildHelper {
                             strRequired = true;
                         } else if (CollectionUtil.isEmpty(groupClasses)) {
                             strRequired = true;
+                        }
+                        if(strRequired){
+                            comment.append(JavaFieldUtil.getJsrComment(annotation));
                         }
                     }
                 }
@@ -259,14 +262,13 @@ public class ParamsBuildHelper {
                     strRequired = true;
                 }
                 //cover comment
-                String comment = "";
                 if (null != customRequestField && StringUtil.isNotEmpty(customRequestField.getDesc())
                         && JavaClassUtil.isTargetChildClass(simpleName, customRequestField.getOwnerClassName()) && !isResp) {
-                    comment = customRequestField.getDesc();
+                    comment = new StringBuilder(customRequestField.getDesc());
                 }
                 if (null != customResponseField && StringUtil.isNotEmpty(customResponseField.getDesc())
                         && JavaClassUtil.isTargetChildClass(simpleName, customResponseField.getOwnerClassName()) && isResp) {
-                    comment = customResponseField.getDesc();
+                    comment = new StringBuilder(customResponseField.getDesc());
                 }
                 //cover fieldName
                 if (null != customRequestField && StringUtil.isNotEmpty(customRequestField.getReplaceName())
@@ -277,21 +279,17 @@ public class ParamsBuildHelper {
                         && JavaClassUtil.isTargetChildClass(simpleName, customResponseField.getOwnerClassName()) && isResp) {
                     fieldName = customResponseField.getReplaceName();
                 }
-
-                if (StringUtils.isBlank(comment)) {
-                    comment = docField.getComment();
-                }
                 // file
                 if (JavaClassValidateUtil.isFile(fieldGicName)) {
                     ApiParam param = ApiParam.of().setField(pre + fieldName).setType("file")
                             .setClassName(className)
                             .setPid(pid).setId(paramList.size() + pid + 1)
                             .setMaxLength(maxLength)
-                            .setDesc(comment).setRequired(Boolean.parseBoolean(isRequired)).setVersion(since);
+                            .setDesc(comment.toString()).setRequired(Boolean.parseBoolean(isRequired)).setVersion(since);
                     if (fieldGicName.contains("[]") || fieldGicName.endsWith(">")) {
-                        comment = comment + "(array of file)";
-                        param.setDesc(comment);
+                        comment.append("(array of file)");
                         param.setType(DocGlobalConstants.PARAM_TYPE_FILE);
+                        param.setDesc(comment.toString());
                         param.setHasItems(true);
                     }
                     paramList.add(param);
@@ -305,15 +303,15 @@ public class ParamsBuildHelper {
                     param.setPid(pid).setMaxLength(maxLength).setValue(fieldValue);
                     String processedType = isShowJavaType ? subTypeName : DocClassUtil.processTypeNameForParams(subTypeName.toLowerCase());
                     param.setType(processedType);
-                    if (StringUtil.isNotEmpty(comment)) {
-                        commonHandleParam(paramList, param, isRequired, comment, since, strRequired);
+                    if (StringUtil.isNotEmpty(comment.toString())) {
+                        commonHandleParam(paramList, param, isRequired, comment.toString(), since, strRequired);
                     } else {
                         commonHandleParam(paramList, param, isRequired, NO_COMMENTS_FOUND, since, strRequired);
                     }
 
                     JavaClass enumClass = ParamUtil.handleSeeEnum(param, field, projectBuilder, jsonRequest, tagsMap);
                     if (Objects.nonNull(enumClass)) {
-                        comment = StringUtils.isEmpty(comment) ? enumClass.getComment() : comment;
+                        comment = new StringBuilder(StringUtils.isEmpty(comment.toString()) ? enumClass.getComment() : comment.toString());
                         String enumComment = handleEnumComment(enumClass, projectBuilder);
                         param.setDesc(comment + enumComment);
                     }
@@ -360,7 +358,7 @@ public class ParamsBuildHelper {
                     param.setType(processedType);
                     JavaClass javaClass = field.getType();
                     if (javaClass.isEnum()) {
-                        comment = comment + handleEnumComment(javaClass, projectBuilder);
+                        comment.append(handleEnumComment(javaClass, projectBuilder));
                         param.setType(DocGlobalConstants.ENUM);
                         Object value = JavaClassUtil.getEnumValue(javaClass, !jsonRequest);
                         param.setValue(String.valueOf(value));
@@ -370,7 +368,7 @@ public class ParamsBuildHelper {
                         if (tagsMap.containsKey(DocTags.MOCK) && StringUtil.isNotEmpty(tagsMap.get(DocTags.MOCK))) {
                             param.setValue(tagsMap.get(DocTags.MOCK));
                         }
-                        if (StringUtil.isNotEmpty(comment)) {
+                        if (StringUtil.isNotEmpty(comment.toString())) {
                             commonHandleParam(paramList, param, isRequired, comment + appendComment, since, strRequired);
                         } else {
                             commonHandleParam(paramList, param, isRequired, NO_COMMENTS_FOUND + appendComment, since, strRequired);
@@ -397,7 +395,7 @@ public class ParamsBuildHelper {
                         if (gNameArr.length > 0) {
                             String gName = DocClassUtil.getSimpleGicName(fieldGicName)[0];
                             JavaClass javaClass1 = projectBuilder.getJavaProjectBuilder().getClassByName(gName);
-                            comment = comment + handleEnumComment(javaClass1, projectBuilder);
+                            comment.append(handleEnumComment(javaClass1, projectBuilder));
                         }
                         String gName = gNameArr[0];
                         if (JavaClassValidateUtil.isPrimitive(gName)) {
@@ -408,13 +406,13 @@ public class ParamsBuildHelper {
                             } else {
                                 param.setValue(fieldValue);
                             }
-                            if (StringUtil.isNotEmpty(comment)) {
+                            if (StringUtil.isNotEmpty(comment.toString())) {
                                 commonHandleParam(paramList, param, isRequired, comment + appendComment, since, strRequired);
                             } else {
                                 commonHandleParam(paramList, param, isRequired, NO_COMMENTS_FOUND + appendComment, since, strRequired);
                             }
                         } else {
-                            if (StringUtil.isNotEmpty(comment)) {
+                            if (StringUtil.isNotEmpty(comment.toString())) {
                                 commonHandleParam(paramList, param, isRequired, comment + appendComment, since, strRequired);
                             } else {
                                 commonHandleParam(paramList, param, isRequired, NO_COMMENTS_FOUND + appendComment, since, strRequired);
@@ -456,7 +454,7 @@ public class ParamsBuildHelper {
                             param.setValue(fieldValue);
                         }
 
-                        if (StringUtil.isNotEmpty(comment)) {
+                        if (StringUtil.isNotEmpty(comment.toString())) {
                             commonHandleParam(paramList, param, isRequired, comment + appendComment, since, strRequired);
                         } else {
                             commonHandleParam(paramList, param, isRequired, NO_COMMENTS_FOUND + appendComment, since, strRequired);
@@ -489,7 +487,7 @@ public class ParamsBuildHelper {
                             }
                         }
                     } else if (subTypeName.length() == 1 || DocGlobalConstants.JAVA_OBJECT_FULLY.equals(subTypeName)) {
-                        if (StringUtil.isNotEmpty(comment)) {
+                        if (StringUtil.isNotEmpty(comment.toString())) {
                             commonHandleParam(paramList, param, isRequired, comment + appendComment, since, strRequired);
                         } else {
                             commonHandleParam(paramList, param, isRequired, NO_COMMENTS_FOUND + appendComment, since, strRequired);
@@ -539,7 +537,7 @@ public class ParamsBuildHelper {
                     } else if (simpleName.equals(subTypeName)) {
                         //do nothing
                     } else {
-                        if (StringUtil.isNotEmpty(comment)) {
+                        if (StringUtil.isNotEmpty(comment.toString())) {
                             commonHandleParam(paramList, param, isRequired, comment + appendComment, since, strRequired);
                         } else {
                             commonHandleParam(paramList, param, isRequired, NO_COMMENTS_FOUND + appendComment, since, strRequired);
