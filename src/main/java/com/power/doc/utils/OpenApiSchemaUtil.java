@@ -34,6 +34,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import static com.power.doc.constants.DocGlobalConstants.ARRAY;
+
 /**
  * @author yu 2020/11/29.
  */
@@ -81,6 +83,11 @@ public class OpenApiSchemaUtil {
     }
 
     public static String getClassNameFromParams(List<ApiParam> apiParams) {
+        // if array[Primitive] or Primitive
+        if (CollectionUtil.isNotEmpty(apiParams) && apiParams.size() == 1
+                && CollectionUtil.isEmpty(apiParams.get(0).getChildren())) {
+            return "string";
+        }
         for(ApiParam a : apiParams){
             if(StringUtil.isNotEmpty(a.getClassName())){
                  return OpenApiSchemaUtil.delClassName(a.getClassName());

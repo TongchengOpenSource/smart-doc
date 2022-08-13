@@ -191,7 +191,6 @@ public final class DocGlobalConstants {
 
     public static final String FILE_CONTENT_TYPE = "multipart/form-data";
 
-    public static final String MULTIPART_TYPE = "multipart/form-data";
 
     public static final String APPLICATION_JSON = "application/json";
 

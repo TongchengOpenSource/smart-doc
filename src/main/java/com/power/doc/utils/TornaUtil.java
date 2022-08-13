@@ -107,7 +107,7 @@ public class TornaUtil {
             }
 
             if (CollectionUtil.isNotEmpty(apiMethodDoc.getQueryParams())
-                    && DocGlobalConstants.MULTIPART_TYPE.equals(apiMethodDoc.getContentType())) {
+                    && DocGlobalConstants.URL_CONTENT_TYPE.equals(apiMethodDoc.getContentType())) {
                 // file upload
                 methodApi.setRequestParams(buildParams(apiMethodDoc.getQueryParams()));
             } else if (CollectionUtil.isNotEmpty(apiMethodDoc.getQueryParams())) {

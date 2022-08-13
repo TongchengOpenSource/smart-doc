@@ -45,6 +45,11 @@ import java.util.*;
  */
 public class OpenApiBuilder {
 
+   static Map<String, String> stringComponent = new HashMap<String, String>() {{
+        put("type", "string");
+        put("format","string");
+    }};
+
     /**
      * Build OpenApi json
      *
@@ -247,42 +252,11 @@ public class OpenApiBuilder {
         Map<String, Object> content = new HashMap<>(8);
         if (Objects.nonNull(apiMethodDoc.getReturnSchema()) && isRep) {
             content.put("schema", apiMethodDoc.getReturnSchema());
-        } else {
-            if (!isRep && apiMethodDoc.getContentType().equals(DocGlobalConstants.MULTIPART_TYPE)) {
-                // formdata
-                Map<String, Object> map = new LinkedHashMap<>();
-                map.put("type", "object");
-                Map<String, Object> properties = new LinkedHashMap<>();
-                Map<String, Object> detail;
-                for (ApiParam apiParam : apiMethodDoc.getQueryParams()) {
-                    detail = new HashMap<>();
-                    detail.put("type", apiParam.getType());
-                    detail.put("description", apiParam.getDesc());
-
-                    detail.put("example", DocUtil.handleJsonStr(apiParam.getValue()));
-                    if ("file".equals(apiParam.getType())) {
-                        detail.remove("example");
-                        if (apiParam.isHasItems()) {
-                            detail.put("type", "array");
-                            Map<String, Object> items = new HashMap<>();
-                            items.put("type", "string");
-                            items.put("format", "binary");
-                            detail.put("items", items);
-                        } else {
-                            detail.put("format", "binary");
-                            detail.put("type", "string");
-                        }
-                    }
-                    properties.put(apiParam.getField(), detail);
-                }
-                map.put("properties", properties);
-                content.put("schema", map);
-            } else if (!isRep && Objects.nonNull(apiMethodDoc.getRequestSchema())) {
+        } else if (!isRep && Objects.nonNull(apiMethodDoc.getRequestSchema())) {
                 content.put("schema", apiMethodDoc.getRequestSchema());
             } else {
                 content.put("schema", buildBodySchema(apiMethodDoc, isRep));
             }
-        }
         if ((!isRep && apiConfig.isRequestExample()) || (isRep && apiConfig.isResponseExample())) {
             content.put("examples", buildBodyExample(apiMethodDoc, isRep));
         }
@@ -300,9 +274,15 @@ public class OpenApiBuilder {
     private static Map<String, Object> buildBodySchema(ApiMethodDoc apiMethodDoc, boolean isRep) {
         Map<String, Object> schema = new HashMap<>(10);
         Map<String, Object> innerScheme = new HashMap<>(10);
+        String requestRef;
+        if (apiMethodDoc.getContentType().equals(DocGlobalConstants.URL_CONTENT_TYPE)) {
+            requestRef = "#/components/schemas/" + OpenApiSchemaUtil.getClassNameFromParams(apiMethodDoc.getQueryParams());
+        } else {
+            requestRef = "#/components/schemas/" + OpenApiSchemaUtil.getClassNameFromParams(apiMethodDoc.getRequestParams());
+        }
         //remove special characters in url
         String responseRef = "#/components/schemas/" + OpenApiSchemaUtil.getClassNameFromParams(apiMethodDoc.getResponseParams());
-        String requestRef = "#/components/schemas/" + OpenApiSchemaUtil.getClassNameFromParams(apiMethodDoc.getRequestParams());
+
         //List param
         if (apiMethodDoc.isListParam()) {
             schema.put("type", DocGlobalConstants.ARRAY);
@@ -313,9 +293,10 @@ public class OpenApiBuilder {
             }
             schema.put("items", innerScheme);
         } else {
-            if (isRep && CollectionUtil.isNotEmpty(apiMethodDoc.getResponseParams()) && !responseRef.contains(OpenApiSchemaUtil.NO_BODY_PARAM)) {
+            if (isRep && CollectionUtil.isNotEmpty(apiMethodDoc.getResponseParams())) {
                 schema.put("$ref", responseRef);
-            } else if (CollectionUtil.isNotEmpty(apiMethodDoc.getRequestParams()) && !requestRef.contains(OpenApiSchemaUtil.NO_BODY_PARAM)) {
+            } else if (!isRep && (CollectionUtil.isNotEmpty(apiMethodDoc.getRequestParams()) ||
+                    (CollectionUtil.isNotEmpty(apiMethodDoc.getQueryParams()) && apiMethodDoc.getContentType().equals(DocGlobalConstants.URL_CONTENT_TYPE)))) {
                 schema.put("$ref", requestRef);
             }
         }
@@ -377,7 +358,7 @@ public class OpenApiBuilder {
             }
         }
         //  not process formdata
-        if (!apiMethodDoc.getContentType().equals(DocGlobalConstants.MULTIPART_TYPE)) {
+        if (!apiMethodDoc.getContentType().equals(DocGlobalConstants.URL_CONTENT_TYPE)) {
             for (ApiParam apiParam : apiMethodDoc.getQueryParams()) {
                 parameters = getStringParams(apiParam);
                 parameters.put("in", "query");
@@ -492,6 +473,8 @@ public class OpenApiBuilder {
     private static Map<String, Object> buildComponentsSchema(List<ApiDoc> apiDocs) {
         Map<String, Object> schemas = new HashMap<>(4);
         Map<String, Object> component = new HashMap<>();
+
+        component.put("string",stringComponent);
         apiDocs.forEach(
                 a -> {
                     List<ApiMethodDoc> apiMethodDocs = a.getList();

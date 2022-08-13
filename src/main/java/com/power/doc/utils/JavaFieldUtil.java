@@ -125,18 +125,24 @@ public class JavaFieldUtil {
     public static String getJsrComment(JavaAnnotation annotation){
             Map<String,AnnotationValue> values = annotation.getPropertyMap();
             StringBuilder sb = new StringBuilder();
-            for(Map.Entry<String,AnnotationValue> m : values.entrySet()) {
-                if (DocAnnotationConstants.REGEXP.equals(m.getKey())) {
-                    sb.append("正则规则").append(" : ").append(StringUtil.removeDoubleQuotes(m.getValue().toString()));
-                }
-
-                if (DocAnnotationConstants.MESSAGE.equals(m.getKey())) {
-                    if(StringUtil.isNotEmpty(m.getValue().toString())) {
-                        sb.append("异常信息").append(" : ").append(StringUtil.removeDoubleQuotes(m.getValue().toString()));
+            String name = annotation.getType().getValue();
+            if(DocValidatorAnnotationEnum.listValidatorAnnotations().contains(name)) {
+                sb.append("[");
+                for (Map.Entry<String, AnnotationValue> m : values.entrySet()) {
+                    if (DocAnnotationConstants.REGEXP.equals(m.getKey())) {
+                        sb.append(m.getKey()).append(" : ").append(StringUtil.removeDoubleQuotes(m.getValue().toString()));
                     }
-                    sb.append("\n");
+                    if (DocAnnotationConstants.MESSAGE.equals(m.getKey())) {
+                        if (StringUtil.isNotEmpty(m.getValue().toString())) {
+                            sb.append(m.getKey()).append(" : ").append(StringUtil.removeDoubleQuotes(m.getValue().toString()));
+                        }
+                        sb.append("\n");
+                    }
                 }
-
+                if (sb.length() <= 1) {
+                    return "";
+                }
+                sb.append("]\n");
             }
                 return sb.toString();
     }
