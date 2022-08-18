@@ -188,6 +188,10 @@ public class DocClassUtil {
             case "localdatetime":
             case "java.time.localdatetime":
             case "java.time.localdate":
+            case "java.time.localtime":
+            case "java.time.year":
+            case "java.time.yearmonth":
+            case "java.time.monthday":
             case "java.time.period":
             case "localdate":
             case "offsetdatetime":

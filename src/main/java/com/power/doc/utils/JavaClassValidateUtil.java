@@ -94,6 +94,9 @@ public class JavaClassValidateUtil {
             case "java.util.date":
             case "java.time.localdatetime":
             case "java.time.localtime":
+            case "java.time.year":
+            case "java.time.yearmonth":
+            case "java.time.monthday":
             case "java.time.period":
             case "localdatetime":
             case "localdate":
@@ -106,7 +109,6 @@ public class JavaClassValidateUtil {
             case "java.math.bigdecimal":
             case "java.math.biginteger":
             case "java.util.uuid":
-            case "java.util.UUID":
             case "java.io.serializable":
             case "java.lang.character":
             case "org.bson.types.objectid":

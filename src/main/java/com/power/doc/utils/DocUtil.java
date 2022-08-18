@@ -37,6 +37,8 @@ import net.datafaker.Faker;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -97,7 +99,7 @@ public class DocUtil {
         fieldValue.put("date-date", DateTimeUtil.dateToStr(new Date(), DateTimeUtil.DATE_FORMAT_DAY));
         fieldValue.put("begintime-date", DateTimeUtil.dateToStr(new Date(), DateTimeUtil.DATE_FORMAT_DAY));
         fieldValue.put("endtime-date", DateTimeUtil.dateToStr(new Date(), DateTimeUtil.DATE_FORMAT_DAY));
-        fieldValue.put("time-localtime", DateTimeUtil.long2Str(System.currentTimeMillis(), DateTimeUtil.DATE_FORMAT_SECOND));
+        fieldValue.put("time-localtime", LocalDateTime.now().toLocalTime().format(DateTimeFormatter.ofPattern("HH:mm:ss")));
         fieldValue.put("state-int", String.valueOf(RandomUtil.randomInt(0, 10)));
         fieldValue.put("state-integer", String.valueOf(RandomUtil.randomInt(0, 10)));
         fieldValue.put("flag-int", String.valueOf(RandomUtil.randomInt(0, 10)));
@@ -581,8 +583,12 @@ public class DocUtil {
             case "enum":
             case "localdatetime":
             case "java.time.localdatetime":
+            case "java.time.year":
+            case "java.time.localtime":
+            case "java.time.yearmonth":
+            case "java.time.monthday":
             case "java.time.localdate":
-            case "java.time.Period":
+            case "java.time.period":
             case "localdate":
             case "offsetdatetime":
             case "localtime":
