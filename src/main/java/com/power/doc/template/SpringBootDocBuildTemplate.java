@@ -79,7 +79,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 }
             }
             DocletTag ignoreTag = cls.getTagByName(DocTags.IGNORE);
-            if (!checkController(cls) || Objects.nonNull(ignoreTag)) {
+            if (Objects.nonNull(ignoreTag) || !checkController(cls)) {
                 continue;
             }
             String strOrder = JavaClassUtil.getClassTagsValue(cls, DocTags.ORDER, Boolean.TRUE);
