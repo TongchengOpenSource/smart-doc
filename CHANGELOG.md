@@ -1,7 +1,7 @@
 ## smart-doc版本
 
 ### 版本号：2.5.0
-- 更新日期: 2022-08-07
+- 更新日期: 2022-08-20
 - 更新内容：
   1. 修复使用@see指向枚举类不存在时空指针问题，改成提示性异常处理，帮助用户可以定位问题，[#331](https://github.com/smart-doc-group/smart-doc/issues/331)
   2. 支持更多jdk 8时间类型[#315](https://github.com/smart-doc-group/smart-doc/issues/315)
