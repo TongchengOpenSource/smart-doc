@@ -256,6 +256,9 @@ public class JavaClassUtil {
      */
     public static Object getEnumValue(JavaClass javaClass, boolean formDataEnum) {
         List<JavaField> javaFields = javaClass.getEnumConstants();
+        if (Objects.isNull(javaFields)) {
+            throw new RuntimeException(javaClass.getName() +" enum not existed");
+        }
         List<JavaMethod> methodList = javaClass.getMethods();
         String methodName = null;
         for (JavaMethod method : methodList) {
