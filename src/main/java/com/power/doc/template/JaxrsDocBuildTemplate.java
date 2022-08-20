@@ -433,10 +433,8 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                     if (JavaClassValidateUtil.isJSR303Required(annotation.getType().getValue())) {
                         strRequired = "true";
                     }
-                    if(DocValidatorAnnotationEnum.listValidatorAnnotations().contains(annotation.getType().getSimpleName())) {
-                        comment.append(JavaFieldUtil.getJsrComment(annotation));
-                    }
                 }
+                comment.append(JavaFieldUtil.getJsrComment(annotations));
             } else {
                 isRequestBody = true;
             }

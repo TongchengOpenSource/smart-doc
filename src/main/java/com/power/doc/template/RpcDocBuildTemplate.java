@@ -201,10 +201,8 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
                 if(JavaClassValidateUtil.isJSR303Required(a.getType().getValue())){
                     required = true;
                 }
-                if(DocValidatorAnnotationEnum.listValidatorAnnotations().contains(a.getType().getSimpleName())) {
-                    comment.append(JavaFieldUtil.getJsrComment(a));
-                }
             }
+            comment.append(JavaFieldUtil.getJsrComment(annotations));
             Set<String> groupClasses = JavaClassUtil.getParamGroupJavaClass(annotations, builder.getJavaProjectBuilder());
             if (JavaClassValidateUtil.isCollection(fullTypeName) || JavaClassValidateUtil.isArray(fullTypeName)) {
                 if (JavaClassValidateUtil.isCollection(typeName)) {

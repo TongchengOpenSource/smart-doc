@@ -222,11 +222,9 @@ public class ParamsBuildHelper {
                         } else if (CollectionUtil.isEmpty(groupClasses)) {
                             strRequired = true;
                         }
-                        if(strRequired){
-                            comment.append(JavaFieldUtil.getJsrComment(annotation));
-                        }
                     }
                 }
+                comment.append(JavaFieldUtil.getJsrComment(javaAnnotations));
                 String fieldValue = "";
                 if (tagsMap.containsKey(DocTags.MOCK) && StringUtil.isNotEmpty(tagsMap.get(DocTags.MOCK))) {
                     fieldValue = tagsMap.get(DocTags.MOCK);

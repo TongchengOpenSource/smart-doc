@@ -204,7 +204,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         List<JavaMethod> methods = cls.getMethods();
         List<DocJavaMethod> docJavaMethods = new ArrayList<>(methods.size());
         for (JavaMethod method : methods) {
-            if (method.isPrivate()  || DocUtil.isMatch(apiConfig.getPackageExcludeFilters(),clazName + "." + method.getName())) {
+            if (method.isPrivate() || DocUtil.isMatch(apiConfig.getPackageExcludeFilters(), clazName + "." + method.getName())) {
                 continue;
             }
             docJavaMethods.add(DocJavaMethod.builder().setJavaMethod(method));
@@ -502,7 +502,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                             if (StringUtil.isNotEmpty(mockValue)) {
                                 mockValue = "[" + mockValue + "]";
                             } else {
-                                mockValue = "[" + DocUtil.getValByTypeAndFieldName(gicTypeName,paramName)+ "]";
+                                mockValue = "[" + DocUtil.getValByTypeAndFieldName(gicTypeName, paramName) + "]";
                             }
                             mockValue = JsonUtil.toPrettyFormat(mockValue);
                         }
@@ -828,10 +828,8 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                     isRequestBody = true;
                 }
                 required = Boolean.parseBoolean(strRequired);
-                if(DocValidatorAnnotationEnum.listValidatorAnnotations().contains(annotation.getType().getSimpleName())) {
-                    comment.append(JavaFieldUtil.getJsrComment(annotation));
-                }
             }
+            comment.append(JavaFieldUtil.getJsrComment(annotations));
             //file upload
             if (JavaClassValidateUtil.isFile(typeName)) {
                 ApiParam param = ApiParam.of().setField(paramName).setType(DocGlobalConstants.PARAM_TYPE_FILE)
