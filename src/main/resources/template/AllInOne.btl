@@ -60,7 +60,7 @@ Parameter | Type|Description|Required|Since
 <%
 for(param in doc.pathParams){
 %>
-${param.field}|${param.type}|${htmlEscape(param.desc)}|${param.required}|${param.version}
+${param.field}|${param.type}|${param.desc}|${param.required}|${param.version}
 <%}%>
 <%}%>
 <%if(isNotEmpty(doc.queryParams)){%>
@@ -72,7 +72,7 @@ Parameter | Type|Description|Required|Since
 <%
 for(param in doc.queryParams){
 %>
-${param.field}|${param.type}|${htmlEscape(param.desc)}|${param.required}|${param.version}
+${param.field}|${param.type}|${param.desc}|${param.required}|${param.version}
 <%}%>
 <%}%>
 <%if(isNotEmpty(doc.requestParams)){%>
@@ -84,7 +84,7 @@ Parameter | Type|Description|Required|Since
 <%
 for(param in doc.requestParams){
 %>
-${param.field}|${param.type}|${htmlEscape(param.desc)}|${param.required}|${param.version}
+${param.field}|${param.type}|${param.desc}|${param.required}|${param.version}
 <%}%>
 <%}%>
 
@@ -102,7 +102,7 @@ Field | Type|Description|Since
 <%
 for(param in doc.responseParams){
 %>
-${param.field}|${param.type}|${htmlEscape(param.desc)}|${param.version}
+${param.field}|${param.type}|${param.desc}|${param.version}
 <%}%>
 <%}%>
 

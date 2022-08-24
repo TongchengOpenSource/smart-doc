@@ -629,7 +629,7 @@ public class ParamsBuildHelper {
         if (projectBuilder.getApiConfig().getInlineEnum()) {
             ApiDataDictionary dataDictionary = projectBuilder.getApiConfig().getDataDictionary(javaClass.getCanonicalName());
             if (Objects.isNull(dataDictionary)) {
-                comment = comment + "<br/>" + JavaClassUtil.getEnumParams(javaClass);
+                comment = comment + "<br/>[Enum values:<br/>" + JavaClassUtil.getEnumParams(javaClass)+"]";
             } else {
                 Class enumClass = dataDictionary.getEnumClass();
                 if (enumClass.isInterface()) {
@@ -640,11 +640,11 @@ public class ParamsBuildHelper {
                         return comment;
                     }
                 }
-                comment = comment + "[enum:" + dictionaryListComment(dataDictionary.getEnumDataDict(enumClass)) + "]";
+                comment = comment + "<br/>[Enum:" + dictionaryListComment(dataDictionary.getEnumDataDict(enumClass)) + "]";
             }
         } else {
             if (StringUtil.isNotEmpty(enumComments)) {
-                comment = comment + "(See: " + enumComments + ")";
+                comment = comment + "<br/>(See: " + enumComments + ")";
             }
             comment = StringUtil.removeQuotes(comment);
         }
