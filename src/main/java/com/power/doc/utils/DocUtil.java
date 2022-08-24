@@ -581,6 +581,7 @@ public class DocUtil {
             case "java.util.uuid":
             case "uuid":
             case "enum":
+            case "java.util.date":
             case "localdatetime":
             case "java.time.localdatetime":
             case "java.time.year":

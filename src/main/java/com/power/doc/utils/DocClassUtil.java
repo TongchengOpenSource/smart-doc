@@ -182,6 +182,7 @@ public class DocClassUtil {
             case "java.lang.string":
             case "string":
             case "char":
+            case "java.util.date":
             case "date":
             case "java.util.uuid":
             case "uuid":
