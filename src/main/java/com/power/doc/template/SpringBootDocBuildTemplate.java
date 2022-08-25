@@ -502,7 +502,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                             if (StringUtil.isNotEmpty(mockValue)) {
                                 mockValue = "[" + mockValue + "]";
                             } else {
-                                mockValue = "[" + DocUtil.getValByTypeAndFieldName(gicTypeName, paramName) + "]";
+                                mockValue = "[" + DocUtil.getValByTypeAndFieldName(simpleTypeName, paramName) + "]";
                             }
                             mockValue = JsonUtil.toPrettyFormat(mockValue);
                         }
