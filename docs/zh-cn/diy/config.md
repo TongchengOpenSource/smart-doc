@@ -217,7 +217,7 @@
 ## isStrict
 * 必填：`false`
 * 类型：`Boolean`
-* 默认值: `flase`
+* 默认值: `false`
 
 是否开启严格模式。
 ```json
