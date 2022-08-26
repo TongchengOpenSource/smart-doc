@@ -8,6 +8,7 @@
   3. 修改date类型文档显示错误
   4. 修复list参数入参样例错误
   5. 修复2.5.0不支持jdk 8的问题
+  6. html特殊字符增加转义处理，解决html文档显示问题[#333](https://github.com/smart-doc-group/smart-doc/issues/333)
 
 ### 版本号：2.5.0
 - 更新日期: 2022-08-20
