@@ -1,7 +1,7 @@
 ## smart-doc版本
 
 ### 版本号：2.5.1
-- 更新日期: 2022-08-25
+- 更新日期: 2022-08-27
 - 更新内容：
   1. 升级qdox，解决字段名使用record报错问题，[#231](https://github.com/smart-doc-group/smart-doc/issues/231)
   2. 优化枚举在文档中的展示[#332](https://github.com/smart-doc-group/smart-doc/issues/332)
