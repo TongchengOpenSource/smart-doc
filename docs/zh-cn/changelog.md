@@ -1,5 +1,28 @@
 ## 变更日志
 
+### 版本号：2.5.1
+- 更新日期: 2022-08-27
+- 更新内容：
+  1. 升级qdox，解决字段名使用record报错问题，[#231](https://github.com/smart-doc-group/smart-doc/issues/231)
+  2. 优化枚举在文档中的展示[#332](https://github.com/smart-doc-group/smart-doc/issues/332)
+  3. 修改date类型文档显示错误
+  4. 修复list参数入参样例错误
+  5. 修复2.5.0不支持jdk 8的问题
+  6. html特殊字符增加转义处理，解决html文档显示问题[#333](https://github.com/smart-doc-group/smart-doc/issues/333)
+
+### 版本号：2.5.0
+- 更新日期: 2022-08-20
+- 更新内容：
+  1. 修复使用@see指向枚举类不存在时空指针问题，改成提示性异常处理，帮助用户可以定位问题，[#331](https://github.com/smart-doc-group/smart-doc/issues/331)
+  2. 支持更多jdk 8时间类型[#315](https://github.com/smart-doc-group/smart-doc/issues/315)
+  3. 支持jsr验证规则提取[#267](https://github.com/smart-doc-group/smart-doc/issues/267)
+
+### 版本号：2.4.9
+- 更新日期: 2022-08-07
+- 更新内容：
+  1. 支持使用@see指向枚举类，[#306](https://github.com/smart-doc-group/smart-doc/issues/306)
+  2. 修复枚举请求的用例展示错误
+
 ### 版本号：2.4.8
 - 更新日期: 2022-07-09
 - 更新内容：
