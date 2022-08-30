@@ -100,14 +100,14 @@ public class TornaUtil {
             methodApi.setIsResponseArray(apiMethodDoc.getIsResponseArray());
             methodApi.setRequestArrayType(apiMethodDoc.getRequestArrayType());
             methodApi.setResponseArrayType(apiMethodDoc.getResponseArrayType());
-            methodApi.setDeprecated(apiMethodDoc.isDeprecated() ? "该接口已废弃" : null);
+            methodApi.setDeprecated(apiMethodDoc.isDeprecated() ? "Deprecated" : null);
             //Path
             if (CollectionUtil.isNotEmpty(apiMethodDoc.getPathParams())) {
                 methodApi.setPathParams(buildParams(apiMethodDoc.getPathParams()));
             }
 
             if (CollectionUtil.isNotEmpty(apiMethodDoc.getQueryParams())
-                    && DocGlobalConstants.URL_CONTENT_TYPE.equals(apiMethodDoc.getContentType())) {
+                    && DocGlobalConstants.FILE_CONTENT_TYPE.equals(apiMethodDoc.getContentType())) {
                 // file upload
                 methodApi.setRequestParams(buildParams(apiMethodDoc.getQueryParams()));
             } else if (CollectionUtil.isNotEmpty(apiMethodDoc.getQueryParams())) {
@@ -295,7 +295,7 @@ public class TornaUtil {
                 String name = parameter.getType().getFullyQualifiedName();
                 gicType = getType(typeName);
                 simpleGicType = gicType.substring(gicType.lastIndexOf(".") + 1).toLowerCase();
-                // is array
+                // Is Array
                 if (JavaClassValidateUtil.isCollection(name) || JavaClassValidateUtil.isArray(name)) {
                     apiMethodDoc.setIsRequestArray(1);
                     if (JavaClassValidateUtil.isPrimitive(gicType)) {

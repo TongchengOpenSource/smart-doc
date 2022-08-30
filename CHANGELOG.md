@@ -1,5 +1,10 @@
 ## smart-doc版本
 
+### 版本号：2.5.2
+- 更新日期: 2022-09-x
+- 更新内容：
+  1. 修复query参数推送到torna被设置到body中，[#336](https://github.com/smart-doc-group/smart-doc/issues/336)
+
 ### 版本号：2.5.1
 - 更新日期: 2022-08-27
 - 更新内容：
