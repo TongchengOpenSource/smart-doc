@@ -250,7 +250,7 @@ public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             apiMethodDoc.setOrder(methodOrder);
             String comment = DocUtil.getEscapeAndCleanComment(method.getComment());
             apiMethodDoc.setDesc(method.getComment());
-            String methodUid = DocUtil.generateId(clazName + method.getName());
+            String methodUid = DocUtil.generateId(clazName + method.getName() + methodOrder);
             apiMethodDoc.setMethodId(methodUid);
             String apiNoteValue = DocUtil.getNormalTagComments(method, DocTags.API_NOTE, cls.getName());
             if (StringUtil.isEmpty(apiNoteValue)) {
