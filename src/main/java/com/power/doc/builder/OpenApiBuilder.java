@@ -357,8 +357,7 @@ public class OpenApiBuilder {
                 parametersList.add(parameters);
             }
         }
-        //  not process formdata
-        if (!apiMethodDoc.getContentType().equals(DocGlobalConstants.URL_CONTENT_TYPE)) {
+        if (apiMethodDoc.getContentType().equals(DocGlobalConstants.URL_CONTENT_TYPE)) {
             for (ApiParam apiParam : apiMethodDoc.getQueryParams()) {
                 parameters = getStringParams(apiParam);
                 parameters.put("in", "query");
