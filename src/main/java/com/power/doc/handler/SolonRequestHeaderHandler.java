@@ -42,7 +42,7 @@ import java.util.stream.Stream;
 /**
  * @author noear 2022/2/19 created
  */
-public class SolonRequestHeaderHandler {
+public class SolonRequestHeaderHandler extends BaseHeaderHandler {
 
     /**
      * handle Solon MVC Request Header
@@ -145,36 +145,6 @@ public class SolonRequestHeaderHandler {
                 return true;
             default:
                 return false;
-        }
-    }
-
-    public void processMappingHeaders(String header, List<ApiReqParam> mappingHeaders) {
-        if (header.contains("!=")) {
-            String headerName = header.substring(0, header.indexOf("!"));
-            ApiReqParam apiReqHeader = ApiReqParam.builder()
-                    .setName(headerName)
-                    .setRequired(true)
-                    .setValue(null)
-                    .setDesc("header condition")
-                    .setType("string");
-            mappingHeaders.add(apiReqHeader);
-        } else {
-            String headerName;
-            String headerValue = null;
-            if (header.contains("=")) {
-                int index = header.indexOf("=");
-                headerName = header.substring(0, index);
-                headerValue = header.substring(index + 1);
-            } else {
-                headerName = header;
-            }
-            ApiReqParam apiReqHeader = ApiReqParam.builder()
-                    .setName(headerName)
-                    .setRequired(true)
-                    .setValue(headerValue)
-                    .setDesc("header condition")
-                    .setType("string");
-            mappingHeaders.add(apiReqHeader);
         }
     }
 }

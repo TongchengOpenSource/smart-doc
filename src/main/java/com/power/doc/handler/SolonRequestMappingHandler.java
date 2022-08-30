@@ -68,11 +68,9 @@ public class SolonRequestMappingHandler {
         boolean deprecated = false;
         for (JavaAnnotation annotation : annotations) {
             String annotationName = annotation.getType().getName();
-
             if (DocAnnotationConstants.DEPRECATED.equals(annotationName)) {
                 deprecated = true;
             }
-
             if (SolonAnnotations.REQUEST_MAPPING.equals(annotationName) || SolonAnnotations.REQUEST_MAPPING_FULLY.equals(annotationName)) {
                 shortUrl = DocUtil.handleMappingValue(annotation);
 
@@ -116,20 +114,8 @@ public class SolonRequestMappingHandler {
                 return null;
             }
             shortUrl = StringUtil.removeQuotes(shortUrl);
-            List<String> urls = DocUtil.split(shortUrl);
-            if (urls.size() > 1) {
-                url = DocUrlUtil.getMvcUrls(serverUrl, contextPath + "/" + controllerBaseUrl, urls);
-                shortUrl = DocUrlUtil.getMvcUrls(DocGlobalConstants.EMPTY, contextPath + "/" + controllerBaseUrl, urls);
-            } else {
-                url = String.join(DocGlobalConstants.PATH_DELIMITER, serverUrl, contextPath, controllerBaseUrl, shortUrl);
-                shortUrl = String.join(DocGlobalConstants.PATH_DELIMITER, DocGlobalConstants.PATH_DELIMITER, contextPath, controllerBaseUrl, shortUrl);
-            }
-            for (Map.Entry<String, String> entry : constantsMap.entrySet()) {
-                String key = entry.getKey();
-                String value = entry.getValue();
-                url = delConstantsUrl(url, key, value);
-                shortUrl = delConstantsUrl(shortUrl, key, value);
-            }
+            url = DocUrlUtil.getMvcUrls(serverUrl, contextPath + "/" + controllerBaseUrl, shortUrl);
+            shortUrl = DocUrlUtil.getMvcUrls(DocGlobalConstants.EMPTY, contextPath + "/" + controllerBaseUrl, shortUrl);
             String urlSuffix = projectBuilder.getApiConfig().getUrlSuffix();
             if (StringUtil.isNotEmpty(urlSuffix)) {
                 url = UrlUtil.simplifyUrl(StringUtil.trim(url)) + urlSuffix;
@@ -142,19 +128,5 @@ public class SolonRequestMappingHandler {
                     .setUrl(url).setShortUrl(shortUrl).setDeprecated(deprecated);
         }
         return null;
-    }
-
-    public static String delConstantsUrl(String url, String replaceKey, String replaceValue) {
-        url = StringUtil.trim(url);
-        url = url.replace("+", "");
-        url = UrlUtil.simplifyUrl(url);
-        String[] pathWords = url.split("/");
-        for (String word : pathWords) {
-            if (word.equals(replaceKey)) {
-                url = url.replace(replaceKey, replaceValue);
-                return url;
-            }
-        }
-        return url;
     }
 }

@@ -124,18 +124,4 @@ public class SpringMVCRequestMappingHandler {
         }
         return null;
     }
-
-    public static String delConstantsUrl(String url, String replaceKey, String replaceValue) {
-        url = StringUtil.trim(url);
-        url = url.replace("+", "");
-        url = UrlUtil.simplifyUrl(url);
-        String[] pathWords = url.split("/");
-        for (String word : pathWords) {
-            if (word.equals(replaceKey)) {
-                url = url.replace(replaceKey, replaceValue);
-                return url;
-            }
-        }
-        return url;
-    }
 }
