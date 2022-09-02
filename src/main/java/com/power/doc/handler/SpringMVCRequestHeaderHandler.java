@@ -30,9 +30,11 @@ import com.power.doc.constants.SpringMvcAnnotations;
 import com.power.doc.model.ApiReqParam;
 import com.power.doc.utils.DocClassUtil;
 import com.power.doc.utils.DocUtil;
+import com.power.doc.utils.JavaFieldUtil;
 import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaMethod;
 import com.thoughtworks.qdox.model.JavaParameter;
+import com.thoughtworks.qdox.model.JavaType;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -80,6 +82,8 @@ public class SpringMVCRequestHeaderHandler extends BaseHeaderHandler {
             String className = method.getDeclaringClass().getCanonicalName();
             Map<String, String> paramMap = DocUtil.getCommentsByTag(method, DocTags.PARAM, className);
             String paramName = javaParameter.getName();
+            JavaType javaType = javaParameter.getType();
+            String simpleTypeName = javaType.getValue();
             ApiReqParam apiReqHeader;
             for (JavaAnnotation annotation : javaAnnotations) {
                 String annotationName = annotation.getType().getValue();
@@ -104,7 +108,9 @@ public class SpringMVCRequestHeaderHandler extends BaseHeaderHandler {
                     }
                     StringBuilder desc = new StringBuilder();
                     String comments = paramMap.get(paramName);
-                    desc.append(comments);
+                    desc.append(DocUtil.paramCommentResolve(comments));
+                    String mockValue = JavaFieldUtil.createMockValue(paramMap, paramName, javaType.getGenericCanonicalName(), simpleTypeName);
+                    apiReqHeader.setValue(mockValue);
 
                     if (requestHeaderMap.get(DocAnnotationConstants.DEFAULT_VALUE_PROP) != null) {
                         apiReqHeader.setValue(StringUtil.removeQuotes((String) requestHeaderMap.get(DocAnnotationConstants.DEFAULT_VALUE_PROP)));

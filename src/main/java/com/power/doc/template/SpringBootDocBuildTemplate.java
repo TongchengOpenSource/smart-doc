@@ -797,9 +797,9 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 javaType = actualTypesMap.get(javaType.getCanonicalName());
             }
             String typeName = javaType.getGenericCanonicalName();
+            String simpleTypeName = javaType.getValue();
             String simpleName = javaType.getValue().toLowerCase();
             String fullTypeName = javaType.getFullyQualifiedName();
-            String simpleTypeName = javaType.getValue();
             String commentClass = paramTagMap.get(paramName);
             String rewriteClassName = getRewriteClassName(replacementMap, fullTypeName, commentClass);
             // rewrite class
@@ -1055,12 +1055,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         if (cls.isAnnotation() || cls.isEnum()) {
             return false;
         }
-        JavaClass superClass = cls.getSuperJavaClass();
-        List<JavaAnnotation> classAnnotations = new ArrayList<>();
-        if (Objects.nonNull(superClass)) {
-            classAnnotations.addAll(superClass.getAnnotations());
-        }
-        classAnnotations.addAll(cls.getAnnotations());
+        List<JavaAnnotation> classAnnotations = DocClassUtil.getAnnotations(cls);
         for (JavaAnnotation annotation : classAnnotations) {
             String name = annotation.getType().getValue();
             if (SpringMvcAnnotations.CONTROLLER.equals(name) || SpringMvcAnnotations.REST_CONTROLLER.equals(name)) {

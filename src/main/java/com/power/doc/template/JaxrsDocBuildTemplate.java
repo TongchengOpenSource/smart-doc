@@ -806,12 +806,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         if (cls.isAnnotation() || cls.isEnum()) {
             return false;
         }
-        JavaClass superClass = cls.getSuperJavaClass();
-        List<JavaAnnotation> classAnnotations = new ArrayList<>();
-        if (Objects.nonNull(superClass)) {
-            classAnnotations.addAll(superClass.getAnnotations());
-        }
-        classAnnotations.addAll(cls.getAnnotations());
+        List<JavaAnnotation> classAnnotations = DocClassUtil.getAnnotations(cls);
         for (JavaAnnotation annotation : classAnnotations) {
             String annotationName = annotation.getType().getFullyQualifiedName();
             if (JakartaJaxrsAnnotations.JAX_PATH_FULLY.equals(annotationName)

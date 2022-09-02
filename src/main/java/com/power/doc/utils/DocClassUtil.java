@@ -25,9 +25,12 @@ package com.power.doc.utils;
 import com.power.common.util.StringUtil;
 import com.power.doc.filter.ReturnTypeProcessor;
 import com.power.doc.model.ApiReturn;
+import com.thoughtworks.qdox.model.JavaAnnotation;
+import com.thoughtworks.qdox.model.JavaClass;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Stack;
 
 /**
@@ -291,5 +294,20 @@ public class DocClassUtil {
             }
         }
         return stack.isEmpty();
+    }
+
+    /**
+     * Get class annotations
+     * @param cls JavaClass
+     * @return List of JavaAnnotation
+     */
+    public static List<JavaAnnotation> getAnnotations(JavaClass cls) {
+        JavaClass superClass = cls.getSuperJavaClass();
+        List<JavaAnnotation> classAnnotations = new ArrayList<>();
+        if (Objects.nonNull(superClass)) {
+            classAnnotations.addAll(superClass.getAnnotations());
+        }
+        classAnnotations.addAll(cls.getAnnotations());
+        return classAnnotations;
     }
 }

@@ -44,6 +44,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static com.power.doc.constants.DocGlobalConstants.JSON_CONTENT_TYPE;
+import static com.power.doc.constants.DocGlobalConstants.NO_COMMENTS_FOUND;
 
 /**
  * Description:
@@ -921,5 +922,16 @@ public class DocUtil {
         return DocPathUtil.matches(requestMapping.getShortUrl(), apiReqHeader.getPathPatterns()
                 , apiReqHeader.getExcludePathPatterns());
 
+    }
+
+    public static String paramCommentResolve(String comment) {
+        if (StringUtil.isEmpty(comment)) {
+            comment = NO_COMMENTS_FOUND;
+        } else {
+            if (comment.contains("|")) {
+                comment = comment.substring(0, comment.indexOf("|"));
+            }
+        }
+        return comment;
     }
 }
