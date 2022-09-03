@@ -28,6 +28,8 @@ import com.power.doc.model.ApiReturn;
 import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaClass;
 
+import javax.annotation.Nonnull;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -309,5 +311,13 @@ public class DocClassUtil {
         }
         classAnnotations.addAll(cls.getAnnotations());
         return classAnnotations;
+    }
+
+    public static <T> T newInstance(@Nonnull Class<T> classWithNoArgsConstructor) {
+        try {
+            return classWithNoArgsConstructor.getConstructor().newInstance();
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | InstantiationException e) {
+            throw new IllegalArgumentException("Class must have the NoArgsConstructor");
+        }
     }
 }
