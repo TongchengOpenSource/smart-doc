@@ -47,7 +47,8 @@ public class ApiErrorCodeDictionary {
     private String enumClassName;
 
     /**
-     * customized enum values resolver
+     * customized enum values resolver,
+     * class implement com.power.doc.extension.dict.DictionaryValuesResolver
      */
     private String valuesResolverClass;
     /**
