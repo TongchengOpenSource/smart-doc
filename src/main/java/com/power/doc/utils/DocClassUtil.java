@@ -26,6 +26,8 @@ import com.power.common.util.StringUtil;
 import com.power.doc.filter.ReturnTypeProcessor;
 import com.power.doc.model.ApiReturn;
 
+import javax.annotation.Nonnull;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
@@ -291,5 +293,13 @@ public class DocClassUtil {
             }
         }
         return stack.isEmpty();
+    }
+
+    public static <T> T newInstance(@Nonnull Class<T> classWithNoArgsConstructor) {
+        try {
+            return classWithNoArgsConstructor.getConstructor().newInstance();
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | InstantiationException e) {
+            throw new IllegalArgumentException("Class must have the NoArgsConstructor");
+        }
     }
 }
