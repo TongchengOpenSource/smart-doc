@@ -23,6 +23,8 @@
 package com.power.doc.utils;
 
 import com.power.common.util.CollectionUtil;
+import com.power.common.util.StringUtil;
+import com.power.common.util.ValidateUtil;
 import com.power.doc.constants.SolonAnnotations;
 import com.power.doc.constants.SpringMvcAnnotations;
 
@@ -33,6 +35,8 @@ import java.util.Objects;
  * @author yu 2019/12/25.
  */
 public class JavaClassValidateUtil {
+
+    private static String CLASS_PATTERN = "^([A-Za-z]{1}[A-Za-z\\d_]*\\.)+[A-Za-z][A-Za-z\\d_]*$";
 
     /**
      * Check if it is the basic data array type of json data
@@ -359,5 +363,34 @@ public class JavaClassValidateUtil {
             default:
                 return false;
         }
+    }
+
+    /**
+     * valid java class name
+     *
+     * @param className class nem
+     * @return boolean
+     */
+    public static boolean isClassName(String className) {
+        if (StringUtil.isEmpty(className) || !className.contains(".")) {
+            return false;
+        }
+        if (ValidateUtil.isContainsChinese(className)) {
+            return false;
+        }
+        String classNameTemp = className;
+        if (className.contains("<")) {
+            int index = className.indexOf("<");
+            classNameTemp = className.substring(0, index);
+        }
+        if (!ValidateUtil.validate(classNameTemp, CLASS_PATTERN)) {
+            return false;
+        }
+        if (className.contains("<") && !className.contains(">")) {
+            return false;
+        } else if (className.contains(">") && !className.contains("<")) {
+            return false;
+        }
+        return true;
     }
 }

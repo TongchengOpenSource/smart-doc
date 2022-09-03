@@ -6,7 +6,8 @@
   1. 修复query参数推送到torna被设置到body中，[#336](https://github.com/smart-doc-group/smart-doc/issues/336)
   2. 请求头参数支持mock值设置，[#337](https://github.com/smart-doc-group/smart-doc/issues/337)
   3. 支持错误码自定义解析器。[#338](https://github.com/smart-doc-group/smart-doc/issues/338)
-  4. 修复openapi表单对象请求参数丢失。
+  4. 修改字段@see 非枚举时错误，[#340](https://github.com/smart-doc-group/smart-doc/issues/340)
+  5. 修复openapi表单对象请求参数丢失。
 
 ### 版本号：2.5.1
 - 更新日期: 2022-08-27

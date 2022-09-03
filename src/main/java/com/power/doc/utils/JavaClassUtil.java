@@ -37,15 +37,7 @@ import com.power.doc.model.DocJavaField;
 import com.power.doc.model.torna.EnumInfo;
 import com.power.doc.model.torna.Item;
 import com.thoughtworks.qdox.JavaProjectBuilder;
-import com.thoughtworks.qdox.model.DocletTag;
-import com.thoughtworks.qdox.model.JavaAnnotation;
-import com.thoughtworks.qdox.model.JavaClass;
-import com.thoughtworks.qdox.model.JavaField;
-import com.thoughtworks.qdox.model.JavaGenericDeclaration;
-import com.thoughtworks.qdox.model.JavaMethod;
-import com.thoughtworks.qdox.model.JavaParameterizedType;
-import com.thoughtworks.qdox.model.JavaType;
-import com.thoughtworks.qdox.model.JavaTypeVariable;
+import com.thoughtworks.qdox.model.*;
 import com.thoughtworks.qdox.model.expression.AnnotationValue;
 import com.thoughtworks.qdox.model.expression.AnnotationValueList;
 import com.thoughtworks.qdox.model.expression.Expression;
@@ -257,7 +249,7 @@ public class JavaClassUtil {
     public static Object getEnumValue(JavaClass javaClass, boolean formDataEnum) {
         List<JavaField> javaFields = javaClass.getEnumConstants();
         if (Objects.isNull(javaFields)) {
-            throw new RuntimeException(javaClass.getName() +" enum not existed");
+            throw new RuntimeException(javaClass.getName() + " enum not existed");
         }
         List<JavaMethod> methodList = javaClass.getMethods();
         String methodName = null;
@@ -326,6 +318,7 @@ public class JavaClassUtil {
         }
         return enums;
     }
+
     public static JavaClass getSeeEnum(JavaField javaField, ProjectDocConfigBuilder builder) {
         if (Objects.isNull(javaField)) {
             return null;
@@ -340,6 +333,9 @@ public class JavaClassUtil {
             return null;
         }
         String value = see.getValue();
+        if (!JavaClassValidateUtil.isClassName(value)) {
+            return null;
+        }
         // not FullyQualifiedName
         if (!StringUtils.contains(value, ".")) {
             List<String> imports = javaField.getDeclaringClass().getSource().getImports();
@@ -347,17 +343,21 @@ public class JavaClassUtil {
             value = imports.stream().filter(i -> StringUtils.endsWith(i, finalValue)).findFirst().orElse(StringUtils.EMPTY);
         }
 
-        return builder.getJavaProjectBuilder().getClassByName(value);
+        JavaClass enumClass = builder.getJavaProjectBuilder().getClassByName(value);
+        if (enumClass.isEnum()) {
+            return enumClass;
+        }
+        return null;
     }
 
     /**
      * get enum info by java class
      *
-     * @author chen qi
      * @param javaClass the java class info
-     * @param builder builder
-     * @since 1.0.0
+     * @param builder   builder
      * @return EnumInfo
+     * @author chen qi
+     * @since 1.0.0
      */
     public static EnumInfo getEnumInfo(JavaClass javaClass, ProjectDocConfigBuilder builder) {
         if (Objects.isNull(javaClass) || !javaClass.isEnum()) {
@@ -494,7 +494,7 @@ public class JavaClassUtil {
      * Obtain Validate Group classes
      *
      * @param annotations the annotations of controller method param
-     * @param builder builder
+     * @param builder     builder
      * @return the group annotation value
      */
     public static Set<String> getParamGroupJavaClass(List<JavaAnnotation> annotations, JavaProjectBuilder builder) {

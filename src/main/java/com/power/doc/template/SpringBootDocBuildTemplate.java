@@ -481,7 +481,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             }
             String rewriteClassName = this.getRewriteClassName(replacementMap, typeName, commentClass);
             // rewrite class
-            if (DocUtil.isClassName(rewriteClassName)) {
+            if (JavaClassValidateUtil.isClassName(rewriteClassName)) {
                 gicTypeName = rewriteClassName;
                 typeName = DocClassUtil.getSimpleName(rewriteClassName);
             }
@@ -803,7 +803,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             String commentClass = paramTagMap.get(paramName);
             String rewriteClassName = getRewriteClassName(replacementMap, fullTypeName, commentClass);
             // rewrite class
-            if (DocUtil.isClassName(rewriteClassName)) {
+            if (JavaClassValidateUtil.isClassName(rewriteClassName)) {
                 typeName = rewriteClassName;
                 fullTypeName = DocClassUtil.getSimpleName(rewriteClassName);
             }
@@ -1081,7 +1081,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 return replacementMap.get(fullTypeName);
             }
             rewriteClassName = comments[comments.length - 1];
-            if (DocUtil.isClassName(rewriteClassName)) {
+            if (JavaClassValidateUtil.isClassName(rewriteClassName)) {
                 return rewriteClassName;
             }
         }

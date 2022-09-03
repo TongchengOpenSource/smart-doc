@@ -58,8 +58,6 @@ public class DocUtil {
     private static Faker faker = new Faker(new Locale("en-US"));
     private static Faker enFaker = new Faker(new Locale("en-US"));
 
-    private static String CLASS_PATTERN = "^([A-Za-z]{1}[A-Za-z\\d_]*\\.)+[A-Za-z][A-Za-z\\d_]*$";
-
     private static Map<String, String> fieldValue = new LinkedHashMap<>();
 
     static {
@@ -198,34 +196,7 @@ public class DocUtil {
         }
     }
 
-    /**
-     * valid java class name
-     *
-     * @param className class nem
-     * @return boolean
-     */
-    public static boolean isClassName(String className) {
-        if (StringUtil.isEmpty(className) || !className.contains(".")) {
-            return false;
-        }
-        if (ValidateUtil.isContainsChinese(className)) {
-            return false;
-        }
-        String classNameTemp = className;
-        if (className.contains("<")) {
-            int index = className.indexOf("<");
-            classNameTemp = className.substring(0, index);
-        }
-        if (!ValidateUtil.validate(classNameTemp, CLASS_PATTERN)) {
-            return false;
-        }
-        if (className.contains("<") && !className.contains(">")) {
-            return false;
-        } else if (className.contains(">") && !className.contains("<")) {
-            return false;
-        }
-        return true;
-    }
+
 
     /**
      * match controller package
