@@ -45,6 +45,11 @@ public class ApiErrorCodeDictionary {
      * enum class name
      */
     private String enumClassName;
+
+    /**
+     * customized enum values resolver
+     */
+    private String valuesResolverClass;
     /**
      * code field
      */
@@ -106,6 +111,15 @@ public class ApiErrorCodeDictionary {
 
     public ApiErrorCodeDictionary setEnumClassName(String enumClassName) {
         this.enumClassName = enumClassName;
+        return this;
+    }
+
+    public String getValuesResolverClass() {
+        return this.valuesResolverClass;
+    }
+
+    public ApiErrorCodeDictionary setValuesResolverClass(String valuesResolverClass) {
+        this.valuesResolverClass = valuesResolverClass;
         return this;
     }
 
