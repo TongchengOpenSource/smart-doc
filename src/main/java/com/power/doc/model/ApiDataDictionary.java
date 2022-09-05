@@ -59,6 +59,11 @@ public class ApiDataDictionary {
     private String enumClassName;
 
     /**
+     * customized values resolve class
+     */
+    private String valuesResolverClass;
+
+    /**
      * code field
      */
     private String codeField;
@@ -127,6 +132,16 @@ public class ApiDataDictionary {
 
     public ApiDataDictionary setEnumClassName(String enumClassName) {
         this.enumClassName = enumClassName;
+        return this;
+    }
+
+
+    public String getValuesResolverClass() {
+        return valuesResolverClass;
+    }
+
+    public ApiDataDictionary setValuesResolverClass(String valuesResolverClass) {
+        this.valuesResolverClass = valuesResolverClass;
         return this;
     }
 

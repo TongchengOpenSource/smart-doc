@@ -865,7 +865,29 @@ public class DocUtil {
                     clazz = classLoader.loadClass(apiDataDictionary.getEnumClassName());
                 }
 
-                if (clazz.isInterface()) {
+                Class<?> valuesResolverClass = null;
+                if (StringUtil.isNotEmpty(apiDataDictionary.getValuesResolverClass())) {
+                    valuesResolverClass = classLoader.loadClass(apiDataDictionary.getValuesResolverClass());
+                }
+                if (null != valuesResolverClass && DictionaryValuesResolver.class.isAssignableFrom(valuesResolverClass)) {
+                    JavaClass javaClass = javaProjectBuilder.getClassByName(clazz.getCanonicalName());
+                    if (Objects.nonNull(javaClass.getTagByName(DocTags.IGNORE))) {
+                        continue;
+                    }
+                    DictionaryValuesResolver resolver = (DictionaryValuesResolver) DocClassUtil.newInstance(valuesResolverClass);
+                    List<DataDict> dataDictList = new ArrayList<>(resolver.resolve());
+                    DocletTag apiNoteTag = javaClass.getTagByName(DocTags.API_NOTE);
+                    String description = DocUtil.getEscapeAndCleanComment(Optional.ofNullable(apiNoteTag).map(DocletTag::getValue).orElse(StringUtil.EMPTY));
+
+                    ApiDocDict apiDocDict = new ApiDocDict();
+                    apiDocDict.setOrder(order++);
+                    apiDocDict.setTitle(javaClass.getComment());
+                    apiDocDict.setDescription(description);
+                    apiDocDict.setDataDictList(dataDictList);
+
+                    apiDocDictList.add(apiDocDict);
+                }
+                else if (clazz.isInterface()) {
                     Set<Class<? extends Enum>> enumImplementSet = apiDataDictionary.getEnumImplementSet();
                     if (CollectionUtil.isEmpty(enumImplementSet)) {
                         continue;
