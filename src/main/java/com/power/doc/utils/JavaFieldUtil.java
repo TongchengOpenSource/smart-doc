@@ -130,20 +130,21 @@ public class JavaFieldUtil {
             String name = annotation.getType().getValue();
             if (DocValidatorAnnotationEnum.listValidatorAnnotations().contains(name)) {
                 for (Map.Entry<String, AnnotationValue> m : values.entrySet()) {
+                    String value = DocUtil.resolveAnnotationValue(m.getValue());
                     if (DocAnnotationConstants.REGEXP.equals(m.getKey())) {
-                        sb.append(m.getKey()).append(": ").append(StringUtil.removeDoubleQuotes(m.getValue().toString()))
+                        sb.append(m.getKey()).append(": ").append(StringUtil.removeDoubleQuotes(value))
                                 .append("; ");
                     }
                     if (DocAnnotationConstants.MAX.equals(m.getKey())) {
-                        sb.append(m.getKey()).append(": ").append(StringUtil.removeDoubleQuotes(m.getValue().toString()))
+                        sb.append(m.getKey()).append(": ").append(StringUtil.removeDoubleQuotes(value))
                                 .append("; ");
                     }
                     if (DocAnnotationConstants.LENGTH.equals(m.getKey())) {
-                        sb.append(m.getKey()).append(": ").append(StringUtil.removeDoubleQuotes(m.getValue().toString()))
+                        sb.append(m.getKey()).append(": ").append(StringUtil.removeDoubleQuotes(value))
                                 .append("; ");
                     }
                     if (DocAnnotationConstants.SIZE.equals(m.getKey())) {
-                        sb.append(m.getKey()).append(": ").append(StringUtil.removeDoubleQuotes(m.getValue().toString()))
+                        sb.append(m.getKey()).append(": ").append(StringUtil.removeDoubleQuotes(value))
                                 .append("; ");
                     }
                 }
