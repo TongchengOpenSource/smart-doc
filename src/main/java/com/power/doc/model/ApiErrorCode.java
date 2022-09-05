@@ -31,4 +31,13 @@ import com.power.common.model.EnumDictionary;
  * @author yu 2018/06/25.
  */
 public class ApiErrorCode extends EnumDictionary {
+    private String solution;
+
+    public String getSolution() {
+        return this.solution;
+    }
+
+    public void setSolution(String solution) {
+        this.solution = solution;
+    }
 }

@@ -220,10 +220,10 @@ public class TornaUtil {
         CommonErrorCode commonErrorCode;
         List<ApiErrorCode> errorCodes = DocUtil.errorCodeDictToList(config, javaProjectBuilder);
         if (CollectionUtil.isNotEmpty(errorCodes)) {
-            for (EnumDictionary code : errorCodes) {
+            for (ApiErrorCode code : errorCodes) {
                 commonErrorCode = new CommonErrorCode();
                 commonErrorCode.setCode(code.getValue());
-                // commonErrorCode.setSolution(code.getDesc());
+                commonErrorCode.setSolution(DocUtil.replaceNewLineToHtmlBr(code.getSolution()));
                 commonErrorCode.setMsg(DocUtil.replaceNewLineToHtmlBr(code.getDesc()));
                 commonErrorCodes.add(commonErrorCode);
             }
