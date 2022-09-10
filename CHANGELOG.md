@@ -1,5 +1,12 @@
 ## smart-doc版本
 
+### 版本号：2.5.3
+- 更新日期: 2022-09-10
+- 更新内容：
+  1. 使用@see注释内容不是枚举类名运行错误，[#340](https://github.com/smart-doc-group/smart-doc/issues/340)
+  2. jsr校验注解支持常量替换，[#334](https://github.com/smart-doc-group/smart-doc/issues/334)
+  3. 支持推送@since到torna的注释中，[#344](https://github.com/smart-doc-group/smart-doc/issues/344)
+
 ### 版本号：2.5.2
 - 更新日期: 2022-09-02
 - 更新内容：
