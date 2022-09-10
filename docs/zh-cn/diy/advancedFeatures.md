@@ -416,7 +416,7 @@ public class EExceptionValuesResolver implements DictionaryValuesResolver {
     }
 }
 ```
-然后在smart-doc配置中执行自己的错误码解析器
+然后在`smart-doc`配置中执行自己的错误码解析器
 ```json
 "errorCodeDictionaries": [
     {   //错误码列表，没有需求可以不设置
