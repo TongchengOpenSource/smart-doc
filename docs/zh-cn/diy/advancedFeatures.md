@@ -396,5 +396,32 @@ public Page<Order> queryPage(@PathVariable int pageIndex , @PathVariable int pag
 ```
 >classifier这种方式都不推荐使用，请使用maven插件或者gradle插件，插件可以实现自动加载。
 
-
-
+## 自定义错误码解析器
+现在很多人使用枚举作为字典码，对于枚举类`smart-doc`可以根据配置很容易就完成扫描到文档中。
+但是对于采用非枚举的情况就需要自己去编写对应的自定解析类了。自定义的解析类必须实现`smart-doc`
+的`com.power.doc.extension.dict.DictionaryValuesResolver`。接口代码如下：
+```java
+public interface DictionaryValuesResolver {
+    <T extends EnumDictionary> Collection<T> resolve();
+}
+```
+实现例子：
+```java
+public class EExceptionValuesResolver implements DictionaryValuesResolver {
+    @Override
+    public <T extends EnumDictionary> Collection<T> resolve() {
+        List<EnumDictionary> list = new ArrayList<>();
+        //反射处理你自己的错误码代码，填充返回
+        return list;
+    }
+}
+```
+然后在smart-doc配置中执行自己的错误码解析器
+```json
+"errorCodeDictionaries": [
+    {   //错误码列表，没有需求可以不设置
+        "title": "title",
+        "valuesResolverClass": "xx.EExceptionValuesResolver" //自定义错误码解析器，使用枚举定义错误码的忽略此项。
+    }
+}
+```

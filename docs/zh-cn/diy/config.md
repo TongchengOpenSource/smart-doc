@@ -69,7 +69,9 @@
         "title": "title",
         "enumClassName": "com.power.common.enums.HttpCodeEnum", //错误码枚举类
         "codeField": "code",//错误码的code码字段名称
-        "descField": "message"//错误码的描述信息对应的字段名
+        "descField": "message",//错误码的描述信息对应的字段名，
+        //自定义错误码解析器，使用枚举定义错误码的忽略此项。https://smart-doc-group.github.io/#/zh-cn/diy/advancedFeatures?id=
+        "valuesResolverClass": "" 
     },
     {
          // @since 2.4.6开始可以配置枚举实现的接口， 当配置接口时title将使用实现枚举的类描述
