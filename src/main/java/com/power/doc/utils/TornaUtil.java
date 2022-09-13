@@ -167,7 +167,7 @@ public class TornaUtil {
             httpParam.setName(header.getName());
             httpParam.setRequired(header.isRequired() ? TornaConstants.YES : TornaConstants.NO);
             httpParam.setExample(StringUtil.removeQuotes(header.getValue()));
-            if (StringUtil.isNotEmpty(header.getSince())&&"-".equals(header.getSince())) {
+            if (StringUtil.isNotEmpty(header.getSince())&&!"-".equals(header.getSince())) {
                 httpParam.setDescription(header.getDesc()+"@since "+header.getSince());
             } else {
                 httpParam.setDescription(header.getDesc());
@@ -198,7 +198,7 @@ public class TornaUtil {
             httpParam.setType(type);
             httpParam.setRequired(apiParam.isRequired() ? TornaConstants.YES : TornaConstants.NO);
             httpParam.setExample(StringUtil.removeQuotes(apiParam.getValue()));
-            if (StringUtil.isNotEmpty(apiParam.getVersion())&&"-".equals(apiParam.getVersion())) {
+            if (StringUtil.isNotEmpty(apiParam.getVersion())&&!"-".equals(apiParam.getVersion())) {
                 httpParam.setDescription(DocUtil.replaceNewLineToHtmlBr(apiParam.getDesc())+ "@since "+apiParam.getVersion());
             } else {
                 httpParam.setDescription(DocUtil.replaceNewLineToHtmlBr(apiParam.getDesc()));
