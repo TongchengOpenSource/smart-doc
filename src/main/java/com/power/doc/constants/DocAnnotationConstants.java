@@ -79,6 +79,8 @@ public interface DocAnnotationConstants {
 
     String JSON_PROPERTY = "JsonProperty";
 
+    String JSON_NAMING = "JsonNaming";
+
     /**
      * Fastjson JSONType annotation
      */

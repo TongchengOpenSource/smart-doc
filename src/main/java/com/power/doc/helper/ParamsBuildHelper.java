@@ -27,13 +27,13 @@ import com.power.common.util.CollectionUtil;
 import com.power.common.util.StringUtil;
 import com.power.doc.builder.ProjectDocConfigBuilder;
 import com.power.doc.constants.*;
+import com.power.doc.extension.json.PropertyNameHelper;
+import com.power.doc.extension.json.PropertyNamingStrategies;
 import com.power.doc.model.*;
-import com.power.doc.model.torna.EnumInfo;
 import com.power.doc.utils.*;
 import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaField;
-import com.thoughtworks.qdox.model.JavaMethod;
 import com.thoughtworks.qdox.model.expression.AnnotationValue;
 import org.apache.commons.lang3.StringUtils;
 
@@ -85,7 +85,8 @@ public class ParamsBuildHelper {
                 globGicName = DocClassUtil.getSimpleGicName(superJavaClass.getGenericFullyQualifiedName());
             }
         }
-
+        List<JavaAnnotation> clsAnnotation = cls.getAnnotations();
+        PropertyNamingStrategies.NamingBase fieldNameConvert = PropertyNameHelper.translate(clsAnnotation);
         JavaClassUtil.genericParamMap(genericMap, cls, globGicName);
         List<DocJavaField> fields = JavaClassUtil.getFields(cls, 0, new LinkedHashMap<>());
         if (JavaClassValidateUtil.isPrimitive(simpleName)) {
@@ -129,11 +130,14 @@ public class ParamsBuildHelper {
                 JavaField field = docField.getJavaField();
                 String maxLength = JavaFieldUtil.getParamMaxLength(field.getAnnotations());
                 StringBuilder comment = new StringBuilder();
-                comment.append(docField.getComment()).append("\n");
+                comment.append(docField.getComment());
                 if (field.isTransient() && skipTransientField) {
                     continue;
                 }
                 String fieldName = docField.getFieldName();
+                if (Objects.nonNull(fieldNameConvert)){
+                    fieldName = fieldNameConvert.translate(fieldName);
+                }
                 if (ignoreFields.containsKey(fieldName)) {
                     continue;
                 }
