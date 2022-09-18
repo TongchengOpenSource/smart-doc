@@ -40,14 +40,16 @@ import com.thoughtworks.qdox.JavaProjectBuilder;
 
 import java.util.*;
 
+import static com.power.doc.constants.DocGlobalConstants.ARRAY;
+
 /**
  * @author xingzi
  */
 public class OpenApiBuilder {
 
-   static Map<String, String> stringComponent = new HashMap<String, String>() {{
+    static Map<String, String> stringComponent = new HashMap<String, String>() {{
         put("type", "string");
-        put("format","string");
+        put("format", "string");
     }};
 
     /**
@@ -197,7 +199,7 @@ public class OpenApiBuilder {
         request.put("parameters", buildParameters(apiMethodDoc));
         request.put("responses", buildResponses(apiConfig, apiMethodDoc));
         request.put("deprecated", apiMethodDoc.isDeprecated());
-        request.put("operationId", String.join("",OpenApiSchemaUtil.getPatternResult("[A-Za-z0-9{}]*",apiMethodDoc.getPath())));
+        request.put("operationId", String.join("", OpenApiSchemaUtil.getPatternResult("[A-Za-z0-9{}]*", apiMethodDoc.getPath())));
 
         return request;
     }
@@ -253,10 +255,10 @@ public class OpenApiBuilder {
         if (Objects.nonNull(apiMethodDoc.getReturnSchema()) && isRep) {
             content.put("schema", apiMethodDoc.getReturnSchema());
         } else if (!isRep && Objects.nonNull(apiMethodDoc.getRequestSchema())) {
-                content.put("schema", apiMethodDoc.getRequestSchema());
-            } else {
-                content.put("schema", buildBodySchema(apiMethodDoc, isRep));
-            }
+            content.put("schema", apiMethodDoc.getRequestSchema());
+        } else {
+            content.put("schema", buildBodySchema(apiMethodDoc, isRep));
+        }
         if ((!isRep && apiConfig.isRequestExample()) || (isRep && apiConfig.isResponseExample())) {
             content.put("examples", buildBodyExample(apiMethodDoc, isRep));
         }
@@ -284,22 +286,22 @@ public class OpenApiBuilder {
         String responseRef = "#/components/schemas/" + OpenApiSchemaUtil.getClassNameFromParams(apiMethodDoc.getResponseParams());
 
         //List param
-        if (apiMethodDoc.isListParam()) {
-            schema.put("type", DocGlobalConstants.ARRAY);
-            if (isRep) {
-                innerScheme.put("$ref", responseRef);
-            } else {
-                innerScheme.put("$ref", requestRef);
-            }
+        if (apiMethodDoc.getIsRequestArray() == 1) {
+            schema.put("type", ARRAY);
+            innerScheme.put("$ref", requestRef);
             schema.put("items", innerScheme);
-        } else {
-            if (isRep && CollectionUtil.isNotEmpty(apiMethodDoc.getResponseParams())) {
-                schema.put("$ref", responseRef);
-            } else if (!isRep && (CollectionUtil.isNotEmpty(apiMethodDoc.getRequestParams()) ||
-                    (CollectionUtil.isNotEmpty(apiMethodDoc.getQueryParams()) && apiMethodDoc.getContentType().equals(DocGlobalConstants.URL_CONTENT_TYPE)))) {
-                schema.put("$ref", requestRef);
-            }
+        } else if (apiMethodDoc.getIsResponseArray() == 1) {
+            schema.put("type", ARRAY);
+            innerScheme.put("$ref", responseRef);
+            schema.put("items", innerScheme);
         }
+
+        else if (isRep && CollectionUtil.isNotEmpty(apiMethodDoc.getResponseParams())) {
+            schema.put("$ref", responseRef);
+        } else if (!isRep && CollectionUtil.isNotEmpty(apiMethodDoc.getRequestParams())) {
+            schema.put("$ref", requestRef);
+        }
+
 
         return schema;
     }
@@ -357,16 +359,22 @@ public class OpenApiBuilder {
                 parametersList.add(parameters);
             }
         }
-        if (apiMethodDoc.getContentType().equals(DocGlobalConstants.URL_CONTENT_TYPE)) {
-            for (ApiParam apiParam : apiMethodDoc.getQueryParams()) {
+        for (ApiParam apiParam : apiMethodDoc.getQueryParams()) {
+            //file
+            if (apiParam.isHasItems()) {
                 parameters = getStringParams(apiParam);
-                parameters.put("in", "query");
+                parameters.put("type", ARRAY);
+                parameters.put("items", getStringParams(apiParam));
+                parametersList.add(parameters);
+            } else {
+                parameters = getStringParams(apiParam);
                 List<ApiParam> children = apiParam.getChildren();
                 if (CollectionUtil.isEmpty(children)) {
                     parametersList.add(parameters);
                 }
             }
         }
+
         //with headers
         if (!CollectionUtil.isEmpty(apiMethodDoc.getRequestHeaders())) {
             for (ApiReqParam header : apiMethodDoc.getRequestHeaders()) {
@@ -386,6 +394,11 @@ public class OpenApiBuilder {
     private static Map<String, Object> getStringParams(ApiParam apiParam) {
         Map<String, Object> parameters;
         parameters = new HashMap<>(20);
+        if ("file".equalsIgnoreCase(apiParam.getType())) {
+            parameters.put("in", "formData");
+        } else {
+            parameters.put("in", "query");
+        }
         parameters.put("name", apiParam.getField());
         parameters.put("description", apiParam.getDesc());
         parameters.put("required", apiParam.isRequired());
@@ -409,17 +422,18 @@ public class OpenApiBuilder {
                 schema.put("format", "binary");
             } else if ("enum".equals(apiParam.getType())) {
                 schema.put("enum", apiParam.getEnumValues());
-            } else if ("array".equals(apiParam.getType())) {
+            } else if (ARRAY.equals(apiParam.getType())) {
                 if (CollectionUtil.isNotEmpty(apiParam.getEnumValues())) {
                     schema.put("type", "string");
                     schema.put("items", apiParam.getEnumValues());
                 } else {
-                    schema.put("type", "array");
-                    schema.put("items", new HashMap<>());
+                    schema.put("type", ARRAY);
+                    Map<String, String> map = new HashMap<>(4);
+                    map.put("type", "string");
+                    map.put("format", "string");
+                    schema.put("items", map);
                 }
             }
-        } else {
-            schema.put("format", "int16".equals(apiParam.getType()) ? "int32" : apiParam.getType());
         }
         return schema;
     }
@@ -473,7 +487,7 @@ public class OpenApiBuilder {
         Map<String, Object> schemas = new HashMap<>(4);
         Map<String, Object> component = new HashMap<>();
 
-        component.put("string",stringComponent);
+        component.put("string", stringComponent);
         apiDocs.forEach(
                 a -> {
                     List<ApiMethodDoc> apiMethodDocs = a.getList();

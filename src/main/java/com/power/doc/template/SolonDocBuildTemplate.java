@@ -275,8 +275,7 @@ public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             apiMethodDoc.setDeprecated(requestMapping.isDeprecated());
             List<JavaParameter> javaParameters = method.getParameters();
 
-            TornaUtil.setTornaArrayTags(javaParameters, apiMethodDoc, docJavaMethod.getJavaMethod().getReturns(),apiConfig);
-            // apiMethodDoc.setIsRequestArray();
+
             final List<ApiReqParam> apiReqParamList = this.configApiReqParams.stream()
                     .filter(param -> DocUtil.filterPath(requestMapping, param)).collect(Collectors.toList());
 
@@ -342,6 +341,7 @@ public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             apiMethodDoc.setRequestSchema(docJavaMethod.getRequestSchema());
             apiMethodDoc.setResponseParams(responseParams);
             methodDocList.add(apiMethodDoc);
+            TornaUtil.setTornaArrayTags( apiMethodDoc);
         }
         return methodDocList;
     }
@@ -433,10 +433,6 @@ public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             String simpleTypeName = javaType.getValue();
             typeName = DocClassUtil.rewriteRequestParam(typeName);
             gicTypeName = DocClassUtil.rewriteRequestParam(gicTypeName);
-            //if params is collection
-            if (JavaClassValidateUtil.isCollection(typeName)) {
-                apiMethodDoc.setListParam(true);
-            }
             JavaClass javaClass = configBuilder.getJavaProjectBuilder().getClassByName(typeName);
             String[] globGicName = DocClassUtil.getSimpleGicName(gicTypeName);
             String comment = this.paramCommentResolve(paramsComments.get(paramName));

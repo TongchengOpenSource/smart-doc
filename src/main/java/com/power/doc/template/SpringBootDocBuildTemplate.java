@@ -68,16 +68,7 @@ import com.power.doc.model.FormData;
 import com.power.doc.model.request.ApiRequestExample;
 import com.power.doc.model.request.CurlRequest;
 import com.power.doc.model.request.RequestMapping;
-import com.power.doc.utils.ApiParamTreeUtil;
-import com.power.doc.utils.CurlUtil;
-import com.power.doc.utils.DocClassUtil;
-import com.power.doc.utils.DocUtil;
-import com.power.doc.utils.JavaClassUtil;
-import com.power.doc.utils.JavaClassValidateUtil;
-import com.power.doc.utils.JavaFieldUtil;
-import com.power.doc.utils.JsonUtil;
-import com.power.doc.utils.OpenApiSchemaUtil;
-import com.power.doc.utils.TornaUtil;
+import com.power.doc.utils.*;
 import com.thoughtworks.qdox.model.DocletTag;
 import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaClass;
@@ -334,13 +325,12 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             apiMethodDoc.setServerUrl(projectBuilder.getServerUrl());
             apiMethodDoc.setPath(requestMapping.getShortUrl());
             apiMethodDoc.setDeprecated(requestMapping.isDeprecated());
-            List<JavaParameter> javaParameters = method.getParameters();
 
-            TornaUtil.setTornaArrayTags(javaParameters, apiMethodDoc, docJavaMethod.getJavaMethod().getReturns(), apiConfig);
             final List<ApiReqParam> apiReqParamList = this.configApiReqParams.stream()
                     .filter(param -> DocUtil.filterPath(requestMapping, param)).collect(Collectors.toList());
 
             ApiMethodReqParam apiMethodReqParam = requestParams(docJavaMethod, projectBuilder, apiReqParamList);
+            //apiMethodDoc.setReqListParam(ParamUtil.isListParam(apiMethodReqParam.getRequestParams()));
             // build request params
             if (paramsDataToTree) {
                 apiMethodDoc.setPathParams(ApiParamTreeUtil.apiParamToTree(apiMethodReqParam.getPathParams()));
@@ -395,14 +385,19 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             }
             // build response params
             List<ApiParam> responseParams = buildReturnApiParams(docJavaMethod, projectBuilder);
+           // apiMethodDoc.setRepListParam(ParamUtil.isListParam(responseParams));
             if (paramsDataToTree) {
                 responseParams = ApiParamTreeUtil.apiParamToTree(responseParams);
             }
             apiMethodDoc.setReturnSchema(docJavaMethod.getReturnSchema());
             apiMethodDoc.setRequestSchema(docJavaMethod.getRequestSchema());
             apiMethodDoc.setResponseParams(responseParams);
+
+            TornaUtil.setTornaArrayTags(apiMethodDoc);
             methodDocList.add(apiMethodDoc);
         }
+
+
         return methodDocList;
     }
 
@@ -491,10 +486,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             String simpleTypeName = javaType.getValue();
             typeName = DocClassUtil.rewriteRequestParam(typeName);
             gicTypeName = DocClassUtil.rewriteRequestParam(gicTypeName);
-            //if params is collection
-            if (JavaClassValidateUtil.isCollection(typeName)) {
-                apiMethodDoc.setListParam(true);
-            }
+
             JavaClass javaClass = configBuilder.getJavaProjectBuilder().getClassByName(typeName);
             String[] globGicName = DocClassUtil.getSimpleGicName(gicTypeName);
             String comment = this.paramCommentResolve(paramsComments.get(paramName));

@@ -243,8 +243,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             apiMethodDoc.setContentType(jaxPathMapping.getMediaType());
             List<JavaParameter> javaParameters = method.getParameters();
 
-            TornaUtil.setTornaArrayTags(javaParameters, apiMethodDoc, docJavaMethod.getJavaMethod().getReturns(), apiConfig);
-            // apiMethodDoc.setIsRequestArray();
+
             ApiMethodReqParam apiMethodReqParam = requestParams(docJavaMethod, projectBuilder);
             // build request params
             if (paramsDataToTree) {
@@ -304,6 +303,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             apiMethodDoc.setRequestSchema(docJavaMethod.getRequestSchema());
             apiMethodDoc.setResponseParams(responseParams);
             methodDocList.add(apiMethodDoc);
+            TornaUtil.setTornaArrayTags( apiMethodDoc);
         }
         return methodDocList;
     }
@@ -632,10 +632,6 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             String simpleTypeName = javaType.getValue();
             typeName = DocClassUtil.rewriteRequestParam(typeName);
             gicTypeName = DocClassUtil.rewriteRequestParam(gicTypeName);
-            //if params is collection
-            if (JavaClassValidateUtil.isCollection(typeName)) {
-                apiMethodDoc.setListParam(true);
-            }
             JavaClass javaClass = configBuilder.getJavaProjectBuilder().getClassByName(typeName);
             String[] globGicName = DocClassUtil.getSimpleGicName(gicTypeName);
             String comment = this.paramCommentResolve(paramsComments.get(paramName));

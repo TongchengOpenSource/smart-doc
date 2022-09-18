@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import static com.power.doc.constants.DocGlobalConstants.ARRAY;
 import static com.power.doc.constants.DocGlobalConstants.OBJECT;
 
 /**
@@ -272,47 +273,29 @@ public class TornaUtil {
     }
 
     /**
-     * set torna responseArray
-     * @param javaParameters params
-     * @param apiMethodDoc methodDoc
-     * @param returnClass return class
-     * @param apiConfig config
+     * request and response is list
+     * @param apiMethodDoc
      */
-    public static void setTornaArrayTags(List<JavaParameter> javaParameters, ApiMethodDoc apiMethodDoc, JavaClass returnClass, ApiConfig apiConfig) {
-
-        apiMethodDoc.setIsResponseArray(0);
+    public static void setTornaArrayTags(ApiMethodDoc apiMethodDoc) {
+        List<ApiParam> reqList = apiMethodDoc.getRequestParams();
+        List<ApiParam> repList = apiMethodDoc.getResponseParams();
         apiMethodDoc.setIsRequestArray(0);
-        //response tags
-        if ((JavaClassValidateUtil.isCollection(returnClass.getFullyQualifiedName()) ||
-                JavaClassValidateUtil.isArray(returnClass.getFullyQualifiedName())) &&
-                apiConfig.getResponseBodyAdvice() == null) {
-            apiMethodDoc.setIsResponseArray(1);
-            String gicType;
-            String simpleGicType;
-            String typeName = returnClass.getGenericFullyQualifiedName();
-            gicType = getType(typeName);
-            simpleGicType = gicType.substring(gicType.lastIndexOf(".") + 1).toLowerCase();
-            apiMethodDoc.setResponseArrayType(JavaClassValidateUtil.isPrimitive(gicType) ? simpleGicType : OBJECT);
+        apiMethodDoc.setIsResponseArray(0);
+        //response
+        if (CollectionUtil.isNotEmpty(repList)) {
+            ApiParam apiParam = repList.get(0);
+            boolean isReqList = repList.size() == 1 && ARRAY.equals(apiParam.getType());
+            String className = getType(apiParam.getClassName());
+            apiMethodDoc.setResponseArrayType(JavaClassValidateUtil.isPrimitive(className) ? className : OBJECT);
+            apiMethodDoc.setIsResponseArray(isReqList ? 1 : 0);
         }
-        //request tags
-        if (CollectionUtil.isNotEmpty(javaParameters) && apiConfig.getRequestBodyAdvice() == null) {
-            for (JavaParameter parameter : javaParameters) {
-                String gicType;
-                String simpleGicType;
-                String typeName = parameter.getType().getGenericFullyQualifiedName();
-                String name = parameter.getType().getFullyQualifiedName();
-                gicType = getType(typeName);
-                simpleGicType = gicType.substring(gicType.lastIndexOf(".") + 1).toLowerCase();
-                // Is Array
-                if (JavaClassValidateUtil.isCollection(name) || JavaClassValidateUtil.isArray(name)) {
-                    apiMethodDoc.setIsRequestArray(1);
-                    if (JavaClassValidateUtil.isPrimitive(gicType)) {
-                        apiMethodDoc.setRequestArrayType(simpleGicType);
-                    } else {
-                        apiMethodDoc.setRequestArrayType(OBJECT);
-                    }
-                }
-            }
+        //request
+        if (CollectionUtil.isNotEmpty(repList)) {
+            ApiParam apiParam = repList.get(0);
+            boolean isRepList = reqList.size() == 1 && ARRAY.equals(apiParam.getType());
+            String className = getType(apiParam.getClassName());
+            apiMethodDoc.setRequestArrayType(JavaClassValidateUtil.isPrimitive(className) ? className : OBJECT);
+            apiMethodDoc.setIsRequestArray(isRepList ? 1 : 0);
         }
     }
 
@@ -327,7 +310,7 @@ public class TornaUtil {
         if (gicType.contains("[")) {
             gicType = gicType.substring(0, gicType.indexOf("["));
         }
-        return gicType;
+            return gicType.substring(gicType.lastIndexOf(".") + 1).toLowerCase();
     }
 
     private static String subFirstUrlOrPath(String url) {

@@ -197,10 +197,6 @@ public class ApiMethodDoc implements Serializable, Cloneable {
      * torna request is array
      */
     private String responseArrayType;
-    /**
-     * is List data . openApi
-     */
-    private boolean listParam = false;
 
     /**
      * tags
@@ -239,13 +235,6 @@ public class ApiMethodDoc implements Serializable, Cloneable {
         this.responseArrayType = responseArrayType;
     }
 
-    public boolean isListParam() {
-        return listParam;
-    }
-
-    public void setListParam(boolean listParam) {
-        this.listParam = listParam;
-    }
 
     public String getMethodId() {
         return methodId;
