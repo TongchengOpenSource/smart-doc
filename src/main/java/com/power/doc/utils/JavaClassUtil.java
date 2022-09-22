@@ -578,8 +578,10 @@ public class JavaClassUtil {
         Field[] fields = clazz.getDeclaredFields();
         Map<String, String> constants = new HashMap<>();
         for (Field field : fields) {
-            boolean isFinal = Modifier.isFinal(field.getModifiers());
-            if (isFinal) {
+            if (Modifier.isPrivate(field.getModifiers())) {
+                continue;
+            }
+            if (Modifier.isFinal(field.getModifiers()) && Modifier.isStatic(field.getModifiers())) {
                 String name = field.getName();
                 constants.put(className + "." + name, String.valueOf(field.get(null)));
             }
