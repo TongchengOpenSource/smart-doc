@@ -85,8 +85,11 @@ public class ParamsBuildHelper {
                 globGicName = DocClassUtil.getSimpleGicName(superJavaClass.getGenericFullyQualifiedName());
             }
         }
-        List<JavaAnnotation> clsAnnotation = cls.getAnnotations();
-        PropertyNamingStrategies.NamingBase fieldNameConvert = PropertyNameHelper.translate(clsAnnotation);
+        PropertyNamingStrategies.NamingBase fieldNameConvert = null;
+        if(Objects.nonNull(cls)) {
+            List<JavaAnnotation> clsAnnotation = cls.getAnnotations();
+             fieldNameConvert = PropertyNameHelper.translate(clsAnnotation);
+        }
         JavaClassUtil.genericParamMap(genericMap, cls, globGicName);
         List<DocJavaField> fields = JavaClassUtil.getFields(cls, 0, new LinkedHashMap<>());
         if (JavaClassValidateUtil.isPrimitive(simpleName)) {
@@ -162,12 +165,12 @@ public class ParamsBuildHelper {
 
                 boolean strRequired = false;
                 int annotationCounter = 0;
-                CustomField customResponseField = responseFieldMap.get(simpleName + "." + fieldName);
+                CustomField customResponseField = CustomField.nameEquals(fieldName,responseFieldMap);
                 if (customResponseField != null && JavaClassUtil.isTargetChildClass(simpleName, customResponseField.getOwnerClassName())
                         && (customResponseField.isIgnore()) && isResp) {
                     continue;
                 }
-                CustomField customRequestField = projectBuilder.getCustomReqFieldMap().get(simpleName + "." + fieldName);
+                CustomField customRequestField = CustomField.nameEquals(fieldName,projectBuilder.getCustomReqFieldMap());
                 if (customRequestField != null && JavaClassUtil.isTargetChildClass(simpleName, customRequestField.getOwnerClassName())
                         && (customRequestField.isIgnore()) && !isResp) {
                     continue;
