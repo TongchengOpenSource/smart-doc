@@ -120,7 +120,7 @@ public class SpringMVCRequestMappingHandler {
                 shortUrl = UrlUtil.simplifyUrl(StringUtil.trim(shortUrl));
             }
             return RequestMapping.builder().setMediaType(mediaType).setMethodType(methodType)
-                    .setUrl(url).setShortUrl(shortUrl).setDeprecated(deprecated);
+                    .setUrl(DocUtil.formatPathUrl(url)).setShortUrl(DocUtil.formatPathUrl(shortUrl)).setDeprecated(deprecated);
         }
         return null;
     }
