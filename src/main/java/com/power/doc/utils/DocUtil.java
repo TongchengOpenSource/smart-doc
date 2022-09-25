@@ -46,6 +46,7 @@ import java.util.stream.Collectors;
 
 import static com.power.doc.constants.DocGlobalConstants.JSON_CONTENT_TYPE;
 import static com.power.doc.constants.DocGlobalConstants.NO_COMMENTS_FOUND;
+import static com.power.doc.model.SystemPlaceholders.*;
 
 /**
  * Description:
@@ -232,7 +233,9 @@ public class DocUtil {
      * @return formatted string
      */
     public static String formatAndRemove(String str, Map<String, String> values) {
-        // /detail/{id:[a-zA-Z0-9]{3}}/{name:[a-zA-Z0-9]{3}}
+        if(SystemPlaceholders.hasSystemProperties(str)){
+            str = DocUtil.delPropertiesUrl(str,new HashSet<>());
+        }
         if (str.contains(":")) {
             String[] strArr = str.split("/");
             for (int i = 0; i < strArr.length; i++) {
@@ -240,6 +243,7 @@ public class DocUtil {
                 if (pathParam.contains(":")) {
                     int length = pathParam.length();
                     String reg = pathParam.substring(pathParam.indexOf(":") + 1, length - 1);
+
                     Generex generex = new Generex(reg);
                     // Generate random String
                     String randomStr = generex.random();
@@ -269,7 +273,6 @@ public class DocUtil {
         }
         return builder.toString();
     }
-
     /**
      * // /detail/{id:[a-zA-Z0-9]{3}}/{name:[a-zA-Z0-9]{3}}
      * remove pattern
@@ -278,6 +281,9 @@ public class DocUtil {
      * @return String
      */
     public static String formatPathUrl(String str) {
+        if(SystemPlaceholders.hasSystemProperties(str)){
+            str = DocUtil.delPropertiesUrl(str,new HashSet<>());
+        }
         if (!str.contains(":")) {
             return str;
         }
@@ -913,5 +919,97 @@ public class DocUtil {
             }
         }
         return comment;
+    }
+
+    /**
+     * del ${server.port:/error}
+     * @param value url
+     * @param visitedPlaceholders  cycle
+     * @return
+     */
+    public static String delPropertiesUrl(String value,Set<String> visitedPlaceholders) {
+        int startIndex = value.indexOf(PLACEHOLDER_PREFIX);
+        if (startIndex == -1) {
+            return value;
+        }
+        StringBuilder result = new StringBuilder(value);
+        while (startIndex != -1) {
+            int endIndex = findPlaceholderEndIndex(result, startIndex);
+            if (endIndex != -1) {
+                String placeholder = result.substring(startIndex + PLACEHOLDER_PREFIX.length(), endIndex);
+                String originalPlaceholder = placeholder;
+                if (visitedPlaceholders == null) {
+                    visitedPlaceholders = new HashSet<>(4);
+                }
+                if (!visitedPlaceholders.add(originalPlaceholder)) {
+                    throw new IllegalArgumentException(
+                            "Circular placeholder reference '" + originalPlaceholder + "' in property definitions");
+                }
+                // Recursive invocation, parsing placeholders contained in the placeholder key.
+                placeholder = delPropertiesUrl(placeholder, visitedPlaceholders);
+                String propVal = SystemPlaceholders.replaceSystemProperties(placeholder);
+                if (propVal == null) {
+                    int separatorIndex = placeholder.indexOf(":");
+                    if (separatorIndex != -1) {
+                        String actualPlaceholder = placeholder.substring(0, separatorIndex);
+                        String defaultValue = placeholder.substring(separatorIndex + ":".length());
+                        propVal = SystemPlaceholders.replaceSystemProperties(actualPlaceholder);
+                        if (propVal == null) {
+                            propVal = defaultValue;
+                        }
+                    }
+                }
+                if (propVal != null) {
+                    propVal = delPropertiesUrl(propVal, visitedPlaceholders);
+                    result.replace(startIndex, endIndex + PLACEHOLDER_PREFIX.length(), propVal);
+                    startIndex = result.indexOf(PLACEHOLDER_PREFIX, startIndex + propVal.length());
+                } else{
+                    // Proceed with unprocessed value.
+                    startIndex = result.indexOf(PLACEHOLDER_PREFIX, endIndex + PLACEHOLDER_PREFIX.length());
+                }
+
+                visitedPlaceholders.remove(originalPlaceholder);
+            }
+            else {
+                startIndex = -1;
+            }
+        }
+        return result.toString();
+    }
+
+    private static int findPlaceholderEndIndex(CharSequence buf, int startIndex) {
+        int index = startIndex +PLACEHOLDER_PREFIX.length();
+        int withinNestedPlaceholder = 0;
+        while (index < buf.length()) {
+            if (substringMatch(buf, index, PLACEHOLDER_SUFFIX)) {
+                if (withinNestedPlaceholder > 0) {
+                    withinNestedPlaceholder--;
+                    index = index + "}".length();
+                }
+                else {
+                    return index;
+                }
+            }
+            else if (substringMatch(buf, index, SIMPLE_PREFIX)) {
+                withinNestedPlaceholder++;
+                index = index + SIMPLE_PREFIX.length();
+            }
+            else {
+                index++;
+            }
+        }
+        return -1;
+    }
+
+    public static boolean substringMatch(CharSequence str, int index, CharSequence substring) {
+        if (index + substring.length() > str.length()) {
+            return false;
+        }
+        for (int i = 0; i < substring.length(); i++) {
+            if (str.charAt(index + i) != substring.charAt(i)) {
+                return false;
+            }
+        }
+        return true;
     }
 }
