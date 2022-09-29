@@ -1,7 +1,6 @@
 package com.power.doc.utils;
 
 import com.google.gson.JsonElement;
-import com.google.gson.JsonNull;
 import com.google.gson.JsonParser;
 import com.power.common.model.EnumDictionary;
 import com.power.common.util.CollectionUtil;
