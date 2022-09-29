@@ -665,7 +665,7 @@ public class ParamsBuildHelper {
 
     private static int atomicOrDefault(AtomicInteger atomicInteger, int defaultVal){
         if(null != atomicInteger){
-            atomicInteger.incrementAndGet();
+           return atomicInteger.incrementAndGet();
         }
         return defaultVal;
     }
