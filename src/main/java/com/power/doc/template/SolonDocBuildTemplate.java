@@ -797,7 +797,7 @@ public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                         //for json
                         paramList.addAll(ParamsBuildHelper.buildParams(gicNameArr[0], DocGlobalConstants.EMPTY, 0,
                                 "true", Boolean.FALSE, new HashMap<>(), builder,
-                                groupClasses, 0, Boolean.TRUE));
+                                groupClasses, 0, Boolean.TRUE, null));
                     } else {
                         throw new RuntimeException("Solon MVC can't support binding Collection on method "
                                 + javaMethod.getName() + ",Check it in " + javaMethod.getDeclaringClass()
@@ -860,7 +860,7 @@ public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 } else {
                     paramList.addAll(ParamsBuildHelper.buildParams(gicNameArr[1], DocGlobalConstants.EMPTY, 0,
                             "true", Boolean.FALSE, new HashMap<>(),
-                            builder, groupClasses, 0, Boolean.FALSE));
+                            builder, groupClasses, 0, Boolean.FALSE, null));
                 }
 
             } else if (JavaClassValidateUtil.isFile(typeName)) {
@@ -892,7 +892,7 @@ public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 paramList.add(param);
             } else {
                 paramList.addAll(ParamsBuildHelper.buildParams(typeName, DocGlobalConstants.EMPTY, 0,
-                        "true", Boolean.FALSE, new HashMap<>(), builder, groupClasses, 0, Boolean.FALSE));
+                        "true", Boolean.FALSE, new HashMap<>(), builder, groupClasses, 0, Boolean.FALSE, null));
             }
         }
         return  ApiParamTreeUtil.buildMethodReqParam(paramList,queryReqParamMap,pathReqParamMap,requestBodyCounter);
