@@ -40,6 +40,7 @@ import com.power.doc.constants.DocAnnotationConstants;
 import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.constants.DocTags;
 import com.power.doc.constants.DubboAnnotationConstants;
+import com.power.doc.constants.TornaConstants;
 import com.power.doc.helper.ParamsBuildHelper;
 import com.power.doc.model.ApiConfig;
 import com.power.doc.model.ApiParam;
@@ -52,6 +53,7 @@ import com.power.doc.utils.DocUtil;
 import com.power.doc.utils.JavaClassUtil;
 import com.power.doc.utils.JavaClassValidateUtil;
 import com.power.doc.utils.JavaFieldUtil;
+import com.power.doc.utils.TornaUtil;
 import com.thoughtworks.qdox.model.DocletTag;
 import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaClass;
@@ -169,7 +171,7 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
       apiMethodDoc.setDeprecated(deprecated);
 
       // build request params
-      List<ApiParam> requestParams = requestParams(method, projectBuilder);
+      List<ApiParam> requestParams = requestParams(method, projectBuilder, new AtomicInteger(0));
       // build response params
       List<ApiParam> responseParams = buildReturnApiParams(DocJavaMethod.builder().setJavaMethod(method), projectBuilder);
 
@@ -186,7 +188,7 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
     return methodDocList;
   }
 
-  private List<ApiParam> requestParams(final JavaMethod javaMethod, ProjectDocConfigBuilder builder) {
+  private List<ApiParam> requestParams(final JavaMethod javaMethod, ProjectDocConfigBuilder builder, AtomicInteger atomicInteger) {
     boolean isStrict = builder.getApiConfig().isStrict();
     boolean isShowJavaType = builder.getApiConfig().getShowJavaType();
     String className = javaMethod.getDeclaringClass().getCanonicalName();
@@ -231,17 +233,17 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
         if (JavaClassValidateUtil.isPrimitive(gicName)) {
           String processedType = isShowJavaType ?
               JavaClassUtil.getClassSimpleName(typeName) : DocClassUtil.processTypeNameForParams(simpleName);
-          ApiParam param = ApiParam.of().setField(paramName)
+          ApiParam param = ApiParam.of().setId(atomicInteger.incrementAndGet()).setField(paramName)
               .setDesc(comment + "   (children type : " + gicName + ")")
               .setRequired(required)
               .setType(processedType);
           paramList.add(param);
         } else {
           paramList.addAll(ParamsBuildHelper.buildParams(gicNameArr[0], paramPre, 0, "true",
-              Boolean.FALSE, new HashMap<>(), builder, groupClasses, 0, Boolean.FALSE));
+              Boolean.FALSE, new HashMap<>(), builder, groupClasses, 0, Boolean.FALSE, atomicInteger));
         }
       } else if (JavaClassValidateUtil.isPrimitive(fullTypeName)) {
-        ApiParam param = ApiParam.of().setField(paramName)
+        ApiParam param = ApiParam.of().setId(atomicInteger.incrementAndGet()).setField(paramName)
             .setType(JavaClassUtil.getClassSimpleName(typeName))
             .setDesc(comment.toString())
             .setRequired(required)
@@ -251,21 +253,21 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
         paramList.add(param);
       } else if (JavaClassValidateUtil.isMap(fullTypeName)) {
         if (JavaClassValidateUtil.isMap(typeName)) {
-          ApiParam apiParam = ApiParam.of().setField(paramName).setType(typeName)
+          ApiParam apiParam = ApiParam.of().setId(atomicInteger.incrementAndGet()).setField(paramName).setType(typeName)
               .setDesc(comment.toString()).setRequired(required).setVersion(DocGlobalConstants.DEFAULT_VERSION);
           paramList.add(apiParam);
           continue;
         }
         String[] gicNameArr = DocClassUtil.getSimpleGicName(typeName);
         paramList.addAll(ParamsBuildHelper.buildParams(gicNameArr[1], paramPre, 0, "true",
-            Boolean.FALSE, new HashMap<>(), builder, groupClasses, 0, Boolean.FALSE));
+            Boolean.FALSE, new HashMap<>(), builder, groupClasses, 0, Boolean.FALSE, atomicInteger));
       } else if (javaClass.isEnum()) {
-        ApiParam param = ApiParam.of().setField(paramName)
+        ApiParam param = ApiParam.of().setId(atomicInteger.incrementAndGet()).setField(paramName)
             .setType("Enum").setRequired(required).setDesc(comment.toString()).setVersion(DocGlobalConstants.DEFAULT_VERSION);
         paramList.add(param);
       } else {
         paramList.addAll(ParamsBuildHelper.buildParams(typeName, paramPre, 0, "true",
-            Boolean.FALSE, new HashMap<>(), builder, groupClasses, 0, Boolean.FALSE));
+            Boolean.FALSE, new HashMap<>(), builder, groupClasses, 0, Boolean.FALSE, atomicInteger));
       }
     }
     return paramList;
