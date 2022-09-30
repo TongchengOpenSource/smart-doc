@@ -823,7 +823,6 @@ public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             } else if (JavaClassValidateUtil.isMap(fullTypeName)) {
                 log.warning("When using smart-doc, it is not recommended to use Map to receive parameters, Check it in "
                         + javaMethod.getDeclaringClass().getCanonicalName() + "#" + javaMethod.getName());
-                //如果typeName 是 map 但没加泛型 java.util.HashMap
                 if (JavaClassValidateUtil.isMap(typeName)) {
                     ApiParam apiParam = ApiParam.of()
                             .setField(paramName)
