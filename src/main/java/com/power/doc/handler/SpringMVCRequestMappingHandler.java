@@ -22,22 +22,19 @@
  */
 package com.power.doc.handler;
 
-import com.power.common.util.StringUtil;
-import com.power.common.util.UrlUtil;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
 import com.power.doc.builder.ProjectDocConfigBuilder;
 import com.power.doc.constants.DocAnnotationConstants;
 import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.constants.Methods;
 import com.power.doc.constants.SpringMvcAnnotations;
 import com.power.doc.model.request.RequestMapping;
-import com.power.doc.utils.DocUrlUtil;
 import com.power.doc.utils.DocUtil;
 import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaMethod;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
 import static com.power.doc.constants.DocTags.DEPRECATED;
 import static com.power.doc.constants.DocTags.IGNORE;
@@ -45,7 +42,7 @@ import static com.power.doc.constants.DocTags.IGNORE;
 /**
  * @author yu 2019/12/22.
  */
-public class SpringMVCRequestMappingHandler {
+public class SpringMVCRequestMappingHandler extends BaseMappingHandler {
 
     /**
      * handle spring request mapping
@@ -57,13 +54,13 @@ public class SpringMVCRequestMappingHandler {
      * @return RequestMapping
      */
     public RequestMapping handle(ProjectDocConfigBuilder projectBuilder, String controllerBaseUrl, JavaMethod method, Map<String, String> constantsMap) {
+        if (Objects.nonNull(method.getTagByName(IGNORE))) {
+            return null;
+        }
         List<JavaAnnotation> annotations = method.getAnnotations();
-        String url;
         String methodType = null;
         String shortUrl = null;
         String mediaType = null;
-        String serverUrl = projectBuilder.getServerUrl();
-        String contextPath = projectBuilder.getApiConfig().getPathPrefix();
         boolean deprecated = false;
         for (JavaAnnotation annotation : annotations) {
             String annotationName = annotation.getType().getName();
@@ -103,25 +100,11 @@ public class SpringMVCRequestMappingHandler {
         if (Objects.nonNull(method.getTagByName(DEPRECATED))) {
             deprecated = true;
         }
-        if (Objects.nonNull(shortUrl)) {
-            if (Objects.nonNull(method.getTagByName(IGNORE))) {
-                return null;
-            }
-            shortUrl = StringUtil.removeQuotes(shortUrl);
-            url = DocUrlUtil.getMvcUrls(serverUrl, contextPath + "/" + controllerBaseUrl, shortUrl);
-            shortUrl = DocUrlUtil.getMvcUrls(DocGlobalConstants.EMPTY, contextPath + "/" + controllerBaseUrl, shortUrl);
-
-            String urlSuffix = projectBuilder.getApiConfig().getUrlSuffix();
-            if (StringUtil.isNotEmpty(urlSuffix)) {
-                url = UrlUtil.simplifyUrl(StringUtil.trim(url)) + urlSuffix;
-                shortUrl = UrlUtil.simplifyUrl(StringUtil.trim(shortUrl)) + urlSuffix;
-            } else {
-                url = UrlUtil.simplifyUrl(StringUtil.trim(url));
-                shortUrl = UrlUtil.simplifyUrl(StringUtil.trim(shortUrl));
-            }
-            return RequestMapping.builder().setMediaType(mediaType).setMethodType(methodType)
-                    .setUrl(DocUtil.formatPathUrl(url)).setShortUrl(DocUtil.formatPathUrl(shortUrl)).setDeprecated(deprecated);
-        }
-        return null;
+        RequestMapping requestMapping = RequestMapping.builder()
+            .setMediaType(mediaType)
+            .setMethodType(methodType)
+            .setDeprecated(deprecated)
+            .setShortUrl(shortUrl);
+        return formatMappingData(projectBuilder,controllerBaseUrl,requestMapping);
     }
 }
