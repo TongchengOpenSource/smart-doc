@@ -523,7 +523,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 } else {
                     paramList.addAll(ParamsBuildHelper.buildParams(gicNameArr[1], DocGlobalConstants.EMPTY, 0,
                             "true", Boolean.FALSE, new HashMap<>(),
-                            builder, groupClasses, 0, Boolean.FALSE));
+                            builder, groupClasses, 0, Boolean.FALSE, null));
                 }
 
             } else if (JavaClassValidateUtil.isFile(typeName)) {
@@ -555,7 +555,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 paramList.add(param);
             } else {
                 paramList.addAll(ParamsBuildHelper.buildParams(typeName, DocGlobalConstants.EMPTY, 0,
-                        "true", Boolean.FALSE, new HashMap<>(), builder, groupClasses, 0, Boolean.FALSE));
+                        "true", Boolean.FALSE, new HashMap<>(), builder, groupClasses, 0, Boolean.FALSE, null));
             }
         }
         List<ApiParam> pathParams = new ArrayList<>();

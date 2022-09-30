@@ -945,7 +945,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                         //for json
                         paramList.addAll(ParamsBuildHelper.buildParams(gicNameArr[0], DocGlobalConstants.EMPTY, 0,
                                 String.valueOf(required), Boolean.FALSE, new HashMap<>(), builder,
-                                groupClasses, 0, Boolean.TRUE));
+                                groupClasses, 0, Boolean.TRUE, null));
                     }
                 }
             } else if (JavaClassValidateUtil.isPrimitive(fullTypeName)) {
@@ -1004,7 +1004,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 } else {
                     paramList.addAll(ParamsBuildHelper.buildParams(gicNameArr[1], DocGlobalConstants.EMPTY, 0,
                             String.valueOf(required), Boolean.FALSE, new HashMap<>(),
-                            builder, groupClasses, 0, Boolean.FALSE));
+                            builder, groupClasses, 0, Boolean.FALSE, null));
                 }
 
             }
@@ -1025,7 +1025,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 paramList.add(param);
             } else {
                 paramList.addAll(ParamsBuildHelper.buildParams(typeName, DocGlobalConstants.EMPTY, 0,
-                        String.valueOf(required), Boolean.FALSE, new HashMap<>(), builder, groupClasses, 0, Boolean.FALSE));
+                        String.valueOf(required), Boolean.FALSE, new HashMap<>(), builder, groupClasses, 0, Boolean.FALSE, null));
             }
         }
         return ApiParamTreeUtil.buildMethodReqParam(paramList, queryReqParamMap, pathReqParamMap, requestBodyCounter);
