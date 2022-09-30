@@ -796,18 +796,6 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         return requestExample;
     }
 
-    private String getRewriteClassName(Map<String, String> replacementMap, String fullTypeName, String commentClass) {
-        String rewriteClassName;
-        if (Objects.nonNull(commentClass) && !DocGlobalConstants.NO_COMMENTS_FOUND.equals(commentClass)) {
-            String[] comments = commentClass.split("\\|");
-            rewriteClassName = comments[comments.length - 1];
-            if (JavaClassValidateUtil.isClassName(rewriteClassName)) {
-                return rewriteClassName;
-            }
-        }
-        return replacementMap.get(fullTypeName);
-    }
-
     private boolean checkController(JavaClass cls) {
         if (cls.isAnnotation() || cls.isEnum()) {
             return false;

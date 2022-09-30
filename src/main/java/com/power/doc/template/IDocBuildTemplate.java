@@ -26,6 +26,7 @@ import com.power.common.util.CollectionUtil;
 import com.power.common.util.StringUtil;
 import com.power.common.util.ValidateUtil;
 import com.power.doc.builder.ProjectDocConfigBuilder;
+import com.power.doc.constants.DocAnnotationConstants;
 import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.constants.DocTags;
 import com.power.doc.constants.TornaConstants;
@@ -40,6 +41,7 @@ import com.power.doc.model.ApiReturn;
 import com.power.doc.model.DocJavaMethod;
 import com.power.doc.utils.*;
 import com.thoughtworks.qdox.model.DocletTag;
+import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaMethod;
 import com.thoughtworks.qdox.model.JavaType;
@@ -53,6 +55,8 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.StringUtils;
 
 import static com.power.doc.constants.DocGlobalConstants.NO_COMMENTS_FOUND;
 import static com.power.doc.constants.DocTags.IGNORE_RESPONSE_BODY_ADVICE;
@@ -300,6 +304,32 @@ public interface IDocBuildTemplate<T> {
             paramName = param;
             pathParamsMap.put(paramName, DocUtil.getValByTypeAndFieldName("string", paramName, Boolean.TRUE));
         }
+    }
+
+    default String getRewriteClassName(Map<String, String> replacementMap, String fullTypeName, String commentClass) {
+        String rewriteClassName;
+        if (Objects.nonNull(commentClass) && !DocGlobalConstants.NO_COMMENTS_FOUND.equals(commentClass)) {
+            String[] comments = commentClass.split("\\|");
+            if (comments.length < 1) {
+                return replacementMap.get(fullTypeName);
+            }
+            rewriteClassName = comments[comments.length - 1];
+            if (JavaClassValidateUtil.isClassName(rewriteClassName)) {
+                return rewriteClassName;
+            }
+        }
+        return replacementMap.get(fullTypeName);
+    }
+
+    default String getParamName(String paramName, JavaAnnotation annotation) {
+        String resolvedParamName = DocUtil.resolveAnnotationValue(annotation.getProperty(DocAnnotationConstants.VALUE_PROP));
+        if (StringUtils.isBlank(resolvedParamName)) {
+            resolvedParamName = DocUtil.resolveAnnotationValue(annotation.getProperty(DocAnnotationConstants.NAME_PROP));
+        }
+        if (!StringUtils.isBlank(resolvedParamName)) {
+            paramName = StringUtil.removeQuotes(resolvedParamName);
+        }
+        return StringUtil.removeQuotes(paramName);
     }
 
     List<T> getApiData(ProjectDocConfigBuilder projectBuilder);

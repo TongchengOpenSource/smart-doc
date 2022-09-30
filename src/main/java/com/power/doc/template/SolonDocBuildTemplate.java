@@ -898,17 +898,6 @@ public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         return  ApiParamTreeUtil.buildMethodReqParam(paramList,queryReqParamMap,pathReqParamMap,requestBodyCounter);
     }
 
-    private String getParamName(String paramName, JavaAnnotation annotation) {
-        String resolvedParamName = DocUtil.resolveAnnotationValue(annotation.getProperty(DocAnnotationConstants.VALUE_PROP));
-        if (StringUtils.isBlank(resolvedParamName)) {
-            resolvedParamName = DocUtil.resolveAnnotationValue(annotation.getProperty(DocAnnotationConstants.NAME_PROP));
-        }
-        if (!StringUtils.isBlank(resolvedParamName)) {
-            paramName = StringUtil.removeQuotes(resolvedParamName);
-        }
-        return StringUtil.removeQuotes(paramName);
-    }
-
     private boolean checkController(JavaClass cls) {
         if (cls.isAnnotation() || cls.isEnum()) {
             return false;
@@ -971,19 +960,6 @@ public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
 
         return false;
     }
-
-    private String getRewriteClassName(Map<String, String> replacementMap, String fullTypeName, String commentClass) {
-        String rewriteClassName;
-        if (Objects.nonNull(commentClass) && !DocGlobalConstants.NO_COMMENTS_FOUND.equals(commentClass)) {
-            String[] comments = commentClass.split("\\|");
-            rewriteClassName = comments[comments.length - 1];
-            if (JavaClassValidateUtil.isClassName(rewriteClassName)) {
-                return rewriteClassName;
-            }
-        }
-        return replacementMap.get(fullTypeName);
-    }
-
 
 
     private List<JavaAnnotation> getAnnotations(JavaClass cls) {
