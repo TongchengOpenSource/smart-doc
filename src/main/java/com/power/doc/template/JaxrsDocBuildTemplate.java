@@ -487,11 +487,8 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                             .setType("array");
                     paramList.add(param);
                     List<ApiParam> apiParamList = ParamsBuildHelper.buildParams(typeName, "└─", 1,
-                            "true", Boolean.FALSE, new HashMap<>(), builder, groupClasses, id, Boolean.FALSE);
+                            "true", Boolean.FALSE, new HashMap<>(), builder, groupClasses, id, Boolean.FALSE,null);
                     paramList.addAll(apiParamList);
-//                    throw new RuntimeException("JAX-RS can't support binding Collection on method "
-//                            + javaMethod.getName() + ",Check it in " + javaMethod.getDeclaringClass()
-//                            .getCanonicalName());
                 }
             } else if (JavaClassValidateUtil.isPrimitive(fullTypeName)) {
                 ApiParam param = ApiParam.of()
