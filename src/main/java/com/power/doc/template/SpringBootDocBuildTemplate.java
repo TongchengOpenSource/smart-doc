@@ -38,6 +38,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.power.common.util.CollectionUtil;
 import com.power.common.util.RandomUtil;
 import com.power.common.util.StringUtil;
 import com.power.common.util.UrlUtil;
@@ -62,6 +63,13 @@ import com.power.doc.model.ApiParam;
 import com.power.doc.model.ApiReqParam;
 import com.power.doc.model.DocJavaMethod;
 import com.power.doc.model.FormData;
+import com.power.doc.model.annotation.EntryAnnotation;
+import com.power.doc.model.annotation.FrameworkAnnotations;
+import com.power.doc.model.annotation.HeaderAnnotation;
+import com.power.doc.model.annotation.MappingAnnotation;
+import com.power.doc.model.annotation.PathVariableAnnotation;
+import com.power.doc.model.annotation.RequestBodyAnnotation;
+import com.power.doc.model.annotation.RequestParamAnnotation;
 import com.power.doc.model.request.ApiRequestExample;
 import com.power.doc.model.request.CurlRequest;
 import com.power.doc.model.request.RequestMapping;
@@ -95,7 +103,8 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         ApiConfig apiConfig = projectBuilder.getApiConfig();
         this.configApiReqParams = Stream.of(apiConfig.getRequestHeaders(), apiConfig.getRequestParams()).filter(Objects::nonNull)
                 .flatMap(Collection::stream).collect(Collectors.toList());
-        List<ApiDoc> apiDocList = processApiData(projectBuilder);
+        FrameworkAnnotations frameworkAnnotations = registeredAnnotations();
+        List<ApiDoc> apiDocList = processApiData(projectBuilder,frameworkAnnotations);
         // sort
         if (apiConfig.isSortByTitle()) {
             Collections.sort(apiDocList);
@@ -125,22 +134,24 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
     @Override
     public List<ApiMethodDoc> buildEntryPointMethod(final JavaClass cls, ApiConfig apiConfig,
                                                      ProjectDocConfigBuilder projectBuilder) {
+        FrameworkAnnotations frameworkAnnotations = registeredAnnotations();
         String clazName = cls.getCanonicalName();
         boolean paramsDataToTree = projectBuilder.getApiConfig().isParamsDataToTree();
         String group = JavaClassUtil.getClassTagsValue(cls, DocTags.GROUP, Boolean.TRUE);
         String classAuthor = JavaClassUtil.getClassTagsValue(cls, DocTags.AUTHOR, Boolean.TRUE);
-        List<JavaAnnotation> classAnnotations = this.getAnnotations(cls);
+        List<JavaAnnotation> classAnnotations = this.getClassAnnotations(cls,frameworkAnnotations);
         Map<String, String> constantsMap = projectBuilder.getConstantsMap();
         String baseUrl = "";
+        Map<String,MappingAnnotation> mappingAnnotationMap = frameworkAnnotations.getMappingAnnotations();
         for (JavaAnnotation annotation : classAnnotations) {
             String annotationName = annotation.getType().getValue();
-            if (DocAnnotationConstants.REQUEST_MAPPING.equals(annotationName) ||
-                    DocGlobalConstants.REQUEST_MAPPING_FULLY.equals(annotationName)) {
-                baseUrl = StringUtil.removeQuotes(DocUtil.getRequestMappingUrl(annotation));
+            MappingAnnotation mappingAnnotation = mappingAnnotationMap.get(annotationName);
+            if (Objects.isNull(mappingAnnotation)) {
+                continue;
             }
-            //FeignClient path handle
-            if (DocGlobalConstants.FEIGN_CLIENT.equals(annotationName) || DocGlobalConstants.FEIGN_CLIENT_FULLY.equals(annotationName)) {
-                baseUrl = StringUtil.removeQuotes(DocUtil.getPathUrl(annotation, DocAnnotationConstants.PATH_PROP));
+            if (CollectionUtil.isNotEmpty(mappingAnnotation.getPathProps())) {
+                baseUrl = StringUtil.removeQuotes(DocUtil.getPathUrl(annotation,mappingAnnotation.getPathProps()
+                    .toArray(new String[mappingAnnotation.getPathProps().size()])));
             }
         }
 
@@ -178,7 +189,8 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 continue;
             }
             //handle request mapping
-            RequestMapping requestMapping = new SpringMVCRequestMappingHandler().handle(projectBuilder, baseUrl, method, constantsMap);
+            RequestMapping requestMapping = new SpringMVCRequestMappingHandler()
+                .handle(projectBuilder, baseUrl, method, constantsMap,frameworkAnnotations);
             if (Objects.isNull(requestMapping)) {
                 continue;
             }
@@ -238,7 +250,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             final List<ApiReqParam> apiReqParamList = this.configApiReqParams.stream()
                     .filter(param -> DocUtil.filterPath(requestMapping, param)).collect(Collectors.toList());
 
-            ApiMethodReqParam apiMethodReqParam = requestParams(docJavaMethod, projectBuilder, apiReqParamList);
+            ApiMethodReqParam apiMethodReqParam = requestParams(docJavaMethod, projectBuilder, apiReqParamList,frameworkAnnotations);
             //apiMethodDoc.setReqListParam(ParamUtil.isListParam(apiMethodReqParam.getRequestParams()));
             // build request params
             if (paramsDataToTree) {
@@ -279,7 +291,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
 
             // build request json
             ApiRequestExample requestExample = buildReqJson(docJavaMethod, apiMethodDoc, requestMapping.getMethodType(),
-                    projectBuilder);
+                    projectBuilder,frameworkAnnotations);
             String requestJson = requestExample.getExampleBody();
             // set request example detail
             apiMethodDoc.setRequestExample(requestExample);
@@ -312,7 +324,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
 
 
     private ApiRequestExample buildReqJson(DocJavaMethod javaMethod, ApiMethodDoc apiMethodDoc, String methodType,
-                                           ProjectDocConfigBuilder configBuilder) {
+                                           ProjectDocConfigBuilder configBuilder,FrameworkAnnotations frameworkAnnotations) {
         JavaMethod method = javaMethod.getJavaMethod();
         Map<String, String> pathParamsMap = new LinkedHashMap<>();
         Map<String, String> queryParamsMap = new LinkedHashMap<>();
@@ -322,10 +334,12 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         apiMethodDoc.getQueryParams().stream().filter(Objects::nonNull).filter(p -> StringUtil.isNotEmpty(p.getValue()) || p.isConfigParam())
                 .forEach(param -> queryParamsMap.put(param.getSourceField(), param.getValue()));
         List<JavaAnnotation> methodAnnotations = method.getAnnotations();
+        Map<String,MappingAnnotation> mappingAnnotationMap = frameworkAnnotations.getMappingAnnotations();
         for (JavaAnnotation annotation : methodAnnotations) {
             String annotationName = annotation.getType().getName();
-            if (annotationName.contains("Mapping")) {
-                Object paramsObjects = annotation.getNamedParameter("params");
+            MappingAnnotation mappingAnnotation = mappingAnnotationMap.get(annotationName);
+            if (Objects.nonNull(mappingAnnotation) && StringUtil.isNotEmpty(mappingAnnotation.getParamsProp())) {
+                Object paramsObjects = annotation.getNamedParameter(mappingAnnotation.getParamsProp());
                 if (Objects.isNull(paramsObjects)) {
                     continue;
                 }
@@ -426,7 +440,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                     mockValue = DocUtil.resolveAnnotationValue(annotationDefaultVal);
                 }
                 paramName = getParamName(paramName, annotation);
-                if (SpringMvcAnnotations.REQUEST_BODY.equals(annotationName) || DocGlobalConstants.REQUEST_BODY_FULLY.equals(annotationName)) {
+                if (frameworkAnnotations.getRequestBodyAnnotation().getAnnotationName().equals(annotationName)) {
                     apiMethodDoc.setContentType(JSON_CONTENT_TYPE);
                     if (Objects.nonNull(configBuilder.getApiConfig().getRequestBodyAdvice())
                             && Objects.isNull(method.getTagByName(IGNORE_REQUEST_BODY_ADVICE))) {
@@ -457,7 +471,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                     }
                     queryParamsMap.remove(paramName);
                     paramAdded = true;
-                } else if (SpringMvcAnnotations.PATH_VARIABLE.contains(annotationName)) {
+                } else if (frameworkAnnotations.getPathVariableAnnotation().getAnnotationName().contains(annotationName)) {
                     if (javaClass.isEnum()) {
                         Object value = JavaClassUtil.getEnumValue(javaClass, Boolean.TRUE);
                         mockValue = StringUtil.removeQuotes(String.valueOf(value));
@@ -467,7 +481,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                     }
                     pathParamsMap.put(paramName, mockValue);
                     paramAdded = true;
-                } else if (SpringMvcAnnotations.REQUEST_PARAM.contains(annotationName)) {
+                } else if (frameworkAnnotations.getRequestParamAnnotation().getAnnotationName().contains(annotationName)) {
                     if (javaClass.isEnum()) {
                         Object value = JavaClassUtil.getEnumValue(javaClass, Boolean.TRUE);
                         mockValue = StringUtil.removeQuotes(String.valueOf(value));
@@ -636,7 +650,8 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
     }
 
 
-    private ApiMethodReqParam requestParams(final DocJavaMethod docJavaMethod, ProjectDocConfigBuilder builder, List<ApiReqParam> configApiReqParams) {
+    private ApiMethodReqParam requestParams(final DocJavaMethod docJavaMethod, ProjectDocConfigBuilder builder,
+        List<ApiReqParam> configApiReqParams,FrameworkAnnotations frameworkAnnotations) {
         JavaMethod javaMethod = docJavaMethod.getJavaMethod();
         boolean isStrict = builder.getApiConfig().isStrict();
         String className = javaMethod.getDeclaringClass().getCanonicalName();
@@ -646,9 +661,11 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         List<ApiParam> paramList = new ArrayList<>();
         Map<String, String> mappingParams = new HashMap<>();
         List<JavaAnnotation> methodAnnotations = javaMethod.getAnnotations();
+        Map<String,MappingAnnotation> mappingAnnotationMap = frameworkAnnotations.getMappingAnnotations();
         for (JavaAnnotation annotation : methodAnnotations) {
             String annotationName = annotation.getType().getName();
-            if (annotationName.contains("Mapping")) {
+            MappingAnnotation mappingAnnotation = mappingAnnotationMap.get(annotationName);
+            if (Objects.nonNull(mappingAnnotation) && StringUtil.isNotEmpty(mappingAnnotation.getParamsProp())) {
                 Object paramsObjects = annotation.getNamedParameter("params");
                 if (Objects.isNull(paramsObjects)) {
                     continue;
@@ -731,21 +748,29 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             boolean required = false;
             for (JavaAnnotation annotation : annotations) {
                 String annotationName = annotation.getType().getValue();
-
                 if (JavaClassValidateUtil.ignoreSpringMvcParamWithAnnotation(annotationName)) {
                     continue out;
                 }
-                if (SpringMvcAnnotations.REQUEST_PARAM.equals(annotationName) ||
-                        DocAnnotationConstants.SHORT_PATH_VARIABLE.equals(annotationName)) {
-                    if (DocAnnotationConstants.SHORT_PATH_VARIABLE.equals(annotationName)) {
+
+                if (frameworkAnnotations.getRequestParamAnnotation().getAnnotationName().equals(annotationName) ||
+                        frameworkAnnotations.getPathVariableAnnotation().getAnnotationName().equals(annotationName)) {
+                        String defaultValueProp = DocAnnotationConstants.DEFAULT_VALUE_PROP;
+                        String requiredProp = DocAnnotationConstants.REQUIRED_PROP;
+                        if (frameworkAnnotations.getRequestParamAnnotation().getAnnotationName().equals(annotationName)) {
+                            defaultValueProp = frameworkAnnotations.getRequestParamAnnotation().getDefaultValueProp();
+                            requiredProp = frameworkAnnotations.getRequestParamAnnotation().getRequiredProp();
+                        }
+                    if (frameworkAnnotations.getPathVariableAnnotation().getAnnotationName().equals(annotationName)) {
+                        defaultValueProp = frameworkAnnotations.getPathVariableAnnotation().getDefaultValueProp();
+                        requiredProp = frameworkAnnotations.getPathVariableAnnotation().getRequiredProp();
                         isPathVariable = true;
                     }
-                    AnnotationValue annotationDefaultVal = annotation.getProperty(DocAnnotationConstants.DEFAULT_VALUE_PROP);
+                    AnnotationValue annotationDefaultVal = annotation.getProperty(defaultValueProp);
                     if (Objects.nonNull(annotationDefaultVal)) {
                         mockValue = DocUtil.resolveAnnotationValue(annotationDefaultVal);
                     }
                     paramName = getParamName(paramName, annotation);
-                    AnnotationValue annotationRequired = annotation.getProperty(DocAnnotationConstants.REQUIRED_PROP);
+                    AnnotationValue annotationRequired = annotation.getProperty(requiredProp);
                     if (Objects.nonNull(annotationRequired)) {
                         strRequired = annotationRequired.toString();
                     } else {
@@ -755,7 +780,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 if (JavaClassValidateUtil.isJSR303Required(annotationName)) {
                     strRequired = "true";
                 }
-                if (SpringMvcAnnotations.REQUEST_BODY.equals(annotationName) || DocGlobalConstants.REQUEST_BODY_FULLY.equals(annotationName)) {
+                if (frameworkAnnotations.getRequestBodyAnnotation().getAnnotationName().equals(annotationName)) {
                     if (requestBodyCounter > 0) {
                         throw new RuntimeException("You have use @RequestBody Passing multiple variables  for method "
                                 + javaMethod.getName() + " in " + className + ",@RequestBody annotation could only bind one variables.");
@@ -942,48 +967,119 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
     }
 
     @Override
-    public boolean isEntryPoint(JavaClass cls) {
-        if (cls.isAnnotation() || cls.isEnum()) {
-            return false;
-        }
-        List<JavaAnnotation> classAnnotations = DocClassUtil.getAnnotations(cls);
-        for (JavaAnnotation annotation : classAnnotations) {
-            String name = annotation.getType().getValue();
-            if (SpringMvcAnnotations.CONTROLLER.equals(name) || SpringMvcAnnotations.REST_CONTROLLER.equals(name)) {
-                return true;
-            }
-        }
-        // use custom doc tag to support Feign.
-        List<DocletTag> docletTags = cls.getTags();
-        for (DocletTag docletTag : docletTags) {
-            String value = docletTag.getName();
-            if (DocTags.REST_API.equals(value)) {
-                return true;
-            }
-        }
+    public boolean isEntryPoint(JavaClass cls,FrameworkAnnotations frameworkAnnotations) {
         return false;
     }
 
-    private List<JavaAnnotation> getAnnotations(JavaClass cls) {
-        List<JavaAnnotation> annotationsList = new ArrayList<>();
-        annotationsList.addAll(cls.getAnnotations());
-        boolean flag = annotationsList.stream().anyMatch(item -> {
-            String annotationName = item.getType().getValue();
-            if (DocAnnotationConstants.REQUEST_MAPPING.equals(annotationName) ||
-                    DocGlobalConstants.REQUEST_MAPPING_FULLY.equals(annotationName)) {
-                return true;
-            }
-            return false;
-        });
-        // child override parent set
-        if (flag) {
-            return annotationsList;
-        }
-        JavaClass superJavaClass = cls.getSuperJavaClass();
-        if (Objects.nonNull(superJavaClass) && !"Object".equals(superJavaClass.getSimpleName())) {
-            annotationsList.addAll(getAnnotations(superJavaClass));
-        }
-        return annotationsList;
-    }
+    @Override
+    public FrameworkAnnotations registeredAnnotations() {
+        FrameworkAnnotations annotations = FrameworkAnnotations.builder();
+        HeaderAnnotation headerAnnotation = HeaderAnnotation.builder()
+            .setAnnotationName(SpringMvcAnnotations.REQUEST_HERDER)
+            .setValueProp(DocAnnotationConstants.VALUE_PROP)
+            .setDefaultValueProp(DocAnnotationConstants.DEFAULT_VALUE_PROP)
+            .setRequiredProp(DocAnnotationConstants.REQUIRED_PROP);
+        // add header annotation
+        annotations.setHeaderAnnotation(headerAnnotation);
 
+
+        // add entry annotation
+        Map<String,EntryAnnotation> entryAnnotations = new HashMap<>();
+        EntryAnnotation controllerAnnotation = EntryAnnotation.builder()
+            .setAnnotationName(SpringMvcAnnotations.CONTROLLER)
+            .setAnnotationFullyName(SpringMvcAnnotations.CONTROLLER);
+        entryAnnotations.put(controllerAnnotation.getAnnotationName(),controllerAnnotation);
+
+        EntryAnnotation restController = EntryAnnotation.builder()
+            .setAnnotationName(SpringMvcAnnotations.REST_CONTROLLER);
+        entryAnnotations.put(restController.getAnnotationName(),restController);
+        annotations.setEntryAnnotations(entryAnnotations);
+
+
+        // add request body annotation
+        RequestBodyAnnotation bodyAnnotation = RequestBodyAnnotation.builder()
+            .setAnnotationName(SpringMvcAnnotations.REQUEST_BODY)
+            .setAnnotationFullyName(SpringMvcAnnotations.REQUEST_BODY_FULLY);
+        annotations.setRequestBodyAnnotation(bodyAnnotation);
+
+        // request param annotation
+        RequestParamAnnotation requestAnnotation = RequestParamAnnotation.builder()
+            .setAnnotationName(SpringMvcAnnotations.REQUEST_PARAM)
+         .setDefaultValueProp(DocAnnotationConstants.DEFAULT_VALUE_PROP)
+            .setRequiredProp(DocAnnotationConstants.REQUIRED_PROP);
+        annotations.setRequestParamAnnotation(requestAnnotation);
+
+
+        // add path variable annotation
+        PathVariableAnnotation pathVariableAnnotation = PathVariableAnnotation.builder()
+            .setAnnotationName(SpringMvcAnnotations.PATH_VARIABLE)
+                .setDefaultValueProp(DocAnnotationConstants.DEFAULT_VALUE_PROP)
+                    .setRequiredProp(DocAnnotationConstants.REQUIRED_PROP);
+        annotations.setPathVariableAnnotation(pathVariableAnnotation);
+
+        // add mapping annotations
+        Map<String,MappingAnnotation> mappingAnnotations = new HashMap<>();
+
+        MappingAnnotation requestMappingAnnotation = MappingAnnotation.builder()
+            .setAnnotationName(SpringMvcAnnotations.REQUEST_MAPPING)
+            .setProducesProp("produces")
+            .setMethodProp("method")
+            .setParamsProp("params")
+            .setScope("class","method")
+            .setPathProps(DocAnnotationConstants.VALUE_PROP, DocAnnotationConstants.NAME_PROP, DocAnnotationConstants.PATH_PROP);
+        mappingAnnotations.put(requestMappingAnnotation.getAnnotationName(),requestMappingAnnotation);
+
+        MappingAnnotation postMappingAnnotation = MappingAnnotation.builder()
+            .setAnnotationName(SpringMvcAnnotations.POST_MAPPING)
+            .setProducesProp("produces")
+            .setMethodProp("method")
+            .setParamsProp("params")
+            .setMethodType(Methods.POST.getValue())
+            .setPathProps(DocAnnotationConstants.VALUE_PROP, DocAnnotationConstants.NAME_PROP, DocAnnotationConstants.PATH_PROP);
+        mappingAnnotations.put(postMappingAnnotation.getAnnotationName(),postMappingAnnotation);
+
+        MappingAnnotation getMappingAnnotation = MappingAnnotation.builder()
+            .setAnnotationName(SpringMvcAnnotations.GET_MAPPING)
+            .setProducesProp("produces")
+            .setMethodProp("method")
+            .setParamsProp("params")
+            .setMethodType(Methods.GET.getValue())
+            .setPathProps(DocAnnotationConstants.VALUE_PROP, DocAnnotationConstants.NAME_PROP, DocAnnotationConstants.PATH_PROP);
+        mappingAnnotations.put(getMappingAnnotation.getAnnotationName(),getMappingAnnotation);
+
+        MappingAnnotation putMappingAnnotation = MappingAnnotation.builder()
+            .setAnnotationName(SpringMvcAnnotations.PUT_MAPPING)
+            .setProducesProp("produces")
+            .setParamsProp("params")
+            .setMethodProp("method")
+            .setMethodType(Methods.PUT.getValue())
+            .setPathProps(DocAnnotationConstants.VALUE_PROP, DocAnnotationConstants.NAME_PROP, DocAnnotationConstants.PATH_PROP);
+        mappingAnnotations.put(putMappingAnnotation.getAnnotationName(),putMappingAnnotation);
+
+        MappingAnnotation patchMappingAnnotation = MappingAnnotation.builder()
+            .setAnnotationName(SpringMvcAnnotations.PATCH_MAPPING)
+            .setProducesProp("produces")
+            .setMethodProp("method")
+            .setParamsProp("params")
+            .setMethodType(Methods.PATCH.getValue())
+            .setPathProps(DocAnnotationConstants.VALUE_PROP, DocAnnotationConstants.NAME_PROP, DocAnnotationConstants.PATH_PROP);
+        mappingAnnotations.put(patchMappingAnnotation.getAnnotationName(),patchMappingAnnotation);
+
+        MappingAnnotation deleteMappingAnnotation = MappingAnnotation.builder()
+            .setAnnotationName(SpringMvcAnnotations.DELETE_MAPPING)
+            .setProducesProp("produces")
+            .setMethodProp("method")
+            .setParamsProp("params")
+            .setMethodType(Methods.DELETE.getValue())
+            .setPathProps(DocAnnotationConstants.VALUE_PROP, DocAnnotationConstants.NAME_PROP, DocAnnotationConstants.PATH_PROP);
+        mappingAnnotations.put(deleteMappingAnnotation.getAnnotationName(),deleteMappingAnnotation);
+
+        MappingAnnotation feignClientAnnotation = MappingAnnotation.builder()
+            .setAnnotationName(DocGlobalConstants.FEIGN_CLIENT)
+            .setAnnotationFullyName(DocGlobalConstants.FEIGN_CLIENT_FULLY);
+        mappingAnnotations.put(feignClientAnnotation.getAnnotationName(),feignClientAnnotation);
+
+        annotations.setMappingAnnotations(mappingAnnotations);
+        return annotations;
+    }
 }

@@ -26,11 +26,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import com.power.common.util.CollectionUtil;
+import com.power.common.util.StringUtil;
 import com.power.doc.builder.ProjectDocConfigBuilder;
 import com.power.doc.constants.DocAnnotationConstants;
-import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.constants.Methods;
-import com.power.doc.constants.SpringMvcAnnotations;
+import com.power.doc.model.annotation.FrameworkAnnotations;
+import com.power.doc.model.annotation.MappingAnnotation;
 import com.power.doc.model.request.RequestMapping;
 import com.power.doc.utils.DocUtil;
 import com.thoughtworks.qdox.model.JavaAnnotation;
@@ -53,7 +55,8 @@ public class SpringMVCRequestMappingHandler extends BaseMappingHandler {
      * @param constantsMap      project constant container
      * @return RequestMapping
      */
-    public RequestMapping handle(ProjectDocConfigBuilder projectBuilder, String controllerBaseUrl, JavaMethod method, Map<String, String> constantsMap) {
+    public RequestMapping handle(ProjectDocConfigBuilder projectBuilder, String controllerBaseUrl, JavaMethod method, Map<String, String> constantsMap,
+        FrameworkAnnotations frameworkAnnotations) {
         if (Objects.nonNull(method.getTagByName(IGNORE))) {
             return null;
         }
@@ -62,43 +65,38 @@ public class SpringMVCRequestMappingHandler extends BaseMappingHandler {
         String shortUrl = null;
         String mediaType = null;
         boolean deprecated = false;
+        if (Objects.nonNull(method.getTagByName(DEPRECATED))) {
+            deprecated = true;
+        }
+        Map<String,MappingAnnotation> mappingAnnotationMap = frameworkAnnotations.getMappingAnnotations();
         for (JavaAnnotation annotation : annotations) {
             String annotationName = annotation.getType().getName();
-            Object produces = annotation.getNamedParameter("produces");
-            if (Objects.nonNull(produces)) {
-                mediaType = produces.toString();
-            }
             if (DocAnnotationConstants.DEPRECATED.equals(annotationName)) {
                 deprecated = true;
             }
-            if (SpringMvcAnnotations.REQUEST_MAPPING.equals(annotationName) || DocGlobalConstants.REQUEST_MAPPING_FULLY.equals(annotationName)) {
-                shortUrl = DocUtil.handleMappingValue(annotation);
-                Object nameParam = annotation.getNamedParameter("method");
+            MappingAnnotation mappingAnnotation = mappingAnnotationMap.get(annotationName);
+            if (Objects.isNull(mappingAnnotation)) {
+                continue;
+            }
+            Object produces = annotation.getNamedParameter(mappingAnnotation.getProducesProp());
+            if (Objects.nonNull(produces)) {
+                mediaType = produces.toString();
+            }
+            if (CollectionUtil.isNotEmpty(mappingAnnotation.getPathProps())) {
+                shortUrl = DocUtil.getPathUrl(annotation,mappingAnnotation.getPathProps()
+                    .toArray(new String[mappingAnnotation.getPathProps().size()]));
+            }
+            if (StringUtil.isNotEmpty(mappingAnnotation.getMethodType())) {
+                methodType = mappingAnnotation.getMethodType();
+            } else {
+                Object nameParam = annotation.getNamedParameter(mappingAnnotation.getMethodProp());
                 if (Objects.nonNull(nameParam)) {
                     methodType = nameParam.toString();
                     methodType = DocUtil.handleHttpMethod(methodType);
                 } else {
                     methodType = Methods.GET.getValue();
                 }
-            } else if (SpringMvcAnnotations.GET_MAPPING.equals(annotationName) || DocGlobalConstants.GET_MAPPING_FULLY.equals(annotationName)) {
-                shortUrl = DocUtil.handleMappingValue(annotation);
-                methodType = Methods.GET.getValue();
-            } else if (SpringMvcAnnotations.POST_MAPPING.equals(annotationName) || DocGlobalConstants.POST_MAPPING_FULLY.equals(annotationName)) {
-                shortUrl = DocUtil.handleMappingValue(annotation);
-                methodType = Methods.POST.getValue();
-            } else if (SpringMvcAnnotations.PUT_MAPPING.equals(annotationName) || DocGlobalConstants.PUT_MAPPING_FULLY.equals(annotationName)) {
-                shortUrl = DocUtil.handleMappingValue(annotation);
-                methodType = Methods.PUT.getValue();
-            } else if (SpringMvcAnnotations.PATCH_MAPPING.equals(annotationName) || DocGlobalConstants.PATCH_MAPPING_FULLY.equals(annotationName)) {
-                shortUrl = DocUtil.handleMappingValue(annotation);
-                methodType = Methods.PATCH.getValue();
-            } else if (SpringMvcAnnotations.DELETE_MAPPING.equals(annotationName) || DocGlobalConstants.DELETE_MAPPING_FULLY.equals(annotationName)) {
-                shortUrl = DocUtil.handleMappingValue(annotation);
-                methodType = Methods.DELETE.getValue();
             }
-        }
-        if (Objects.nonNull(method.getTagByName(DEPRECATED))) {
-            deprecated = true;
         }
         RequestMapping requestMapping = RequestMapping.builder()
             .setMediaType(mediaType)

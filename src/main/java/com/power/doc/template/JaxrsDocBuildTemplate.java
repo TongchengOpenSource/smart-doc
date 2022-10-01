@@ -56,6 +56,7 @@ import com.power.doc.model.ApiParam;
 import com.power.doc.model.ApiReqParam;
 import com.power.doc.model.DocJavaMethod;
 import com.power.doc.model.FormData;
+import com.power.doc.model.annotation.FrameworkAnnotations;
 import com.power.doc.model.request.ApiRequestExample;
 import com.power.doc.model.request.CurlRequest;
 import com.power.doc.model.request.JaxrsPathMapping;
@@ -97,7 +98,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
     public List<ApiDoc> getApiData(ProjectDocConfigBuilder projectBuilder) {
         ApiConfig apiConfig = projectBuilder.getApiConfig();
         this.headers = apiConfig.getRequestHeaders();
-        return processApiData(projectBuilder);
+        return processApiData(projectBuilder,null);
     }
 
     @Override
@@ -766,7 +767,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
     }
 
     @Override
-    public boolean isEntryPoint(JavaClass cls) {
+    public boolean isEntryPoint(JavaClass cls,FrameworkAnnotations frameworkAnnotations) {
         if (cls.isAnnotation() || cls.isEnum()) {
             return false;
         }
@@ -787,5 +788,10 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             }
         }
         return false;
+    }
+
+    @Override
+    public FrameworkAnnotations registeredAnnotations() {
+        return null;
     }
 }

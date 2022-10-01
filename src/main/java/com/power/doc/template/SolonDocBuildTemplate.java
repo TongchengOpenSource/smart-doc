@@ -9,6 +9,7 @@ import com.power.doc.helper.FormDataBuildHelper;
 import com.power.doc.helper.JsonBuildHelper;
 import com.power.doc.helper.ParamsBuildHelper;
 import com.power.doc.model.*;
+import com.power.doc.model.annotation.FrameworkAnnotations;
 import com.power.doc.model.request.ApiRequestExample;
 import com.power.doc.model.request.CurlRequest;
 import com.power.doc.model.request.RequestMapping;
@@ -41,7 +42,7 @@ public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         ApiConfig apiConfig = projectBuilder.getApiConfig();
         this.configApiReqParams = Stream.of(apiConfig.getRequestHeaders(), apiConfig.getRequestParams()).filter(Objects::nonNull)
                 .flatMap(Collection::stream).collect(Collectors.toList());
-        List<ApiDoc> apiDocList = processApiData(projectBuilder);
+        List<ApiDoc> apiDocList = processApiData(projectBuilder,null);
         return apiDocList;
     }
 
@@ -785,7 +786,7 @@ public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         return  ApiParamTreeUtil.buildMethodReqParam(paramList,queryReqParamMap,pathReqParamMap,requestBodyCounter);
     }
 
-    public boolean isEntryPoint(JavaClass cls) {
+    public boolean isEntryPoint(JavaClass cls,FrameworkAnnotations frameworkAnnotations) {
         if (cls.isAnnotation() || cls.isEnum()) {
             return false;
         }
@@ -823,6 +824,11 @@ public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         }
 
         return false;
+    }
+
+    @Override
+    public FrameworkAnnotations registeredAnnotations() {
+        return null;
     }
 
     private boolean checkRemoting(JavaClass cls) {

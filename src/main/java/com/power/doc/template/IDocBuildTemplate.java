@@ -39,6 +39,8 @@ import com.power.doc.model.ApiParam;
 import com.power.doc.model.ApiReqParam;
 import com.power.doc.model.ApiReturn;
 import com.power.doc.model.DocJavaMethod;
+import com.power.doc.model.annotation.FrameworkAnnotations;
+import com.power.doc.model.annotation.MappingAnnotation;
 import com.power.doc.utils.*;
 import com.thoughtworks.qdox.model.DocletTag;
 import com.thoughtworks.qdox.model.JavaAnnotation;
@@ -71,7 +73,7 @@ import static com.power.doc.constants.DocTags.IGNORE_RESPONSE_BODY_ADVICE;
 public interface IDocBuildTemplate<T> {
    AtomicInteger atomicInteger = new AtomicInteger(1);
 
-    default List<ApiDoc> processApiData(ProjectDocConfigBuilder projectBuilder) {
+    default List<ApiDoc> processApiData(ProjectDocConfigBuilder projectBuilder,FrameworkAnnotations frameworkAnnotations) {
         ApiConfig apiConfig = projectBuilder.getApiConfig();
         List<ApiDoc> apiDocList = new ArrayList<>();
         int order = 0;
@@ -87,7 +89,7 @@ public interface IDocBuildTemplate<T> {
             }
             // from tag
             DocletTag ignoreTag = cls.getTagByName(DocTags.IGNORE);
-            if (!isEntryPoint(cls) || Objects.nonNull(ignoreTag)) {
+            if (!isEntryPoint(cls,frameworkAnnotations) || Objects.nonNull(ignoreTag)) {
                 continue;
             }
             String strOrder = JavaClassUtil.getClassTagsValue(cls, DocTags.ORDER, Boolean.TRUE);
@@ -432,6 +434,30 @@ public interface IDocBuildTemplate<T> {
         apiDocs.sort(Comparator.comparing(ApiDoc::getOrder));
         return apiDocs;
     }
+
+    default List<JavaAnnotation> getClassAnnotations(JavaClass cls,FrameworkAnnotations frameworkAnnotations) {
+        List<JavaAnnotation> annotationsList = new ArrayList<>();
+        annotationsList.addAll(cls.getAnnotations());
+        Map<String, MappingAnnotation> mappingAnnotationMap = frameworkAnnotations.getMappingAnnotations();
+        boolean flag = annotationsList.stream().anyMatch(item -> {
+            String annotationName = item.getType().getValue();
+            MappingAnnotation mappingAnnotation = mappingAnnotationMap.get(annotationName);
+            if (CollectionUtil.isNotEmpty(mappingAnnotation.getScope())
+                && mappingAnnotation.getScope().contains("class")) {
+                return true;
+            }
+            return false;
+        });
+        // child override parent set
+        if (flag) {
+            return annotationsList;
+        }
+        JavaClass superJavaClass = cls.getSuperJavaClass();
+        if (Objects.nonNull(superJavaClass) && !"Object".equals(superJavaClass.getSimpleName())) {
+            annotationsList.addAll(getClassAnnotations(superJavaClass,frameworkAnnotations));
+        }
+        return annotationsList;
+    }
     List<T> getApiData(ProjectDocConfigBuilder projectBuilder);
 
     T getSingleApiData(ProjectDocConfigBuilder projectBuilder, String apiClassName);
@@ -441,6 +467,8 @@ public interface IDocBuildTemplate<T> {
     List<ApiMethodDoc> buildEntryPointMethod(final JavaClass cls, ApiConfig apiConfig,
         ProjectDocConfigBuilder projectBuilder);
 
-    boolean isEntryPoint(JavaClass cls);
+    boolean isEntryPoint(JavaClass cls,FrameworkAnnotations frameworkAnnotations);
+
+    FrameworkAnnotations registeredAnnotations();
 
 }

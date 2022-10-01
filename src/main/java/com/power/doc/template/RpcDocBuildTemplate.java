@@ -46,6 +46,7 @@ import com.power.doc.model.ApiMethodDoc;
 import com.power.doc.model.ApiParam;
 import com.power.doc.model.DocJavaMethod;
 import com.power.doc.model.JavaMethodDoc;
+import com.power.doc.model.annotation.FrameworkAnnotations;
 import com.power.doc.model.rpc.RpcApiDoc;
 import com.power.doc.utils.ApiParamTreeUtil;
 import com.power.doc.utils.DocClassUtil;
@@ -87,7 +88,7 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
         }
       }
       DocletTag ignoreTag = cls.getTagByName(DocTags.IGNORE);
-      if (!isEntryPoint(cls) || Objects.nonNull(ignoreTag)) {
+      if (!isEntryPoint(cls,null) || Objects.nonNull(ignoreTag)) {
         continue;
       }
       String strOrder = JavaClassUtil.getClassTagsValue(cls, DocTags.ORDER, Boolean.TRUE);
@@ -278,7 +279,7 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
   }
 
 
-  public boolean isEntryPoint(JavaClass cls) {
+  public boolean isEntryPoint(JavaClass cls,FrameworkAnnotations frameworkAnnotations) {
     // Exclude DubboSwaggerService from dubbo 2.7.x
     if (DocGlobalConstants.DUBBO_SWAGGER.equals(cls.getCanonicalName())) {
       return false;
@@ -300,6 +301,11 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
       }
     }
     return false;
+  }
+
+  @Override
+  public FrameworkAnnotations registeredAnnotations() {
+    return null;
   }
 
   private void handleJavaApiDoc(JavaClass cls, List<RpcApiDoc> apiDocList, List<JavaMethodDoc> apiMethodDocs,

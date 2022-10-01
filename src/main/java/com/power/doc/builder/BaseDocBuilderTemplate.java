@@ -75,7 +75,7 @@ public class BaseDocBuilderTemplate {
         if (Objects.isNull(config)) {
             throw new NullPointerException("ApiConfig can't be null");
         }
-        if (Objects.isNull(config.getLanguage())) {
+        if (Objects.nonNull(config.getLanguage())) {
             System.setProperty(DocGlobalConstants.DOC_LANGUAGE, config.getLanguage().getCode());
         } else {
             //default is chinese
