@@ -116,7 +116,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
      * @param cls            cls
      * @param apiConfig      apiConfig
      * @param projectBuilder projectBuilder
-     * @return List<ApiMethodDoc>
+     * @return List of ApiMethodDoc
      */
     @Override
     public List<ApiMethodDoc> buildEntryPointMethod(final JavaClass cls, ApiConfig apiConfig,
