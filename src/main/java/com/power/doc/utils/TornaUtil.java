@@ -1,9 +1,11 @@
 package com.power.doc.utils;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.power.common.model.EnumDictionary;
 import com.power.common.util.CollectionUtil;
+import com.power.common.util.OkHttp3Util;
 import com.power.common.util.StringUtil;
 import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.constants.TornaConstants;
@@ -11,22 +13,42 @@ import com.power.doc.model.*;
 import com.power.doc.model.rpc.RpcApiDependency;
 import com.power.doc.model.torna.*;
 import com.thoughtworks.qdox.JavaProjectBuilder;
-import com.thoughtworks.qdox.model.JavaClass;
-import com.thoughtworks.qdox.model.JavaParameter;
+
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 import static com.power.doc.constants.DocGlobalConstants.ARRAY;
 import static com.power.doc.constants.DocGlobalConstants.OBJECT;
+import static com.power.doc.constants.TornaConstants.ENUM_PUSH;
+import static com.power.doc.constants.TornaConstants.PUSH;
 
 /**
  * @author xingzi 2021/4/28 16:15
  **/
 public class TornaUtil {
+
+    public static void pushToTorna(TornaApi tornaApi,ApiConfig apiConfig, JavaProjectBuilder builder) {
+        //Build push document information
+        Map<String, String> requestJson = TornaConstants.buildParams(PUSH, new Gson().toJson(tornaApi), apiConfig);
+        //Push dictionary information
+        Map<String, Object> dicMap = new HashMap<>(2);
+        List<TornaDic> docDicts = TornaUtil.buildTornaDic(DocUtil.buildDictionary(apiConfig, builder));
+        if (CollectionUtil.isNotEmpty(docDicts)) {
+            dicMap.put("enums", docDicts);
+            Map<String, String> dicRequestJson = TornaConstants.buildParams(ENUM_PUSH, new Gson().toJson(dicMap), apiConfig);
+            String dicResponseMsg = OkHttp3Util.syncPostJson(apiConfig.getOpenUrl(), new Gson().toJson(dicRequestJson));
+            TornaUtil.printDebugInfo(apiConfig, dicResponseMsg, dicRequestJson, ENUM_PUSH);
+        }
+        //Get the response result
+        String responseMsg = OkHttp3Util.syncPostJson(apiConfig.getOpenUrl(), new Gson().toJson(requestJson));
+        //Print the log of pushing documents to Torna
+        TornaUtil.printDebugInfo(apiConfig, responseMsg, requestJson, PUSH);
+    }
 
     public static boolean setDebugEnv(ApiConfig apiConfig, TornaApi tornaApi) {
         boolean hasDebugEnv = StringUtils.isNotBlank(apiConfig.getDebugEnvName())
@@ -168,7 +190,7 @@ public class TornaUtil {
             httpParam.setName(header.getName());
             httpParam.setRequired(header.isRequired() ? TornaConstants.YES : TornaConstants.NO);
             httpParam.setExample(StringUtil.removeQuotes(header.getValue()));
-            if (StringUtil.isNotEmpty(header.getSince())&&!"-".equals(header.getSince())) {
+            if (StringUtil.isNotEmpty(header.getSince())&&!DocGlobalConstants.DEFAULT_VERSION.equals(header.getSince())) {
                 httpParam.setDescription(header.getDesc()+"@since "+header.getSince());
             } else {
                 httpParam.setDescription(header.getDesc());
@@ -199,7 +221,7 @@ public class TornaUtil {
             httpParam.setType(type);
             httpParam.setRequired(apiParam.isRequired() ? TornaConstants.YES : TornaConstants.NO);
             httpParam.setExample(StringUtil.removeQuotes(apiParam.getValue()));
-            if (StringUtil.isNotEmpty(apiParam.getVersion())&&!"-".equals(apiParam.getVersion())) {
+            if (StringUtil.isNotEmpty(apiParam.getVersion())&&!DocGlobalConstants.DEFAULT_VERSION.equals(apiParam.getVersion())) {
                 httpParam.setDescription(DocUtil.replaceNewLineToHtmlBr(apiParam.getDesc())+ "@since "+apiParam.getVersion());
             } else {
                 httpParam.setDescription(DocUtil.replaceNewLineToHtmlBr(apiParam.getDesc()));
@@ -217,8 +239,7 @@ public class TornaUtil {
         StringBuilder s = new StringBuilder();
         if (CollectionUtil.isNotEmpty(dependencies)) {
             for (RpcApiDependency r : dependencies) {
-                s.append(r.toString())
-                        .append("\n\n");
+                s.append(r.toString()).append("\n\n");
             }
         }
         return s.toString();
@@ -265,7 +286,6 @@ public class TornaUtil {
                 api.setType(d.getType());
                 api.setValue(d.getValue());
                 api.setDescription(d.getDesc());
-
                 apis.add(api);
             }
         }
@@ -310,19 +330,16 @@ public class TornaUtil {
         if (gicType.contains("[")) {
             gicType = gicType.substring(0, gicType.indexOf("["));
         }
-            return gicType.substring(gicType.lastIndexOf(".") + 1).toLowerCase();
+        return gicType.substring(gicType.lastIndexOf(".") + 1).toLowerCase();
     }
 
     private static String subFirstUrlOrPath(String url) {
-
         if (StringUtil.isEmpty(url)) {
             return StringUtil.EMPTY;
         }
-
         if (!url.contains(DocGlobalConstants.MULTI_URL_SEPARATOR)) {
             return url;
         }
-
         String[] split = StringUtil.split(url, DocGlobalConstants.MULTI_URL_SEPARATOR);
         return split[0];
     }

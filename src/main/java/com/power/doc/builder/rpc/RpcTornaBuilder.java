@@ -40,6 +40,8 @@ import com.power.doc.template.IDocBuildTemplate;
 import com.power.doc.utils.DocUtil;
 import com.power.doc.utils.TornaUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
+
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -86,11 +88,11 @@ public class RpcTornaBuilder {
 
     public static void buildTorna(List<RpcApiDoc> apiDocs, ApiConfig apiConfig, JavaProjectBuilder builder) {
         TornaApi tornaApi = new TornaApi();
-        tornaApi.setAuthor(StringUtil.isEmpty(apiConfig.getAuthor()) ? System.getProperty("user.name") : apiConfig.getAuthor());
-        tornaApi.setIsReplace((apiConfig.getReplace() == null || apiConfig.getReplace()) ? 1 : 0);
+        tornaApi.setAuthor(apiConfig.getAuthor());
+        tornaApi.setIsReplace(BooleanUtils.toInteger(apiConfig.getReplace()));
         Apis api;
         List<Apis> apisList = new ArrayList<>();
-        //添加接口数据
+        // Add data
         for (RpcApiDoc a : apiDocs) {
             api = new Apis();
             api.setName(StringUtils.isBlank(a.getDesc()) ? a.getName() : a.getDesc());
@@ -109,21 +111,7 @@ public class RpcTornaBuilder {
         }
         tornaApi.setCommonErrorCodes(buildErrorCode(apiConfig, builder));
         tornaApi.setApis(apisList);
-        //Build push document information
-        Map<String, String> requestJson = TornaConstants.buildParams(PUSH, new Gson().toJson(tornaApi), apiConfig);
-        //Push dictionary information
-        Map<String, Object> dicMap = new HashMap<>(2);
-        List<TornaDic> docDicts = TornaUtil.buildTornaDic(DocUtil.buildDictionary(apiConfig, builder));
-
-        if (CollectionUtil.isNotEmpty(docDicts)) {
-            dicMap.put("enums", docDicts);
-            Map<String, String> dicRequestJson = TornaConstants.buildParams(ENUM_PUSH, new Gson().toJson(dicMap), apiConfig);
-            String dicResponseMsg = OkHttp3Util.syncPostJson(apiConfig.getOpenUrl(), new Gson().toJson(dicRequestJson));
-            TornaUtil.printDebugInfo(apiConfig, dicResponseMsg, dicRequestJson, ENUM_PUSH);
-        }
-        //Get the response result
-        String responseMsg = OkHttp3Util.syncPostJson(apiConfig.getOpenUrl(), new Gson().toJson(requestJson));
-        //Print the log of pushing documents to Torna
-        TornaUtil.printDebugInfo(apiConfig, responseMsg, requestJson, PUSH);
+        // Push to torna
+        TornaUtil.pushToTorna(tornaApi,apiConfig,builder);
     }
 }

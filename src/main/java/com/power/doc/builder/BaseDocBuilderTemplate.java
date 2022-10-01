@@ -72,10 +72,10 @@ public class BaseDocBuilderTemplate {
      * @param config Api config
      */
     public void checkAndInitForGetApiData(ApiConfig config) {
-        if (null == config) {
+        if (Objects.isNull(config)) {
             throw new NullPointerException("ApiConfig can't be null");
         }
-        if (null != config.getLanguage()) {
+        if (Objects.isNull(config.getLanguage())) {
             System.setProperty(DocGlobalConstants.DOC_LANGUAGE, config.getLanguage().getCode());
         } else {
             //default is chinese
@@ -96,7 +96,12 @@ public class BaseDocBuilderTemplate {
         if (StringUtil.isEmpty(config.getFramework())) {
             config.setFramework(FrameworkEnum.SPRING.getFramework());
         }
-
+        if (StringUtil.isEmpty(config.getAuthor())) {
+            config.setAuthor(System.getProperty("user.name"));
+        }
+        if (Objects.isNull(config.getReplace())) {
+            config.setReplace(Boolean.TRUE);
+        }
     }
 
     public Map<String, String> setDirectoryLanguageVariable(ApiConfig config, Template mapper) {

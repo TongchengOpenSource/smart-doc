@@ -22,7 +22,6 @@ public class ParamUtil {
         if (Objects.isNull(seeEnum)) {
             return null;
         }
-
         param.setType(DocGlobalConstants.ENUM);
         Object value = JavaClassUtil.getEnumValue(seeEnum, !jsonRequest);
         param.setValue(String.valueOf(value));
@@ -32,7 +31,6 @@ public class ParamUtil {
         if (tagsMap.containsKey(DocTags.MOCK) && StringUtil.isNotEmpty(tagsMap.get(DocTags.MOCK))) {
             param.setValue(tagsMap.get(DocTags.MOCK));
         }
-
         return seeEnum;
     }
 }

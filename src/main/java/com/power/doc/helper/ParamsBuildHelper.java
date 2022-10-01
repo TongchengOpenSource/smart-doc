@@ -367,15 +367,7 @@ public class ParamsBuildHelper {
                     JavaClass javaClass = field.getType();
                     if (javaClass.isEnum()) {
                         comment.append(handleEnumComment(javaClass, projectBuilder));
-                        param.setType(DocGlobalConstants.ENUM);
-                        Object value = JavaClassUtil.getEnumValue(javaClass, !jsonRequest);
-                        param.setValue(String.valueOf(value));
-                        param.setEnumValues(JavaClassUtil.getEnumValues(javaClass));
-                        param.setEnumInfo(JavaClassUtil.getEnumInfo(javaClass, projectBuilder));
-                        // Override old value
-                        if (tagsMap.containsKey(DocTags.MOCK) && StringUtil.isNotEmpty(tagsMap.get(DocTags.MOCK))) {
-                            param.setValue(tagsMap.get(DocTags.MOCK));
-                        }
+                        ParamUtil.handleSeeEnum(param,field,projectBuilder,jsonRequest,tagsMap);
                         if (StringUtil.isNotEmpty(comment.toString())) {
                             commonHandleParam(paramList, param, isRequired, comment + appendComment, since, strRequired);
                         } else {
