@@ -322,7 +322,7 @@ public class DocUtil {
             case "MethodType.PATCH":
                 return "PATCH";
             default:
-                return method;
+                return "GET";
         }
     }
 
