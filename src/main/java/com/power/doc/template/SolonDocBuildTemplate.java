@@ -15,8 +15,6 @@ import com.power.doc.model.request.RequestMapping;
 import com.power.doc.utils.*;
 import com.thoughtworks.qdox.model.*;
 import com.thoughtworks.qdox.model.expression.AnnotationValue;
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -35,10 +33,7 @@ import static com.power.doc.constants.DocTags.IGNORE_REQUEST_BODY_ADVICE;
 public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
 
     private static Logger log = Logger.getLogger(SolonDocBuildTemplate.class.getName());
-    /**
-     * api index
-     */
-    private final AtomicInteger atomicInteger = new AtomicInteger(1);
+
     private List<ApiReqParam> configApiReqParams;
 
     @Override
@@ -46,111 +41,8 @@ public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         ApiConfig apiConfig = projectBuilder.getApiConfig();
         this.configApiReqParams = Stream.of(apiConfig.getRequestHeaders(), apiConfig.getRequestParams()).filter(Objects::nonNull)
                 .flatMap(Collection::stream).collect(Collectors.toList());
-        List<ApiDoc> apiDocList = new ArrayList<>();
-        int order = 0;
-        Collection<JavaClass> classes = projectBuilder.getJavaProjectBuilder().getClasses();
-        boolean setCustomOrder = false;
-        for (JavaClass cls : classes) {
-            if (StringUtil.isNotEmpty(apiConfig.getPackageFilters())) {
-                if (!DocUtil.isMatch(apiConfig.getPackageFilters(), cls.getCanonicalName())) {
-                    continue;
-                }
-            }
-            DocletTag ignoreTag = cls.getTagByName(DocTags.IGNORE);
-            if (!checkController(cls) || Objects.nonNull(ignoreTag)) {
-                continue;
-            }
-            String strOrder = JavaClassUtil.getClassTagsValue(cls, DocTags.ORDER, Boolean.TRUE);
-            order++;
-            if (ValidateUtil.isNonnegativeInteger(strOrder)) {
-                setCustomOrder = true;
-                order = Integer.parseInt(strOrder);
-            }
-            List<ApiMethodDoc> apiMethodDocs = buildControllerMethod(cls, apiConfig, projectBuilder);
-
-            if(apiMethodDocs.size() == 0 && checkComponent(cls)){
-                //If it's a component and there are no methods; pass; by noear
-                continue;
-            }
-
-            this.handleApiDoc(cls, apiDocList, apiMethodDocs, order, apiConfig.isMd5EncryptedHtmlName());
-        }
-        // handle TagsApiDoc
-        apiDocList = handleTagsApiDoc(apiDocList);
-
-        // sort
-        if (apiConfig.isSortByTitle()) {
-            Collections.sort(apiDocList);
-        } else if (setCustomOrder) {
-            // while set custom oder
-            return apiDocList.stream()
-                    .sorted(Comparator.comparing(ApiDoc::getOrder))
-                    .peek(p -> p.setOrder(atomicInteger.getAndAdd(1))).collect(Collectors.toList());
-        }
+        List<ApiDoc> apiDocList = processApiData(projectBuilder);
         return apiDocList;
-    }
-
-    /**
-     * handle tags to api doc
-     * copy the same tag
-     *
-     * @author cqmike
-     */
-    private List<ApiDoc> handleTagsApiDoc(List<ApiDoc> apiDocList) {
-        if (CollectionUtil.isEmpty(apiDocList)) {
-            return Collections.emptyList();
-        }
-
-        // all class tag copy
-        Map<String, ApiDoc> copyMap = new HashMap<>();
-        apiDocList.forEach(doc -> {
-            String[] tags = doc.getTags();
-            if (ArrayUtils.isEmpty(tags)) {
-                tags = new String[]{doc.getName()};
-            }
-
-            for (String tag : tags) {
-                tag = StringUtil.trim(tag);
-                copyMap.computeIfPresent(tag, (k, v) -> {
-                    List<ApiMethodDoc> list = CollectionUtil.isEmpty(v.getList()) ? new ArrayList<>() : v.getList();
-                    list.addAll(doc.getList());
-                    v.setList(list);
-                    return v;
-                });
-                copyMap.putIfAbsent(tag, doc);
-            }
-        });
-
-        // handle method tag
-        Map<String, ApiDoc> allMap = new HashMap<>(copyMap);
-        allMap.forEach((k, v) -> {
-            List<ApiMethodDoc> methodDocList = v.getList();
-            methodDocList.forEach(method -> {
-                String[] tags = method.getTags();
-                if (ArrayUtils.isEmpty(tags)) {
-                    return;
-                }
-                for (String tag : tags) {
-                    tag = StringUtil.trim(tag);
-                    copyMap.computeIfPresent(tag, (k1, v2) -> {
-                        method.setOrder(v2.getList().size() + 1);
-                        v2.getList().add(method);
-                        return v2;
-                    });
-                    copyMap.putIfAbsent(tag, ApiDoc.buildTagApiDoc(v, tag, method));
-                }
-            });
-        });
-
-        List<ApiDoc> apiDocs = new ArrayList<>(copyMap.values());
-        int index = apiDocs.size() - 1;
-        for (ApiDoc apiDoc : apiDocs) {
-            if (apiDoc.getOrder() == null) {
-                apiDoc.setOrder(index++);
-            }
-        }
-        apiDocs.sort(Comparator.comparing(ApiDoc::getOrder));
-        return apiDocs;
     }
 
 
@@ -164,7 +56,7 @@ public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         return JavaClassValidateUtil.isMvcIgnoreParams(typeName, ignoreParams);
     }
 
-    private List<ApiMethodDoc> buildControllerMethod(final JavaClass cls, ApiConfig apiConfig,
+    public List<ApiMethodDoc> buildEntryPointMethod(final JavaClass cls, ApiConfig apiConfig,
                                                      ProjectDocConfigBuilder projectBuilder) {
         String clazName = cls.getCanonicalName();
         boolean paramsDataToTree = projectBuilder.getApiConfig().isParamsDataToTree();
@@ -248,7 +140,6 @@ public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             methodOrder++;
             apiMethodDoc.setName(method.getName());
             apiMethodDoc.setOrder(methodOrder);
-            String comment = DocUtil.getEscapeAndCleanComment(method.getComment());
             apiMethodDoc.setDesc(method.getComment());
             String methodUid = DocUtil.generateId(clazName + method.getName() + methodOrder);
             apiMethodDoc.setMethodId(methodUid);
@@ -273,9 +164,6 @@ public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             apiMethodDoc.setServerUrl(projectBuilder.getServerUrl());
             apiMethodDoc.setPath(requestMapping.getShortUrl());
             apiMethodDoc.setDeprecated(requestMapping.isDeprecated());
-            List<JavaParameter> javaParameters = method.getParameters();
-
-
             final List<ApiReqParam> apiReqParamList = this.configApiReqParams.stream()
                     .filter(param -> DocUtil.filterPath(requestMapping, param)).collect(Collectors.toList());
 
@@ -897,7 +785,7 @@ public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         return  ApiParamTreeUtil.buildMethodReqParam(paramList,queryReqParamMap,pathReqParamMap,requestBodyCounter);
     }
 
-    private boolean checkController(JavaClass cls) {
+    public boolean isEntryPoint(JavaClass cls) {
         if (cls.isAnnotation() || cls.isEnum()) {
             return false;
         }
@@ -919,6 +807,12 @@ public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 return true;
             }
         }
+        for (JavaAnnotation annotation : cls.getAnnotations()) {
+            String name = annotation.getType().getValue();
+            if (SolonAnnotations.REMOTING.equals(name)) {
+                return true;
+            }
+        }
         // use custom doc tag to support Feign.
         List<DocletTag> docletTags = cls.getTags();
         for (DocletTag docletTag : docletTags) {
@@ -927,6 +821,7 @@ public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
                 return true;
             }
         }
+
         return false;
     }
 
@@ -944,22 +839,6 @@ public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
 
         return false;
     }
-
-    private boolean checkComponent(JavaClass cls) {
-        if (cls.isAnnotation() || cls.isEnum()) {
-            return false;
-        }
-
-        for (JavaAnnotation annotation : cls.getAnnotations()) {
-            String name = annotation.getType().getValue();
-            if (SolonAnnotations.COMPONENT.equals(name)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
 
     private List<JavaAnnotation> getAnnotations(JavaClass cls) {
         List<JavaAnnotation> annotationsList = new ArrayList<>();

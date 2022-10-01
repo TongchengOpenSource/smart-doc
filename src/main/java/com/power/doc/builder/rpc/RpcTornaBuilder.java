@@ -22,10 +22,6 @@
  */
 package com.power.doc.builder.rpc;
 
-import com.google.gson.Gson;
-import com.power.common.util.CollectionUtil;
-import com.power.common.util.OkHttp3Util;
-import com.power.common.util.StringUtil;
 import com.power.doc.builder.ProjectDocConfigBuilder;
 import com.power.doc.constants.TornaConstants;
 import com.power.doc.factory.BuildTemplateFactory;
@@ -35,9 +31,7 @@ import com.power.doc.model.rpc.RpcApiDoc;
 import com.power.doc.model.torna.Apis;
 import com.power.doc.model.torna.DubboInfo;
 import com.power.doc.model.torna.TornaApi;
-import com.power.doc.model.torna.TornaDic;
 import com.power.doc.template.IDocBuildTemplate;
-import com.power.doc.utils.DocUtil;
 import com.power.doc.utils.TornaUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 
@@ -45,12 +39,8 @@ import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import static com.power.doc.constants.TornaConstants.ENUM_PUSH;
-import static com.power.doc.constants.TornaConstants.PUSH;
 import static com.power.doc.utils.TornaUtil.buildDubboApis;
 import static com.power.doc.utils.TornaUtil.buildErrorCode;
 

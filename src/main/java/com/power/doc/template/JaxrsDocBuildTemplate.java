@@ -22,13 +22,27 @@
  */
 package com.power.doc.template;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.RandomUtil;
 import com.power.common.util.StringUtil;
 import com.power.common.util.UrlUtil;
-import com.power.common.util.ValidateUtil;
 import com.power.doc.builder.ProjectDocConfigBuilder;
-import com.power.doc.constants.*;
+import com.power.doc.constants.DocGlobalConstants;
+import com.power.doc.constants.DocTags;
+import com.power.doc.constants.JAXRSAnnotations;
+import com.power.doc.constants.JakartaJaxrsAnnotations;
 import com.power.doc.handler.JaxrsHeaderHandler;
 import com.power.doc.handler.JaxrsPathHandler;
 import com.power.doc.helper.FormDataBuildHelper;
@@ -45,28 +59,22 @@ import com.power.doc.model.FormData;
 import com.power.doc.model.request.ApiRequestExample;
 import com.power.doc.model.request.CurlRequest;
 import com.power.doc.model.request.JaxrsPathMapping;
-import com.power.doc.utils.*;
+import com.power.doc.utils.ApiParamTreeUtil;
+import com.power.doc.utils.CurlUtil;
+import com.power.doc.utils.DocClassUtil;
+import com.power.doc.utils.DocPathUtil;
+import com.power.doc.utils.DocUtil;
+import com.power.doc.utils.JavaClassUtil;
+import com.power.doc.utils.JavaClassValidateUtil;
+import com.power.doc.utils.JavaFieldUtil;
+import com.power.doc.utils.JsonUtil;
+import com.power.doc.utils.TornaUtil;
 import com.thoughtworks.qdox.model.DocletTag;
 import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaMethod;
 import com.thoughtworks.qdox.model.JavaParameter;
 import com.thoughtworks.qdox.model.JavaType;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.logging.Logger;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static com.power.doc.constants.DocGlobalConstants.FILE_CONTENT_TYPE;
 import static com.power.doc.constants.DocTags.IGNORE;
@@ -81,10 +89,6 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
 
     private static Logger log = Logger.getLogger(JaxrsDocBuildTemplate.class.getName());
     /**
-     * api index
-     */
-    private final AtomicInteger atomicInteger = new AtomicInteger(1);
-    /**
      * headers
      */
     private List<ApiReqParam> headers;
@@ -93,42 +97,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
     public List<ApiDoc> getApiData(ProjectDocConfigBuilder projectBuilder) {
         ApiConfig apiConfig = projectBuilder.getApiConfig();
         this.headers = apiConfig.getRequestHeaders();
-        List<ApiDoc> apiDocList = new ArrayList<>();
-        int order = 0;
-        Collection<JavaClass> classes = projectBuilder.getJavaProjectBuilder().getClasses();
-        boolean setCustomOrder = false;
-        // exclude  class is ignore
-        for (JavaClass cls : classes) {
-            if (StringUtil.isNotEmpty(apiConfig.getPackageFilters())) {
-                // from smart config
-                if (!DocUtil.isMatch(apiConfig.getPackageFilters(), cls.getCanonicalName())) {
-                    continue;
-                }
-            }
-            // from tag
-            DocletTag ignoreTag = cls.getTagByName(DocTags.IGNORE);
-            if (!checkController(cls) || Objects.nonNull(ignoreTag)) {
-                continue;
-            }
-            String strOrder = JavaClassUtil.getClassTagsValue(cls, DocTags.ORDER, Boolean.TRUE);
-            order++;
-            if (ValidateUtil.isNonnegativeInteger(strOrder)) {
-                setCustomOrder = true;
-                order = Integer.parseInt(strOrder);
-            }
-            List<ApiMethodDoc> apiMethodDocs = buildControllerMethod(cls, apiConfig, projectBuilder);
-            this.handleApiDoc(cls, apiDocList, apiMethodDocs, order, apiConfig.isMd5EncryptedHtmlName());
-        }
-        // sort
-        if (apiConfig.isSortByTitle()) {
-            Collections.sort(apiDocList);
-        } else if (setCustomOrder) {
-            // while set custom oder
-            return apiDocList.stream()
-                    .sorted(Comparator.comparing(ApiDoc::getOrder))
-                    .peek(p -> p.setOrder(atomicInteger.getAndAdd(1))).collect(Collectors.toList());
-        }
-        return apiDocList;
+        return processApiData(projectBuilder);
     }
 
     @Override
@@ -149,7 +118,8 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
      * @param projectBuilder projectBuilder
      * @return List<ApiMethodDoc>
      */
-    private List<ApiMethodDoc> buildControllerMethod(final JavaClass cls, ApiConfig apiConfig,
+    @Override
+    public List<ApiMethodDoc> buildEntryPointMethod(final JavaClass cls, ApiConfig apiConfig,
                                                      ProjectDocConfigBuilder projectBuilder) {
         String clzName = cls.getCanonicalName();
         boolean paramsDataToTree = projectBuilder.getApiConfig().isParamsDataToTree();
@@ -241,7 +211,6 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
             apiMethodDoc.setPath(jaxPathMapping.getShortUrl());
             apiMethodDoc.setDeprecated(jaxPathMapping.isDeprecated());
             apiMethodDoc.setContentType(jaxPathMapping.getMediaType());
-            List<JavaParameter> javaParameters = method.getParameters();
 
 
             ApiMethodReqParam apiMethodReqParam = requestParams(docJavaMethod, projectBuilder);
@@ -796,7 +765,8 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         return requestExample;
     }
 
-    private boolean checkController(JavaClass cls) {
+    @Override
+    public boolean isEntryPoint(JavaClass cls) {
         if (cls.isAnnotation() || cls.isEnum()) {
             return false;
         }

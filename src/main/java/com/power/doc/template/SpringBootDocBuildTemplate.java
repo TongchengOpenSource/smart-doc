@@ -25,7 +25,6 @@ package com.power.doc.template;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -39,11 +38,9 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import com.power.common.util.CollectionUtil;
 import com.power.common.util.RandomUtil;
 import com.power.common.util.StringUtil;
 import com.power.common.util.UrlUtil;
-import com.power.common.util.ValidateUtil;
 import com.power.doc.builder.ProjectDocConfigBuilder;
 import com.power.doc.constants.ApiReqParamInTypeEnum;
 import com.power.doc.constants.DocAnnotationConstants;
@@ -77,7 +74,6 @@ import com.thoughtworks.qdox.model.JavaParameter;
 import com.thoughtworks.qdox.model.JavaType;
 import com.thoughtworks.qdox.model.expression.AnnotationValue;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import static com.power.doc.constants.DocGlobalConstants.FILE_CONTENT_TYPE;
@@ -91,10 +87,7 @@ import static com.power.doc.constants.DocTags.IGNORE_REQUEST_BODY_ADVICE;
 public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
 
     private static Logger log = Logger.getLogger(SpringBootDocBuildTemplate.class.getName());
-    /**
-     * api index
-     */
-    private final AtomicInteger atomicInteger = new AtomicInteger(1);
+
     private List<ApiReqParam> configApiReqParams;
 
     @Override
@@ -102,40 +95,10 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         ApiConfig apiConfig = projectBuilder.getApiConfig();
         this.configApiReqParams = Stream.of(apiConfig.getRequestHeaders(), apiConfig.getRequestParams()).filter(Objects::nonNull)
                 .flatMap(Collection::stream).collect(Collectors.toList());
-        List<ApiDoc> apiDocList = new ArrayList<>();
-        int order = 0;
-        Collection<JavaClass> classes = projectBuilder.getJavaProjectBuilder().getClasses();
-        boolean setCustomOrder = false;
-        for (JavaClass cls : classes) {
-            if (StringUtil.isNotEmpty(apiConfig.getPackageFilters())) {
-                if (!DocUtil.isMatch(apiConfig.getPackageFilters(), cls.getCanonicalName())) {
-                    continue;
-                }
-            }
-            DocletTag ignoreTag = cls.getTagByName(DocTags.IGNORE);
-            if (Objects.nonNull(ignoreTag) || !checkController(cls)) {
-                continue;
-            }
-            String strOrder = JavaClassUtil.getClassTagsValue(cls, DocTags.ORDER, Boolean.TRUE);
-            order++;
-            if (ValidateUtil.isNonnegativeInteger(strOrder)) {
-                setCustomOrder = true;
-                order = Integer.parseInt(strOrder);
-            }
-            List<ApiMethodDoc> apiMethodDocs = buildControllerMethod(cls, apiConfig, projectBuilder);
-            this.handleApiDoc(cls, apiDocList, apiMethodDocs, order, apiConfig.isMd5EncryptedHtmlName());
-        }
-        // handle TagsApiDoc
-        apiDocList = handleTagsApiDoc(apiDocList);
-
+        List<ApiDoc> apiDocList = processApiData(projectBuilder);
         // sort
         if (apiConfig.isSortByTitle()) {
             Collections.sort(apiDocList);
-        } else if (setCustomOrder) {
-            // while set custom oder
-            return apiDocList.stream()
-                    .sorted(Comparator.comparing(ApiDoc::getOrder))
-                    .peek(p -> p.setOrder(atomicInteger.getAndAdd(1))).collect(Collectors.toList());
         }
         return apiDocList;
     }
@@ -146,62 +109,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
      *
      * @author cqmike
      */
-    private List<ApiDoc> handleTagsApiDoc(List<ApiDoc> apiDocList) {
-        if (CollectionUtil.isEmpty(apiDocList)) {
-            return Collections.emptyList();
-        }
 
-        // all class tag copy
-        Map<String, ApiDoc> copyMap = new HashMap<>();
-        apiDocList.forEach(doc -> {
-            String[] tags = doc.getTags();
-            if (ArrayUtils.isEmpty(tags)) {
-                tags = new String[]{doc.getName()};
-            }
-
-            for (String tag : tags) {
-                tag = StringUtil.trim(tag);
-                copyMap.computeIfPresent(tag, (k, v) -> {
-                    List<ApiMethodDoc> list = CollectionUtil.isEmpty(v.getList()) ? new ArrayList<>() : v.getList();
-                    list.addAll(doc.getList());
-                    v.setList(list);
-                    return v;
-                });
-                copyMap.putIfAbsent(tag, doc);
-            }
-        });
-
-        // handle method tag
-        Map<String, ApiDoc> allMap = new HashMap<>(copyMap);
-        allMap.forEach((k, v) -> {
-            List<ApiMethodDoc> methodDocList = v.getList();
-            methodDocList.forEach(method -> {
-                String[] tags = method.getTags();
-                if (ArrayUtils.isEmpty(tags)) {
-                    return;
-                }
-                for (String tag : tags) {
-                    tag = StringUtil.trim(tag);
-                    copyMap.computeIfPresent(tag, (k1, v2) -> {
-                        method.setOrder(v2.getList().size() + 1);
-                        v2.getList().add(method);
-                        return v2;
-                    });
-                    copyMap.putIfAbsent(tag, ApiDoc.buildTagApiDoc(v, tag, method));
-                }
-            });
-        });
-
-        List<ApiDoc> apiDocs = new ArrayList<>(copyMap.values());
-        int index = apiDocs.size() - 1;
-        for (ApiDoc apiDoc : apiDocs) {
-            if (apiDoc.getOrder() == null) {
-                apiDoc.setOrder(index++);
-            }
-        }
-        apiDocs.sort(Comparator.comparing(ApiDoc::getOrder));
-        return apiDocs;
-    }
 
 
     @Override
@@ -214,7 +122,8 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
         return JavaClassValidateUtil.isMvcIgnoreParams(typeName, ignoreParams);
     }
 
-    private List<ApiMethodDoc> buildControllerMethod(final JavaClass cls, ApiConfig apiConfig,
+    @Override
+    public List<ApiMethodDoc> buildEntryPointMethod(final JavaClass cls, ApiConfig apiConfig,
                                                      ProjectDocConfigBuilder projectBuilder) {
         String clazName = cls.getCanonicalName();
         boolean paramsDataToTree = projectBuilder.getApiConfig().isParamsDataToTree();
@@ -1032,7 +941,8 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc> {
 
     }
 
-    private boolean checkController(JavaClass cls) {
+    @Override
+    public boolean isEntryPoint(JavaClass cls) {
         if (cls.isAnnotation() || cls.isEnum()) {
             return false;
         }

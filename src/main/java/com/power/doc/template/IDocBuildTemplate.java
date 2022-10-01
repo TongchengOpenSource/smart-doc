@@ -47,6 +47,9 @@ import com.thoughtworks.qdox.model.JavaMethod;
 import com.thoughtworks.qdox.model.JavaType;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -56,6 +59,7 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import static com.power.doc.constants.DocGlobalConstants.NO_COMMENTS_FOUND;
@@ -65,6 +69,47 @@ import static com.power.doc.constants.DocTags.IGNORE_RESPONSE_BODY_ADVICE;
  * @author yu 2019/12/21.
  */
 public interface IDocBuildTemplate<T> {
+   AtomicInteger atomicInteger = new AtomicInteger(1);
+
+    default List<ApiDoc> processApiData(ProjectDocConfigBuilder projectBuilder) {
+        ApiConfig apiConfig = projectBuilder.getApiConfig();
+        List<ApiDoc> apiDocList = new ArrayList<>();
+        int order = 0;
+        boolean setCustomOrder = false;
+        Collection<JavaClass> classes = projectBuilder.getJavaProjectBuilder().getClasses();
+        // exclude  class is ignore
+        for (JavaClass cls : classes) {
+            if (StringUtil.isNotEmpty(apiConfig.getPackageFilters())) {
+                // from smart config
+                if (!DocUtil.isMatch(apiConfig.getPackageFilters(), cls.getCanonicalName())) {
+                    continue;
+                }
+            }
+            // from tag
+            DocletTag ignoreTag = cls.getTagByName(DocTags.IGNORE);
+            if (!isEntryPoint(cls) || Objects.nonNull(ignoreTag)) {
+                continue;
+            }
+            String strOrder = JavaClassUtil.getClassTagsValue(cls, DocTags.ORDER, Boolean.TRUE);
+            order++;
+            if (ValidateUtil.isNonnegativeInteger(strOrder)) {
+                setCustomOrder = true;
+                order = Integer.parseInt(strOrder);
+            }
+            List<ApiMethodDoc> apiMethodDocs = buildEntryPointMethod(cls, apiConfig, projectBuilder);
+            this.handleApiDoc(cls, apiDocList, apiMethodDocs, order, apiConfig.isMd5EncryptedHtmlName());
+        }
+        apiDocList = handleTagsApiDoc(apiDocList);
+        if (apiConfig.isSortByTitle()) {
+            Collections.sort(apiDocList);
+        } else if (setCustomOrder) {
+            // while set custom oder
+            return apiDocList.stream()
+                .sorted(Comparator.comparing(ApiDoc::getOrder))
+                .peek(p -> p.setOrder(atomicInteger.getAndAdd(1))).collect(Collectors.toList());
+        }
+        return apiDocList;
+    }
 
     default String createDocRenderHeaders(List<ApiReqParam> headers, boolean isAdoc) {
         StringBuilder builder = new StringBuilder();
@@ -331,11 +376,71 @@ public interface IDocBuildTemplate<T> {
         }
         return StringUtil.removeQuotes(paramName);
     }
+    default List<ApiDoc> handleTagsApiDoc(List<ApiDoc> apiDocList) {
+        if (CollectionUtil.isEmpty(apiDocList)) {
+            return Collections.emptyList();
+        }
 
+        // all class tag copy
+        Map<String, ApiDoc> copyMap = new HashMap<>();
+        apiDocList.forEach(doc -> {
+            String[] tags = doc.getTags();
+            if (ArrayUtils.isEmpty(tags)) {
+                tags = new String[]{doc.getName()};
+            }
+
+            for (String tag : tags) {
+                tag = StringUtil.trim(tag);
+                copyMap.computeIfPresent(tag, (k, v) -> {
+                    List<ApiMethodDoc> list = CollectionUtil.isEmpty(v.getList()) ? new ArrayList<>() : v.getList();
+                    list.addAll(doc.getList());
+                    v.setList(list);
+                    return v;
+                });
+                copyMap.putIfAbsent(tag, doc);
+            }
+        });
+
+        // handle method tag
+        Map<String, ApiDoc> allMap = new HashMap<>(copyMap);
+        allMap.forEach((k, v) -> {
+            List<ApiMethodDoc> methodDocList = v.getList();
+            methodDocList.forEach(method -> {
+                String[] tags = method.getTags();
+                if (ArrayUtils.isEmpty(tags)) {
+                    return;
+                }
+                for (String tag : tags) {
+                    tag = StringUtil.trim(tag);
+                    copyMap.computeIfPresent(tag, (k1, v2) -> {
+                        method.setOrder(v2.getList().size() + 1);
+                        v2.getList().add(method);
+                        return v2;
+                    });
+                    copyMap.putIfAbsent(tag, ApiDoc.buildTagApiDoc(v, tag, method));
+                }
+            });
+        });
+
+        List<ApiDoc> apiDocs = new ArrayList<>(copyMap.values());
+        int index = apiDocs.size() - 1;
+        for (ApiDoc apiDoc : apiDocs) {
+            if (apiDoc.getOrder() == null) {
+                apiDoc.setOrder(index++);
+            }
+        }
+        apiDocs.sort(Comparator.comparing(ApiDoc::getOrder));
+        return apiDocs;
+    }
     List<T> getApiData(ProjectDocConfigBuilder projectBuilder);
 
     T getSingleApiData(ProjectDocConfigBuilder projectBuilder, String apiClassName);
 
     boolean ignoreReturnObject(String typeName, List<String> ignoreParams);
+
+    List<ApiMethodDoc> buildEntryPointMethod(final JavaClass cls, ApiConfig apiConfig,
+        ProjectDocConfigBuilder projectBuilder);
+
+    boolean isEntryPoint(JavaClass cls);
 
 }

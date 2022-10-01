@@ -22,7 +22,6 @@
  */
 package com.power.doc.builder;
 
-import com.google.gson.Gson;
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.FileUtil;
 import com.power.common.util.StringUtil;

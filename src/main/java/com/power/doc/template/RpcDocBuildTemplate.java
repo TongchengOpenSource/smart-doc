@@ -40,9 +40,9 @@ import com.power.doc.constants.DocAnnotationConstants;
 import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.constants.DocTags;
 import com.power.doc.constants.DubboAnnotationConstants;
-import com.power.doc.constants.TornaConstants;
 import com.power.doc.helper.ParamsBuildHelper;
 import com.power.doc.model.ApiConfig;
+import com.power.doc.model.ApiMethodDoc;
 import com.power.doc.model.ApiParam;
 import com.power.doc.model.DocJavaMethod;
 import com.power.doc.model.JavaMethodDoc;
@@ -53,7 +53,6 @@ import com.power.doc.utils.DocUtil;
 import com.power.doc.utils.JavaClassUtil;
 import com.power.doc.utils.JavaClassValidateUtil;
 import com.power.doc.utils.JavaFieldUtil;
-import com.power.doc.utils.TornaUtil;
 import com.thoughtworks.qdox.model.DocletTag;
 import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaClass;
@@ -82,12 +81,13 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
     boolean setCustomOrder = false;
     for (JavaClass cls : projectBuilder.getJavaProjectBuilder().getClasses()) {
       if (StringUtil.isNotEmpty(apiConfig.getPackageFilters())) {
+        // check package
         if (!DocUtil.isMatch(apiConfig.getPackageFilters(), cls.getCanonicalName())) {
           continue;
         }
       }
       DocletTag ignoreTag = cls.getTagByName(DocTags.IGNORE);
-      if (!checkDubboInterface(cls) || Objects.nonNull(ignoreTag)) {
+      if (!isEntryPoint(cls) || Objects.nonNull(ignoreTag)) {
         continue;
       }
       String strOrder = JavaClassUtil.getClassTagsValue(cls, DocTags.ORDER, Boolean.TRUE);
@@ -117,6 +117,11 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
 
   public boolean ignoreReturnObject(String typeName, List<String> ignoreParams) {
     return false;
+  }
+
+  @Override
+  public List<ApiMethodDoc> buildEntryPointMethod(JavaClass cls, ApiConfig apiConfig, ProjectDocConfigBuilder projectBuilder) {
+    return null;
   }
 
 
@@ -274,7 +279,7 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
   }
 
 
-  private boolean checkDubboInterface(JavaClass cls) {
+  public boolean isEntryPoint(JavaClass cls) {
     // Exclude DubboSwaggerService from dubbo 2.7.x
     if (DocGlobalConstants.DUBBO_SWAGGER.equals(cls.getCanonicalName())) {
       return false;
