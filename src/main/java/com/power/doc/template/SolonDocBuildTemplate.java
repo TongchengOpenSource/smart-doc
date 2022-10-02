@@ -154,8 +154,8 @@ public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDo
 
         // add request body annotation
         RequestBodyAnnotation bodyAnnotation = RequestBodyAnnotation.builder()
-                .setAnnotationName(SpringMvcAnnotations.REQUEST_BODY)
-                .setAnnotationFullyName(SpringMvcAnnotations.REQUEST_BODY_FULLY);
+                .setAnnotationName(SolonAnnotations.REQUEST_BODY)
+                .setAnnotationFullyName(SolonAnnotations.REQUEST_BODY_FULLY);
         annotations.setRequestBodyAnnotation(bodyAnnotation);
 
         // request param annotation

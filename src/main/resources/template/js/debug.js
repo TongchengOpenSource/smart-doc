@@ -83,14 +83,14 @@ $("button").on("click", function () {
 
     if ("multipart/form-data" === contentType) {
         finalUrl = castToGetUri(url, pathParamData);
-        queryParamData = getInputData($queryElement, true)
+        queryParamData = getInputData($queryElement, true,true)
         body = queryParamData;
         ajaxOptions.processData = false;
         ajaxOptions.contentType = false;
     } else if ("POST" === method && contentType !== "multipart/form-data"
         && contentType !== "application/json") {
         finalUrl = castToGetUri(url, pathParamData);
-        queryParamData = getInputData($queryElement)
+        queryParamData = getInputData($queryElement,true)
         body = queryParamData;
     } else {
         queryParamData = getInputData($queryElement)
@@ -180,7 +180,7 @@ function castToGetUri(url, pathParams, params) {
     }
 }
 
-function getInputData(element, returnFormDate) {
+function getInputData(element, isPost, returnFormDate) {
     const formData = new FormData();
     $(element).find("tr").each(function (i) {
         const checked = $(this).find('td:eq(0)').children(".checkbox").children(
@@ -206,7 +206,7 @@ function getInputData(element, returnFormDate) {
                     formData.append(name, encodeURI(val));
                 } else {
                     // support chinese
-                    if (hasChinese(val)) {
+                    if (hasChinese(val) && !isPost) {
                         formData.append(name, encodeURIComponent(val));
                     } else {
                         formData.append(name, val);
