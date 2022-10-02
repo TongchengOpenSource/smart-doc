@@ -32,9 +32,9 @@ import static com.power.doc.constants.DocGlobalConstants.JSON_CONTENT_TYPE;
 import static com.power.doc.constants.DocTags.IGNORE;
 import static com.power.doc.constants.DocTags.IGNORE_REQUEST_BODY_ADVICE;
 
-public interface IRestDocTemplateI extends IBaseDocBuildTemplate {
+public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 
-    Logger log = Logger.getLogger(IRestDocTemplateI.class.getName());
+    Logger log = Logger.getLogger(IRestDocTemplate.class.getName());
     AtomicInteger atomicInteger = new AtomicInteger(1);
 
     default List<ApiDoc> processApiData(ProjectDocConfigBuilder projectBuilder, FrameworkAnnotations frameworkAnnotations,
@@ -339,7 +339,10 @@ public interface IRestDocTemplateI extends IBaseDocBuildTemplate {
             if (Objects.isNull(requestMapping)) {
                 continue;
             }
-            if (StringUtil.isEmpty(method.getComment()) && apiConfig.isStrict()) {
+            if(Objects.isNull(requestMapping.getShortUrl())) {
+                continue;
+            }
+             if (StringUtil.isEmpty(method.getComment()) && apiConfig.isStrict()) {
                 throw new RuntimeException("Unable to find comment for method " + method.getName() + " in " + cls.getCanonicalName());
             }
             ApiMethodDoc apiMethodDoc = new ApiMethodDoc();
@@ -417,7 +420,7 @@ public interface IRestDocTemplateI extends IBaseDocBuildTemplate {
             //reduce create in template
             apiMethodDoc.setHeaders(this.createDocRenderHeaders(allApiReqHeaders, apiConfig.isAdoc()));
             apiMethodDoc.setRequestHeaders(allApiReqHeaders);
-
+            log.info("mathodName="+method.getName());
             String path = apiMethodDoc.getPath().split(";")[0];
             String pathUrl = DocUtil.formatPathUrl(path);
             List<ApiParam> pathParams = apiMethodDoc.getPathParams();

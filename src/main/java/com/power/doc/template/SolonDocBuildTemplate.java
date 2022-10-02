@@ -44,7 +44,7 @@ import java.util.stream.Stream;
 /**
  * @author noear 2022/2/19 created
  */
-public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDocTemplateI {
+public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDocTemplate {
 
     @Override
     public List<ApiDoc> getApiData(ProjectDocConfigBuilder projectBuilder) {
@@ -93,10 +93,13 @@ public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDo
 
     @Override
     public void requestMappingPostProcess(JavaClass javaClass, JavaMethod method, RequestMapping requestMapping) {
-        boolean isRemote = false;
+        if (Objects.isNull(requestMapping)) {
+            return;
+        }
         if (javaClass.isAnnotation() || javaClass.isEnum()) {
             return;
         }
+        boolean isRemote = false;
         for (JavaAnnotation annotation : javaClass.getAnnotations()) {
             String name = annotation.getType().getValue();
             if (SolonAnnotations.REMOTING.equals(name)) {
