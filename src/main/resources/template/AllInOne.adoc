@@ -51,7 +51,7 @@ for(doc in api.list){
 [width="100%",options="header"]
 [stripes=even]
 |====================
-|Header | Type|Description|Required|Since
+|Header | Type|Required|Description|Since
 ${doc.headers}
 |====================
 <%}%>
@@ -62,11 +62,11 @@ ${doc.headers}
 [width="100%",options="header"]
 [stripes=even]
 |====================
-|Parameter | Type|Description|Required|Since
+|Parameter | Type|Required|Description|Since
 <%
 for(param in doc.pathParams){
 %>
-|${param.field}|${param.type}|${param.desc}|${param.required}|${param.version}
+|${param.field}|${param.type}|${param.required}|${param.desc}|${param.version}
 <%}%>
 |====================
 <%}%>
@@ -77,11 +77,11 @@ for(param in doc.pathParams){
 [width="100%",options="header"]
 [stripes=even]
 |====================
-|Parameter | Type|Description|Required|Since
+|Parameter | Type|Required|Description|Since
 <%
 for(param in doc.queryParams){
 %>
-|${param.field}|${param.type}|${param.desc}|${param.required}|${param.version}
+|${param.field}|${param.type}|${param.required}|${param.desc}|${param.version}
 <%}%>
 |====================
 <%}%>
@@ -92,11 +92,11 @@ for(param in doc.queryParams){
 [width="100%",options="header"]
 [stripes=even]
 |====================
-|Parameter | Type|Description|Required|Since
+|Parameter | Type|Required|Description|Since
 <%
 for(param in doc.requestParams){
 %>
-|${param.field}|${param.type}|${param.desc}|${param.required}|${param.version}
+|${param.field}|${param.type}|${param.required}|${param.desc}|${param.version}
 <%}%>
 |====================
 <%}%>
