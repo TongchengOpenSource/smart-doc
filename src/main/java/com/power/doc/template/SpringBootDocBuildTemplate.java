@@ -37,6 +37,8 @@ import com.power.doc.constants.DocAnnotationConstants;
 import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.constants.Methods;
 import com.power.doc.constants.SpringMvcAnnotations;
+import com.power.doc.handler.SpringMVCRequestHeaderHandler;
+import com.power.doc.handler.SpringMVCRequestMappingHandler;
 import com.power.doc.model.ApiConfig;
 import com.power.doc.model.ApiDoc;
 import com.power.doc.model.ApiReqParam;
@@ -47,8 +49,10 @@ import com.power.doc.model.annotation.MappingAnnotation;
 import com.power.doc.model.annotation.PathVariableAnnotation;
 import com.power.doc.model.annotation.RequestBodyAnnotation;
 import com.power.doc.model.annotation.RequestParamAnnotation;
+import com.power.doc.model.request.RequestMapping;
 import com.power.doc.utils.JavaClassValidateUtil;
 import com.thoughtworks.qdox.model.JavaClass;
+import com.thoughtworks.qdox.model.JavaMethod;
 
 /**
  * @author yu 2019/12/21.
@@ -56,16 +60,14 @@ import com.thoughtworks.qdox.model.JavaClass;
 public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc>,IRestDocTemplate {
 
     private static Logger log = Logger.getLogger(SpringBootDocBuildTemplate.class.getName());
-
-    private List<ApiReqParam> configApiReqParams;
-
     @Override
     public List<ApiDoc> getApiData(ProjectDocConfigBuilder projectBuilder) {
         ApiConfig apiConfig = projectBuilder.getApiConfig();
-        this.configApiReqParams = Stream.of(apiConfig.getRequestHeaders(), apiConfig.getRequestParams()).filter(Objects::nonNull)
+        List<ApiReqParam> configApiReqParams = Stream.of(apiConfig.getRequestHeaders(), apiConfig.getRequestParams()).filter(Objects::nonNull)
                 .flatMap(Collection::stream).collect(Collectors.toList());
         FrameworkAnnotations frameworkAnnotations = registeredAnnotations();
-        List<ApiDoc> apiDocList = processApiData(projectBuilder,frameworkAnnotations,configApiReqParams);
+        List<ApiDoc> apiDocList = this.processApiData(projectBuilder,frameworkAnnotations,
+            configApiReqParams,new SpringMVCRequestMappingHandler(),new SpringMVCRequestHeaderHandler());
         // sort
         if (apiConfig.isSortByTitle()) {
             Collections.sort(apiDocList);
@@ -195,5 +197,10 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc>,IRe
     @Override
     public boolean isEntryPoint(JavaClass javaClass, FrameworkAnnotations frameworkAnnotations) {
         return false;
+    }
+
+    @Override
+    public void requestMappingPostProcess(JavaClass javaClass, JavaMethod method, RequestMapping requestMapping) {
+        // do nothing
     }
 }

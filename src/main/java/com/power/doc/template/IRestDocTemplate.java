@@ -30,15 +30,13 @@ import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.constants.DocTags;
 import com.power.doc.constants.Methods;
 import com.power.doc.constants.SpringMvcRequestAnnotationsEnum;
-import com.power.doc.constants.TornaConstants;
-import com.power.doc.handler.SpringMVCRequestHeaderHandler;
-import com.power.doc.handler.SpringMVCRequestMappingHandler;
+import com.power.doc.handler.IRequestMappingHandler;
+import com.power.doc.handler.IHeaderHandler;
 import com.power.doc.helper.FormDataBuildHelper;
 import com.power.doc.helper.JsonBuildHelper;
 import com.power.doc.helper.ParamsBuildHelper;
 import com.power.doc.model.ApiConfig;
 import com.power.doc.model.ApiDoc;
-import com.power.doc.model.ApiGroup;
 import com.power.doc.model.ApiMethodDoc;
 import com.power.doc.model.ApiMethodReqParam;
 import com.power.doc.model.ApiParam;
@@ -54,7 +52,6 @@ import com.power.doc.model.request.RequestMapping;
 import com.power.doc.utils.ApiParamTreeUtil;
 import com.power.doc.utils.CurlUtil;
 import com.power.doc.utils.DocClassUtil;
-import com.power.doc.utils.DocPathUtil;
 import com.power.doc.utils.DocUtil;
 import com.power.doc.utils.JavaClassUtil;
 import com.power.doc.utils.JavaClassValidateUtil;
@@ -83,8 +80,8 @@ public interface IRestDocTemplate extends BaseDocBuildTemplate{
   static Logger log = Logger.getLogger(IRestDocTemplate.class.getName());
   AtomicInteger atomicInteger = new AtomicInteger(1);
 
-  default List<ApiDoc> processApiData(ProjectDocConfigBuilder projectBuilder,
-      FrameworkAnnotations frameworkAnnotations,List<ApiReqParam> configApiReqParams) {
+  default List<ApiDoc> processApiData(ProjectDocConfigBuilder projectBuilder, FrameworkAnnotations frameworkAnnotations,
+      List<ApiReqParam> configApiReqParams, IRequestMappingHandler baseMappingHandler,IHeaderHandler headerHandler) {
     ApiConfig apiConfig = projectBuilder.getApiConfig();
     List<ApiDoc> apiDocList = new ArrayList<>();
     int order = 0;
@@ -110,7 +107,7 @@ public interface IRestDocTemplate extends BaseDocBuildTemplate{
         order = Integer.parseInt(strOrder);
       }
       List<ApiMethodDoc> apiMethodDocs = buildEntryPointMethod(cls, apiConfig, projectBuilder,
-          frameworkAnnotations,configApiReqParams);
+          frameworkAnnotations,configApiReqParams,baseMappingHandler,headerHandler);
       this.handleApiDoc(cls, apiDocList, apiMethodDocs, order, apiConfig.isMd5EncryptedHtmlName());
     }
     apiDocList = handleTagsApiDoc(apiDocList);
@@ -171,70 +168,7 @@ public interface IRestDocTemplate extends BaseDocBuildTemplate{
   }
 
 
-  /**
-   * handle group api docs
-   *
-   * @param apiDocList list of apiDocList
-   * @param apiConfig  ApiConfig apiConfig
-   * @return List of ApiDoc
-   * @author cqmike
-   */
-  default List<ApiDoc> handleApiGroup(List<ApiDoc> apiDocList, ApiConfig apiConfig) {
-    if (CollectionUtil.isEmpty(apiDocList) || apiConfig == null) {
-      return apiDocList;
-    }
-    List<ApiGroup> groups = apiConfig.getGroups();
-    List<ApiDoc> finalApiDocs = new ArrayList<>();
 
-    ApiDoc defaultGroup = ApiDoc.buildGroupApiDoc(TornaConstants.DEFAULT_GROUP_CODE);
-    // show default group
-    AtomicInteger order = new AtomicInteger(1);
-    finalApiDocs.add(defaultGroup);
-
-    if (CollectionUtil.isEmpty(groups)) {
-      defaultGroup.setOrder(order.getAndIncrement());
-      defaultGroup.getChildrenApiDocs().addAll(apiDocList);
-      return finalApiDocs;
-    }
-    Map<String, String> hasInsert = new HashMap<>();
-    for (ApiGroup group : groups) {
-      ApiDoc groupApiDoc = ApiDoc.buildGroupApiDoc(group.getName());
-      finalApiDocs.add(groupApiDoc);
-      for (ApiDoc doc : apiDocList) {
-        if (hasInsert.containsKey(doc.getAlias())) {
-          continue;
-        }
-        if (!DocUtil.isMatch(group.getApis(), doc.getPackageName()+"."+doc.getName())) {
-          continue;
-        }
-        hasInsert.put(doc.getAlias(), null);
-        groupApiDoc.getChildrenApiDocs().add(doc);
-        doc.setOrder(groupApiDoc.getChildrenApiDocs().size());
-        doc.setGroup(group.getName());
-        if (StringUtil.isEmpty(group.getPaths())) {
-          continue;
-        }
-        List<ApiMethodDoc> methodDocs = doc.getList().stream()
-            .filter(l -> DocPathUtil.matches(l.getPath(), group.getPaths(), null))
-            .collect(Collectors.toList());
-        doc.setList(methodDocs);
-      }
-    }
-    // Ungrouped join the default group
-    for (ApiDoc doc : apiDocList) {
-      String key = doc.getAlias();
-      if (!hasInsert.containsKey(key)) {
-        defaultGroup.getChildrenApiDocs().add(doc);
-        doc.setOrder(defaultGroup.getChildrenApiDocs().size());
-        hasInsert.put(doc.getAlias(), null);
-      }
-    }
-    if (CollectionUtil.isEmpty(defaultGroup.getChildrenApiDocs())) {
-      finalApiDocs.remove(defaultGroup);
-    }
-    finalApiDocs.forEach(group -> group.setOrder(order.getAndIncrement()));
-    return finalApiDocs;
-  }
 
   default Set<String> ignoreParamsSets(JavaMethod method) {
     Set<String> ignoreSets = new HashSet<>();
@@ -373,12 +307,10 @@ public interface IRestDocTemplate extends BaseDocBuildTemplate{
   default List<JavaAnnotation> getClassAnnotations(JavaClass cls,FrameworkAnnotations frameworkAnnotations) {
     List<JavaAnnotation> annotationsList = new ArrayList<>();
     annotationsList.addAll(cls.getAnnotations());
-    Map<String, MappingAnnotation> mappingAnnotationMap = frameworkAnnotations.getMappingAnnotations();
+    Map<String, EntryAnnotation> mappingAnnotationMap = frameworkAnnotations.getEntryAnnotations();
     boolean flag = annotationsList.stream().anyMatch(item -> {
       String annotationName = item.getType().getValue();
-      MappingAnnotation mappingAnnotation = mappingAnnotationMap.get(annotationName);
-      if (CollectionUtil.isNotEmpty(mappingAnnotation.getScope())
-          && mappingAnnotation.getScope().contains("class")) {
+      if (mappingAnnotationMap.containsKey(annotationName)) {
         return true;
       }
       return false;
@@ -395,13 +327,13 @@ public interface IRestDocTemplate extends BaseDocBuildTemplate{
   }
 
   default List<ApiMethodDoc> buildEntryPointMethod(final JavaClass cls, ApiConfig apiConfig,
-      ProjectDocConfigBuilder projectBuilder,FrameworkAnnotations frameworkAnnotations,List<ApiReqParam> configApiReqParams) {
+      ProjectDocConfigBuilder projectBuilder,FrameworkAnnotations frameworkAnnotations,
+      List<ApiReqParam> configApiReqParams, IRequestMappingHandler baseMappingHandler,IHeaderHandler headerHandler) {
     String clazName = cls.getCanonicalName();
     boolean paramsDataToTree = projectBuilder.getApiConfig().isParamsDataToTree();
     String group = JavaClassUtil.getClassTagsValue(cls, DocTags.GROUP, Boolean.TRUE);
     String classAuthor = JavaClassUtil.getClassTagsValue(cls, DocTags.AUTHOR, Boolean.TRUE);
     List<JavaAnnotation> classAnnotations = this.getClassAnnotations(cls,frameworkAnnotations);
-    Map<String, String> constantsMap = projectBuilder.getConstantsMap();
     String baseUrl = "";
     Map<String,MappingAnnotation> mappingAnnotationMap = frameworkAnnotations.getMappingAnnotations();
     for (JavaAnnotation annotation : classAnnotations) {
@@ -450,8 +382,9 @@ public interface IRestDocTemplate extends BaseDocBuildTemplate{
         continue;
       }
       //handle request mapping
-      RequestMapping requestMapping = new SpringMVCRequestMappingHandler()
-          .handle(projectBuilder, baseUrl, method, constantsMap,frameworkAnnotations);
+      RequestMapping requestMapping = baseMappingHandler.handle(projectBuilder, baseUrl, method,frameworkAnnotations,(javaClass, mapping) ->{
+        this.requestMappingPostProcess(javaClass,method,mapping);
+      });
       if (Objects.isNull(requestMapping)) {
         continue;
       }
@@ -499,7 +432,7 @@ public interface IRestDocTemplate extends BaseDocBuildTemplate{
       }
       apiMethodDoc.setDetail(apiNoteValue != null ? apiNoteValue : "");
       //handle headers
-      List<ApiReqParam> apiReqHeaders = new SpringMVCRequestHeaderHandler().handle(method, projectBuilder);
+      List<ApiReqParam> apiReqHeaders = headerHandler.handle(method, projectBuilder);
       apiReqHeaders = apiReqHeaders.stream().filter(param -> DocUtil.filterPath(requestMapping, param)).collect(Collectors.toList());
 
       apiMethodDoc.setType(requestMapping.getMethodType());
@@ -508,7 +441,7 @@ public interface IRestDocTemplate extends BaseDocBuildTemplate{
       apiMethodDoc.setPath(requestMapping.getShortUrl());
       apiMethodDoc.setDeprecated(requestMapping.isDeprecated());
 
-      final List<ApiReqParam> apiReqParamList = this.processApiData.stream()
+      final List<ApiReqParam> apiReqParamList = configApiReqParams.stream()
           .filter(param -> DocUtil.filterPath(requestMapping, param)).collect(Collectors.toList());
 
       ApiMethodReqParam apiMethodReqParam = requestParams(docJavaMethod, projectBuilder, apiReqParamList,frameworkAnnotations);
@@ -1248,4 +1181,5 @@ public interface IRestDocTemplate extends BaseDocBuildTemplate{
 
   boolean isEntryPoint(JavaClass javaClass,FrameworkAnnotations frameworkAnnotations);
 
+  void requestMappingPostProcess(JavaClass javaClass,JavaMethod method,RequestMapping requestMapping);
 }

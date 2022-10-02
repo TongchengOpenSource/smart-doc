@@ -305,16 +305,16 @@ public class TornaUtil {
         if (CollectionUtil.isNotEmpty(repList)) {
             ApiParam apiParam = repList.get(0);
             boolean isReqList = repList.size() == 1 && ARRAY.equals(apiParam.getType());
-            String className = getType(apiParam.getClassName());
-            apiMethodDoc.setResponseArrayType(JavaClassValidateUtil.isPrimitive(className) ? className : OBJECT);
+//            String className = getType(apiParam.getClassName());
+//            apiMethodDoc.setResponseArrayType(JavaClassValidateUtil.isPrimitive(className) ? className : OBJECT);
             apiMethodDoc.setIsResponseArray(isReqList ? 1 : 0);
         }
         //request
         if (CollectionUtil.isNotEmpty(repList)) {
             ApiParam apiParam = repList.get(0);
             boolean isRepList = reqList.size() == 1 && ARRAY.equals(apiParam.getType());
-            String className = getType(apiParam.getClassName());
-            apiMethodDoc.setRequestArrayType(JavaClassValidateUtil.isPrimitive(className) ? className : OBJECT);
+//            String className = getType(apiParam.getClassName());
+//            apiMethodDoc.setRequestArrayType(JavaClassValidateUtil.isPrimitive(className) ? className : OBJECT);
             apiMethodDoc.setIsRequestArray(isRepList ? 1 : 0);
         }
     }

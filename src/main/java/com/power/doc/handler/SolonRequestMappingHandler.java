@@ -23,13 +23,14 @@
 package com.power.doc.handler;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 import com.power.doc.builder.ProjectDocConfigBuilder;
 import com.power.doc.constants.DocAnnotationConstants;
 import com.power.doc.constants.Methods;
 import com.power.doc.constants.SolonAnnotations;
+import com.power.doc.function.RequestMappingFunc;
+import com.power.doc.model.annotation.FrameworkAnnotations;
 import com.power.doc.model.request.RequestMapping;
 import com.power.doc.utils.DocUtil;
 import com.thoughtworks.qdox.model.JavaAnnotation;
@@ -41,7 +42,7 @@ import static com.power.doc.constants.DocTags.IGNORE;
 /**
  * @author noear 2022/2/19 created
  */
-public class SolonRequestMappingHandler extends BaseMappingHandler{
+public class SolonRequestMappingHandler implements IRequestMappingHandler {
 
     /**
      * handle solon request mapping
@@ -49,11 +50,12 @@ public class SolonRequestMappingHandler extends BaseMappingHandler{
      * @param projectBuilder    projectBuilder
      * @param controllerBaseUrl solon mvc controller base url
      * @param method            JavaMethod
-     * @param constantsMap      project constant container
-     * @param isRemoting        isRemoting
      * @return RequestMapping
      */
-    public RequestMapping handle(ProjectDocConfigBuilder projectBuilder, String controllerBaseUrl, JavaMethod method, Map<String, String> constantsMap, boolean isRemoting) {
+    public RequestMapping handle(ProjectDocConfigBuilder projectBuilder,
+        String controllerBaseUrl,
+        JavaMethod method, FrameworkAnnotations frameworkAnnotations,
+        RequestMappingFunc requestMappingFunc) {
         if (Objects.nonNull(method.getTagByName(IGNORE))) {
             return null;
         }
@@ -86,15 +88,6 @@ public class SolonRequestMappingHandler extends BaseMappingHandler{
                 methodType = Methods.DELETE.getValue();
             }
         }
-        if(isRemoting) {
-            methodType = Methods.POST.getValue();
-            if (shortUrl == null) {
-                shortUrl = method.getName();
-            }
-            if (mediaType == null) {
-                mediaType = "text/json";
-            }
-        }
         if (Objects.nonNull(method.getTagByName(DEPRECATED))) {
             deprecated = true;
         }
@@ -103,6 +96,8 @@ public class SolonRequestMappingHandler extends BaseMappingHandler{
             .setMethodType(methodType)
             .setDeprecated(deprecated)
             .setShortUrl(shortUrl);
-        return formatMappingData(projectBuilder,controllerBaseUrl,requestMapping);
+        requestMapping = formatMappingData(projectBuilder,controllerBaseUrl,requestMapping);
+        requestMappingFunc.process(method.getDeclaringClass(),requestMapping);
+        return requestMapping;
     }
 }

@@ -78,18 +78,4 @@ public class AdocDocBuilder {
             builderTemplate.buildDirectoryDataDoc(config, javaProjectBuilder, DICT_LIST_ADOC_TPL, DICT_LIST_ADOC);
         }
     }
-
-    /**
-     * Generate a single controller api document
-     *
-     * @param config         ApiConfig
-     * @param controllerName controller name
-     */
-    public static void buildSingleApiDoc(ApiConfig config, String controllerName) {
-        config.setAdoc(false);
-        ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, JavaProjectBuilderHelper.create());
-        DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
-        builderTemplate.checkAndInit(config,false);
-        builderTemplate.buildSingleApi(configBuilder, controllerName, API_DOC_ADOC_TPL, API_EXTENSION);
-    }
 }

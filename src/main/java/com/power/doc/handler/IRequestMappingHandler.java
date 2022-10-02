@@ -28,15 +28,18 @@ import com.power.common.util.StringUtil;
 import com.power.common.util.UrlUtil;
 import com.power.doc.builder.ProjectDocConfigBuilder;
 import com.power.doc.constants.DocGlobalConstants;
+import com.power.doc.function.RequestMappingFunc;
+import com.power.doc.model.annotation.FrameworkAnnotations;
 import com.power.doc.model.request.RequestMapping;
 import com.power.doc.utils.DocUrlUtil;
+import com.thoughtworks.qdox.model.JavaMethod;
 
 /**
  * @author yu3.sun on 2022/10/1
  */
-public class BaseMappingHandler {
+public interface IRequestMappingHandler {
 
-  public RequestMapping formatMappingData(ProjectDocConfigBuilder projectBuilder, String controllerBaseUrl,RequestMapping requestMapping) {
+  default RequestMapping formatMappingData(ProjectDocConfigBuilder projectBuilder, String controllerBaseUrl,RequestMapping requestMapping) {
     String shortUrl = requestMapping.getShortUrl();
     if (Objects.nonNull(shortUrl)) {
       String serverUrl = projectBuilder.getServerUrl();
@@ -57,4 +60,8 @@ public class BaseMappingHandler {
     }
     return null;
   }
+
+  RequestMapping handle(ProjectDocConfigBuilder projectBuilder, String controllerBaseUrl, JavaMethod method,
+      FrameworkAnnotations frameworkAnnotations,
+      RequestMappingFunc requestMappingFunc);
 }

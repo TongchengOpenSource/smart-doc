@@ -384,28 +384,6 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
         FileUtil.nioWriteFile(mapper.render(), config.getOutPath() + FILE_SEPARATOR + outPutFileName);
     }
 
-
-    /**
-     * Generate a single controller api document
-     *
-     * @param projectBuilder projectBuilder
-     * @param controllerName controller name
-     * @param template       template
-     * @param fileExtension  file extension
-     */
-    public void buildSingleApi(ProjectDocConfigBuilder projectBuilder, String controllerName, String template, String fileExtension) {
-        ApiConfig config = projectBuilder.getApiConfig();
-        FileUtil.mkdirs(config.getOutPath());
-        IDocBuildTemplate<ApiDoc> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework());
-        ApiDoc doc = docBuildTemplate.getSingleApiData(projectBuilder, controllerName);
-        Template mapper = BeetlTemplateUtil.getByName(template);
-        mapper.binding(TemplateVariable.DESC.getVariable(), doc.getDesc());
-        mapper.binding(TemplateVariable.NAME.getVariable(), doc.getName());
-        mapper.binding(TemplateVariable.LIST.getVariable(), doc.getList());
-        FileUtil.writeFileNotAppend(mapper.render(), config.getOutPath() + FILE_SEPARATOR + doc.getName() + fileExtension);
-    }
-
-
     private List<ApiDoc> listOfApiData(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
         this.checkAndInitForGetApiData(config);
         config.setMd5EncryptedHtmlName(true);
