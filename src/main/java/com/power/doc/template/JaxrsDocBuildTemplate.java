@@ -392,7 +392,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDo
                 throw new RuntimeException("ERROR: Unable to find javadoc @QueryParam for actual param \""
                         + paramName + "\" in method " + javaMethod.getName() + " from " + className);
             }
-            StringBuilder comment = new StringBuilder(this.paramCommentResolve(paramTagMap.get(paramName))).append("\n");;
+
             if (requestFieldToUnderline) {
                 paramName = StringUtil.camelToUnderline(paramName);
             }
@@ -400,6 +400,8 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDo
             JavaClass javaClass = builder.getJavaProjectBuilder().getClassByName(fullTypeName);
             List<JavaAnnotation> annotations = parameter.getAnnotations();
             Set<String> groupClasses = JavaClassUtil.getParamGroupJavaClass(annotations, builder.getJavaProjectBuilder());
+
+            StringBuilder comment = new StringBuilder(this.paramCommentResolve(paramTagMap.get(paramName)));
             boolean isPathVariable = false;
             boolean isRequestBody = false;
             String strRequired = "false";

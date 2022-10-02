@@ -187,7 +187,7 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc>, IBaseD
                 throw new RuntimeException("ERROR: Unable to find javadoc @param for actual param \""
                         + paramName + "\" in method " + javaMethod.getName() + " from " + className);
             }
-            StringBuilder comment = new StringBuilder(this.paramCommentResolve(paramTagMap.get(paramName))).append("\n");
+            StringBuilder comment = new StringBuilder(this.paramCommentResolve(paramTagMap.get(paramName)));
             String mockValue = JavaFieldUtil.createMockValue(paramTagMap, paramName, typeName, typeName);
             JavaClass javaClass = builder.getJavaProjectBuilder().getClassByName(fullTypeName);
             List<JavaAnnotation> annotations = parameter.getAnnotations();

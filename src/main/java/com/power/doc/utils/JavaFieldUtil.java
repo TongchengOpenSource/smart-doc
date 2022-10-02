@@ -154,7 +154,7 @@ public class JavaFieldUtil {
             return DocGlobalConstants.EMPTY;
         }
         StringBuilder finalSb = new StringBuilder();
-        finalSb.append("Validate[").append(sb).append("]");
+        finalSb.append("\nValidate[").append(sb).append("]");
         return finalSb.toString();
     }
 

@@ -90,8 +90,8 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
             }
             builder.append(header.getName()).append("|")
                     .append(header.getType()).append("|")
-                    .append(header.getDesc()).append("|")
                     .append(header.isRequired()).append("|")
+                    .append(header.getDesc()).append("|")
                     .append(header.getSince()).append("\n");
         }
         return builder.toString();
@@ -420,7 +420,6 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
             //reduce create in template
             apiMethodDoc.setHeaders(this.createDocRenderHeaders(allApiReqHeaders, apiConfig.isAdoc()));
             apiMethodDoc.setRequestHeaders(allApiReqHeaders);
-            log.info("mathodName="+method.getName());
             String path = apiMethodDoc.getPath().split(";")[0];
             String pathUrl = DocUtil.formatPathUrl(path);
             List<ApiParam> pathParams = apiMethodDoc.getPathParams();
@@ -877,7 +876,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                 throw new RuntimeException("ERROR: Unable to find javadoc @param for actual param \""
                         + paramName + "\" in method " + javaMethod.getName() + " from " + className);
             }
-            StringBuilder comment = new StringBuilder(this.paramCommentResolve(paramTagMap.get(paramName))).append("\n");
+            StringBuilder comment = new StringBuilder(this.paramCommentResolve(paramTagMap.get(paramName)));
             if (requestFieldToUnderline) {
                 paramName = StringUtil.camelToUnderline(paramName);
             }
