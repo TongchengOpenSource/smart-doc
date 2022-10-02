@@ -1,7 +1,7 @@
 /*
  * smart-doc
  *
- * Copyright (C) 2018-2021 smart-doc
+ * Copyright (C) 2018-2022 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -25,8 +25,12 @@ package com.power.doc.utils;
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.StringUtil;
 import com.power.doc.constants.DocGlobalConstants;
-import com.power.doc.model.ApiReqHeader;
+import com.power.doc.model.ApiReqParam;
+import com.power.doc.model.FormData;
 import com.power.doc.model.request.CurlRequest;
+
+import java.util.List;
+import java.util.Objects;
 
 /**
  * @author yu 2020/12/21.
@@ -34,10 +38,17 @@ import com.power.doc.model.request.CurlRequest;
 public class CurlUtil {
 
     public static String toCurl(CurlRequest request) {
+        if (Objects.isNull(request)) {
+            return "";
+        }
+        String methodType = request.getType();
+        if (Objects.nonNull(methodType) && methodType.contains(".")) {
+            methodType = methodType.substring(methodType.indexOf(".") + 1);
+        }
         StringBuilder sb = new StringBuilder();
         sb.append("curl");
         sb.append(" -X");
-        sb.append(" ").append(request.getType());
+        sb.append(" ").append(methodType);
         if (request.getUrl().indexOf("https") == 0) {
             sb.append(" -k");
         }
@@ -47,7 +58,7 @@ public class CurlUtil {
             sb.append(" 'Content-Type: ").append(request.getContentType()).append("'");
         }
         if (CollectionUtil.isNotEmpty(request.getReqHeaders())) {
-            for (ApiReqHeader reqHeader : request.getReqHeaders()) {
+            for (ApiReqParam reqHeader : request.getReqHeaders()) {
                 sb.append(" -H");
                 if (StringUtil.isEmpty(reqHeader.getValue())) {
                     sb.append(" '" + reqHeader.getName() + "'");
@@ -56,6 +67,12 @@ public class CurlUtil {
                 }
             }
         }
+
+        List<FormData> fileFormDataList = request.getFileFormDataList();
+        if (CollectionUtil.isNotEmpty(fileFormDataList)) {
+            fileFormDataList.forEach(file -> sb.append(" -F '").append(file.getKey()).append("='"));
+        }
+
         sb.append(" -i");
         // append request url
         sb.append(" ").append(request.getUrl());

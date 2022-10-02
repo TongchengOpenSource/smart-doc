@@ -1,7 +1,7 @@
 /*
  * smart-doc https://github.com/shalousun/smart-doc
  *
- * Copyright (C) 2018-2021 smart-doc
+ * Copyright (C) 2018-2022 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -22,27 +22,34 @@
  */
 package com.power.doc.builder;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.FileUtil;
 import com.power.common.util.StringUtil;
 import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.constants.Methods;
+import com.power.doc.factory.BuildTemplateFactory;
+import com.power.doc.helper.JavaProjectBuilderHelper;
 import com.power.doc.model.*;
-import com.power.doc.template.SpringBootDocBuildTemplate;
+import com.power.doc.model.openapi.OpenApiTag;
+import com.power.doc.template.IDocBuildTemplate;
 import com.power.doc.utils.DocUtil;
+import com.power.doc.utils.JsonUtil;
+import com.power.doc.utils.OpenApiSchemaUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 
 import java.util.*;
+
+import static com.power.doc.constants.DocGlobalConstants.ARRAY;
 
 /**
  * @author xingzi
  */
 public class OpenApiBuilder {
 
-    //过滤url中的特殊字符
-    private static final String PATH_REGEX = "[/{};\\t+]";
+    static Map<String, String> stringComponent = new HashMap<String, String>() {{
+        put("type", "string");
+        put("format", "string");
+    }};
 
     /**
      * Build OpenApi json
@@ -52,8 +59,8 @@ public class OpenApiBuilder {
 
     public static void buildOpenApi(ApiConfig config) {
         DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
-        builderTemplate.checkAndInit(config);
-        JavaProjectBuilder javaProjectBuilder = new JavaProjectBuilder();
+        builderTemplate.checkAndInit(config, false);
+        JavaProjectBuilder javaProjectBuilder = JavaProjectBuilderHelper.create();
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
         openApiCreate(config, configBuilder);
     }
@@ -66,7 +73,7 @@ public class OpenApiBuilder {
      */
     public static void buildOpenApi(ApiConfig config, JavaProjectBuilder projectBuilder) {
         DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
-        builderTemplate.checkAndInit(config);
+        builderTemplate.checkAndInit(config, false);
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, projectBuilder);
         openApiCreate(config, configBuilder);
     }
@@ -79,26 +86,27 @@ public class OpenApiBuilder {
      */
     private static void openApiCreate(ApiConfig config, ProjectDocConfigBuilder configBuilder) {
         config.setParamsDataToTree(true);
-        SpringBootDocBuildTemplate docBuildTemplate = new SpringBootDocBuildTemplate();
+        IDocBuildTemplate docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework());
         List<ApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder);
         Map<String, Object> json = new HashMap<>(8);
         json.put("openapi", "3.0.3");
         json.put("info", buildInfo(config));
         json.put("servers", buildServers(config));
-        json.put("paths", buildPaths(apiDocList));
+        Set<OpenApiTag> tags = new HashSet<>();
+        json.put("tags", tags);
+        json.put("paths", buildPaths(config, apiDocList, tags));
         json.put("components", buildComponentsSchema(apiDocList));
 
         String filePath = config.getOutPath();
         filePath = filePath + DocGlobalConstants.OPEN_API_JSON;
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        String data = gson.toJson(json);
+        String data = JsonUtil.toPrettyJson(json);
         FileUtil.nioWriteFile(data, filePath);
     }
 
     /**
-     * info 信息
+     * Build openapi info
      *
-     * @param apiConfig 文档配置信息
+     * @param apiConfig ApiConfig
      * @return
      */
     private static Map<String, Object> buildInfo(ApiConfig apiConfig) {
@@ -109,9 +117,9 @@ public class OpenApiBuilder {
     }
 
     /**
-     * server 信息
+     * Build Servers
      *
-     * @param config 文档配置信息
+     * @param config ApiConfig
      * @return
      */
     private static List<Map<String, Object>> buildServers(ApiConfig config) {
@@ -123,21 +131,24 @@ public class OpenApiBuilder {
     }
 
     /**
-     * 构建path数据 url请求
+     * Build openapi paths
      *
-     * @param apiDocList api列表
+     * @param apiConfig  ApiConfig
+     * @param apiDocList List of api
+     * @param tags       tags
      * @return
      */
-    private static Map<String, Object> buildPaths(List<ApiDoc> apiDocList) {
+    private static Map<String, Object> buildPaths(ApiConfig apiConfig, List<ApiDoc> apiDocList, Set<OpenApiTag> tags) {
         Map<String, Object> pathMap = new HashMap<>(500);
         apiDocList.forEach(
                 a -> {
+                    tags.add(OpenApiTag.of(a.getDesc(), a.getDesc()));
                     List<ApiMethodDoc> apiMethodDocs = a.getList();
                     apiMethodDocs.forEach(
                             method -> {
-                                //设置paths的请求url 将双斜杠替换成单斜杠
+                                //replace '//' to '/'
                                 String url = method.getPath().replace("//", "/");
-                                Map<String, Object> request = buildPathUrls(method, a);
+                                Map<String, Object> request = buildPathUrls(apiConfig, method, a);
                                 //pathMap.put(method.getPath().replace("//", "/"), buildPathUrls(method, a));
                                 if (!pathMap.containsKey(url)) {
                                     pathMap.put(url, request);
@@ -153,172 +164,152 @@ public class OpenApiBuilder {
     }
 
     /**
-     * paths 设置url请求方式
+     * Build path urls
      *
-     * @param apiMethodDoc 方法参数
-     * @param apiDoc       类参数
+     * @param apiConfig    ApiConfig
+     * @param apiMethodDoc Method
+     * @param apiDoc       ApiDoc
      * @return
      */
-    private static Map<String, Object> buildPathUrls(ApiMethodDoc apiMethodDoc, ApiDoc apiDoc) {
+    private static Map<String, Object> buildPathUrls(ApiConfig apiConfig, ApiMethodDoc apiMethodDoc, ApiDoc apiDoc) {
         Map<String, Object> request = new HashMap<>(4);
-        request.put(apiMethodDoc.getType().toLowerCase(), buildPathUrlsRequest(apiMethodDoc, apiDoc));
+        request.put(apiMethodDoc.getType().toLowerCase(), buildPathUrlsRequest(apiConfig, apiMethodDoc, apiDoc));
         return request;
     }
 
     /**
-     * url的基本信息 信息简介summary 详情description 所属分类tags 请求参数parameter 请求体request 返回值responses
+     * Build request
      *
-     * @param apiMethodDoc 方法参数
-     * @param apiDoc       类参数
+     * @param apiConfig    ApiConfig
+     * @param apiMethodDoc ApiMethodDoc
+     * @param apiDoc       apiDoc
      * @return
      */
-    private static Map<String, Object> buildPathUrlsRequest(ApiMethodDoc apiMethodDoc, ApiDoc apiDoc) {
+    private static Map<String, Object> buildPathUrlsRequest(ApiConfig apiConfig, ApiMethodDoc apiMethodDoc, ApiDoc apiDoc) {
         Map<String, Object> request = new HashMap<>(20);
         request.put("summary", apiMethodDoc.getDesc());
         request.put("description", apiMethodDoc.getDetail());
         if (StringUtil.isNotEmpty(apiMethodDoc.getGroup())) {
-            request.put("tags", new String[]{apiMethodDoc.getGroup()});
+            request.put("tags", new String[]{apiDoc.getDesc()});
         } else {
             request.put("tags", new String[]{apiDoc.getDesc()});
         }
-        request.put("requestBody", buildRequestBody(apiMethodDoc));
+        request.put("requestBody", buildRequestBody(apiConfig, apiMethodDoc));
         request.put("parameters", buildParameters(apiMethodDoc));
-        request.put("responses", buildResponses(apiMethodDoc));
+        request.put("responses", buildResponses(apiConfig, apiMethodDoc));
         request.put("deprecated", apiMethodDoc.isDeprecated());
-        request.put("operationId", apiMethodDoc.getMethodId());
+        request.put("operationId", String.join("", OpenApiSchemaUtil.getPatternResult("[A-Za-z0-9{}]*", apiMethodDoc.getPath())));
+
         return request;
     }
 
     /**
-     * 请求体构建 只针对post请求 并且请求体不为null
+     * Build request body
      *
-     * @param apiMethodDoc 方法参数
+     * @param apiMethodDoc ApiMethodDoc
      * @return
      */
-    private static Map<String, Object> buildRequestBody(ApiMethodDoc apiMethodDoc) {
+    private static Map<String, Object> buildRequestBody(ApiConfig apiConfig, ApiMethodDoc apiMethodDoc) {
         Map<String, Object> requestBody = new HashMap<>(8);
         boolean isPost = (apiMethodDoc.getType().equals(Methods.POST.getValue())
                 || apiMethodDoc.getType().equals(Methods.PUT.getValue()) ||
                 apiMethodDoc.getType().equals(Methods.PATCH.getValue()));
-        //如果是post请求 且包含请求体
+        //add content of post method
         if (isPost) {
-            requestBody.put("content", buildContent(apiMethodDoc, false));
+            requestBody.put("content", buildContent(apiConfig, apiMethodDoc, false));
             return requestBody;
         }
-
         return null;
     }
 
     /**
-     * 构建content信息 responses 和 requestBody 都需要content信息
+     * Build content for responses and requestBody
      *
-     * @param apiMethodDoc 方法参数
-     * @param isRep        是否是返回数据
+     * @param apiConfig    ApiConfig
+     * @param apiMethodDoc ApiMethodDoc
+     * @param isRep        is response
      * @return
      */
-    private static Map<String, Object> buildContent(ApiMethodDoc apiMethodDoc, boolean isRep) {
+    private static Map<String, Object> buildContent(ApiConfig apiConfig, ApiMethodDoc apiMethodDoc, boolean isRep) {
         Map<String, Object> content = new HashMap<>(8);
         String contentType = apiMethodDoc.getContentType();
         if (isRep) {
             contentType = "*/*";
         }
-        content.put(contentType, buildContentBody(apiMethodDoc, isRep));
+        content.put(contentType, buildContentBody(apiConfig, apiMethodDoc, isRep));
         return content;
 
     }
 
     /**
-     * 构建content的数据内容
+     * Build data of content
      *
-     * @param apiMethodDoc 方法参数
-     * @param isRep        是否是返回数据
+     * @param apiConfig    ApiConfig
+     * @param apiMethodDoc ApiMethodDoc
+     * @param isRep        is response
      * @return
      */
-    private static Map<String, Object> buildContentBody(ApiMethodDoc apiMethodDoc, boolean isRep) {
+    private static Map<String, Object> buildContentBody(ApiConfig apiConfig, ApiMethodDoc apiMethodDoc, boolean isRep) {
         Map<String, Object> content = new HashMap<>(8);
         if (Objects.nonNull(apiMethodDoc.getReturnSchema()) && isRep) {
             content.put("schema", apiMethodDoc.getReturnSchema());
+        } else if (!isRep && Objects.nonNull(apiMethodDoc.getRequestSchema())) {
+            content.put("schema", apiMethodDoc.getRequestSchema());
         } else {
-            if (!isRep && apiMethodDoc.getContentType().equals(DocGlobalConstants.MULTIPART_TYPE)) {
-                // formdata
-                Map<String, Object> map = new LinkedHashMap<>();
-                if (apiMethodDoc.isListParam()) {
-                    map.put("type", DocGlobalConstants.ARRAY);
-                } else {
-                    map.put("type", "object");
-                }
-                Map<String, Object> properties = new LinkedHashMap<>();
-                Map<String, Object> detail;
-                for (ApiParam apiParam : apiMethodDoc.getQueryParams()) {
-                    detail = new HashMap<>();
-                    detail.put("type", apiParam.getType());
-                    detail.put("description", apiParam.getDesc());
-                    detail.put("example", DocUtil.handleJsonStr(apiParam.getValue()));
-                    if ("file".equals(apiParam.getType())) {
-                        if (apiParam.isHasItems()) {
-                            detail.put("type", "array");
-                            Map<String, Object> items = new HashMap<>();
-                            items.put("type", "string");
-                            items.put("format", "binary");
-                            detail.put("items", items);
-                        } else {
-                            detail.put("format", "binary");
-                        }
-                    }
-                    properties.put(apiParam.getField(), detail);
-                }
-                map.put("properties", properties);
-                content.put("schema", map);
-            } else if (!isRep && Objects.nonNull(apiMethodDoc.getRequestSchema())) {
-                content.put("schema", apiMethodDoc.getRequestSchema());
-            } else {
-                content.put("schema", buildBodySchema(apiMethodDoc, isRep));
-            }
+            content.put("schema", buildBodySchema(apiMethodDoc, isRep));
         }
-        content.put("examples", buildBodyExample(apiMethodDoc, isRep));
+        if ((!isRep && apiConfig.isRequestExample()) || (isRep && apiConfig.isResponseExample())) {
+            content.put("examples", buildBodyExample(apiMethodDoc, isRep));
+        }
         return content;
 
     }
 
     /**
-     * content body 的schema 信息
+     * Build schema of Body
      *
-     * @param apiMethodDoc 请求方法参数 去除server
-     * @param isRep        是否是返回数据
+     * @param apiMethodDoc ApiMethodDoc
+     * @param isRep        is response
      * @return
      */
     private static Map<String, Object> buildBodySchema(ApiMethodDoc apiMethodDoc, boolean isRep) {
         Map<String, Object> schema = new HashMap<>(10);
-        //当类型为数组时使用
         Map<String, Object> innerScheme = new HashMap<>(10);
-        //去除url中的特殊字符
-        String responseRef = "#/components/schemas/" + apiMethodDoc.getPath().replaceAll(PATH_REGEX, "_") + "response";
-        String requestRef = "#/components/schemas/" + apiMethodDoc.getPath().replaceAll(PATH_REGEX, "_") + "request";
-        //如果是数组类型
-        if (apiMethodDoc.isListParam()) {
-            schema.put("type", DocGlobalConstants.ARRAY);
-            if (isRep) {
-                innerScheme.put("$ref", responseRef);
-            } else {
-                innerScheme.put("$ref", requestRef);
-            }
-            schema.put("items", innerScheme);
+        String requestRef;
+        if (apiMethodDoc.getContentType().equals(DocGlobalConstants.URL_CONTENT_TYPE)) {
+            requestRef = "#/components/schemas/" + OpenApiSchemaUtil.getClassNameFromParams(apiMethodDoc.getQueryParams());
         } else {
-            if (isRep) {
-                schema.put("$ref", responseRef);
-            } else {
-                schema.put("$ref", requestRef);
-            }
+            requestRef = "#/components/schemas/" + OpenApiSchemaUtil.getClassNameFromParams(apiMethodDoc.getRequestParams());
         }
+        //remove special characters in url
+        String responseRef = "#/components/schemas/" + OpenApiSchemaUtil.getClassNameFromParams(apiMethodDoc.getResponseParams());
+
+        //List param
+        if (apiMethodDoc.getIsRequestArray() == 1) {
+            schema.put("type", ARRAY);
+            innerScheme.put("$ref", requestRef);
+            schema.put("items", innerScheme);
+        } else if (apiMethodDoc.getIsResponseArray() == 1) {
+            schema.put("type", ARRAY);
+            innerScheme.put("$ref", responseRef);
+            schema.put("items", innerScheme);
+        }
+
+        else if (isRep && CollectionUtil.isNotEmpty(apiMethodDoc.getResponseParams())) {
+            schema.put("$ref", responseRef);
+        } else if (!isRep && CollectionUtil.isNotEmpty(apiMethodDoc.getRequestParams())) {
+            schema.put("$ref", requestRef);
+        }
+
 
         return schema;
     }
 
     /**
-     * 信息样例  请求和返回的信息样例
+     * Build body example
      *
-     * @param apiMethodDoc 方法参数
-     * @param isRep        是否是返回数据
+     * @param apiMethodDoc ApiMethodDoc
+     * @param isRep        is response
      * @return
      */
     private static Map<String, Object> buildBodyExample(ApiMethodDoc apiMethodDoc, boolean isRep) {
@@ -329,10 +320,10 @@ public class OpenApiBuilder {
     }
 
     /**
-     * 信息样例数据构建 此处请求体requestBody构建完成
+     * Build example data
      *
-     * @param apiMethodDoc 方法参数
-     * @param isRep        是否为返回数据
+     * @param apiMethodDoc ApiMethodDoc
+     * @param isRep        is response
      * @return
      */
     private static Map<String, Object> buildExampleData(ApiMethodDoc apiMethodDoc, boolean isRep) {
@@ -350,14 +341,15 @@ public class OpenApiBuilder {
     }
 
     /**
-     * 构建请求参数 用于get请求 @PathVariable Header 参数构建
+     * Build request parameters
      *
-     * @param apiMethodDoc 方法体
+     * @param apiMethodDoc API data for the method
      * @return
      */
     private static List<Map<String, Object>> buildParameters(ApiMethodDoc apiMethodDoc) {
         Map<String, Object> parameters;
         List<Map<String, Object>> parametersList = new ArrayList<>();
+        // Handling path parameters
         for (ApiParam apiParam : apiMethodDoc.getPathParams()) {
             parameters = getStringParams(apiParam);
             parameters.put("in", "path");
@@ -366,20 +358,25 @@ public class OpenApiBuilder {
                 parametersList.add(parameters);
             }
         }
-        // not handle form data
-        if (!apiMethodDoc.getContentType().equals(DocGlobalConstants.MULTIPART_TYPE)) {
-            for (ApiParam apiParam : apiMethodDoc.getQueryParams()) {
+        for (ApiParam apiParam : apiMethodDoc.getQueryParams()) {
+            //file
+            if (apiParam.isHasItems()) {
                 parameters = getStringParams(apiParam);
-                parameters.put("in", "query");
+                parameters.put("type", ARRAY);
+                parameters.put("items", getStringParams(apiParam));
+                parametersList.add(parameters);
+            } else {
+                parameters = getStringParams(apiParam);
                 List<ApiParam> children = apiParam.getChildren();
                 if (CollectionUtil.isEmpty(children)) {
                     parametersList.add(parameters);
                 }
             }
         }
-        //如果包含请求头
+
+        //with headers
         if (!CollectionUtil.isEmpty(apiMethodDoc.getRequestHeaders())) {
-            for (ApiReqHeader header : apiMethodDoc.getRequestHeaders()) {
+            for (ApiReqParam header : apiMethodDoc.getRequestHeaders()) {
                 parameters = new HashMap<>(20);
                 parameters.put("name", header.getName());
                 parameters.put("description", header.getDesc());
@@ -396,6 +393,11 @@ public class OpenApiBuilder {
     private static Map<String, Object> getStringParams(ApiParam apiParam) {
         Map<String, Object> parameters;
         parameters = new HashMap<>(20);
+        if ("file".equalsIgnoreCase(apiParam.getType())) {
+            parameters.put("in", "formData");
+        } else {
+            parameters.put("in", "query");
+        }
         parameters.put("name", apiParam.getField());
         parameters.put("description", apiParam.getDesc());
         parameters.put("required", apiParam.isRequired());
@@ -405,9 +407,9 @@ public class OpenApiBuilder {
     }
 
     /**
-     * 如果是get请求或者是@PathVariable 设置请求参数
+     * If it is a get request or @PathVariable set the request parameters
      *
-     * @param apiParam 参数信息
+     * @param apiParam Parameter information
      * @return
      */
     private static Map<String, Object> buildParametersSchema(ApiParam apiParam) {
@@ -419,20 +421,29 @@ public class OpenApiBuilder {
                 schema.put("format", "binary");
             } else if ("enum".equals(apiParam.getType())) {
                 schema.put("enum", apiParam.getEnumValues());
+            } else if (ARRAY.equals(apiParam.getType())) {
+                if (CollectionUtil.isNotEmpty(apiParam.getEnumValues())) {
+                    schema.put("type", "string");
+                    schema.put("items", apiParam.getEnumValues());
+                } else {
+                    schema.put("type", ARRAY);
+                    Map<String, String> map = new HashMap<>(4);
+                    map.put("type", "string");
+                    map.put("format", "string");
+                    schema.put("items", map);
+                }
             }
-        } else {
-            schema.put("format", "int16".equals(apiParam.getType()) ? "int32" : apiParam.getType());
         }
         return schema;
     }
 
     /**
-     * 如果包含header 设置请求参数
+     * If the header is included, set the request parameters
      *
-     * @param header 参数信息
+     * @param header header
      * @return
      */
-    private static Map<String, Object> buildParametersSchema(ApiReqHeader header) {
+    private static Map<String, Object> buildParametersSchema(ApiReqParam header) {
         Map<String, Object> schema = new HashMap<>(10);
         String openApiType = DocUtil.javaTypeToOpenApiTypeConvert(header.getType());
         schema.put("type", openApiType);
@@ -441,73 +452,72 @@ public class OpenApiBuilder {
     }
 
     /**
-     * 构建返回信息
+     * build response
      *
-     * @param apiMethodDoc 方法参数
+     * @param apiMethodDoc ApiMethodDoc
      * @return
      */
-    private static Map<String, Object> buildResponses(ApiMethodDoc apiMethodDoc) {
+    private static Map<String, Object> buildResponses(ApiConfig apiConfig, ApiMethodDoc apiMethodDoc) {
         Map<String, Object> response = new HashMap<>(10);
-        response.put("200", buildResponsesBody(apiMethodDoc));
+        response.put("200", buildResponsesBody(apiConfig, apiMethodDoc));
         return response;
     }
 
     /**
-     * 构建返回信息实体
+     * response body
      *
-     * @param apiMethodDoc 方法参数
+     * @param apiMethodDoc ApiMethodDoc
      * @return
      */
-    private static Map<String, Object> buildResponsesBody(ApiMethodDoc apiMethodDoc) {
+    private static Map<String, Object> buildResponsesBody(ApiConfig apiConfig, ApiMethodDoc apiMethodDoc) {
         Map<String, Object> responseBody = new HashMap<>(10);
         responseBody.put("description", "OK");
-        responseBody.put("content", buildContent(apiMethodDoc, true));
+        responseBody.put("content", buildContent(apiConfig, apiMethodDoc, true));
         return responseBody;
     }
 
     /**
-     * 构建component
+     * component schema
      *
-     * @param apiDocs 请求列表
+     * @param apiDocs List of ApiDoc
      * @return
      */
     private static Map<String, Object> buildComponentsSchema(List<ApiDoc> apiDocs) {
         Map<String, Object> schemas = new HashMap<>(4);
         Map<String, Object> component = new HashMap<>();
+
+        component.put("string", stringComponent);
         apiDocs.forEach(
                 a -> {
                     List<ApiMethodDoc> apiMethodDocs = a.getList();
                     apiMethodDocs.forEach(
                             method -> {
                                 //request components
+                                String requestSchema = OpenApiSchemaUtil.getClassNameFromParams(method.getRequestParams());
                                 List<ApiParam> requestParams = method.getRequestParams();
-                                if (CollectionUtil.isNotEmpty(requestParams)) {
-                                    Map<String, Object> prop = buildProperties(requestParams);
-                                    if (Objects.nonNull(prop) && prop.size() > 0) {
-                                        component.put(method.getPath().replaceAll(PATH_REGEX, "_") + "request", buildProperties(requestParams));
-                                    }
-                                } else {
-                                    component.put(method.getPath().replaceAll(PATH_REGEX, "_") + "request", new HashMap<>(0));
-                                }
+                                Map<String, Object> prop = buildProperties(requestParams, component);
+                                component.put(requestSchema, prop);
                                 //response components
                                 List<ApiParam> responseParams = method.getResponseParams();
-                                component.put(method.getPath().replaceAll(PATH_REGEX, "_") + "response", buildProperties(responseParams));
+                                String schemaName = OpenApiSchemaUtil.getClassNameFromParams(method.getResponseParams());
+                                component.put(schemaName, buildProperties(responseParams, component));
                             }
                     );
                 }
         );
+        component.remove(OpenApiSchemaUtil.NO_BODY_PARAM);
         schemas.put("schemas", component);
         return schemas;
     }
 
     /**
-     * component schema properties 信息
+     * component schema properties
      *
-     * @param apiParam 参数列表
+     * @param apiParam list of ApiParam
      * @return
      */
-    private static Map<String, Object> buildProperties(List<ApiParam> apiParam) {
-        Map<String, Object> component = new HashMap<>();
+    private static Map<String, Object> buildProperties(List<ApiParam> apiParam, Map<String, Object> component) {
+        Map<String, Object> properties = new HashMap<>();
         Map<String, Object> propertiesData = new LinkedHashMap<>();
         List<String> requiredList = new ArrayList<>();
         if (apiParam != null) {
@@ -523,28 +533,28 @@ public class OpenApiBuilder {
                     continue;
                 }
                 String field = param.getField();
-                propertiesData.put(field, buildPropertiesData(param));
+                propertiesData.put(field, buildPropertiesData(param, component));
             }
             if (!propertiesData.isEmpty()) {
-                component.put("properties", propertiesData);
+                properties.put("properties", propertiesData);
             }
             if (!CollectionUtil.isEmpty(requiredList)) {
-                component.put("required", requiredList);
+                properties.put("required", requiredList);
             }
-            return component;
+            return properties;
         } else {
-            return null;
+            return new HashMap<>();
         }
 
     }
 
     /**
-     * component schema properties 实体信息构建
+     * component schema properties data
      *
-     * @param apiParam 参数基本信息
+     * @param apiParam ApiParam
      * @return
      */
-    private static Map<String, Object> buildPropertiesData(ApiParam apiParam) {
+    private static Map<String, Object> buildPropertiesData(ApiParam apiParam, Map<String, Object> component) {
         Map<String, Object> propertiesData = new HashMap<>();
         String openApiType = DocUtil.javaTypeToOpenApiTypeConvert(apiParam.getType());
         //array object file map
@@ -558,25 +568,47 @@ public class OpenApiBuilder {
             propertiesData.put("type", "object");
             propertiesData.put("description", apiParam.getDesc() + "(map data)");
         }
-        if ("object".equals(apiParam.getType())) {
-            if (apiParam.getChildren() != null) {
-                propertiesData.put("type", "object");
-                propertiesData.put("description", apiParam.getDesc() + "(object)");
-                propertiesData.put("properties", buildProperties(apiParam.getChildren()).get("properties"));
-                propertiesData.put("requires", buildProperties(apiParam.getChildren()).get("requires"));
-            }
-        }
         if ("array".equals(apiParam.getType())) {
-            if (apiParam.getChildren() != null) {
+            if (CollectionUtil.isNotEmpty(apiParam.getChildren())) {
                 propertiesData.put("type", "array");
-                propertiesData.put("items", buildProperties(apiParam.getChildren()));
+                if (!apiParam.isSelfReferenceLoop()) {
+                    Map<String, Object> arrayRef = new HashMap<>(4);
+                    String childSchemaName = OpenApiSchemaUtil.getClassNameFromParams(apiParam.getChildren());
+                    if (childSchemaName.contains(OpenApiSchemaUtil.NO_BODY_PARAM)) {
+                        propertiesData.put("type", "object");
+                        propertiesData.put("description", apiParam.getDesc() + "(object)");
+                    } else {
+                        component.put(childSchemaName, buildProperties(apiParam.getChildren(), component));
+                        arrayRef.put("$ref", "#/components/schemas/" + childSchemaName);
+                        propertiesData.put("items", arrayRef);
+                    }
+                }
             }
-
         }
         if ("file".equals(apiParam.getType())) {
             propertiesData.put("type", "string");
             propertiesData.put("format", "binary");
         }
+        if ("object".equals(apiParam.getType())) {
+            if (CollectionUtil.isNotEmpty(apiParam.getChildren())) {
+                propertiesData.put("type", "object");
+                propertiesData.put("description", apiParam.getDesc() + "(object)");
+                if (!apiParam.isSelfReferenceLoop()) {
+                    String childSchemaName = OpenApiSchemaUtil.getClassNameFromParams(apiParam.getChildren());
+                    if (childSchemaName.contains(OpenApiSchemaUtil.NO_BODY_PARAM)) {
+                        propertiesData.put("type", "object");
+                        propertiesData.put("description", apiParam.getDesc() + "(object)");
+                    } else {
+                        component.put(childSchemaName, buildProperties(apiParam.getChildren(), component));
+                        propertiesData.put("$ref", "#/components/schemas/" + childSchemaName);
+                    }
+                }
+            } else {
+                propertiesData.put("type", "object");
+                propertiesData.put("description", apiParam.getDesc() + "(object)");
+            }
+        }
+
         return propertiesData;
     }
 }

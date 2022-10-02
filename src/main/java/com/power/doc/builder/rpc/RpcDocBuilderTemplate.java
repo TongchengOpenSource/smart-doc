@@ -1,7 +1,7 @@
 /*
  * smart-doc https://github.com/shalousun/smart-doc
  *
- * Copyright (C) 2018-2021 smart-doc
+ * Copyright (C) 2018-2022 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -25,15 +25,18 @@ package com.power.doc.builder.rpc;
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.DateTimeUtil;
 import com.power.common.util.FileUtil;
+import com.power.common.util.StringUtil;
 import com.power.doc.builder.BaseDocBuilderTemplate;
 import com.power.doc.builder.ProjectDocConfigBuilder;
+import com.power.doc.constants.FrameworkEnum;
 import com.power.doc.constants.TemplateVariable;
+import com.power.doc.factory.BuildTemplateFactory;
 import com.power.doc.model.ApiConfig;
+import com.power.doc.model.ApiDocDict;
 import com.power.doc.model.ApiErrorCode;
 import com.power.doc.model.rpc.RpcApiAllData;
 import com.power.doc.model.rpc.RpcApiDoc;
 import com.power.doc.template.IDocBuildTemplate;
-import com.power.doc.template.RpcDocBuildTemplate;
 import com.power.doc.utils.BeetlTemplateUtil;
 import com.power.doc.utils.DocUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
@@ -56,7 +59,10 @@ public class RpcDocBuilderTemplate extends BaseDocBuilderTemplate {
     private static long now = System.currentTimeMillis();
 
     public void checkAndInit(ApiConfig config) {
-        super.checkAndInit(config);
+        if (StringUtil.isEmpty(config.getFramework())) {
+            config.setFramework(FrameworkEnum.DUBBO.getFramework());
+        }
+        super.checkAndInit(config, false);
         config.setOutPath(config.getOutPath() + FILE_SEPARATOR + RPC_OUT_DIR);
     }
 
@@ -101,7 +107,7 @@ public class RpcDocBuilderTemplate extends BaseDocBuilderTemplate {
             rpcConfigConfigContent = FileUtil.getFileContent(rpcConfig);
         }
         FileUtil.mkdirs(outPath);
-        List<ApiErrorCode> errorCodeList = DocUtil.errorCodeDictToList(config);
+        List<ApiErrorCode> errorCodeList = DocUtil.errorCodeDictToList(config, javaProjectBuilder);
         Template tpl = BeetlTemplateUtil.getByName(template);
         tpl.binding(TemplateVariable.API_DOC_LIST.getVariable(), apiDocList);
         tpl.binding(TemplateVariable.ERROR_CODE_LIST.getVariable(), errorCodeList);
@@ -112,19 +118,37 @@ public class RpcDocBuilderTemplate extends BaseDocBuilderTemplate {
         tpl.binding(TemplateVariable.PROJECT_NAME.getVariable(), config.getProjectName());
         tpl.binding(TemplateVariable.RPC_CONSUMER_CONFIG.getVariable(), rpcConfigConfigContent);
         setDirectoryLanguageVariable(config, tpl);
+
+        List<ApiDocDict> apiDocDictList = DocUtil.buildDictionary(config, javaProjectBuilder);
+        tpl.binding(TemplateVariable.DICT_LIST.getVariable(), apiDocDictList);
+
+        int codeIndex = apiDocList.isEmpty() ? 1 : apiDocDictList.size();
+
+
+        if (CollectionUtil.isNotEmpty(errorCodeList)) {
+            tpl.binding(TemplateVariable.ERROR_CODE_ORDER.getVariable(), ++codeIndex);
+        }
+
+        if (CollectionUtil.isNotEmpty(apiDocDictList)) {
+            tpl.binding(TemplateVariable.DICT_ORDER.getVariable(), ++codeIndex);
+        }
+
+        setCssCDN(config, tpl);
         FileUtil.nioWriteFile(tpl.render(), outPath + FILE_SEPARATOR + outPutFileName);
     }
 
     /**
      * Build search js
      *
-     * @param apiDocList     list  data of Api doc
-     * @param config         api config
-     * @param template       template
-     * @param outPutFileName output file
+     * @param apiDocList         list  data of Api doc
+     * @param config             api config
+     * @param javaProjectBuilder projectBuilder
+     * @param template           template
+     * @param outPutFileName     output file
      */
-    public void buildSearchJs(List<RpcApiDoc> apiDocList, ApiConfig config, String template, String outPutFileName) {
-        List<ApiErrorCode> errorCodeList = DocUtil.errorCodeDictToList(config);
+    public void buildSearchJs(List<RpcApiDoc> apiDocList, ApiConfig config, JavaProjectBuilder javaProjectBuilder
+            , String template, String outPutFileName) {
+        List<ApiErrorCode> errorCodeList = DocUtil.errorCodeDictToList(config, javaProjectBuilder);
         Template tpl = BeetlTemplateUtil.getByName(template);
         // directory tree
         List<RpcApiDoc> apiDocs = new ArrayList<>();
@@ -147,6 +171,10 @@ public class RpcDocBuilderTemplate extends BaseDocBuilderTemplate {
             apiDoc1.setList(new ArrayList<>(0));
             apiDocs.add(apiDoc1);
         }
+
+        // set dict list
+        List<ApiDocDict> apiDocDictList = DocUtil.buildDictionary(config, javaProjectBuilder);
+        tpl.binding(TemplateVariable.DICT_LIST.getVariable(), apiDocDictList);
         tpl.binding(TemplateVariable.DIRECTORY_TREE.getVariable(), apiDocs);
         FileUtil.nioWriteFile(tpl.render(), config.getOutPath() + FILE_SEPARATOR + outPutFileName);
     }
@@ -154,12 +182,13 @@ public class RpcDocBuilderTemplate extends BaseDocBuilderTemplate {
     /**
      * build error_code adoc
      *
-     * @param config         api config
-     * @param template       template
-     * @param outPutFileName output file
+     * @param config             api config
+     * @param template           template
+     * @param outPutFileName     output file
+     * @param javaProjectBuilder javaProjectBuilder
      */
-    public void buildErrorCodeDoc(ApiConfig config, String template, String outPutFileName) {
-        List<ApiErrorCode> errorCodeList = DocUtil.errorCodeDictToList(config);
+    public void buildErrorCodeDoc(ApiConfig config, String template, String outPutFileName, JavaProjectBuilder javaProjectBuilder) {
+        List<ApiErrorCode> errorCodeList = DocUtil.errorCodeDictToList(config, javaProjectBuilder);
         Template mapper = BeetlTemplateUtil.getByName(template);
         mapper.binding(TemplateVariable.LIST.getVariable(), errorCodeList);
         FileUtil.nioWriteFile(mapper.render(), config.getOutPath() + FILE_SEPARATOR + outPutFileName);
@@ -178,8 +207,9 @@ public class RpcDocBuilderTemplate extends BaseDocBuilderTemplate {
         apiAllData.setProjectName(config.getProjectName());
         apiAllData.setProjectId(DocUtil.generateId(config.getProjectName()));
         apiAllData.setApiDocList(listOfApiData(config, javaProjectBuilder));
-        apiAllData.setErrorCodeList(DocUtil.errorCodeDictToList(config));
+        apiAllData.setErrorCodeList(DocUtil.errorCodeDictToList(config, javaProjectBuilder));
         apiAllData.setRevisionLogs(config.getRevisionLogs());
+        apiAllData.setApiDocDictList(DocUtil.buildDictionary(config, javaProjectBuilder));
         apiAllData.setDependencyList(config.getRpcApiDependencies());
         return apiAllData;
     }
@@ -188,7 +218,7 @@ public class RpcDocBuilderTemplate extends BaseDocBuilderTemplate {
         this.checkAndInitForGetApiData(config);
         config.setMd5EncryptedHtmlName(true);
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
-        IDocBuildTemplate docBuildTemplate = new RpcDocBuildTemplate();
+        IDocBuildTemplate docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework());
         return docBuildTemplate.getApiData(configBuilder);
     }
 

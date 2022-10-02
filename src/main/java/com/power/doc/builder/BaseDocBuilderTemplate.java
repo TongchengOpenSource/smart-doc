@@ -1,7 +1,7 @@
 /*
  * smart-doc https://github.com/shalousun/smart-doc
  *
- * Copyright (C) 2018-2021 smart-doc
+ * Copyright (C) 2018-2022 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -22,20 +22,29 @@
  */
 package com.power.doc.builder;
 
-import com.power.common.util.CollectionUtil;
 import com.power.common.util.DateTimeUtil;
-import com.power.common.util.EnumUtil;
 import com.power.common.util.StringUtil;
 import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.constants.DocLanguage;
+import com.power.doc.constants.FrameworkEnum;
 import com.power.doc.constants.TemplateVariable;
 import com.power.doc.model.ApiConfig;
-import com.power.doc.model.ApiErrorCode;
-import com.power.doc.model.ApiErrorCodeDictionary;
 import com.power.doc.model.RevisionLog;
+import org.apache.commons.lang3.StringUtils;
+import org.beetl.core.Resource;
 import org.beetl.core.Template;
+import org.beetl.core.resource.ClasspathResourceLoader;
 
-import java.util.*;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Reader;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+
+import static com.power.doc.constants.DocGlobalConstants.CSS_CDN;
+import static com.power.doc.constants.DocGlobalConstants.CSS_CDN_CH;
 
 /**
  * @author yu 2020/5/16.
@@ -48,10 +57,11 @@ public class BaseDocBuilderTemplate {
      * check condition and init
      *
      * @param config Api config
+     * @param checkOutPath check out path
      */
-    public void checkAndInit(ApiConfig config) {
+    public void checkAndInit(ApiConfig config,boolean checkOutPath) {
         this.checkAndInitForGetApiData(config);
-        if (StringUtil.isEmpty(config.getOutPath())) {
+        if (StringUtil.isEmpty(config.getOutPath())&&!checkOutPath) {
             throw new RuntimeException("doc output path can't be null or empty");
         }
     }
@@ -62,10 +72,10 @@ public class BaseDocBuilderTemplate {
      * @param config Api config
      */
     public void checkAndInitForGetApiData(ApiConfig config) {
-        if (null == config) {
+        if (Objects.isNull(config)) {
             throw new NullPointerException("ApiConfig can't be null");
         }
-        if (null != config.getLanguage()) {
+        if (Objects.nonNull(config.getLanguage())) {
             System.setProperty(DocGlobalConstants.DOC_LANGUAGE, config.getLanguage().getCode());
         } else {
             //default is chinese
@@ -82,6 +92,15 @@ public class BaseDocBuilderTemplate {
                             .setRemarks("Created by smart-doc")
                             .setStatus("auto")
             );
+        }
+        if (StringUtil.isEmpty(config.getFramework())) {
+            config.setFramework(FrameworkEnum.SPRING.getFramework());
+        }
+        if (StringUtil.isEmpty(config.getAuthor())) {
+            config.setAuthor(System.getProperty("user.name"));
+        }
+        if (Objects.isNull(config.getReplace())) {
+            config.setReplace(Boolean.TRUE);
         }
     }
 
@@ -106,5 +125,48 @@ public class BaseDocBuilderTemplate {
             titleMap.put(TemplateVariable.DICT_LIST_TITLE.getVariable(), DocGlobalConstants.DICT_CN_TITLE);
         }
         return titleMap;
+    }
+
+    public void setCssCDN(ApiConfig config, Template template) {
+        if (DocLanguage.CHINESE.equals(config.getLanguage())) {
+            template.binding(TemplateVariable.CSS_CND.getVariable(), CSS_CDN_CH);
+        } else {
+            template.binding(TemplateVariable.CSS_CND.getVariable(), CSS_CDN);
+        }
+    }
+
+    public String allInOneDocName(ApiConfig apiConfig, String fileName, String suffix) {
+        String allInOneName = apiConfig.getAllInOneDocFileName();
+        if (StringUtils.isNotEmpty(apiConfig.getAllInOneDocFileName())) {
+            if (allInOneName.endsWith(suffix)) {
+                return allInOneName;
+            } else {
+                return allInOneName + suffix;
+            }
+        } else if (StringUtil.isNotEmpty(fileName) && fileName.endsWith(suffix)) {
+            return fileName;
+        } else {
+            return fileName + suffix;
+        }
+    }
+    public static void copyJarFile(String source, String target) {
+        ClasspathResourceLoader resourceLoader = new ClasspathResourceLoader("/template/");
+        Resource resource = resourceLoader.getResource(source);
+        try (FileWriter fileWriter = new FileWriter(target, false);
+             Reader reader = resource.openReader()) {
+            char[] c = new char[1024 * 1024];
+            int temp;
+            int len = 0;
+            while ((temp = reader.read()) != -1) {
+                c[len] = (char) temp;
+                len++;
+            }
+            reader.close();
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+            bufferedWriter.write(c, 0, len);
+            bufferedWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

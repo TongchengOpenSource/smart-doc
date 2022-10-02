@@ -1,7 +1,7 @@
 /*
  * smart-doc
  *
- * Copyright (C) 2018-2021 smart-doc
+ * Copyright (C) 2018-2022 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -23,6 +23,10 @@
 package com.power.doc.utils;
 
 import com.power.common.util.CollectionUtil;
+import com.power.common.util.StringUtil;
+import com.power.common.util.ValidateUtil;
+import com.power.doc.constants.SolonAnnotations;
+import com.power.doc.constants.SpringMvcAnnotations;
 
 import java.util.List;
 import java.util.Objects;
@@ -31,6 +35,8 @@ import java.util.Objects;
  * @author yu 2019/12/25.
  */
 public class JavaClassValidateUtil {
+
+    private static String CLASS_PATTERN = "^([A-Za-z]{1}[A-Za-z\\d_]*\\.)+[A-Za-z][A-Za-z\\d_]*$";
 
     /**
      * Check if it is the basic data array type of json data
@@ -87,20 +93,29 @@ public class JavaClassValidateUtil {
             case "boolean":
             case "byte":
             case "uuid":
+            case "character":
             case "java.sql.timestamp":
             case "java.util.date":
             case "java.time.localdatetime":
             case "java.time.localtime":
+            case "java.time.year":
+            case "java.time.yearmonth":
+            case "java.time.monthday":
+            case "java.time.period":
             case "localdatetime":
             case "localdate":
             case "zoneddatetime":
+            case "offsetdatetime":
+            case "period":
             case "java.time.localdate":
             case "java.time.zoneddatetime":
+            case "java.time.offsetdatetime":
             case "java.math.bigdecimal":
             case "java.math.biginteger":
             case "java.util.uuid":
-            case "java.util.UUID":
             case "java.io.serializable":
+            case "java.lang.character":
+            case "org.bson.types.objectid":
                 return true;
             default:
                 return false;
@@ -214,6 +229,24 @@ public class JavaClassValidateUtil {
     }
 
     /**
+     * Download
+     *
+     * @param typeName return type name
+     * @return boolean
+     */
+    public static boolean isFileDownloadResource(String typeName) {
+        switch (typeName) {
+            case "org.springframework.core.io.Resource":
+            case "org.springframework.core.io.InputStreamSource":
+            case "org.springframework.core.io.ByteArrayResource":
+            case "org.noear.solon.core.handle.DownloadedFile":
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    /**
      * ignore param of spring mvc
      *
      * @param paramType    param type name
@@ -228,14 +261,21 @@ public class JavaClassValidateUtil {
             case "org.springframework.ui.Model":
             case "org.springframework.ui.ModelMap":
             case "org.springframework.web.servlet.ModelAndView":
+            case "org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap":
             case "org.springframework.validation.BindingResult":
             case "javax.servlet.http.HttpServletRequest":
-            case "org.springframework.web.context.request.WebRequest":
+            case "javax.servlet.http.HttpServlet":
             case "javax.servlet.http.HttpSession":
             case "javax.servlet.http.HttpServletResponse":
+            case "org.springframework.web.context.request.WebRequest":
             case "org.springframework.web.reactive.function.server.ServerRequest":
             case "org.springframework.web.multipart.MultipartHttpServletRequest":
             case "org.springframework.http.HttpHeaders":
+            case "org.springframework.core.io.Resource":
+            case "org.springframework.core.io.InputStreamSource":
+            case "org.springframework.core.io.ByteArrayResource":
+            case "org.noear.solon.core.handle.Context":
+            case "org.noear.solon.core.handle.ModelAndView":
                 return true;
             default:
                 return false;
@@ -273,6 +313,11 @@ public class JavaClassValidateUtil {
             case "org.springframework.web.multipart.commons.CommonsMultipartFile":
             case "org.springframework.web.multipart.commons.CommonsMultipartFile[]":
             case "java.util.List<org.springframework.web.multipart.commons.CommonsMultipartFile>":
+            case "javax.servlet.http.Part":
+            case "javax.servlet.http.Part[]":
+            case "java.util.List<javax.servlet.http.Part>":
+            case "org.noear.solon.core.handle.UploadedFile":
+            case "org.noear.solon.core.handle.DownloadedFile":
                 return true;
             default:
                 return false;
@@ -293,5 +338,59 @@ public class JavaClassValidateUtil {
             default:
                 return false;
         }
+    }
+
+    /**
+     * ignore param with annotation
+     * @param annotation Spring Mvc's annotation
+     * @return boolean
+     */
+    public static boolean ignoreSpringMvcParamWithAnnotation(String annotation) {
+        switch (annotation) {
+            case SpringMvcAnnotations.SESSION_ATTRIBUTE:
+            case SpringMvcAnnotations.REQUEST_ATTRIBUTE:
+            case SpringMvcAnnotations.REQUEST_HERDER:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    public static boolean ignoreSolonMvcParamWithAnnotation(String annotation) {
+        switch (annotation) {
+            case SolonAnnotations.REQUEST_HERDER:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    /**
+     * valid java class name
+     *
+     * @param className class nem
+     * @return boolean
+     */
+    public static boolean isClassName(String className) {
+        if (StringUtil.isEmpty(className) || !className.contains(".")) {
+            return false;
+        }
+        if (ValidateUtil.isContainsChinese(className)) {
+            return false;
+        }
+        String classNameTemp = className;
+        if (className.contains("<")) {
+            int index = className.indexOf("<");
+            classNameTemp = className.substring(0, index);
+        }
+        if (!ValidateUtil.validate(classNameTemp, CLASS_PATTERN)) {
+            return false;
+        }
+        if (className.contains("<") && !className.contains(">")) {
+            return false;
+        } else if (className.contains(">") && !className.contains("<")) {
+            return false;
+        }
+        return true;
     }
 }

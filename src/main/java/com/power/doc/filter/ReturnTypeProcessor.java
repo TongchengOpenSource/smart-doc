@@ -1,7 +1,7 @@
 /*
  * smart-doc https://github.com/shalousun/smart-doc
  *
- * Copyright (C) 2018-2021 smart-doc
+ * Copyright (C) 2018-2022 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -49,9 +49,8 @@ public class ReturnTypeProcessor {
         filters.add(new WebFluxReturnFilter());
         filters.add(new BoxReturnFilter());
         filters.add(new DefaultReturnFilter());
-        ApiReturn apiReturn = null;
         for (ReturnTypeFilter filter : filters) {
-            apiReturn = filter.doFilter(typeName);
+            ApiReturn apiReturn = filter.doFilter(typeName);
             if (Objects.nonNull(apiReturn)) {
                 return apiReturn;
             }

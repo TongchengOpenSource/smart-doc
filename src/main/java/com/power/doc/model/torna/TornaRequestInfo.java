@@ -1,7 +1,7 @@
 /*
  * smart-doc https://github.com/shalousun/smart-doc
  *
- * Copyright (C) 2018-2021 smart-doc
+ * Copyright (C) 2018-2022 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -29,9 +29,9 @@ import java.net.URLDecoder;
 import java.util.HashMap;
 
 /**
- * torna请求日志信息
+ * Print the log of pushing documents to Torna
  *
- * @author: xingzi 2021/3/20 22:11
+ * @author xingzi 2021/3/20 22:11
  **/
 public class TornaRequestInfo {
     private String code;
@@ -91,19 +91,17 @@ public class TornaRequestInfo {
 
     public String buildInfo() {
         StringBuilder sb = new StringBuilder();
-        sb.append("---------------------------START---------------------------\n")
-                .append("接口名: ")
+        sb.append("---------------------------PUSH START---------------------------\n")
+                .append("API: ")
                 .append(category)
                 .append("\n")
-                .append("请求数据: \n")
+                .append("Request Param: \n")
                 .append(TornaConstants.GSON.toJson(requestInfo))
                 .append("\n")
-                .append("返回结果: \n")
+                .append("Response: \n")
                 .append(TornaConstants.GSON.fromJson(responseInfo, HashMap.class))
                 .append("\n")
-                .append("---------------------------END---------------------------\n");
-
-
+                .append("---------------------------PUSH END---------------------------\n");
         try {
             return URLDecoder.decode(sb.toString(), "utf-8");
         } catch (UnsupportedEncodingException e) {

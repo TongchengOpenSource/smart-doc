@@ -1,7 +1,7 @@
 /*
  * smart-doc
  *
- * Copyright (C) 2018-2021 smart-doc
+ * Copyright (C) 2018-2022 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -68,6 +68,11 @@ public class DocJavaField {
      * field generic actualJavaType;
      */
     private String actualJavaType;
+
+    /**
+     * field name
+     */
+    private String fieldName;
 
     private boolean array;
 
@@ -198,5 +203,14 @@ public class DocJavaField {
 
     public void setEnum(boolean anEnum) {
         isEnum = anEnum;
+    }
+
+    public String getFieldName() {
+        return fieldName;
+    }
+
+    public DocJavaField setFieldName(String fieldName) {
+        this.fieldName = fieldName;
+        return this;
     }
 }

@@ -1,7 +1,7 @@
 /*
  * smart-doc https://github.com/shalousun/smart-doc
  *
- * Copyright (C) 2018-2021 smart-doc
+ * Copyright (C) 2018-2022 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -23,10 +23,11 @@
 package com.power.doc.builder;
 
 import com.power.common.util.DateTimeUtil;
+import com.power.doc.factory.BuildTemplateFactory;
+import com.power.doc.helper.JavaProjectBuilderHelper;
 import com.power.doc.model.ApiConfig;
 import com.power.doc.model.ApiDoc;
 import com.power.doc.template.IDocBuildTemplate;
-import com.power.doc.template.SpringBootDocBuildTemplate;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 
 import java.util.List;
@@ -48,7 +49,7 @@ public class ApiDocBuilder {
      * @param config ApiConfig
      */
     public static void buildApiDoc(ApiConfig config) {
-        JavaProjectBuilder javaProjectBuilder = new JavaProjectBuilder();
+        JavaProjectBuilder javaProjectBuilder = JavaProjectBuilderHelper.create();
         buildApiDoc(config, javaProjectBuilder);
     }
 
@@ -60,34 +61,21 @@ public class ApiDocBuilder {
      */
     public static void buildApiDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
         DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
-        builderTemplate.checkAndInit(config);
+        builderTemplate.checkAndInit(config,false);
         config.setAdoc(false);
         config.setParamsDataToTree(false);
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
-        IDocBuildTemplate docBuildTemplate = new SpringBootDocBuildTemplate();
+        IDocBuildTemplate docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework());
         List<ApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder);
         if (config.isAllInOne()) {
             String version = config.isCoverOld() ? "" : "-V" + DateTimeUtil.long2Str(System.currentTimeMillis(), DATE_FORMAT);
-            builderTemplate.buildAllInOne(apiDocList, config, javaProjectBuilder, ALL_IN_ONE_MD_TPL, "AllInOne" + version + ".md");
+            String docName = builderTemplate.allInOneDocName(config,"AllInOne" + version + ".md",".md");
+            apiDocList = docBuildTemplate.handleApiGroup(apiDocList, config);
+            builderTemplate.buildAllInOne(apiDocList, config, javaProjectBuilder, ALL_IN_ONE_MD_TPL, docName);
         } else {
             builderTemplate.buildApiDoc(apiDocList, config, API_DOC_MD_TPL, API_EXTENSION);
-            builderTemplate.buildErrorCodeDoc(config, ERROR_CODE_LIST_MD_TPL, ERROR_CODE_LIST_MD);
+            builderTemplate.buildErrorCodeDoc(config, ERROR_CODE_LIST_MD_TPL, ERROR_CODE_LIST_MD, javaProjectBuilder);
             builderTemplate.buildDirectoryDataDoc(config, javaProjectBuilder, DICT_LIST_MD_TPL, DICT_LIST_MD);
         }
-    }
-
-    /**
-     * Generate a single controller api document
-     *
-     * @param config         (ApiConfig
-     * @param controllerName controller name
-     */
-    public static void buildSingleApiDoc(ApiConfig config, String controllerName) {
-        config.setAdoc(false);
-        JavaProjectBuilder javaProjectBuilder = new JavaProjectBuilder();
-        ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
-        DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
-        builderTemplate.checkAndInit(config);
-        builderTemplate.buildSingleApi(configBuilder, controllerName, API_DOC_MD_TPL, API_EXTENSION);
     }
 }

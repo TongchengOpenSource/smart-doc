@@ -1,4 +1,4 @@
-# ${desc}
+# ${htmlEscape(desc)}
 
 **URI:** ${uri}
 
@@ -9,15 +9,13 @@
 **Author:** ${author}
 
 **Version:** ${version}
-<% for(doc in list){ %>
+<%
+for(doc in list){
+%>
 <%if(doc.deprecated){%>
-
-## ~~${doc.desc}~~
-
+## ~~${htmlEscape(doc.desc)}~~
 <%}else{%>
-
-## ${doc.desc}
-
+## ${htmlEscape(doc.desc)}
 <%}%>
 
 **Definition：** ${doc.methodDefinition}
@@ -33,9 +31,10 @@
 
 Parameter|Type|Description|Required|Since
 ---|---|---|---|---
-
-<% for(param in doc.requestParams){ %>
-${param.field}|${param.type}|${param.desc}|${param.required}|${param.version}
+<%
+for(param in doc.requestParams){
+%>
+${param.field}|${param.type}|${htmlEscape(param.desc)}|${param.required}|${param.version}
 <%}%>
 <%}%>
 
@@ -44,9 +43,10 @@ ${param.field}|${param.type}|${param.desc}|${param.required}|${param.version}
 
 Field | Type|Description|Since
 ---|---|---|---
-
-<% for(param in doc.responseParams){ %>
-${param.field}|${param.type}|${param.desc}|${param.version}
+<%
+for(param in doc.responseParams){
+%>
+${param.field}|${param.type}|${htmlEscape(param.desc)}|${param.version}
 <%}%>
 <%}%>
 

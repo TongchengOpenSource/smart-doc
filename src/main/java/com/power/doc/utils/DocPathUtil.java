@@ -1,7 +1,7 @@
 /*
  * smart-doc https://github.com/shalousun/smart-doc
  *
- * Copyright (C) 2018-2021 smart-doc
+ * Copyright (C) 2018-2022 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -22,12 +22,15 @@
  */
 package com.power.doc.utils;
 
+import com.power.common.util.PathUtil;
 import com.power.common.util.StringUtil;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.List;
 
-public class PathUtil {
+public class DocPathUtil {
 
     /**
      * Get the java class name
@@ -60,5 +63,25 @@ public class PathUtil {
             return path;
         }
         return null;
+    }
+
+    /**
+     * Determine a match for the given lookup path.
+     *
+     * @param lookupPath      the request path
+     * @param includePatterns the path patterns to map (empty for matching to all paths)
+     * @param excludePatterns the path patterns to exclude (empty for no specific excludes)
+     * @return {@code true} if matched the request path
+     */
+    public static boolean matches(String lookupPath, String includePatterns, String excludePatterns) {
+        List<String> includePatternList = null;
+        if (StringUtil.isNotEmpty(includePatterns)) {
+            includePatternList = Arrays.asList(includePatterns.split(",", 0));
+        }
+        List<String> excludePatternList = null;
+        if (StringUtil.isNotEmpty(excludePatterns)) {
+            excludePatternList = Arrays.asList(excludePatterns.split(",", 0));
+        }
+        return PathUtil.matches(lookupPath,includePatternList,excludePatternList);
     }
 }

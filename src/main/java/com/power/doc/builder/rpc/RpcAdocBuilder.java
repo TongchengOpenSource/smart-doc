@@ -1,7 +1,7 @@
 /*
  * smart-doc https://github.com/shalousun/smart-doc
  *
- * Copyright (C) 2018-2021 smart-doc
+ * Copyright (C) 2018-2022 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -23,9 +23,12 @@
 package com.power.doc.builder.rpc;
 
 import com.power.doc.builder.ProjectDocConfigBuilder;
+import com.power.doc.constants.FrameworkEnum;
+import com.power.doc.factory.BuildTemplateFactory;
+import com.power.doc.helper.JavaProjectBuilderHelper;
 import com.power.doc.model.ApiConfig;
 import com.power.doc.model.rpc.RpcApiDoc;
-import com.power.doc.template.RpcDocBuildTemplate;
+import com.power.doc.template.IDocBuildTemplate;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 
 import java.util.List;
@@ -47,7 +50,7 @@ public class RpcAdocBuilder {
      * @param config ApiConfig
      */
     public static void buildApiDoc(ApiConfig config) {
-        JavaProjectBuilder javaProjectBuilder = new JavaProjectBuilder();
+        JavaProjectBuilder javaProjectBuilder = JavaProjectBuilderHelper.create();
         buildApiDoc(config, javaProjectBuilder);
     }
 
@@ -58,18 +61,20 @@ public class RpcAdocBuilder {
      * @param javaProjectBuilder ProjectDocConfigBuilder
      */
     public static void buildApiDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
-        config.setAdoc(true);
+        config.setFramework(FrameworkEnum.DUBBO.getFramework());
         config.setShowJavaType(true);
+        config.setAdoc(true);
         RpcDocBuilderTemplate builderTemplate = new RpcDocBuilderTemplate();
         builderTemplate.checkAndInit(config);
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
-        RpcDocBuildTemplate docBuildTemplate = new RpcDocBuildTemplate();
+        IDocBuildTemplate docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework());
         List<RpcApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder);
         if (config.isAllInOne()) {
-            builderTemplate.buildAllInOne(apiDocList, config, javaProjectBuilder, RPC_ALL_IN_ONE_ADOC_TPL, INDEX_DOC);
+            String docName = builderTemplate.allInOneDocName(config, INDEX_DOC, ".adoc");
+            builderTemplate.buildAllInOne(apiDocList, config, javaProjectBuilder, RPC_ALL_IN_ONE_ADOC_TPL, docName);
         } else {
             builderTemplate.buildApiDoc(apiDocList, config, RPC_API_DOC_ADOC_TPL, API_EXTENSION);
-            builderTemplate.buildErrorCodeDoc(config, ERROR_CODE_LIST_ADOC_TPL, ERROR_CODE_LIST_ADOC);
+            builderTemplate.buildErrorCodeDoc(config, ERROR_CODE_LIST_ADOC_TPL, ERROR_CODE_LIST_ADOC, javaProjectBuilder);
         }
     }
 

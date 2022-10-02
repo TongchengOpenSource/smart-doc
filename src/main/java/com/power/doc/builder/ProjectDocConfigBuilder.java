@@ -1,7 +1,7 @@
 /*
  * smart-doc https://github.com/shalousun/smart-doc
  *
- * Copyright (C) 2018-2021 smart-doc
+ * Copyright (C) 2018-2022 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -27,12 +27,17 @@ import com.power.common.util.CollectionUtil;
 import com.power.common.util.StringUtil;
 import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.constants.HighlightStyle;
+import com.power.doc.helper.JavaProjectBuilderHelper;
 import com.power.doc.model.*;
 import com.power.doc.utils.JavaClassUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
+import com.thoughtworks.qdox.directorywalker.DirectoryScanner;
+import com.thoughtworks.qdox.directorywalker.SuffixFilter;
 import com.thoughtworks.qdox.model.JavaClass;
+import com.thoughtworks.qdox.parser.ParseException;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
@@ -49,6 +54,8 @@ public class ProjectDocConfigBuilder {
     private JavaProjectBuilder javaProjectBuilder;
 
     private Map<String, JavaClass> classFilesMap = new ConcurrentHashMap<>();
+
+    private Map<String, Class<? extends Enum>> enumClassMap = new ConcurrentHashMap<>();
 
     private Map<String, CustomField> customRespFieldMap = new ConcurrentHashMap<>();
 
@@ -69,7 +76,7 @@ public class ProjectDocConfigBuilder {
         }
         this.apiConfig = apiConfig;
         if (Objects.isNull(javaProjectBuilder)) {
-            javaProjectBuilder = new JavaProjectBuilder();
+            javaProjectBuilder = JavaProjectBuilderHelper.create();
         }
 
         if (StringUtil.isEmpty(apiConfig.getServerUrl())) {
@@ -90,8 +97,45 @@ public class ProjectDocConfigBuilder {
         this.initCustomRequestFieldsMap(apiConfig);
         this.initReplaceClassMap(apiConfig);
         this.initConstants(apiConfig);
+        this.initDict(apiConfig);
         this.checkBodyAdvice(apiConfig.getRequestBodyAdvice());
         this.checkBodyAdvice(apiConfig.getResponseBodyAdvice());
+    }
+
+    private void initDict(ApiConfig apiConfig) {
+        if (Objects.isNull(enumClassMap) || enumClassMap.size() == 0) {
+            return;
+        }
+        List<ApiDataDictionary> dataDictionaries = apiConfig.getDataDictionaries();
+        if (Objects.isNull(dataDictionaries)) {
+            dataDictionaries = new ArrayList<>();
+        }
+
+        for (ApiDataDictionary dataDictionary : dataDictionaries) {
+            dataDictionary.setEnumImplementSet(getEnumImplementsByInterface(dataDictionary.getEnumClass()));
+        }
+
+        List<ApiErrorCodeDictionary> errorCodeDictionaries = apiConfig.getErrorCodeDictionaries();
+        if (Objects.isNull(errorCodeDictionaries)) {
+            errorCodeDictionaries = new ArrayList<>();
+        }
+
+        for (ApiErrorCodeDictionary errorCodeDictionary : errorCodeDictionaries) {
+            errorCodeDictionary.setEnumImplementSet(getEnumImplementsByInterface(errorCodeDictionary.getEnumClass()));
+        }
+    }
+
+    private Set<Class<? extends Enum>> getEnumImplementsByInterface(Class<?> enumClass) {
+        if (!enumClass.isInterface()) {
+            return Collections.emptySet();
+        }
+        Set<Class<? extends Enum>> set = new HashSet<>();
+        enumClassMap.forEach((k, v) -> {
+            if (enumClass.isAssignableFrom(v)) {
+                set.add(v);
+            }
+        });
+        return set;
     }
 
     public JavaClass getClassByName(String simpleName) {
@@ -120,15 +164,41 @@ public class ProjectDocConfigBuilder {
                 String strPath = path.getPath();
                 if (StringUtil.isNotEmpty(strPath)) {
                     strPath = strPath.replace("\\", "/");
-                    builder.addSourceTree(new File(strPath));
+                    loadJavaSource(strPath, builder);
                 }
             }
         }
     }
 
+    private void loadJavaSource(String strPath, JavaProjectBuilder builder) {
+        DirectoryScanner scanner = new DirectoryScanner(new File(strPath));
+        scanner.addFilter(new SuffixFilter(".java"));
+        scanner.scan(currentFile -> {
+            try {
+                builder.addSource(currentFile);
+            } catch (ParseException | IOException e) {
+                log.warning(e.getMessage());
+            }
+        });
+    }
+
     private void initClassFilesMap() {
         Collection<JavaClass> javaClasses = javaProjectBuilder.getClasses();
         for (JavaClass cls : javaClasses) {
+            if (cls.isEnum()) {
+                Class enumClass;
+                ClassLoader classLoader = apiConfig.getClassLoader();
+                try {
+                    if (Objects.isNull(classLoader)) {
+                        enumClass = Class.forName(cls.getFullyQualifiedName());
+                    } else {
+                        enumClass = classLoader.loadClass(cls.getFullyQualifiedName());
+                    }
+                    enumClassMap.put(cls.getFullyQualifiedName(), enumClass);
+                } catch (ClassNotFoundException e) {
+                    continue;
+                }
+            }
             classFilesMap.put(cls.getFullyQualifiedName(), cls);
         }
     }
@@ -136,7 +206,7 @@ public class ProjectDocConfigBuilder {
     private void initCustomResponseFieldsMap(ApiConfig config) {
         if (CollectionUtil.isNotEmpty(config.getCustomResponseFields())) {
             for (CustomField field : config.getCustomResponseFields()) {
-                customRespFieldMap.put(field.getName(), field);
+                customRespFieldMap.put(field.getOwnerClassName() + "." + field.getName(), field);
             }
         }
     }
@@ -144,7 +214,7 @@ public class ProjectDocConfigBuilder {
     private void initCustomRequestFieldsMap(ApiConfig config) {
         if (CollectionUtil.isNotEmpty(config.getCustomRequestFields())) {
             for (CustomField field : config.getCustomRequestFields()) {
-                customReqFieldMap.put(field.getName(), field);
+                customReqFieldMap.put(field.getOwnerClassName() + "." + field.getName(), field);
             }
         }
     }
@@ -193,31 +263,41 @@ public class ProjectDocConfigBuilder {
         }
     }
 
-    /**
-     * 设置高亮样式
-     */
     private void setHighlightStyle() {
         String style = apiConfig.getStyle();
+        if (DocGlobalConstants.HIGH_LIGHT_DEFAULT_STYLE.equals(style)) {
+            // use local css file
+            apiConfig.setHighlightStyleLink(DocGlobalConstants.HIGH_LIGHT_CSS_DEFAULT);
+            return;
+        }
         if (HighlightStyle.containsStyle(style)) {
+            apiConfig.setHighlightStyleLink(String.format(DocGlobalConstants.HIGH_LIGHT_CSS_URL_FORMAT, style));
             return;
         }
         Random random = new Random();
-        if ("randomLight".equals(style)) {
+        if (DocGlobalConstants.HIGH_LIGHT_CSS_RANDOM_LIGHT.equals(style)) {
             // Eliminate styles that do not match the template
             style = HighlightStyle.randomLight(random);
             if (HighlightStyle.containsStyle(style)) {
                 apiConfig.setStyle(style);
+                apiConfig.setHighlightStyleLink(String.format(DocGlobalConstants.HIGH_LIGHT_CSS_URL_FORMAT, style));
             } else {
-                apiConfig.setStyle("null");
+                apiConfig.setStyle(null);
             }
-        } else if ("randomDark".equals(style)) {
-            apiConfig.setStyle(HighlightStyle.randomDark(random));
+        } else if (DocGlobalConstants.HIGH_LIGHT_CSS_RANDOM_DARK.equals(style)) {
+            style = HighlightStyle.randomDark(random);
+            if (DocGlobalConstants.HIGH_LIGHT_DEFAULT_STYLE.equals(style)) {
+                apiConfig.setHighlightStyleLink(DocGlobalConstants.HIGH_LIGHT_CSS_DEFAULT);
+            } else {
+                apiConfig.setHighlightStyleLink(String.format(DocGlobalConstants.HIGH_LIGHT_CSS_URL_FORMAT, style));
+            }
+            apiConfig.setStyle(style);
         } else {
             // Eliminate styles that do not match the template
-            apiConfig.setStyle("null");
+            apiConfig.setStyle(null);
+
         }
     }
-
 
     public JavaProjectBuilder getJavaProjectBuilder() {
         return javaProjectBuilder;
@@ -247,6 +327,10 @@ public class ProjectDocConfigBuilder {
 
     public Map<String, String> getReplaceClassMap() {
         return replaceClassMap;
+    }
+
+    public Map<String, Class<? extends Enum>> getEnumClassMap() {
+        return enumClassMap;
     }
 
     public Map<String, String> getConstantsMap() {

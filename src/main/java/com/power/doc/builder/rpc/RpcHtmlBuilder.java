@@ -1,7 +1,7 @@
 /*
  * smart-doc https://github.com/shalousun/smart-doc
  *
- * Copyright (C) 2018-2021 smart-doc
+ * Copyright (C) 2018-2022 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -24,16 +24,24 @@ package com.power.doc.builder.rpc;
 
 import com.power.common.util.FileUtil;
 import com.power.doc.builder.ProjectDocConfigBuilder;
+import com.power.doc.factory.BuildTemplateFactory;
+import com.power.doc.helper.JavaProjectBuilderHelper;
 import com.power.doc.model.ApiConfig;
 import com.power.doc.model.rpc.RpcApiDoc;
-import com.power.doc.template.RpcDocBuildTemplate;
+import com.power.doc.template.IDocBuildTemplate;
 import com.power.doc.utils.BeetlTemplateUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import org.beetl.core.Template;
 
 import java.util.List;
 
-import static com.power.doc.constants.DocGlobalConstants.*;
+import static com.power.doc.constants.DocGlobalConstants.ALL_IN_ONE_CSS;
+import static com.power.doc.constants.DocGlobalConstants.ALL_IN_ONE_CSS_OUT;
+import static com.power.doc.constants.DocGlobalConstants.FILE_SEPARATOR;
+import static com.power.doc.constants.DocGlobalConstants.FONT_STYLE;
+import static com.power.doc.constants.DocGlobalConstants.JQUERY;
+import static com.power.doc.constants.DocGlobalConstants.RPC_ALL_IN_ONE_HTML_TPL;
+import static com.power.doc.constants.DocGlobalConstants.RPC_ALL_IN_ONE_SEARCH_TPL;
 
 /**
  * @author yu 2020/5/17.
@@ -53,7 +61,7 @@ public class RpcHtmlBuilder {
      * @param config config
      */
     public static void buildApiDoc(ApiConfig config) {
-        JavaProjectBuilder javaProjectBuilder = new JavaProjectBuilder();
+        JavaProjectBuilder javaProjectBuilder = JavaProjectBuilderHelper.create();
         buildApiDoc(config, javaProjectBuilder);
     }
 
@@ -68,11 +76,13 @@ public class RpcHtmlBuilder {
         RpcDocBuilderTemplate builderTemplate = new RpcDocBuilderTemplate();
         builderTemplate.checkAndInit(config);
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
-        RpcDocBuildTemplate docBuildTemplate = new RpcDocBuildTemplate();
+        IDocBuildTemplate docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework());
         List<RpcApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder);
         Template indexCssTemplate = BeetlTemplateUtil.getByName(ALL_IN_ONE_CSS);
-        FileUtil.nioWriteFile(indexCssTemplate.render(), config.getOutPath() + FILE_SEPARATOR + ALL_IN_ONE_CSS);
+        FileUtil.nioWriteFile(indexCssTemplate.render(), config.getOutPath() + FILE_SEPARATOR + ALL_IN_ONE_CSS_OUT);
+        builderTemplate.copyJarFile("css/" + FONT_STYLE, config.getOutPath() + FILE_SEPARATOR + FONT_STYLE);
+        builderTemplate.copyJarFile("js/" + JQUERY, config.getOutPath() + FILE_SEPARATOR + JQUERY);
         builderTemplate.buildAllInOne(apiDocList, config, javaProjectBuilder, RPC_ALL_IN_ONE_HTML_TPL, INDEX_HTML);
-        builderTemplate.buildSearchJs(apiDocList, config, RPC_ALL_IN_ONE_SEARCH_TPL, SEARCH_JS);
+        builderTemplate.buildSearchJs(apiDocList, config, javaProjectBuilder, RPC_ALL_IN_ONE_SEARCH_TPL, SEARCH_JS);
     }
 }

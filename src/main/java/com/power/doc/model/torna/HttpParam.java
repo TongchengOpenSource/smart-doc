@@ -1,7 +1,7 @@
 /*
  * smart-doc https://github.com/shalousun/smart-doc
  *
- * Copyright (C) 2018-2021 smart-doc
+ * Copyright (C) 2018-2022 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -37,17 +37,19 @@ public class HttpParam {
     private String example;
     private String description;
     private String parentId;
-    private List<EnumInfo> enumInfo;
+    private EnumInfo enumInfo;
     private String code;
     private String msg;
     private String solution;
     private List<HttpParam> children;
 
-    public List<EnumInfo> getEnumInfo() {
+    private Integer orderIndex;
+
+    public EnumInfo getEnumInfo() {
         return enumInfo;
     }
 
-    public HttpParam setEnumInfo(List<EnumInfo> enumInfo) {
+    public HttpParam setEnumInfo(EnumInfo enumInfo) {
         this.enumInfo = enumInfo;
         return this;
     }
@@ -146,5 +148,14 @@ public class HttpParam {
 
     public void setChildren(List<HttpParam> children) {
         this.children = children;
+    }
+
+    public Integer getOrderIndex() {
+        return orderIndex;
+    }
+
+    public HttpParam setOrderIndex(Integer orderIndex) {
+        this.orderIndex = orderIndex;
+        return this;
     }
 }

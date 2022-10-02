@@ -14,16 +14,23 @@ ${revisionLog.version}|${revisionLog.revisionTime}|${revisionLog.status}|${revis
 
 
 <%
-for(api in apiDocList){
+for(apiGroup in apiDocList){
+%>
+<%
+if(!apiDocListOnlyHasDefaultGroup) {%>
+# ${apiGroup.group}
+<%}%>
+<%
+for(api in apiGroup.childrenApiDocs){
 %>
 ## ${api.desc}
 <%
 for(doc in api.list){
 %>
 <%if(doc.deprecated){%>
-### ~~${doc.desc}~~
+### ~~${htmlEscape(doc.desc)}~~
 <%}else{%>
-### ${doc.desc}
+### ${htmlEscape(doc.desc)}
 <%}%>
 **URL:** ${doc.url}
 
@@ -108,30 +115,45 @@ ${doc.responseUsage}
 
 <% } %>
 <% } %>
+<% } %>
 <%if(isNotEmpty(errorCodeList)){%>
+<%if(apiDocListOnlyHasDefaultGroup) { %>
 ## ${errorListTitle}
+<% } else { %>
+# ${errorListTitle}
+<% } %>
 Error code |Description
 ---|---
 <%
 for(error in errorCodeList){
 %>
-${error.value}|${error.desc}
+${error.value}|${htmlEscape(error.desc)}
 <%}%>
 <%}%>
 
 <%if(isNotEmpty(dictList)){%>
+<%if(apiDocListOnlyHasDefaultGroup) { %>
 ## ${dictListTitle}
+<% } else { %>
+# ${dictListTitle}
+<% } %>
+
 <%
 for(dict in dictList){
 %>
+
+<%if(apiDocListOnlyHasDefaultGroup) { %>
 ### ${dict.title}
+<% } else { %>
+## ${dict.title}
+<% } %>
 
 Code |Type|Description
 ---|---|---
 <%
 for(dataDict in dict.dataDictList){
 %>
-${dataDict.value}|${dataDict.type}|${dataDict.desc}
+${dataDict.value}|${dataDict.type}|${htmlEscape(dataDict.desc)}
 <%}%>
 <%}%>
 <%}%>

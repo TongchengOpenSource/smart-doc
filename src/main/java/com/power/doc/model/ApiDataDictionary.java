@@ -1,7 +1,7 @@
 /*
  * smart-doc
  *
- * Copyright (C) 2018-2021 smart-doc
+ * Copyright (C) 2018-2022 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -24,10 +24,13 @@ package com.power.doc.model;
 
 import com.power.common.model.EnumDictionary;
 import com.power.common.util.EnumUtil;
+import com.power.common.util.StringUtil;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 /**
  * @author yu 2019/10/31.
@@ -42,7 +45,13 @@ public class ApiDataDictionary {
     /**
      * enumClass
      */
-    private Class<? extends Enum> enumClass;
+    private Class<?> enumClass;
+
+    /**
+     * enum implements
+     * when enumClass is interface
+     */
+    private Set<Class<? extends Enum>> enumImplementSet;
 
     /**
      * enum class name
@@ -77,11 +86,20 @@ public class ApiDataDictionary {
         return enumClass;
     }
 
-    public ApiDataDictionary setEnumClass(Class enumClass) {
+    public ApiDataDictionary setEnumClass(Class<?> enumClass) {
         this.enumClass = enumClass;
-        if (StringUtils.isBlank(this.enumClassName)) {
+        if (StringUtils.isBlank(this.enumClassName) && Objects.nonNull(enumClass)) {
             this.enumClassName = enumClass.getSimpleName();
         }
+        return this;
+    }
+
+    public Set<Class<? extends Enum>> getEnumImplementSet() {
+        return enumImplementSet;
+    }
+
+    public ApiDataDictionary setEnumImplementSet(Set<Class<? extends Enum>> enumImplementSet) {
+        this.enumImplementSet = enumImplementSet;
         return this;
     }
 
@@ -112,9 +130,9 @@ public class ApiDataDictionary {
         return this;
     }
 
-    public List<EnumDictionary> getEnumDataDict() {
-        if (this.enumClass != null) {
-            return EnumUtil.getEnumInformation(this.enumClass, this.getCodeField(),
+    public List<EnumDictionary> getEnumDataDict(Class enumClass) {
+        if (Objects.nonNull(enumClass)) {
+            return EnumUtil.getEnumInformation(enumClass, this.getCodeField(),
                     this.getDescField());
         } else {
             return new ArrayList<>();

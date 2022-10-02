@@ -17,26 +17,33 @@ for(revisionLog in revisionLogList){
 
 
 <%
-for(api in apiDocList){
+for(apiGroup in apiDocList){
 %>
-== ${api.desc}
+<%
+if(!apiDocListOnlyHasDefaultGroup) {%>
+== ${apiGroup.group}
+<%} %>
+<%
+for(api in apiGroup.childrenApiDocs){
+%>
+=== ${api.desc}
 <%
 for(doc in api.list){
 %>
 <%if(doc.deprecated){%>
-=== [line-through]#${doc.desc}#
+==== [line-through]#${doc.desc}#
 <%}else{%>
-=== ${doc.desc}
+==== ${doc.desc}
 <%}%>
-*URL:* ${doc.url}
+*URL:* `${doc.url}`
 
-*Type:* ${doc.type}
+*Type:* `${doc.type}`
 
 <%if(isNotEmpty(doc.author)){%>
 *Author:* ${doc.author}
 <%}%>
 
-*Content-Type:* ${doc.contentType}
+*Content-Type:* `${doc.contentType}`
 
 <%if(isNotEmpty(doc.headers)){%>
 *Request-headers:*
@@ -124,8 +131,13 @@ ${doc.responseUsage}
 
 <% } %>
 <% } %>
+<% } %>
 <%if(isNotEmpty(errorCodeList)){%>
+<%if(apiDocListOnlyHasDefaultGroup) { %>
+=== ${errorListTitle}
+<% } else { %>
 == ${errorListTitle}
+<% } %>
 
 [width="100%",options="header"]
 [stripes=even]
@@ -140,7 +152,13 @@ for(error in errorCodeList){
 <%}%>
 
 <%if(isNotEmpty(dictList)){%>
+
+<%if(apiDocListOnlyHasDefaultGroup) { %>
+=== ${dictListTitle}
+<% } else { %>
 == ${dictListTitle}
+<% } %>
+
 <%
 for(dict in dictList){
 %>

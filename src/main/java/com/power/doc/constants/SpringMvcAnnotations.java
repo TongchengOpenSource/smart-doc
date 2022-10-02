@@ -1,7 +1,7 @@
 /*
  * smart-doc https://github.com/shalousun/smart-doc
  *
- * Copyright (C) 2018-2021 smart-doc
+ * Copyright (C) 2018-2022 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -50,4 +50,10 @@ public interface SpringMvcAnnotations {
     String REST_CONTROLLER = "RestController";
 
     String PATH_VARIABLE = "PathVariable";
+
+    String SESSION_ATTRIBUTE = "SessionAttribute";
+
+    String REQUEST_ATTRIBUTE="RequestAttribute";
+
+    String REQUEST_BODY_FULLY = "org.springframework.web.bind.annotation.RequestBody";
 }

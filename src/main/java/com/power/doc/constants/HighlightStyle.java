@@ -1,7 +1,7 @@
 /*
  * smart-doc https://github.com/shalousun/smart-doc
  *
- * Copyright (C) 2018-2021 smart-doc
+ * Copyright (C) 2018-2022 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -229,7 +229,7 @@ public class HighlightStyle {
 
 
     /**
-     * 随机一个 light style
+     * Randomly select a light style
      *
      * @param random Random
      * @return String of random
@@ -239,7 +239,7 @@ public class HighlightStyle {
     }
 
     /**
-     * 随机一个 dark style
+     * Randomly select a dark style
      *
      * @param random Random
      * @return String of random
@@ -249,7 +249,7 @@ public class HighlightStyle {
     }
 
     /**
-     * 随机一个 style
+     * Randomly select a style
      *
      * @param random Random
      * @return String of random
@@ -271,10 +271,9 @@ public class HighlightStyle {
     }
 
     /**
-     * |
-     * 高亮样式是否存在
+     * Does the highlight style exist?
      *
-     * @param style 高亮样式
+     * @param style Highlight style
      * @return boolean
      */
     public static boolean containsStyle(String style) {

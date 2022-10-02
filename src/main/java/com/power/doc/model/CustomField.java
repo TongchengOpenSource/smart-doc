@@ -1,7 +1,7 @@
 /*
  * smart-doc
  *
- * Copyright (C) 2018-2021 smart-doc
+ * Copyright (C) 2018-2022 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -21,6 +21,8 @@
  * under the License.
  */
 package com.power.doc.model;
+
+import java.util.Map;
 
 /**
  * @author xingzi
@@ -48,6 +50,17 @@ public class CustomField {
     private boolean require;
 
     private boolean ignore;
+
+    private String replaceName;
+
+    public String getReplaceName() {
+        return replaceName;
+    }
+
+    public CustomField setReplaceName(String replaceName) {
+        this.replaceName = replaceName;
+        return this;
+    }
 
     public static CustomField builder() {
         return new CustomField();
@@ -105,5 +118,14 @@ public class CustomField {
     public CustomField setIgnore(boolean ignore) {
         this.ignore = ignore;
         return this;
+    }
+
+    public static CustomField nameEquals(String fieldName , Map<String,CustomField> customFieldMap){
+        for(Map.Entry<String,CustomField> c : customFieldMap.entrySet()){
+            if(fieldName.equals(c.getKey())){
+                return c.getValue();
+            }
+        }
+        return null;
     }
 }

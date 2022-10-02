@@ -1,7 +1,7 @@
 /*
  * smart-doc
  *
- * Copyright (C) 2018-2021 smart-doc
+ * Copyright (C) 2018-2022 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -25,9 +25,14 @@ package com.power.doc.utils;
 import com.power.common.util.StringUtil;
 import com.power.doc.filter.ReturnTypeProcessor;
 import com.power.doc.model.ApiReturn;
+import com.thoughtworks.qdox.model.JavaAnnotation;
+import com.thoughtworks.qdox.model.JavaClass;
 
+import javax.annotation.Nonnull;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Stack;
 
 /**
@@ -145,6 +150,9 @@ public class DocClassUtil {
      * @return array of string
      */
     public static String[] getMapKeyValueType(String gName) {
+        if (StringUtil.isEmpty(gName)) {
+            return new String[0];
+        }
         if (gName.contains("<")) {
             String[] arr = new String[2];
             String key = gName.substring(gName.indexOf("<") + 1, gName.indexOf(","));
@@ -174,54 +182,70 @@ public class DocClassUtil {
         if (javaTypeName.contains("[]")) {
             return "array";
         }
+        javaTypeName = javaTypeName.toLowerCase();
         switch (javaTypeName) {
-            case "java.lang.String":
+            case "java.lang.string":
             case "string":
             case "char":
+            case "java.util.date":
             case "date":
-            case "java.util.UUID":
+            case "java.util.uuid":
             case "uuid":
             case "localdatetime":
+            case "java.time.localdatetime":
+            case "java.time.localdate":
+            case "java.time.localtime":
+            case "java.time.year":
+            case "java.time.yearmonth":
+            case "java.time.monthday":
+            case "java.time.period":
             case "localdate":
+            case "offsetdatetime":
             case "localtime":
             case "timestamp":
             case "zoneddatetime":
+            case "period":
             case "java.time.zoneddatetime":
-            case "java.time.ZonedDateTime":
+            case "java.time.offsetdatetime":
+            case "java.lang.character":
+            case "character":
+            case "org.bson.types.objectid":
                 return "string";
-            case "java.util.List":
+            case "java.util.list":
             case "list":
-            case "java.util.Set":
+            case "java.util.set":
             case "set":
-            case "java.util.LinkedList":
+            case "java.util.linkedlist":
             case "linkedlist":
-            case "java.util.ArrayList":
+            case "java.util.arraylist":
             case "arraylist":
-            case "java.util.TreeSet":
+            case "java.util.treeset":
             case "treeset":
                 return "array";
-            case "java.util.Byte":
+            case "java.lang.byte":
             case "byte":
                 return "int8";
-            case "java.lang.Integer":
+            case "java.lang.integer":
             case "integer":
             case "int":
                 return "int32";
             case "short":
-            case "java.lang.Short":
+            case "java.lang.short":
                 return "int16";
             case "double":
+            case "java.lang.double":
                 return "double";
-            case "java.lang.Long":
+            case "java.lang.long":
             case "long":
                 return "int64";
-            case "java.lang.Float":
+            case "java.lang.float":
             case "float":
                 return "float";
+            case "java.math.bigdecimal":
             case "bigdecimal":
             case "biginteger":
                 return "number";
-            case "java.lang.Boolean":
+            case "java.lang.boolean":
             case "boolean":
                 return "boolean";
             case "map":
@@ -255,7 +279,7 @@ public class DocClassUtil {
     public static String rewriteRequestParam(String typeName) {
         switch (typeName) {
             case "org.springframework.data.domain.Pageable":
-                return "org.springframework.data.domain.PageRequest";
+                return "com.power.doc.model.framework.PageableAsQueryParam";
             default:
                 return typeName;
         }
@@ -272,5 +296,28 @@ public class DocClassUtil {
             }
         }
         return stack.isEmpty();
+    }
+
+    /**
+     * Get class annotations
+     * @param cls JavaClass
+     * @return List of JavaAnnotation
+     */
+    public static List<JavaAnnotation> getAnnotations(JavaClass cls) {
+        JavaClass superClass = cls.getSuperJavaClass();
+        List<JavaAnnotation> classAnnotations = new ArrayList<>();
+        if (Objects.nonNull(superClass)) {
+            classAnnotations.addAll(superClass.getAnnotations());
+        }
+        classAnnotations.addAll(cls.getAnnotations());
+        return classAnnotations;
+    }
+
+    public static <T> T newInstance(@Nonnull Class<T> classWithNoArgsConstructor) {
+        try {
+            return classWithNoArgsConstructor.getConstructor().newInstance();
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | InstantiationException e) {
+            throw new IllegalArgumentException("Class must have the NoArgsConstructor");
+        }
     }
 }

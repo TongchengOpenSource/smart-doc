@@ -1,7 +1,7 @@
 /*
  * smart-doc https://github.com/shalousun/smart-doc
  *
- * Copyright (C) 2018-2021 smart-doc
+ * Copyright (C) 2018-2022 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -23,10 +23,16 @@
 package com.power.doc.utils;
 
 import com.power.common.util.CollectionUtil;
+import com.power.common.util.StringUtil;
+import com.power.doc.model.ApiMethodReqParam;
 import com.power.doc.model.ApiParam;
+import com.power.doc.model.ApiReqParam;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author yu 2020/8/8.
@@ -49,7 +55,7 @@ public class ApiParamTreeUtil {
         }
         for (ApiParam apiParam : params) {
             // remove pre of field
-            apiParam.setChildren(getChild(apiParam.getId(), apiParamList));
+            apiParam.setChildren(getChild(apiParam.getId(), apiParamList, 0));
         }
         return params;
     }
@@ -59,22 +65,87 @@ public class ApiParamTreeUtil {
      *
      * @param id           param id
      * @param apiParamList List of ApiParam
+     * @param counter      invoked counter
      * @return List of ApiParam
      */
-    private static List<ApiParam> getChild(int id, List<ApiParam> apiParamList) {
+    private static List<ApiParam> getChild(int id, List<ApiParam> apiParamList, int counter) {
         List<ApiParam> childList = new ArrayList<>();
+        if (counter > 7) {
+            return childList;
+        }
         for (ApiParam param : apiParamList) {
             if (param.getPid() == id) {
                 childList.add(param);
             }
         }
+        counter++;
         for (ApiParam param : childList) {
-            param.setChildren(getChild(param.getId(), apiParamList));
+            param.setChildren(getChild(param.getId(), apiParamList, counter));
         }
         if (childList.size() == 0) {
             return new ArrayList<>(0);
         }
         return childList;
+    }
+
+    /**
+     * buildMethodReqParam handle configParam
+     *
+     * @param paramList          unConfigParam
+     * @param queryReqParamMap   configQueryParam
+     * @param pathReqParamMap    configPathParam
+     * @param requestBodyCounter hasRequestBody
+     * @return ApiMethodReqParam
+     */
+    public static ApiMethodReqParam buildMethodReqParam(List<ApiParam> paramList, final Map<String, ApiReqParam> queryReqParamMap,
+                                                        final Map<String, ApiReqParam> pathReqParamMap, int requestBodyCounter) {
+        List<ApiParam> pathParams = new ArrayList<>();
+        List<ApiParam> queryParams = new ArrayList<>();
+        List<ApiParam> bodyParams = new ArrayList<>();
+        for (ApiParam param : paramList) {
+            param.setValue(StringUtil.removeDoubleQuotes(param.getValue()));
+            if (param.isPathParam()) {
+                if (pathReqParamMap.containsKey(param.getField())) {
+                    param.setConfigParam(true).setValue(pathReqParamMap.get(param.getField()).getValue());
+                }
+                param.setId(pathParams.size() + 1);
+                pathParams.add(param);
+            } else if (param.isQueryParam() || requestBodyCounter < 1) {
+                if (queryReqParamMap.containsKey(param.getField())) {
+                    param.setConfigParam(true).setValue(queryReqParamMap.get(param.getField()).getValue());
+                }
+                param.setId(queryParams.size() + 1);
+                queryParams.add(param);
+            } else {
+                param.setId(bodyParams.size() + 1);
+                bodyParams.add(param);
+            }
+        }
+
+        final Set<String> queryParamSet = queryParams.stream().map(ApiParam::getField).collect(Collectors.toSet());
+        for (ApiReqParam value : queryReqParamMap.values()) {
+            if (queryParamSet.contains(value.getName())) {
+                continue;
+            }
+            final ApiParam apiParam = ApiReqParam.convertToApiParam(value)
+                    .setQueryParam(true).setId(queryParams.size() + 1);
+            queryParams.add(apiParam);
+        }
+
+        final Set<String> pathParamSet = pathParams.stream().map(ApiParam::getField).collect(Collectors.toSet());
+        for (ApiReqParam value : pathReqParamMap.values()) {
+            if (pathParamSet.contains(value.getName())) {
+                continue;
+            }
+            final ApiParam apiParam = ApiReqParam.convertToApiParam(value)
+                    .setPathParam(true).setId(pathParams.size() + 1);
+            pathParams.add(apiParam);
+        }
+
+        return ApiMethodReqParam.builder()
+                .setRequestParams(bodyParams)
+                .setPathParams(pathParams)
+                .setQueryParams(queryParams);
     }
 
 }

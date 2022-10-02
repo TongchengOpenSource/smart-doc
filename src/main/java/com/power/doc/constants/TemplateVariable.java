@@ -1,7 +1,7 @@
 /*
  * smart-doc https://github.com/shalousun/smart-doc
  *
- * Copyright (C) 2018-2021 smart-doc
+ * Copyright (C) 2018-2022 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -30,7 +30,9 @@ public enum TemplateVariable {
     NAME("name"),
     LIST("list"),
     API_DOC_LIST("apiDocList"),
+    API_DOC_LIST_ONLY_HAS_DEFAULT_GROUP("apiDocListOnlyHasDefaultGroup"),
     ERROR_CODE_LIST("errorCodeList"),
+    ERROR_CODE_ORDER("errorCodeListOrder"),
     VERSION_LIST("revisionLogList"),
     DEPENDENCY_LIST("dependencyList"),
     HOME_PAGE("homePage"),
@@ -51,10 +53,14 @@ public enum TemplateVariable {
     RPC_CONSUMER_CONFIG("consumerConfigExample"),
     REQUEST_EXAMPLE("isRequestExample"),
     RESPONSE_EXAMPLE("isResponseExample"),
+    DISPLAY_REQUEST_PARAMS("displayRequestParams"),
+    DISPLAY_RESPONSE_PARAMS("displayResponseParams"),
     RESPONSE_LIST("respList"),
     ORDER("order"),
     INDEX_ALIAS("alias"),
-    DIRECTORY_TREE("directoryTree");
+    DIRECTORY_TREE("directoryTree"),
+    HIGH_LIGHT_CSS_LINK("highlightCssLink"),
+    CSS_CND("css_cdn");
 
     private String variable;
 

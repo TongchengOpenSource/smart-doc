@@ -1,7 +1,7 @@
 /*
  * smart-doc https://github.com/shalousun/smart-doc
  *
- * Copyright (C) 2018-2021 smart-doc
+ * Copyright (C) 2018-2022 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -22,7 +22,9 @@
  */
 package com.power.doc.model.request;
 
+import com.power.common.util.StringUtil;
 import com.power.doc.model.FormData;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 
@@ -64,6 +66,15 @@ public class ApiRequestExample {
 
     public ApiRequestExample setJsonBody(String jsonBody) {
         this.jsonBody = jsonBody;
+        return this;
+    }
+
+    public ApiRequestExample addJsonBody(String jsonBody) {
+        if (StringUtil.isNotEmpty(jsonBody)) {
+            this.jsonBody = StringUtils.joinWith("&", this.jsonBody, jsonBody);
+        } else {
+            this.jsonBody = jsonBody;
+        }
         return this;
     }
 

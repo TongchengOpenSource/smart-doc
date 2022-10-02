@@ -1,7 +1,7 @@
 /*
  * smart-doc
  *
- * Copyright (C) 2018-2021 smart-doc
+ * Copyright (C) 2018-2022 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -22,35 +22,47 @@
  */
 package com.power.doc.model;
 
+import com.power.doc.constants.ApiReqParamInTypeEnum;
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.Objects;
 
 /**
  * Description:
- * http request header info model
+ * http request param info model
  *
  * @author yu 2018/06/18.
+ * @author chenqi  2021/07/15
  */
-public class ApiReqHeader {
+public class ApiReqParam {
 
     /**
-     * Request header name
+     * Request param name
      */
     private String name;
 
     /**
-     * Request header type
+     * Request param type
      */
     private String type;
 
     /**
-     * request header defaultValue
+     * request param defaultValue
      */
     private String value;
 
     /**
-     * Request header description
+     * Request param description
      */
     private String desc;
+
+    /**
+     * where is param location
+     * default header
+     *
+     * @see ApiReqParamInTypeEnum value
+     */
+    private String paramIn;
 
     /**
      * required flag
@@ -66,20 +78,27 @@ public class ApiReqHeader {
      */
     private String since = "-";
 
-    @Deprecated
-    public static ApiReqHeader header() {
-        return new ApiReqHeader();
-    }
+    /**
+     * @since 2.2.2
+     * Regular expression match request param
+     */
+    private String pathPatterns;
 
-    public static ApiReqHeader builder() {
-        return new ApiReqHeader();
+    /**
+     * @since 2.2.2
+     * Regular expression ignore request param
+     */
+    private String excludePathPatterns;
+
+    public static ApiReqParam builder() {
+        return new ApiReqParam();
     }
 
     public String getName() {
         return name;
     }
 
-    public ApiReqHeader setName(String name) {
+    public ApiReqParam setName(String name) {
         this.name = name;
         return this;
     }
@@ -88,7 +107,7 @@ public class ApiReqHeader {
         return type;
     }
 
-    public ApiReqHeader setType(String type) {
+    public ApiReqParam setType(String type) {
         this.type = type;
         return this;
     }
@@ -97,7 +116,7 @@ public class ApiReqHeader {
         return desc;
     }
 
-    public ApiReqHeader setDesc(String desc) {
+    public ApiReqParam setDesc(String desc) {
         this.desc = desc;
         return this;
     }
@@ -106,7 +125,7 @@ public class ApiReqHeader {
         return required;
     }
 
-    public ApiReqHeader setRequired(boolean required) {
+    public ApiReqParam setRequired(boolean required) {
         this.required = required;
         return this;
     }
@@ -115,7 +134,7 @@ public class ApiReqHeader {
         return since;
     }
 
-    public ApiReqHeader setSince(String since) {
+    public ApiReqParam setSince(String since) {
         this.since = since;
         return this;
     }
@@ -124,8 +143,38 @@ public class ApiReqHeader {
         return value;
     }
 
-    public ApiReqHeader setValue(String value) {
+    public ApiReqParam setValue(String value) {
         this.value = value;
+        return this;
+    }
+
+    public String getPathPatterns() {
+        return pathPatterns;
+    }
+
+    public ApiReqParam setPathPatterns(String pathPatterns) {
+        this.pathPatterns = pathPatterns;
+        return this;
+    }
+
+    public String getExcludePathPatterns() {
+        return excludePathPatterns;
+    }
+
+    public ApiReqParam setExcludePathPatterns(String excludePathPatterns) {
+        this.excludePathPatterns = excludePathPatterns;
+        return this;
+    }
+
+    public String getParamIn() {
+        if (StringUtils.isEmpty(paramIn)) {
+            return ApiReqParamInTypeEnum.HEADER.getValue();
+        }
+        return paramIn;
+    }
+
+    public ApiReqParam setParamIn(String paramIn) {
+        this.paramIn = paramIn;
         return this;
     }
 
@@ -133,7 +182,7 @@ public class ApiReqHeader {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ApiReqHeader that = (ApiReqHeader) o;
+        ApiReqParam that = (ApiReqParam) o;
         return Objects.equals(name, that.name);
     }
 
@@ -153,11 +202,23 @@ public class ApiReqHeader {
                 .append(value).append('\"');
         sb.append(",\"desc\":\"")
                 .append(desc).append('\"');
+        sb.append(",\"paramIn\":")
+                .append(paramIn);
         sb.append(",\"required\":")
                 .append(required);
         sb.append(",\"since\":\"")
                 .append(since).append('\"');
+        sb.append(",\"pathPatterns\":\"")
+                .append(pathPatterns).append('\"');
+        sb.append(",\"excludePathPatterns\":\"")
+                .append(excludePathPatterns).append('\"');
         sb.append('}');
         return sb.toString();
+    }
+
+    public static ApiParam convertToApiParam(ApiReqParam param) {
+        return ApiParam.of().setField(param.getName()).setValue(param.getValue())
+                .setRequired(param.isRequired()).setDesc(param.getDesc()).setConfigParam(true)
+                .setVersion("-").setType(param.getType());
     }
 }

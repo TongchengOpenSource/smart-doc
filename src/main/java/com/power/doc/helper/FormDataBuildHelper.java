@@ -1,7 +1,7 @@
 /*
  * smart-doc https://github.com/shalousun/smart-doc
  *
- * Copyright (C) 2018-2021 smart-doc
+ * Copyright (C) 2018-2022 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -38,7 +38,11 @@ import com.power.doc.utils.JavaClassValidateUtil;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaField;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author yu 2019/12/25.
@@ -55,7 +59,9 @@ public class FormDataBuildHelper {
      * @param pre             pre
      * @return list of FormData
      */
-    public static List<FormData> getFormData(String className, Map<String, String> registryClasses, int counter, ProjectDocConfigBuilder builder, String pre) {
+    public static List<FormData> getFormData(String className, Map<String, String> registryClasses, int counter
+            , ProjectDocConfigBuilder builder, String pre) {
+
         if (StringUtil.isEmpty(className)) {
             throw new RuntimeException("Class name can't be null or empty.");
         }
@@ -92,6 +98,9 @@ public class FormDataBuildHelper {
             if (JavaClassValidateUtil.isArray(gicName)) {
                 gicName = gicName.substring(0, gicName.indexOf("["));
             }
+            if (JavaClassValidateUtil.isPrimitive(gicName)) {
+                pre = pre.substring(0, pre.lastIndexOf("."));
+            }
             formDataList.addAll(getFormData(gicName, registryClasses, counter, builder, pre + "[]"));
         }
         int n = 0;
@@ -101,7 +110,7 @@ public class FormDataBuildHelper {
             String fieldName = field.getName();
             String subTypeName = docField.getFullyQualifiedName();
             String fieldGicName = docField.getGenericCanonicalName();
-            JavaClass javaClass = builder.getJavaProjectBuilder().getClassByName(subTypeName);
+            JavaClass javaClass = field.getType();
             if (field.isStatic() || "this$0".equals(fieldName) ||
                     JavaClassValidateUtil.isIgnoreFieldTypes(subTypeName)) {
                 continue;
@@ -121,13 +130,14 @@ public class FormDataBuildHelper {
                 continue;
             }
             String comment = docField.getComment();
-            if (StringUtil.isNotEmpty(comment)) {
-                comment = DocUtil.replaceNewLineToHtmlBr(comment);
-            }
             if (JavaClassValidateUtil.isFile(fieldGicName)) {
                 FormData formData = new FormData();
                 formData.setKey(pre + fieldName);
                 formData.setType("file");
+                if (fieldGicName.contains("[]") || fieldGicName.endsWith(">")) {
+                    comment = comment + "(array of file)";
+                    formData.setType(DocGlobalConstants.PARAM_TYPE_FILE);
+                }
                 formData.setDescription(comment);
                 formData.setValue("");
                 formDataList.add(formData);
@@ -152,6 +162,9 @@ public class FormDataBuildHelper {
                 formDataList.add(formData);
             } else if (javaClass.isEnum()) {
                 Object value = JavaClassUtil.getEnumValue(javaClass, Boolean.TRUE);
+                if (tagsMap.containsKey(DocTags.MOCK) && StringUtil.isNotEmpty(tagsMap.get(DocTags.MOCK))) {
+                    value = tagsMap.get(DocTags.MOCK);
+                }
                 FormData formData = new FormData();
                 formData.setKey(pre + fieldName);
                 formData.setType("text");

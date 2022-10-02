@@ -1,7 +1,7 @@
 /*
  * smart-doc https://github.com/shalousun/smart-doc
  *
- * Copyright (C) 2018-2021 smart-doc
+ * Copyright (C) 2018-2022 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -22,6 +22,7 @@
  */
 package com.power.doc.builder;
 
+import com.power.doc.helper.JavaProjectBuilderHelper;
 import com.power.doc.model.ApiAllData;
 import com.power.doc.model.ApiConfig;
 import com.thoughtworks.qdox.JavaProjectBuilder;
@@ -56,7 +57,7 @@ public class ApiDataBuilder {
         config.setParamsDataToTree(toTree);
         DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
         builderTemplate.checkAndInitForGetApiData(config);
-        JavaProjectBuilder javaProjectBuilder = new JavaProjectBuilder();
+        JavaProjectBuilder javaProjectBuilder = JavaProjectBuilderHelper.create();
         ApiAllData apiAllData = builderTemplate.getApiData(config, javaProjectBuilder);
         return apiAllData;
     }

@@ -1,7 +1,7 @@
 /*
  * smart-doc https://github.com/shalousun/smart-doc
  *
- * Copyright (C) 2018-2021 smart-doc
+ * Copyright (C) 2018-2022 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -39,6 +39,11 @@ public interface DocAnnotationConstants {
 
     String SHORT_JSON_IGNORE = "JsonIgnore";
 
+    /**
+     * jackson JsonIgnoreProperties annotation
+     */
+    String SHORT_JSON_IGNORE_PROPERTIES = "JsonIgnoreProperties";
+
     String SHORT_JSON_PROPERTY = "JsonProperty";
 
     String SHORT_JSON_FIELD = "JSONField";
@@ -46,6 +51,7 @@ public interface DocAnnotationConstants {
     String REQUIRED_PROP = "required";
 
     String SERIALIZE_PROP = "serialize";
+    String DESERIALIZE_PROP = "deserialize";
 
     String NAME_PROP = "name";
 
@@ -66,4 +72,30 @@ public interface DocAnnotationConstants {
     String JSON_CREATOR = "JsonCreator";
 
     String MAX = "max";
+
+    String SIZE = "size";
+
+    String LENGTH = "length";
+
+    String JSON_PROPERTY = "JsonProperty";
+
+    String JSON_NAMING = "JsonNaming";
+
+    /**
+     * Fastjson JSONType annotation
+     */
+    String SHORT_JSON_TYPE = "JSONType";
+
+    /**
+     * Fastjson JSONType annotation  ignores prop
+     */
+    String IGNORE_PROP = "ignores";
+    /**
+     * Jsr303 param message
+     */
+    String MESSAGE = "message";
+    /**
+     * Jsr303 param regexp
+     */
+    String REGEXP = "regexp";
 }

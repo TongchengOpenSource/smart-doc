@@ -1,7 +1,7 @@
 /*
  * smart-doc
  *
- * Copyright (C) 2018-2021 smart-doc
+ * Copyright (C) 2018-2022 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -26,8 +26,10 @@ import com.power.common.util.CollectionUtil;
 import com.power.doc.constants.DocLanguage;
 import com.power.doc.model.rpc.RpcApiDependency;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -42,6 +44,16 @@ public class ApiConfig {
      * Web server base url
      */
     private String serverUrl;
+
+    /**
+     *  Web server base url for postman
+     */
+    private String serverEnv;
+
+    /**
+     * Path Prefix, eg: Servlet ContextPath
+     */
+    private String pathPrefix = "";
 
     /**
      * Set comments check mode
@@ -67,7 +79,13 @@ public class ApiConfig {
     /**
      * list of Request headers
      */
-    private List<ApiReqHeader> requestHeaders;
+    private List<ApiReqParam> requestHeaders;
+
+    /**
+     * @since 2.2.2
+     * list of Request params
+     */
+    private List<ApiReqParam> requestParams;
 
     /**
      * @since 1.7.5
@@ -98,6 +116,11 @@ public class ApiConfig {
     private String packageFilters;
 
     /**
+     * controller package exclude filters
+     */
+    private String packageExcludeFilters;
+
+    /**
      * List of change log
      */
     private List<RevisionLog> revisionLogs;
@@ -118,12 +141,36 @@ public class ApiConfig {
      * adoc flag
      */
     private boolean adoc;
+    /**
+     * default /src/main/java
+     */
+    private String codePath;
 
+    public String getCodePath() {
+        return codePath;
+    }
+
+    public ApiConfig setCodePath(String codePath) {
+        this.codePath = codePath;
+        return this;
+    }
 
     /**
      * api data dictionary
      */
     private List<ApiDataDictionary> dataDictionaries;
+
+
+    private transient ClassLoader classLoader;
+
+    public ClassLoader getClassLoader() {
+        return classLoader;
+    }
+
+    public ApiConfig setClassLoader(ClassLoader classLoader) {
+        this.classLoader = classLoader;
+        return this;
+    }
 
     /**
      * @since 1.7.9
@@ -151,6 +198,7 @@ public class ApiConfig {
      * project  group
      */
     private String group;
+
     /**
      * @since 1.7.5
      * project name
@@ -277,6 +325,8 @@ public class ApiConfig {
 
     private String style;
 
+    private String highlightStyleLink;
+
     /**
      * create debug page
      */
@@ -300,37 +350,83 @@ public class ApiConfig {
      * Torna appKey
      */
     private String appKey;
+
     /**
      * Torna Secret
      */
     private String secret;
+
     /**
      * Torna appToken
      */
     private String appToken;
+
     /**
      * Torna openUrl
      */
     private String openUrl;
 
     /**
-     * 调试环境名称
+     * Debugging environment name
      */
     private String debugEnvName;
+
     /**
-     * 调试环境请求路径
+     * Url of the debugging environment
      */
     private String debugEnvUrl;
 
     /**
-     * torna调试开关
+     * Show log when pushing document to torna
      */
     private boolean tornaDebug = true;
 
     /**
-     * 推送人
+     * The operator who pushes the document to Torna
      */
     private String author;
+
+    /**
+     * smart-doc supported framework, if not set default is spring,
+     */
+    private String framework;
+
+
+    private List<ApiGroup> groups;
+
+    /**
+     * replace old document while push to torna
+     * @since 2.2.4
+     */
+    private Boolean replace;
+
+    /**
+     * @since 2.2.5
+     */
+    private boolean requestParamsTable = Boolean.TRUE;
+
+    /**
+     * @since 2.2.5
+     */
+    private boolean responseParamsTable = Boolean.TRUE;
+
+
+    public String getPackageExcludeFilters() {
+        return packageExcludeFilters;
+    }
+
+    public ApiConfig setPackageExcludeFilters(String packageExcludeFilters) {
+        this.packageExcludeFilters = packageExcludeFilters;
+        return this;
+    }
+
+    public String getPathPrefix() {
+        return pathPrefix;
+    }
+
+    public void setPathPrefix(String pathPrefix) {
+        this.pathPrefix = pathPrefix;
+    }
 
     public String getAuthor() {
         return author;
@@ -404,18 +500,46 @@ public class ApiConfig {
         this.outPath = outPath;
     }
 
-    public List<ApiReqHeader> getRequestHeaders() {
+    public List<ApiReqParam> getRequestHeaders() {
         return requestHeaders;
     }
 
-    public void setRequestHeaders(List<ApiReqHeader> requestHeaders) {
+    public void setRequestHeaders(List<ApiReqParam> requestHeaders) {
         this.requestHeaders = requestHeaders;
     }
 
-    public void setRequestHeaders(ApiReqHeader... requestHeaders) {
+    public void setRequestHeaders(ApiReqParam... requestHeaders) {
         this.requestHeaders = CollectionUtil.asList(requestHeaders);
-        this.requestHeaders.stream().map(header -> header.setDesc(header.getDesc() + "(Global)"))
-                .collect(Collectors.toList());
+        this.requestHeaders.forEach(header -> header.setDesc(header.getDesc() + "(Global)"));
+    }
+
+    public List<ApiGroup> getGroups() {
+        return groups;
+    }
+
+    public ApiConfig setGroups(List<ApiGroup> groups) {
+        this.groups = groups;
+        return this;
+    }
+
+    public ApiConfig setGroups(ApiGroup... groups) {
+        this.groups = CollectionUtil.asList(groups);
+        return this;
+    }
+
+
+    public List<ApiReqParam> getRequestParams() {
+        return requestParams;
+    }
+
+    public ApiConfig setRequestParams(List<ApiReqParam> requestParams) {
+        this.requestParams = requestParams;
+        return this;
+    }
+
+    public void setRequestParams(ApiReqParam... requestParams) {
+        this.requestParams = CollectionUtil.asList(requestParams);
+        this.requestParams.forEach(param -> param.setDesc(param.getDesc() + "(Global)"));
     }
 
     public List<CustomField> getCustomResponseFields() {
@@ -519,8 +643,17 @@ public class ApiConfig {
             return null;
         }
         return this.dataDictionaries.stream().filter((apiDataDictionary ->
-                enumClassName.equalsIgnoreCase(apiDataDictionary.getEnumClassName())))
-                .findFirst().orElse(new ApiDataDictionary());
+        {
+            boolean equalsName = enumClassName.equalsIgnoreCase(apiDataDictionary.getEnumClassName());
+
+            Set<Class<? extends Enum>> enumImplementSet = apiDataDictionary.getEnumImplementSet();
+            if (CollectionUtil.isEmpty(enumImplementSet)) {
+                return equalsName;
+            }
+            Set<String> collect = enumImplementSet.stream().map(Class::getName).collect(Collectors.toSet());
+            return equalsName || collect.contains(enumClassName);
+        }))
+                .findFirst().orElse(null);
     }
 
     public List<ApiErrorCodeDictionary> getErrorCodeDictionaries() {
@@ -792,106 +925,51 @@ public class ApiConfig {
         this.customRequestFields = CollectionUtil.asList(customRequestFields);
     }
 
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("{");
-        sb.append("\"serverUrl\":\"")
-                .append(serverUrl).append('\"');
-        sb.append(",\"isStrict\":")
-                .append(isStrict);
-        sb.append(",\"allInOne\":")
-                .append(allInOne);
-        sb.append(",\"outPath\":\"")
-                .append(outPath).append('\"');
-        sb.append(",\"sourceCodePaths\":")
-                .append(sourceCodePaths);
-        sb.append(",\"requestHeaders\":")
-                .append(requestHeaders);
-        sb.append(",\"coverOld\":")
-                .append(coverOld);
-        sb.append(",\"customResponseFields\":")
-                .append(customResponseFields);
-        sb.append(",\"errorCodes\":")
-                .append(errorCodes);
-        sb.append(",\"packageFilters\":\"")
-                .append(packageFilters).append('\"');
-        sb.append(",\"revisionLogs\":")
-                .append(revisionLogs);
-        sb.append(",\"md5EncryptedHtmlName\":")
-                .append(md5EncryptedHtmlName);
-        sb.append(",\"language\":")
-                .append(language);
-        sb.append(",\"adoc\":")
-                .append(adoc);
-        sb.append(",\"dataDictionaries\":")
-                .append(dataDictionaries);
-        sb.append(",\"errorCodeDictionaries\":")
-                .append(errorCodeDictionaries);
-        sb.append(",\"apiObjectReplacements\":")
-                .append(apiObjectReplacements);
-        sb.append(",\"rpcApiDependencies\":")
-                .append(rpcApiDependencies);
-        sb.append(",\"apiConstants\":")
-                .append(apiConstants);
-        sb.append(",\"group\":\"")
-                .append(group).append('\"');
-        sb.append(",\"projectName\":\"")
-                .append(projectName).append('\"');
-        sb.append(",\"projectCName\":\"")
-                .append(projectCName).append('\"');
-        sb.append(",\"skipTransientField\":")
-                .append(skipTransientField);
-        sb.append(",\"showAuthor\":")
-                .append(showAuthor);
-        sb.append(",\"requestFieldToUnderline\":")
-                .append(requestFieldToUnderline);
-        sb.append(",\"responseFieldToUnderline\":")
-                .append(responseFieldToUnderline);
-        sb.append(",\"sortByTitle\":")
-                .append(sortByTitle);
-        sb.append(",\"showJavaType\":")
-                .append(showJavaType);
-        sb.append(",\"inlineEnum\":")
-                .append(inlineEnum);
-        sb.append(",\"rpcConsumerConfig\":\"")
-                .append(rpcConsumerConfig).append('\"');
-        sb.append(",\"recursionLimit\":")
-                .append(recursionLimit);
-        sb.append(",\"requestExample\":")
-                .append(requestExample);
-        sb.append(",\"responseExample\":")
-                .append(responseExample);
-        sb.append(",\"allInOneDocFileName\":\"")
-                .append(allInOneDocFileName).append('\"');
-        sb.append(",\"paramsDataToTree\":")
-                .append(paramsDataToTree);
-        sb.append(",\"ignoreRequestParams\":")
-                .append(ignoreRequestParams);
-        sb.append(",\"displayActualType\":")
-                .append(displayActualType);
-        sb.append(",\"responseBodyAdvice\":")
-                .append(responseBodyAdvice);
-        sb.append(",\"style\":\"")
-                .append(style).append('\"');
-        sb.append(",\"createDebugPage\":")
-                .append(createDebugPage);
-        sb.append(",\"urlSuffix\":\"")
-                .append(urlSuffix).append('\"');
-        sb.append(",\"appKey\":\"")
-                .append(appKey).append('\"');
-        sb.append(",\"secret\":\"")
-                .append(secret).append('\"');
-        sb.append(",\"appToken\":\"")
-                .append(appToken).append('\"');
-        sb.append(",\"openUrl\":\"")
-                .append(openUrl).append('\"');
-        sb.append(",\"debugEnvName\":\"")
-                .append(debugEnvName).append('\"');
-        sb.append(",\"debugEnvUrl\":\"")
-                .append(debugEnvUrl).append('\"');
-        sb.append(",\"tornaDebug\":")
-                .append(tornaDebug);
-        sb.append('}');
-        return sb.toString();
+    public String getFramework() {
+        return framework;
+    }
+
+    public void setFramework(String framework) {
+        this.framework = framework;
+    }
+
+    public Boolean getReplace() {
+        return replace;
+    }
+
+    public void setReplace(Boolean replace) {
+        this.replace = replace;
+    }
+
+    public boolean isRequestParamsTable() {
+        return requestParamsTable;
+    }
+
+    public void setRequestParamsTable(boolean requestParamsTable) {
+        this.requestParamsTable = requestParamsTable;
+    }
+
+    public boolean isResponseParamsTable() {
+        return responseParamsTable;
+    }
+
+    public void setResponseParamsTable(boolean responseParamsTable) {
+        this.responseParamsTable = responseParamsTable;
+    }
+
+    public String getHighlightStyleLink() {
+        return highlightStyleLink;
+    }
+
+    public void setHighlightStyleLink(String highlightStyleLink) {
+        this.highlightStyleLink = highlightStyleLink;
+    }
+
+    public String getServerEnv() {
+        return serverEnv;
+    }
+
+    public void setServerEnv(String serverEnv) {
+        this.serverEnv = serverEnv;
     }
 }

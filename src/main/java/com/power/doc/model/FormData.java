@@ -1,7 +1,7 @@
 /*
  * smart-doc
  *
- * Copyright (C) 2018-2021 smart-doc
+ * Copyright (C) 2018-2022 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -31,6 +31,19 @@ public class FormData {
     private String description;
     private String src;
     private String value;
+    /**
+     * openapi items
+     */
+    private boolean hasItems;
+
+    public boolean isHasItems() {
+        return hasItems;
+    }
+
+    public FormData setHasItems(boolean hasItems) {
+        this.hasItems = hasItems;
+        return this;
+    }
 
     public String getKey() {
         return key;

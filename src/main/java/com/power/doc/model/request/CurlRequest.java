@@ -1,7 +1,7 @@
 /*
  * smart-doc https://github.com/shalousun/smart-doc
  *
- * Copyright (C) 2018-2021 smart-doc
+ * Copyright (C) 2018-2022 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -22,7 +22,8 @@
  */
 package com.power.doc.model.request;
 
-import com.power.doc.model.ApiReqHeader;
+import com.power.doc.model.ApiReqParam;
+import com.power.doc.model.FormData;
 
 import java.util.List;
 
@@ -33,13 +34,22 @@ public class CurlRequest {
 
     private String type;
 
-    private List<ApiReqHeader> reqHeaders;
+    private List<ApiReqParam> reqHeaders;
+    private List<FormData> fileFormDataList;
 
     private String url;
 
     private String body;
 
     private String contentType;
+    public List<FormData> getFileFormDataList() {
+        return fileFormDataList;
+    }
+
+    public CurlRequest setFileFormDataList(List<FormData> fileFormDataList) {
+        this.fileFormDataList = fileFormDataList;
+        return this;
+    }
 
     public static CurlRequest builder() {
         return new CurlRequest();
@@ -54,11 +64,11 @@ public class CurlRequest {
         return this;
     }
 
-    public List<ApiReqHeader> getReqHeaders() {
+    public List<ApiReqParam> getReqHeaders() {
         return reqHeaders;
     }
 
-    public CurlRequest setReqHeaders(List<ApiReqHeader> reqHeaders) {
+    public CurlRequest setReqHeaders(List<ApiReqParam> reqHeaders) {
         this.reqHeaders = reqHeaders;
         return this;
     }

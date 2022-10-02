@@ -1,7 +1,7 @@
 /*
  * smart-doc
  *
- * Copyright (C) 2018-2021 smart-doc
+ * Copyright (C) 2018-2022 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -23,14 +23,21 @@
 package com.power.doc.model;
 
 import com.power.doc.model.torna.EnumInfo;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
+
+import static com.power.doc.constants.DocGlobalConstants.PARAM_PREFIX;
 
 /**
  * @author yu 2019/9/27.
  */
 public class ApiParam {
 
+    /**
+     * param class name
+     */
+    private String className;
     /**
      * field id
      */
@@ -98,27 +105,44 @@ public class ApiParam {
     /**
      * enum
      */
-    private List<EnumInfo> enumInfo;
+    private EnumInfo enumInfo;
     /**
      * Valid @Max
      */
     private String maxLength;
 
+    /**
+     *  is config.json config param
+     *  default false
+     */
+    private boolean configParam;
+    /**
+     * 自循环引用
+     */
+    private boolean selfReferenceLoop;
+
     public static ApiParam of() {
         return new ApiParam();
     }
 
-    public List<EnumInfo> getEnumInfo() {
+    public EnumInfo getEnumInfo() {
         return enumInfo;
     }
 
-    public ApiParam setEnumInfo(List<EnumInfo> enumInfo) {
+    public ApiParam setEnumInfo(EnumInfo enumInfo) {
         this.enumInfo = enumInfo;
         return this;
     }
 
     public String getField() {
         return field;
+    }
+
+    public String getSourceField() {
+        if (StringUtils.isEmpty(field)) {
+            return StringUtils.EMPTY;
+        }
+        return field.replaceAll(PARAM_PREFIX, "").replaceAll("&nbsp;", "");
     }
 
     public ApiParam setField(String field) {
@@ -243,30 +267,52 @@ public class ApiParam {
         return this;
     }
 
+    public boolean isConfigParam() {
+        return configParam;
+    }
+
+    public ApiParam setConfigParam(boolean configParam) {
+        this.configParam = configParam;
+        return this;
+    }
+
+    public String getClassName() {
+        return className;
+    }
+
+    public ApiParam setClassName(String className) {
+        this.className = className;
+        return this;
+    }
+
+    public boolean isSelfReferenceLoop() {
+        return selfReferenceLoop;
+    }
+
+    public void setSelfReferenceLoop(boolean selfReferenceLoop) {
+        this.selfReferenceLoop = selfReferenceLoop;
+    }
+
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("{");
-        sb.append("\"id\":")
-                .append(id);
-        sb.append(",\"field\":\"")
-                .append(field).append('\"');
-        sb.append(",\"type\":\"")
-                .append(type).append('\"');
-        sb.append(",\"desc\":\"")
-                .append(desc).append('\"');
-        sb.append(",\"required\":")
-                .append(required);
-        sb.append(",\"version\":\"")
-                .append(version).append('\"');
-        sb.append(",\"pid\":")
-                .append(pid);
-        sb.append(",\"pathParam\":")
-                .append(pathParam);
-        sb.append(",\"queryParam\":")
-                .append(queryParam);
-        sb.append(",\"children\":")
-                .append(children);
-        sb.append('}');
-        return sb.toString();
+        return "ApiParam{" +
+                "id=" + id +
+                ", field='" + field + '\'' +
+                ", type='" + type + '\'' +
+                ", desc='" + desc + '\'' +
+                ", required=" + required +
+                ", version='" + version + '\'' +
+                ", pid=" + pid +
+                ", pathParam=" + pathParam +
+                ", queryParam=" + queryParam +
+                ", value='" + value + '\'' +
+                ", children=" + children +
+                ", hasItems=" + hasItems +
+                ", enumValues=" + enumValues +
+                ", enumInfo=" + enumInfo +
+                ", maxLength='" + maxLength + '\'' +
+                ", configParam=" + configParam +
+                ", selfReferenceLoop=" + selfReferenceLoop +
+                '}';
     }
 }

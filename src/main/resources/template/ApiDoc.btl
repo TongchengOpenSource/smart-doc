@@ -4,9 +4,9 @@
 for(doc in list){
 %>
 <%if(doc.deprecated){%>
-## ~~${doc.desc}~~
+## ~~${htmlEscape(doc.desc)}~~
 <%}else{%>
-## ${doc.desc}
+## ${htmlEscape(doc.desc)}
 <%}%>
 **URL:** `${doc.url}`
 

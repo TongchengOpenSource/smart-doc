@@ -1,7 +1,7 @@
 /*
  * smart-doc https://github.com/shalousun/smart-doc
  *
- * Copyright (C) 2018-2021 smart-doc
+ * Copyright (C) 2018-2022 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -22,12 +22,13 @@
  */
 package com.power.doc.builder;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.FileUtil;
 import com.power.common.util.StringUtil;
 import com.power.doc.constants.DocGlobalConstants;
+import com.power.doc.constants.Methods;
+import com.power.doc.factory.BuildTemplateFactory;
+import com.power.doc.helper.JavaProjectBuilderHelper;
 import com.power.doc.model.*;
 import com.power.doc.model.postman.InfoBean;
 import com.power.doc.model.postman.ItemBean;
@@ -38,13 +39,12 @@ import com.power.doc.model.postman.request.RequestBean;
 import com.power.doc.model.postman.request.body.BodyBean;
 import com.power.doc.model.postman.request.header.HeaderBean;
 import com.power.doc.template.IDocBuildTemplate;
-import com.power.doc.template.SpringBootDocBuildTemplate;
-import com.power.doc.utils.PathUtil;
+import com.power.doc.utils.DocPathUtil;
+import com.power.doc.utils.JsonUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,14 +57,14 @@ public class PostmanJsonBuilder {
     private static final String MSG = "Interface name is not set.";
 
     /**
-     * 构建postman json
+     * build postman json
      *
-     * @param config 配置文件
+     * @param config Smart-doc ApiConfig
      */
     public static void buildPostmanCollection(ApiConfig config) {
         DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
-        builderTemplate.checkAndInit(config);
-        JavaProjectBuilder javaProjectBuilder = new JavaProjectBuilder();
+        builderTemplate.checkAndInit(config, false);
+        JavaProjectBuilder javaProjectBuilder = JavaProjectBuilderHelper.create();
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
         postManCreate(config, configBuilder);
     }
@@ -77,17 +77,20 @@ public class PostmanJsonBuilder {
      */
     public static void buildPostmanCollection(ApiConfig config, JavaProjectBuilder projectBuilder) {
         DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
-        builderTemplate.checkAndInit(config);
+        builderTemplate.checkAndInit(config, false);
+        if (StringUtil.isNotEmpty(config.getServerEnv())) {
+            config.setServerUrl(config.getServerEnv());
+        }
         config.setParamsDataToTree(false);
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, projectBuilder);
         postManCreate(config, configBuilder);
     }
 
     /**
-     * 第一层的Item
+     * Build the first layer of Postman Item
      *
-     * @param apiDoc
-     * @return
+     * @param apiDoc Documentation for each Controller
+     * @return First layer of Postman Item
      */
     private static ItemBean buildItemBean(ApiDoc apiDoc) {
         ItemBean itemBean = new ItemBean();
@@ -105,10 +108,10 @@ public class PostmanJsonBuilder {
     }
 
     /**
-     * 构建第二层的item
+     * Build the second layer of Postman item
      *
-     * @param apiMethodDoc
-     * @return
+     * @param apiMethodDoc Documentation for each method
+     * @return The second layer of Postman item
      */
     private static ItemBean buildItem(ApiMethodDoc apiMethodDoc) {
         ItemBean item = new ItemBean();
@@ -130,37 +133,19 @@ public class PostmanJsonBuilder {
     }
 
     private static UrlBean buildUrlBean(ApiMethodDoc apiMethodDoc) {
-        UrlBean urlBean = new UrlBean();
+        UrlBean urlBean = new UrlBean(apiMethodDoc.getServerUrl());
         String url = Optional.ofNullable(apiMethodDoc.getRequestExample().getUrl()).orElse(apiMethodDoc.getUrl());
-        urlBean.setRaw(PathUtil.toPostmanPath(url));
-        try {
-            URL javaUrl = new java.net.URL(apiMethodDoc.getServerUrl());
-            if (javaUrl.getPort() == -1) {
-                urlBean.setPort(null);
-            } else {
-                urlBean.setPort(String.valueOf(javaUrl.getPort()));
-            }
-            // set protocol
-            String protocol = javaUrl.getProtocol();
-            if (StringUtil.isNotEmpty(protocol)) {
-                urlBean.setProtocol(protocol);
-            }
-
-            List<String> hosts = new ArrayList<>();
-            hosts.add(javaUrl.getHost());
-            urlBean.setHost(hosts);
-
-            List<String> paths = new ArrayList<>();
-            paths.add(javaUrl.getPath());
-            urlBean.setPath(paths);
-        } catch (MalformedURLException e) {
-        }
-        String shortUrl = PathUtil.toPostmanPath(apiMethodDoc.getPath());
+        urlBean.setRaw(DocPathUtil.toPostmanPath(url));
+        String shortUrl = DocPathUtil.toPostmanPath(apiMethodDoc.getPath());
         String[] paths = shortUrl.split("/");
         List<String> pathList = new ArrayList<>();
-        if (CollectionUtil.isNotEmpty(urlBean.getPath()) && shortUrl.indexOf(urlBean.getPath().get(0)) < 0) {
-            pathList.add(urlBean.getPath().get(0).replaceAll("/", ""));
+        String serverPath = CollectionUtil.isNotEmpty(urlBean.getPath()) ? urlBean.getPath().get(0) : "";
+        // Add server path
+        if (CollectionUtil.isNotEmpty(urlBean.getPath()) && !shortUrl.contains(serverPath)) {
+            String[] serverPaths = serverPath.split("/");
+            pathList.addAll(Arrays.asList(serverPaths));
         }
+        // Add mapping path
         for (String str : paths) {
             if (StringUtil.isNotEmpty(str)) {
                 pathList.add(str);
@@ -171,14 +156,21 @@ public class PostmanJsonBuilder {
         }
 
         urlBean.setPath(pathList);
+
         List<ParamBean> queryParams = new ArrayList<>();
-        for (ApiParam apiParam : apiMethodDoc.getQueryParams()) {
-            ParamBean queryParam = new ParamBean();
-            queryParam.setDescription(apiParam.getDesc());
-            queryParam.setKey(apiParam.getField());
-            queryParam.setValue(apiParam.getValue());
-            queryParams.add(queryParam);
+        if (!apiMethodDoc.getType().equals(Methods.POST.getValue()) ||
+                apiMethodDoc.getContentType().contains(DocGlobalConstants.JSON_CONTENT_TYPE)) {
+            for (ApiParam apiParam : apiMethodDoc.getQueryParams()) {
+                ParamBean queryParam = new ParamBean();
+                queryParam.setDescription(apiParam.getDesc());
+                queryParam.setKey(apiParam.getField());
+                queryParam.setValue(apiParam.getValue());
+                queryParams.add(queryParam);
+            }
         }
+        urlBean.setQuery(queryParams);
+
+
         List<ParamBean> variables = new ArrayList<>();
         for (ApiParam apiParam : apiMethodDoc.getPathParams()) {
             ParamBean queryParam = new ParamBean();
@@ -188,43 +180,57 @@ public class PostmanJsonBuilder {
             variables.add(queryParam);
         }
         urlBean.setVariable(variables);
-        urlBean.setQuery(queryParams);
         return urlBean;
     }
 
     /**
-     * 构造请求体
+     * Build payload
      *
-     * @param apiMethodDoc
-     * @return
+     * @return Body payload
      */
     private static BodyBean buildBodyBean(ApiMethodDoc apiMethodDoc) {
         BodyBean bodyBean;
         if (apiMethodDoc.getContentType().contains(DocGlobalConstants.JSON_CONTENT_TYPE)) {
-            bodyBean = new BodyBean(false);
+            bodyBean = new BodyBean(Boolean.FALSE);// Json request
             bodyBean.setMode(DocGlobalConstants.POSTMAN_MODE_RAW);
             if (apiMethodDoc.getRequestExample() != null) {
                 bodyBean.setRaw(apiMethodDoc.getRequestExample().getJsonBody());
             }
         } else {
-            bodyBean = new BodyBean(true);
-            bodyBean.setMode(DocGlobalConstants.POSTMAN_MODE_FORMDATA);
-            bodyBean.setFormdata(apiMethodDoc.getRequestExample().getFormDataList());
+            if (apiMethodDoc.getType().equals(Methods.POST.getValue())) {
+                bodyBean = new BodyBean(Boolean.TRUE); //Formdata
+                bodyBean.setMode(DocGlobalConstants.POSTMAN_MODE_FORMDATA);
+                if (CollectionUtil.isNotEmpty(apiMethodDoc.getRequestExample().getFormDataList())) {
+                    bodyBean.setFormdata(apiMethodDoc.getRequestExample().getFormDataList());
+                } else {
+                    // if method is post and formdata list size is 0, convert query param to formdata
+                    List<ApiParam> queryParams = apiMethodDoc.getQueryParams();
+                    List<FormData> formDataList = new ArrayList<>(queryParams.size());
+                    for (ApiParam apiParam : queryParams) {
+                        FormData formData = new FormData();
+                        formData.setDescription(apiParam.getDesc());
+                        formData.setKey(apiParam.getField());
+                        formData.setType(apiParam.getType());
+                        formData.setValue(apiParam.getValue());
+                        formDataList.add(formData);
+                    }
+                    bodyBean.setFormdata(formDataList);
+                }
+            } else {
+                bodyBean = new BodyBean(Boolean.FALSE);
+            }
         }
         return bodyBean;
-
     }
 
     /**
-     * 构造请求头
+     * Build header
      *
-     * @param apiMethodDoc
-     * @return
+     * @return List of header
      */
     private static List<HeaderBean> buildHeaderBeanList(ApiMethodDoc apiMethodDoc) {
         List<HeaderBean> headerBeans = new ArrayList<>();
-
-        List<ApiReqHeader> headers = apiMethodDoc.getRequestHeaders();
+        List<ApiReqParam> headers = apiMethodDoc.getRequestHeaders();
         headers.forEach(
                 apiReqHeader -> {
                     HeaderBean headerBean = new HeaderBean();
@@ -241,7 +247,7 @@ public class PostmanJsonBuilder {
     }
 
     private static void postManCreate(ApiConfig config, ProjectDocConfigBuilder configBuilder) {
-        IDocBuildTemplate docBuildTemplate = new SpringBootDocBuildTemplate();
+        IDocBuildTemplate docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework());
         List<ApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder);
         RequestItem requestItem = new RequestItem();
         requestItem.setInfo(new InfoBean(config.getProjectName()));
@@ -255,8 +261,7 @@ public class PostmanJsonBuilder {
         requestItem.setItem(itemBeans);
         String filePath = config.getOutPath();
         filePath = filePath + DocGlobalConstants.POSTMAN_JSON;
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        String data = gson.toJson(requestItem);
+        String data = JsonUtil.toPrettyJson(requestItem);
         FileUtil.nioWriteFile(data, filePath);
     }
 

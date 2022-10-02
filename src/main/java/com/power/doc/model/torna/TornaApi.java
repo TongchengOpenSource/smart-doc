@@ -1,7 +1,7 @@
 /*
  * smart-doc https://github.com/shalousun/smart-doc
  *
- * Copyright (C) 2018-2021 smart-doc
+ * Copyright (C) 2018-2022 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -42,6 +42,18 @@ public class TornaApi {
     List<Apis> apis;
     String author;
     List<CommonErrorCode> commonErrorCodes;
+    /**
+     * 是否替换文档，1：替换，0：不替换（追加）。缺省：1
+     */
+    Integer isReplace;
+
+    public Integer getIsReplace() {
+        return isReplace;
+    }
+
+    public void setIsReplace(Integer isReplace) {
+        this.isReplace = isReplace;
+    }
 
     public String getAuthor() {
         return author;

@@ -1,7 +1,7 @@
 /*
  * smart-doc https://github.com/shalousun/smart-doc
  *
- * Copyright (C) 2018-2021 smart-doc
+ * Copyright (C) 2018-2022 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -37,6 +37,7 @@ public class Apis {
     private String parentId;
     private String isShow;
     private String author;
+    private Integer orderIndex;
     private DubboInfo dubboInfo;
     private List<HttpParam> headerParams;
     private List<HttpParam> pathParams;
@@ -45,6 +46,51 @@ public class Apis {
     private List<HttpParam> responseParams;
     private String errorCodeParams;
     private List<Apis> items;
+    private Integer isRequestArray;
+    private String requestArrayType;
+    private Integer isResponseArray;
+    private String responseArrayType;
+    private String deprecated;
+
+    public Integer getIsRequestArray() {
+        return isRequestArray;
+    }
+
+    public void setIsRequestArray(Integer isRequestArray) {
+        this.isRequestArray = isRequestArray;
+    }
+
+    public String getRequestArrayType() {
+        return requestArrayType;
+    }
+
+    public void setRequestArrayType(String requestArrayType) {
+        this.requestArrayType = requestArrayType;
+    }
+
+    public Integer getIsResponseArray() {
+        return isResponseArray;
+    }
+
+    public void setIsResponseArray(Integer isResponseArray) {
+        this.isResponseArray = isResponseArray;
+    }
+
+    public String getResponseArrayType() {
+        return responseArrayType;
+    }
+
+    public void setResponseArrayType(String responseArrayType) {
+        this.responseArrayType = responseArrayType;
+    }
+
+    public Integer getOrderIndex() {
+        return orderIndex;
+    }
+
+    public void setOrderIndex(Integer orderIndex) {
+        this.orderIndex = orderIndex;
+    }
 
     public String getAuthor() {
         return author;
@@ -181,5 +227,13 @@ public class Apis {
 
     public void setDubboInfo(DubboInfo dubboInfo) {
         this.dubboInfo = dubboInfo;
+    }
+
+    public String getDeprecated() {
+        return deprecated;
+    }
+
+    public void setDeprecated(String deprecated) {
+        this.deprecated = deprecated;
     }
 }

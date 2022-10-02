@@ -28,8 +28,9 @@ for(doc in list){
 |====================
 |Header | Type|Description|Required|Since
 ${doc.headers}
-<%}%>
 |====================
+<%}%>
+
 
 <%if(isNotEmpty(doc.pathParams)){%>
 *Path-parameters:*
@@ -62,7 +63,7 @@ for(param in doc.queryParams){
 <%}%>
 
 <%if(isNotEmpty(doc.requestParams)){%>
-*Request-parameters:*
+*Body-parameters:*
 
 [width="100%",options="header"]
 [stripes=even]

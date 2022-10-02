@@ -1,7 +1,7 @@
 /*
  * smart-doc
  *
- * Copyright (C) 2018-2021 smart-doc
+ * Copyright (C) 2018-2022 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -22,12 +22,21 @@
  */
 package com.power.doc.utils;
 
+import com.power.common.model.EnumDictionary;
 import com.power.common.util.CollectionUtil;
+import com.power.common.util.EnumUtil;
 import com.power.common.util.StringUtil;
+import com.power.doc.builder.ProjectDocConfigBuilder;
 import com.power.doc.constants.DocAnnotationConstants;
+import com.power.doc.constants.DocTags;
 import com.power.doc.constants.DocValidatorAnnotationEnum;
 import com.power.doc.constants.ValidatorAnnotations;
+import com.power.doc.model.ApiConfig;
+import com.power.doc.model.ApiDataDictionary;
 import com.power.doc.model.DocJavaField;
+import com.power.doc.model.torna.EnumInfo;
+import com.power.doc.model.torna.Item;
+import com.thoughtworks.qdox.JavaProjectBuilder;
 import com.thoughtworks.qdox.model.*;
 import com.thoughtworks.qdox.model.expression.AnnotationValue;
 import com.thoughtworks.qdox.model.expression.AnnotationValueList;
@@ -35,6 +44,7 @@ import com.thoughtworks.qdox.model.expression.Expression;
 import com.thoughtworks.qdox.model.expression.TypeRef;
 import com.thoughtworks.qdox.model.impl.DefaultJavaField;
 import com.thoughtworks.qdox.model.impl.DefaultJavaParameterizedType;
+import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -57,6 +67,30 @@ public class JavaClassUtil {
      * @return list of JavaField
      */
     public static List<DocJavaField> getFields(JavaClass cls1, int counter, Map<String, DocJavaField> addedFields) {
+        Map<String, JavaType> actualJavaTypes = new HashMap<>(10);
+        List<DocJavaField> fields = getFields(cls1, counter, addedFields, actualJavaTypes);
+        fields.stream().filter(f -> f.getGenericCanonicalName() != null)
+                .forEach(f -> actualJavaTypes.entrySet().stream()
+                        .filter(e -> f.getGenericCanonicalName().equals(e.getKey()))
+                        .forEach(e ->
+                                f.setGenericCanonicalName(f.getGenericCanonicalName()
+                                                .replace(e.getKey(), e.getValue().getGenericCanonicalName()))
+                                        .setFullyQualifiedName(f.getFullyQualifiedName()
+                                                .replace(e.getKey(), e.getValue().getFullyQualifiedName()))
+                                        .setActualJavaType(e.getValue().getFullyQualifiedName())));
+        return fields;
+    }
+
+    /**
+     * Get fields
+     *
+     * @param cls1            The JavaClass object
+     * @param counter         Recursive counter
+     * @param addedFields     added fields,Field deduplication
+     * @param actualJavaTypes collected actualJavaTypes
+     * @return list of JavaField
+     */
+    private static List<DocJavaField> getFields(JavaClass cls1, int counter, Map<String, DocJavaField> addedFields, Map<String, JavaType> actualJavaTypes) {
         List<DocJavaField> fieldList = new ArrayList<>();
         if (null == cls1) {
             return fieldList;
@@ -89,26 +123,32 @@ public class JavaClassUtil {
                     String comment = javaMethod.getComment();
                     JavaField javaField = new DefaultJavaField(javaMethod.getReturns(), methodName);
                     DocJavaField docJavaField = DocJavaField.builder()
+                            .setFieldName(methodName)
                             .setJavaField(javaField)
                             .setComment(comment)
                             .setDocletTags(javaMethod.getTags())
                             .setAnnotations(javaMethod.getAnnotations())
-                            .setFullyQualifiedName(javaField.getType().getFullyQualifiedName())
-                            .setGenericCanonicalName(javaField.getType().getGenericCanonicalName());
+                            .setFullyQualifiedName(javaField.getType()
+                                    .getFullyQualifiedName())
+                            .setGenericCanonicalName(javaField.getType()
+                                    .getGenericCanonicalName());
                     addedFields.put(methodName, docJavaField);
                 }
             }
             // ignore enum parent class
+            if (actualJavaTypes == null) {
+                actualJavaTypes = new HashMap<>(10);
+            }
             if (!cls1.isEnum()) {
                 JavaClass parentClass = cls1.getSuperJavaClass();
-                getFields(parentClass, counter, addedFields);
+                getFields(parentClass, counter, addedFields, actualJavaTypes);
                 List<JavaType> implClasses = cls1.getImplements();
                 for (JavaType type : implClasses) {
                     JavaClass javaClass = (JavaClass) type;
-                    getFields(javaClass, counter, addedFields);
+                    getFields(javaClass, counter, addedFields, actualJavaTypes);
                 }
             }
-            Map<String, JavaType> actualJavaTypes = getActualTypesMap(cls1);
+            actualJavaTypes.putAll(getActualTypesMap(cls1));
             List<JavaMethod> javaMethods = cls1.getMethods();
             for (JavaMethod method : javaMethods) {
                 String methodName = method.getName();
@@ -129,55 +169,70 @@ public class JavaClassUtil {
                     DocJavaField docJavaField = addedFields.get(methodName);
                     docJavaField.setAnnotations(method.getAnnotations());
                     docJavaField.setComment(comment);
+                    docJavaField.setFieldName(methodName);
                     addedFields.put(methodName, docJavaField);
                 }
             }
-            for (JavaField javaField : cls1.getFields()) {
-                String fieldName = javaField.getName();
-                DocJavaField docJavaField = DocJavaField.builder();
-                boolean typeChecked = false;
-                String gicName = javaField.getType().getGenericCanonicalName();
-                String subTypeName = javaField.getType().getFullyQualifiedName();
-                String actualType = null;
-                if (JavaClassValidateUtil.isCollection(subTypeName) &&
-                        !JavaClassValidateUtil.isCollection(gicName)) {
-                    String[] gNameArr = DocClassUtil.getSimpleGicName(gicName);
-                    actualType = JavaClassUtil.getClassSimpleName(gNameArr[0]);
-                    docJavaField.setArray(true);
-                    typeChecked = true;
-                }
-                if (JavaClassValidateUtil.isPrimitive(subTypeName) && !typeChecked) {
-                    docJavaField.setPrimitive(true);
-                    typeChecked = true;
-                }
-                if (JavaClassValidateUtil.isFile(subTypeName) && !typeChecked) {
-                    docJavaField.setFile(true);
-                    typeChecked = true;
-                }
-                if (javaField.getType().isEnum() && !typeChecked) {
-                    docJavaField.setEnum(true);
-                }
-                for (Map.Entry<String, JavaType> entry : actualJavaTypes.entrySet()) {
-                    String key = entry.getKey();
-                    JavaType value = entry.getValue();
-                    if (gicName.contains(key)) {
-                        subTypeName = subTypeName.replaceAll(key, value.getFullyQualifiedName());
-                        gicName = gicName.replaceAll(key, value.getGenericCanonicalName());
-                        actualType = value.getFullyQualifiedName();
+            if (!cls1.isInterface()) {
+                for (JavaField javaField : cls1.getFields()) {
+                    long count = javaField.getAnnotations().stream()
+                            .filter(annotation -> DocAnnotationConstants.SHORT_JSON_IGNORE.equals(
+                                    annotation.getType().getSimpleName()))
+                            .count();
+                    if (count > 0) {
+                        continue;
                     }
-                }
-                docJavaField.setComment(javaField.getComment())
-                        .setJavaField(javaField).setFullyQualifiedName(subTypeName)
-                        .setGenericCanonicalName(gicName).setActualJavaType(actualType)
-                        .setAnnotations(javaField.getAnnotations());
-                if (addedFields.containsKey(fieldName)) {
+                    String fieldName = javaField.getName();
+                    String subTypeName = javaField.getType().getFullyQualifiedName();
+
+                    if (javaField.isStatic() || "this$0".equals(fieldName) ||
+                            JavaClassValidateUtil.isIgnoreFieldTypes(subTypeName)) {
+                        continue;
+                    }
+                    if (fieldName.startsWith("is") && ("boolean".equals(subTypeName))) {
+                        fieldName = StringUtil.firstToLowerCase(fieldName.substring(2));
+                    }
+
+                    DocJavaField docJavaField = DocJavaField.builder();
+                    boolean typeChecked = false;
+                    String gicName = javaField.getType().getGenericCanonicalName();
+
+                    String actualType = null;
+                    if (JavaClassValidateUtil.isCollection(subTypeName) &&
+                            !JavaClassValidateUtil.isCollection(gicName)) {
+                        String[] gNameArr = DocClassUtil.getSimpleGicName(gicName);
+                        actualType = JavaClassUtil.getClassSimpleName(gNameArr[0]);
+                        docJavaField.setArray(true);
+                        typeChecked = true;
+                    }
+                    if (JavaClassValidateUtil.isPrimitive(subTypeName) && !typeChecked) {
+                        docJavaField.setPrimitive(true);
+                        typeChecked = true;
+                    }
+                    if (JavaClassValidateUtil.isFile(subTypeName) && !typeChecked) {
+                        docJavaField.setFile(true);
+                        typeChecked = true;
+                    }
+                    if (javaField.getType().isEnum() && !typeChecked) {
+                        docJavaField.setEnum(true);
+                    }
+                    docJavaField.setComment(javaField.getComment())
+                            .setJavaField(javaField).setFullyQualifiedName(subTypeName)
+                            .setGenericCanonicalName(gicName).setActualJavaType(actualType)
+                            .setAnnotations(javaField.getAnnotations())
+                            .setFieldName(fieldName);
+                    if (addedFields.containsKey(fieldName)) {
+                        addedFields.remove(fieldName);
+                        addedFields.put(fieldName, docJavaField);
+                        continue;
+                    }
                     addedFields.put(fieldName, docJavaField);
-                    continue;
                 }
-                addedFields.put(fieldName, docJavaField);
             }
-            List<DocJavaField> parentFieldList = addedFields.values().stream()
-                    .filter(v -> Objects.nonNull(v)).collect(Collectors.toList());
+            List<DocJavaField> parentFieldList = addedFields.values()
+                    .stream()
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList());
             fieldList.addAll(parentFieldList);
         }
         return fieldList;
@@ -193,6 +248,9 @@ public class JavaClassUtil {
      */
     public static Object getEnumValue(JavaClass javaClass, boolean formDataEnum) {
         List<JavaField> javaFields = javaClass.getEnumConstants();
+        if (Objects.isNull(javaFields)) {
+            throw new RuntimeException(javaClass.getName() + " enum not existed");
+        }
         List<JavaMethod> methodList = javaClass.getMethods();
         String methodName = null;
         for (JavaMethod method : methodList) {
@@ -259,6 +317,96 @@ public class JavaClassUtil {
             enums.add(javaField.getName());
         }
         return enums;
+    }
+
+    public static JavaClass getSeeEnum(JavaField javaField, ProjectDocConfigBuilder builder) {
+        if (Objects.isNull(javaField)) {
+            return null;
+        }
+        JavaClass javaClass = javaField.getType();
+        if (javaClass.isEnum()) {
+            return javaClass;
+        }
+
+        DocletTag see = javaField.getTagByName(DocTags.SEE);
+        if (Objects.isNull(see)) {
+            return null;
+        }
+        String value = see.getValue();
+        if (!JavaClassValidateUtil.isClassName(value)) {
+            return null;
+        }
+        // not FullyQualifiedName
+        if (!StringUtils.contains(value, ".")) {
+            List<String> imports = javaField.getDeclaringClass().getSource().getImports();
+            String finalValue = value;
+            value = imports.stream().filter(i -> StringUtils.endsWith(i, finalValue)).findFirst().orElse(StringUtils.EMPTY);
+        }
+
+        JavaClass enumClass = builder.getJavaProjectBuilder().getClassByName(value);
+        if (enumClass.isEnum()) {
+            return enumClass;
+        }
+        return null;
+    }
+
+    /**
+     * get enum info by java class
+     *
+     * @param javaClass the java class info
+     * @param builder   builder
+     * @return EnumInfo
+     * @author chen qi
+     * @since 1.0.0
+     */
+    public static EnumInfo getEnumInfo(JavaClass javaClass, ProjectDocConfigBuilder builder) {
+        if (Objects.isNull(javaClass) || !javaClass.isEnum()) {
+            return null;
+        }
+        if (Objects.nonNull(javaClass.getTagByName(DocTags.IGNORE))) {
+            return null;
+        }
+        //todo support the field described by @see
+
+        ApiConfig apiConfig = builder.getApiConfig();
+        ClassLoader classLoader = apiConfig.getClassLoader();
+        ApiDataDictionary dataDictionary = apiConfig.getDataDictionary(javaClass.getFullyQualifiedName());
+
+        EnumInfo enumInfo = new EnumInfo();
+        String comment = javaClass.getComment();
+        DocletTag apiNoteTag = javaClass.getTagByName(DocTags.API_NOTE);
+        enumInfo.setName(comment);
+        enumInfo.setDescription(DocUtil.getEscapeAndCleanComment(Optional.ofNullable(apiNoteTag).map(DocletTag::getValue).orElse(StringUtil.EMPTY)));
+        List<JavaField> enumConstants = javaClass.getEnumConstants();
+
+        // value can use invoke method to get value, desc too
+        if (Objects.nonNull(dataDictionary)) {
+            Class<?> enumClass = dataDictionary.getEnumClass();
+            if (enumClass.isInterface()) {
+                try {
+                    enumClass = classLoader.loadClass(javaClass.getFullyQualifiedName());
+                } catch (ClassNotFoundException e) {
+                    return enumInfo;
+                }
+            }
+            List<EnumDictionary> enumInformation = EnumUtil.getEnumInformation(enumClass, dataDictionary.getCodeField(), dataDictionary.getDescField());
+            List<Item> itemList = enumInformation.stream().map(i -> new Item(i.getName(), i.getType(), i.getValue(), i.getDesc())).collect(Collectors.toList());
+            enumInfo.setItems(itemList);
+            return enumInfo;
+        }
+
+        List<Item> collect = enumConstants.stream().map(cons -> {
+            Item item = new Item();
+            String name = cons.getName();
+            String enumComment = cons.getComment();
+            item.setName(name);
+            item.setType("string");
+            item.setValue(name);
+            item.setDescription(enumComment);
+            return item;
+        }).collect(Collectors.toList());
+        enumInfo.setItems(collect);
+        return enumInfo;
     }
 
 
@@ -346,17 +494,18 @@ public class JavaClassUtil {
      * Obtain Validate Group classes
      *
      * @param annotations the annotations of controller method param
+     * @param builder     builder
      * @return the group annotation value
      */
-    public static List<String> getParamGroupJavaClass(List<JavaAnnotation> annotations) {
+    public static Set<String> getParamGroupJavaClass(List<JavaAnnotation> annotations, JavaProjectBuilder builder) {
         if (CollectionUtil.isEmpty(annotations)) {
-            return new ArrayList<>(0);
+            return new HashSet<>(0);
         }
-        List<String> javaClassList = new ArrayList<>();
+        Set<String> javaClassList = new HashSet<>();
         List<String> validates = DocValidatorAnnotationEnum.listValidatorAnnotations();
         for (JavaAnnotation javaAnnotation : annotations) {
             List<AnnotationValue> annotationValueList = getAnnotationValues(validates, javaAnnotation);
-            addGroupClass(annotationValueList, javaClassList);
+            addGroupClass(annotationValueList, javaClassList, builder);
         }
         return javaClassList;
     }
@@ -367,11 +516,11 @@ public class JavaClassUtil {
      * @param javaAnnotation the annotation of controller method param
      * @return the group annotation value
      */
-    public static List<String> getParamGroupJavaClass(JavaAnnotation javaAnnotation) {
+    public static Set<String> getParamGroupJavaClass(JavaAnnotation javaAnnotation) {
         if (Objects.isNull(javaAnnotation)) {
-            return new ArrayList<>(0);
+            return new HashSet<>(0);
         }
-        List<String> javaClassList = new ArrayList<>();
+        Set<String> javaClassList = new HashSet<>();
         List<String> validates = DocValidatorAnnotationEnum.listValidatorAnnotations();
         List<AnnotationValue> annotationValueList = getAnnotationValues(validates, javaAnnotation);
         addGroupClass(annotationValueList, javaClassList);
@@ -429,8 +578,10 @@ public class JavaClassUtil {
         Field[] fields = clazz.getDeclaredFields();
         Map<String, String> constants = new HashMap<>();
         for (Field field : fields) {
-            boolean isFinal = Modifier.isFinal(field.getModifiers());
-            if (isFinal) {
+            if (Modifier.isPrivate(field.getModifiers())) {
+                continue;
+            }
+            if (Modifier.isFinal(field.getModifiers()) && Modifier.isStatic(field.getModifiers())) {
                 String name = field.getName();
                 constants.put(className + "." + name, String.valueOf(field.get(null)));
             }
@@ -438,19 +589,50 @@ public class JavaClassUtil {
         return constants;
     }
 
-    private static void addGroupClass(List<AnnotationValue> annotationValueList, List<String> javaClassList) {
+    private static void addGroupClass(List<AnnotationValue> annotationValueList, Set<String> javaClassList) {
         if (CollectionUtil.isEmpty(annotationValueList)) {
             return;
         }
-        for (int i = 0; i < annotationValueList.size(); i++) {
-            TypeRef annotationValue = (TypeRef) annotationValueList.get(i);
-            DefaultJavaParameterizedType annotationValueType = (DefaultJavaParameterizedType) annotationValue.getType();
-            javaClassList.add(annotationValueType.getGenericCanonicalName());
+        for (AnnotationValue annotationValue : annotationValueList) {
+            TypeRef typeRef = (TypeRef) annotationValue;
+            DefaultJavaParameterizedType annotationValueType = (DefaultJavaParameterizedType) typeRef.getType();
+            javaClassList.add(annotationValueType.getGenericFullyQualifiedName());
+        }
+    }
+
+
+    private static void addGroupClass(List<AnnotationValue> annotationValueList, Set<String> javaClassList, JavaProjectBuilder builder) {
+        if (CollectionUtil.isEmpty(annotationValueList)) {
+            return;
+        }
+        for (AnnotationValue annotationValue : annotationValueList) {
+            TypeRef typeRef = (TypeRef) annotationValue;
+            DefaultJavaParameterizedType annotationValueType = (DefaultJavaParameterizedType) typeRef.getType();
+            String genericCanonicalName = annotationValueType.getGenericFullyQualifiedName();
+            JavaClass classByName = builder.getClassByName(genericCanonicalName);
+            recursionGetAllValidInterface(classByName, javaClassList, builder);
+            javaClassList.add(genericCanonicalName);
+        }
+    }
+
+    private static void recursionGetAllValidInterface(JavaClass classByName, Set<String> javaClassSet, JavaProjectBuilder builder) {
+        List<JavaType> anImplements = classByName.getImplements();
+        if (CollectionUtil.isEmpty(anImplements)) {
+            return;
+        }
+        for (JavaType javaType : anImplements) {
+            String genericFullyQualifiedName = javaType.getGenericFullyQualifiedName();
+            javaClassSet.add(genericFullyQualifiedName);
+            if (Objects.equals("javax.validation.groups.Default", genericFullyQualifiedName)) {
+                continue;
+            }
+            JavaClass implementJavaClass = builder.getClassByName(genericFullyQualifiedName);
+            recursionGetAllValidInterface(implementJavaClass, javaClassSet, builder);
         }
     }
 
     private static List<AnnotationValue> getAnnotationValues(List<String> validates, JavaAnnotation javaAnnotation) {
-        List<AnnotationValue> annotationValueList = null;
+        List<AnnotationValue> annotationValueList = new ArrayList<>();
         String simpleName = javaAnnotation.getType().getValue();
         if (simpleName.equalsIgnoreCase(ValidatorAnnotations.VALIDATED)) {
             if (Objects.nonNull(javaAnnotation.getProperty(DocAnnotationConstants.VALUE_PROP))) {
@@ -459,7 +641,6 @@ public class JavaClassUtil {
                     annotationValueList = ((AnnotationValueList) v).getValueList();
                 }
                 if (v instanceof TypeRef) {
-                    annotationValueList = new ArrayList<>();
                     annotationValueList.add(v);
                 }
             }
@@ -470,7 +651,6 @@ public class JavaClassUtil {
                     annotationValueList = ((AnnotationValueList) v).getValueList();
                 }
                 if (v instanceof TypeRef) {
-                    annotationValueList = new ArrayList<>();
                     annotationValueList.add(v);
                 }
             }
@@ -512,5 +692,40 @@ public class JavaClassUtil {
             return false;
         }
         return false;
+    }
+
+    public static Map<String, String> getClassJsonIgnoreFields(JavaClass cls) {
+        if (cls == null) return Collections.EMPTY_MAP;
+        List<JavaAnnotation> classAnnotation = cls.getAnnotations();
+        Map<String, String> ignoreFields = new HashMap<>();
+        for (JavaAnnotation annotation : classAnnotation) {
+            String simpleAnnotationName = annotation.getType().getValue();
+            if (DocAnnotationConstants.SHORT_JSON_IGNORE_PROPERTIES.equalsIgnoreCase(simpleAnnotationName)) {
+                return JavaClassUtil.getJsonIgnoresProp(annotation, DocAnnotationConstants.VALUE_PROP);
+            }
+            if (DocAnnotationConstants.SHORT_JSON_TYPE.equals(simpleAnnotationName)) {
+                return JavaClassUtil.getJsonIgnoresProp(annotation, DocAnnotationConstants.IGNORE_PROP);
+            }
+        }
+        return ignoreFields;
+    }
+
+    public static Map<String, String> getJsonIgnoresProp(JavaAnnotation annotation, String propName) {
+        Map<String, String> ignoreFields = new HashMap<>();
+        Object ignoresObject = annotation.getNamedParameter(propName);
+        if (Objects.isNull(ignoresObject)) {
+            return ignoreFields;
+        }
+        if (ignoresObject instanceof String) {
+            String prop = StringUtil.removeQuotes(ignoresObject.toString());
+            ignoreFields.put(prop, null);
+            return ignoreFields;
+        }
+        List<String> ignorePropList = (LinkedList) ignoresObject;
+        for (String str : ignorePropList) {
+            String prop = StringUtil.removeQuotes(str);
+            ignoreFields.put(prop, null);
+        }
+        return ignoreFields;
     }
 }

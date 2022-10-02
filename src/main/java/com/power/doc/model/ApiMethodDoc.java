@@ -1,7 +1,7 @@
 /*
  * smart-doc
  *
- * Copyright (C) 2018-2021 smart-doc
+ * Copyright (C) 2018-2022 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -33,7 +33,7 @@ import java.util.Map;
 /**
  * java api method info model.
  */
-public class ApiMethodDoc implements Serializable {
+public class ApiMethodDoc implements Serializable, Cloneable {
 
 
     private static final long serialVersionUID = 7211922919532562867L;
@@ -109,7 +109,7 @@ public class ApiMethodDoc implements Serializable {
     /**
      * http request headers
      */
-    private List<ApiReqHeader> requestHeaders;
+    private List<ApiReqParam> requestHeaders;
 
     /**
      * path params
@@ -181,19 +181,60 @@ public class ApiMethodDoc implements Serializable {
      * mark page
      */
     private String page = "";
+    /**
+     * torna request is array
+     */
+    private Integer isRequestArray;
+    /**
+     * torna request is array-type
+     */
+    private String requestArrayType;
+    /**
+     * torna response is array
+     */
+    private Integer isResponseArray;
+    /**
+     * torna request is array
+     */
+    private String responseArrayType;
 
     /**
-     * 是否为List数据 openApi
+     * tags
      */
-    private boolean listParam = false;
+    private String[] tags;
 
-    public boolean isListParam() {
-        return listParam;
+    public Integer getIsRequestArray() {
+        return isRequestArray;
     }
 
-    public void setListParam(boolean listParam) {
-        this.listParam = listParam;
+    public void setIsRequestArray(Integer isRequestArray) {
+        this.isRequestArray = isRequestArray;
     }
+
+    public String getRequestArrayType() {
+        return requestArrayType;
+    }
+
+    public void setRequestArrayType(String requestArrayType) {
+        this.requestArrayType = requestArrayType;
+    }
+
+    public Integer getIsResponseArray() {
+        return isResponseArray;
+    }
+
+    public void setIsResponseArray(Integer isResponseArray) {
+        this.isResponseArray = isResponseArray;
+    }
+
+    public String getResponseArrayType() {
+        return responseArrayType;
+    }
+
+    public void setResponseArrayType(String responseArrayType) {
+        this.responseArrayType = responseArrayType;
+    }
+
 
     public String getMethodId() {
         return methodId;
@@ -291,11 +332,11 @@ public class ApiMethodDoc implements Serializable {
         this.responseParams = responseParams;
     }
 
-    public List<ApiReqHeader> getRequestHeaders() {
+    public List<ApiReqParam> getRequestHeaders() {
         return requestHeaders;
     }
 
-    public void setRequestHeaders(List<ApiReqHeader> requestHeaders) {
+    public void setRequestHeaders(List<ApiReqParam> requestHeaders) {
         this.requestHeaders = requestHeaders;
     }
 
@@ -415,6 +456,15 @@ public class ApiMethodDoc implements Serializable {
         this.page = page;
     }
 
+    public String[] getTags() {
+        return tags;
+    }
+
+    public ApiMethodDoc setTags(String[] tags) {
+        this.tags = tags;
+        return this;
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("{");
@@ -462,5 +512,14 @@ public class ApiMethodDoc implements Serializable {
                 .append(deprecated);
         sb.append('}');
         return sb.toString();
+    }
+
+    @Override
+    public ApiMethodDoc clone() {
+        try {
+            return (ApiMethodDoc) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException("clone apiMethodDoc is error", e);
+        }
     }
 }

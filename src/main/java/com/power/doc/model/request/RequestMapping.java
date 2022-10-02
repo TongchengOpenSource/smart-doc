@@ -1,7 +1,7 @@
 /*
  * smart-doc https://github.com/shalousun/smart-doc
  *
- * Copyright (C) 2018-2021 smart-doc
+ * Copyright (C) 2018-2022 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -35,7 +35,14 @@ public class RequestMapping {
      * path
      */
     private String shortUrl;
+    /**
+     * method type
+     */
     private String methodType;
+
+    /**
+     * media type
+     */
     private String mediaType;
 
     /**
