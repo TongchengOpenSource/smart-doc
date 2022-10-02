@@ -58,7 +58,7 @@ public interface IRequestMappingHandler {
             requestMapping.setUrl(url).setShortUrl(shortUrl);
             return requestMapping;
         }
-        return null;
+        return requestMapping;
     }
 
     RequestMapping handle(ProjectDocConfigBuilder projectBuilder, String controllerBaseUrl, JavaMethod method,
