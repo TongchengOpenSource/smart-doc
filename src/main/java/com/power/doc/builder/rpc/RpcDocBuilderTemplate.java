@@ -56,7 +56,7 @@ import static com.power.doc.constants.DocGlobalConstants.RPC_OUT_DIR;
 public class RpcDocBuilderTemplate extends BaseDocBuilderTemplate {
 
     private static final String DEPENDENCY_TITLE = "Add dependency";
-    private static long now = System.currentTimeMillis();
+    private static final long now = System.currentTimeMillis();
 
     public void checkAndInit(ApiConfig config) {
         if (StringUtil.isEmpty(config.getFramework())) {
@@ -158,8 +158,7 @@ public class RpcDocBuilderTemplate extends BaseDocBuilderTemplate {
         apiDoc.setDesc(DEPENDENCY_TITLE);
         apiDoc.setList(new ArrayList<>(0));
         apiDocs.add(apiDoc);
-        List<RpcApiDoc> apiDocs1 = apiDocList;
-        for (RpcApiDoc apiDoc1 : apiDocs1) {
+        for (RpcApiDoc apiDoc1 : apiDocList) {
             apiDoc1.setOrder(apiDocs.size() + 1);
             apiDocs.add(apiDoc1);
         }
@@ -218,7 +217,7 @@ public class RpcDocBuilderTemplate extends BaseDocBuilderTemplate {
         this.checkAndInitForGetApiData(config);
         config.setMd5EncryptedHtmlName(true);
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
-        IDocBuildTemplate docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework());
+        IDocBuildTemplate<RpcApiDoc> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework());
         return docBuildTemplate.getApiData(configBuilder);
     }
 

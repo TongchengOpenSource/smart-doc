@@ -126,11 +126,10 @@ public interface IHeaderHandler {
                 }
             }
         }
-        List<ApiReqParam> allApiReqHeaders = Stream.of(mappingHeaders, reqHeaders)
+        return Stream.of(mappingHeaders, reqHeaders)
                 .flatMap(Collection::stream)
                 .distinct()
                 .collect(Collectors.toList());
-        return allApiReqHeaders;
     }
 
     default void processMappingHeaders(String header, List<ApiReqParam> mappingHeaders) {

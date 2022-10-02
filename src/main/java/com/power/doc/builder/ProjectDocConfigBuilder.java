@@ -49,25 +49,25 @@ import static com.power.doc.constants.DocGlobalConstants.DEFAULT_SERVER_URL;
  */
 public class ProjectDocConfigBuilder {
 
-    private static Logger log = Logger.getLogger(ProjectDocConfigBuilder.class.getName());
+    private static final Logger log = Logger.getLogger(ProjectDocConfigBuilder.class.getName());
 
-    private JavaProjectBuilder javaProjectBuilder;
+    private final JavaProjectBuilder javaProjectBuilder;
 
-    private Map<String, JavaClass> classFilesMap = new ConcurrentHashMap<>();
+    private final Map<String, JavaClass> classFilesMap = new ConcurrentHashMap<>();
 
-    private Map<String, Class<? extends Enum>> enumClassMap = new ConcurrentHashMap<>();
+    private final Map<String, Class<? extends Enum>> enumClassMap = new ConcurrentHashMap<>();
 
-    private Map<String, CustomField> customRespFieldMap = new ConcurrentHashMap<>();
+    private final Map<String, CustomField> customRespFieldMap = new ConcurrentHashMap<>();
 
-    private Map<String, CustomField> customReqFieldMap = new ConcurrentHashMap<>();
+    private final Map<String, CustomField> customReqFieldMap = new ConcurrentHashMap<>();
 
-    private Map<String, String> replaceClassMap = new ConcurrentHashMap<>();
+    private final Map<String, String> replaceClassMap = new ConcurrentHashMap<>();
 
-    private Map<String, String> constantsMap = new ConcurrentHashMap<>();
+    private final Map<String, String> constantsMap = new ConcurrentHashMap<>();
 
-    private String serverUrl;
+    private final String serverUrl;
 
-    private ApiConfig apiConfig;
+    private final ApiConfig apiConfig;
 
 
     public ProjectDocConfigBuilder(ApiConfig apiConfig, JavaProjectBuilder javaProjectBuilder) {
@@ -103,7 +103,7 @@ public class ProjectDocConfigBuilder {
     }
 
     private void initDict(ApiConfig apiConfig) {
-        if (Objects.isNull(enumClassMap) || enumClassMap.size() == 0) {
+        if (enumClassMap.size() == 0) {
             return;
         }
         List<ApiDataDictionary> dataDictionaries = apiConfig.getDataDictionaries();

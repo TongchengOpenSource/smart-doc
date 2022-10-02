@@ -71,7 +71,7 @@ public enum DocValidatorAnnotationEnum {
 
     VALIDATED("Validated");
 
-    private String value;
+    private final String value;
 
     DocValidatorAnnotationEnum(String value) {
         this.value = value;

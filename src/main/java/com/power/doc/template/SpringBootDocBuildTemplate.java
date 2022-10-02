@@ -23,10 +23,7 @@
 package com.power.doc.template;
 
 import com.power.doc.builder.ProjectDocConfigBuilder;
-import com.power.doc.constants.DocAnnotationConstants;
-import com.power.doc.constants.DocGlobalConstants;
-import com.power.doc.constants.Methods;
-import com.power.doc.constants.SpringMvcAnnotations;
+import com.power.doc.constants.*;
 import com.power.doc.handler.SpringMVCRequestHeaderHandler;
 import com.power.doc.handler.SpringMVCRequestMappingHandler;
 import com.power.doc.model.ApiConfig;
@@ -39,7 +36,6 @@ import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaMethod;
 
 import java.util.*;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -47,8 +43,6 @@ import java.util.stream.Stream;
  * @author yu 2019/12/21.
  */
 public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDocTemplate {
-
-    private static Logger log = Logger.getLogger(SpringBootDocBuildTemplate.class.getName());
 
     @Override
     public List<ApiDoc> getApiData(ProjectDocConfigBuilder projectBuilder) {
@@ -190,7 +184,17 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IR
     }
 
     @Override
+    public List<String> listMvcRequestAnnotations() {
+        return SpringMvcRequestAnnotationsEnum.listSpringMvcRequestAnnotations();
+    }
+
+    @Override
     public void requestMappingPostProcess(JavaClass javaClass, JavaMethod method, RequestMapping requestMapping) {
         // do nothing
+    }
+
+    @Override
+    public boolean ignoreMvcParamWithAnnotation(String annotation) {
+        return JavaClassValidateUtil.ignoreSpringMvcParamWithAnnotation(annotation);
     }
 }

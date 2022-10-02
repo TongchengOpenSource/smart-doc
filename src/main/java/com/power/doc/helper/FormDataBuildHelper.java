@@ -100,7 +100,6 @@ public class FormDataBuildHelper {
             formDataList.addAll(getFormData(gicName, registryClasses, counter, builder, pre + "[]"));
         }
         int n = 0;
-        out:
         for (DocJavaField docField : fields) {
             JavaField field = docField.getJavaField();
             String fieldName = field.getName();
@@ -119,7 +118,7 @@ public class FormDataBuildHelper {
             }
             Map<String, String> tagsMap = DocUtil.getFieldTagsValue(field, docField);
             if (tagsMap.containsKey(DocTags.IGNORE)) {
-                continue out;
+                continue;
             }
             String typeSimpleName = field.getType().getSimpleName();
             if (JavaClassValidateUtil.isMap(subTypeName)) {
@@ -138,7 +137,7 @@ public class FormDataBuildHelper {
                 formData.setValue("");
                 formDataList.add(formData);
             } else if (JavaClassValidateUtil.isPrimitive(subTypeName)) {
-                String fieldValue = "";
+                String fieldValue;
                 if (tagsMap.containsKey(DocTags.MOCK) && StringUtil.isNotEmpty(tagsMap.get(DocTags.MOCK))) {
                     fieldValue = tagsMap.get(DocTags.MOCK);
                 } else {
@@ -171,11 +170,11 @@ public class FormDataBuildHelper {
                 String gNameTemp = field.getType().getGenericCanonicalName();
                 String[] gNameArr = DocClassUtil.getSimpleGicName(gNameTemp);
                 if (gNameArr.length == 0) {
-                    continue out;
+                    continue;
                 }
                 String gName = DocClassUtil.getSimpleGicName(gNameTemp)[0];
                 if (JavaClassValidateUtil.isPrimitive(gName)) {
-                    String fieldValue = "";
+                    String fieldValue;
                     if (tagsMap.containsKey(DocTags.MOCK) && StringUtil.isNotEmpty(tagsMap.get(DocTags.MOCK))) {
                         fieldValue = tagsMap.get(DocTags.MOCK);
                     } else {
@@ -189,11 +188,11 @@ public class FormDataBuildHelper {
                     formData.setDescription(comment);
                     formDataList.add(formData);
                 } else {
-                    if (!simpleName.equals(gName) && !gName.equals(simpleName)) {
+                    if (!simpleName.equals(gName)) {
                         if (gName.length() == 1) {
                             int len = globGicName.length;
                             if (len > 0) {
-                                String gicName = (n < len) ? globGicName[n] : globGicName[len - 1];
+                                String gicName = globGicName[n];
                                 if (!JavaClassValidateUtil.isPrimitive(gicName) && !simpleName.equals(gicName)) {
                                     formDataList.addAll(getFormData(gicName, registryClasses, counter, builder, pre + fieldName + "[0]."));
                                 }
@@ -210,7 +209,6 @@ public class FormDataBuildHelper {
 //                    formDataList.addAll(getFormData(gicName, registryClasses, counter, builder, pre + fieldName + "."));
 //                }
 //                n++;
-                continue;
             } else {
                 formDataList.addAll(getFormData(fieldGicName, registryClasses, counter, builder, pre + fieldName + "."));
             }

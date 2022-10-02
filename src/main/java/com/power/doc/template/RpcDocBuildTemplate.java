@@ -94,10 +94,6 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc>, BaseDo
         return apiDocList;
     }
 
-    public RpcApiDoc getSingleApiData(ProjectDocConfigBuilder projectBuilder, String apiClassName) {
-        return null;
-    }
-
     public boolean ignoreReturnObject(String typeName, List<String> ignoreParams) {
         return false;
     }
@@ -253,7 +249,6 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc>, BaseDo
         }
         return paramList;
     }
-
 
     public boolean isEntryPoint(JavaClass cls, FrameworkAnnotations frameworkAnnotations) {
         // Exclude DubboSwaggerService from dubbo 2.7.x

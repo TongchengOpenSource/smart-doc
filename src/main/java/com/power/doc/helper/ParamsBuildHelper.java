@@ -162,7 +162,7 @@ public class ParamsBuildHelper {
                 String since = DocGlobalConstants.DEFAULT_VERSION;
 
                 if (tagsMap.containsKey(DocTags.IGNORE)) {
-                    continue out;
+                    continue;
                 } else if (tagsMap.containsKey(DocTags.SINCE)) {
                     since = tagsMap.get(DocTags.SINCE);
                 }
@@ -179,7 +179,6 @@ public class ParamsBuildHelper {
                         && (customRequestField.isIgnore()) && !isResp) {
                     continue;
                 }
-                an:
                 for (JavaAnnotation annotation : javaAnnotations) {
                     String simpleAnnotationName = annotation.getType().getValue();
                     if (DocAnnotationConstants.JSON_PROPERTY.equalsIgnoreCase(simpleAnnotationName)) {
@@ -226,6 +225,7 @@ public class ParamsBuildHelper {
                         for (String javaClass : groupClassList) {
                             if (groupClasses.contains(javaClass)) {
                                 hasGroup = true;
+                                break;
                             }
                         }
                         if (hasGroup) {
@@ -247,10 +247,8 @@ public class ParamsBuildHelper {
                     }
                 }
                 if (annotationCounter < 1) {
-                    doc:
                     if (tagsMap.containsKey(DocTags.REQUIRED)) {
                         strRequired = true;
-                        break doc;
                     }
                 }
 
@@ -393,7 +391,7 @@ public class ParamsBuildHelper {
                         }
                         String[] gNameArr = DocClassUtil.getSimpleGicName(fieldGicName);
                         if (gNameArr.length == 0) {
-                            continue out;
+                            continue;
                         }
                         if (gNameArr.length > 0) {
                             String gName = DocClassUtil.getSimpleGicName(fieldGicName)[0];
@@ -434,7 +432,7 @@ public class ParamsBuildHelper {
                                     // handle generic
                                     int len = globGicName.length;
                                     if (len < 1) {
-                                        continue out;
+                                        continue;
                                     }
                                     String gicName = genericMap.get(gName) != null ? genericMap.get(gName) : globGicName[0];
 
@@ -463,9 +461,8 @@ public class ParamsBuildHelper {
                             commonHandleParam(paramList, param, isRequired, NO_COMMENTS_FOUND + appendComment, since, strRequired);
                         }
                         fieldPid = Optional.ofNullable(atomicInteger).isPresent() ? param.getId() : paramList.size() + pid;
-                        String gNameTemp = fieldGicName;
-                        String valType = DocClassUtil.getMapKeyValueType(gNameTemp).length == 0 ? gNameTemp : DocClassUtil.getMapKeyValueType(gNameTemp)[1];
-                        if (JavaClassValidateUtil.isMap(gNameTemp) || JAVA_OBJECT_FULLY.equals(valType)) {
+                        String valType = DocClassUtil.getMapKeyValueType(fieldGicName).length == 0 ? fieldGicName : DocClassUtil.getMapKeyValueType(fieldGicName)[1];
+                        if (JavaClassValidateUtil.isMap(fieldGicName) || JAVA_OBJECT_FULLY.equals(valType)) {
                             ApiParam param1 = ApiParam.of()
                                     .setField(preBuilder.toString() + "any object")
                                     .setId(atomicOrDefault(atomicInteger, fieldPid + 1)).setPid(fieldPid)
@@ -579,7 +576,7 @@ public class ParamsBuildHelper {
                     .setVersion(DEFAULT_VERSION)
                     .setPid(pid)
                     .setId(atomicOrDefault(atomicInteger, ++pid));
-            paramList.addAll(Collections.singletonList(apiParam));
+            paramList.add(apiParam);
         }
         // build param when map value is not primitive
         if (JavaClassValidateUtil.isPrimitive(valueSimpleName)) {

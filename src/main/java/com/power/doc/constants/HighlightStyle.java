@@ -171,7 +171,6 @@ public class HighlightStyle {
         background.put("atelier-savanna-light", "#ecf4ee");
         background.put("atelier-seaside-dark", "#131513");
         background.put("atelier-seaside-light", "#f4fbf4");
-        background.put("atelier-cave-light", "#efecf4");
         background.put("atelier-sulphurpool-dark", "#202746");
         background.put("atelier-sulphurpool-light", "#f5f7ff");
         background.put("atom-one-dark", "#282c34");

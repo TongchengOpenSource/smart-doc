@@ -532,15 +532,6 @@ public class JavaClassUtil {
         return javaClassList;
     }
 
-    /**
-     * 通过name获取类标签的value
-     *
-     * @param cls           类
-     * @param tagName       需要获取的标签name
-     * @param checkComments 检查注释
-     * @return 类标签的value
-     * @author songhaozhi
-     */
     public static String getClassTagsValue(final JavaClass cls, final String tagName, boolean checkComments) {
         if (StringUtil.isNotEmpty(tagName)) {
             StringBuilder result = new StringBuilder();
@@ -695,7 +686,9 @@ public class JavaClassUtil {
     }
 
     public static Map<String, String> getClassJsonIgnoreFields(JavaClass cls) {
-        if (cls == null) return Collections.EMPTY_MAP;
+        if (Objects.isNull(cls)) {
+            return Collections.EMPTY_MAP;
+        }
         List<JavaAnnotation> classAnnotation = cls.getAnnotations();
         Map<String, String> ignoreFields = new HashMap<>();
         for (JavaAnnotation annotation : classAnnotation) {
@@ -721,7 +714,7 @@ public class JavaClassUtil {
             ignoreFields.put(prop, null);
             return ignoreFields;
         }
-        List<String> ignorePropList = (LinkedList) ignoresObject;
+        LinkedList<String> ignorePropList = (LinkedList) ignoresObject;
         for (String str : ignorePropList) {
             String prop = StringUtil.removeQuotes(str);
             ignoreFields.put(prop, null);

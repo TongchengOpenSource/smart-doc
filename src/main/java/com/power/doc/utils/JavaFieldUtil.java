@@ -121,7 +121,7 @@ public class JavaFieldUtil {
      * getJsr303Comment
      *
      * @param annotations annotations
-     * @return
+     * @return Jsr comments
      */
     public static String getJsrComment(List<JavaAnnotation> annotations) {
         StringBuilder sb = new StringBuilder();

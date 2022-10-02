@@ -86,15 +86,14 @@ public class BeetlTemplateUtil {
     }
 
     /**
-     * @param path
-     * @return
+     * @param path file path
+     * @return group template
      */
     private static GroupTemplate getGroupTemplate(String path) {
         try {
             ClasspathResourceLoader resourceLoader = new ClasspathResourceLoader("/" + path + "/");
             Configuration cfg = Configuration.defaultConfiguration();
-            GroupTemplate gt = new GroupTemplate(resourceLoader, cfg);
-            return gt;
+            return new GroupTemplate(resourceLoader, cfg);
         } catch (IOException e) {
             throw new RuntimeException("Can't found Beetl template.");
         }

@@ -64,10 +64,8 @@ public class SourceCodePath {
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("{");
-        sb.append("\"path\":\"")
-                .append(path).append('\"');
-        sb.append(",\"desc\":\"")
-                .append(desc).append('\"');
+        sb.append("\"path\":\"").append(path).append('\"');
+        sb.append(",\"desc\":\"").append(desc).append('\"');
         sb.append('}');
         return sb.toString();
     }

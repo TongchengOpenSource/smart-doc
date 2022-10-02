@@ -67,10 +67,7 @@ public class SpringMVCRequestMappingHandler implements IRequestMappingHandler {
         String methodType = null;
         String shortUrl = null;
         String mediaType = null;
-        boolean deprecated = false;
-        if (Objects.nonNull(method.getTagByName(DEPRECATED))) {
-            deprecated = true;
-        }
+        boolean deprecated = Objects.nonNull(method.getTagByName(DEPRECATED));
         Map<String, MappingAnnotation> mappingAnnotationMap = frameworkAnnotations.getMappingAnnotations();
         for (JavaAnnotation annotation : annotations) {
             String annotationName = annotation.getType().getName();
@@ -87,7 +84,7 @@ public class SpringMVCRequestMappingHandler implements IRequestMappingHandler {
             }
             if (CollectionUtil.isNotEmpty(mappingAnnotation.getPathProps())) {
                 shortUrl = DocUtil.getPathUrl(annotation, mappingAnnotation.getPathProps()
-                        .toArray(new String[mappingAnnotation.getPathProps().size()]));
+                        .toArray(new String[0]));
             }
             if (StringUtil.isNotEmpty(mappingAnnotation.getMethodType())) {
                 methodType = mappingAnnotation.getMethodType();

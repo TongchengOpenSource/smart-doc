@@ -24,6 +24,7 @@ package com.power.doc.utils;
 
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.StringUtil;
+import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.model.ApiMethodReqParam;
 import com.power.doc.model.ApiParam;
 import com.power.doc.model.ApiReqParam;
@@ -47,7 +48,7 @@ public class ApiParamTreeUtil {
         // find root
         for (ApiParam apiParam : apiParamList) {
             // remove pre of field
-            apiParam.setField(apiParam.getField().replaceAll("└─", "").replaceAll("&nbsp;", ""));
+            apiParam.setField(apiParam.getField().replaceAll(DocGlobalConstants.PARAM_PREFIX, "").replaceAll("&nbsp;", ""));
             // pid == 0
             if (apiParam.getPid() == 0) {
                 params.add(apiParam);

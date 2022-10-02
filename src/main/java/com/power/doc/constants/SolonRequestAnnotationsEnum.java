@@ -39,7 +39,7 @@ public enum SolonRequestAnnotationsEnum {
     REQUEST_HERDER("Header"),
     REQUEST_HERDER_FULLY("org.noear.solon.annotation.Header"),
     ;
-    private String value;
+    private final String value;
 
     SolonRequestAnnotationsEnum(String value) {
         this.value = value;

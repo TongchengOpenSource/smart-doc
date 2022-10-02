@@ -54,12 +54,12 @@ public enum FrameworkEnum {
     /**
      * Framework name
      */
-    private String framework;
+    private final String framework;
 
     /**
      * Framework  IDocBuildTemplate implement
      */
-    private String className;
+    private final String className;
 
 
     FrameworkEnum(String framework, String className) {
@@ -72,9 +72,9 @@ public enum FrameworkEnum {
         if (StringUtil.isEmpty(framework)) {
             return className;
         }
-        for (FrameworkEnum e : FrameworkEnum.values()) {
-            if (e.framework.equalsIgnoreCase(framework)) {
-                className = e.className;
+        for (FrameworkEnum frameworkEnum : FrameworkEnum.values()) {
+            if (frameworkEnum.framework.equalsIgnoreCase(framework)) {
+                className = frameworkEnum.className;
                 break;
             }
         }

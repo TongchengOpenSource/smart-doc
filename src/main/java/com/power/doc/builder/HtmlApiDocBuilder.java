@@ -45,7 +45,7 @@ public class HtmlApiDocBuilder {
 
     private static final String ERROR_CODE_HTML = "error.html";
     private static final String DICT_HTML = "dict.html";
-    private static long now = System.currentTimeMillis();
+    private static final long now = System.currentTimeMillis();
     private static String INDEX_HTML = "index.html";
 
     /**
@@ -69,14 +69,14 @@ public class HtmlApiDocBuilder {
         builderTemplate.checkAndInit(config, false);
         config.setParamsDataToTree(false);
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
-        IDocBuildTemplate docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework());
+        IDocBuildTemplate<ApiDoc> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework());
         List<ApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder);
         Template indexCssTemplate = BeetlTemplateUtil.getByName(ALL_IN_ONE_CSS);
         FileUtil.nioWriteFile(indexCssTemplate.render(), config.getOutPath() + FILE_SEPARATOR + ALL_IN_ONE_CSS_OUT);
-        builderTemplate.copyJarFile("js/" + HIGH_LIGHT_JS, config.getOutPath() + FILE_SEPARATOR + HIGH_LIGHT_JS);
-        builderTemplate.copyJarFile("css/" + FONT_STYLE, config.getOutPath() + FILE_SEPARATOR + FONT_STYLE);
-        builderTemplate.copyJarFile("js/" + JQUERY, config.getOutPath() + FILE_SEPARATOR + JQUERY);
-        builderTemplate.copyJarFile("css/" + HIGH_LIGHT_STYLE, config.getOutPath() + FILE_SEPARATOR + HIGH_LIGHT_STYLE);
+        BaseDocBuilderTemplate.copyJarFile("js/" + HIGH_LIGHT_JS, config.getOutPath() + FILE_SEPARATOR + HIGH_LIGHT_JS);
+        BaseDocBuilderTemplate.copyJarFile("css/" + FONT_STYLE, config.getOutPath() + FILE_SEPARATOR + FONT_STYLE);
+        BaseDocBuilderTemplate.copyJarFile("js/" + JQUERY, config.getOutPath() + FILE_SEPARATOR + JQUERY);
+        BaseDocBuilderTemplate.copyJarFile("css/" + HIGH_LIGHT_STYLE, config.getOutPath() + FILE_SEPARATOR + HIGH_LIGHT_STYLE);
         if (config.isAllInOne()) {
             apiDocList = docBuildTemplate.handleApiGroup(apiDocList, config);
             if (config.isCreateDebugPage()) {

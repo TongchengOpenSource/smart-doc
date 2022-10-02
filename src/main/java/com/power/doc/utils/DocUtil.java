@@ -353,8 +353,7 @@ public class DocUtil {
         List<String> result = new ArrayList<>();
         StringBuilder sb = new StringBuilder();
         Stack<Character> stack = new Stack<>();
-        for (int i = 0; i < chars.length; i++) {
-            char s = chars[i];
+        for (char s : chars) {
             if ('{' == s) {
                 stack.push(s);
             }
@@ -926,7 +925,7 @@ public class DocUtil {
      *
      * @param value               url
      * @param visitedPlaceholders cycle
-     * @return
+     * @return url deleted
      */
     public static String delPropertiesUrl(String value, Set<String> visitedPlaceholders) {
         int startIndex = value.indexOf(PLACEHOLDER_PREFIX);

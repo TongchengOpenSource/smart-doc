@@ -23,6 +23,7 @@
 package com.power.doc.builder.rpc;
 
 import com.power.common.util.FileUtil;
+import com.power.doc.builder.BaseDocBuilderTemplate;
 import com.power.doc.builder.ProjectDocConfigBuilder;
 import com.power.doc.factory.BuildTemplateFactory;
 import com.power.doc.helper.JavaProjectBuilderHelper;
@@ -41,12 +42,6 @@ import static com.power.doc.constants.DocGlobalConstants.*;
  * @author yu 2020/5/17.
  */
 public class RpcHtmlBuilder {
-
-    private static long now = System.currentTimeMillis();
-
-    private static String INDEX_HTML = "rpc-index.html";
-
-    private static String SEARCH_JS = "search.js";
 
 
     /**
@@ -70,13 +65,15 @@ public class RpcHtmlBuilder {
         RpcDocBuilderTemplate builderTemplate = new RpcDocBuilderTemplate();
         builderTemplate.checkAndInit(config);
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
-        IDocBuildTemplate docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework());
+        IDocBuildTemplate<RpcApiDoc> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework());
         List<RpcApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder);
         Template indexCssTemplate = BeetlTemplateUtil.getByName(ALL_IN_ONE_CSS);
         FileUtil.nioWriteFile(indexCssTemplate.render(), config.getOutPath() + FILE_SEPARATOR + ALL_IN_ONE_CSS_OUT);
-        builderTemplate.copyJarFile("css/" + FONT_STYLE, config.getOutPath() + FILE_SEPARATOR + FONT_STYLE);
-        builderTemplate.copyJarFile("js/" + JQUERY, config.getOutPath() + FILE_SEPARATOR + JQUERY);
+        BaseDocBuilderTemplate.copyJarFile("css/" + FONT_STYLE, config.getOutPath() + FILE_SEPARATOR + FONT_STYLE);
+        BaseDocBuilderTemplate.copyJarFile("js/" + JQUERY, config.getOutPath() + FILE_SEPARATOR + JQUERY);
+        String INDEX_HTML = "rpc-index.html";
         builderTemplate.buildAllInOne(apiDocList, config, javaProjectBuilder, RPC_ALL_IN_ONE_HTML_TPL, INDEX_HTML);
+        String SEARCH_JS = "search.js";
         builderTemplate.buildSearchJs(apiDocList, config, javaProjectBuilder, RPC_ALL_IN_ONE_SEARCH_TPL, SEARCH_JS);
     }
 }

@@ -247,7 +247,7 @@ public class PostmanJsonBuilder {
     }
 
     private static void postManCreate(ApiConfig config, ProjectDocConfigBuilder configBuilder) {
-        IDocBuildTemplate docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework());
+        IDocBuildTemplate<ApiDoc> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework());
         List<ApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder);
         RequestItem requestItem = new RequestItem();
         requestItem.setInfo(new InfoBean(config.getProjectName()));

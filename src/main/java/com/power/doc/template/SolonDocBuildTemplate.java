@@ -31,6 +31,7 @@ import com.power.doc.model.ApiDoc;
 import com.power.doc.model.ApiReqParam;
 import com.power.doc.model.annotation.*;
 import com.power.doc.model.request.RequestMapping;
+import com.power.doc.utils.DocUtil;
 import com.power.doc.utils.JavaClassValidateUtil;
 import com.thoughtworks.qdox.model.DocletTag;
 import com.thoughtworks.qdox.model.JavaAnnotation;
@@ -38,7 +39,6 @@ import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaMethod;
 
 import java.util.*;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -46,8 +46,6 @@ import java.util.stream.Stream;
  * @author noear 2022/2/19 created
  */
 public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDocTemplate {
-
-    private static Logger log = Logger.getLogger(SpringBootDocBuildTemplate.class.getName());
 
     @Override
     public List<ApiDoc> getApiData(ProjectDocConfigBuilder projectBuilder) {
@@ -90,10 +88,15 @@ public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDo
     }
 
     @Override
+    public List<String> listMvcRequestAnnotations() {
+        return SolonRequestAnnotationsEnum.listMvcRequestAnnotations();
+    }
+
+    @Override
     public void requestMappingPostProcess(JavaClass javaClass, JavaMethod method, RequestMapping requestMapping) {
         boolean isRemote = false;
         if (javaClass.isAnnotation() || javaClass.isEnum()) {
-            isRemote = false;
+            return;
         }
         for (JavaAnnotation annotation : javaClass.getAnnotations()) {
             String name = annotation.getType().getValue();
@@ -112,6 +115,11 @@ public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDo
                 requestMapping.setMediaType("text/json");
             }
         }
+    }
+
+    @Override
+    public boolean ignoreMvcParamWithAnnotation(String annotation) {
+        return JavaClassValidateUtil.ignoreSolonMvcParamWithAnnotation(annotation);
     }
 
 

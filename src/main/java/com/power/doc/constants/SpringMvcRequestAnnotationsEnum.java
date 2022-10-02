@@ -39,7 +39,7 @@ public enum SpringMvcRequestAnnotationsEnum {
     REQUEST_HERDER("RequestHeader"),
     REQUEST_HERDER_FULLY("org.springframework.web.bind.annotation.RequestHeader"),
     ;
-    private String value;
+    private final String value;
 
     SpringMvcRequestAnnotationsEnum(String value) {
         this.value = value;

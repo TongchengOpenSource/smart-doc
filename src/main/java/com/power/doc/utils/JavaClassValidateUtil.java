@@ -45,7 +45,7 @@ public class JavaClassValidateUtil {
      * @return boolean
      */
     public static boolean isPrimitiveArray(String type0) {
-        String type = type0.contains("java.lang") ? type0.substring(type0.lastIndexOf(".") + 1, type0.length()) : type0;
+        String type = type0.contains("java.lang") ? type0.substring(type0.lastIndexOf(".") + 1) : type0;
         type = type.toLowerCase();
         switch (type) {
             case "integer[]":
@@ -76,7 +76,7 @@ public class JavaClassValidateUtil {
         if (Objects.isNull(type0)) {
             return true;
         }
-        String type = type0.contains("java.lang") ? type0.substring(type0.lastIndexOf(".") + 1, type0.length()) : type0;
+        String type = type0.contains("java.lang") ? type0.substring(type0.lastIndexOf(".") + 1) : type0;
         type = type.toLowerCase();
         switch (type) {
             case "integer":
@@ -197,21 +197,6 @@ public class JavaClassValidateUtil {
         }
     }
 
-
-    /**
-     * custom tag
-     *
-     * @param tagName custom field tag
-     * @return boolean
-     */
-    public static boolean isRequiredTag(String tagName) {
-        switch (tagName) {
-            case "required":
-                return true;
-            default:
-                return false;
-        }
-    }
 
     /**
      * ignore tag request field

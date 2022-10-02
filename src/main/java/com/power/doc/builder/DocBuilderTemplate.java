@@ -49,7 +49,7 @@ import static com.power.doc.constants.DocGlobalConstants.*;
  */
 public class DocBuilderTemplate extends BaseDocBuilderTemplate {
 
-    private static long now = System.currentTimeMillis();
+    private static final long now = System.currentTimeMillis();
 
     /**
      * get all api data
@@ -188,9 +188,7 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
             ApiDoc apiDoc1 = new ApiDoc();
             int codeIndex = 0;
             if (isOnlyDefaultGroup) {
-                if (apiDocs.size() > 0) {
-                    codeIndex = apiDocs.get(0).getChildrenApiDocs().size();
-                }
+                codeIndex = apiDocs.get(0).getChildrenApiDocs().size();
             } else {
                 codeIndex = apiDocList.size();
             }

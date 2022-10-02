@@ -289,7 +289,6 @@ public class TornaUtil {
     /**
      * request and response is list
      *
-     * @param apiMethodDoc
      */
     public static void setTornaArrayTags(ApiMethodDoc apiMethodDoc) {
         List<ApiParam> reqList = apiMethodDoc.getRequestParams();

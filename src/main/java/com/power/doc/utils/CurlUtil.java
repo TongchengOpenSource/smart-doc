@@ -61,9 +61,10 @@ public class CurlUtil {
             for (ApiReqParam reqHeader : request.getReqHeaders()) {
                 sb.append(" -H");
                 if (StringUtil.isEmpty(reqHeader.getValue())) {
-                    sb.append(" '" + reqHeader.getName() + "'");
+                    sb.append(" '").append(reqHeader.getName()).append("'");
                 } else {
-                    sb.append(" '" + reqHeader.getName() + ':' + reqHeader.getValue() + "'");
+                    sb.append(" '").append(reqHeader.getName()).append(':')
+                            .append(reqHeader.getValue()).append("'");
                 }
             }
         }
@@ -78,7 +79,7 @@ public class CurlUtil {
         sb.append(" ").append(request.getUrl());
         if (StringUtil.isNotEmpty(request.getBody())) {
             sb.append(" --data");
-            sb.append(" '" + request.getBody() + "'");
+            sb.append(" '").append(request.getBody()).append("'");
         }
         return sb.toString();
     }

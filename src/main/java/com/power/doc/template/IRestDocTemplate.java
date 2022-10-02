@@ -34,7 +34,7 @@ import static com.power.doc.constants.DocTags.IGNORE_REQUEST_BODY_ADVICE;
 
 public interface IRestDocTemplate extends BaseDocBuildTemplate {
 
-    static Logger log = Logger.getLogger(IRestDocTemplate.class.getName());
+    Logger log = Logger.getLogger(IRestDocTemplate.class.getName());
     AtomicInteger atomicInteger = new AtomicInteger(1);
 
     default List<ApiDoc> processApiData(ProjectDocConfigBuilder projectBuilder, FrameworkAnnotations frameworkAnnotations,
@@ -130,9 +130,7 @@ public interface IRestDocTemplate extends BaseDocBuildTemplate {
         DocletTag ignoreParam = method.getTagByName(DocTags.IGNORE_PARAMS);
         if (Objects.nonNull(ignoreParam)) {
             String[] igParams = ignoreParam.getValue().split(" ");
-            for (String str : igParams) {
-                ignoreSets.add(str);
-            }
+            Collections.addAll(ignoreSets, igParams);
         }
         return ignoreSets;
     }
@@ -261,15 +259,12 @@ public interface IRestDocTemplate extends BaseDocBuildTemplate {
     }
 
     default List<JavaAnnotation> getClassAnnotations(JavaClass cls, FrameworkAnnotations frameworkAnnotations) {
-        List<JavaAnnotation> annotationsList = new ArrayList<>();
-        annotationsList.addAll(cls.getAnnotations());
+        List<JavaAnnotation> annotationsList = new ArrayList<>(cls.getAnnotations());
         Map<String, EntryAnnotation> mappingAnnotationMap = frameworkAnnotations.getEntryAnnotations();
         boolean flag = annotationsList.stream().anyMatch(item -> {
             String annotationName = item.getType().getValue();
-            if (mappingAnnotationMap.containsKey(annotationName)) {
-                return true;
-            }
-            return false;
+            String fullyName = item.getType().getFullyQualifiedName();
+            return mappingAnnotationMap.containsKey(annotationName) || mappingAnnotationMap.containsKey(fullyName);
         });
         // child override parent set
         if (flag) {
@@ -300,7 +295,7 @@ public interface IRestDocTemplate extends BaseDocBuildTemplate {
             }
             if (CollectionUtil.isNotEmpty(mappingAnnotation.getPathProps())) {
                 baseUrl = StringUtil.removeQuotes(DocUtil.getPathUrl(annotation, mappingAnnotation.getPathProps()
-                        .toArray(new String[mappingAnnotation.getPathProps().size()])));
+                        .toArray(new String[0])));
             }
         }
 
@@ -338,9 +333,9 @@ public interface IRestDocTemplate extends BaseDocBuildTemplate {
                 continue;
             }
             //handle request mapping
-            RequestMapping requestMapping = baseMappingHandler.handle(projectBuilder, baseUrl, method, frameworkAnnotations, (javaClass, mapping) -> {
-                this.requestMappingPostProcess(javaClass, method, mapping);
-            });
+            RequestMapping requestMapping = baseMappingHandler.handle(projectBuilder, baseUrl,
+                    method, frameworkAnnotations,
+                    (javaClass, mapping) -> this.requestMappingPostProcess(javaClass, method, mapping));
             if (Objects.isNull(requestMapping)) {
                 continue;
             }
@@ -414,14 +409,10 @@ public interface IRestDocTemplate extends BaseDocBuildTemplate {
             }
 
             List<ApiReqParam> allApiReqHeaders;
-            if (configApiReqParams != null) {
-                final Map<String, List<ApiReqParam>> reqParamMap = configApiReqParams.stream().collect(Collectors.groupingBy(ApiReqParam::getParamIn));
-                final List<ApiReqParam> headerParamList = reqParamMap.getOrDefault(ApiReqParamInTypeEnum.HEADER.getValue(), Collections.emptyList());
-                allApiReqHeaders = Stream.of(headerParamList, apiReqHeaders).filter(Objects::nonNull)
-                        .flatMap(Collection::stream).distinct().filter(param -> DocUtil.filterPath(requestMapping, param)).collect(Collectors.toList());
-            } else {
-                allApiReqHeaders = apiReqHeaders.stream().filter(param -> DocUtil.filterPath(requestMapping, param)).collect(Collectors.toList());
-            }
+            final Map<String, List<ApiReqParam>> reqParamMap = configApiReqParams.stream().collect(Collectors.groupingBy(ApiReqParam::getParamIn));
+            final List<ApiReqParam> headerParamList = reqParamMap.getOrDefault(ApiReqParamInTypeEnum.HEADER.getValue(), Collections.emptyList());
+            allApiReqHeaders = Stream.of(headerParamList, apiReqHeaders).filter(Objects::nonNull)
+                    .flatMap(Collection::stream).distinct().filter(param -> DocUtil.filterPath(requestMapping, param)).collect(Collectors.toList());
 
             //reduce create in template
             apiMethodDoc.setHeaders(this.createDocRenderHeaders(allApiReqHeaders, apiConfig.isAdoc()));
@@ -525,7 +516,7 @@ public interface IRestDocTemplate extends BaseDocBuildTemplate {
         boolean requestFieldToUnderline = configBuilder.getApiConfig().isRequestFieldToUnderline();
         Map<String, String> replacementMap = configBuilder.getReplaceClassMap();
         Map<String, String> paramsComments = DocUtil.getCommentsByTag(method, DocTags.PARAM, null);
-        List<String> springMvcRequestAnnotations = SpringMvcRequestAnnotationsEnum.listSpringMvcRequestAnnotations();
+        List<String> mvcRequestAnnotations = this.listMvcRequestAnnotations();
         List<FormData> formDataList = new ArrayList<>();
         ApiRequestExample requestExample = ApiRequestExample.builder();
         out:
@@ -576,10 +567,10 @@ public interface IRestDocTemplate extends BaseDocBuildTemplate {
             for (JavaAnnotation annotation : annotations) {
                 String annotationName = annotation.getType().getValue();
                 String fullName = annotation.getType().getSimpleName();
-                if (!springMvcRequestAnnotations.contains(fullName) || paramAdded) {
+                if (!mvcRequestAnnotations.contains(fullName) || paramAdded) {
                     continue;
                 }
-                if (JavaClassValidateUtil.ignoreSpringMvcParamWithAnnotation(annotationName)) {
+                if (ignoreMvcParamWithAnnotation(annotationName)) {
                     continue out;
                 }
 
@@ -681,7 +672,7 @@ public interface IRestDocTemplate extends BaseDocBuildTemplate {
                 }
                 if (!JavaClassValidateUtil.isPrimitive(gicName)
                         && !configBuilder.getJavaProjectBuilder().getClassByName(gicName).isEnum()) {
-                    throw new RuntimeException("Spring MVC can't support binding Collection on method "
+                    throw new RuntimeException("can't support binding Collection on method "
                             + method.getName() + "Check it in " + method.getDeclaringClass().getCanonicalName());
                 }
                 String value = null;
@@ -897,7 +888,7 @@ public interface IRestDocTemplate extends BaseDocBuildTemplate {
             boolean required = false;
             for (JavaAnnotation annotation : annotations) {
                 String annotationName = annotation.getType().getValue();
-                if (JavaClassValidateUtil.ignoreSpringMvcParamWithAnnotation(annotationName)) {
+                if (ignoreMvcParamWithAnnotation(annotationName)) {
                     continue out;
                 }
 
@@ -964,10 +955,7 @@ public interface IRestDocTemplate extends BaseDocBuildTemplate {
                 continue;
             }
 
-            boolean queryParam = false;
-            if (!isRequestBody && !isPathVariable) {
-                queryParam = true;
-            }
+            boolean queryParam = !isRequestBody && !isPathVariable;
             if (JavaClassValidateUtil.isCollection(fullTypeName) || JavaClassValidateUtil.isArray(fullTypeName)) {
                 if (JavaClassValidateUtil.isCollection(typeName)) {
                     typeName = typeName + "<T>";
@@ -1137,5 +1125,9 @@ public interface IRestDocTemplate extends BaseDocBuildTemplate {
 
     boolean isEntryPoint(JavaClass javaClass, FrameworkAnnotations frameworkAnnotations);
 
+    List<String> listMvcRequestAnnotations();
+
     void requestMappingPostProcess(JavaClass javaClass, JavaMethod method, RequestMapping requestMapping);
+
+    boolean ignoreMvcParamWithAnnotation(String annotation);
 }

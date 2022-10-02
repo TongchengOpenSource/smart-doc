@@ -140,7 +140,7 @@ public class DocClassUtil {
                 }
             }
         }
-        return classes.toArray(new String[classes.size()]);
+        return classes.toArray(new String[0]);
     }
 
     /**

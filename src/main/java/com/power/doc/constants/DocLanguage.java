@@ -31,7 +31,7 @@ public enum DocLanguage {
     ENGLISH("en-US"),
     CHINESE("zh-CN");
 
-    public String code;
+    public final String code;
 
     DocLanguage(String code) {
         this.code = code;
