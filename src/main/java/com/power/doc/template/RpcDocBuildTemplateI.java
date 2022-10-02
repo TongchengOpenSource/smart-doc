@@ -49,7 +49,7 @@ import static com.power.doc.constants.DocTags.IGNORE;
 /**
  * @author yu 2020/1/29.
  */
-public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc>, BaseDocBuildTemplate {
+public class RpcDocBuildTemplateI implements IDocBuildTemplate<RpcApiDoc>, IBaseDocBuildTemplate {
 
     /**
      * api index

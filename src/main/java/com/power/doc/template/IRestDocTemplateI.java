@@ -32,9 +32,9 @@ import static com.power.doc.constants.DocGlobalConstants.JSON_CONTENT_TYPE;
 import static com.power.doc.constants.DocTags.IGNORE;
 import static com.power.doc.constants.DocTags.IGNORE_REQUEST_BODY_ADVICE;
 
-public interface IRestDocTemplate extends BaseDocBuildTemplate {
+public interface IRestDocTemplateI extends IBaseDocBuildTemplate {
 
-    Logger log = Logger.getLogger(IRestDocTemplate.class.getName());
+    Logger log = Logger.getLogger(IRestDocTemplateI.class.getName());
     AtomicInteger atomicInteger = new AtomicInteger(1);
 
     default List<ApiDoc> processApiData(ProjectDocConfigBuilder projectBuilder, FrameworkAnnotations frameworkAnnotations,

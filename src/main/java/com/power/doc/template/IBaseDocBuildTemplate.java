@@ -44,7 +44,7 @@ import static com.power.doc.constants.DocTags.IGNORE_RESPONSE_BODY_ADVICE;
 /**
  * @author yu3.sun on 2022/10/2
  */
-public interface BaseDocBuildTemplate {
+public interface IBaseDocBuildTemplate {
     default String paramCommentResolve(String comment) {
         if (StringUtil.isEmpty(comment)) {
             comment = NO_COMMENTS_FOUND;
@@ -56,9 +56,7 @@ public interface BaseDocBuildTemplate {
         return comment;
     }
 
-    default List<ApiParam> buildReturnApiParams(
-            DocJavaMethod docJavaMethod,
-            ProjectDocConfigBuilder projectBuilder) {
+    default List<ApiParam> buildReturnApiParams(DocJavaMethod docJavaMethod, ProjectDocConfigBuilder projectBuilder) {
         JavaMethod method = docJavaMethod.getJavaMethod();
         if (method.getReturns().isVoid() && Objects.isNull(projectBuilder.getApiConfig().getResponseBodyAdvice())) {
             return new ArrayList<>(0);

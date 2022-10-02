@@ -54,9 +54,9 @@ import static com.power.doc.constants.DocTags.IGNORE;
  * @author Zxq
  * @since 2021/7/15
  */
-public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDocTemplate {
+public class JaxrsDocBuildTemplateI implements IDocBuildTemplate<ApiDoc>, IRestDocTemplateI {
 
-    private static final Logger log = Logger.getLogger(JaxrsDocBuildTemplate.class.getName());
+    private static final Logger log = Logger.getLogger(JaxrsDocBuildTemplateI.class.getName());
 
     /**
      * api index

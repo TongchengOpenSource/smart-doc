@@ -31,7 +31,6 @@ import com.power.doc.model.ApiDoc;
 import com.power.doc.model.ApiReqParam;
 import com.power.doc.model.annotation.*;
 import com.power.doc.model.request.RequestMapping;
-import com.power.doc.utils.DocUtil;
 import com.power.doc.utils.JavaClassValidateUtil;
 import com.thoughtworks.qdox.model.DocletTag;
 import com.thoughtworks.qdox.model.JavaAnnotation;
@@ -45,7 +44,7 @@ import java.util.stream.Stream;
 /**
  * @author noear 2022/2/19 created
  */
-public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDocTemplate {
+public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDocTemplateI {
 
     @Override
     public List<ApiDoc> getApiData(ProjectDocConfigBuilder projectBuilder) {
