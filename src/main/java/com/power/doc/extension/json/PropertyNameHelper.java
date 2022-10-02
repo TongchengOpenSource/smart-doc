@@ -20,10 +20,11 @@ public class PropertyNameHelper {
     public static final String JACKSON_LOWER_DOT_CASE = "lowerdot";
 
 
-    private PropertyNameHelper(){}
+    private PropertyNameHelper() {
+    }
 
-    public static PropertyNamingStrategies.NamingBase translate(List<JavaAnnotation> javaAnnotations){
-        for(JavaAnnotation annotation : javaAnnotations){
+    public static PropertyNamingStrategies.NamingBase translate(List<JavaAnnotation> javaAnnotations) {
+        for (JavaAnnotation annotation : javaAnnotations) {
             String simpleAnnotationName = annotation.getType().getValue();
             //jackson
             if (DocAnnotationConstants.JSON_NAMING.equalsIgnoreCase(simpleAnnotationName)) {
@@ -35,29 +36,29 @@ public class PropertyNameHelper {
         return null;
     }
 
-    private static  PropertyNamingStrategies.NamingBase jackSonTranslate(String annotationValue) {
-        if(StringUtil.isEmpty(annotationValue)){
+    private static PropertyNamingStrategies.NamingBase jackSonTranslate(String annotationValue) {
+        if (StringUtil.isEmpty(annotationValue)) {
             return null;
         }
-        if(annotationValue.contains(JACKSON_LOWER_CAMEL_CASE)) {
+        if (annotationValue.contains(JACKSON_LOWER_CAMEL_CASE)) {
             return PropertyNamingStrategies.LOWER_CAMEL_CASE;
         }
-        if(annotationValue.contains(JACKSON_UPPER_CAMEL_CASE)) {
+        if (annotationValue.contains(JACKSON_UPPER_CAMEL_CASE)) {
             return PropertyNamingStrategies.UPPER_CAMEL_CASE;
         }
-        if(annotationValue.contains(JACKSON_SNAKE_CASE)) {
+        if (annotationValue.contains(JACKSON_SNAKE_CASE)) {
             return PropertyNamingStrategies.SNAKE_CASE;
         }
-        if(annotationValue.contains(JACKSON_UPPER_SNAKE_CASE)) {
+        if (annotationValue.contains(JACKSON_UPPER_SNAKE_CASE)) {
             return PropertyNamingStrategies.UPPER_SNAKE_CASE;
         }
-        if(annotationValue.contains(JACKSON_LOWER_CASE)) {
+        if (annotationValue.contains(JACKSON_LOWER_CASE)) {
             return PropertyNamingStrategies.LOWER_CASE;
         }
-        if(annotationValue.contains(JACKSON_KEBAB_CASE)) {
+        if (annotationValue.contains(JACKSON_KEBAB_CASE)) {
             return PropertyNamingStrategies.KEBAB_CASE;
         }
-        if(annotationValue.contains(JACKSON_LOWER_DOT_CASE)) {
+        if (annotationValue.contains(JACKSON_LOWER_DOT_CASE)) {
             return PropertyNamingStrategies.LOWER_DOT_CASE;
         }
         return null;

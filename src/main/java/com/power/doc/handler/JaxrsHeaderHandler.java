@@ -43,6 +43,7 @@ import java.util.Objects;
 
 /**
  * Jaxrs Header Handler
+ *
  * @author Zxq
  */
 public class JaxrsHeaderHandler {
@@ -79,7 +80,7 @@ public class JaxrsHeaderHandler {
 
                 // Obtain header value
                 if (JakartaJaxrsAnnotations.JAX_HEADER_PARAM_FULLY.equals(annotationName)
-                    || JAXRSAnnotations.JAX_HEADER_PARAM_FULLY.equals(annotationName)) {
+                        || JAXRSAnnotations.JAX_HEADER_PARAM_FULLY.equals(annotationName)) {
                     String name = StringUtil.removeQuotes(DocUtil.getRequestHeaderValue(annotation));
                     name = DocUtil.handleConstants(constantsMap, name);
                     apiReqHeader.setName(name);

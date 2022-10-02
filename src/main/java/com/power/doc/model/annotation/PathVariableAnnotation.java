@@ -5,53 +5,53 @@ package com.power.doc.model.annotation;
  */
 public class PathVariableAnnotation {
 
-  private String annotationName;
+    private String annotationName;
 
-  private String annotationFullyName;
+    private String annotationFullyName;
 
-  private String defaultValueProp;
+    private String defaultValueProp;
 
-  private String requiredProp;
-
-
-  public static PathVariableAnnotation builder() {
-    return new PathVariableAnnotation();
-  }
+    private String requiredProp;
 
 
-  public String getAnnotationName() {
-    return annotationName;
-  }
+    public static PathVariableAnnotation builder() {
+        return new PathVariableAnnotation();
+    }
 
-  public PathVariableAnnotation setAnnotationName(String annotationName) {
-    this.annotationName = annotationName;
-    return this;
-  }
 
-  public String getAnnotationFullyName() {
-    return annotationFullyName;
-  }
+    public String getAnnotationName() {
+        return annotationName;
+    }
 
-  public PathVariableAnnotation setAnnotationFullyName(String annotationFullyName) {
-    this.annotationFullyName = annotationFullyName;
-    return this;
-  }
+    public PathVariableAnnotation setAnnotationName(String annotationName) {
+        this.annotationName = annotationName;
+        return this;
+    }
 
-  public String getDefaultValueProp() {
-    return defaultValueProp;
-  }
+    public String getAnnotationFullyName() {
+        return annotationFullyName;
+    }
 
-  public PathVariableAnnotation setDefaultValueProp(String defaultValueProp) {
-    this.defaultValueProp = defaultValueProp;
-    return this;
-  }
+    public PathVariableAnnotation setAnnotationFullyName(String annotationFullyName) {
+        this.annotationFullyName = annotationFullyName;
+        return this;
+    }
 
-  public String getRequiredProp() {
-    return requiredProp;
-  }
+    public String getDefaultValueProp() {
+        return defaultValueProp;
+    }
 
-  public PathVariableAnnotation setRequiredProp(String requiredProp) {
-    this.requiredProp = requiredProp;
-    return this;
-  }
+    public PathVariableAnnotation setDefaultValueProp(String defaultValueProp) {
+        this.defaultValueProp = defaultValueProp;
+        return this;
+    }
+
+    public String getRequiredProp() {
+        return requiredProp;
+    }
+
+    public PathVariableAnnotation setRequiredProp(String requiredProp) {
+        this.requiredProp = requiredProp;
+        return this;
+    }
 }

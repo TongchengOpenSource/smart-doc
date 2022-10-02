@@ -42,6 +42,11 @@ public class CurlRequest {
     private String body;
 
     private String contentType;
+
+    public static CurlRequest builder() {
+        return new CurlRequest();
+    }
+
     public List<FormData> getFileFormDataList() {
         return fileFormDataList;
     }
@@ -49,10 +54,6 @@ public class CurlRequest {
     public CurlRequest setFileFormDataList(List<FormData> fileFormDataList) {
         this.fileFormDataList = fileFormDataList;
         return this;
-    }
-
-    public static CurlRequest builder() {
-        return new CurlRequest();
     }
 
     public String getType() {

@@ -112,8 +112,8 @@ public class ApiParam {
     private String maxLength;
 
     /**
-     *  is config.json config param
-     *  default false
+     * is config.json config param
+     * default false
      */
     private boolean configParam;
     /**
@@ -138,16 +138,16 @@ public class ApiParam {
         return field;
     }
 
+    public ApiParam setField(String field) {
+        this.field = field;
+        return this;
+    }
+
     public String getSourceField() {
         if (StringUtils.isEmpty(field)) {
             return StringUtils.EMPTY;
         }
         return field.replaceAll(PARAM_PREFIX, "").replaceAll("&nbsp;", "");
-    }
-
-    public ApiParam setField(String field) {
-        this.field = field;
-        return this;
     }
 
     public String getType() {

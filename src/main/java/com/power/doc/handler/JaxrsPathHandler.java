@@ -34,13 +34,7 @@ import com.power.doc.utils.DocUtil;
 import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaMethod;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 import static com.power.doc.constants.DocTags.DEPRECATED;
 import static com.power.doc.constants.DocTags.IGNORE;
@@ -83,10 +77,10 @@ public class JaxrsPathHandler {
                 deprecated = true;
             }
             if (JakartaJaxrsAnnotations.JAX_PATH_FULLY.equals(annotationName)
-                || JakartaJaxrsAnnotations.JAX_PATH_PARAM_FULLY.equals(annotationName)
-                || JakartaJaxrsAnnotations.JAXB_REST_PATH_FULLY.equals(annotationName)
-                || JAXRSAnnotations.JAX_PATH_FULLY.equals(annotationName)
-                || JAXRSAnnotations.JAX_PATH_PARAM_FULLY.equals(annotationName)) {
+                    || JakartaJaxrsAnnotations.JAX_PATH_PARAM_FULLY.equals(annotationName)
+                    || JakartaJaxrsAnnotations.JAXB_REST_PATH_FULLY.equals(annotationName)
+                    || JAXRSAnnotations.JAX_PATH_FULLY.equals(annotationName)
+                    || JAXRSAnnotations.JAX_PATH_PARAM_FULLY.equals(annotationName)) {
                 shortUrl = DocUtil.handleMappingValue(annotation);
             }
             if (ANNOTATION_NAMES.contains(annotationName)) {

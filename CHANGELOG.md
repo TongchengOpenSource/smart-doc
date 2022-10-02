@@ -1,307 +1,340 @@
 ## smart-doc版本
 
 ### 版本号：2.5.3
+
 - 更新日期: 2022-09-10
 - 更新内容：
-  1. 使用@see注释内容不是枚举类名运行错误，[#340](https://github.com/smart-doc-group/smart-doc/issues/340)
-  2. jsr校验注解支持常量替换，[#334](https://github.com/smart-doc-group/smart-doc/issues/334)
-  3. 支持推送@since到torna的注释中，[#344](https://github.com/smart-doc-group/smart-doc/issues/344)
+    1. 使用@see注释内容不是枚举类名运行错误，[#340](https://github.com/smart-doc-group/smart-doc/issues/340)
+    2. jsr校验注解支持常量替换，[#334](https://github.com/smart-doc-group/smart-doc/issues/334)
+    3. 支持推送@since到torna的注释中，[#344](https://github.com/smart-doc-group/smart-doc/issues/344)
 
 ### 版本号：2.5.2
+
 - 更新日期: 2022-09-02
 - 更新内容：
-  1. 修复query参数推送到torna被设置到body中，[#336](https://github.com/smart-doc-group/smart-doc/issues/336)
-  2. 请求头参数支持mock值设置，[#337](https://github.com/smart-doc-group/smart-doc/issues/337)
-  3. 支持错误码自定义解析器。[#338](https://github.com/smart-doc-group/smart-doc/issues/338)
-  4. 修改字段@see 非枚举时错误，[#340](https://github.com/smart-doc-group/smart-doc/issues/340)
-  5. 修复openapi表单对象请求参数丢失。
+    1. 修复query参数推送到torna被设置到body中，[#336](https://github.com/smart-doc-group/smart-doc/issues/336)
+    2. 请求头参数支持mock值设置，[#337](https://github.com/smart-doc-group/smart-doc/issues/337)
+    3. 支持错误码自定义解析器。[#338](https://github.com/smart-doc-group/smart-doc/issues/338)
+    4. 修改字段@see 非枚举时错误，[#340](https://github.com/smart-doc-group/smart-doc/issues/340)
+    5. 修复openapi表单对象请求参数丢失。
 
 ### 版本号：2.5.1
+
 - 更新日期: 2022-08-27
 - 更新内容：
-  1. 升级qdox，解决字段名使用record报错问题，[#231](https://github.com/smart-doc-group/smart-doc/issues/231)
-  2. 优化枚举在文档中的展示[#332](https://github.com/smart-doc-group/smart-doc/issues/332)
-  3. 修改date类型文档显示错误
-  4. 修复list参数入参样例错误
-  5. 修复2.5.0不支持jdk 8的问题
-  6. html特殊字符增加转义处理，解决html文档显示问题[#333](https://github.com/smart-doc-group/smart-doc/issues/333)
+    1. 升级qdox，解决字段名使用record报错问题，[#231](https://github.com/smart-doc-group/smart-doc/issues/231)
+    2. 优化枚举在文档中的展示[#332](https://github.com/smart-doc-group/smart-doc/issues/332)
+    3. 修改date类型文档显示错误
+    4. 修复list参数入参样例错误
+    5. 修复2.5.0不支持jdk 8的问题
+    6. html特殊字符增加转义处理，解决html文档显示问题[#333](https://github.com/smart-doc-group/smart-doc/issues/333)
 
 ### 版本号：2.5.0
+
 - 更新日期: 2022-08-20
 - 更新内容：
-  1. 修复使用@see指向枚举类不存在时空指针问题，改成提示性异常处理，帮助用户可以定位问题，[#331](https://github.com/smart-doc-group/smart-doc/issues/331)
-  2. 支持更多jdk 8时间类型[#315](https://github.com/smart-doc-group/smart-doc/issues/315)
-  3. 支持jsr验证规则提取[#267](https://github.com/smart-doc-group/smart-doc/issues/267)
+    1. 修复使用@see指向枚举类不存在时空指针问题，改成提示性异常处理，帮助用户可以定位问题，[#331](https://github.com/smart-doc-group/smart-doc/issues/331)
+    2. 支持更多jdk 8时间类型[#315](https://github.com/smart-doc-group/smart-doc/issues/315)
+    3. 支持jsr验证规则提取[#267](https://github.com/smart-doc-group/smart-doc/issues/267)
 
 ### 版本号：2.4.9
+
 - 更新日期: 2022-08-07
 - 更新内容：
-  1. 支持使用@see指向枚举类，[#306](https://github.com/smart-doc-group/smart-doc/issues/306)
-  2. 修复枚举请求的用例展示错误
-  
+    1. 支持使用@see指向枚举类，[#306](https://github.com/smart-doc-group/smart-doc/issues/306)
+    2. 修复枚举请求的用例展示错误
+
 ### 版本号：2.4.8
+
 - 更新日期: 2022-07-09
 - 更新内容：
-  1. 支持servlet 3.0 文件上传[#294](https://github.com/smart-doc-group/smart-doc/issues/294)
-  2. 修复表单复杂对象嵌套Request-example错误问题[#284](https://github.com/smart-doc-group/smart-doc/issues/284)
-  3. 修复注释换行导致html文档链接无法点击问题[#290](https://github.com/smart-doc-group/smart-doc/issues/290)
-  4. 修复实现接口的枚举作为字段时生成文档报错,[#292](https://github.com/smart-doc-group/smart-doc/issues/292)
-  5. 修复Delete Option json请求没有request body的问题[#300](https://github.com/smart-doc-group/smart-doc/issues/300)
-  6. 修复OpenAPI导出一级菜单未使用注释名的bug,[#296](https://github.com/smart-doc-group/smart-doc/issues/296)
-  7. 新增对JAX-RS @PATCH、@HEAD 的支持[#pr303](https://github.com/smart-doc-group/smart-doc/pull/303) 
-  8. 自增serverEnv配置用户支持在postman中设置服务器地址变量，[#280](https://github.com/smart-doc-group/smart-doc/issues/280)
+    1. 支持servlet 3.0 文件上传[#294](https://github.com/smart-doc-group/smart-doc/issues/294)
+    2. 修复表单复杂对象嵌套Request-example错误问题[#284](https://github.com/smart-doc-group/smart-doc/issues/284)
+    3. 修复注释换行导致html文档链接无法点击问题[#290](https://github.com/smart-doc-group/smart-doc/issues/290)
+    4. 修复实现接口的枚举作为字段时生成文档报错,[#292](https://github.com/smart-doc-group/smart-doc/issues/292)
+    5. 修复Delete Option json请求没有request body的问题[#300](https://github.com/smart-doc-group/smart-doc/issues/300)
+    6. 修复OpenAPI导出一级菜单未使用注释名的bug,[#296](https://github.com/smart-doc-group/smart-doc/issues/296)
+    7. 新增对JAX-RS @PATCH、@HEAD 的支持[#pr303](https://github.com/smart-doc-group/smart-doc/pull/303)
+    8. 自增serverEnv配置用户支持在postman中设置服务器地址变量，[#280](https://github.com/smart-doc-group/smart-doc/issues/280)
+
 ### 版本号：2.4.7
+
 - 更新日期: 2022-06-13
 - 更新内容：
-  1. 修复2.4.6版本使用高版本jdk出现module权限的问题
-  2. 修复bug[#283](https://github.com/smart-doc-group/smart-doc/issues/283)
+    1. 修复2.4.6版本使用高版本jdk出现module权限的问题
+    2. 修复bug[#283](https://github.com/smart-doc-group/smart-doc/issues/283)
+
 ### 版本号：2.4.6
+
 - 更新日期: 2022-05-29
 - 更新内容：
-  1. 新增枚举字典扫描，[#264](https://github.com/smart-doc-group/smart-doc/issues/264)
-  2. BigDecimal类型输出优化，[#268](https://github.com/smart-doc-group/smart-doc/issues/268)
-  3. 对不规范的mock注释增加检查，[#262](https://github.com/smart-doc-group/smart-doc/issues/262)
+    1. 新增枚举字典扫描，[#264](https://github.com/smart-doc-group/smart-doc/issues/264)
+    2. BigDecimal类型输出优化，[#268](https://github.com/smart-doc-group/smart-doc/issues/268)
+    3. 对不规范的mock注释增加检查，[#262](https://github.com/smart-doc-group/smart-doc/issues/262)
 
 ### 版本号：2.4.5
+
 - 更新日期: 2022-05-10
 - 更新内容：
-  1. 修复部分代码空指针问题，加固健壮性
-  2. 修复curl example错误问题，改为方法名[#256](https://github.com/smart-doc-group/smart-doc/issues/256)
+    1. 修复部分代码空指针问题，加固健壮性
+    2. 修复curl example错误问题，改为方法名[#256](https://github.com/smart-doc-group/smart-doc/issues/256)
 
 #### 版本号：2.4.4
+
 - 更新日期: 2022-05-03
 - 更新内容：
-  1. 优化对mongodb ObjectId类型的解析[#240](https://github.com/smart-doc-group/smart-doc/issues/240)
-  2. 优化OpenAPI生成时operationId值的填充，改为方法名[#235](https://github.com/smart-doc-group/smart-doc/issues/235)
-  3. 修复请求参数为Long类型数组时自定义mock提取错误[#244](https://github.com/smart-doc-group/smart-doc/issues/244)
-  4. 修复文档说明生成输出多个br标签[#248](https://github.com/smart-doc-group/smart-doc/issues/248)
-  5. 修复query param参数显示在Request-body中的问题[#242](https://github.com/smart-doc-group/smart-doc/issues/242)
-  6. 修复Controller类上RequestMapping多path包含parameter时的解析错误[#206](https://github.com/smart-doc-group/smart-doc/issues/206)
-  7. 修复多文件上传，推送到torna的类型错误[#234](https://github.com/smart-doc-group/smart-doc/issues/234)
-  8. 修复分组验证在OpenAPI中不生效问题[#243](https://github.com/smart-doc-group/smart-doc/issues/243)
-  9. 修复OpenAPI数据类型设置错误[#253](https://github.com/smart-doc-group/smart-doc/issues/253)
-  10. 支持在smart-doc.json配置中对@RequestHeader进行忽略了[#250](https://github.com/smart-doc-group/smart-doc/issues/250)
-  11. 修复controller注释html文档导航链接无效的问题[#255](https://github.com/smart-doc-group/smart-doc/issues/255)
-  12. 支持内部类枚举私有属性解析。
-  13. 移除Spring标记过时的`application/json;charset=UTF-8`，默认改为`application/json`
+    1. 优化对mongodb ObjectId类型的解析[#240](https://github.com/smart-doc-group/smart-doc/issues/240)
+    2. 优化OpenAPI生成时operationId值的填充，改为方法名[#235](https://github.com/smart-doc-group/smart-doc/issues/235)
+    3. 修复请求参数为Long类型数组时自定义mock提取错误[#244](https://github.com/smart-doc-group/smart-doc/issues/244)
+    4. 修复文档说明生成输出多个br标签[#248](https://github.com/smart-doc-group/smart-doc/issues/248)
+    5. 修复query param参数显示在Request-body中的问题[#242](https://github.com/smart-doc-group/smart-doc/issues/242)
+    6. 修复Controller类上RequestMapping多path包含parameter时的解析错误[#206](https://github.com/smart-doc-group/smart-doc/issues/206)
+    7. 修复多文件上传，推送到torna的类型错误[#234](https://github.com/smart-doc-group/smart-doc/issues/234)
+    8. 修复分组验证在OpenAPI中不生效问题[#243](https://github.com/smart-doc-group/smart-doc/issues/243)
+    9. 修复OpenAPI数据类型设置错误[#253](https://github.com/smart-doc-group/smart-doc/issues/253)
+    10. 支持在smart-doc.json配置中对@RequestHeader进行忽略了[#250](https://github.com/smart-doc-group/smart-doc/issues/250)
+    11. 修复controller注释html文档导航链接无效的问题[#255](https://github.com/smart-doc-group/smart-doc/issues/255)
+    12. 支持内部类枚举私有属性解析。
+    13. 移除Spring标记过时的`application/json;charset=UTF-8`，默认改为`application/json`
 
 #### 版本号：2.4.3
+
 - 更新日期: 2022-04-17
 - 更新内容：
-  1. 支持生成openapi时不生成请求和返回用例[#233](https://github.com/smart-doc-group/smart-doc/issues/233)
-  2. 优化对map返回结构的解析[#223](https://github.com/smart-doc-group/smart-doc/issues/223)
-  3. 修复生成openapi的时候对contentType的处理转义[#232](https://github.com/smart-doc-group/smart-doc/issues/232)
-  4. 修改分组归档处理[#226](https://github.com/smart-doc-group/smart-doc/issues/226)
+    1. 支持生成openapi时不生成请求和返回用例[#233](https://github.com/smart-doc-group/smart-doc/issues/233)
+    2. 优化对map返回结构的解析[#223](https://github.com/smart-doc-group/smart-doc/issues/223)
+    3. 修复生成openapi的时候对contentType的处理转义[#232](https://github.com/smart-doc-group/smart-doc/issues/232)
+    4. 修改分组归档处理[#226](https://github.com/smart-doc-group/smart-doc/issues/226)
 
 #### 版本号：2.4.2
+
 - 更新日期: 2022-04-04
 - 更新内容：
-  1. 修改2.4.1静态常量自动解析不完善的问题。
-  2. 新增header自动常量解析。
-  3. 修改某些特殊情况下泛型继承解析问题[#215](https://github.com/smart-doc-group/smart-doc/issues/215)
-  4. 优化对文档中特殊大于和小于符号的处理。
+    1. 修改2.4.1静态常量自动解析不完善的问题。
+    2. 新增header自动常量解析。
+    3. 修改某些特殊情况下泛型继承解析问题[#215](https://github.com/smart-doc-group/smart-doc/issues/215)
+    4. 优化对文档中特殊大于和小于符号的处理。
 
 #### 版本号：2.4.1
+
 - 更新日期: 2022-03-26
 - 更新内容：
-  1. customResponseFields新增replaceName配置支持替换字段名。
-  2. 修复获取非@param注释tag值错误bug。
-  3. 支持静态常量自动解析，无需再使用apiConstants来配置。
-  4. 修复dubbo rpc
+    1. customResponseFields新增replaceName配置支持替换字段名。
+    2. 修复获取非@param注释tag值错误bug。
+    3. 支持静态常量自动解析，无需再使用apiConstants来配置。
+    4. 修复dubbo rpc
 
 #### 版本号：2.4.0
+
 - 更新日期: 2022-03-06
 - 更新内容：
-  1. 支持字段多泛型嵌套private B<K,V> body;的解析
+    1. 支持字段多泛型嵌套private B<K,V> body;的解析
 
 #### 版本号：2.3.9
+
 - 更新日期: 2022-02-26
 - 更新内容：
-  1. 支持推送已过时的接口标记到torna。
-  2. rpc mock完善。
-  3. dubbo接口文档支持导出字典。
-  4. 支持solon，https://gitee.com/noear/solon
+    1. 支持推送已过时的接口标记到torna。
+    2. rpc mock完善。
+    3. dubbo接口文档支持导出字典。
+    4. 支持solon，https://gitee.com/noear/solon
 
 #### 版本号：2.3.8
+
 - 更新日期: 2022-02-19
 - 更新内容：
-  1. 支持多层继承解析。
-  2. 优化生成postman post请求文档。
+    1. 支持多层继承解析。
+    2. 优化生成postman post请求文档。
 
 #### 版本号：2.3.7
+
 - 更新日期: 2022-01-17
 - 更新内容：
-  1. 支持JAX-RS。
-  2. 优化对项目文件的加载。
-  3. 解决文件数据未获取到是数据错误的bug。
+    1. 支持JAX-RS。
+    2. 优化对项目文件的加载。
+    3. 解决文件数据未获取到是数据错误的bug。
 
 #### 版本号：2.3.6
+
 - 更新日期: 2022-01-02
 - 更新内容：
-  1. 导出postman时serverUrl不再强制要求设置协议。
-  2. 修改设置responseBodyAdvice后推送torna数据错误。
-  3. 解决gradle插件不能在kts脚本中添加include和exclude的问题。
+    1. 导出postman时serverUrl不再强制要求设置协议。
+    2. 修改设置responseBodyAdvice后推送torna数据错误。
+    3. 解决gradle插件不能在kts脚本中添加include和exclude的问题。
 
 #### 版本号：2.3.5
+
 - 更新日期: 2021-12-18
 - 更新内容：
-  1. 修改author名称多余的双引号。
-  2. 修复接口常量被当做字段的问题。
-  3. 增强插件对旧版本依赖jar的过滤，防止新版本qdox解析错误。
+    1. 修改author名称多余的双引号。
+    2. 修复接口常量被当做字段的问题。
+    3. 增强插件对旧版本依赖jar的过滤，防止新版本qdox解析错误。
 
 #### 版本号：2.3.4
+
 - 更新日期: 2021-12-05
 - 更新内容：
-  1. 修复将@NotEmpty放到字段最前面，后面其他注解不会被分析的bug。
-  2. 插件增强对projectName设置。
-  3. 增强插件对旧版本依赖jar的过滤，防止新版本qdox解析错误。
+    1. 修复将@NotEmpty放到字段最前面，后面其他注解不会被分析的bug。
+    2. 插件增强对projectName设置。
+    3. 增强插件对旧版本依赖jar的过滤，防止新版本qdox解析错误。
 
 #### 版本号：2.3.3
+
 - 更新日期: 2021-11-29
 - 更新内容：
-  1. 支持OffsetDateTime。
-  2. 修复html文档搜索清空后目录显示不全的bug。
-  3. 修复非分组使用时html文档目录序号错乱问题。
-  4. 修复英文请求头转义问题。
+    1. 支持OffsetDateTime。
+    2. 修复html文档搜索清空后目录显示不全的bug。
+    3. 修复非分组使用时html文档目录序号错乱问题。
+    4. 修复英文请求头转义问题。
 
 #### 版本号：2.3.2
+
 - 更新日期: 2021-11-21
 - 更新内容：
-  1. 修复debug调试页搜索后目录锚点错误。
-  2. 修复生成openapi时List<String>等基本类型数组入参时类型转换错误。
-  3. 优化泛型类型显示，当泛型类型的实参类型是基本类型时直接显示为基本类型。
-  4. 新增对@RequestAttribute参数的忽略。
-  5. 修复@RequstBody使用基本类型时的请求参数示例错误
-
+    1. 修复debug调试页搜索后目录锚点错误。
+    2. 修复生成openapi时List<String>等基本类型数组入参时类型转换错误。
+    3. 优化泛型类型显示，当泛型类型的实参类型是基本类型时直接显示为基本类型。
+    4. 新增对@RequestAttribute参数的忽略。
+    5. 修复@RequstBody使用基本类型时的请求参数示例错误
 
 #### 版本号：2.3.1
+
 - 更新日期: 2021-11-13
 - 更新内容：
-  1. 修复debug调试不支持请求头设置中文值的bug。
-  2. 修复response自定义tag设置返回未格式化换行问题。
-  3. 修复枚举类型字段指定mock不生效的问题。
-  4. 新增对@SessionAttribute参数做忽略。
-  5. 支持controller实现接口，并使用default方法。
-  
+    1. 修复debug调试不支持请求头设置中文值的bug。
+    2. 修复response自定义tag设置返回未格式化换行问题。
+    3. 修复枚举类型字段指定mock不生效的问题。
+    4. 新增对@SessionAttribute参数做忽略。
+    5. 支持controller实现接口，并使用default方法。
+
 #### 版本号：2.3.0
+
 - 更新日期: 2021-11-07
 - 更新内容：
-  1. 修复创建html文档丢失search.js文件问题。
-  2. 修复packageFilters配置多个包时只有第一个生效的问题。
-  3. 修复debug调试页面的curl指令错误。
-  4. 修复设置了下载文件接口加download标记后，数据并未生效的bug。
-  5. 优化一些部分常见字段的随机值生成。
+    1. 修复创建html文档丢失search.js文件问题。
+    2. 修复packageFilters配置多个包时只有第一个生效的问题。
+    3. 修复debug调试页面的curl指令错误。
+    4. 修复设置了下载文件接口加download标记后，数据并未生效的bug。
+    5. 优化一些部分常见字段的随机值生成。
 
 #### 版本号：2.2.9
+
 - 更新日期: 2021-10-31
 - 更新内容：
-  1. 修复生成openapi文件上传错误问题。
-  2. 修复文件上传接口推送到torna参数被放置到query参数列表的问题。
-  3. 修改List<T>类型参数推送到torna错误的问题
-  4. 优化outPath配置，只使用torna推送时可以不再要求配置outPath项。
+    1. 修复生成openapi文件上传错误问题。
+    2. 修复文件上传接口推送到torna参数被放置到query参数列表的问题。
+    3. 修改List<T>类型参数推送到torna错误的问题
+    4. 优化outPath配置，只使用torna推送时可以不再要求配置outPath项。
 
 #### 版本号：2.2.8
+
 - 更新日期: 2021-10-07
 - 更新内容：
-  1. 修复html文档无接口注释时锚点跳转错误的问题。
-  2. 修复导出postman时服务端口配置成变量报错的问题。
-  
+    1. 修复html文档无接口注释时锚点跳转错误的问题。
+    2. 修复导出postman时服务端口配置成变量报错的问题。
+
 #### 版本号：2.2.7
+
 - 更新日期: 2021-09-12
 - 更新内容：
-  1. 修复dubbo文档css连接错误。
-  2. 修复分组后组归错误。
-  3. 修复路径常量相似度时替换错误的bug。
-  4. JSR303分组优化，标记Null的分组字段将不再显示在文档中 。
+    1. 修复dubbo文档css连接错误。
+    2. 修复分组后组归错误。
+    3. 修复路径常量相似度时替换错误的bug。
+    4. JSR303分组优化，标记Null的分组字段将不再显示在文档中 。
 
 #### 版本号：2.2.6
+
 - 更新日期: 2021-09-05
 - 更新内容：
-  1. 修复html文档静态资源链接错误。
-  2. 不配置分组时不显示分组。
-  3. 修复分组后目录item搜索错误。
-  4. 优化maven插件提示 。
+    1. 修复html文档静态资源链接错误。
+    2. 不配置分组时不显示分组。
+    3. 修复分组后目录item搜索错误。
+    4. 优化maven插件提示 。
 
 #### 版本号：2.2.5
+
 - 更新日期: 2021-08-08
 - 更新内容：
-  1. 支持在html文档中不显示参数列表。
-  2. html文档使用的资源全部改成本地引用。
-  3. 修复Boolean类型字段命名为is前缀时，is前缀被去除的bug。
-  4. 修复配置了字典码列表后枚举字段注释显示错误[#139](https://github.com/smart-doc-group/smart-doc/issues/139)
-  5. 修复分析过程中出现的数组越界异常 。
-  6. 新增接口分组支持。
+    1. 支持在html文档中不显示参数列表。
+    2. html文档使用的资源全部改成本地引用。
+    3. 修复Boolean类型字段命名为is前缀时，is前缀被去除的bug。
+    4. 修复配置了字典码列表后枚举字段注释显示错误[#139](https://github.com/smart-doc-group/smart-doc/issues/139)
+    5. 修复分析过程中出现的数组越界异常 。
+    6. 新增接口分组支持。
 
 #### 版本号：2.2.4
 
 - 更新日期: 2021-08-08
 - 更新内容：
-  1. 修复字典码推送torna错误 #https://gitee.com/smart-doc-team/smart-doc/issues/I43JQR。
-  2. 新增jsr303 @size和@length支持。
-  3. 修改html的模板样式错误。
-  4. 修复postman错误#I41G2E 。
-  5. 新增isReplace配置 。
-  6. 修复当存在多个jsr注解时，部分注解失效问题。
+    1. 修复字典码推送torna错误 #https://gitee.com/smart-doc-team/smart-doc/issues/I43JQR。
+    2. 新增jsr303 @size和@length支持。
+    3. 修改html的模板样式错误。
+    4. 修复postman错误#I41G2E 。
+    5. 新增isReplace配置 。
+    6. 修复当存在多个jsr注解时，部分注解失效问题。
 
 #### 版本号：2.2.3
 
 - 更新日期: 2021-07-18
 - 更新内容：
-  1. 增加pathPrefix配置项用于配置上下文，引入该配置项后serverUrl仅用于配置服务器地址。
-  2. 支持请求头常量设置解析。
-  3. 支持使用JsonIgnoreProperties和JSONType注解去忽略多字段。
-  4. 修改部分文档设置allInOneDocFileName无效的问题,[#131](https://github.com/smart-doc-group/smart-doc/issues/131)
-  5. 修复dubbo rpc文档模板格式错误 #https://gitee.com/smart-doc-team/smart-doc/issues/I40ZGE .
-  6. 支持配置添加拦截器中设置全局请求参数，[#132](https://github.com/smart-doc-group/smart-doc/issues/132)
-  7. 修复部分类型mock未推送到torna的问题。
-  
+    1. 增加pathPrefix配置项用于配置上下文，引入该配置项后serverUrl仅用于配置服务器地址。
+    2. 支持请求头常量设置解析。
+    3. 支持使用JsonIgnoreProperties和JSONType注解去忽略多字段。
+    4. 修改部分文档设置allInOneDocFileName无效的问题,[#131](https://github.com/smart-doc-group/smart-doc/issues/131)
+    5. 修复dubbo rpc文档模板格式错误 #https://gitee.com/smart-doc-team/smart-doc/issues/I40ZGE .
+    6. 支持配置添加拦截器中设置全局请求参数，[#132](https://github.com/smart-doc-group/smart-doc/issues/132)
+    7. 修复部分类型mock未推送到torna的问题。
+
 #### 版本号：2.2.2
 
 - 更新日期: 2021-07-04
 - 更新内容：
-  1. 修复url中遇到正则表达解析错误问题.
-  2. 修复生成的json样例部分格式化后错误的bug,gitee #I3XSE5。
-  3. 增强对文档中html特殊字符的处理，防止html渲染后显示错误，gitee #I3XO31。
-  4. 请求头设置增强，支持配置urlPatterns和excludePathPatterns两个属性去匹配对应的接口。
-  5. 优化了maven插件的提示，优化后可以将加载了那些目录模块代码路径打印。
-  6. 提供了其它框架扩展文档解析的能力。
-  7. 修复doc模板错误，gitee #I3Y640。
-  8. 修复字典模板错误，[#119](https://github.com/smart-doc-group/smart-doc/issues/119)
-  9. 添加忽略HttpServlet对象。
-  10. 支持内置替换Jpa Pageable分页对象，去除不必要的请求参数替换配置。
-  11. packageFilters增强，可使用正则进行匹配，gitee #I3YKZ4 。
-  12. 修复dubbo rpc文档推送到torna数据错误。
-  13. 修复customResponseFields和customRequestFields设置时不同类同名字段覆盖bug，gitee #I3Y6AL。
-  14. 修复高版本gradle中使用implements添加依赖时，gradle插件无法加载依赖导致返回空json的bug。
+    1. 修复url中遇到正则表达解析错误问题.
+    2. 修复生成的json样例部分格式化后错误的bug,gitee #I3XSE5。
+    3. 增强对文档中html特殊字符的处理，防止html渲染后显示错误，gitee #I3XO31。
+    4. 请求头设置增强，支持配置urlPatterns和excludePathPatterns两个属性去匹配对应的接口。
+    5. 优化了maven插件的提示，优化后可以将加载了那些目录模块代码路径打印。
+    6. 提供了其它框架扩展文档解析的能力。
+    7. 修复doc模板错误，gitee #I3Y640。
+    8. 修复字典模板错误，[#119](https://github.com/smart-doc-group/smart-doc/issues/119)
+    9. 添加忽略HttpServlet对象。
+    10. 支持内置替换Jpa Pageable分页对象，去除不必要的请求参数替换配置。
+    11. packageFilters增强，可使用正则进行匹配，gitee #I3YKZ4 。
+    12. 修复dubbo rpc文档推送到torna数据错误。
+    13. 修复customResponseFields和customRequestFields设置时不同类同名字段覆盖bug，gitee #I3Y6AL。
+    14. 修复高版本gradle中使用implements添加依赖时，gradle插件无法加载依赖导致返回空json的bug。
+
 #### 版本号：2.2.1
 
 - 更新日期: 2021-06-20
 - 更新内容：
-  1. 移除代码中System.out.print打印.
-  
+    1. 移除代码中System.out.print打印.
+
 #### 版本号：2.2.0
 
 - 更新日期: 2021-06-20
 - 更新内容：
-  1. 修复参数多行注释时，注释提取错误，gitee #I3TYYP.
-  2. 修复部分代码可能出现的空指针问题。
-  3. 添加@response tag。支持自己设置response example
-  4. 修复推送到torna请求或返回为数组时，示例显示错误
-  5. Character类型解析支持。
-  6. 修复使用Quartz中JobDataMap类型解析错误。
-  7. 移除YapiBuilder。smart-doc不在支持其他第三方接口系统，请使用torna.
+    1. 修复参数多行注释时，注释提取错误，gitee #I3TYYP.
+    2. 修复部分代码可能出现的空指针问题。
+    3. 添加@response tag。支持自己设置response example
+    4. 修复推送到torna请求或返回为数组时，示例显示错误
+    5. Character类型解析支持。
+    6. 修复使用Quartz中JobDataMap类型解析错误。
+    7. 移除YapiBuilder。smart-doc不在支持其他第三方接口系统，请使用torna.
+
 #### 版本号：2.1.9
 
 - 更新日期: 2021-05-29
 - 更新内容：
-  1. 修复inlineEnum为false时枚举展示在参数中的问题。
-  2. 返回Spring文件下载对象支持自动识别为文件下载，减少手动标记@download tag。
-  3. smart-doc使用的css cdn更换，默认使用国内cdn，提升国内的加载速度，切换英文环境使用google的cdn.
-  4. 添加多层泛型嵌套的解析支持。gitee #I3T6UV .
-  5. 修复父类是泛型时父类中LocalDateTime类型字段生成json样例错误。
-  6. 添加将接口排序order推送到torna中。
-  7. 修复类上的@ignore tag不生效bug.
-  8. 优化字典码推送，空字典码不会像torna发起推送请求。
+    1. 修复inlineEnum为false时枚举展示在参数中的问题。
+    2. 返回Spring文件下载对象支持自动识别为文件下载，减少手动标记@download tag。
+    3. smart-doc使用的css cdn更换，默认使用国内cdn，提升国内的加载速度，切换英文环境使用google的cdn.
+    4. 添加多层泛型嵌套的解析支持。gitee #I3T6UV .
+    5. 修复父类是泛型时父类中LocalDateTime类型字段生成json样例错误。
+    6. 添加将接口排序order推送到torna中。
+    7. 修复类上的@ignore tag不生效bug.
+    8. 优化字典码推送，空字典码不会像torna发起推送请求。
+
 #### 版本号：2.1.8
 
 - 更新日期: 2021-05-22
@@ -314,6 +347,7 @@
     6. 修复生成json用例中数组类型json错误的问题。
     7. 修复customRequestFields中设置字段value在用例中不生效的bug。
     8. 添加@JsonProperty支持,支持JsonProperty.Access控制字段。
+
 #### 版本号：2.1.7
 
 - 更新日期: 2021-05-12

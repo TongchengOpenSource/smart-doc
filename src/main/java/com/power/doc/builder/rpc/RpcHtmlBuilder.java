@@ -35,13 +35,7 @@ import org.beetl.core.Template;
 
 import java.util.List;
 
-import static com.power.doc.constants.DocGlobalConstants.ALL_IN_ONE_CSS;
-import static com.power.doc.constants.DocGlobalConstants.ALL_IN_ONE_CSS_OUT;
-import static com.power.doc.constants.DocGlobalConstants.FILE_SEPARATOR;
-import static com.power.doc.constants.DocGlobalConstants.FONT_STYLE;
-import static com.power.doc.constants.DocGlobalConstants.JQUERY;
-import static com.power.doc.constants.DocGlobalConstants.RPC_ALL_IN_ONE_HTML_TPL;
-import static com.power.doc.constants.DocGlobalConstants.RPC_ALL_IN_ONE_SEARCH_TPL;
+import static com.power.doc.constants.DocGlobalConstants.*;
 
 /**
  * @author yu 2020/5/17.

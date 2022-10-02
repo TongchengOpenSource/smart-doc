@@ -23,7 +23,6 @@
 package com.power.doc.function;
 
 import com.power.doc.utils.DocUtil;
-
 import org.beetl.core.Context;
 import org.beetl.core.Function;
 
@@ -32,11 +31,11 @@ import org.beetl.core.Function;
  */
 public class HtmlEscape implements Function {
 
-  @Override
-  public String call(Object[] paras, Context ctx) {
-    String str = String.valueOf(paras[0]).replaceAll("&", "&amp;");
-    str = str.replaceAll("\"", "&quot;");
-    str = str.replaceAll("<p>", "").replaceAll("</p>", " ");
-    return DocUtil.replaceNewLineToHtmlBr(DocUtil.getEscapeAndCleanComment(str));
-  }
+    @Override
+    public String call(Object[] paras, Context ctx) {
+        String str = String.valueOf(paras[0]).replaceAll("&", "&amp;");
+        str = str.replaceAll("\"", "&quot;");
+        str = str.replaceAll("<p>", "").replaceAll("</p>", " ");
+        return DocUtil.replaceNewLineToHtmlBr(DocUtil.getEscapeAndCleanComment(str));
+    }
 }

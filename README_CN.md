@@ -13,9 +13,11 @@ Collection2.0+、OpenAPI 3.0+的文档。
 
 $\color{red}{你给我的star，胜过所有读过的诗—smart-doc}$
 
-> 无论你是很有经验的大佬、还是刚入行的萌新。遇到使用疑惑时，我们希望你能仔细阅读smart-doc官方码云的wiki文档。我们将smart-doc及其插件的 每一个配置项和可能在日常中遇到的问题都整理到了文档中。仔细阅读文档就是对开源项目最大的支持。
+> 无论你是很有经验的大佬、还是刚入行的萌新。遇到使用疑惑时，我们希望你能仔细阅读smart-doc官方码云的wiki文档。我们将smart-doc及其插件的
+> 每一个配置项和可能在日常中遇到的问题都整理到了文档中。仔细阅读文档就是对开源项目最大的支持。
 
 查看[快速开始](https://smart-doc-group.github.io/#/zh-cn/) 了解详情
+
 ## Features
 
 - 零注解、零学习成本、只需要写标准JAVA注释。
@@ -41,7 +43,8 @@ smart-doc + [Torna](http://torna.cn) 组成行业领先的文档生成和管理�
 
 [smart-doc+Torna文档自动化](https://gitee.com/smart-doc-team/smart-doc/wikis/smart-doc与torna对接?sort_id=3695028)
 
-> Torna是由smart-doc官方独家推动联合研发的企业级文档管理系统，因此smart-doc官方不会对接其它任何的外部文档管理系统，例如像showdoc、yapi 之类的对接请自定内部处理，也不要再给我们提其他文档系统对接的PR。我们核心是把smart-doc+Torna的这套方案打造好。
+> Torna是由smart-doc官方独家推动联合研发的企业级文档管理系统，因此smart-doc官方不会对接其它任何的外部文档管理系统，例如像showdoc、yapi
+> 之类的对接请自定内部处理，也不要再给我们提其他文档系统对接的PR。我们核心是把smart-doc+Torna的这套方案打造好。
 
 ## Building
 
@@ -64,7 +67,9 @@ the [LICENSE](https://gitee.com/smart-doc-team/smart-doc/blob/master/LICENSE) fi
 
 ## Who is using
 
-> 排名不分先后，更多接入公司，欢迎在[https://gitee.com/smart-doc-team/smart-doc/issues/I1594T](https://gitee.com/smart-doc-team/smart-doc/issues/I1594T)登记（仅供开源用户参考）
+>
+排名不分先后，更多接入公司，欢迎在[https://gitee.com/smart-doc-team/smart-doc/issues/I1594T](https://gitee.com/smart-doc-team/smart-doc/issues/I1594T)
+登记（仅供开源用户参考）
 
 ![IFLYTEK](https://gitee.com/smart-doc-team/smart-doc/raw/master/images/known-users/iflytek.png)
 &nbsp;&nbsp;<img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/known-users/oneplus.png" title="一加" width="83px" height="83px"/>
@@ -83,9 +88,12 @@ the [LICENSE](https://gitee.com/smart-doc-team/smart-doc/blob/master/LICENSE) fi
 ## Award situation
 
 - 2020 年度 OSC 中国开源项目评选”活动中获得「最积极运营项目」
+
 ## Acknowledgements
+
 感谢[JetBrains SoftWare](https://www.jetbrains.com) 免费的开源授权。
 <img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/jetbrains-variant-3.png" width="260px" height="220px"/>
+
 ## Contact
 
 愿意参与构建smart-doc或者是需要交流问题可以加入qq群：
@@ -95,8 +103,8 @@ the [LICENSE](https://gitee.com/smart-doc-team/smart-doc/blob/master/LICENSE) fi
 
 > 1群已满，有问题请加2群。
 
-
 ## Donate
+
 如果您觉得我们的开源软件对你有所帮助，请扫下方二维码打赏我们一杯咖啡
 
 <img src="https://images.gitee.com/uploads/images/2020/0831/225756_9aecdd4d_144669.png" width="200px" height="210px"/>

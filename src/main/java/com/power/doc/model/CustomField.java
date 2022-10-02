@@ -53,6 +53,19 @@ public class CustomField {
 
     private String replaceName;
 
+    public static CustomField builder() {
+        return new CustomField();
+    }
+
+    public static CustomField nameEquals(String fieldName, Map<String, CustomField> customFieldMap) {
+        for (Map.Entry<String, CustomField> c : customFieldMap.entrySet()) {
+            if (fieldName.equals(c.getKey())) {
+                return c.getValue();
+            }
+        }
+        return null;
+    }
+
     public String getReplaceName() {
         return replaceName;
     }
@@ -60,10 +73,6 @@ public class CustomField {
     public CustomField setReplaceName(String replaceName) {
         this.replaceName = replaceName;
         return this;
-    }
-
-    public static CustomField builder() {
-        return new CustomField();
     }
 
     public boolean isRequire() {
@@ -118,14 +127,5 @@ public class CustomField {
     public CustomField setIgnore(boolean ignore) {
         this.ignore = ignore;
         return this;
-    }
-
-    public static CustomField nameEquals(String fieldName , Map<String,CustomField> customFieldMap){
-        for(Map.Entry<String,CustomField> c : customFieldMap.entrySet()){
-            if(fieldName.equals(c.getKey())){
-                return c.getValue();
-            }
-        }
-        return null;
     }
 }

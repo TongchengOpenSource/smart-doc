@@ -4,16 +4,11 @@ package com.power.doc.constants;
  * JAX-RS Annotations
  *
  * @author Zxq
- *
- * @deprecated Java EE has been renamed to Jakarta EE, an upgrade is recommended.
  * @see JakartaJaxrsAnnotations
+ * @deprecated Java EE has been renamed to Jakarta EE, an upgrade is recommended.
  */
 @Deprecated
 public final class JAXRSAnnotations {
-
-    private JAXRSAnnotations() {
-        throw new IllegalStateException("Utility class");
-    }
 
     /**
      * JAX-RS@DefaultValue
@@ -39,7 +34,6 @@ public final class JAXRSAnnotations {
      * JAX-RS@Consumes
      */
     public static final String JAX_CONSUMES_FULLY = "javax.ws.rs.Consumes";
-
     /**
      * JAX-RS@GET
      */
@@ -64,5 +58,8 @@ public final class JAXRSAnnotations {
      * JAX-RS@HEAD
      */
     public static final String JAXB_HEAD_FULLY = "javax.ws.rs.HEAD";
+    private JAXRSAnnotations() {
+        throw new IllegalStateException("Utility class");
+    }
 
 }

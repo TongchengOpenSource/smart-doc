@@ -293,9 +293,7 @@ public class OpenApiBuilder {
             schema.put("type", ARRAY);
             innerScheme.put("$ref", responseRef);
             schema.put("items", innerScheme);
-        }
-
-        else if (isRep && CollectionUtil.isNotEmpty(apiMethodDoc.getResponseParams())) {
+        } else if (isRep && CollectionUtil.isNotEmpty(apiMethodDoc.getResponseParams())) {
             schema.put("$ref", responseRef);
         } else if (!isRep && CollectionUtil.isNotEmpty(apiMethodDoc.getRequestParams())) {
             schema.put("$ref", requestRef);

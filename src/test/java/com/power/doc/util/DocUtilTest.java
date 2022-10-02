@@ -2,14 +2,12 @@ package com.power.doc.util;
 
 import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.constants.DocLanguage;
-import com.power.doc.enums.BaseEnum;
 import com.power.doc.enums.IEnum;
 import com.power.doc.enums.OrderEnum;
 import com.power.doc.utils.DocUtil;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -24,7 +22,7 @@ public class DocUtilTest {
         System.out.println(str);
     }
 
-   /* @Test*/
+    /* @Test*/
     public void testFormatAndRemove() {
         System.setProperty(DocGlobalConstants.DOC_LANGUAGE, DocLanguage.CHINESE.getCode());
         Map<String, String> params = new HashMap<>();
@@ -44,11 +42,11 @@ public class DocUtilTest {
     }
 
     @Test
-    public void testIsMatch(){
+    public void testIsMatch() {
         System.setProperty(DocGlobalConstants.DOC_LANGUAGE, DocLanguage.CHINESE.getCode());
         String pattern = "com.aaa.*.controller";
         String controllerName = "com.aaa.cc.controlle";
 
-        System.out.println(DocUtil.isMatch(pattern,controllerName));
+        System.out.println(DocUtil.isMatch(pattern, controllerName));
     }
 }

@@ -61,7 +61,7 @@ public class ApiDocBuilder {
      */
     public static void buildApiDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
         DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
-        builderTemplate.checkAndInit(config,false);
+        builderTemplate.checkAndInit(config, false);
         config.setAdoc(false);
         config.setParamsDataToTree(false);
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
@@ -69,7 +69,7 @@ public class ApiDocBuilder {
         List<ApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder);
         if (config.isAllInOne()) {
             String version = config.isCoverOld() ? "" : "-V" + DateTimeUtil.long2Str(System.currentTimeMillis(), DATE_FORMAT);
-            String docName = builderTemplate.allInOneDocName(config,"AllInOne" + version + ".md",".md");
+            String docName = builderTemplate.allInOneDocName(config, "AllInOne" + version + ".md", ".md");
             apiDocList = docBuildTemplate.handleApiGroup(apiDocList, config);
             builderTemplate.buildAllInOne(apiDocList, config, javaProjectBuilder, ALL_IN_ONE_MD_TPL, docName);
         } else {

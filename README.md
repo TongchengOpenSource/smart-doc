@@ -15,6 +15,7 @@ write Javadoc comments when developing, smart-doc can help you generate Markdown
 need to inject annotations into the code like Swagger.
 
 [quick start](https://smart-doc-group.github.io/#/)
+
 ## Features
 
 - Zero annotation, zero learning cost, only need to write standard JAVA document comments.
@@ -70,11 +71,14 @@ smart-doc better.
 <img src="https://raw.githubusercontent.com/shalousun/smart-doc/dev/images/known-users/tianbo-tech.png" title="tianbo tech" width="127px" height="70px"/>
 
 ## Acknowledgements
+
 Thanks to [JetBrains SoftWare](https://www.jetbrains.com) for providing free Open Source license for this project.
 <img src="https://raw.githubusercontent.com/shalousun/smart-doc/dev/images/jetbrains-variant-3.png" width="260px" height="220px"/>
+
 ## License
 
-Smart-doc is under the Apache 2.0 license. See the [LICENSE](https://github.com/smart-doc-group/smart-doc/blob/master/LICENSE)
+Smart-doc is under the Apache 2.0 license. See
+the [LICENSE](https://github.com/smart-doc-group/smart-doc/blob/master/LICENSE)
 file for details.
 
 ## Contact

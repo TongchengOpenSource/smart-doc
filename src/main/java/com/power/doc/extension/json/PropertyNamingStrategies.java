@@ -5,18 +5,11 @@ package com.power.doc.extension.json;
  * copy from jackson
  * and singleton instances.
  * <a href="https://github.com/FasterXML/jackson-databind/blob/src/main/java/com/fasterxml/jackson/databind/PropertyNamingStrategies.java"></a>.
+ *
  * @author xingzi
  */
 public abstract class PropertyNamingStrategies
-        implements java.io.Serializable
-{
-    private static final long serialVersionUID = 2L;
-   /*
-    /**********************************************************************
-    /* Static instances that may be referenced
-    /**********************************************************************
-     */
-
+        implements java.io.Serializable {
     /**
      * Naming convention used in Java, where words other than first are capitalized
      * and no separator is used between words. Since this is the native Java naming convention,
@@ -25,7 +18,11 @@ public abstract class PropertyNamingStrategies
      * Example external property names would be "numberValue", "namingStrategy", "theDefiniteProof".
      */
     public static final LowerCamelCaseStrategy LOWER_CAMEL_CASE = new LowerCamelCaseStrategy();
-
+   /*
+    /**********************************************************************
+    /* Static instances that may be referenced
+    /**********************************************************************
+     */
     /**
      * Naming convention used in languages like Pascal, where all words are capitalized
      * and no separator is used between words.
@@ -33,7 +30,6 @@ public abstract class PropertyNamingStrategies
      * Example external property names would be "NumberValue", "NamingStrategy", "TheDefiniteProof".
      */
     public static final UpperCamelCaseStrategy UPPER_CAMEL_CASE = new UpperCamelCaseStrategy();
-
     /**
      * Naming convention used in languages like C, where words are in lower-case
      * letters, separated by underscores.
@@ -41,14 +37,13 @@ public abstract class PropertyNamingStrategies
      * Example external property names would be "number_value", "naming_strategy", "the_definite_proof".
      */
     public static final SnakeCaseStrategy SNAKE_CASE = new SnakeCaseStrategy();
-
     /**
      * Naming convention in which the words are in upper-case letters, separated by underscores.
      * See {@link UpperSnakeCaseStrategy} for details.
+     *
      * @since 2.13
      */
     public static final UpperSnakeCaseStrategy UPPER_SNAKE_CASE = new UpperSnakeCaseStrategy();
-
     /**
      * Naming convention in which all words of the logical name are in lower case, and
      * no separator is used between words.
@@ -56,7 +51,6 @@ public abstract class PropertyNamingStrategies
      * Example external property names would be "numbervalue", "namingstrategy", "thedefiniteproof".
      */
     public static final LowerCaseStrategy LOWER_CASE = new LowerCaseStrategy();
-
     /**
      * Naming convention used in languages like Lisp, where words are in lower-case
      * letters, separated by hyphens.
@@ -64,7 +58,6 @@ public abstract class PropertyNamingStrategies
      * Example external property names would be "number-value", "naming-strategy", "the-definite-proof".
      */
     public static final KebabCaseStrategy KEBAB_CASE = new KebabCaseStrategy();
-
     /**
      * Naming convention widely used as configuration properties name, where words are in
      * lower-case letters, separated by dots.
@@ -72,6 +65,7 @@ public abstract class PropertyNamingStrategies
      * Example external property names would be "number.value", "naming.strategy", "the.definite.proof".
      */
     public static final LowerDotCaseStrategy LOWER_DOT_CASE = new LowerDotCaseStrategy();
+    private static final long serialVersionUID = 2L;
 
     /*
     /**********************************************************************
@@ -86,19 +80,20 @@ public abstract class PropertyNamingStrategies
 
         /**
          * name convert
+         *
          * @param propertyName propertyName
          * @return string
          */
         public abstract String translate(String propertyName);
 
         /**
-         *  Helper method to share implementation between snake and dotted case.
-         * @param input input
+         * Helper method to share implementation between snake and dotted case.
+         *
+         * @param input     input
          * @param separator separator
          * @return string
          */
-        protected String translateLowerCaseWithSeparator(final String input, final char separator)
-        {
+        protected String translateLowerCaseWithSeparator(final String input, final char separator) {
             if (input == null) {
                 return null; // garbage in, garbage out
             }
@@ -171,7 +166,7 @@ public abstract class PropertyNamingStrategies
      * property name is just one character in length, i.e., it is the
      * underscore character.  This applies only to the first character of the
      * Java property name.</li></ul>
-     *<p>
+     * <p>
      * These rules result in the following additional example translations from
      * Java property names to JSON element names.
      * <ul><li>&quot;userName&quot; is translated to &quot;user_name&quot;</li>
@@ -188,33 +183,28 @@ public abstract class PropertyNamingStrategies
      * <li>&quot;user__name&quot; is translated to &quot;user__name&quot;
      * (unchanged, with two underscores)</li></ul>
      */
-    public static class SnakeCaseStrategy extends NamingBase
-    {
+    public static class SnakeCaseStrategy extends NamingBase {
         @Override
-        public String translate(String input)
-        {
-            if (input == null) {return null;}// garbage in, garbage out
+        public String translate(String input) {
+            if (input == null) {
+                return null;
+            }// garbage in, garbage out
             int length = input.length();
             StringBuilder result = new StringBuilder(length * 2);
             int resultLength = 0;
             boolean wasPrevTranslated = false;
-            for (int i = 0; i < length; i++)
-            {
+            for (int i = 0; i < length; i++) {
                 char c = input.charAt(i);
                 if (i > 0 || c != '_') // skip first starting underscore
                 {
-                    if (Character.isUpperCase(c))
-                    {
-                        if (!wasPrevTranslated && resultLength > 0 && result.charAt(resultLength - 1) != '_')
-                        {
+                    if (Character.isUpperCase(c)) {
+                        if (!wasPrevTranslated && resultLength > 0 && result.charAt(resultLength - 1) != '_') {
                             result.append('_');
                             resultLength++;
                         }
                         c = Character.toLowerCase(c);
                         wasPrevTranslated = true;
-                    }
-                    else
-                    {
+                    } else {
                         wasPrevTranslated = false;
                     }
                     result.append(c);
@@ -225,19 +215,21 @@ public abstract class PropertyNamingStrategies
         }
     }
 
-    /**at translates an input to the equivalent upper case snake
+    /**
+     * at translates an input to the equivalent upper case snake
      * case. The class extends {@link PropertyNamingStrategies.SnakeCaseStrategy} to retain the
      * snake case conversion functionality offered by the strategy.
+     *
      * @since 2.13
      */
-    public static class UpperSnakeCaseStrategy extends SnakeCaseStrategy
-    {
+    public static class UpperSnakeCaseStrategy extends SnakeCaseStrategy {
 
         @Override
         public String translate(String input) {
             String output = super.translate(input);
-            if (output == null)
-            {return null;}
+            if (output == null) {
+                return null;
+            }
             return super.translate(input).toUpperCase();
         }
     }
@@ -246,8 +238,7 @@ public abstract class PropertyNamingStrategies
      * "No-operation" strategy that is equivalent to not specifying any
      * strategy: will simply return suggested standard bean naming as-is.
      */
-    public static class LowerCamelCaseStrategy extends NamingBase
-    {
+    public static class LowerCamelCaseStrategy extends NamingBase {
 
         @Override
         public String translate(String input) {
@@ -262,13 +253,12 @@ public abstract class PropertyNamingStrategies
      *
      * <ul><li>The first lower-case letter in the Java property name is translated
      * into its equivalent upper-case representation.</li></ul>
-     *
+     * <p>
      * This rules result in the following example translation from
      * Java property names to JSON element names.
      * <ul><li>&quot;userName&quot; is translated to &quot;UserName&quot;</li></ul>
      */
-    public static class UpperCamelCaseStrategy extends NamingBase
-    {
+    public static class UpperCamelCaseStrategy extends NamingBase {
 
         /**
          * Converts camelCase to PascalCase
@@ -280,7 +270,7 @@ public abstract class PropertyNamingStrategies
          */
         @Override
         public String translate(String input) {
-            if (input == null || input.isEmpty()){
+            if (input == null || input.isEmpty()) {
                 return input; // garbage in, garbage out
             }
             // Replace first lower-case letter with upper-case equivalent
@@ -301,8 +291,7 @@ public abstract class PropertyNamingStrategies
      * Conversion from internal name like "someOtherValue" would be into external name
      * if "someothervalue".
      */
-    public static class LowerCaseStrategy extends NamingBase
-    {
+    public static class LowerCaseStrategy extends NamingBase {
 
         @Override
         public String translate(String input) {
@@ -316,8 +305,7 @@ public abstract class PropertyNamingStrategies
      * as separators, uses hyphens. Naming convention traditionally used for languages
      * like Lisp.
      */
-    public static class KebabCaseStrategy extends NamingBase
-    {
+    public static class KebabCaseStrategy extends NamingBase {
 
         @Override
         public String translate(String input) {
@@ -333,7 +321,7 @@ public abstract class PropertyNamingStrategies
     public static class LowerDotCaseStrategy extends NamingBase {
 
         @Override
-        public String translate(String input){
+        public String translate(String input) {
             return translateLowerCaseWithSeparator(input, '.');
         }
     }

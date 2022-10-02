@@ -2,14 +2,11 @@ package com.power.doc;
 
 import com.power.common.util.DateTimeUtil;
 import com.power.doc.builder.HtmlApiDocBuilder;
-import com.power.doc.builder.OpenApiBuilder;
-import com.power.doc.builder.TornaBuilder;
 import com.power.doc.builder.rpc.RpcTornaBuilder;
 import com.power.doc.enums.OrderEnum;
 import com.power.doc.model.*;
 import com.power.doc.model.rpc.RpcApiDependency;
 import org.junit.jupiter.api.Test;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -107,7 +104,7 @@ public class ApiDocTest {
 
         //TornaBuilder.buildApiDoc(config);
         //OpenApiBuilder.buildOpenApi(config);
-       // HtmlApiDocBuilder.buildApiDoc(config);
+        // HtmlApiDocBuilder.buildApiDoc(config);
         RpcTornaBuilder.buildApiDoc(config);
         //TornaBuilder.buildApiDoc(config);
         //RpcTornaBuilder.buildApiDoc(config);
@@ -118,7 +115,7 @@ public class ApiDocTest {
     }
 
     @Test
-    public void test_1(){
+    public void test_1() {
         ApiConfig config = new ApiConfig();
         config.setServerUrl("http://127.0.0.1:8899");
         config.setOpenUrl("http://localhost:7700/api");

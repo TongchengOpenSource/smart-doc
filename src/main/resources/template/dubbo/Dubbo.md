@@ -13,9 +13,13 @@
 for(doc in list){
 %>
 <%if(doc.deprecated){%>
+
 ## ~~${htmlEscape(doc.desc)}~~
+
 <%}else{%>
+
 ## ${htmlEscape(doc.desc)}
+
 <%}%>
 
 **Definition：** ${doc.methodDefinition}
@@ -31,6 +35,7 @@ for(doc in list){
 
 Parameter|Type|Description|Required|Since
 ---|---|---|---|---
+
 <%
 for(param in doc.requestParams){
 %>
@@ -43,6 +48,7 @@ ${param.field}|${param.type}|${htmlEscape(param.desc)}|${param.required}|${param
 
 Field | Type|Description|Since
 ---|---|---|---
+
 <%
 for(param in doc.responseParams){
 %>

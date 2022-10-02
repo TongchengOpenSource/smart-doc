@@ -9,12 +9,12 @@ import org.beetl.core.Function;
  */
 public class RemoveLineBreaks implements Function {
 
-  @Override
-  public String call(Object[] paras, Context ctx) {
-    String str = String.valueOf(paras[0])
-        .replaceAll("\n", " ")
-        .replaceAll("\r"," ");
-    return DocUtil.getEscapeAndCleanComment(str)
-            .replaceAll(System.lineSeparator(), "");
-  }
+    @Override
+    public String call(Object[] paras, Context ctx) {
+        String str = String.valueOf(paras[0])
+                .replaceAll("\n", " ")
+                .replaceAll("\r", " ");
+        return DocUtil.getEscapeAndCleanComment(str)
+                .replaceAll(System.lineSeparator(), "");
+    }
 }

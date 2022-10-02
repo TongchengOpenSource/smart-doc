@@ -53,7 +53,7 @@ public interface SpringMvcAnnotations {
 
     String SESSION_ATTRIBUTE = "SessionAttribute";
 
-    String REQUEST_ATTRIBUTE="RequestAttribute";
+    String REQUEST_ATTRIBUTE = "RequestAttribute";
 
     String REQUEST_BODY_FULLY = "org.springframework.web.bind.annotation.RequestBody";
 }

@@ -22,8 +22,6 @@
  */
 package com.power.doc.constants;
 
-import java.io.File;
-
 /**
  * @author yu 2018/12/15.
  */

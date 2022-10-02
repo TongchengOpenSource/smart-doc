@@ -342,6 +342,7 @@ public class JavaClassValidateUtil {
 
     /**
      * ignore param with annotation
+     *
      * @param annotation Spring Mvc's annotation
      * @return boolean
      */

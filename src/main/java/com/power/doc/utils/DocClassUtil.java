@@ -300,6 +300,7 @@ public class DocClassUtil {
 
     /**
      * Get class annotations
+     *
      * @param cls JavaClass
      * @return List of JavaAnnotation
      */
@@ -316,7 +317,8 @@ public class DocClassUtil {
     public static <T> T newInstance(@Nonnull Class<T> classWithNoArgsConstructor) {
         try {
             return classWithNoArgsConstructor.getConstructor().newInstance();
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | InstantiationException e) {
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException |
+                 InstantiationException e) {
             throw new IllegalArgumentException("Class must have the NoArgsConstructor");
         }
     }

@@ -35,23 +35,7 @@ import org.beetl.core.Template;
 
 import java.util.List;
 
-import static com.power.doc.constants.DocGlobalConstants.ALL_IN_ONE_CSS;
-import static com.power.doc.constants.DocGlobalConstants.ALL_IN_ONE_CSS_OUT;
-import static com.power.doc.constants.DocGlobalConstants.ALL_IN_ONE_HTML_TPL;
-import static com.power.doc.constants.DocGlobalConstants.DEBUG_JS_OUT;
-import static com.power.doc.constants.DocGlobalConstants.DEBUG_JS_TPL;
-import static com.power.doc.constants.DocGlobalConstants.DEBUG_PAGE_ALL_TPL;
-import static com.power.doc.constants.DocGlobalConstants.DEBUG_PAGE_SINGLE_TPL;
-import static com.power.doc.constants.DocGlobalConstants.FILE_SEPARATOR;
-import static com.power.doc.constants.DocGlobalConstants.FONT_STYLE;
-import static com.power.doc.constants.DocGlobalConstants.HIGH_LIGHT_JS;
-import static com.power.doc.constants.DocGlobalConstants.HIGH_LIGHT_STYLE;
-import static com.power.doc.constants.DocGlobalConstants.JQUERY;
-import static com.power.doc.constants.DocGlobalConstants.SEARCH_ALL_JS_TPL;
-import static com.power.doc.constants.DocGlobalConstants.SEARCH_JS_TPL;
-import static com.power.doc.constants.DocGlobalConstants.SINGLE_DICT_HTML_TPL;
-import static com.power.doc.constants.DocGlobalConstants.SINGLE_ERROR_HTML_TPL;
-import static com.power.doc.constants.DocGlobalConstants.SINGLE_INDEX_HTML_TPL;
+import static com.power.doc.constants.DocGlobalConstants.*;
 
 /**
  * @author yu 2019/9/20.

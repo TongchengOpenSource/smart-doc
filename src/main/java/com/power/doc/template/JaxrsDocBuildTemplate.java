@@ -22,9 +22,6 @@
  */
 package com.power.doc.template;
 
-import java.util.List;
-import java.util.logging.Logger;
-
 import com.power.doc.builder.ProjectDocConfigBuilder;
 import com.power.doc.model.ApiDoc;
 import com.power.doc.model.annotation.FrameworkAnnotations;
@@ -32,13 +29,16 @@ import com.power.doc.model.request.RequestMapping;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaMethod;
 
+import java.util.List;
+import java.util.logging.Logger;
+
 /**
  * Build documents for JAX RS
  *
  * @author Zxq
  * @since 2021/7/15
  */
-public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>,IRestDocTemplate {
+public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDocTemplate {
 
     private static Logger log = Logger.getLogger(JaxrsDocBuildTemplate.class.getName());
 

@@ -32,7 +32,6 @@ import com.power.doc.model.torna.TornaApi;
 import com.power.doc.template.IDocBuildTemplate;
 import com.power.doc.utils.TornaUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
-
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -68,7 +67,7 @@ public class TornaBuilder {
     public static void buildApiDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
         config.setParamsDataToTree(true);
         DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
-        builderTemplate.checkAndInit(config,true);
+        builderTemplate.checkAndInit(config, true);
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
         IDocBuildTemplate docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework());
         List<ApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder);
@@ -115,7 +114,7 @@ public class TornaBuilder {
         // delete default group when only default group
         tornaApi.setApis(groupApiList.size() == 1 ? groupApiList.get(0).getItems() : groupApiList);
         // Push to torna
-        TornaUtil.pushToTorna(tornaApi,apiConfig,builder);
+        TornaUtil.pushToTorna(tornaApi, apiConfig, builder);
     }
 }
 

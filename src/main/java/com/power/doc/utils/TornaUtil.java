@@ -13,17 +13,11 @@ import com.power.doc.model.*;
 import com.power.doc.model.rpc.RpcApiDependency;
 import com.power.doc.model.torna.*;
 import com.thoughtworks.qdox.JavaProjectBuilder;
-
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 import static com.power.doc.constants.DocGlobalConstants.ARRAY;
-import static com.power.doc.constants.DocGlobalConstants.OBJECT;
 import static com.power.doc.constants.TornaConstants.ENUM_PUSH;
 import static com.power.doc.constants.TornaConstants.PUSH;
 
@@ -32,7 +26,7 @@ import static com.power.doc.constants.TornaConstants.PUSH;
  **/
 public class TornaUtil {
 
-    public static void pushToTorna(TornaApi tornaApi,ApiConfig apiConfig, JavaProjectBuilder builder) {
+    public static void pushToTorna(TornaApi tornaApi, ApiConfig apiConfig, JavaProjectBuilder builder) {
         //Build push document information
         Map<String, String> requestJson = TornaConstants.buildParams(PUSH, new Gson().toJson(tornaApi), apiConfig);
         //Push dictionary information
@@ -86,9 +80,9 @@ public class TornaUtil {
                         .setRequestInfo(requestJson)
                         .setResponseInfo(responseMsg);
                 System.out.println(info.buildInfo());
-            }catch (Exception e){
+            } catch (Exception e) {
                 //Ex : Nginx Error,Tomcat Error
-                System.out.println("Response Error : \n"+ responseMsg);
+                System.out.println("Response Error : \n" + responseMsg);
             }
         }
     }
@@ -190,8 +184,8 @@ public class TornaUtil {
             httpParam.setName(header.getName());
             httpParam.setRequired(header.isRequired() ? TornaConstants.YES : TornaConstants.NO);
             httpParam.setExample(StringUtil.removeQuotes(header.getValue()));
-            if (StringUtil.isNotEmpty(header.getSince())&&!DocGlobalConstants.DEFAULT_VERSION.equals(header.getSince())) {
-                httpParam.setDescription(header.getDesc()+"@since "+header.getSince());
+            if (StringUtil.isNotEmpty(header.getSince()) && !DocGlobalConstants.DEFAULT_VERSION.equals(header.getSince())) {
+                httpParam.setDescription(header.getDesc() + "@since " + header.getSince());
             } else {
                 httpParam.setDescription(header.getDesc());
             }
@@ -221,8 +215,8 @@ public class TornaUtil {
             httpParam.setType(type);
             httpParam.setRequired(apiParam.isRequired() ? TornaConstants.YES : TornaConstants.NO);
             httpParam.setExample(StringUtil.removeQuotes(apiParam.getValue()));
-            if (StringUtil.isNotEmpty(apiParam.getVersion())&&!DocGlobalConstants.DEFAULT_VERSION.equals(apiParam.getVersion())) {
-                httpParam.setDescription(DocUtil.replaceNewLineToHtmlBr(apiParam.getDesc())+ "@since "+apiParam.getVersion());
+            if (StringUtil.isNotEmpty(apiParam.getVersion()) && !DocGlobalConstants.DEFAULT_VERSION.equals(apiParam.getVersion())) {
+                httpParam.setDescription(DocUtil.replaceNewLineToHtmlBr(apiParam.getDesc()) + "@since " + apiParam.getVersion());
             } else {
                 httpParam.setDescription(DocUtil.replaceNewLineToHtmlBr(apiParam.getDesc()));
             }
@@ -294,6 +288,7 @@ public class TornaUtil {
 
     /**
      * request and response is list
+     *
      * @param apiMethodDoc
      */
     public static void setTornaArrayTags(ApiMethodDoc apiMethodDoc) {

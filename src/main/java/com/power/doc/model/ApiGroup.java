@@ -9,25 +9,24 @@ package com.power.doc.model;
  */
 public class ApiGroup {
 
-    public static ApiGroup builder(){
-        return new ApiGroup();
-    }
     /**
      * group name
      */
     private String name;
-
     /**
      * package name
      * support patten
      */
     private String apis;
-
     /**
      * url path
      * support patten
      */
     private String paths;
+
+    public static ApiGroup builder() {
+        return new ApiGroup();
+    }
 
     public String getName() {
         return name;

@@ -28,5 +28,5 @@ import com.thoughtworks.qdox.model.JavaClass;
 @FunctionalInterface
 public interface RequestMappingFunc {
 
-  void process(JavaClass cls,RequestMapping requestMapping);
+    void process(JavaClass cls, RequestMapping requestMapping);
 }

@@ -82,6 +82,6 @@ public class DocPathUtil {
         if (StringUtil.isNotEmpty(excludePatterns)) {
             excludePatternList = Arrays.asList(excludePatterns.split(",", 0));
         }
-        return PathUtil.matches(lookupPath,includePatternList,excludePatternList);
+        return PathUtil.matches(lookupPath, includePatternList, excludePatternList);
     }
 }

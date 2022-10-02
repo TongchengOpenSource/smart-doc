@@ -198,7 +198,6 @@ public class DocUtil {
     }
 
 
-
     /**
      * match controller package
      *
@@ -233,8 +232,8 @@ public class DocUtil {
      * @return formatted string
      */
     public static String formatAndRemove(String str, Map<String, String> values) {
-        if(SystemPlaceholders.hasSystemProperties(str)){
-            str = DocUtil.delPropertiesUrl(str,new HashSet<>());
+        if (SystemPlaceholders.hasSystemProperties(str)) {
+            str = DocUtil.delPropertiesUrl(str, new HashSet<>());
         }
         if (str.contains(":")) {
             String[] strArr = str.split("/");
@@ -273,6 +272,7 @@ public class DocUtil {
         }
         return builder.toString();
     }
+
     /**
      * // /detail/{id:[a-zA-Z0-9]{3}}/{name:[a-zA-Z0-9]{3}}
      * remove pattern
@@ -281,8 +281,8 @@ public class DocUtil {
      * @return String
      */
     public static String formatPathUrl(String str) {
-        if(SystemPlaceholders.hasSystemProperties(str)){
-            str = DocUtil.delPropertiesUrl(str,new HashSet<>());
+        if (SystemPlaceholders.hasSystemProperties(str)) {
+            str = DocUtil.delPropertiesUrl(str, new HashSet<>());
         }
         if (!str.contains(":")) {
             return str;
@@ -923,11 +923,12 @@ public class DocUtil {
 
     /**
      * del ${server.port:/error}
-     * @param value url
-     * @param visitedPlaceholders  cycle
+     *
+     * @param value               url
+     * @param visitedPlaceholders cycle
      * @return
      */
-    public static String delPropertiesUrl(String value,Set<String> visitedPlaceholders) {
+    public static String delPropertiesUrl(String value, Set<String> visitedPlaceholders) {
         int startIndex = value.indexOf(PLACEHOLDER_PREFIX);
         if (startIndex == -1) {
             return value;
@@ -963,14 +964,13 @@ public class DocUtil {
                     propVal = delPropertiesUrl(propVal, visitedPlaceholders);
                     result.replace(startIndex, endIndex + PLACEHOLDER_PREFIX.length(), propVal);
                     startIndex = result.indexOf(PLACEHOLDER_PREFIX, startIndex + propVal.length());
-                } else{
+                } else {
                     // Proceed with unprocessed value.
                     startIndex = result.indexOf(PLACEHOLDER_PREFIX, endIndex + PLACEHOLDER_PREFIX.length());
                 }
 
                 visitedPlaceholders.remove(originalPlaceholder);
-            }
-            else {
+            } else {
                 startIndex = -1;
             }
         }
@@ -978,23 +978,20 @@ public class DocUtil {
     }
 
     private static int findPlaceholderEndIndex(CharSequence buf, int startIndex) {
-        int index = startIndex +PLACEHOLDER_PREFIX.length();
+        int index = startIndex + PLACEHOLDER_PREFIX.length();
         int withinNestedPlaceholder = 0;
         while (index < buf.length()) {
             if (substringMatch(buf, index, PLACEHOLDER_SUFFIX)) {
                 if (withinNestedPlaceholder > 0) {
                     withinNestedPlaceholder--;
                     index = index + "}".length();
-                }
-                else {
+                } else {
                     return index;
                 }
-            }
-            else if (substringMatch(buf, index, SIMPLE_PREFIX)) {
+            } else if (substringMatch(buf, index, SIMPLE_PREFIX)) {
                 withinNestedPlaceholder++;
                 index = index + SIMPLE_PREFIX.length();
-            }
-            else {
+            } else {
                 index++;
             }
         }

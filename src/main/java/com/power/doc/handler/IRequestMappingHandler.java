@@ -22,8 +22,6 @@
  */
 package com.power.doc.handler;
 
-import java.util.Objects;
-
 import com.power.common.util.StringUtil;
 import com.power.common.util.UrlUtil;
 import com.power.doc.builder.ProjectDocConfigBuilder;
@@ -34,34 +32,36 @@ import com.power.doc.model.request.RequestMapping;
 import com.power.doc.utils.DocUrlUtil;
 import com.thoughtworks.qdox.model.JavaMethod;
 
+import java.util.Objects;
+
 /**
  * @author yu3.sun on 2022/10/1
  */
 public interface IRequestMappingHandler {
 
-  default RequestMapping formatMappingData(ProjectDocConfigBuilder projectBuilder, String controllerBaseUrl,RequestMapping requestMapping) {
-    String shortUrl = requestMapping.getShortUrl();
-    if (Objects.nonNull(shortUrl)) {
-      String serverUrl = projectBuilder.getServerUrl();
-      String contextPath = projectBuilder.getApiConfig().getPathPrefix();
-      shortUrl = StringUtil.removeQuotes(shortUrl);
-      String url = DocUrlUtil.getMvcUrls(serverUrl, contextPath + "/" + controllerBaseUrl, shortUrl);
-      shortUrl = DocUrlUtil.getMvcUrls(DocGlobalConstants.EMPTY, contextPath + "/" + controllerBaseUrl, shortUrl);
-      String urlSuffix = projectBuilder.getApiConfig().getUrlSuffix();
-      if (StringUtil.isNotEmpty(urlSuffix)) {
-        url = UrlUtil.simplifyUrl(StringUtil.trim(url)) + urlSuffix;
-        shortUrl = UrlUtil.simplifyUrl(StringUtil.trim(shortUrl)) + urlSuffix;
-      } else {
-        url = UrlUtil.simplifyUrl(StringUtil.trim(url));
-        shortUrl = UrlUtil.simplifyUrl(StringUtil.trim(shortUrl));
-      }
-      requestMapping.setUrl(url).setShortUrl(shortUrl);
-      return requestMapping;
+    default RequestMapping formatMappingData(ProjectDocConfigBuilder projectBuilder, String controllerBaseUrl, RequestMapping requestMapping) {
+        String shortUrl = requestMapping.getShortUrl();
+        if (Objects.nonNull(shortUrl)) {
+            String serverUrl = projectBuilder.getServerUrl();
+            String contextPath = projectBuilder.getApiConfig().getPathPrefix();
+            shortUrl = StringUtil.removeQuotes(shortUrl);
+            String url = DocUrlUtil.getMvcUrls(serverUrl, contextPath + "/" + controllerBaseUrl, shortUrl);
+            shortUrl = DocUrlUtil.getMvcUrls(DocGlobalConstants.EMPTY, contextPath + "/" + controllerBaseUrl, shortUrl);
+            String urlSuffix = projectBuilder.getApiConfig().getUrlSuffix();
+            if (StringUtil.isNotEmpty(urlSuffix)) {
+                url = UrlUtil.simplifyUrl(StringUtil.trim(url)) + urlSuffix;
+                shortUrl = UrlUtil.simplifyUrl(StringUtil.trim(shortUrl)) + urlSuffix;
+            } else {
+                url = UrlUtil.simplifyUrl(StringUtil.trim(url));
+                shortUrl = UrlUtil.simplifyUrl(StringUtil.trim(shortUrl));
+            }
+            requestMapping.setUrl(url).setShortUrl(shortUrl);
+            return requestMapping;
+        }
+        return null;
     }
-    return null;
-  }
 
-  RequestMapping handle(ProjectDocConfigBuilder projectBuilder, String controllerBaseUrl, JavaMethod method,
-      FrameworkAnnotations frameworkAnnotations,
-      RequestMappingFunc requestMappingFunc);
+    RequestMapping handle(ProjectDocConfigBuilder projectBuilder, String controllerBaseUrl, JavaMethod method,
+                          FrameworkAnnotations frameworkAnnotations,
+                          RequestMappingFunc requestMappingFunc);
 }

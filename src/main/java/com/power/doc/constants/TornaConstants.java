@@ -136,6 +136,7 @@ public class TornaConstants {
 
     /**
      * Convert byte array to hex
+     *
      * @param bytes byte array
      * @return String
      */

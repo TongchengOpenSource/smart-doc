@@ -62,14 +62,14 @@ public class AdocDocBuilder {
      */
     public static void buildApiDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
         DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
-        builderTemplate.checkAndInit(config,false);
+        builderTemplate.checkAndInit(config, false);
         config.setParamsDataToTree(false);
         config.setAdoc(true);
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
         IDocBuildTemplate docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework());
         List<ApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder);
         if (config.isAllInOne()) {
-            String docName = builderTemplate.allInOneDocName(config,INDEX_DOC,".adoc");
+            String docName = builderTemplate.allInOneDocName(config, INDEX_DOC, ".adoc");
             apiDocList = docBuildTemplate.handleApiGroup(apiDocList, config);
             builderTemplate.buildAllInOne(apiDocList, config, javaProjectBuilder, ALL_IN_ONE_ADOC_TPL, docName);
         } else {

@@ -23,18 +23,12 @@
 package com.power.doc.utils;
 
 import com.power.common.util.CollectionUtil;
-import com.power.common.util.MD6Util;
 import com.power.common.util.StringUtil;
 import com.power.doc.model.ApiParam;
-import com.thoughtworks.qdox.model.JavaParameter;
-import org.apache.commons.codec.digest.DigestUtils;
 
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-
-import static com.power.doc.constants.DocGlobalConstants.ARRAY;
 
 /**
  * @author yu 2020/11/29.
@@ -42,7 +36,8 @@ import static com.power.doc.constants.DocGlobalConstants.ARRAY;
 public class OpenApiSchemaUtil {
 
     public final static String NO_BODY_PARAM = "NO_BODY_PARAM";
-    final static  Pattern  p =  Pattern.compile("[A-Z]\\w+.*?|[A-Z]");
+    final static Pattern p = Pattern.compile("[A-Z]\\w+.*?|[A-Z]");
+
     public static Map<String, Object> primaryTypeSchema(String primaryType) {
         Map<String, Object> map = new HashMap<>();
         map.put("type", DocUtil.javaTypeToOpenApiTypeConvert(primaryType));
@@ -88,30 +83,32 @@ public class OpenApiSchemaUtil {
                 && CollectionUtil.isEmpty(apiParams.get(0).getChildren())) {
             return "string";
         }
-        for(ApiParam a : apiParams){
-            if(StringUtil.isNotEmpty(a.getClassName())){
-                 return OpenApiSchemaUtil.delClassName(a.getClassName());
+        for (ApiParam a : apiParams) {
+            if (StringUtil.isNotEmpty(a.getClassName())) {
+                return OpenApiSchemaUtil.delClassName(a.getClassName());
             }
         }
         return NO_BODY_PARAM;
     }
-    public static String  delClassName(String className){
+
+    public static String delClassName(String className) {
         return String.join("", getPatternResult(p, className));
     }
 
-    public static List<String> getPatternResult(Pattern p,String content){
+    public static List<String> getPatternResult(Pattern p, String content) {
         List<String> matchers = new ArrayList<>();
         Matcher m = p.matcher(content);
-        while (m.find()){
+        while (m.find()) {
             matchers.add(m.group());
         }
         return matchers;
     }
-    public static List<String> getPatternResult(String rex,String content){
+
+    public static List<String> getPatternResult(String rex, String content) {
         Pattern p = Pattern.compile(rex);
         List<String> matchers = new ArrayList<>();
         Matcher m = p.matcher(content);
-        while (m.find()){
+        while (m.find()) {
             matchers.add(m.group());
         }
         return matchers;

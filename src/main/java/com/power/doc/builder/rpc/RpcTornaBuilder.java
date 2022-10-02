@@ -34,7 +34,6 @@ import com.power.doc.model.torna.TornaApi;
 import com.power.doc.template.IDocBuildTemplate;
 import com.power.doc.utils.TornaUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
-
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -102,6 +101,6 @@ public class RpcTornaBuilder {
         tornaApi.setCommonErrorCodes(buildErrorCode(apiConfig, builder));
         tornaApi.setApis(apisList);
         // Push to torna
-        TornaUtil.pushToTorna(tornaApi,apiConfig,builder);
+        TornaUtil.pushToTorna(tornaApi, apiConfig, builder);
     }
 }

@@ -94,6 +94,12 @@ public class ApiReqParam {
         return new ApiReqParam();
     }
 
+    public static ApiParam convertToApiParam(ApiReqParam param) {
+        return ApiParam.of().setField(param.getName()).setValue(param.getValue())
+                .setRequired(param.isRequired()).setDesc(param.getDesc()).setConfigParam(true)
+                .setVersion("-").setType(param.getType());
+    }
+
     public String getName() {
         return name;
     }
@@ -214,11 +220,5 @@ public class ApiReqParam {
                 .append(excludePathPatterns).append('\"');
         sb.append('}');
         return sb.toString();
-    }
-
-    public static ApiParam convertToApiParam(ApiReqParam param) {
-        return ApiParam.of().setField(param.getName()).setValue(param.getValue())
-                .setRequired(param.isRequired()).setDesc(param.getDesc()).setConfigParam(true)
-                .setVersion("-").setType(param.getType());
     }
 }

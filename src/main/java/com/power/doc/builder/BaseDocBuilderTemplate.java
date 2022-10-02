@@ -53,15 +53,36 @@ public class BaseDocBuilderTemplate {
 
     public static long NOW = System.currentTimeMillis();
 
+    public static void copyJarFile(String source, String target) {
+        ClasspathResourceLoader resourceLoader = new ClasspathResourceLoader("/template/");
+        Resource resource = resourceLoader.getResource(source);
+        try (FileWriter fileWriter = new FileWriter(target, false);
+             Reader reader = resource.openReader()) {
+            char[] c = new char[1024 * 1024];
+            int temp;
+            int len = 0;
+            while ((temp = reader.read()) != -1) {
+                c[len] = (char) temp;
+                len++;
+            }
+            reader.close();
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+            bufferedWriter.write(c, 0, len);
+            bufferedWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * check condition and init
      *
-     * @param config Api config
+     * @param config       Api config
      * @param checkOutPath check out path
      */
-    public void checkAndInit(ApiConfig config,boolean checkOutPath) {
+    public void checkAndInit(ApiConfig config, boolean checkOutPath) {
         this.checkAndInitForGetApiData(config);
-        if (StringUtil.isEmpty(config.getOutPath())&&!checkOutPath) {
+        if (StringUtil.isEmpty(config.getOutPath()) && !checkOutPath) {
             throw new RuntimeException("doc output path can't be null or empty");
         }
     }
@@ -147,26 +168,6 @@ public class BaseDocBuilderTemplate {
             return fileName;
         } else {
             return fileName + suffix;
-        }
-    }
-    public static void copyJarFile(String source, String target) {
-        ClasspathResourceLoader resourceLoader = new ClasspathResourceLoader("/template/");
-        Resource resource = resourceLoader.getResource(source);
-        try (FileWriter fileWriter = new FileWriter(target, false);
-             Reader reader = resource.openReader()) {
-            char[] c = new char[1024 * 1024];
-            int temp;
-            int len = 0;
-            while ((temp = reader.read()) != -1) {
-                c[len] = (char) temp;
-                len++;
-            }
-            reader.close();
-            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-            bufferedWriter.write(c, 0, len);
-            bufferedWriter.close();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 }

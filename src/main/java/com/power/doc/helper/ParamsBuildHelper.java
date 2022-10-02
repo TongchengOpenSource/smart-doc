@@ -26,7 +26,10 @@ import com.power.common.model.EnumDictionary;
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.StringUtil;
 import com.power.doc.builder.ProjectDocConfigBuilder;
-import com.power.doc.constants.*;
+import com.power.doc.constants.DocAnnotationConstants;
+import com.power.doc.constants.DocGlobalConstants;
+import com.power.doc.constants.DocTags;
+import com.power.doc.constants.ValidatorAnnotations;
 import com.power.doc.extension.json.PropertyNameHelper;
 import com.power.doc.extension.json.PropertyNamingStrategies;
 import com.power.doc.model.*;
@@ -87,9 +90,9 @@ public class ParamsBuildHelper {
             }
         }
         PropertyNamingStrategies.NamingBase fieldNameConvert = null;
-        if(Objects.nonNull(cls)) {
+        if (Objects.nonNull(cls)) {
             List<JavaAnnotation> clsAnnotation = cls.getAnnotations();
-             fieldNameConvert = PropertyNameHelper.translate(clsAnnotation);
+            fieldNameConvert = PropertyNameHelper.translate(clsAnnotation);
         }
         JavaClassUtil.genericParamMap(genericMap, cls, globGicName);
         List<DocJavaField> fields = JavaClassUtil.getFields(cls, 0, new LinkedHashMap<>());
@@ -139,7 +142,7 @@ public class ParamsBuildHelper {
                     continue;
                 }
                 String fieldName = docField.getFieldName();
-                if (Objects.nonNull(fieldNameConvert)){
+                if (Objects.nonNull(fieldNameConvert)) {
                     fieldName = fieldNameConvert.translate(fieldName);
                 }
                 if (ignoreFields.containsKey(fieldName)) {
@@ -166,12 +169,12 @@ public class ParamsBuildHelper {
 
                 boolean strRequired = false;
                 int annotationCounter = 0;
-                CustomField customResponseField = CustomField.nameEquals(fieldName,responseFieldMap);
+                CustomField customResponseField = CustomField.nameEquals(fieldName, responseFieldMap);
                 if (customResponseField != null && JavaClassUtil.isTargetChildClass(simpleName, customResponseField.getOwnerClassName())
                         && (customResponseField.isIgnore()) && isResp) {
                     continue;
                 }
-                CustomField customRequestField = CustomField.nameEquals(fieldName,projectBuilder.getCustomReqFieldMap());
+                CustomField customRequestField = CustomField.nameEquals(fieldName, projectBuilder.getCustomReqFieldMap());
                 if (customRequestField != null && JavaClassUtil.isTargetChildClass(simpleName, customRequestField.getOwnerClassName())
                         && (customRequestField.isIgnore()) && !isResp) {
                     continue;
@@ -367,7 +370,7 @@ public class ParamsBuildHelper {
                     JavaClass javaClass = field.getType();
                     if (javaClass.isEnum()) {
                         comment.append(handleEnumComment(javaClass, projectBuilder));
-                        ParamUtil.handleSeeEnum(param,field,projectBuilder,jsonRequest,tagsMap);
+                        ParamUtil.handleSeeEnum(param, field, projectBuilder, jsonRequest, tagsMap);
                         if (StringUtil.isNotEmpty(comment.toString())) {
                             commonHandleParam(paramList, param, isRequired, comment + appendComment, since, strRequired);
                         } else {
@@ -633,7 +636,7 @@ public class ParamsBuildHelper {
         if (projectBuilder.getApiConfig().getInlineEnum()) {
             ApiDataDictionary dataDictionary = projectBuilder.getApiConfig().getDataDictionary(javaClass.getCanonicalName());
             if (Objects.isNull(dataDictionary)) {
-                comment = comment + "<br/>[Enum values:<br/>" + JavaClassUtil.getEnumParams(javaClass)+"]";
+                comment = comment + "<br/>[Enum values:<br/>" + JavaClassUtil.getEnumParams(javaClass) + "]";
             } else {
                 Class enumClass = dataDictionary.getEnumClass();
                 if (enumClass.isInterface()) {
@@ -655,9 +658,9 @@ public class ParamsBuildHelper {
         return comment;
     }
 
-    private static int atomicOrDefault(AtomicInteger atomicInteger, int defaultVal){
-        if(null != atomicInteger){
-           return atomicInteger.incrementAndGet();
+    private static int atomicOrDefault(AtomicInteger atomicInteger, int defaultVal) {
+        if (null != atomicInteger) {
+            return atomicInteger.incrementAndGet();
         }
         return defaultVal;
     }

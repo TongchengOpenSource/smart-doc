@@ -5,6 +5,7 @@ import com.thoughtworks.qdox.library.ClassLibraryBuilder;
 
 /**
  * the helper to create {@link JavaProjectBuilder} object
+ *
  * @author luchuanbaker@qq.com
  */
 public class JavaProjectBuilderHelper {

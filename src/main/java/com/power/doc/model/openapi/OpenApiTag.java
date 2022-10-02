@@ -17,16 +17,16 @@ public class OpenApiTag {
      */
     private String description;
 
-    public static OpenApiTag of(String name, String description) {
-        return new OpenApiTag(name, description);
-    }
-
     public OpenApiTag() {
     }
 
     public OpenApiTag(String name, String description) {
         this.name = name;
         this.description = description;
+    }
+
+    public static OpenApiTag of(String name, String description) {
+        return new OpenApiTag(name, description);
     }
 
     public String getName() {

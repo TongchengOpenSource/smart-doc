@@ -26,7 +26,6 @@ import com.power.common.util.CollectionUtil;
 import com.power.doc.constants.DocLanguage;
 import com.power.doc.model.rpc.RpcApiDependency;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -46,7 +45,7 @@ public class ApiConfig {
     private String serverUrl;
 
     /**
-     *  Web server base url for postman
+     * Web server base url for postman
      */
     private String serverEnv;
 
@@ -145,60 +144,33 @@ public class ApiConfig {
      * default /src/main/java
      */
     private String codePath;
-
-    public String getCodePath() {
-        return codePath;
-    }
-
-    public ApiConfig setCodePath(String codePath) {
-        this.codePath = codePath;
-        return this;
-    }
-
     /**
      * api data dictionary
      */
     private List<ApiDataDictionary> dataDictionaries;
-
-
     private transient ClassLoader classLoader;
-
-    public ClassLoader getClassLoader() {
-        return classLoader;
-    }
-
-    public ApiConfig setClassLoader(ClassLoader classLoader) {
-        this.classLoader = classLoader;
-        return this;
-    }
-
     /**
      * @since 1.7.9
      * api error code dictionary
      */
     private List<ApiErrorCodeDictionary> errorCodeDictionaries;
-
     /**
      * list of custom response filed
      */
     private List<ApiObjectReplacement> apiObjectReplacements;
-
     /**
      * list of rpc api dependencies
      */
     private List<RpcApiDependency> rpcApiDependencies;
-
     /**
      * list of api constant
      */
     private List<ApiConstant> apiConstants;
-
     /**
      * @since 2.0.7
      * project  group
      */
     private String group;
-
     /**
      * @since 1.7.5
      * project name
@@ -209,93 +181,79 @@ public class ApiConfig {
      * project  cn name
      */
     private String projectCName;
-
     /**
      * Skip Transient Field
      */
     private boolean skipTransientField = true;
-
     /**
      * @since 1.7.10
      * default show author
      */
     private boolean showAuthor = true;
-
     /**
      * convert request field to underline
      *
      * @since 1.8.7
      */
     private boolean requestFieldToUnderline;
-
     /**
      * convert response field to underline
      *
      * @since 1.8.7
      */
     private boolean responseFieldToUnderline;
-
     /**
      * sort by title
      *
      * @since 1.8.7
      */
     private boolean sortByTitle;
-
     /**
      * is rest api doc
      *
      * @since 1.8.7
      */
     private Boolean showJavaType = Boolean.FALSE;
-
     /**
      * is inline enum field comment
      *
      * @since 1.8.8
      */
     private Boolean inlineEnum = Boolean.FALSE;
-
     /**
      * rpc consumer config example
      *
      * @since 1.8.7
      */
     private String rpcConsumerConfig;
-
     /**
      * recursion limit
      *
      * @since 1.8.8
      */
     private int recursionLimit = 7;
-
     /**
      * request example
      *
      * @since 1.9.0
      */
     private boolean requestExample = Boolean.TRUE;
-
     /**
      * response example
      *
      * @since 1.9.0
      */
     private boolean responseExample = Boolean.TRUE;
-
     /**
      * custom setting api document name
      *
      * @since 1.9.0
      */
     private String allInOneDocFileName;
-
     /**
      * convert param data to tree
      */
     private boolean paramsDataToTree;
-
     /**
      * request ignore param
      *
@@ -303,41 +261,50 @@ public class ApiConfig {
      * @since 1.9.2
      */
     private List<String> ignoreRequestParams;
-
     /**
      * display actual type of generic
      *
      * @since 1.9.6
      */
     private boolean displayActualType;
-
     /**
      * Support Spring MVC ResponseBodyAdvice
      *
      * @since 1.9.8
      */
     private BodyAdvice responseBodyAdvice;
-
     /**
      * @since 2.1.4
      */
     private BodyAdvice requestBodyAdvice;
-
     private String style;
-
     private String highlightStyleLink;
-
     /**
      * create debug page
      */
     private boolean createDebugPage;
-
     /**
      * Spring MVC url suffix
      *
      * @since 2.1.0
      */
     private String urlSuffix;
+    /**
+     * Torna appKey
+     */
+    private String appKey;
+    /**
+     * Torna Secret
+     */
+    private String secret;
+    /**
+     * Torna appToken
+     */
+    private String appToken;
+    /**
+     * Torna openUrl
+     */
+    private String openUrl;
 
     /**
      *     public static final String APP_KEY = "20201216788835306945118208";
@@ -347,69 +314,58 @@ public class ApiConfig {
      * @return
      */
     /**
-     * Torna appKey
-     */
-    private String appKey;
-
-    /**
-     * Torna Secret
-     */
-    private String secret;
-
-    /**
-     * Torna appToken
-     */
-    private String appToken;
-
-    /**
-     * Torna openUrl
-     */
-    private String openUrl;
-
-    /**
      * Debugging environment name
      */
     private String debugEnvName;
-
     /**
      * Url of the debugging environment
      */
     private String debugEnvUrl;
-
     /**
      * Show log when pushing document to torna
      */
     private boolean tornaDebug = true;
-
     /**
      * The operator who pushes the document to Torna
      */
     private String author;
-
     /**
      * smart-doc supported framework, if not set default is spring,
      */
     private String framework;
-
-
     private List<ApiGroup> groups;
-
     /**
      * replace old document while push to torna
+     *
      * @since 2.2.4
      */
     private Boolean replace;
-
     /**
      * @since 2.2.5
      */
     private boolean requestParamsTable = Boolean.TRUE;
-
     /**
      * @since 2.2.5
      */
     private boolean responseParamsTable = Boolean.TRUE;
 
+    public String getCodePath() {
+        return codePath;
+    }
+
+    public ApiConfig setCodePath(String codePath) {
+        this.codePath = codePath;
+        return this;
+    }
+
+    public ClassLoader getClassLoader() {
+        return classLoader;
+    }
+
+    public ApiConfig setClassLoader(ClassLoader classLoader) {
+        this.classLoader = classLoader;
+        return this;
+    }
 
     public String getPackageExcludeFilters() {
         return packageExcludeFilters;
@@ -643,16 +599,16 @@ public class ApiConfig {
             return null;
         }
         return this.dataDictionaries.stream().filter((apiDataDictionary ->
-        {
-            boolean equalsName = enumClassName.equalsIgnoreCase(apiDataDictionary.getEnumClassName());
+                {
+                    boolean equalsName = enumClassName.equalsIgnoreCase(apiDataDictionary.getEnumClassName());
 
-            Set<Class<? extends Enum>> enumImplementSet = apiDataDictionary.getEnumImplementSet();
-            if (CollectionUtil.isEmpty(enumImplementSet)) {
-                return equalsName;
-            }
-            Set<String> collect = enumImplementSet.stream().map(Class::getName).collect(Collectors.toSet());
-            return equalsName || collect.contains(enumClassName);
-        }))
+                    Set<Class<? extends Enum>> enumImplementSet = apiDataDictionary.getEnumImplementSet();
+                    if (CollectionUtil.isEmpty(enumImplementSet)) {
+                        return equalsName;
+                    }
+                    Set<String> collect = enumImplementSet.stream().map(Class::getName).collect(Collectors.toSet());
+                    return equalsName || collect.contains(enumClassName);
+                }))
                 .findFirst().orElse(null);
     }
 
