@@ -67,7 +67,7 @@ import static com.power.doc.constants.DocTags.IGNORE;
 /**
  * @author yu 2020/1/29.
  */
-public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
+public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc>,BaseDocBuildTemplate{
 
   /**
    * api index
@@ -119,12 +119,6 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc> {
   public boolean ignoreReturnObject(String typeName, List<String> ignoreParams) {
     return false;
   }
-
-  @Override
-  public List<ApiMethodDoc> buildEntryPointMethod(JavaClass cls, ApiConfig apiConfig, ProjectDocConfigBuilder projectBuilder) {
-    return null;
-  }
-
 
   private List<JavaMethodDoc> buildServiceMethod(final JavaClass cls, ApiConfig apiConfig, ProjectDocConfigBuilder projectBuilder) {
     String clazName = cls.getCanonicalName();
