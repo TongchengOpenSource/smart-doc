@@ -10,7 +10,8 @@
   5. 修复jax-rs方法上绑定集合解析错误，[#358](https://github.com/smart-doc-group/smart-doc/issues/358)
   6. 修复customResponseFields配置无效错误，[#355](https://github.com/smart-doc-group/smart-doc/issues/355)
   7. 对Jackson注解@JsonNaming驼峰转下划线的支持,[#349](https://github.com/smart-doc-group/smart-doc/issues/349)
-  8. curl请求用例显示混乱
+  8. curl请求用例显示混乱。
+  9. 修复常量解析private字段被解析是发生异常问题，[#356](https://github.com/smart-doc-group/smart-doc/issues/356)
 
 ### 版本号：2.5.3
 
