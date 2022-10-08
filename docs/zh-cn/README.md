@@ -49,7 +49,7 @@ smart-doc + [Torna](http://torna.cn/) 组成行业领先的文档生成和管理
 
 ## Contact
 
-愿意参与构建`smart-doc`或者是需要交流问题可以加入qq群，[常见问题答疑](https://smart-doc-group.github.io/#/zh-cn/QA)
+愿意参与构建`smart-doc`或者是需要交流问题可以加入qq群，[常见问题答疑](https://smart-doc-group.github.io/#/zh-cn/faq)
 
 <img src="../_images/smart-doc-qq.jpg" title="qq群" width="200px" height="210px"/>
 <img src="../_images/smart-doc-qq2.jpeg" title="qq群2" width="200px" height="210px"/>
