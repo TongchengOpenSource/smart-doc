@@ -113,6 +113,7 @@ public class ParamsBuildHelper {
                     registryClasses, projectBuilder, groupClasses, pid, jsonRequest, nextLevel, atomicInteger));
         } else if (DocGlobalConstants.JAVA_OBJECT_FULLY.equals(className)) {
             ApiParam param = ApiParam.of()
+                    .setClassName(className)
                     .setId(atomicOrDefault(atomicInteger, pid + 1))
                     .setField(pre + "any object")
                     .setType("object")
@@ -602,6 +603,7 @@ public class ParamsBuildHelper {
         StringBuilder comments = new StringBuilder();
         comments.append("Return ").append(typeName).append(".");
         ApiParam apiParam = ApiParam.of()
+                .setClassName(typeName)
                 .setId(atomicOrDefault(atomicInteger, 0))
                 .setField("-")
                 .setType(typeName)

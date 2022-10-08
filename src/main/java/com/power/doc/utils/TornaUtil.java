@@ -18,6 +18,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.*;
 
 import static com.power.doc.constants.DocGlobalConstants.ARRAY;
+import static com.power.doc.constants.DocGlobalConstants.OBJECT;
 import static com.power.doc.constants.TornaConstants.ENUM_PUSH;
 import static com.power.doc.constants.TornaConstants.PUSH;
 
@@ -299,16 +300,16 @@ public class TornaUtil {
         if (CollectionUtil.isNotEmpty(repList)) {
             ApiParam apiParam = repList.get(0);
             boolean isReqList = repList.size() == 1 && ARRAY.equals(apiParam.getType());
-//            String className = getType(apiParam.getClassName());
-//            apiMethodDoc.setResponseArrayType(JavaClassValidateUtil.isPrimitive(className) ? className : OBJECT);
+            String className = getType(apiParam.getClassName());
+            apiMethodDoc.setResponseArrayType(JavaClassValidateUtil.isPrimitive(className) ? className : OBJECT);
             apiMethodDoc.setIsResponseArray(isReqList ? 1 : 0);
         }
         //request
         if (CollectionUtil.isNotEmpty(repList)) {
             ApiParam apiParam = repList.get(0);
             boolean isRepList = reqList.size() == 1 && ARRAY.equals(apiParam.getType());
-//            String className = getType(apiParam.getClassName());
-//            apiMethodDoc.setRequestArrayType(JavaClassValidateUtil.isPrimitive(className) ? className : OBJECT);
+            String className = getType(apiParam.getClassName());
+            apiMethodDoc.setRequestArrayType(JavaClassValidateUtil.isPrimitive(className) ? className : OBJECT);
             apiMethodDoc.setIsRequestArray(isRepList ? 1 : 0);
         }
     }
@@ -316,7 +317,7 @@ public class TornaUtil {
     private static String getType(String typeName) {
         String gicType;
         //get generic type
-        if (typeName.contains("<")) {
+          if (typeName.contains("<")) {
             gicType = typeName.substring(typeName.indexOf("<") + 1, typeName.lastIndexOf(">"));
         } else {
             gicType = typeName;

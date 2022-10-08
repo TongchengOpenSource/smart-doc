@@ -399,7 +399,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                     .filter(param -> DocUtil.filterPath(requestMapping, param)).collect(Collectors.toList());
 
             ApiMethodReqParam apiMethodReqParam = requestParams(docJavaMethod, projectBuilder, apiReqParamList, frameworkAnnotations);
-            //apiMethodDoc.setReqListParam(ParamUtil.isListParam(apiMethodReqParam.getRequestParams()));
+
             // build request params
             if (paramsDataToTree) {
                 apiMethodDoc.setPathParams(ApiParamTreeUtil.apiParamToTree(apiMethodReqParam.getPathParams()));
@@ -449,7 +449,6 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
             }
             // build response params
             List<ApiParam> responseParams = buildReturnApiParams(docJavaMethod, projectBuilder);
-            // apiMethodDoc.setRepListParam(ParamUtil.isListParam(responseParams));
             if (paramsDataToTree) {
                 responseParams = ApiParamTreeUtil.apiParamToTree(responseParams);
             }

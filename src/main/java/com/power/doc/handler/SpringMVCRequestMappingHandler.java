@@ -32,6 +32,7 @@ import com.power.doc.model.annotation.FrameworkAnnotations;
 import com.power.doc.model.annotation.MappingAnnotation;
 import com.power.doc.model.request.RequestMapping;
 import com.power.doc.utils.DocUtil;
+import com.power.doc.utils.JavaClassUtil;
 import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaMethod;
 
@@ -71,6 +72,7 @@ public class SpringMVCRequestMappingHandler implements IRequestMappingHandler {
         Map<String, MappingAnnotation> mappingAnnotationMap = frameworkAnnotations.getMappingAnnotations();
         for (JavaAnnotation annotation : annotations) {
             String annotationName = annotation.getType().getName();
+            annotationName = JavaClassUtil.getClassSimpleName(annotationName);
             if (DocAnnotationConstants.DEPRECATED.equals(annotationName)) {
                 deprecated = true;
             }
