@@ -30,6 +30,7 @@ import com.power.doc.function.RequestMappingFunc;
 import com.power.doc.model.annotation.FrameworkAnnotations;
 import com.power.doc.model.request.RequestMapping;
 import com.power.doc.utils.DocUrlUtil;
+import com.power.doc.utils.DocUtil;
 import com.thoughtworks.qdox.model.JavaMethod;
 
 import java.util.Objects;
@@ -40,7 +41,8 @@ import java.util.Objects;
 public interface IRequestMappingHandler {
 
     default RequestMapping formatMappingData(ProjectDocConfigBuilder projectBuilder, String controllerBaseUrl, RequestMapping requestMapping) {
-        String shortUrl = requestMapping.getShortUrl();
+        String shortUrl = DocUtil.formatPathUrl(requestMapping.getShortUrl());
+        controllerBaseUrl = DocUtil.formatPathUrl(controllerBaseUrl);
         if (Objects.nonNull(shortUrl)) {
             String serverUrl = projectBuilder.getServerUrl();
             String contextPath = projectBuilder.getApiConfig().getPathPrefix();

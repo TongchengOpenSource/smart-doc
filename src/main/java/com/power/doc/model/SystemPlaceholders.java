@@ -21,7 +21,9 @@ public class SystemPlaceholders {
     }
 
     public static boolean hasSystemProperties(String url) {
-        return url.startsWith(PLACEHOLDER_PREFIX) && url.endsWith(PLACEHOLDER_SUFFIX) && url.contains(VALUE_SEPARATOR);
+        return url.startsWith(PLACEHOLDER_PREFIX) &&
+                url.endsWith(PLACEHOLDER_SUFFIX)
+                && url.contains(VALUE_SEPARATOR);
     }
 
     public static String replaceSystemProperties(String url) {

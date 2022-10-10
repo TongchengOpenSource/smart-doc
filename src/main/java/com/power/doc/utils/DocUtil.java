@@ -232,9 +232,7 @@ public class DocUtil {
      * @return formatted string
      */
     public static String formatAndRemove(String str, Map<String, String> values) {
-        if (SystemPlaceholders.hasSystemProperties(str)) {
-            str = DocUtil.delPropertiesUrl(str, new HashSet<>());
-        }
+        str = DocUtil.delPropertiesUrl(str, new HashSet<>());
         if (str.contains(":")) {
             String[] strArr = str.split("/");
             for (int i = 0; i < strArr.length; i++) {
@@ -242,7 +240,6 @@ public class DocUtil {
                 if (pathParam.contains(":")) {
                     int length = pathParam.length();
                     String reg = pathParam.substring(pathParam.indexOf(":") + 1, length - 1);
-
                     Generex generex = new Generex(reg);
                     // Generate random String
                     String randomStr = generex.random();
@@ -272,7 +269,6 @@ public class DocUtil {
         }
         return builder.toString();
     }
-
     /**
      * // /detail/{id:[a-zA-Z0-9]{3}}/{name:[a-zA-Z0-9]{3}}
      * remove pattern
@@ -281,9 +277,7 @@ public class DocUtil {
      * @return String
      */
     public static String formatPathUrl(String str) {
-        if (SystemPlaceholders.hasSystemProperties(str)) {
-            str = DocUtil.delPropertiesUrl(str, new HashSet<>());
-        }
+        str = DocUtil.delPropertiesUrl(str, new HashSet<>());
         if (!str.contains(":")) {
             return str;
         }
