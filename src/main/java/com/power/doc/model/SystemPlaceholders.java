@@ -1,5 +1,7 @@
 package com.power.doc.model;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * @author xingzi
  * Date 2022/9/25 14:52
@@ -21,9 +23,9 @@ public class SystemPlaceholders {
     }
 
     public static boolean hasSystemProperties(String url) {
-        return url.startsWith(PLACEHOLDER_PREFIX) &&
-                url.endsWith(PLACEHOLDER_SUFFIX)
-                && url.contains(VALUE_SEPARATOR);
+            return !StringUtils.isBlank(url) && url.contains(PLACEHOLDER_PREFIX) &&
+                    url.contains(PLACEHOLDER_SUFFIX)
+                    && url.contains(VALUE_SEPARATOR);
     }
 
     public static String replaceSystemProperties(String url) {

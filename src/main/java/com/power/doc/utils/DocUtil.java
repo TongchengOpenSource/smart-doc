@@ -232,7 +232,9 @@ public class DocUtil {
      * @return formatted string
      */
     public static String formatAndRemove(String str, Map<String, String> values) {
-        str = DocUtil.delPropertiesUrl(str, new HashSet<>());
+        if(hasSystemProperties(str)) {
+            str = DocUtil.delPropertiesUrl(str, new HashSet<>());
+        }
         if (str.contains(":")) {
             String[] strArr = str.split("/");
             for (int i = 0; i < strArr.length; i++) {
@@ -277,7 +279,9 @@ public class DocUtil {
      * @return String
      */
     public static String formatPathUrl(String str) {
-        str = DocUtil.delPropertiesUrl(str, new HashSet<>());
+        if(hasSystemProperties(str)) {
+            str = DocUtil.delPropertiesUrl(str, new HashSet<>());
+        }
         if (!str.contains(":")) {
             return str;
         }

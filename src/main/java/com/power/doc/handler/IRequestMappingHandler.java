@@ -41,8 +41,7 @@ import java.util.Objects;
 public interface IRequestMappingHandler {
 
     default RequestMapping formatMappingData(ProjectDocConfigBuilder projectBuilder, String controllerBaseUrl, RequestMapping requestMapping) {
-        String shortUrl = DocUtil.formatPathUrl(requestMapping.getShortUrl());
-        controllerBaseUrl = DocUtil.formatPathUrl(controllerBaseUrl);
+        String shortUrl = requestMapping.getShortUrl();
         if (Objects.nonNull(shortUrl)) {
             String serverUrl = projectBuilder.getServerUrl();
             String contextPath = projectBuilder.getApiConfig().getPathPrefix();
@@ -57,6 +56,7 @@ public interface IRequestMappingHandler {
                 url = UrlUtil.simplifyUrl(StringUtil.trim(url));
                 shortUrl = UrlUtil.simplifyUrl(StringUtil.trim(shortUrl));
             }
+            url = DocUtil.formatPathUrl(url);
             requestMapping.setUrl(url).setShortUrl(shortUrl);
             return requestMapping;
         }
