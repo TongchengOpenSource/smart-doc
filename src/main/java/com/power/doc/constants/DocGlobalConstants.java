@@ -246,4 +246,7 @@ public interface DocGlobalConstants {
 
     String PARAM_PREFIX = "└─";
 
+    String OPENAPI_2_COMPONENT_KRY = "#/definitions/schemas/";
+
+    String OPENAPI_3_COMPONENT_KRY = "#/components/schemas/";
 }

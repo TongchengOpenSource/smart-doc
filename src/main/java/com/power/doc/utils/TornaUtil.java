@@ -288,8 +288,8 @@ public class TornaUtil {
     }
 
     /**
-     * request and response is list
-     *
+     * 设置请求参数是否为数组
+     * @param apiMethodDoc 请求参数
      */
     public static void setTornaArrayTags(ApiMethodDoc apiMethodDoc) {
         List<ApiParam> reqList = apiMethodDoc.getRequestParams();
