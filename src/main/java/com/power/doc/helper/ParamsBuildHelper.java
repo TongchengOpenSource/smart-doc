@@ -536,7 +536,17 @@ public class ParamsBuildHelper {
                             }
                         }
                     } else if (simpleName.equals(subTypeName)) {
-                        //do nothing
+                        // reference self
+                        ApiParam param1 = ApiParam.of()
+                            .setField(pre+fieldName)
+                            .setPid(pid)
+                            .setId(atomicOrDefault(atomicInteger, paramList.size() + pid + 1))
+                            .setClassName(subTypeName)
+                            .setMaxLength(maxLength)
+                            .setType("object")
+                            .setDesc(comment.append(" $ref... self").toString())
+                            .setVersion(DocGlobalConstants.DEFAULT_VERSION);
+                        paramList.add(param1);
                     } else {
                         if (StringUtil.isNotEmpty(comment.toString())) {
                             commonHandleParam(paramList, param, isRequired, comment + appendComment, since, strRequired);

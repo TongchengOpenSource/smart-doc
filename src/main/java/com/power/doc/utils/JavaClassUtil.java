@@ -28,6 +28,7 @@ import com.power.common.util.EnumUtil;
 import com.power.common.util.StringUtil;
 import com.power.doc.builder.ProjectDocConfigBuilder;
 import com.power.doc.constants.DocAnnotationConstants;
+import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.constants.DocTags;
 import com.power.doc.constants.DocValidatorAnnotationEnum;
 import com.power.doc.constants.ValidatorAnnotations;
@@ -92,7 +93,7 @@ public class JavaClassUtil {
      */
     private static List<DocJavaField> getFields(JavaClass cls1, int counter, Map<String, DocJavaField> addedFields, Map<String, JavaType> actualJavaTypes) {
         List<DocJavaField> fieldList = new ArrayList<>();
-        if (null == cls1) {
+        if (Objects.isNull(cls1)) {
             return fieldList;
         } else if ("Object".equals(cls1.getSimpleName()) || "Timestamp".equals(cls1.getSimpleName()) ||
                 "Date".equals(cls1.getSimpleName()) || "Locale".equals(cls1.getSimpleName())
@@ -121,6 +122,9 @@ public class JavaClassUtil {
                         continue;
                     }
                     String comment = javaMethod.getComment();
+                    if (StringUtil.isEmpty(comment)) {
+                        comment = DocGlobalConstants.NO_COMMENTS_FOUND;
+                    }
                     JavaField javaField = new DefaultJavaField(javaMethod.getReturns(), methodName);
                     DocJavaField docJavaField = DocJavaField.builder()
                             .setFieldName(methodName)
@@ -216,7 +220,11 @@ public class JavaClassUtil {
                     if (javaField.getType().isEnum() && !typeChecked) {
                         docJavaField.setEnum(true);
                     }
-                    docJavaField.setComment(javaField.getComment())
+                    String comment = javaField.getComment();
+                    if (Objects.isNull(comment)) {
+                        comment = DocGlobalConstants.NO_COMMENTS_FOUND;
+                    }
+                    docJavaField.setComment(comment)
                             .setJavaField(javaField).setFullyQualifiedName(subTypeName)
                             .setGenericCanonicalName(gicName).setActualJavaType(actualType)
                             .setAnnotations(javaField.getAnnotations())
