@@ -148,14 +148,8 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDo
             }
             docJavaMethods.add(DocJavaMethod.builder().setJavaMethod(method));
         }
-        JavaClass parentClass = cls.getSuperJavaClass();
-        if (Objects.nonNull(parentClass) && !"Object".equals(parentClass.getSimpleName())) {
-            Map<String, JavaType> actualTypesMap = JavaClassUtil.getActualTypesMap(parentClass);
-            List<JavaMethod> parentMethodList = parentClass.getMethods();
-            for (JavaMethod method : parentMethodList) {
-                docJavaMethods.add(DocJavaMethod.builder().setJavaMethod(method).setActualTypesMap(actualTypesMap));
-            }
-        }
+        // add parent class methods
+        docJavaMethods.addAll(getParenClassMethods(cls));
         List<ApiMethodDoc> methodDocList = new ArrayList<>(methods.size());
         int methodOrder = 0;
         for (DocJavaMethod docJavaMethod : docJavaMethods) {
@@ -213,19 +207,15 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDo
             apiMethodDoc.setDeprecated(jaxPathMapping.isDeprecated());
             apiMethodDoc.setContentType(jaxPathMapping.getMediaType());
 
-
+           // build request params
             ApiMethodReqParam apiMethodReqParam = requestParams(docJavaMethod, projectBuilder);
-            // build request params
+            apiMethodDoc.setPathParams(apiMethodReqParam.getPathParams());
+            apiMethodDoc.setQueryParams(apiMethodReqParam.getQueryParams());
+            apiMethodDoc.setRequestParams(apiMethodReqParam.getRequestParams());
             if (paramsDataToTree) {
-                apiMethodDoc.setPathParams(ApiParamTreeUtil.apiParamToTree(apiMethodReqParam.getPathParams()));
-                apiMethodDoc.setQueryParams(ApiParamTreeUtil.apiParamToTree(apiMethodReqParam.getQueryParams()));
-                apiMethodDoc.setRequestParams(ApiParamTreeUtil.apiParamToTree(apiMethodReqParam.getRequestParams()));
-            } else {
-                apiMethodDoc.setPathParams(apiMethodReqParam.getPathParams());
-                apiMethodDoc.setQueryParams(apiMethodReqParam.getQueryParams());
-                apiMethodDoc.setRequestParams(apiMethodReqParam.getRequestParams());
+                // convert to tree
+                this.convertParamsDataToTree(apiMethodDoc);
             }
-
             List<ApiReqParam> allApiReqParams;
             allApiReqParams = ApiReqParams;
             if (this.headers != null) {
@@ -606,13 +596,13 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDo
         List<FormData> formDataList = new ArrayList<>();
         ApiRequestExample requestExample = ApiRequestExample.builder();
         for (JavaParameter parameter : parameterList) {
-            JavaType javaType = parameter.getType();
-            if (Objects.nonNull(actualTypesMap) && Objects.nonNull(actualTypesMap.get(javaType.getCanonicalName()))) {
-                javaType = actualTypesMap.get(javaType.getCanonicalName());
-            }
             String paramName = parameter.getName();
             if (ignoreSets.contains(paramName)) {
                 continue;
+            }
+            JavaType javaType = parameter.getType();
+            if (Objects.nonNull(actualTypesMap) && Objects.nonNull(actualTypesMap.get(javaType.getCanonicalName()))) {
+                javaType = actualTypesMap.get(javaType.getCanonicalName());
             }
             String typeName = javaType.getFullyQualifiedName();
 
@@ -770,12 +760,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDo
             requestExample.setExampleBody(exampleBody).setUrl(url);
         } else {
             // for get delete
-            pathParamsMap.putAll(DocUtil.formDataToMap(formDataList));
-            path = DocUtil.formatAndRemove(path, pathParamsMap);
-            url = UrlUtil.urlJoin(path, pathParamsMap);
-            url = StringUtil.removeQuotes(url);
-            url = apiMethodDoc.getServerUrl() + "/" + url;
-            url = UrlUtil.simplifyUrl(url);
+            url = formatRequestUrl(pathParamsMap,pathParamsMap,apiMethodDoc.getServerUrl(),path);
             CurlRequest curlRequest = CurlRequest.builder()
                     .setBody(requestExample.getJsonBody())
                     .setContentType(apiMethodDoc.getContentType())

@@ -22,21 +22,31 @@
  */
 package com.power.doc.template;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
 import com.power.common.util.StringUtil;
+import com.power.common.util.UrlUtil;
 import com.power.doc.builder.ProjectDocConfigBuilder;
 import com.power.doc.constants.DocTags;
 import com.power.doc.helper.ParamsBuildHelper;
+import com.power.doc.model.ApiMethodDoc;
 import com.power.doc.model.ApiParam;
 import com.power.doc.model.ApiReturn;
 import com.power.doc.model.DocJavaMethod;
+import com.power.doc.utils.ApiParamTreeUtil;
 import com.power.doc.utils.DocClassUtil;
+import com.power.doc.utils.DocUtil;
+import com.power.doc.utils.JavaClassUtil;
 import com.power.doc.utils.JavaClassValidateUtil;
 import com.power.doc.utils.OpenApiSchemaUtil;
 import com.thoughtworks.qdox.model.DocletTag;
+import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaMethod;
 import com.thoughtworks.qdox.model.JavaType;
-
-import java.util.*;
 
 import static com.power.doc.constants.DocGlobalConstants.NO_COMMENTS_FOUND;
 import static com.power.doc.constants.DocTags.IGNORE_RESPONSE_BODY_ADVICE;
@@ -45,6 +55,7 @@ import static com.power.doc.constants.DocTags.IGNORE_RESPONSE_BODY_ADVICE;
  * @author yu3.sun on 2022/10/2
  */
 public interface IBaseDocBuildTemplate {
+
     default String paramCommentResolve(String comment) {
         if (StringUtil.isEmpty(comment)) {
             comment = NO_COMMENTS_FOUND;
@@ -67,13 +78,13 @@ public interface IBaseDocBuildTemplate {
         }
         String returnTypeGenericCanonicalName = method.getReturnType().getGenericCanonicalName();
         if (Objects.nonNull(projectBuilder.getApiConfig().getResponseBodyAdvice())
-                && Objects.isNull(method.getTagByName(IGNORE_RESPONSE_BODY_ADVICE))) {
+            && Objects.isNull(method.getTagByName(IGNORE_RESPONSE_BODY_ADVICE))) {
             String responseBodyAdvice = projectBuilder.getApiConfig().getResponseBodyAdvice().getClassName();
             if (!returnTypeGenericCanonicalName.startsWith(responseBodyAdvice)) {
                 returnTypeGenericCanonicalName = new StringBuffer()
-                        .append(responseBodyAdvice)
-                        .append("<")
-                        .append(returnTypeGenericCanonicalName).append(">").toString();
+                    .append(responseBodyAdvice)
+                    .append("<")
+                    .append(returnTypeGenericCanonicalName).append(">").toString();
             }
         }
         Map<String, JavaType> actualTypesMap = docJavaMethod.getActualTypesMap();
@@ -101,7 +112,7 @@ public interface IBaseDocBuildTemplate {
                     return new ArrayList<>(0);
                 }
                 return ParamsBuildHelper.buildParams(gicName, "", 0, null, Boolean.TRUE,
-                        new HashMap<>(), projectBuilder, null, 0, Boolean.FALSE, null);
+                    new HashMap<>(), projectBuilder, null, 0, Boolean.FALSE, null);
             } else {
                 return new ArrayList<>(0);
             }
@@ -112,13 +123,42 @@ public interface IBaseDocBuildTemplate {
                 return new ArrayList<>(0);
             }
             return ParamsBuildHelper.buildParams(returnType, "", 0, null, Boolean.TRUE,
-                    new HashMap<>(), projectBuilder, null, 0, Boolean.FALSE, null);
+                new HashMap<>(), projectBuilder, null, 0, Boolean.FALSE, null);
         }
         if (StringUtil.isNotEmpty(returnType)) {
             return ParamsBuildHelper.buildParams(returnType, "", 0, null, Boolean.TRUE,
-                    new HashMap<>(), projectBuilder, null, 0, Boolean.FALSE, null);
+                new HashMap<>(), projectBuilder, null, 0, Boolean.FALSE, null);
         }
         return new ArrayList<>(0);
+    }
+
+    default void convertParamsDataToTree(ApiMethodDoc apiMethodDoc) {
+        apiMethodDoc.setPathParams(ApiParamTreeUtil.apiParamToTree(apiMethodDoc.getPathParams()));
+        apiMethodDoc.setQueryParams(ApiParamTreeUtil.apiParamToTree(apiMethodDoc.getQueryParams()));
+        apiMethodDoc.setRequestParams(ApiParamTreeUtil.apiParamToTree(apiMethodDoc.getRequestParams()));
+    }
+
+    default List<DocJavaMethod> getParenClassMethods(JavaClass cls) {
+        List<DocJavaMethod> docJavaMethods = new ArrayList<>();
+        JavaClass parentClass = cls.getSuperJavaClass();
+        if (Objects.nonNull(parentClass) && !"Object".equals(parentClass.getSimpleName())) {
+            Map<String, JavaType> actualTypesMap = JavaClassUtil.getActualTypesMap(parentClass);
+            List<JavaMethod> parentMethodList = parentClass.getMethods();
+            for (JavaMethod method : parentMethodList) {
+                docJavaMethods.add(DocJavaMethod.builder().setJavaMethod(method).setActualTypesMap(actualTypesMap));
+            }
+        }
+        return docJavaMethods;
+    }
+
+    default String formatRequestUrl(Map<String, String> pathParamsMap, Map<String, String> queryParamsMap,
+        String serverUrl,String path) {
+        path = DocUtil.formatAndRemove(path, pathParamsMap);
+        String url = UrlUtil.urlJoin(path, queryParamsMap);
+        url = StringUtil.removeQuotes(url);
+        url = serverUrl + "/" + url;
+        url = UrlUtil.simplifyUrl(url);
+        return url;
     }
 
     boolean ignoreReturnObject(String typeName, List<String> ignoreParams);
