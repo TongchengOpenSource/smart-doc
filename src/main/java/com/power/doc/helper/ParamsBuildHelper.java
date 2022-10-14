@@ -22,6 +22,18 @@
  */
 package com.power.doc.helper;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
+
 import com.power.common.model.EnumDictionary;
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.StringUtil;
@@ -32,28 +44,38 @@ import com.power.doc.constants.DocTags;
 import com.power.doc.constants.ValidatorAnnotations;
 import com.power.doc.extension.json.PropertyNameHelper;
 import com.power.doc.extension.json.PropertyNamingStrategies;
-import com.power.doc.model.*;
-import com.power.doc.utils.*;
+import com.power.doc.model.ApiConfig;
+import com.power.doc.model.ApiDataDictionary;
+import com.power.doc.model.ApiParam;
+import com.power.doc.model.CustomField;
+import com.power.doc.model.DocJavaField;
+import com.power.doc.utils.DocClassUtil;
+import com.power.doc.utils.DocUtil;
+import com.power.doc.utils.JavaClassUtil;
+import com.power.doc.utils.JavaClassValidateUtil;
+import com.power.doc.utils.JavaFieldUtil;
+import com.power.doc.utils.ParamUtil;
 import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaField;
 import com.thoughtworks.qdox.model.expression.AnnotationValue;
+
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
-
-import static com.power.doc.constants.DocGlobalConstants.*;
+import static com.power.doc.constants.DocGlobalConstants.ARRAY;
+import static com.power.doc.constants.DocGlobalConstants.DEFAULT_VERSION;
+import static com.power.doc.constants.DocGlobalConstants.JAVA_OBJECT_FULLY;
+import static com.power.doc.constants.DocGlobalConstants.JSON_PROPERTY_READ_ONLY;
+import static com.power.doc.constants.DocGlobalConstants.JSON_PROPERTY_WRITE_ONLY;
 
 /**
  * @author yu 2019/12/21.
  */
-public class ParamsBuildHelper {
+public class ParamsBuildHelper extends BaseHelper {
 
     public static List<ApiParam> buildParams(String className, String pre, int level, String isRequired, boolean isResp
-            , Map<String, String> registryClasses, ProjectDocConfigBuilder projectBuilder, Set<String> groupClasses
-            , int pid, boolean jsonRequest, AtomicInteger atomicInteger) {
+        , Map<String, String> registryClasses, ProjectDocConfigBuilder projectBuilder, Set<String> groupClasses
+        , int pid, boolean jsonRequest, AtomicInteger atomicInteger) {
         Map<String, String> genericMap = new HashMap<>(10);
 
         if (StringUtil.isEmpty(className)) {
@@ -106,29 +128,26 @@ public class ParamsBuildHelper {
                     gicName = gicName.substring(0, gicName.indexOf("["));
                 }
                 paramList.addAll(buildParams(gicName, pre, nextLevel, isRequired, isResp
-                        , registryClasses, projectBuilder, groupClasses, pid, jsonRequest, atomicInteger));
+                    , registryClasses, projectBuilder, groupClasses, pid, jsonRequest, atomicInteger));
             }
         } else if (JavaClassValidateUtil.isMap(simpleName)) {
             paramList.addAll(buildMapParam(globGicName, pre, level, isRequired, isResp,
-                    registryClasses, projectBuilder, groupClasses, pid, jsonRequest, nextLevel, atomicInteger));
+                registryClasses, projectBuilder, groupClasses, pid, jsonRequest, nextLevel, atomicInteger));
         } else if (DocGlobalConstants.JAVA_OBJECT_FULLY.equals(className)) {
             ApiParam param = ApiParam.of()
-                    .setClassName(className)
-                    .setId(atomicOrDefault(atomicInteger, pid + 1))
-                    .setField(pre + "any object")
-                    .setType("object")
-                    .setPid(pid);
-
-            if (StringUtil.isEmpty(isRequired)) {
-                param.setDesc(DocGlobalConstants.ANY_OBJECT_MSG).setVersion(DocGlobalConstants.DEFAULT_VERSION);
-            } else {
-                param.setDesc(DocGlobalConstants.ANY_OBJECT_MSG).setRequired(false).setVersion(DocGlobalConstants.DEFAULT_VERSION);
-            }
+                .setClassName(className)
+                .setId(atomicOrDefault(atomicInteger, pid + 1))
+                .setField(pre + "any object")
+                .setType("object")
+                .setPid(pid)
+                .setDesc(DocGlobalConstants.ANY_OBJECT_MSG)
+                .setVersion(DocGlobalConstants.DEFAULT_VERSION)
+                .setRequired(Boolean.parseBoolean(isRequired));
             paramList.add(param);
         } else if (JavaClassValidateUtil.isReactor(simpleName)) {
             if (globGicName.length > 0) {
                 paramList.addAll(buildParams(globGicName[0], pre, nextLevel, isRequired, isResp
-                        , registryClasses, projectBuilder, groupClasses, pid, jsonRequest, atomicInteger));
+                    , registryClasses, projectBuilder, groupClasses, pid, jsonRequest, atomicInteger));
             }
         } else {
             Map<String, String> ignoreFields = JavaClassUtil.getClassJsonIgnoreFields(cls);
@@ -172,38 +191,20 @@ public class ParamsBuildHelper {
                 int annotationCounter = 0;
                 CustomField customResponseField = CustomField.nameEquals(fieldName, responseFieldMap);
                 if (customResponseField != null && JavaClassUtil.isTargetChildClass(simpleName, customResponseField.getOwnerClassName())
-                        && (customResponseField.isIgnore()) && isResp) {
+                    && (customResponseField.isIgnore()) && isResp) {
                     continue;
                 }
                 CustomField customRequestField = CustomField.nameEquals(fieldName, projectBuilder.getCustomReqFieldMap());
                 if (customRequestField != null && JavaClassUtil.isTargetChildClass(simpleName, customRequestField.getOwnerClassName())
-                        && (customRequestField.isIgnore()) && !isResp) {
+                    && (customRequestField.isIgnore()) && !isResp) {
                     continue;
                 }
                 for (JavaAnnotation annotation : javaAnnotations) {
-                    String simpleAnnotationName = annotation.getType().getValue();
-                    if (DocAnnotationConstants.JSON_PROPERTY.equalsIgnoreCase(simpleAnnotationName)) {
-                        AnnotationValue value = annotation.getProperty("access");
-                        if (Objects.nonNull(value)) {
-                            if (JSON_PROPERTY_READ_ONLY.equals(value.getParameterValue()) && !isResp) {
-                                continue out;
-                            }
-                            if (JSON_PROPERTY_WRITE_ONLY.equals(value.getParameterValue()) && isResp) {
-                                continue out;
-                            }
-                        }
-                    }
-                    if (DocAnnotationConstants.SHORT_JSON_IGNORE.equals(simpleAnnotationName)) {
+                    if (JavaClassValidateUtil.isIgnoreFieldJson(annotation,isResp)) {
                         continue out;
-                    } else if (DocAnnotationConstants.SHORT_JSON_FIELD.equals(simpleAnnotationName)) {
-                        AnnotationValue serialize = annotation.getProperty(DocAnnotationConstants.SERIALIZE_PROP);
-                        AnnotationValue deserialize = annotation.getProperty(DocAnnotationConstants.DESERIALIZE_PROP);
-                        if (!isResp && Objects.nonNull(deserialize) && Boolean.FALSE.toString().equals(deserialize.toString())) {
-                            continue out;
-                        }
-                        if (isResp && Objects.nonNull(serialize) && Boolean.FALSE.toString().equals(serialize.toString())) {
-                            continue out;
-                        }
+                    }
+                    String simpleAnnotationName = annotation.getType().getValue();
+                    if (DocAnnotationConstants.SHORT_JSON_FIELD.equals(simpleAnnotationName)) {
                         if (null != annotation.getProperty(DocAnnotationConstants.NAME_PROP)) {
                             fieldName = StringUtil.removeQuotes(annotation.getProperty(DocAnnotationConstants.NAME_PROP).toString());
                         }
@@ -237,68 +238,59 @@ public class ParamsBuildHelper {
                     }
                 }
                 comment.append(JavaFieldUtil.getJsrComment(javaAnnotations));
-                String fieldValue = "";
-                if (tagsMap.containsKey(DocTags.MOCK) && StringUtil.isNotEmpty(tagsMap.get(DocTags.MOCK))) {
-                    fieldValue = tagsMap.get(DocTags.MOCK);
-                    if (!DocUtil.javaPrimaryType(typeSimpleName)
-                            && !JavaClassValidateUtil.isCollection(subTypeName)
-                            && !JavaClassValidateUtil.isMap(subTypeName)
-                            && !JavaClassValidateUtil.isArray(subTypeName)) {
-                        fieldValue = DocUtil.handleJsonStr(fieldValue);
-                    }
-                }
+                String fieldValue = BaseHelper.getFieldValueFromMock(subTypeName, tagsMap, typeSimpleName);
                 if (annotationCounter < 1) {
                     if (tagsMap.containsKey(DocTags.REQUIRED)) {
                         strRequired = true;
                     }
                 }
 
-
                 // cover response value
                 if (Objects.nonNull(customResponseField) && isResp && Objects.nonNull(customResponseField.getValue())
-                        && JavaClassUtil.isTargetChildClass(simpleName, customResponseField.getOwnerClassName())) {
+                    && JavaClassUtil.isTargetChildClass(simpleName, customResponseField.getOwnerClassName())) {
                     fieldValue = String.valueOf(customResponseField.getValue());
                 }
                 // cover request value
                 if (Objects.nonNull(customRequestField) && !isResp && Objects.nonNull(customRequestField.getValue())
-                        && JavaClassUtil.isTargetChildClass(simpleName, customRequestField.getOwnerClassName())) {
+                    && JavaClassUtil.isTargetChildClass(simpleName, customRequestField.getOwnerClassName())) {
                     fieldValue = String.valueOf(customRequestField.getValue());
                 }
                 //cover required
                 if (customRequestField != null && !isResp && JavaClassUtil.isTargetChildClass(simpleName, customRequestField.getOwnerClassName())
-                        && customRequestField.isRequire()) {
+                    && customRequestField.isRequire()) {
                     strRequired = true;
                 }
                 //cover comment
                 if (null != customRequestField && StringUtil.isNotEmpty(customRequestField.getDesc())
-                        && JavaClassUtil.isTargetChildClass(simpleName, customRequestField.getOwnerClassName()) && !isResp) {
+                    && JavaClassUtil.isTargetChildClass(simpleName, customRequestField.getOwnerClassName()) && !isResp) {
                     comment = new StringBuilder(customRequestField.getDesc());
                 }
                 if (null != customResponseField && StringUtil.isNotEmpty(customResponseField.getDesc())
-                        && JavaClassUtil.isTargetChildClass(simpleName, customResponseField.getOwnerClassName()) && isResp) {
+                    && JavaClassUtil.isTargetChildClass(simpleName, customResponseField.getOwnerClassName()) && isResp) {
                     comment = new StringBuilder(customResponseField.getDesc());
                 }
                 //cover fieldName
                 if (null != customRequestField && StringUtil.isNotEmpty(customRequestField.getReplaceName())
-                        && JavaClassUtil.isTargetChildClass(simpleName, customRequestField.getOwnerClassName()) && !isResp) {
+                    && JavaClassUtil.isTargetChildClass(simpleName, customRequestField.getOwnerClassName()) && !isResp) {
                     fieldName = customRequestField.getReplaceName();
                 }
                 if (null != customResponseField && StringUtil.isNotEmpty(customResponseField.getReplaceName())
-                        && JavaClassUtil.isTargetChildClass(simpleName, customResponseField.getOwnerClassName()) && isResp) {
+                    && JavaClassUtil.isTargetChildClass(simpleName, customResponseField.getOwnerClassName()) && isResp) {
                     fieldName = customResponseField.getReplaceName();
                 }
                 // file
                 if (JavaClassValidateUtil.isFile(fieldGicName)) {
                     ApiParam param = ApiParam.of().setField(pre + fieldName).setType("file")
-                            .setClassName(className)
-                            .setPid(pid)
-                            .setId(atomicOrDefault(atomicInteger, paramList.size() + pid + 1))
-                            .setMaxLength(maxLength)
-                            .setDesc(comment.toString()).setRequired(Boolean.parseBoolean(isRequired)).setVersion(since);
+                        .setClassName(className)
+                        .setPid(pid)
+                        .setId(atomicOrDefault(atomicInteger, paramList.size() + pid + 1))
+                        .setMaxLength(maxLength)
+                        .setDesc(comment.toString())
+                        .setRequired(Boolean.parseBoolean(isRequired))
+                        .setVersion(since);
                     if (fieldGicName.contains("[]") || fieldGicName.endsWith(">")) {
-                        comment.append("(array of file)");
                         param.setType(DocGlobalConstants.PARAM_TYPE_FILE);
-                        param.setDesc(comment.toString());
+                        param.setDesc(comment.append("(array of file)").toString());
                         param.setHasItems(true);
                     }
                     paramList.add(param);
@@ -313,11 +305,8 @@ public class ParamsBuildHelper {
                     param.setId(atomicOrDefault(atomicInteger, paramList.size() + param.getPid() + 1));
                     String processedType = isShowJavaType ? subTypeName : DocClassUtil.processTypeNameForParams(subTypeName.toLowerCase());
                     param.setType(processedType);
-                    if (StringUtil.isNotEmpty(comment.toString())) {
-                        commonHandleParam(paramList, param, isRequired, comment.toString(), since, strRequired);
-                    } else {
-                        commonHandleParam(paramList, param, isRequired, NO_COMMENTS_FOUND, since, strRequired);
-                    }
+                    // handle param
+                    commonHandleParam(paramList, param, isRequired, comment.toString(), since, strRequired);
 
                     JavaClass enumClass = ParamUtil.handleSeeEnum(param, field, projectBuilder, jsonRequest, tagsMap);
                     if (Objects.nonNull(enumClass)) {
@@ -370,12 +359,8 @@ public class ParamsBuildHelper {
                     if (javaClass.isEnum()) {
                         comment.append(handleEnumComment(javaClass, projectBuilder));
                         ParamUtil.handleSeeEnum(param, field, projectBuilder, jsonRequest, tagsMap);
-                        if (StringUtil.isNotEmpty(comment.toString())) {
-                            commonHandleParam(paramList, param, isRequired, comment + appendComment, since, strRequired);
-                        } else {
-                            commonHandleParam(paramList, param, isRequired, NO_COMMENTS_FOUND + appendComment, since, strRequired);
-                        }
-
+                        // hand Param
+                        commonHandleParam(paramList, param, isRequired, comment + appendComment, since, strRequired);
                     } else if (JavaClassValidateUtil.isCollection(subTypeName) || JavaClassValidateUtil.isArray(subTypeName)) {
                         param.setType("array");
                         if (tagsMap.containsKey(DocTags.MOCK) && StringUtil.isNotEmpty(tagsMap.get(DocTags.MOCK))) {
@@ -408,27 +393,17 @@ public class ParamsBuildHelper {
                             } else {
                                 param.setValue(fieldValue);
                             }
-                            if (StringUtil.isNotEmpty(comment.toString())) {
-                                commonHandleParam(paramList, param, isRequired, comment + appendComment, since, strRequired);
-                            } else {
-                                commonHandleParam(paramList, param, isRequired, NO_COMMENTS_FOUND + appendComment, since, strRequired);
-                            }
+                            commonHandleParam(paramList, param, isRequired, comment + appendComment, since, strRequired);
                         } else {
-                            if (StringUtil.isNotEmpty(comment.toString())) {
-                                commonHandleParam(paramList, param, isRequired, comment + appendComment, since, strRequired);
-                            } else {
-                                commonHandleParam(paramList, param, isRequired, NO_COMMENTS_FOUND + appendComment, since, strRequired);
-                            }
+                            commonHandleParam(paramList, param, isRequired, comment + appendComment, since, strRequired);
                             fieldPid = Optional.ofNullable(atomicInteger).isPresent() ? param.getId() : paramList.size() + pid;
                             if (!simpleName.equals(gName)) {
                                 JavaClass arraySubClass = projectBuilder.getJavaProjectBuilder().getClassByName(gName);
                                 if (arraySubClass.isEnum()) {
                                     Object value = JavaClassUtil.getEnumValue(arraySubClass, Boolean.FALSE);
-                                    StringBuilder sb = new StringBuilder();
-                                    sb.append("[\"").append(value).append("\"]");
-                                    param.setValue(sb.toString())
-                                            .setEnumInfo(JavaClassUtil.getEnumInfo(arraySubClass, projectBuilder))
-                                            .setEnumValues(JavaClassUtil.getEnumValues(arraySubClass));
+                                    param.setValue("[\"" + value + "\"]")
+                                        .setEnumInfo(JavaClassUtil.getEnumInfo(arraySubClass, projectBuilder))
+                                        .setEnumValues(JavaClassUtil.getEnumValues(arraySubClass));
                                 } else if (gName.length() == 1) {
                                     // handle generic
                                     int len = globGicName.length;
@@ -439,11 +414,11 @@ public class ParamsBuildHelper {
 
                                     if (!JavaClassValidateUtil.isPrimitive(gicName) && !simpleName.equals(gicName)) {
                                         paramList.addAll(buildParams(gicName, preBuilder.toString(), nextLevel, isRequired
-                                                , isResp, registryClasses, projectBuilder, groupClasses, fieldPid, jsonRequest, atomicInteger));
+                                            , isResp, registryClasses, projectBuilder, groupClasses, fieldPid, jsonRequest, atomicInteger));
                                     }
                                 } else {
                                     paramList.addAll(buildParams(gName, preBuilder.toString(), nextLevel, isRequired
-                                            , isResp, registryClasses, projectBuilder, groupClasses, fieldPid, jsonRequest, atomicInteger));
+                                        , isResp, registryClasses, projectBuilder, groupClasses, fieldPid, jsonRequest, atomicInteger));
                                 }
                             } else {
                                 param.setSelfReferenceLoop(true);
@@ -455,23 +430,19 @@ public class ParamsBuildHelper {
                             param.setType("map");
                             param.setValue(fieldValue);
                         }
-
-                        if (StringUtil.isNotEmpty(comment.toString())) {
-                            commonHandleParam(paramList, param, isRequired, comment + appendComment, since, strRequired);
-                        } else {
-                            commonHandleParam(paramList, param, isRequired, NO_COMMENTS_FOUND + appendComment, since, strRequired);
-                        }
+                        commonHandleParam(paramList, param, isRequired, comment + appendComment, since, strRequired);
                         fieldPid = Optional.ofNullable(atomicInteger).isPresent() ? param.getId() : paramList.size() + pid;
-                        String valType = DocClassUtil.getMapKeyValueType(fieldGicName).length == 0 ? fieldGicName : DocClassUtil.getMapKeyValueType(fieldGicName)[1];
+                        String valType = DocClassUtil.getMapKeyValueType(fieldGicName).length == 0 ? fieldGicName
+                            : DocClassUtil.getMapKeyValueType(fieldGicName)[1];
                         if (JavaClassValidateUtil.isMap(fieldGicName) || JAVA_OBJECT_FULLY.equals(valType)) {
                             ApiParam param1 = ApiParam.of()
-                                    .setField(preBuilder.toString() + "any object")
-                                    .setId(atomicOrDefault(atomicInteger, fieldPid + 1)).setPid(fieldPid)
-                                    .setClassName(className)
-                                    .setMaxLength(maxLength)
-                                    .setType("object")
-                                    .setDesc(DocGlobalConstants.ANY_OBJECT_MSG)
-                                    .setVersion(DocGlobalConstants.DEFAULT_VERSION);
+                                .setField(preBuilder.toString() + "any object")
+                                .setId(atomicOrDefault(atomicInteger, fieldPid + 1)).setPid(fieldPid)
+                                .setClassName(className)
+                                .setMaxLength(maxLength)
+                                .setType("object")
+                                .setDesc(DocGlobalConstants.ANY_OBJECT_MSG)
+                                .setVersion(DocGlobalConstants.DEFAULT_VERSION);
                             paramList.add(param1);
                             continue;
                         }
@@ -480,33 +451,28 @@ public class ParamsBuildHelper {
                                 String gicName = genericMap.get(valType);
                                 if (!JavaClassValidateUtil.isPrimitive(gicName) && !simpleName.equals(gicName)) {
                                     paramList.addAll(buildParams(gicName, preBuilder.toString(), nextLevel, isRequired
-                                            , isResp, registryClasses, projectBuilder, groupClasses, fieldPid, jsonRequest, atomicInteger));
+                                        , isResp, registryClasses, projectBuilder, groupClasses, fieldPid, jsonRequest, atomicInteger));
                                 }
                             } else {
                                 paramList.addAll(buildParams(valType, preBuilder.toString(), nextLevel, isRequired
-                                        , isResp, registryClasses, projectBuilder, groupClasses, fieldPid, jsonRequest, atomicInteger));
+                                    , isResp, registryClasses, projectBuilder, groupClasses, fieldPid, jsonRequest, atomicInteger));
                             }
                         }
                     } else if (subTypeName.length() == 1 || DocGlobalConstants.JAVA_OBJECT_FULLY.equals(subTypeName)) {
-                        if (StringUtil.isNotEmpty(comment.toString())) {
-                            commonHandleParam(paramList, param, isRequired, comment + appendComment, since, strRequired);
-                        } else {
-                            commonHandleParam(paramList, param, isRequired, NO_COMMENTS_FOUND + appendComment, since, strRequired);
-                        }
+                        commonHandleParam(paramList, param, isRequired, comment + appendComment, since, strRequired);
                         boolean isGenerics = docField.getJavaField().getType().getFullyQualifiedName().length() == 1;
-
                         fieldPid = Optional.ofNullable(atomicInteger).isPresent() ? param.getId() : paramList.size() + pid;
                         // handle java generic or object
                         if (isGenerics && DocGlobalConstants.JAVA_OBJECT_FULLY.equals(subTypeName) && StringUtil.isNotEmpty(field.getComment())) {
                             ApiParam param1 = ApiParam.of()
-                                    .setField(preBuilder.toString() + "any object")
-                                    .setId(atomicOrDefault(atomicInteger, fieldPid + 1))
-                                    .setPid(pid)
-                                    .setClassName(className)
-                                    .setMaxLength(maxLength)
-                                    .setType("object")
-                                    .setDesc(DocGlobalConstants.ANY_OBJECT_MSG)
-                                    .setVersion(DocGlobalConstants.DEFAULT_VERSION);
+                                .setField(preBuilder.append("any object").toString())
+                                .setId(atomicOrDefault(atomicInteger, fieldPid + 1))
+                                .setPid(pid)
+                                .setClassName(className)
+                                .setMaxLength(maxLength)
+                                .setType("object")
+                                .setDesc(DocGlobalConstants.ANY_OBJECT_MSG)
+                                .setVersion(DocGlobalConstants.DEFAULT_VERSION);
                             paramList.add(param1);
                         } else if (!simpleName.equals(className)) {
                             if (globGicName.length > 0) {
@@ -520,25 +486,25 @@ public class ParamsBuildHelper {
                                         String gName = DocClassUtil.getSimpleGicName(gicName)[0];
                                         if (!JavaClassValidateUtil.isPrimitive(gName)) {
                                             paramList.addAll(buildParams(gName, preBuilder.toString(), nextLevel, isRequired
-                                                    , isResp, registryClasses, projectBuilder, groupClasses, fieldPid, jsonRequest, atomicInteger));
+                                                , isResp, registryClasses, projectBuilder, groupClasses, fieldPid, jsonRequest, atomicInteger));
                                         }
                                     } else {
                                         paramList.addAll(buildParams(gicName, preBuilder.toString(), nextLevel, isRequired
-                                                , isResp, registryClasses, projectBuilder, groupClasses, fieldPid, jsonRequest, atomicInteger));
+                                            , isResp, registryClasses, projectBuilder, groupClasses, fieldPid, jsonRequest, atomicInteger));
                                     }
                                 } else {
                                     paramList.addAll(buildParams(gicName, preBuilder.toString(), nextLevel, isRequired
-                                            , isResp, registryClasses, projectBuilder, groupClasses, fieldPid, jsonRequest, atomicInteger));
+                                        , isResp, registryClasses, projectBuilder, groupClasses, fieldPid, jsonRequest, atomicInteger));
                                 }
                             } else {
                                 paramList.addAll(buildParams(subTypeName, preBuilder.toString(), nextLevel, isRequired
-                                        , isResp, registryClasses, projectBuilder, groupClasses, fieldPid, jsonRequest, atomicInteger));
+                                    , isResp, registryClasses, projectBuilder, groupClasses, fieldPid, jsonRequest, atomicInteger));
                             }
                         }
                     } else if (simpleName.equals(subTypeName)) {
                         // reference self
                         ApiParam param1 = ApiParam.of()
-                            .setField(pre+fieldName)
+                            .setField(pre + fieldName)
                             .setPid(pid)
                             .setId(atomicOrDefault(atomicInteger, paramList.size() + pid + 1))
                             .setClassName(subTypeName)
@@ -548,15 +514,11 @@ public class ParamsBuildHelper {
                             .setVersion(DocGlobalConstants.DEFAULT_VERSION);
                         paramList.add(param1);
                     } else {
-                        if (StringUtil.isNotEmpty(comment.toString())) {
-                            commonHandleParam(paramList, param, isRequired, comment + appendComment, since, strRequired);
-                        } else {
-                            commonHandleParam(paramList, param, isRequired, NO_COMMENTS_FOUND + appendComment, since, strRequired);
-                        }
+                        commonHandleParam(paramList, param, isRequired, comment + appendComment, since, strRequired);
                         fieldGicName = DocUtil.formatFieldTypeGicName(genericMap, globGicName, fieldGicName);
                         fieldPid = Optional.ofNullable(atomicInteger).isPresent() ? param.getId() : paramList.size() + pid;
                         paramList.addAll(buildParams(fieldGicName, preBuilder.toString(), nextLevel, isRequired
-                                , isResp, registryClasses, projectBuilder, groupClasses, fieldPid, jsonRequest, atomicInteger));
+                            , isResp, registryClasses, projectBuilder, groupClasses, fieldPid, jsonRequest, atomicInteger));
 
                     }
                 }
@@ -565,9 +527,10 @@ public class ParamsBuildHelper {
         return paramList;
     }
 
-    private static List<ApiParam> buildMapParam(String[] globGicName, String pre, int level, String isRequired, boolean isResp, Map<String, String> registryClasses,
-                                                ProjectDocConfigBuilder projectBuilder, Set<String> groupClasses, int pid, boolean jsonRequest,
-                                                int nextLevel, AtomicInteger atomicInteger) {
+    private static List<ApiParam> buildMapParam(String[] globGicName, String pre, int level, String isRequired, boolean isResp,
+        Map<String, String> registryClasses,
+        ProjectDocConfigBuilder projectBuilder, Set<String> groupClasses, int pid, boolean jsonRequest,
+        int nextLevel, AtomicInteger atomicInteger) {
         if (globGicName.length != 2) {
             return Collections.emptyList();
         }
@@ -581,12 +544,12 @@ public class ParamsBuildHelper {
             boolean isShowJavaType = projectBuilder.getApiConfig().getShowJavaType();
             String valueSimpleNameType = isShowJavaType ? valueSimpleName : DocClassUtil.processTypeNameForParams(valueSimpleName.toLowerCase());
             ApiParam apiParam = ApiParam.of().setField(pre + "mapKey")
-                    .setType(valueSimpleNameType)
-                    .setClassName(valueSimpleName)
-                    .setDesc(Optional.ofNullable(projectBuilder.getClassByName(valueSimpleName)).map(JavaClass::getComment).orElse("A map key."))
-                    .setVersion(DEFAULT_VERSION)
-                    .setPid(pid)
-                    .setId(atomicOrDefault(atomicInteger, ++pid));
+                .setType(valueSimpleNameType)
+                .setClassName(valueSimpleName)
+                .setDesc(Optional.ofNullable(projectBuilder.getClassByName(valueSimpleName)).map(JavaClass::getComment).orElse("A map key."))
+                .setVersion(DEFAULT_VERSION)
+                .setPid(pid)
+                .setId(atomicOrDefault(atomicInteger, ++pid));
             paramList.add(apiParam);
         }
         // build param when map value is not primitive
@@ -599,26 +562,24 @@ public class ParamsBuildHelper {
         }
         preBuilder.append("└─");
         paramList.addAll(buildParams(globGicName[1], preBuilder.toString(), ++nextLevel, isRequired, isResp
-                , registryClasses, projectBuilder, groupClasses, pid, jsonRequest, atomicInteger));
+            , registryClasses, projectBuilder, groupClasses, pid, jsonRequest, atomicInteger));
         return paramList;
     }
 
     public static String dictionaryListComment(List<EnumDictionary> enumDataDict) {
         return enumDataDict.stream().map(apiDataDictionary ->
-                apiDataDictionary.getName() + "-(\"" + apiDataDictionary.getValue() + "\",\"" + apiDataDictionary.getDesc() + "\")"
+            apiDataDictionary.getName() + "-(\"" + apiDataDictionary.getValue() + "\",\"" + apiDataDictionary.getDesc() + "\")"
         ).collect(Collectors.joining(","));
     }
 
     public static List<ApiParam> primitiveReturnRespComment(String typeName, AtomicInteger atomicInteger) {
-        StringBuilder comments = new StringBuilder();
-        comments.append("Return ").append(typeName).append(".");
-        ApiParam apiParam = ApiParam.of()
-                .setClassName(typeName)
-                .setId(atomicOrDefault(atomicInteger, 0))
-                .setField("-")
-                .setType(typeName)
-                .setDesc(comments.toString())
-                .setVersion(DocGlobalConstants.DEFAULT_VERSION);
+        String comments = "Return " + typeName + ".";
+        ApiParam apiParam = ApiParam.of().setClassName(typeName)
+            .setId(atomicOrDefault(atomicInteger, 0))
+            .setField("-")
+            .setType(typeName)
+            .setDesc(comments)
+            .setVersion(DocGlobalConstants.DEFAULT_VERSION);
 
         List<ApiParam> paramList = new ArrayList<>();
         paramList.add(apiParam);
@@ -626,13 +587,12 @@ public class ParamsBuildHelper {
     }
 
     private static void commonHandleParam(List<ApiParam> paramList, ApiParam param, String isRequired
-            , String comment, String since, boolean strRequired) {
+        , String comment, String since, boolean strRequired) {
         if (StringUtil.isEmpty(isRequired)) {
             param.setDesc(comment).setVersion(since);
         } else {
             param.setDesc(comment).setVersion(since).setRequired(strRequired);
         }
-//        param.setId(paramList.size() + param.getPid() + 1);
         paramList.add(param);
     }
 

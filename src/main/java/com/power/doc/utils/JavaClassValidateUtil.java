@@ -22,14 +22,20 @@
  */
 package com.power.doc.utils;
 
+import java.util.List;
+import java.util.Objects;
+
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.StringUtil;
 import com.power.common.util.ValidateUtil;
+import com.power.doc.constants.DocAnnotationConstants;
 import com.power.doc.constants.SolonAnnotations;
 import com.power.doc.constants.SpringMvcAnnotations;
+import com.thoughtworks.qdox.model.JavaAnnotation;
+import com.thoughtworks.qdox.model.expression.AnnotationValue;
 
-import java.util.List;
-import java.util.Objects;
+import static com.power.doc.constants.DocGlobalConstants.JSON_PROPERTY_READ_ONLY;
+import static com.power.doc.constants.DocGlobalConstants.JSON_PROPERTY_WRITE_ONLY;
 
 /**
  * @author yu 2019/12/25.
@@ -379,4 +385,34 @@ public class JavaClassValidateUtil {
         }
         return true;
     }
+
+    public static boolean isIgnoreFieldJson(JavaAnnotation annotation, Boolean isResp) {
+        String simpleAnnotationName = annotation.getType().getValue();
+        if (DocAnnotationConstants.SHORT_JSON_IGNORE.equals(simpleAnnotationName)) {
+            return true;
+        }
+        if (DocAnnotationConstants.JSON_PROPERTY.equalsIgnoreCase(simpleAnnotationName)) {
+            AnnotationValue value = annotation.getProperty("access");
+            if (Objects.nonNull(value)) {
+                if (JSON_PROPERTY_READ_ONLY.equals(value.getParameterValue()) && !isResp) {
+                    return true;
+                }
+                if (JSON_PROPERTY_WRITE_ONLY.equals(value.getParameterValue()) && isResp) {
+                    return true;
+                }
+            }
+        }
+        if (DocAnnotationConstants.SHORT_JSON_FIELD.equals(simpleAnnotationName)) {
+            AnnotationValue serialize = annotation.getProperty(DocAnnotationConstants.SERIALIZE_PROP);
+            AnnotationValue deserialize = annotation.getProperty(DocAnnotationConstants.DESERIALIZE_PROP);
+            if (!isResp && Objects.nonNull(deserialize) && Boolean.FALSE.toString().equals(deserialize.toString())) {
+                return true;
+            }
+            if (isResp && Objects.nonNull(serialize) && Boolean.FALSE.toString().equals(serialize.toString())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

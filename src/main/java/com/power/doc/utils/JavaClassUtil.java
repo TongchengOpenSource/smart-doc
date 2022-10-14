@@ -22,6 +22,20 @@
  */
 package com.power.doc.utils;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import com.power.common.model.EnumDictionary;
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.EnumUtil;
@@ -38,19 +52,23 @@ import com.power.doc.model.DocJavaField;
 import com.power.doc.model.torna.EnumInfo;
 import com.power.doc.model.torna.Item;
 import com.thoughtworks.qdox.JavaProjectBuilder;
-import com.thoughtworks.qdox.model.*;
+import com.thoughtworks.qdox.model.DocletTag;
+import com.thoughtworks.qdox.model.JavaAnnotation;
+import com.thoughtworks.qdox.model.JavaClass;
+import com.thoughtworks.qdox.model.JavaField;
+import com.thoughtworks.qdox.model.JavaGenericDeclaration;
+import com.thoughtworks.qdox.model.JavaMethod;
+import com.thoughtworks.qdox.model.JavaParameterizedType;
+import com.thoughtworks.qdox.model.JavaType;
+import com.thoughtworks.qdox.model.JavaTypeVariable;
 import com.thoughtworks.qdox.model.expression.AnnotationValue;
 import com.thoughtworks.qdox.model.expression.AnnotationValueList;
 import com.thoughtworks.qdox.model.expression.Expression;
 import com.thoughtworks.qdox.model.expression.TypeRef;
 import com.thoughtworks.qdox.model.impl.DefaultJavaField;
 import com.thoughtworks.qdox.model.impl.DefaultJavaParameterizedType;
-import org.apache.commons.lang3.StringUtils;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.util.*;
-import java.util.stream.Collectors;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Handle JavaClass
@@ -71,14 +89,14 @@ public class JavaClassUtil {
         Map<String, JavaType> actualJavaTypes = new HashMap<>(10);
         List<DocJavaField> fields = getFields(cls1, counter, addedFields, actualJavaTypes);
         fields.stream().filter(f -> f.getGenericCanonicalName() != null)
-                .forEach(f -> actualJavaTypes.entrySet().stream()
-                        .filter(e -> f.getGenericCanonicalName().equals(e.getKey()))
-                        .forEach(e ->
-                                f.setGenericCanonicalName(f.getGenericCanonicalName()
-                                                .replace(e.getKey(), e.getValue().getGenericCanonicalName()))
-                                        .setFullyQualifiedName(f.getFullyQualifiedName()
-                                                .replace(e.getKey(), e.getValue().getFullyQualifiedName()))
-                                        .setActualJavaType(e.getValue().getFullyQualifiedName())));
+            .forEach(f -> actualJavaTypes.entrySet().stream()
+                .filter(e -> f.getGenericCanonicalName().equals(e.getKey()))
+                .forEach(e ->
+                    f.setGenericCanonicalName(f.getGenericCanonicalName()
+                            .replace(e.getKey(), e.getValue().getGenericCanonicalName()))
+                        .setFullyQualifiedName(f.getFullyQualifiedName()
+                            .replace(e.getKey(), e.getValue().getFullyQualifiedName()))
+                        .setActualJavaType(e.getValue().getFullyQualifiedName())));
         return fields;
     }
 
@@ -91,21 +109,22 @@ public class JavaClassUtil {
      * @param actualJavaTypes collected actualJavaTypes
      * @return list of JavaField
      */
-    private static List<DocJavaField> getFields(JavaClass cls1, int counter, Map<String, DocJavaField> addedFields, Map<String, JavaType> actualJavaTypes) {
+    private static List<DocJavaField> getFields(JavaClass cls1, int counter, Map<String, DocJavaField> addedFields,
+        Map<String, JavaType> actualJavaTypes) {
         List<DocJavaField> fieldList = new ArrayList<>();
         if (Objects.isNull(cls1)) {
             return fieldList;
         } else if ("Object".equals(cls1.getSimpleName()) || "Timestamp".equals(cls1.getSimpleName()) ||
-                "Date".equals(cls1.getSimpleName()) || "Locale".equals(cls1.getSimpleName())
-                || "ClassLoader".equals(cls1.getSimpleName()) || JavaClassValidateUtil.isMap(cls1.getFullyQualifiedName())
-                || cls1.isEnum() || "Serializable".equals(cls1.getSimpleName())
-                || "ZonedDateTime".equals(cls1.getSimpleName())) {
+            "Date".equals(cls1.getSimpleName()) || "Locale".equals(cls1.getSimpleName())
+            || "ClassLoader".equals(cls1.getSimpleName()) || JavaClassValidateUtil.isMap(cls1.getFullyQualifiedName())
+            || cls1.isEnum() || "Serializable".equals(cls1.getSimpleName())
+            || "ZonedDateTime".equals(cls1.getSimpleName())) {
             return fieldList;
         } else {
             String className = cls1.getFullyQualifiedName();
             if (cls1.isInterface() &&
-                    !JavaClassValidateUtil.isCollection(className) &&
-                    !JavaClassValidateUtil.isMap(className)) {
+                !JavaClassValidateUtil.isCollection(className) &&
+                !JavaClassValidateUtil.isMap(className)) {
                 List<JavaMethod> methods = cls1.getMethods();
                 for (JavaMethod javaMethod : methods) {
                     String methodName = javaMethod.getName();
@@ -127,15 +146,15 @@ public class JavaClassUtil {
                     }
                     JavaField javaField = new DefaultJavaField(javaMethod.getReturns(), methodName);
                     DocJavaField docJavaField = DocJavaField.builder()
-                            .setFieldName(methodName)
-                            .setJavaField(javaField)
-                            .setComment(comment)
-                            .setDocletTags(javaMethod.getTags())
-                            .setAnnotations(javaMethod.getAnnotations())
-                            .setFullyQualifiedName(javaField.getType()
-                                    .getFullyQualifiedName())
-                            .setGenericCanonicalName(javaField.getType()
-                                    .getGenericCanonicalName());
+                        .setFieldName(methodName)
+                        .setJavaField(javaField)
+                        .setComment(comment)
+                        .setDocletTags(javaMethod.getTags())
+                        .setAnnotations(javaMethod.getAnnotations())
+                        .setFullyQualifiedName(javaField.getType()
+                            .getFullyQualifiedName())
+                        .setGenericCanonicalName(javaField.getType()
+                            .getGenericCanonicalName());
                     addedFields.put(methodName, docJavaField);
                 }
             }
@@ -170,6 +189,9 @@ public class JavaClassUtil {
                     if (Objects.isNull(comment)) {
                         comment = addedFields.get(methodName).getComment();
                     }
+                    if (StringUtil.isEmpty(comment)) {
+                        comment = DocGlobalConstants.NO_COMMENTS_FOUND;
+                    }
                     DocJavaField docJavaField = addedFields.get(methodName);
                     docJavaField.setAnnotations(method.getAnnotations());
                     docJavaField.setComment(comment);
@@ -180,9 +202,9 @@ public class JavaClassUtil {
             if (!cls1.isInterface()) {
                 for (JavaField javaField : cls1.getFields()) {
                     long count = javaField.getAnnotations().stream()
-                            .filter(annotation -> DocAnnotationConstants.SHORT_JSON_IGNORE.equals(
-                                    annotation.getType().getSimpleName()))
-                            .count();
+                        .filter(annotation -> DocAnnotationConstants.SHORT_JSON_IGNORE.equals(
+                            annotation.getType().getSimpleName()))
+                        .count();
                     if (count > 0) {
                         continue;
                     }
@@ -190,7 +212,7 @@ public class JavaClassUtil {
                     String subTypeName = javaField.getType().getFullyQualifiedName();
 
                     if (javaField.isStatic() || "this$0".equals(fieldName) ||
-                            JavaClassValidateUtil.isIgnoreFieldTypes(subTypeName)) {
+                        JavaClassValidateUtil.isIgnoreFieldTypes(subTypeName)) {
                         continue;
                     }
                     if (fieldName.startsWith("is") && ("boolean".equals(subTypeName))) {
@@ -203,7 +225,7 @@ public class JavaClassUtil {
 
                     String actualType = null;
                     if (JavaClassValidateUtil.isCollection(subTypeName) &&
-                            !JavaClassValidateUtil.isCollection(gicName)) {
+                        !JavaClassValidateUtil.isCollection(gicName)) {
                         String[] gNameArr = DocClassUtil.getSimpleGicName(gicName);
                         actualType = JavaClassUtil.getClassSimpleName(gNameArr[0]);
                         docJavaField.setArray(true);
@@ -225,10 +247,10 @@ public class JavaClassUtil {
                         comment = DocGlobalConstants.NO_COMMENTS_FOUND;
                     }
                     docJavaField.setComment(comment)
-                            .setJavaField(javaField).setFullyQualifiedName(subTypeName)
-                            .setGenericCanonicalName(gicName).setActualJavaType(actualType)
-                            .setAnnotations(javaField.getAnnotations())
-                            .setFieldName(fieldName);
+                        .setJavaField(javaField).setFullyQualifiedName(subTypeName)
+                        .setGenericCanonicalName(gicName).setActualJavaType(actualType)
+                        .setAnnotations(javaField.getAnnotations())
+                        .setFieldName(fieldName);
                     if (addedFields.containsKey(fieldName)) {
                         addedFields.remove(fieldName);
                         addedFields.put(fieldName, docJavaField);
@@ -238,9 +260,9 @@ public class JavaClassUtil {
                 }
             }
             List<DocJavaField> parentFieldList = addedFields.values()
-                    .stream()
-                    .filter(Objects::nonNull)
-                    .collect(Collectors.toList());
+                .stream()
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
             fieldList.addAll(parentFieldList);
         }
         return fieldList;
@@ -267,7 +289,7 @@ public class JavaClassUtil {
                 String annotationName = annotation.getType().getValue();
                 // enum serialize while use JsonValue and JsonCreator annotation
                 if (DocAnnotationConstants.JSON_VALUE.equals(annotationName)
-                        || DocAnnotationConstants.JSON_CREATOR.equals(annotationName)) {
+                    || DocAnnotationConstants.JSON_CREATOR.equals(annotationName)) {
                     methodName = method.getName();
                     break;
                 }
@@ -397,8 +419,10 @@ public class JavaClassUtil {
                     return enumInfo;
                 }
             }
-            List<EnumDictionary> enumInformation = EnumUtil.getEnumInformation(enumClass, dataDictionary.getCodeField(), dataDictionary.getDescField());
-            List<Item> itemList = enumInformation.stream().map(i -> new Item(i.getName(), i.getType(), i.getValue(), i.getDesc())).collect(Collectors.toList());
+            List<EnumDictionary> enumInformation = EnumUtil.getEnumInformation(enumClass, dataDictionary.getCodeField(),
+                dataDictionary.getDescField());
+            List<Item> itemList = enumInformation.stream().map(i -> new Item(i.getName(), i.getType(), i.getValue(), i.getDesc()))
+                .collect(Collectors.toList());
             enumInfo.setItems(itemList);
             return enumInfo;
         }
@@ -551,7 +575,7 @@ public class JavaClassUtil {
                 String value = tags.get(i).getValue();
                 if (StringUtil.isEmpty(value) && checkComments) {
                     throw new RuntimeException("ERROR: #" + cls.getName()
-                            + "() - bad @" + tagName + " javadoc from " + cls.getName() + ", must be add comment if you use it.");
+                        + "() - bad @" + tagName + " javadoc from " + cls.getName() + ", must be add comment if you use it.");
                 }
                 if (tagName.equals(tags.get(i).getName())) {
                     if (result.length() > 0) {
