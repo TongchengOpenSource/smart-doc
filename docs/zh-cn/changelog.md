@@ -67,11 +67,13 @@
   6. 修复OpenAPI导出一级菜单未使用注释名的bug,[#296](https://github.com/smart-doc-group/smart-doc/issues/296)
   7. 新增对JAX-RS @PATCH、@HEAD 的支持[#pr303](https://github.com/smart-doc-group/smart-doc/pull/303)
   8. 自增serverEnv配置用户支持在postman中设置服务器地址变量，[#280](https://github.com/smart-doc-group/smart-doc/issues/280)
+
 ### 版本号：2.4.7
 - 更新日期: 2022-06-13
 - 更新内容：
   1. 修复2.4.6版本使用高版本jdk出现module权限的问题
   2. 修复bug[#283](https://github.com/smart-doc-group/smart-doc/issues/283)
+
 ### 版本号：2.4.6
 - 更新日期: 2022-05-29
 - 更新内容：
