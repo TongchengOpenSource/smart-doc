@@ -1,21 +1,22 @@
 ## smart-doc版本
 
 ### 版本号：2.6.0
+
 - 更新日期: 2022-10-15
 - 更新内容：
-  1. 修复markdown从出现换行错误导致渲染混乱，[#340](https://github.com/smart-doc-group/smart-doc-maven-plugin/issues/17)
-  2. Post请求中文参数编码错误，[#19](https://github.com/smart-doc-group/smart-doc-maven-plugin/issues/19)
-  3. 支持推送@since到torna的注释中，[#344](https://github.com/smart-doc-group/smart-doc/issues/344)
-  4. spring mvc mapping method数组书写方式解析错误，[#361](https://github.com/smart-doc-group/smart-doc/issues/361)
-  5. 修复jax-rs方法上绑定集合解析错误，[#358](https://github.com/smart-doc-group/smart-doc/issues/358)
-  6. 修复customResponseFields配置无效错误，[#355](https://github.com/smart-doc-group/smart-doc/issues/355)
-  7. 对Jackson注解@JsonNaming驼峰转下划线的支持,[#349](https://github.com/smart-doc-group/smart-doc/issues/349)
-  8. curl请求用例显示混乱。
-  9. 修复常量解析private字段被解析是发生异常问题，[#356](https://github.com/smart-doc-group/smart-doc/issues/356)
-  10. RequestMapping中params解析出错,[#374](https://github.com/smart-doc-group/smart-doc/issues/374)
-  11. 自循环依赖对象字段显示优化，[#376](https://github.com/smart-doc-group/smart-doc/issues/376)
-  12. maven 插件是否能考虑支持appToken，[#354](https://github.com/smart-doc-group/smart-doc/issues/354)
-  13. 优化到大量的代码，和2.5.3对比变化非常大。
+    1. 修复markdown从出现换行错误导致渲染混乱，[#340](https://github.com/smart-doc-group/smart-doc-maven-plugin/issues/17)
+    2. Post请求中文参数编码错误，[#19](https://github.com/smart-doc-group/smart-doc-maven-plugin/issues/19)
+    3. 支持推送@since到torna的注释中，[#344](https://github.com/smart-doc-group/smart-doc/issues/344)
+    4. spring mvc mapping method数组书写方式解析错误，[#361](https://github.com/smart-doc-group/smart-doc/issues/361)
+    5. 修复jax-rs方法上绑定集合解析错误，[#358](https://github.com/smart-doc-group/smart-doc/issues/358)
+    6. 修复customResponseFields配置无效错误，[#355](https://github.com/smart-doc-group/smart-doc/issues/355)
+    7. 对Jackson注解@JsonNaming驼峰转下划线的支持,[#349](https://github.com/smart-doc-group/smart-doc/issues/349)
+    8. curl请求用例显示混乱。
+    9. 修复常量解析private字段被解析是发生异常问题，[#356](https://github.com/smart-doc-group/smart-doc/issues/356)
+    10. RequestMapping中params解析出错,[#374](https://github.com/smart-doc-group/smart-doc/issues/374)
+    11. 自循环依赖对象字段显示优化，[#376](https://github.com/smart-doc-group/smart-doc/issues/376)
+    12. maven 插件是否能考虑支持appToken，[#354](https://github.com/smart-doc-group/smart-doc/issues/354)
+    13. 优化到大量的代码，和2.5.3对比变化非常大。
 
 ### 版本号：2.5.3
 
@@ -74,12 +75,14 @@
     7. 新增对JAX-RS @PATCH、@HEAD 的支持[#pr303](https://github.com/smart-doc-group/smart-doc/pull/303)
     8. 自增serverEnv配置用户支持在postman中设置服务器地址变量，[#280](https://github.com/smart-doc-group/smart-doc/issues/280)
 
+
 ### 版本号：2.4.7
 
 - 更新日期: 2022-06-13
 - 更新内容：
     1. 修复2.4.6版本使用高版本jdk出现module权限的问题
     2. 修复bug[#283](https://github.com/smart-doc-group/smart-doc/issues/283)
+
 
 ### 版本号：2.4.6
 
