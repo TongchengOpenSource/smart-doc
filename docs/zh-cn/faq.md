@@ -17,14 +17,14 @@
 - `fork` [spring-boot-maven-multiple-module](https://gitee.com/smart-doc-team/spring-boot-maven-multiple-module)项目到个人仓库中
 - 修改`fork`的代码添加测试用例，然后项目`gitee`上会有一个【Pull Request】的地方，选择给我们提pr即可，后面官方也会合并的测试用例进行问题的测试。
 
-# 如果提升smart-doc生成文档的速度？
+# 如何提升smart-doc生成文档的速度？
 `smart-doc maven`或者是`gradle`插件在默认请款下会自动分析项目的`pom`或者`gradle`提取依赖关系，
 然后自动去下载依赖的源码并加载到内存中，如果被加载的类越多，在完成源代码加载进入解析阶段就会需要执行扫描很多不必要的类
 过滤。因此提升`smart-doc`生成文档速度最重要的就是让`smart-doc`的插件少加载代码。通常对于一个项目来说，
 和生成文档`api`层直接关联的非常少，这些都是不必要的加载。
 提升速度最直接的方式就是在插件中配置：`include`或者`exclude` 。例如：
-```aidl
-plugin>
+```xml
+<plugin>
     <groupId>com.github.shalousun</groupId>
     <artifactId>smart-doc-maven-plugin</artifactId>
     <version>[最新版本]</version>
