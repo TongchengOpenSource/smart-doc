@@ -199,7 +199,7 @@
 服务器地址, 导出`postman`建议设置成`http://{{server}}`方便直接在`postman`直接设置环境变量。改配置是为了支持postman导出时不用全局修改serverUrl
 ```json
 {
-    "serverUrl": "http://{{server}}"
+    "serverEnv": "http://{{server}}"
 }
 ```
 
