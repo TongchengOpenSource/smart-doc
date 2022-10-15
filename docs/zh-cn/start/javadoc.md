@@ -427,7 +427,7 @@ public CommonResult<DateEntity> test(int id,@RequestBody DateEntity dateEntity){
 把`id`参数忽略掉，不要展示在文档中，这种主要是传统的有状态后台管理系统中的用户状态参数。
 
 >如果你要忽略的是一个Spring或者是JAX-RS这种顶级开源项目或者统一规范的参数时，请给官方提issue。例如你发现smart-doc不能忽略Spring
-的@SessionAttribute注解的参数，那么你完成可以给官方提issue。
+的@SessionAttribute注解的参数，那么你完全可以给官方提issue。
 ## 2.6 `@response`使用(不推荐)
 
 ```java
@@ -448,7 +448,6 @@ public CommonResult<String> create() {
     return null;
 }
 ```
-把`id`参数忽略掉，不要展示在文档中，这种主要是传统的有状态后台管理系统中的用户状态参数。
 
 >对于使用@response的用户，我们只能认为你的代码是在太不清晰了，最好的就是代码写规范，让smart-doc能够自动生成返回样例。
 
