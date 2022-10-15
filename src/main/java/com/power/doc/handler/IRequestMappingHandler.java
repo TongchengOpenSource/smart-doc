@@ -49,13 +49,11 @@ public interface IRequestMappingHandler {
             String url = DocUrlUtil.getMvcUrls(serverUrl, contextPath + "/" + controllerBaseUrl, shortUrl);
             shortUrl = DocUrlUtil.getMvcUrls(DocGlobalConstants.EMPTY, contextPath + "/" + controllerBaseUrl, shortUrl);
             String urlSuffix = projectBuilder.getApiConfig().getUrlSuffix();
-            if (StringUtil.isNotEmpty(urlSuffix)) {
-                url = UrlUtil.simplifyUrl(StringUtil.trim(url)) + urlSuffix;
-                shortUrl = UrlUtil.simplifyUrl(StringUtil.trim(shortUrl)) + urlSuffix;
-            } else {
-                url = UrlUtil.simplifyUrl(StringUtil.trim(url));
-                shortUrl = UrlUtil.simplifyUrl(StringUtil.trim(shortUrl));
+            if (StringUtil.isEmpty(urlSuffix)) {
+                urlSuffix = StringUtil.EMPTY;
             }
+            url = UrlUtil.simplifyUrl(StringUtil.trim(url)) + urlSuffix;
+            shortUrl = UrlUtil.simplifyUrl(StringUtil.trim(shortUrl)) + urlSuffix;
             url = DocUtil.formatPathUrl(url);
             requestMapping.setUrl(url).setShortUrl(shortUrl);
             return requestMapping;
