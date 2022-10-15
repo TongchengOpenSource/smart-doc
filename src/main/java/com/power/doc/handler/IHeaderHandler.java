@@ -22,6 +22,15 @@
  */
 package com.power.doc.handler;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import com.power.common.util.StringUtil;
 import com.power.doc.builder.ProjectDocConfigBuilder;
 import com.power.doc.constants.DocTags;
@@ -34,10 +43,6 @@ import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaMethod;
 import com.thoughtworks.qdox.model.JavaParameter;
 import com.thoughtworks.qdox.model.JavaType;
-
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * @author yu3.sun on 2022/8/30
@@ -109,13 +114,13 @@ public interface IHeaderHandler {
                     if (requestHeaderMap.get(headerAnnotation.getDefaultValueProp()) != null) {
                         apiReqHeader.setValue(StringUtil.removeQuotes((String) requestHeaderMap.get(headerAnnotation.getDefaultValueProp())));
                         desc.append("(defaultValue: ")
-                                .append(StringUtil.removeQuotes((String) requestHeaderMap.get(headerAnnotation.getDefaultValueProp())))
-                                .append(")");
+                            .append(StringUtil.removeQuotes((String) requestHeaderMap.get(headerAnnotation.getDefaultValueProp())))
+                            .append(")");
                     }
                     apiReqHeader.setDesc(desc.toString());
                     if (requestHeaderMap.get(headerAnnotation.getRequiredProp()) != null) {
                         apiReqHeader.setRequired(!Boolean.FALSE.toString()
-                                .equals(requestHeaderMap.get(headerAnnotation.getRequiredProp())));
+                            .equals(requestHeaderMap.get(headerAnnotation.getRequiredProp())));
                     } else {
                         apiReqHeader.setRequired(true);
                     }
@@ -127,20 +132,20 @@ public interface IHeaderHandler {
             }
         }
         return Stream.of(mappingHeaders, reqHeaders)
-                .flatMap(Collection::stream)
-                .distinct()
-                .collect(Collectors.toList());
+            .flatMap(Collection::stream)
+            .distinct()
+            .collect(Collectors.toList());
     }
 
     default void processMappingHeaders(String header, List<ApiReqParam> mappingHeaders) {
         if (header.contains("!=")) {
             String headerName = header.substring(0, header.indexOf("!"));
             ApiReqParam apiReqHeader = ApiReqParam.builder()
-                    .setName(headerName)
-                    .setRequired(true)
-                    .setValue(null)
-                    .setDesc("header condition")
-                    .setType("string");
+                .setName(headerName)
+                .setRequired(true)
+                .setValue(null)
+                .setDesc("header condition")
+                .setType("string");
             mappingHeaders.add(apiReqHeader);
         } else {
             String headerName;
@@ -153,11 +158,11 @@ public interface IHeaderHandler {
                 headerName = header;
             }
             ApiReqParam apiReqHeader = ApiReqParam.builder()
-                    .setName(headerName)
-                    .setRequired(true)
-                    .setValue(headerValue)
-                    .setDesc("header condition")
-                    .setType("string");
+                .setName(headerName)
+                .setRequired(true)
+                .setValue(headerValue)
+                .setDesc("header condition")
+                .setType("string");
             mappingHeaders.add(apiReqHeader);
         }
     }

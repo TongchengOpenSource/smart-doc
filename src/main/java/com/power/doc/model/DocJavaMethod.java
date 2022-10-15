@@ -22,10 +22,10 @@
  */
 package com.power.doc.model;
 
+import java.util.Map;
+
 import com.thoughtworks.qdox.model.JavaMethod;
 import com.thoughtworks.qdox.model.JavaType;
-
-import java.util.Map;
 
 /**
  * @author yu 2020/10/30.
@@ -42,6 +42,10 @@ public class DocJavaMethod {
     private Map<String, JavaType> actualTypesMap;
 
     private boolean download;
+
+    Map<String, String> paramTagMap;
+
+    Map<String, String> paramsComments;
 
     public static DocJavaMethod builder() {
         return new DocJavaMethod();
@@ -89,6 +93,24 @@ public class DocJavaMethod {
 
     public DocJavaMethod setDownload(boolean download) {
         this.download = download;
+        return this;
+    }
+
+    public Map<String, String> getParamTagMap() {
+        return paramTagMap;
+    }
+
+    public DocJavaMethod setParamTagMap(Map<String, String> paramTagMap) {
+        this.paramTagMap = paramTagMap;
+        return this;
+    }
+
+    public Map<String, String> getParamsComments() {
+        return paramsComments;
+    }
+
+    public DocJavaMethod setParamsComments(Map<String, String> paramsComments) {
+        this.paramsComments = paramsComments;
         return this;
     }
 }

@@ -9,7 +9,8 @@ package com.power.doc.extension.json;
  * @author xingzi
  */
 public abstract class PropertyNamingStrategies
-        implements java.io.Serializable {
+    implements java.io.Serializable {
+
     /**
      * Naming convention used in Java, where words other than first are capitalized
      * and no separator is used between words. Since this is the native Java naming convention,
@@ -184,6 +185,7 @@ public abstract class PropertyNamingStrategies
      * (unchanged, with two underscores)</li></ul>
      */
     public static class SnakeCaseStrategy extends NamingBase {
+
         @Override
         public String translate(String input) {
             if (input == null) {

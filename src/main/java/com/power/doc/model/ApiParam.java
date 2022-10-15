@@ -22,10 +22,11 @@
  */
 package com.power.doc.model;
 
-import com.power.doc.model.torna.EnumInfo;
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.List;
+
+import com.power.doc.model.torna.EnumInfo;
+
+import org.apache.commons.lang3.StringUtils;
 
 import static com.power.doc.constants.DocGlobalConstants.PARAM_PREFIX;
 
@@ -296,23 +297,23 @@ public class ApiParam {
     @Override
     public String toString() {
         return "ApiParam{" +
-                "id=" + id +
-                ", field='" + field + '\'' +
-                ", type='" + type + '\'' +
-                ", desc='" + desc + '\'' +
-                ", required=" + required +
-                ", version='" + version + '\'' +
-                ", pid=" + pid +
-                ", pathParam=" + pathParam +
-                ", queryParam=" + queryParam +
-                ", value='" + value + '\'' +
-                ", children=" + children +
-                ", hasItems=" + hasItems +
-                ", enumValues=" + enumValues +
-                ", enumInfo=" + enumInfo +
-                ", maxLength='" + maxLength + '\'' +
-                ", configParam=" + configParam +
-                ", selfReferenceLoop=" + selfReferenceLoop +
-                '}';
+            "id=" + id +
+            ", field='" + field + '\'' +
+            ", type='" + type + '\'' +
+            ", desc='" + desc + '\'' +
+            ", required=" + required +
+            ", version='" + version + '\'' +
+            ", pid=" + pid +
+            ", pathParam=" + pathParam +
+            ", queryParam=" + queryParam +
+            ", value='" + value + '\'' +
+            ", children=" + children +
+            ", hasItems=" + hasItems +
+            ", enumValues=" + enumValues +
+            ", enumInfo=" + enumInfo +
+            ", maxLength='" + maxLength + '\'' +
+            ", configParam=" + configParam +
+            ", selfReferenceLoop=" + selfReferenceLoop +
+            '}';
     }
 }

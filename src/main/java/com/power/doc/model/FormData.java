@@ -26,6 +26,7 @@ package com.power.doc.model;
  * @author xingzi  2019/12/21  20:20
  */
 public class FormData {
+
     private String key;
     private String type;
     private String description;
@@ -88,11 +89,11 @@ public class FormData {
     @Override
     public String toString() {
         return "FormData{" +
-                "key='" + key + '\'' +
-                ", type='" + type + '\'' +
-                ", description='" + description + '\'' +
-                ", src='" + src + '\'' +
-                ", value='" + value + '\'' +
-                '}';
+            "key='" + key + '\'' +
+            ", type='" + type + '\'' +
+            ", description='" + description + '\'' +
+            ", src='" + src + '\'' +
+            ", value='" + value + '\'' +
+            '}';
     }
 }

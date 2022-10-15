@@ -22,6 +22,8 @@
  */
 package com.power.doc.handler;
 
+import java.util.Objects;
+
 import com.power.common.util.StringUtil;
 import com.power.common.util.UrlUtil;
 import com.power.doc.builder.ProjectDocConfigBuilder;
@@ -32,8 +34,6 @@ import com.power.doc.model.request.RequestMapping;
 import com.power.doc.utils.DocUrlUtil;
 import com.power.doc.utils.DocUtil;
 import com.thoughtworks.qdox.model.JavaMethod;
-
-import java.util.Objects;
 
 /**
  * @author yu3.sun on 2022/10/1
@@ -64,6 +64,6 @@ public interface IRequestMappingHandler {
     }
 
     RequestMapping handle(ProjectDocConfigBuilder projectBuilder, String controllerBaseUrl, JavaMethod method,
-                          FrameworkAnnotations frameworkAnnotations,
-                          RequestMappingFunc requestMappingFunc);
+        FrameworkAnnotations frameworkAnnotations,
+        RequestMappingFunc requestMappingFunc);
 }

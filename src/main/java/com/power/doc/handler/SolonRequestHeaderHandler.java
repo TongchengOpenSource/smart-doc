@@ -50,10 +50,10 @@ public class SolonRequestHeaderHandler implements IHeaderHandler {
     @Override
     public HeaderAnnotation getHeaderAnnotation() {
         return HeaderAnnotation.builder()
-                .setAnnotationName(SolonAnnotations.REQUEST_HERDER)
-                .setValueProp(DocAnnotationConstants.VALUE_PROP)
-                .setDefaultValueProp(DocAnnotationConstants.DEFAULT_VALUE_PROP)
-                .setRequiredProp(DocAnnotationConstants.REQUIRED_PROP);
+            .setAnnotationName(SolonAnnotations.REQUEST_HERDER)
+            .setValueProp(DocAnnotationConstants.VALUE_PROP)
+            .setDefaultValueProp(DocAnnotationConstants.DEFAULT_VALUE_PROP)
+            .setRequiredProp(DocAnnotationConstants.REQUIRED_PROP);
     }
 
 

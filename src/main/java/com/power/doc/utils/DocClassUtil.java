@@ -22,18 +22,19 @@
  */
 package com.power.doc.utils;
 
-import com.power.common.util.StringUtil;
-import com.power.doc.filter.ReturnTypeProcessor;
-import com.power.doc.model.ApiReturn;
-import com.thoughtworks.qdox.model.JavaAnnotation;
-import com.thoughtworks.qdox.model.JavaClass;
-
-import javax.annotation.Nonnull;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Stack;
+
+import javax.annotation.Nonnull;
+
+import com.power.common.util.StringUtil;
+import com.power.doc.filter.ReturnTypeProcessor;
+import com.power.doc.model.ApiReturn;
+import com.thoughtworks.qdox.model.JavaAnnotation;
+import com.thoughtworks.qdox.model.JavaClass;
 
 /**
  * Description:

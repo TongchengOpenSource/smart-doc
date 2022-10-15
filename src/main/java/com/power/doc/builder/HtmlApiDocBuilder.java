@@ -22,6 +22,8 @@
  */
 package com.power.doc.builder;
 
+import java.util.List;
+
 import com.power.common.util.FileUtil;
 import com.power.doc.factory.BuildTemplateFactory;
 import com.power.doc.helper.JavaProjectBuilderHelper;
@@ -30,12 +32,27 @@ import com.power.doc.model.ApiDoc;
 import com.power.doc.template.IDocBuildTemplate;
 import com.power.doc.utils.BeetlTemplateUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
+
 import org.apache.commons.lang3.StringUtils;
 import org.beetl.core.Template;
 
-import java.util.List;
-
-import static com.power.doc.constants.DocGlobalConstants.*;
+import static com.power.doc.constants.DocGlobalConstants.ALL_IN_ONE_CSS;
+import static com.power.doc.constants.DocGlobalConstants.ALL_IN_ONE_CSS_OUT;
+import static com.power.doc.constants.DocGlobalConstants.ALL_IN_ONE_HTML_TPL;
+import static com.power.doc.constants.DocGlobalConstants.DEBUG_JS_OUT;
+import static com.power.doc.constants.DocGlobalConstants.DEBUG_JS_TPL;
+import static com.power.doc.constants.DocGlobalConstants.DEBUG_PAGE_ALL_TPL;
+import static com.power.doc.constants.DocGlobalConstants.DEBUG_PAGE_SINGLE_TPL;
+import static com.power.doc.constants.DocGlobalConstants.FILE_SEPARATOR;
+import static com.power.doc.constants.DocGlobalConstants.FONT_STYLE;
+import static com.power.doc.constants.DocGlobalConstants.HIGH_LIGHT_JS;
+import static com.power.doc.constants.DocGlobalConstants.HIGH_LIGHT_STYLE;
+import static com.power.doc.constants.DocGlobalConstants.JQUERY;
+import static com.power.doc.constants.DocGlobalConstants.SEARCH_ALL_JS_TPL;
+import static com.power.doc.constants.DocGlobalConstants.SEARCH_JS_TPL;
+import static com.power.doc.constants.DocGlobalConstants.SINGLE_DICT_HTML_TPL;
+import static com.power.doc.constants.DocGlobalConstants.SINGLE_ERROR_HTML_TPL;
+import static com.power.doc.constants.DocGlobalConstants.SINGLE_INDEX_HTML_TPL;
 
 /**
  * @author yu 2019/9/20.
@@ -106,9 +123,9 @@ public class HtmlApiDocBuilder {
                 buildDoc(builderTemplate, apiDocList, config, javaProjectBuilder, SINGLE_INDEX_HTML_TPL, indexAlias);
             }
             builderTemplate.buildErrorCodeDoc(config, javaProjectBuilder, apiDocList, SINGLE_ERROR_HTML_TPL,
-                    ERROR_CODE_HTML, indexAlias);
+                ERROR_CODE_HTML, indexAlias);
             builderTemplate.buildDirectoryDataDoc(config, javaProjectBuilder, apiDocList,
-                    SINGLE_DICT_HTML_TPL, DICT_HTML, indexAlias);
+                SINGLE_DICT_HTML_TPL, DICT_HTML, indexAlias);
             builderTemplate.buildSearchJs(config, javaProjectBuilder, apiDocList, SEARCH_JS_TPL);
         }
 
@@ -125,7 +142,7 @@ public class HtmlApiDocBuilder {
      * @param indexHtml          indexHtml
      */
     private static void buildDoc(DocBuilderTemplate builderTemplate, List<ApiDoc> apiDocList, ApiConfig config
-            , JavaProjectBuilder javaProjectBuilder, String template, String indexHtml) {
+        , JavaProjectBuilder javaProjectBuilder, String template, String indexHtml) {
         FileUtil.mkdirs(config.getOutPath());
         int index = 0;
         for (ApiDoc doc : apiDocList) {
@@ -133,7 +150,7 @@ public class HtmlApiDocBuilder {
                 doc.setAlias(indexHtml);
             }
             builderTemplate.buildDoc(apiDocList, config, javaProjectBuilder, template,
-                    doc.getAlias() + ".html", doc, indexHtml);
+                doc.getAlias() + ".html", doc, indexHtml);
             index++;
         }
     }

@@ -77,11 +77,11 @@ public class ApiConstant {
     public String toString() {
         final StringBuilder sb = new StringBuilder("{");
         sb.append("\"constantsClass\":")
-                .append(constantsClass);
+            .append(constantsClass);
         sb.append(",\"constantsClassName\":\"")
-                .append(constantsClassName).append('\"');
+            .append(constantsClassName).append('\"');
         sb.append(",\"description\":\"")
-                .append(description).append('\"');
+            .append(description).append('\"');
         sb.append('}');
         return sb.toString();
     }

@@ -22,6 +22,11 @@
  */
 package com.power.doc.handler;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
 import com.power.common.util.StringUtil;
 import com.power.doc.builder.ProjectDocConfigBuilder;
 import com.power.doc.constants.DocTags;
@@ -33,12 +38,8 @@ import com.power.doc.utils.DocUtil;
 import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaMethod;
 import com.thoughtworks.qdox.model.JavaParameter;
-import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import org.apache.commons.lang3.StringUtils;
 
 
 /**
@@ -72,7 +73,7 @@ public class JaxrsHeaderHandler {
                 String annotationName = annotation.getType().getFullyQualifiedName();
                 //Obtain header default value
                 if (JakartaJaxrsAnnotations.JAX_DEFAULT_VALUE_FULLY.equals(annotationName)
-                        || JAXRSAnnotations.JAX_DEFAULT_VALUE_FULLY.equals(annotationName)) {
+                    || JAXRSAnnotations.JAX_DEFAULT_VALUE_FULLY.equals(annotationName)) {
                     defaultValue = StringUtil.removeQuotes(DocUtil.getRequestHeaderValue(annotation));
                     defaultValue = DocUtil.handleConstants(constantsMap, defaultValue);
                 }
@@ -80,7 +81,7 @@ public class JaxrsHeaderHandler {
 
                 // Obtain header value
                 if (JakartaJaxrsAnnotations.JAX_HEADER_PARAM_FULLY.equals(annotationName)
-                        || JAXRSAnnotations.JAX_HEADER_PARAM_FULLY.equals(annotationName)) {
+                    || JAXRSAnnotations.JAX_HEADER_PARAM_FULLY.equals(annotationName)) {
                     String name = StringUtil.removeQuotes(DocUtil.getRequestHeaderValue(annotation));
                     name = DocUtil.handleConstants(constantsMap, name);
                     apiReqHeader.setName(name);
@@ -106,8 +107,8 @@ public class JaxrsHeaderHandler {
             desc.append(paramComments);
             if (StringUtils.isNotBlank(defaultValue)) {
                 desc.append("(defaultValue: ")
-                        .append(defaultValue)
-                        .append(")");
+                    .append(defaultValue)
+                    .append(")");
             }
             return desc.toString();
         }

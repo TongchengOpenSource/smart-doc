@@ -22,6 +22,13 @@
  */
 package com.power.doc.template;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
+
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.StringUtil;
 import com.power.doc.builder.ProjectDocConfigBuilder;
@@ -33,13 +40,6 @@ import com.power.doc.model.ApiMethodDoc;
 import com.power.doc.model.annotation.FrameworkAnnotations;
 import com.power.doc.utils.DocPathUtil;
 import com.power.doc.utils.DocUtil;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 /**
  * @author yu 2019/12/21.
@@ -95,8 +95,8 @@ public interface IDocBuildTemplate<T> {
                     continue;
                 }
                 List<ApiMethodDoc> methodDocs = doc.getList().stream()
-                        .filter(l -> DocPathUtil.matches(l.getPath(), group.getPaths(), null))
-                        .collect(Collectors.toList());
+                    .filter(l -> DocPathUtil.matches(l.getPath(), group.getPaths(), null))
+                    .collect(Collectors.toList());
                 doc.setList(methodDocs);
             }
         }

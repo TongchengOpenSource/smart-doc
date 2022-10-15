@@ -22,6 +22,11 @@
  */
 package com.power.doc.builder.rpc;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.DateTimeUtil;
 import com.power.common.util.FileUtil;
@@ -40,12 +45,8 @@ import com.power.doc.template.IDocBuildTemplate;
 import com.power.doc.utils.BeetlTemplateUtil;
 import com.power.doc.utils.DocUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
-import org.beetl.core.Template;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import org.beetl.core.Template;
 
 import static com.power.doc.constants.DocGlobalConstants.FILE_SEPARATOR;
 import static com.power.doc.constants.DocGlobalConstants.RPC_OUT_DIR;
@@ -98,7 +99,8 @@ public class RpcDocBuilderTemplate extends BaseDocBuilderTemplate {
      * @param template           template
      * @param outPutFileName     output file
      */
-    public void buildAllInOne(List<RpcApiDoc> apiDocList, ApiConfig config, JavaProjectBuilder javaProjectBuilder, String template, String outPutFileName) {
+    public void buildAllInOne(List<RpcApiDoc> apiDocList, ApiConfig config, JavaProjectBuilder javaProjectBuilder, String template,
+        String outPutFileName) {
         String outPath = config.getOutPath();
         String strTime = DateTimeUtil.long2Str(now, DateTimeUtil.DATE_FORMAT_SECOND);
         String rpcConfig = config.getRpcConsumerConfig();
@@ -124,7 +126,6 @@ public class RpcDocBuilderTemplate extends BaseDocBuilderTemplate {
 
         int codeIndex = apiDocList.isEmpty() ? 1 : apiDocDictList.size();
 
-
         if (CollectionUtil.isNotEmpty(errorCodeList)) {
             tpl.binding(TemplateVariable.ERROR_CODE_ORDER.getVariable(), ++codeIndex);
         }
@@ -147,7 +148,7 @@ public class RpcDocBuilderTemplate extends BaseDocBuilderTemplate {
      * @param outPutFileName     output file
      */
     public void buildSearchJs(List<RpcApiDoc> apiDocList, ApiConfig config, JavaProjectBuilder javaProjectBuilder
-            , String template, String outPutFileName) {
+        , String template, String outPutFileName) {
         List<ApiErrorCode> errorCodeList = DocUtil.errorCodeDictToList(config, javaProjectBuilder);
         Template tpl = BeetlTemplateUtil.getByName(template);
         // directory tree
@@ -216,6 +217,15 @@ public class RpcDocBuilderTemplate extends BaseDocBuilderTemplate {
     private List<RpcApiDoc> listOfApiData(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
         this.checkAndInitForGetApiData(config);
         config.setMd5EncryptedHtmlName(true);
+        ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
+        IDocBuildTemplate<RpcApiDoc> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework());
+        return docBuildTemplate.getApiData(configBuilder);
+    }
+
+    public List<RpcApiDoc> getRpcApiDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
+        config.setShowJavaType(true);
+        // check
+        checkAndInit(config);
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
         IDocBuildTemplate<RpcApiDoc> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework());
         return docBuildTemplate.getApiData(configBuilder);

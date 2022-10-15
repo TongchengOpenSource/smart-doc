@@ -22,6 +22,8 @@
  */
 package com.power.doc.builder;
 
+import java.util.List;
+
 import com.power.common.util.DateTimeUtil;
 import com.power.doc.factory.BuildTemplateFactory;
 import com.power.doc.helper.JavaProjectBuilderHelper;
@@ -30,9 +32,12 @@ import com.power.doc.model.ApiDoc;
 import com.power.doc.template.IDocBuildTemplate;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 
-import java.util.List;
-
-import static com.power.doc.constants.DocGlobalConstants.*;
+import static com.power.doc.constants.DocGlobalConstants.ALL_IN_ONE_MD_TPL;
+import static com.power.doc.constants.DocGlobalConstants.API_DOC_MD_TPL;
+import static com.power.doc.constants.DocGlobalConstants.DICT_LIST_MD;
+import static com.power.doc.constants.DocGlobalConstants.DICT_LIST_MD_TPL;
+import static com.power.doc.constants.DocGlobalConstants.ERROR_CODE_LIST_MD;
+import static com.power.doc.constants.DocGlobalConstants.ERROR_CODE_LIST_MD_TPL;
 
 /**
  * use to create markdown doc

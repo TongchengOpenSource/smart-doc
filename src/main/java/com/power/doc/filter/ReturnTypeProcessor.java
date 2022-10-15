@@ -22,11 +22,11 @@
  */
 package com.power.doc.filter;
 
-import com.power.doc.model.ApiReturn;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import com.power.doc.model.ApiReturn;
 
 /**
  * @author yu 2020/4/17.

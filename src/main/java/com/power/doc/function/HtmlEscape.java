@@ -23,10 +23,12 @@
 package com.power.doc.function;
 
 import com.power.doc.utils.DocUtil;
+
 import org.beetl.core.Context;
 import org.beetl.core.Function;
 
 /**
+ * beetl template function
  * @author yu 2021/6/26.
  */
 public class HtmlEscape implements Function {

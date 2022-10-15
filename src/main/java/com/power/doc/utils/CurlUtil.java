@@ -22,15 +22,15 @@
  */
 package com.power.doc.utils;
 
+import java.util.List;
+import java.util.Objects;
+
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.StringUtil;
 import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.model.ApiReqParam;
 import com.power.doc.model.FormData;
 import com.power.doc.model.request.CurlRequest;
-
-import java.util.List;
-import java.util.Objects;
 
 /**
  * @author yu 2020/12/21.
@@ -53,7 +53,7 @@ public class CurlUtil {
             sb.append(" -k");
         }
         if (StringUtil.isNotEmpty(request.getContentType()) &&
-                !DocGlobalConstants.URL_CONTENT_TYPE.equals(request.getContentType())) {
+            !DocGlobalConstants.URL_CONTENT_TYPE.equals(request.getContentType())) {
             sb.append(" -H");
             sb.append(" 'Content-Type: ").append(request.getContentType()).append("'");
         }
@@ -64,7 +64,7 @@ public class CurlUtil {
                     sb.append(" '").append(reqHeader.getName()).append("'");
                 } else {
                     sb.append(" '").append(reqHeader.getName()).append(':')
-                            .append(reqHeader.getValue()).append("'");
+                        .append(reqHeader.getValue()).append("'");
                 }
             }
         }

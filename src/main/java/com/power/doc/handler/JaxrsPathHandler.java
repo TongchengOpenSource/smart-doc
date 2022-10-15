@@ -22,6 +22,14 @@
  */
 package com.power.doc.handler;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+
 import com.power.common.util.StringUtil;
 import com.power.common.util.UrlUtil;
 import com.power.doc.builder.ProjectDocConfigBuilder;
@@ -34,8 +42,6 @@ import com.power.doc.utils.DocUtil;
 import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaMethod;
 
-import java.util.*;
-
 import static com.power.doc.constants.DocTags.DEPRECATED;
 import static com.power.doc.constants.DocTags.IGNORE;
 
@@ -45,18 +51,19 @@ import static com.power.doc.constants.DocTags.IGNORE;
  * @author Zxq
  */
 public class JaxrsPathHandler {
+
     /**
      * ANNOTATION_NAMES
      */
     private static final Set<String> ANNOTATION_NAMES = Collections.unmodifiableSet(new HashSet<>(
-            Arrays.asList(
-                    JakartaJaxrsAnnotations.JAXB_DELETE_FULLY, JakartaJaxrsAnnotations.JAX_PUT_FULLY,
-                    JakartaJaxrsAnnotations.JAX_GET_FULLY, JakartaJaxrsAnnotations.JAX_POST_FULLY,
-                    JakartaJaxrsAnnotations.JAX_PATCH_FULLY, JakartaJaxrsAnnotations.JAX_HEAD_FULLY,
-                    JAXRSAnnotations.JAXB_DELETE_FULLY, JAXRSAnnotations.JAX_PUT_FULLY,
-                    JAXRSAnnotations.JAX_GET_FULLY, JAXRSAnnotations.JAX_POST_FULLY,
-                    JAXRSAnnotations.JAXB_PATCH_FULLY, JAXRSAnnotations.JAXB_HEAD_FULLY
-            )));
+        Arrays.asList(
+            JakartaJaxrsAnnotations.JAXB_DELETE_FULLY, JakartaJaxrsAnnotations.JAX_PUT_FULLY,
+            JakartaJaxrsAnnotations.JAX_GET_FULLY, JakartaJaxrsAnnotations.JAX_POST_FULLY,
+            JakartaJaxrsAnnotations.JAX_PATCH_FULLY, JakartaJaxrsAnnotations.JAX_HEAD_FULLY,
+            JAXRSAnnotations.JAXB_DELETE_FULLY, JAXRSAnnotations.JAX_PUT_FULLY,
+            JAXRSAnnotations.JAX_GET_FULLY, JAXRSAnnotations.JAX_POST_FULLY,
+            JAXRSAnnotations.JAXB_PATCH_FULLY, JAXRSAnnotations.JAXB_HEAD_FULLY
+        )));
 
     Map<String, String> constantsMap;
 
@@ -77,10 +84,10 @@ public class JaxrsPathHandler {
                 deprecated = true;
             }
             if (JakartaJaxrsAnnotations.JAX_PATH_FULLY.equals(annotationName)
-                    || JakartaJaxrsAnnotations.JAX_PATH_PARAM_FULLY.equals(annotationName)
-                    || JakartaJaxrsAnnotations.JAXB_REST_PATH_FULLY.equals(annotationName)
-                    || JAXRSAnnotations.JAX_PATH_FULLY.equals(annotationName)
-                    || JAXRSAnnotations.JAX_PATH_PARAM_FULLY.equals(annotationName)) {
+                || JakartaJaxrsAnnotations.JAX_PATH_PARAM_FULLY.equals(annotationName)
+                || JakartaJaxrsAnnotations.JAXB_REST_PATH_FULLY.equals(annotationName)
+                || JAXRSAnnotations.JAX_PATH_FULLY.equals(annotationName)
+                || JAXRSAnnotations.JAX_PATH_PARAM_FULLY.equals(annotationName)) {
                 shortUrl = DocUtil.handleMappingValue(annotation);
             }
             if (ANNOTATION_NAMES.contains(annotationName)) {
@@ -94,17 +101,17 @@ public class JaxrsPathHandler {
         JaxrsPathMapping jaxrsPathMapping = getJaxbPathMapping(projectBuilder, baseUrl, method, shortUrl, serverUrl, contextPath);
         if (jaxrsPathMapping != null) {
             return jaxrsPathMapping.setDeprecated(deprecated)
-                    .setMethodType(methodType)
-                    .setMediaType(mediaType);
+                .setMethodType(methodType)
+                .setMediaType(mediaType);
         }
         return null;
     }
 
     private JaxrsPathMapping getJaxbPathMapping(ProjectDocConfigBuilder projectBuilder,
-                                                String baseUrl, JavaMethod method,
-                                                String shortUrl,
-                                                String serverUrl,
-                                                String contextPath) {
+        String baseUrl, JavaMethod method,
+        String shortUrl,
+        String serverUrl,
+        String contextPath) {
         String url;
         if (Objects.nonNull(shortUrl)) {
             if (Objects.nonNull(method.getTagByName(IGNORE))) {
@@ -136,8 +143,8 @@ public class JaxrsPathHandler {
                 shortUrl += urlSuffix;
             }
             return JaxrsPathMapping.builder()
-                    .setUrl(StringUtil.trim(url))
-                    .setShortUrl(StringUtil.trim(shortUrl));
+                .setUrl(StringUtil.trim(url))
+                .setShortUrl(StringUtil.trim(shortUrl));
         }
         return null;
     }

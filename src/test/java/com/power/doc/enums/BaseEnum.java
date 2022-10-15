@@ -8,8 +8,6 @@ public interface BaseEnum extends IEnum {
 
     /**
      * get the enum desc
-     *
-     * @return
      */
     String getDesc();
 }

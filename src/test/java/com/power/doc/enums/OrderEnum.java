@@ -33,8 +33,8 @@ public enum OrderEnum implements BaseEnum {
     @Override
     public String toString() {
         return "ErrorCodeEnum{" +
-                "code='" + code + '\'' +
-                ", desc='" + desc + '\'' +
-                '}';
+            "code='" + code + '\'' +
+            ", desc='" + desc + '\'' +
+            '}';
     }
 }

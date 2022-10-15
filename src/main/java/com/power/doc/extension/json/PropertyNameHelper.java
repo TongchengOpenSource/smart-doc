@@ -1,16 +1,17 @@
 package com.power.doc.extension.json;
 
+import java.util.List;
+
 import com.power.common.util.StringUtil;
 import com.power.doc.constants.DocAnnotationConstants;
 import com.thoughtworks.qdox.model.JavaAnnotation;
-
-import java.util.List;
 
 /**
  * @author xingzi
  * Date 2022/9/17 13:32
  */
 public class PropertyNameHelper {
+
     public static final String JACKSON_LOWER_CAMEL_CASE = "lowercamel";
     public static final String JACKSON_UPPER_CAMEL_CASE = "uppercamel";
     public static final String JACKSON_SNAKE_CASE = "snake";

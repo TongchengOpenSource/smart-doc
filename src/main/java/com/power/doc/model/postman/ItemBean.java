@@ -22,14 +22,15 @@
  */
 package com.power.doc.model.postman;
 
-import com.power.doc.model.postman.request.RequestBean;
-
 import java.util.List;
+
+import com.power.doc.model.postman.request.RequestBean;
 
 /**
  * @author xingzi
  */
 public class ItemBean {
+
     private String name;
     private RequestBean request;
     private List<ItemBean> item;

@@ -22,6 +22,11 @@
  */
 package com.power.doc.builder;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.DateTimeUtil;
 import com.power.common.util.FileUtil;
@@ -30,19 +35,23 @@ import com.power.doc.constants.HighlightStyle;
 import com.power.doc.constants.TemplateVariable;
 import com.power.doc.constants.TornaConstants;
 import com.power.doc.factory.BuildTemplateFactory;
-import com.power.doc.model.*;
+import com.power.doc.model.ApiAllData;
+import com.power.doc.model.ApiConfig;
+import com.power.doc.model.ApiDoc;
+import com.power.doc.model.ApiDocDict;
+import com.power.doc.model.ApiErrorCode;
+import com.power.doc.model.ApiMethodDoc;
 import com.power.doc.template.IDocBuildTemplate;
 import com.power.doc.utils.BeetlTemplateUtil;
 import com.power.doc.utils.DocUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
+
 import org.beetl.core.Template;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-
-import static com.power.doc.constants.DocGlobalConstants.*;
+import static com.power.doc.constants.DocGlobalConstants.CSS_CDN;
+import static com.power.doc.constants.DocGlobalConstants.CSS_CDN_CH;
+import static com.power.doc.constants.DocGlobalConstants.FILE_SEPARATOR;
+import static com.power.doc.constants.DocGlobalConstants.SEARCH_JS_OUT;
 
 /**
  * @author yu 2019/9/26.
@@ -101,7 +110,7 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
      * @param outPutFileName     output file
      */
     public void buildAllInOne(List<ApiDoc> apiDocList, ApiConfig config, JavaProjectBuilder javaProjectBuilder,
-                              String template, String outPutFileName) {
+        String template, String outPutFileName) {
         buildDoc(apiDocList, config, javaProjectBuilder, template, outPutFileName, null, null);
     }
 
@@ -117,7 +126,7 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
      * @param index              index html
      */
     public void buildDoc(List<ApiDoc> apiDocList, ApiConfig config, JavaProjectBuilder javaProjectBuilder,
-                         String template, String outPutFileName, ApiDoc apiDoc, String index) {
+        String template, String outPutFileName, ApiDoc apiDoc, String index) {
         String outPath = config.getOutPath();
         String strTime = DateTimeUtil.long2Str(now, DateTimeUtil.DATE_FORMAT_SECOND);
         FileUtil.mkdirs(outPath);
@@ -282,7 +291,7 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
      * @param indexAlias         index alias
      */
     public void buildErrorCodeDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder,
-                                  List<ApiDoc> apiDocList, String template, String outPutFileName, String indexAlias) {
+        List<ApiDoc> apiDocList, String template, String outPutFileName, String indexAlias) {
         List<ApiErrorCode> errorCodeList = DocUtil.errorCodeDictToList(config, javaProjectBuilder);
         String strTime = DateTimeUtil.long2Str(now, DateTimeUtil.DATE_FORMAT_SECOND);
         Template errorTemplate = BeetlTemplateUtil.getByName(template);
@@ -321,7 +330,7 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
      * @param indexAlias         index alias
      */
     public void buildDirectoryDataDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder, List<ApiDoc> apiDocList,
-                                      String template, String outPutFileName, String indexAlias) {
+        String template, String outPutFileName, String indexAlias) {
         List<ApiDocDict> directoryList = DocUtil.buildDictionary(config, javaProjectBuilder);
         Template mapper = BeetlTemplateUtil.getByName(template);
         String strTime = DateTimeUtil.long2Str(now, DateTimeUtil.DATE_FORMAT_SECOND);

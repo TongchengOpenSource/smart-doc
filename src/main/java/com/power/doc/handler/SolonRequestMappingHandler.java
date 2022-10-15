@@ -22,6 +22,9 @@
  */
 package com.power.doc.handler;
 
+import java.util.List;
+import java.util.Objects;
+
 import com.power.doc.builder.ProjectDocConfigBuilder;
 import com.power.doc.constants.DocAnnotationConstants;
 import com.power.doc.constants.Methods;
@@ -32,9 +35,6 @@ import com.power.doc.model.request.RequestMapping;
 import com.power.doc.utils.DocUtil;
 import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaMethod;
-
-import java.util.List;
-import java.util.Objects;
 
 import static com.power.doc.constants.DocTags.DEPRECATED;
 import static com.power.doc.constants.DocTags.IGNORE;
@@ -53,9 +53,9 @@ public class SolonRequestMappingHandler implements IRequestMappingHandler {
      * @return RequestMapping
      */
     public RequestMapping handle(ProjectDocConfigBuilder projectBuilder,
-                                 String controllerBaseUrl,
-                                 JavaMethod method, FrameworkAnnotations frameworkAnnotations,
-                                 RequestMappingFunc requestMappingFunc) {
+        String controllerBaseUrl,
+        JavaMethod method, FrameworkAnnotations frameworkAnnotations,
+        RequestMappingFunc requestMappingFunc) {
         if (Objects.nonNull(method.getTagByName(IGNORE))) {
             return null;
         }
@@ -92,10 +92,10 @@ public class SolonRequestMappingHandler implements IRequestMappingHandler {
             deprecated = true;
         }
         RequestMapping requestMapping = RequestMapping.builder()
-                .setMediaType(mediaType)
-                .setMethodType(methodType)
-                .setDeprecated(deprecated)
-                .setShortUrl(shortUrl);
+            .setMediaType(mediaType)
+            .setMethodType(methodType)
+            .setDeprecated(deprecated)
+            .setShortUrl(shortUrl);
         requestMapping = formatMappingData(projectBuilder, controllerBaseUrl, requestMapping);
         requestMappingFunc.process(method.getDeclaringClass(), requestMapping);
         return requestMapping;

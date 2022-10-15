@@ -3,14 +3,15 @@ package com.power.doc;
 import com.power.common.util.DateTimeUtil;
 import com.power.doc.builder.HtmlApiDocBuilder;
 import com.power.doc.builder.openapi.OpenApiBuilder;
-import com.power.doc.builder.rpc.RpcTornaBuilder;
 import com.power.doc.enums.OrderEnum;
-import com.power.doc.model.*;
+import com.power.doc.model.ApiConfig;
+import com.power.doc.model.ApiDataDictionary;
+import com.power.doc.model.CustomField;
+import com.power.doc.model.RevisionLog;
+import com.power.doc.model.SourceCodePath;
 import com.power.doc.model.rpc.RpcApiDependency;
-import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.junit.jupiter.api.Test;
 
 /**
  * Description:
@@ -43,15 +44,14 @@ public class ApiDocTest {
         config.setMd5EncryptedHtmlName(true);
         //不指定SourcePaths默认加载代码为项目src/main/java下的
         config.setSourceCodePaths(
-                SourceCodePath.builder().setDesc("本项目代码")
-                        .setPath("C:\\Users\\xingzi\\Desktop\\smart-doc-example-cn")
+            SourceCodePath.builder().setDesc("本项目代码")
+                .setPath("C:\\Users\\xingzi\\Desktop\\smart-doc-example-cn")
 
-                //SourcePath.path().setPath("F:\\Personal\\project\\smart\\src\\main\\java")
-                //SourcePath.path().setDesc("加载项目外代码").setPath("E:\\ApplicationPower\\ApplicationPower\\Common-util\\src\\main\\java")
+            //SourcePath.path().setPath("F:\\Personal\\project\\smart\\src\\main\\java")
+            //SourcePath.path().setDesc("加载项目外代码").setPath("E:\\ApplicationPower\\ApplicationPower\\Common-util\\src\\main\\java")
         );
         config.setPackageFilters("com.power.doc.controller.ValidatorTestController");
 //        config.setPackageFilters("com.power.doc.dubbo.*");
-
 
 //        config.setDataDictionaries(
 //                ApiDataDictionary.builder().setTitle("订单字典").setEnumClass(OrderEnum.class).setCodeField("code").setDescField("desc")
@@ -99,8 +99,8 @@ public class ApiDocTest {
         long start = System.currentTimeMillis();
 
         //TornaBuilder.buildApiDoc(config);
-         OpenApiBuilder.buildOpenApi(config);
-         HtmlApiDocBuilder.buildApiDoc(config);
+        OpenApiBuilder.buildOpenApi(config);
+        HtmlApiDocBuilder.buildApiDoc(config);
         //RpcTornaBuilder.buildApiDoc(config);
         //TornaBuilder.buildApiDoc(config);
         //RpcTornaBuilder.buildApiDoc(config);
@@ -128,14 +128,14 @@ public class ApiDocTest {
         config.setMd5EncryptedHtmlName(true);
         //不指定SourcePaths默认加载代码为项目src/main/java下的
         config.setSourceCodePaths(
-                SourceCodePath.builder().setDesc("本项目代码")
-                        .setPath("F:\\IDEA\\IdeaProject\\seckill\\src\\main\\java\\com\\fht\\seckill\\controller")
+            SourceCodePath.builder().setDesc("本项目代码")
+                .setPath("F:\\IDEA\\IdeaProject\\seckill\\src\\main\\java\\com\\fht\\seckill\\controller")
         );
 //        config.setPackageFilters("com.power.doc.dubbo.*");
         //config.setPackageFilters("com.fht.seckill.controller.*");
 
         config.setDataDictionaries(
-                ApiDataDictionary.builder().setTitle("订单字典").setEnumClass(OrderEnum.class).setCodeField("code").setDescField("desc")
+            ApiDataDictionary.builder().setTitle("订单字典").setEnumClass(OrderEnum.class).setCodeField("code").setDescField("desc")
         );
         //设置请求头，如果没有请求头，可以不用设置
      /*   config.setRequestHeaders(
@@ -148,17 +148,17 @@ public class ApiDocTest {
 //                CustomRespField.field().setName("success").setDesc("成功返回true,失败返回false"),
 //                CustomRespField.field().setName("message").setDesc("接口响应信息"),
 //                CustomRespField.field().setName("data").setDesc("接口响应数据"),
-                CustomField.builder().setName("msg").setDesc("消息测试").setIgnore(true).setValue("000200"),
-                CustomField.builder().setName("code2").setDesc("code测试").setIgnore(false).setValue("010000")
-                //.setDesc("响应代码")
+            CustomField.builder().setName("msg").setDesc("消息测试").setIgnore(true).setValue("000200"),
+            CustomField.builder().setName("code2").setDesc("code测试").setIgnore(false).setValue("010000")
+            //.setDesc("响应代码")
         );
         //非必须只有当setAllInOne设置为true时文档变更记录才生效，https://gitee.com/sunyurepository/ApplicationPower/issues/IPS4O
         config.setRevisionLogs(
-                RevisionLog.builder().setRevisionTime("2018/12/15").setAuthor("chen").setRemarks("测试").setStatus("创建").setVersion("V1.0"),
-                RevisionLog.builder().setRevisionTime("2018/12/16").setAuthor("chen2").setRemarks("测试2").setStatus("修改").setVersion("V2.0")
+            RevisionLog.builder().setRevisionTime("2018/12/15").setAuthor("chen").setRemarks("测试").setStatus("创建").setVersion("V1.0"),
+            RevisionLog.builder().setRevisionTime("2018/12/16").setAuthor("chen2").setRemarks("测试2").setStatus("修改").setVersion("V2.0")
         );
         config.setRpcApiDependencies(RpcApiDependency.builder().setGroupId("com.test").setArtifactId("test1").setVersion("1.0"),
-                RpcApiDependency.builder().setGroupId("com.smart").setArtifactId("test").setVersion("1.1.1")
+            RpcApiDependency.builder().setGroupId("com.smart").setArtifactId("test").setVersion("1.1.1")
         );
         long start = System.currentTimeMillis();
 

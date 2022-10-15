@@ -22,10 +22,11 @@
  */
 package com.power.doc.model;
 
-import com.power.doc.constants.ApiReqParamInTypeEnum;
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.Objects;
+
+import com.power.doc.constants.ApiReqParamInTypeEnum;
+
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Description:
@@ -96,8 +97,8 @@ public class ApiReqParam {
 
     public static ApiParam convertToApiParam(ApiReqParam param) {
         return ApiParam.of().setField(param.getName()).setValue(param.getValue())
-                .setRequired(param.isRequired()).setDesc(param.getDesc()).setConfigParam(true)
-                .setVersion("-").setType(param.getType());
+            .setRequired(param.isRequired()).setDesc(param.getDesc()).setConfigParam(true)
+            .setVersion("-").setType(param.getType());
     }
 
     public String getName() {
@@ -186,8 +187,12 @@ public class ApiReqParam {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         ApiReqParam that = (ApiReqParam) o;
         return Objects.equals(name, that.name);
     }
@@ -201,23 +206,23 @@ public class ApiReqParam {
     public String toString() {
         final StringBuilder sb = new StringBuilder("{");
         sb.append("\"name\":\"")
-                .append(name).append('\"');
+            .append(name).append('\"');
         sb.append(",\"type\":\"")
-                .append(type).append('\"');
+            .append(type).append('\"');
         sb.append(",\"value\":\"")
-                .append(value).append('\"');
+            .append(value).append('\"');
         sb.append(",\"desc\":\"")
-                .append(desc).append('\"');
+            .append(desc).append('\"');
         sb.append(",\"paramIn\":")
-                .append(paramIn);
+            .append(paramIn);
         sb.append(",\"required\":")
-                .append(required);
+            .append(required);
         sb.append(",\"since\":\"")
-                .append(since).append('\"');
+            .append(since).append('\"');
         sb.append(",\"pathPatterns\":\"")
-                .append(pathPatterns).append('\"');
+            .append(pathPatterns).append('\"');
         sb.append(",\"excludePathPatterns\":\"")
-                .append(excludePathPatterns).append('\"');
+            .append(excludePathPatterns).append('\"');
         sb.append('}');
         return sb.toString();
     }

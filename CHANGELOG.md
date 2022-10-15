@@ -12,6 +12,8 @@
   7. 对Jackson注解@JsonNaming驼峰转下划线的支持,[#349](https://github.com/smart-doc-group/smart-doc/issues/349)
   8. curl请求用例显示混乱。
   9. 修复常量解析private字段被解析是发生异常问题，[#356](https://github.com/smart-doc-group/smart-doc/issues/356)
+  10. RequestMapping中params解析出错,[#374](https://github.com/smart-doc-group/smart-doc/issues/374)
+  11. 自循环依赖对象字段显示优化，[#376](https://github.com/smart-doc-group/smart-doc/issues/376)
 
 ### 版本号：2.5.3
 

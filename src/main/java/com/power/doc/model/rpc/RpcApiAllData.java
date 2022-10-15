@@ -22,11 +22,11 @@
  */
 package com.power.doc.model.rpc;
 
+import java.util.List;
+
 import com.power.doc.model.ApiDocDict;
 import com.power.doc.model.ApiErrorCode;
 import com.power.doc.model.RevisionLog;
-
-import java.util.List;
 
 /**
  * @author yu 2020/5/24.

@@ -1,12 +1,13 @@
 package com.power.doc.qbox;
 
+import java.nio.file.Paths;
+
 import com.power.doc.builder.HtmlApiDocBuilder;
 import com.power.doc.constants.FrameworkEnum;
 import com.power.doc.model.ApiConfig;
 import com.power.doc.model.SourceCodePath;
-import org.junit.jupiter.api.Test;
 
-import java.nio.file.Paths;
+import org.junit.jupiter.api.Test;
 
 /**
  * smart-doc
@@ -38,8 +39,8 @@ public class QboxScanSourceTest {
         config.setMd5EncryptedHtmlName(true);
         config.setFramework(FrameworkEnum.DUBBO.getFramework());
         config.setSourceCodePaths(
-                SourceCodePath.builder().setDesc("tesSourceScan")
-                        .setPath(testJavaDirectory));
+            SourceCodePath.builder().setDesc("tesSourceScan")
+                .setPath(testJavaDirectory));
 
         // This bug caused not all source code to be found.
         // error at ProjectDocConfigBuilder#loadJavaSource when qbox parse ScanErrorSource

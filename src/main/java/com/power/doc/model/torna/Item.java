@@ -26,6 +26,7 @@ package com.power.doc.model.torna;
  * @author xingzi 2021/2/25 12:29
  **/
 public class Item {
+
     /**
      * {
      * *                                 "name": "WAIT_PAY",

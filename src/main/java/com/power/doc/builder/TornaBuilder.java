@@ -22,6 +22,9 @@
  */
 package com.power.doc.builder;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.power.doc.constants.TornaConstants;
 import com.power.doc.factory.BuildTemplateFactory;
 import com.power.doc.helper.JavaProjectBuilderHelper;
@@ -32,11 +35,9 @@ import com.power.doc.model.torna.TornaApi;
 import com.power.doc.template.IDocBuildTemplate;
 import com.power.doc.utils.TornaUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
+
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static com.power.doc.utils.TornaUtil.buildApis;
 import static com.power.doc.utils.TornaUtil.buildErrorCode;
@@ -48,7 +49,7 @@ import static com.power.doc.utils.TornaUtil.buildErrorCode;
 public class TornaBuilder {
 
     /**
-     * build controller api
+     * build controller api,for unit testing
      *
      * @param config config
      */

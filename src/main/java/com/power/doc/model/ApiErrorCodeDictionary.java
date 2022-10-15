@@ -128,13 +128,13 @@ public class ApiErrorCodeDictionary {
     public String toString() {
         final StringBuilder sb = new StringBuilder("{");
         sb.append("\"enumClass\":")
-                .append(enumClass);
+            .append(enumClass);
         sb.append(",\"enumClassName\":\"")
-                .append(enumClassName).append('\"');
+            .append(enumClassName).append('\"');
         sb.append(",\"codeField\":\"")
-                .append(codeField).append('\"');
+            .append(codeField).append('\"');
         sb.append(",\"descField\":\"")
-                .append(descField).append('\"');
+            .append(descField).append('\"');
         sb.append('}');
         return sb.toString();
     }

@@ -86,6 +86,7 @@ public final class JakartaJaxrsAnnotations {
      * JAX-RS@HEAD
      */
     public static final String JAX_HEAD_FULLY = "jakarta.ws.rs.HEAD";
+
     private JakartaJaxrsAnnotations() {
         throw new IllegalStateException("Utility class");
     }

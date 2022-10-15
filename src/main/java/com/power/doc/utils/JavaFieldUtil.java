@@ -22,6 +22,10 @@
  */
 package com.power.doc.utils;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
 import com.power.common.util.StringUtil;
 import com.power.doc.constants.DocAnnotationConstants;
 import com.power.doc.constants.DocGlobalConstants;
@@ -30,10 +34,6 @@ import com.power.doc.model.CustomField;
 import com.power.doc.model.DocJavaField;
 import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.expression.AnnotationValue;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
 /**
  * @author yu 2019/12/21.
@@ -133,19 +133,19 @@ public class JavaFieldUtil {
                     String value = DocUtil.resolveAnnotationValue(m.getValue());
                     if (DocAnnotationConstants.REGEXP.equals(m.getKey())) {
                         sb.append(m.getKey()).append(": ").append(StringUtil.removeDoubleQuotes(value))
-                                .append("; ");
+                            .append("; ");
                     }
                     if (DocAnnotationConstants.MAX.equals(m.getKey())) {
                         sb.append(m.getKey()).append(": ").append(StringUtil.removeDoubleQuotes(value))
-                                .append("; ");
+                            .append("; ");
                     }
                     if (DocAnnotationConstants.LENGTH.equals(m.getKey())) {
                         sb.append(m.getKey()).append(": ").append(StringUtil.removeDoubleQuotes(value))
-                                .append("; ");
+                            .append("; ");
                     }
                     if (DocAnnotationConstants.SIZE.equals(m.getKey())) {
                         sb.append(m.getKey()).append(": ").append(StringUtil.removeDoubleQuotes(value))
-                                .append("; ");
+                            .append("; ");
                     }
                 }
             }

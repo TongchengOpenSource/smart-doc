@@ -57,9 +57,9 @@ public class ApiObjectReplacement {
     public String toString() {
         final StringBuilder sb = new StringBuilder("{");
         sb.append("\"className\":\"")
-                .append(className).append('\"');
+            .append(className).append('\"');
         sb.append(",\"replacementClassName\":\"")
-                .append(replacementClassName).append('\"');
+            .append(replacementClassName).append('\"');
         sb.append('}');
         return sb.toString();
     }

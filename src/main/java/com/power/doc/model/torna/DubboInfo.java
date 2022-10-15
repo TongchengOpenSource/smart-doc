@@ -4,6 +4,7 @@ package com.power.doc.model.torna;
  * @author xingzi 2021/4/28 12:54
  **/
 public class DubboInfo {
+
     private String interfaceName;
     private String author;
     private String version;
@@ -62,11 +63,11 @@ public class DubboInfo {
     @Override
     public String toString() {
         return "DubboInfo{" +
-                "interfaceName='" + interfaceName + '\'' +
-                ", author='" + author + '\'' +
-                ", version='" + version + '\'' +
-                ", protocol='" + protocol + '\'' +
-                ", dependency='" + dependency + '\'' +
-                '}';
+            "interfaceName='" + interfaceName + '\'' +
+            ", author='" + author + '\'' +
+            ", version='" + version + '\'' +
+            ", protocol='" + protocol + '\'' +
+            ", dependency='" + dependency + '\'' +
+            '}';
     }
 }

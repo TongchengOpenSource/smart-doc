@@ -22,6 +22,12 @@
  */
 package com.power.doc.helper;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
 import com.power.common.util.RandomUtil;
 import com.power.common.util.StringUtil;
 import com.power.doc.builder.ProjectDocConfigBuilder;
@@ -37,8 +43,6 @@ import com.power.doc.utils.JavaClassUtil;
 import com.power.doc.utils.JavaClassValidateUtil;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaField;
-
-import java.util.*;
 
 /**
  * @author yu 2019/12/25.
@@ -56,7 +60,7 @@ public class FormDataBuildHelper {
      * @return list of FormData
      */
     public static List<FormData> getFormData(String className, Map<String, String> registryClasses, int counter
-            , ProjectDocConfigBuilder builder, String pre) {
+        , ProjectDocConfigBuilder builder, String pre) {
 
         if (StringUtil.isEmpty(className)) {
             throw new RuntimeException("Class name can't be null or empty.");
@@ -107,7 +111,7 @@ public class FormDataBuildHelper {
             String fieldGicName = docField.getGenericCanonicalName();
             JavaClass javaClass = field.getType();
             if (field.isStatic() || "this$0".equals(fieldName) ||
-                    JavaClassValidateUtil.isIgnoreFieldTypes(subTypeName)) {
+                JavaClassValidateUtil.isIgnoreFieldTypes(subTypeName)) {
                 continue;
             }
             if (field.isTransient() && skipTransientField) {
@@ -146,7 +150,7 @@ public class FormDataBuildHelper {
                 CustomField customRequestField = builder.getCustomReqFieldMap().get(fieldName);
                 // cover request value
                 if (Objects.nonNull(customRequestField) && Objects.nonNull(customRequestField.getValue())
-                        && JavaClassUtil.isTargetChildClass(simpleName, customRequestField.getOwnerClassName())) {
+                    && JavaClassUtil.isTargetChildClass(simpleName, customRequestField.getOwnerClassName())) {
                     fieldValue = String.valueOf(customRequestField.getValue());
                 }
                 FormData formData = new FormData();

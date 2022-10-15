@@ -1,10 +1,11 @@
 package com.power.doc.util;
 
-import com.power.doc.utils.DocUrlUtil;
-import org.junit.jupiter.api.Test;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import com.power.doc.utils.DocUrlUtil;
+
+import org.junit.jupiter.api.Test;
 
 public class DocUrlUtilTest {
 

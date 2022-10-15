@@ -8,8 +8,6 @@ public interface IEnum {
 
     /**
      * get the enum code
-     *
-     * @return
      */
     String getCode();
 }

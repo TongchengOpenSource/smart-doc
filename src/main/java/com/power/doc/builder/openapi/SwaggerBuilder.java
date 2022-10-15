@@ -1,4 +1,33 @@
+/*
+ * smart-doc https://github.com/shalousun/smart-doc
+ *
+ * Copyright (C) 2018-2022 smart-doc
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package com.power.doc.builder.openapi;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.FileUtil;
@@ -8,14 +37,17 @@ import com.power.doc.builder.ProjectDocConfigBuilder;
 import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.factory.BuildTemplateFactory;
 import com.power.doc.helper.JavaProjectBuilderHelper;
-import com.power.doc.model.*;
+import com.power.doc.model.ApiConfig;
+import com.power.doc.model.ApiDoc;
+import com.power.doc.model.ApiGroup;
+import com.power.doc.model.ApiMethodDoc;
+import com.power.doc.model.ApiParam;
+import com.power.doc.model.ApiReqParam;
 import com.power.doc.model.openapi.OpenApiTag;
 import com.power.doc.template.IDocBuildTemplate;
 import com.power.doc.utils.JsonUtil;
 import com.power.doc.utils.OpenApiSchemaUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
-
-import java.util.*;
 
 import static com.power.doc.constants.DocGlobalConstants.ARRAY;
 
@@ -26,12 +58,13 @@ import static com.power.doc.constants.DocGlobalConstants.ARRAY;
  */
 @SuppressWarnings("all")
 public class SwaggerBuilder extends AbstractOpenApiBuilder {
+
     private static final SwaggerBuilder INSTANCE = new SwaggerBuilder();
 
     /**
-     * 单元测试
+     * For unit testing
      *
-     * @param config 配置文件
+     * @param config Configuration of smart-doc
      */
     public static void buildOpenApi(ApiConfig config) {
         JavaProjectBuilder javaProjectBuilder = JavaProjectBuilderHelper.create();
@@ -39,26 +72,20 @@ public class SwaggerBuilder extends AbstractOpenApiBuilder {
     }
 
     /**
-     * 插件
+     * Only for smart-doc maven plugin and gradle plugin.
      *
-     * @param config         配置文件
-     * @param projectBuilder 工程
+     * @param config         Configuration of smart-doc
+     * @param projectBuilder JavaDocBuilder of QDox
      */
     public static void buildOpenApi(ApiConfig config, JavaProjectBuilder projectBuilder) {
-        DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
-        builderTemplate.checkAndInit(config, false);
-        ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, projectBuilder);
-        config.setParamsDataToTree(true);
-        IDocBuildTemplate docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework());
-        List<ApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder);
+        List<ApiDoc> apiDocList = INSTANCE.getOpenApiDocs(config,projectBuilder);
         INSTANCE.openApiCreate(config, apiDocList);
     }
 
     /**
      * Build OpenApi
      *
-     * @param config     ApiConfig
-     * @param apiDocList
+     * @param config Configuration of smart-doc
      */
     public void openApiCreate(ApiConfig config, List<ApiDoc> apiDocList) {
         Map<String, Object> json = new HashMap<>(8);
@@ -81,8 +108,7 @@ public class SwaggerBuilder extends AbstractOpenApiBuilder {
     /**
      * Build openapi info
      *
-     * @param apiConfig ApiConfig
-     * @return
+     * @param apiConfig Configuration of smart-doc
      */
     private static Map<String, Object> buildInfo(ApiConfig apiConfig) {
         Map<String, Object> infoMap = new HashMap<>(8);
@@ -94,8 +120,7 @@ public class SwaggerBuilder extends AbstractOpenApiBuilder {
     /**
      * Build Servers
      *
-     * @param config ApiConfig
-     * @return
+     * @param config Configuration of smart-doc
      */
     @Deprecated
     private static List<Map<String, String>> buildTags(ApiConfig config) {
@@ -114,7 +139,7 @@ public class SwaggerBuilder extends AbstractOpenApiBuilder {
     /**
      * Build request
      *
-     * @param apiConfig    ApiConfig
+     * @param apiConfig    Configuration of smart-doc
      * @param apiMethodDoc ApiMethodDoc
      * @param apiDoc       apiDoc
      */

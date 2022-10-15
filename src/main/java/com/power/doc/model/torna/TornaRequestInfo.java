@@ -22,11 +22,11 @@
  */
 package com.power.doc.model.torna;
 
-import com.power.doc.constants.TornaConstants;
-
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.HashMap;
+
+import com.power.doc.constants.TornaConstants;
 
 /**
  * Print the log of pushing documents to Torna
@@ -34,6 +34,7 @@ import java.util.HashMap;
  * @author xingzi 2021/3/20 22:11
  **/
 public class TornaRequestInfo {
+
     private String code;
     private String message;
     private Object requestInfo;
@@ -92,16 +93,16 @@ public class TornaRequestInfo {
     public String buildInfo() {
         StringBuilder sb = new StringBuilder();
         sb.append("---------------------------PUSH START---------------------------\n")
-                .append("API: ")
-                .append(category)
-                .append("\n")
-                .append("Request Param: \n")
-                .append(TornaConstants.GSON.toJson(requestInfo))
-                .append("\n")
-                .append("Response: \n")
-                .append(TornaConstants.GSON.fromJson(responseInfo, HashMap.class))
-                .append("\n")
-                .append("---------------------------PUSH END---------------------------\n");
+            .append("API: ")
+            .append(category)
+            .append("\n")
+            .append("Request Param: \n")
+            .append(TornaConstants.GSON.toJson(requestInfo))
+            .append("\n")
+            .append("Response: \n")
+            .append(TornaConstants.GSON.fromJson(responseInfo, HashMap.class))
+            .append("\n")
+            .append("---------------------------PUSH END---------------------------\n");
         try {
             return URLDecoder.decode(sb.toString(), "utf-8");
         } catch (UnsupportedEncodingException e) {

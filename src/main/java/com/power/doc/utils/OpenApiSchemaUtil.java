@@ -22,13 +22,17 @@
  */
 package com.power.doc.utils;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.StringUtil;
 import com.power.doc.model.ApiParam;
-
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * @author yu 2020/11/29.
@@ -80,7 +84,7 @@ public class OpenApiSchemaUtil {
     public static String getClassNameFromParams(List<ApiParam> apiParams) {
         // if array[Primitive] or Primitive
         if (CollectionUtil.isNotEmpty(apiParams) && apiParams.size() == 1
-                && CollectionUtil.isEmpty(apiParams.get(0).getChildren())) {
+            && CollectionUtil.isEmpty(apiParams.get(0).getChildren())) {
             return "string";
         }
         for (ApiParam a : apiParams) {

@@ -28,6 +28,7 @@ import java.util.List;
  * @author xingzi 2021/2/8 10:07
  **/
 public class Apis {
+
     private String name;
     private String description;
     private String url;

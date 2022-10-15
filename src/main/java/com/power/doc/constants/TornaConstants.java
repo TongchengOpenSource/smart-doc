@@ -22,17 +22,22 @@
  */
 package com.power.doc.constants;
 
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.security.MessageDigest;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.power.common.util.DateTimeUtil;
 import com.power.doc.model.ApiConfig;
-import org.apache.commons.lang3.StringUtils;
 
-import java.io.IOException;
-import java.net.URLEncoder;
-import java.security.MessageDigest;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author xingzi 2020/2/2

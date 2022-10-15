@@ -22,13 +22,14 @@
  */
 package com.power.doc.extension.dict;
 
-import com.power.common.model.EnumDictionary;
-
 import java.util.Collection;
+
+import com.power.common.model.EnumDictionary;
 
 /**
  * https://github.com/smart-doc-group/smart-doc/issues/338
  */
 public interface DictionaryValuesResolver {
+
     <T extends EnumDictionary> Collection<T> resolve();
 }

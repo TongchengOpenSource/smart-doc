@@ -22,14 +22,14 @@
  */
 package com.power.doc.model;
 
-import com.power.common.util.CollectionUtil;
-import com.power.doc.constants.DocLanguage;
-import com.power.doc.model.rpc.RpcApiDependency;
-
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import com.power.common.util.CollectionUtil;
+import com.power.doc.constants.DocLanguage;
+import com.power.doc.model.rpc.RpcApiDependency;
 
 /**
  * Description:
@@ -599,17 +599,17 @@ public class ApiConfig {
             return null;
         }
         return this.dataDictionaries.stream().filter((apiDataDictionary ->
-                {
-                    boolean equalsName = enumClassName.equalsIgnoreCase(apiDataDictionary.getEnumClassName());
+            {
+                boolean equalsName = enumClassName.equalsIgnoreCase(apiDataDictionary.getEnumClassName());
 
-                    Set<Class<? extends Enum>> enumImplementSet = apiDataDictionary.getEnumImplementSet();
-                    if (CollectionUtil.isEmpty(enumImplementSet)) {
-                        return equalsName;
-                    }
-                    Set<String> collect = enumImplementSet.stream().map(Class::getName).collect(Collectors.toSet());
-                    return equalsName || collect.contains(enumClassName);
-                }))
-                .findFirst().orElse(null);
+                Set<Class<? extends Enum>> enumImplementSet = apiDataDictionary.getEnumImplementSet();
+                if (CollectionUtil.isEmpty(enumImplementSet)) {
+                    return equalsName;
+                }
+                Set<String> collect = enumImplementSet.stream().map(Class::getName).collect(Collectors.toSet());
+                return equalsName || collect.contains(enumClassName);
+            }))
+            .findFirst().orElse(null);
     }
 
     public List<ApiErrorCodeDictionary> getErrorCodeDictionaries() {

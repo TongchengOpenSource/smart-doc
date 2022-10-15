@@ -4,6 +4,7 @@ package com.power.doc.constants;
  * @author noear 2022/2/19 created
  */
 public interface SolonAnnotations {
+
     String REQUEST_MAPPING = "Mapping";
     String REQUEST_MAPPING_FULLY = "org.noear.solon.annotation.Mapping";
 

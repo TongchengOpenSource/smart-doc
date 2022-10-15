@@ -1,14 +1,15 @@
 package com.power.doc.util;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.constants.DocLanguage;
 import com.power.doc.enums.IEnum;
 import com.power.doc.enums.OrderEnum;
 import com.power.doc.utils.DocUtil;
-import org.junit.jupiter.api.Test;
 
-import java.util.HashMap;
-import java.util.Map;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author yu 2018/12/10.

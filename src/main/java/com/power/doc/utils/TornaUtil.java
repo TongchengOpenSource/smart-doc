@@ -1,5 +1,11 @@
 package com.power.doc.utils;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
@@ -9,13 +15,25 @@ import com.power.common.util.OkHttp3Util;
 import com.power.common.util.StringUtil;
 import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.constants.TornaConstants;
-import com.power.doc.model.*;
+import com.power.doc.model.ApiConfig;
+import com.power.doc.model.ApiDocDict;
+import com.power.doc.model.ApiErrorCode;
+import com.power.doc.model.ApiMethodDoc;
+import com.power.doc.model.ApiParam;
+import com.power.doc.model.ApiReqParam;
+import com.power.doc.model.DataDict;
+import com.power.doc.model.JavaMethodDoc;
 import com.power.doc.model.rpc.RpcApiDependency;
-import com.power.doc.model.torna.*;
+import com.power.doc.model.torna.Apis;
+import com.power.doc.model.torna.CommonErrorCode;
+import com.power.doc.model.torna.DebugEnv;
+import com.power.doc.model.torna.HttpParam;
+import com.power.doc.model.torna.TornaApi;
+import com.power.doc.model.torna.TornaDic;
+import com.power.doc.model.torna.TornaRequestInfo;
 import com.thoughtworks.qdox.JavaProjectBuilder;
-import org.apache.commons.lang3.StringUtils;
 
-import java.util.*;
+import org.apache.commons.lang3.StringUtils;
 
 import static com.power.doc.constants.DocGlobalConstants.ARRAY;
 import static com.power.doc.constants.DocGlobalConstants.OBJECT;
@@ -47,8 +65,8 @@ public class TornaUtil {
 
     public static boolean setDebugEnv(ApiConfig apiConfig, TornaApi tornaApi) {
         boolean hasDebugEnv = StringUtils.isNotBlank(apiConfig.getDebugEnvName())
-                &&
-                StringUtils.isNotBlank(apiConfig.getDebugEnvUrl());
+            &&
+            StringUtils.isNotBlank(apiConfig.getDebugEnvUrl());
         //Set up the test environment
         List<DebugEnv> debugEnvs = new ArrayList<>();
         if (hasDebugEnv) {
@@ -64,22 +82,22 @@ public class TornaUtil {
     public static void printDebugInfo(ApiConfig apiConfig, String responseMsg, Map<String, String> requestJson, String category) {
         if (apiConfig.isTornaDebug()) {
             String sb = "Configuration information : \n" +
-                    "OpenUrl: " +
-                    apiConfig.getOpenUrl() +
-                    "\n" +
-                    "appToken: " +
-                    apiConfig.getAppToken() +
-                    "\n";
+                "OpenUrl: " +
+                apiConfig.getOpenUrl() +
+                "\n" +
+                "appToken: " +
+                apiConfig.getAppToken() +
+                "\n";
             System.out.println(sb);
             try {
                 JsonElement element = JsonParser.parseString(responseMsg);
                 TornaRequestInfo info = new TornaRequestInfo()
-                        .of()
-                        .setCategory(category)
-                        .setCode(element.getAsJsonObject().get(TornaConstants.CODE).getAsString())
-                        .setMessage(element.getAsJsonObject().get(TornaConstants.MESSAGE).getAsString())
-                        .setRequestInfo(requestJson)
-                        .setResponseInfo(responseMsg);
+                    .of()
+                    .setCategory(category)
+                    .setCode(element.getAsJsonObject().get(TornaConstants.CODE).getAsString())
+                    .setMessage(element.getAsJsonObject().get(TornaConstants.MESSAGE).getAsString())
+                    .setRequestInfo(requestJson)
+                    .setResponseInfo(responseMsg);
                 System.out.println(info.buildInfo());
             } catch (Exception e) {
                 //Ex : Nginx Error,Tomcat Error
@@ -125,7 +143,7 @@ public class TornaUtil {
             }
 
             if (CollectionUtil.isNotEmpty(apiMethodDoc.getQueryParams())
-                    && DocGlobalConstants.FILE_CONTENT_TYPE.equals(apiMethodDoc.getContentType())) {
+                && DocGlobalConstants.FILE_CONTENT_TYPE.equals(apiMethodDoc.getContentType())) {
                 // file upload
                 methodApi.setRequestParams(buildParams(apiMethodDoc.getQueryParams()));
             } else if (CollectionUtil.isNotEmpty(apiMethodDoc.getQueryParams())) {
@@ -263,8 +281,8 @@ public class TornaUtil {
             for (ApiDocDict doc : apiDocDicts) {
                 tornaDic = new TornaDic();
                 tornaDic.setName(doc.getTitle())
-                        .setDescription(DocUtil.replaceNewLineToHtmlBr(doc.getDescription()))
-                        .setItems(buildTornaDicItems(doc.getDataDictList()));
+                    .setDescription(DocUtil.replaceNewLineToHtmlBr(doc.getDescription()))
+                    .setItems(buildTornaDicItems(doc.getDataDictList()));
                 dics.add(tornaDic);
             }
         }
@@ -289,6 +307,7 @@ public class TornaUtil {
 
     /**
      * 设置请求参数是否为数组
+     *
      * @param apiMethodDoc 请求参数
      */
     public static void setTornaArrayTags(ApiMethodDoc apiMethodDoc) {
@@ -317,7 +336,7 @@ public class TornaUtil {
     private static String getType(String typeName) {
         String gicType;
         //get generic type
-          if (typeName.contains("<")) {
+        if (typeName.contains("<")) {
             gicType = typeName.substring(typeName.indexOf("<") + 1, typeName.lastIndexOf(">"));
         } else {
             gicType = typeName;

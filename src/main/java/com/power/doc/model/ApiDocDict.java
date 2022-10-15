@@ -87,11 +87,11 @@ public class ApiDocDict {
     public String toString() {
         final StringBuilder sb = new StringBuilder("{");
         sb.append("\"order\":")
-                .append(order);
+            .append(order);
         sb.append(",\"title\":\"")
-                .append(title).append('\"');
+            .append(title).append('\"');
         sb.append(",\"dataDictList\":")
-                .append(dataDictList);
+            .append(dataDictList);
         sb.append('}');
         return sb.toString();
     }

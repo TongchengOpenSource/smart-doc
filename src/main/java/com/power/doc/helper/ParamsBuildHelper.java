@@ -58,15 +58,12 @@ import com.power.doc.utils.ParamUtil;
 import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaField;
-import com.thoughtworks.qdox.model.expression.AnnotationValue;
 
 import org.apache.commons.lang3.StringUtils;
 
 import static com.power.doc.constants.DocGlobalConstants.ARRAY;
 import static com.power.doc.constants.DocGlobalConstants.DEFAULT_VERSION;
 import static com.power.doc.constants.DocGlobalConstants.JAVA_OBJECT_FULLY;
-import static com.power.doc.constants.DocGlobalConstants.JSON_PROPERTY_READ_ONLY;
-import static com.power.doc.constants.DocGlobalConstants.JSON_PROPERTY_WRITE_ONLY;
 
 /**
  * @author yu 2019/12/21.
@@ -200,7 +197,7 @@ public class ParamsBuildHelper extends BaseHelper {
                     continue;
                 }
                 for (JavaAnnotation annotation : javaAnnotations) {
-                    if (JavaClassValidateUtil.isIgnoreFieldJson(annotation,isResp)) {
+                    if (JavaClassValidateUtil.isIgnoreFieldJson(annotation, isResp)) {
                         continue out;
                     }
                     String simpleAnnotationName = annotation.getType().getValue();

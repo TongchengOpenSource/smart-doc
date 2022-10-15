@@ -22,25 +22,42 @@
  */
 package com.power.doc.builder;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Random;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Logger;
+
 import com.power.common.constants.Charset;
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.StringUtil;
 import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.constants.HighlightStyle;
 import com.power.doc.helper.JavaProjectBuilderHelper;
-import com.power.doc.model.*;
+import com.power.doc.model.ApiConfig;
+import com.power.doc.model.ApiConstant;
+import com.power.doc.model.ApiDataDictionary;
+import com.power.doc.model.ApiErrorCodeDictionary;
+import com.power.doc.model.ApiObjectReplacement;
+import com.power.doc.model.BodyAdvice;
+import com.power.doc.model.CustomField;
+import com.power.doc.model.DocJavaField;
+import com.power.doc.model.SourceCodePath;
 import com.power.doc.utils.JavaClassUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import com.thoughtworks.qdox.directorywalker.DirectoryScanner;
 import com.thoughtworks.qdox.directorywalker.SuffixFilter;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.parser.ParseException;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Logger;
 
 import static com.power.doc.constants.DocGlobalConstants.DEFAULT_SERVER_URL;
 

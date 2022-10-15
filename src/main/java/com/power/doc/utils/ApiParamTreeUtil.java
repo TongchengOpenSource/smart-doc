@@ -22,18 +22,18 @@
  */
 package com.power.doc.utils;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.StringUtil;
 import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.model.ApiMethodReqParam;
 import com.power.doc.model.ApiParam;
 import com.power.doc.model.ApiReqParam;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * @author yu 2020/8/8.
@@ -99,7 +99,7 @@ public class ApiParamTreeUtil {
      * @return ApiMethodReqParam
      */
     public static ApiMethodReqParam buildMethodReqParam(List<ApiParam> paramList, final Map<String, ApiReqParam> queryReqParamMap,
-                                                        final Map<String, ApiReqParam> pathReqParamMap, int requestBodyCounter) {
+        final Map<String, ApiReqParam> pathReqParamMap, int requestBodyCounter) {
         List<ApiParam> pathParams = new ArrayList<>();
         List<ApiParam> queryParams = new ArrayList<>();
         List<ApiParam> bodyParams = new ArrayList<>();
@@ -129,7 +129,7 @@ public class ApiParamTreeUtil {
                 continue;
             }
             final ApiParam apiParam = ApiReqParam.convertToApiParam(value)
-                    .setQueryParam(true).setId(queryParams.size() + 1);
+                .setQueryParam(true).setId(queryParams.size() + 1);
             queryParams.add(apiParam);
         }
 
@@ -139,14 +139,14 @@ public class ApiParamTreeUtil {
                 continue;
             }
             final ApiParam apiParam = ApiReqParam.convertToApiParam(value)
-                    .setPathParam(true).setId(pathParams.size() + 1);
+                .setPathParam(true).setId(pathParams.size() + 1);
             pathParams.add(apiParam);
         }
 
         return ApiMethodReqParam.builder()
-                .setRequestParams(bodyParams)
-                .setPathParams(pathParams)
-                .setQueryParams(queryParams);
+            .setRequestParams(bodyParams)
+            .setPathParams(pathParams)
+            .setQueryParams(queryParams);
     }
 
 }

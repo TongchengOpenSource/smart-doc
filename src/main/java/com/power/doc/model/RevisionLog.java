@@ -23,7 +23,7 @@
 package com.power.doc.model;
 
 /**
- * 接口文档修订日志
+ * document revision log
  *
  * @author yolanda0608 2018/12/15
  */
@@ -107,15 +107,15 @@ public class RevisionLog {
     public String toString() {
         final StringBuilder sb = new StringBuilder("{");
         sb.append("\"version\":\"")
-                .append(version).append('\"');
+            .append(version).append('\"');
         sb.append(",\"status\":\"")
-                .append(status).append('\"');
+            .append(status).append('\"');
         sb.append(",\"author\":\"")
-                .append(author).append('\"');
+            .append(author).append('\"');
         sb.append(",\"revisionTime\":\"")
-                .append(revisionTime).append('\"');
+            .append(revisionTime).append('\"');
         sb.append(",\"remarks\":\"")
-                .append(remarks).append('\"');
+            .append(remarks).append('\"');
         sb.append('}');
         return sb.toString();
     }

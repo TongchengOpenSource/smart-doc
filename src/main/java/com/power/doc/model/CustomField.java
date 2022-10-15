@@ -28,6 +28,7 @@ import java.util.Map;
  * @author xingzi
  **/
 public class CustomField {
+
     /**
      * field name
      */

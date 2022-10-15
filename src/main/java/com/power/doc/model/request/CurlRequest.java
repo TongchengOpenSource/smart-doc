@@ -22,10 +22,10 @@
  */
 package com.power.doc.model.request;
 
+import java.util.List;
+
 import com.power.doc.model.ApiReqParam;
 import com.power.doc.model.FormData;
-
-import java.util.List;
 
 /**
  * @author yu 2020/12/21.

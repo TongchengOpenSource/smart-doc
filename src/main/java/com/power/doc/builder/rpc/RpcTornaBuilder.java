@@ -22,23 +22,21 @@
  */
 package com.power.doc.builder.rpc;
 
-import com.power.doc.builder.ProjectDocConfigBuilder;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.power.doc.constants.TornaConstants;
-import com.power.doc.factory.BuildTemplateFactory;
 import com.power.doc.helper.JavaProjectBuilderHelper;
 import com.power.doc.model.ApiConfig;
 import com.power.doc.model.rpc.RpcApiDoc;
 import com.power.doc.model.torna.Apis;
 import com.power.doc.model.torna.DubboInfo;
 import com.power.doc.model.torna.TornaApi;
-import com.power.doc.template.IDocBuildTemplate;
 import com.power.doc.utils.TornaUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
+
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static com.power.doc.utils.TornaUtil.buildDubboApis;
 import static com.power.doc.utils.TornaUtil.buildErrorCode;
@@ -68,10 +66,7 @@ public class RpcTornaBuilder {
     public static void buildApiDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
         config.setParamsDataToTree(true);
         RpcDocBuilderTemplate builderTemplate = new RpcDocBuilderTemplate();
-        builderTemplate.checkAndInit(config);
-        ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
-        IDocBuildTemplate<RpcApiDoc> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework());
-        List<RpcApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder);
+        List<RpcApiDoc> apiDocList = builderTemplate.getRpcApiDoc(config, javaProjectBuilder);
         buildTorna(apiDocList, config, javaProjectBuilder);
     }
 
@@ -90,11 +85,11 @@ public class RpcTornaBuilder {
             api.setIsFolder(TornaConstants.YES);
             api.setAuthor(a.getAuthor());
             api.setDubboInfo(new DubboInfo().builder()
-                    .setAuthor(a.getAuthor())
-                    .setProtocol(a.getProtocol())
-                    .setVersion(a.getVersion())
-                    .setDependency(TornaUtil.buildDependencies(apiConfig.getRpcApiDependencies()))
-                    .setInterfaceName(a.getName()));
+                .setAuthor(a.getAuthor())
+                .setProtocol(a.getProtocol())
+                .setVersion(a.getVersion())
+                .setDependency(TornaUtil.buildDependencies(apiConfig.getRpcApiDependencies()))
+                .setInterfaceName(a.getName()));
             api.setOrderIndex(a.getOrder());
             apisList.add(api);
         }

@@ -69,9 +69,9 @@ public class BodyAdvice {
     public String toString() {
         final StringBuilder sb = new StringBuilder("{");
         sb.append("\"className\":\"")
-                .append(className).append('\"');
+            .append(className).append('\"');
         sb.append(",\"dataField\":\"")
-                .append(dataField).append('\"');
+            .append(dataField).append('\"');
         sb.append('}');
         return sb.toString();
     }

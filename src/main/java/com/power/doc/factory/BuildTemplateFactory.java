@@ -46,7 +46,8 @@ public class BuildTemplateFactory {
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
-            throw new RuntimeException("The class=>" + className + " is not found , smart-doc currently supported framework name can only be set in [dubbo, spring].");
+            throw new RuntimeException(
+                "The class=>" + className + " is not found , smart-doc currently supported framework name can only be set in [dubbo, spring].");
         }
         return null;
     }

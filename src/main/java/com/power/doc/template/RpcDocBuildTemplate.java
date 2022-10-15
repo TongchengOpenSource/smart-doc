@@ -22,6 +22,17 @@
  */
 package com.power.doc.template;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
+
 import com.power.common.util.StringUtil;
 import com.power.common.util.ValidateUtil;
 import com.power.doc.builder.ProjectDocConfigBuilder;
@@ -36,12 +47,18 @@ import com.power.doc.model.DocJavaMethod;
 import com.power.doc.model.JavaMethodDoc;
 import com.power.doc.model.annotation.FrameworkAnnotations;
 import com.power.doc.model.rpc.RpcApiDoc;
-import com.power.doc.utils.*;
-import com.thoughtworks.qdox.model.*;
-
-import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
+import com.power.doc.utils.ApiParamTreeUtil;
+import com.power.doc.utils.DocClassUtil;
+import com.power.doc.utils.DocUtil;
+import com.power.doc.utils.JavaClassUtil;
+import com.power.doc.utils.JavaClassValidateUtil;
+import com.power.doc.utils.JavaFieldUtil;
+import com.thoughtworks.qdox.model.DocletTag;
+import com.thoughtworks.qdox.model.JavaAnnotation;
+import com.thoughtworks.qdox.model.JavaClass;
+import com.thoughtworks.qdox.model.JavaMethod;
+import com.thoughtworks.qdox.model.JavaParameter;
+import com.thoughtworks.qdox.model.JavaType;
 
 import static com.power.doc.constants.DocTags.DEPRECATED;
 import static com.power.doc.constants.DocTags.IGNORE;
@@ -75,7 +92,7 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc>, IBaseD
             }
             String strOrder = JavaClassUtil.getClassTagsValue(cls, DocTags.ORDER, Boolean.TRUE);
             order++;
-            if (ValidateUtil.isNonnegativeInteger(strOrder)) {
+            if (ValidateUtil.isNonNegativeInteger(strOrder)) {
                 order = Integer.parseInt(strOrder);
                 setCustomOrder = true;
             }
@@ -88,8 +105,8 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc>, IBaseD
         } else if (setCustomOrder) {
             // while set custom oder
             return apiDocList.stream()
-                    .sorted(Comparator.comparing(RpcApiDoc::getOrder))
-                    .peek(p -> p.setOrder(atomicInteger.getAndAdd(1))).collect(Collectors.toList());
+                .sorted(Comparator.comparing(RpcApiDoc::getOrder))
+                .peek(p -> p.setOrder(atomicInteger.getAndAdd(1))).collect(Collectors.toList());
         }
         return apiDocList;
     }
@@ -185,7 +202,7 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc>, IBaseD
             String paramPre = paramName + ".";
             if (!paramTagMap.containsKey(paramName) && JavaClassValidateUtil.isPrimitive(fullTypeName) && isStrict) {
                 throw new RuntimeException("ERROR: Unable to find javadoc @param for actual param \""
-                        + paramName + "\" in method " + javaMethod.getName() + " from " + className);
+                    + paramName + "\" in method " + javaMethod.getName() + " from " + className);
             }
             StringBuilder comment = new StringBuilder(this.paramCommentResolve(paramTagMap.get(paramName)));
             String mockValue = JavaFieldUtil.createMockValue(paramTagMap, paramName, typeName, typeName);
@@ -209,42 +226,42 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc>, IBaseD
                 }
                 if (JavaClassValidateUtil.isPrimitive(gicName)) {
                     String processedType = isShowJavaType ?
-                            JavaClassUtil.getClassSimpleName(typeName) : DocClassUtil.processTypeNameForParams(simpleName);
+                        JavaClassUtil.getClassSimpleName(typeName) : DocClassUtil.processTypeNameForParams(simpleName);
                     ApiParam param = ApiParam.of().setId(atomicInteger.incrementAndGet()).setField(paramName)
-                            .setDesc(comment + "   (children type : " + gicName + ")")
-                            .setRequired(required)
-                            .setType(processedType);
+                        .setDesc(comment + "   (children type : " + gicName + ")")
+                        .setRequired(required)
+                        .setType(processedType);
                     paramList.add(param);
                 } else {
                     paramList.addAll(ParamsBuildHelper.buildParams(gicNameArr[0], paramPre, 0, "true",
-                            Boolean.FALSE, new HashMap<>(), builder, groupClasses, 0, Boolean.FALSE, atomicInteger));
+                        Boolean.FALSE, new HashMap<>(), builder, groupClasses, 0, Boolean.FALSE, atomicInteger));
                 }
             } else if (JavaClassValidateUtil.isPrimitive(fullTypeName)) {
                 ApiParam param = ApiParam.of().setId(atomicInteger.incrementAndGet()).setField(paramName)
-                        .setType(JavaClassUtil.getClassSimpleName(typeName))
-                        .setDesc(comment.toString())
-                        .setRequired(required)
-                        .setMaxLength(JavaFieldUtil.getParamMaxLength(parameter.getAnnotations()))
-                        .setValue(mockValue)
-                        .setVersion(DocGlobalConstants.DEFAULT_VERSION);
+                    .setType(JavaClassUtil.getClassSimpleName(typeName))
+                    .setDesc(comment.toString())
+                    .setRequired(required)
+                    .setMaxLength(JavaFieldUtil.getParamMaxLength(parameter.getAnnotations()))
+                    .setValue(mockValue)
+                    .setVersion(DocGlobalConstants.DEFAULT_VERSION);
                 paramList.add(param);
             } else if (JavaClassValidateUtil.isMap(fullTypeName)) {
                 if (JavaClassValidateUtil.isMap(typeName)) {
                     ApiParam apiParam = ApiParam.of().setId(atomicInteger.incrementAndGet()).setField(paramName).setType(typeName)
-                            .setDesc(comment.toString()).setRequired(required).setVersion(DocGlobalConstants.DEFAULT_VERSION);
+                        .setDesc(comment.toString()).setRequired(required).setVersion(DocGlobalConstants.DEFAULT_VERSION);
                     paramList.add(apiParam);
                     continue;
                 }
                 String[] gicNameArr = DocClassUtil.getSimpleGicName(typeName);
                 paramList.addAll(ParamsBuildHelper.buildParams(gicNameArr[1], paramPre, 0, "true",
-                        Boolean.FALSE, new HashMap<>(), builder, groupClasses, 0, Boolean.FALSE, atomicInteger));
+                    Boolean.FALSE, new HashMap<>(), builder, groupClasses, 0, Boolean.FALSE, atomicInteger));
             } else if (javaClass.isEnum()) {
                 ApiParam param = ApiParam.of().setId(atomicInteger.incrementAndGet()).setField(paramName)
-                        .setType("Enum").setRequired(required).setDesc(comment.toString()).setVersion(DocGlobalConstants.DEFAULT_VERSION);
+                    .setType("Enum").setRequired(required).setDesc(comment.toString()).setVersion(DocGlobalConstants.DEFAULT_VERSION);
                 paramList.add(param);
             } else {
                 paramList.addAll(ParamsBuildHelper.buildParams(typeName, paramPre, 0, "true",
-                        Boolean.FALSE, new HashMap<>(), builder, groupClasses, 0, Boolean.FALSE, atomicInteger));
+                    Boolean.FALSE, new HashMap<>(), builder, groupClasses, 0, Boolean.FALSE, atomicInteger));
             }
         }
         return paramList;
@@ -259,8 +276,8 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc>, IBaseD
         for (JavaAnnotation annotation : classAnnotations) {
             String name = annotation.getType().getCanonicalName();
             if (DubboAnnotationConstants.SERVICE.equals(name)
-                    || DubboAnnotationConstants.DUBBO_SERVICE.equals(name)
-                    || DubboAnnotationConstants.ALI_DUBBO_SERVICE.equals(name)) {
+                || DubboAnnotationConstants.DUBBO_SERVICE.equals(name)
+                || DubboAnnotationConstants.ALI_DUBBO_SERVICE.equals(name)) {
                 return true;
             }
         }
@@ -280,7 +297,7 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc>, IBaseD
     }
 
     private void handleJavaApiDoc(JavaClass cls, List<RpcApiDoc> apiDocList, List<JavaMethodDoc> apiMethodDocs,
-                                  int order, ProjectDocConfigBuilder builder) {
+        int order, ProjectDocConfigBuilder builder) {
         String className = cls.getCanonicalName();
         String shortName = cls.getName();
         String comment = cls.getComment();
@@ -352,7 +369,7 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc>, IBaseD
             params.add(parameter.getType().getGenericValue() + " " + parameter.getName());
         }
         methodBuilder.append(method.getName()).append("(")
-                .append(String.join(", ", params)).append(")");
+            .append(String.join(", ", params)).append(")");
         return methodBuilder.toString();
     }
 }

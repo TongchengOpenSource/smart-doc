@@ -22,6 +22,14 @@
  */
 package com.power.doc.builder;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Reader;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+
 import com.power.common.util.DateTimeUtil;
 import com.power.common.util.StringUtil;
 import com.power.doc.constants.DocGlobalConstants;
@@ -30,18 +38,11 @@ import com.power.doc.constants.FrameworkEnum;
 import com.power.doc.constants.TemplateVariable;
 import com.power.doc.model.ApiConfig;
 import com.power.doc.model.RevisionLog;
+
 import org.apache.commons.lang3.StringUtils;
 import org.beetl.core.Resource;
 import org.beetl.core.Template;
 import org.beetl.core.resource.ClasspathResourceLoader;
-
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Reader;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
 
 import static com.power.doc.constants.DocGlobalConstants.CSS_CDN;
 import static com.power.doc.constants.DocGlobalConstants.CSS_CDN_CH;
@@ -57,7 +58,7 @@ public class BaseDocBuilderTemplate {
         ClasspathResourceLoader resourceLoader = new ClasspathResourceLoader("/template/");
         Resource resource = resourceLoader.getResource(source);
         try (FileWriter fileWriter = new FileWriter(target, false);
-             Reader reader = resource.openReader()) {
+            Reader reader = resource.openReader()) {
             char[] c = new char[1024 * 1024];
             int temp;
             int len = 0;
@@ -106,12 +107,12 @@ public class BaseDocBuilderTemplate {
         if (Objects.isNull(config.getRevisionLogs())) {
             String strTime = DateTimeUtil.long2Str(NOW, DateTimeUtil.DATE_FORMAT_SECOND);
             config.setRevisionLogs(
-                    RevisionLog.builder()
-                            .setRevisionTime(strTime)
-                            .setAuthor("@" + System.getProperty("user.name"))
-                            .setVersion("v" + strTime)
-                            .setRemarks("Created by smart-doc")
-                            .setStatus("auto")
+                RevisionLog.builder()
+                    .setRevisionTime(strTime)
+                    .setAuthor("@" + System.getProperty("user.name"))
+                    .setVersion("v" + strTime)
+                    .setRemarks("Created by smart-doc")
+                    .setStatus("auto")
             );
         }
         if (StringUtil.isEmpty(config.getFramework())) {

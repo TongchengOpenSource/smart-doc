@@ -7,6 +7,7 @@ package com.power.doc.model.openapi;
  * @version 1.0
  */
 public class OpenApiTag {
+
     /**
      * the tag name
      */

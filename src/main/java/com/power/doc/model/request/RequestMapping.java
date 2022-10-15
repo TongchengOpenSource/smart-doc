@@ -26,6 +26,7 @@ package com.power.doc.model.request;
  * @author yu 2019/12/22.
  */
 public class RequestMapping {
+
     /**
      * url
      */

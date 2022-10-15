@@ -22,11 +22,12 @@
  */
 package com.power.doc.model.request;
 
+import java.util.List;
+
 import com.power.common.util.StringUtil;
 import com.power.doc.model.FormData;
-import org.apache.commons.lang3.StringUtils;
 
-import java.util.List;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author yu 2019/12/22.

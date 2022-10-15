@@ -22,6 +22,13 @@
  */
 package com.power.doc.builder.openapi;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.FileUtil;
 import com.power.common.util.StringUtil;
@@ -31,14 +38,16 @@ import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.constants.Methods;
 import com.power.doc.factory.BuildTemplateFactory;
 import com.power.doc.helper.JavaProjectBuilderHelper;
-import com.power.doc.model.*;
+import com.power.doc.model.ApiConfig;
+import com.power.doc.model.ApiDoc;
+import com.power.doc.model.ApiMethodDoc;
+import com.power.doc.model.ApiParam;
+import com.power.doc.model.ApiReqParam;
 import com.power.doc.model.openapi.OpenApiTag;
 import com.power.doc.template.IDocBuildTemplate;
 import com.power.doc.utils.JsonUtil;
 import com.power.doc.utils.OpenApiSchemaUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
-
-import java.util.*;
 
 import static com.power.doc.constants.DocGlobalConstants.ARRAY;
 
@@ -46,12 +55,13 @@ import static com.power.doc.constants.DocGlobalConstants.ARRAY;
  * @author xingzi
  */
 public class OpenApiBuilder extends AbstractOpenApiBuilder {
+
     private static final OpenApiBuilder INSTANCE = new OpenApiBuilder();
 
     /**
-     * 单元测试
+     *  For unit testing
      *
-     * @param config 配置文件
+     * @param config Configuration of smart-doc
      */
     public static void buildOpenApi(ApiConfig config) {
         JavaProjectBuilder javaProjectBuilder = JavaProjectBuilderHelper.create();
@@ -59,26 +69,21 @@ public class OpenApiBuilder extends AbstractOpenApiBuilder {
     }
 
     /**
-     * 插件
+     * Only for smart-doc maven plugin and gradle plugin.
      *
-     * @param config         配置文件
-     * @param projectBuilder 工程
+     * @param config         Configuration of smart-doc
+     * @param projectBuilder JavaDocBuilder of QDox
      */
     public static void buildOpenApi(ApiConfig config, JavaProjectBuilder projectBuilder) {
-        DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
-        builderTemplate.checkAndInit(config, false);
-        ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, projectBuilder);
-        config.setParamsDataToTree(true);
-        IDocBuildTemplate docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework());
-        List<ApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder);
+        List<ApiDoc> apiDocList = INSTANCE.getOpenApiDocs(config,projectBuilder);
         INSTANCE.openApiCreate(config, apiDocList);
     }
 
     /**
      * Build OpenApi
      *
-     * @param config     ApiConfig
-     * @param apiDocList 接口列表
+     * @param config     Configuration of smart-doc
+     * @param apiDocList List of API DOC
      */
     @Override
     public void openApiCreate(ApiConfig config, List<ApiDoc> apiDocList) {
@@ -100,8 +105,7 @@ public class OpenApiBuilder extends AbstractOpenApiBuilder {
     /**
      * Build openapi info
      *
-     * @param apiConfig ApiConfig
-     * @return
+     * @param apiConfig Configuration of smart-doc
      */
     private static Map<String, Object> buildInfo(ApiConfig apiConfig) {
         Map<String, Object> infoMap = new HashMap<>(8);
@@ -113,8 +117,7 @@ public class OpenApiBuilder extends AbstractOpenApiBuilder {
     /**
      * Build Servers
      *
-     * @param config ApiConfig
-     * @return
+     * @param config Configuration of smart-doc
      */
     private static List<Map<String, Object>> buildServers(ApiConfig config) {
         List<Map<String, Object>> serverList = new ArrayList<>();
@@ -128,10 +131,9 @@ public class OpenApiBuilder extends AbstractOpenApiBuilder {
     /**
      * Build request
      *
-     * @param apiConfig    ApiConfig
+     * @param apiConfig    Configuration of smart-doc
      * @param apiMethodDoc ApiMethodDoc
      * @param apiDoc       apiDoc
-     * @return
      */
     public Map<String, Object> buildPathUrlsRequest(ApiConfig apiConfig, ApiMethodDoc apiMethodDoc, ApiDoc apiDoc) {
         Map<String, Object> request = new HashMap<>(20);
@@ -155,13 +157,12 @@ public class OpenApiBuilder extends AbstractOpenApiBuilder {
      * Build request body
      *
      * @param apiMethodDoc ApiMethodDoc
-     * @return
      */
     private static Map<String, Object> buildRequestBody(ApiConfig apiConfig, ApiMethodDoc apiMethodDoc, String componentKey) {
         Map<String, Object> requestBody = new HashMap<>(8);
         boolean isPost = (apiMethodDoc.getType().equals(Methods.POST.getValue())
-                || apiMethodDoc.getType().equals(Methods.PUT.getValue()) ||
-                apiMethodDoc.getType().equals(Methods.PATCH.getValue()));
+            || apiMethodDoc.getType().equals(Methods.PUT.getValue()) ||
+            apiMethodDoc.getType().equals(Methods.PATCH.getValue()));
         //add content of post method
         if (isPost) {
             requestBody.put("content", buildContent(apiConfig, apiMethodDoc, false, componentKey));
