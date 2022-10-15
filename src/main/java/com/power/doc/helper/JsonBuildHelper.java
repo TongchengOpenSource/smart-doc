@@ -430,21 +430,6 @@ public class JsonBuildHelper extends BaseHelper {
                         if (StringUtil.isNotEmpty(field.getComment())) {
                             // from source code
                             data0.append("{\"object\":\"any object\"},");
-                        } else if (globGicName.length > 0) {
-                            String gicName = genericMap.get(subTypeName) == null ? globGicName[0] : genericMap.get(subTypeName);
-                            if (!typeName.equals(genericCanonicalName)) {
-                                if (JavaClassValidateUtil.isPrimitive(gicName)) {
-                                    data0.append("\"")
-                                        .append(buildJson(gicName, genericCanonicalName, isResp, nextLevel, registryClasses, groupClasses, builder))
-                                        .append("\",");
-                                } else {
-                                    String simpleName = DocClassUtil.getSimpleName(gicName);
-                                    data0.append(buildJson(simpleName, gicName, isResp, nextLevel, registryClasses, groupClasses, builder))
-                                        .append(",");
-                                }
-                            } else {
-                                data0.append("{},");
-                            }
                         } else {
                             data0.append("{},");
                         }

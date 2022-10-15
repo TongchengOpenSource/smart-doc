@@ -455,23 +455,24 @@ public class ParamsBuildHelper extends BaseHelper {
                                     , isResp, registryClasses, projectBuilder, groupClasses, fieldPid, jsonRequest, atomicInteger));
                             }
                         }
-                    } else if (subTypeName.length() == 1 || DocGlobalConstants.JAVA_OBJECT_FULLY.equals(subTypeName)) {
+                    } else if (DocGlobalConstants.JAVA_OBJECT_FULLY.equals(subTypeName)) {
                         commonHandleParam(paramList, param, isRequired, comment + appendComment, since, strRequired);
-                        boolean isGenerics = docField.getJavaField().getType().getFullyQualifiedName().length() == 1;
+                        fieldPid = Optional.ofNullable(atomicInteger).isPresent() ? param.getId() : paramList.size() + pid;
+                        ApiParam param1 = ApiParam.of()
+                            .setField(preBuilder.append("any object").toString())
+                            .setId(atomicOrDefault(atomicInteger, fieldPid + 1))
+                            .setPid(pid)
+                            .setClassName(className)
+                            .setMaxLength(maxLength)
+                            .setType("object")
+                            .setDesc(DocGlobalConstants.ANY_OBJECT_MSG)
+                            .setVersion(DocGlobalConstants.DEFAULT_VERSION);
+                        paramList.add(param1);
+                    } else if (subTypeName.length() == 1) {
+                        commonHandleParam(paramList, param, isRequired, comment + appendComment, since, strRequired);
                         fieldPid = Optional.ofNullable(atomicInteger).isPresent() ? param.getId() : paramList.size() + pid;
                         // handle java generic or object
-                        if (isGenerics && DocGlobalConstants.JAVA_OBJECT_FULLY.equals(subTypeName) && StringUtil.isNotEmpty(field.getComment())) {
-                            ApiParam param1 = ApiParam.of()
-                                .setField(preBuilder.append("any object").toString())
-                                .setId(atomicOrDefault(atomicInteger, fieldPid + 1))
-                                .setPid(pid)
-                                .setClassName(className)
-                                .setMaxLength(maxLength)
-                                .setType("object")
-                                .setDesc(DocGlobalConstants.ANY_OBJECT_MSG)
-                                .setVersion(DocGlobalConstants.DEFAULT_VERSION);
-                            paramList.add(param1);
-                        } else if (!simpleName.equals(className)) {
+                        if (!simpleName.equals(className)) {
                             if (globGicName.length > 0) {
                                 String gicName = genericMap.get(subTypeName) != null ? genericMap.get(subTypeName) : globGicName[0];
                                 String simple = DocClassUtil.getSimpleName(gicName);
