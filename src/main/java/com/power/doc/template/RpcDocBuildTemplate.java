@@ -44,7 +44,7 @@ import com.power.doc.helper.ParamsBuildHelper;
 import com.power.doc.model.ApiConfig;
 import com.power.doc.model.ApiParam;
 import com.power.doc.model.DocJavaMethod;
-import com.power.doc.model.JavaMethodDoc;
+import com.power.doc.model.RpcJavaMethod;
 import com.power.doc.model.annotation.FrameworkAnnotations;
 import com.power.doc.model.rpc.RpcApiDoc;
 import com.power.doc.utils.ApiParamTreeUtil;
@@ -66,7 +66,7 @@ import static com.power.doc.constants.DocTags.IGNORE;
 /**
  * @author yu 2020/1/29.
  */
-public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc>, IBaseDocBuildTemplate {
+public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc>, IRpcDocTemplate {
 
     /**
      * api index
@@ -96,7 +96,7 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc>, IBaseD
                 order = Integer.parseInt(strOrder);
                 setCustomOrder = true;
             }
-            List<JavaMethodDoc> apiMethodDocs = buildServiceMethod(cls, apiConfig, projectBuilder);
+            List<RpcJavaMethod> apiMethodDocs = buildServiceMethod(cls, apiConfig, projectBuilder);
             this.handleJavaApiDoc(cls, apiDocList, apiMethodDocs, order, projectBuilder);
         }
         // sort
@@ -115,61 +115,30 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc>, IBaseD
         return false;
     }
 
-    private List<JavaMethodDoc> buildServiceMethod(final JavaClass cls, ApiConfig apiConfig, ProjectDocConfigBuilder projectBuilder) {
+    private List<RpcJavaMethod> buildServiceMethod(final JavaClass cls, ApiConfig apiConfig, ProjectDocConfigBuilder projectBuilder) {
         String clazName = cls.getCanonicalName();
         List<JavaMethod> methods = cls.getMethods();
-        List<JavaMethodDoc> methodDocList = new ArrayList<>(methods.size());
+        List<RpcJavaMethod> methodDocList = new ArrayList<>(methods.size());
         int methodOrder = 0;
         for (JavaMethod method : methods) {
             if (method.isPrivate()) {
                 continue;
             }
-            if (StringUtil.isEmpty(method.getComment()) && apiConfig.isStrict()) {
-                throw new RuntimeException("Unable to find comment for method " + method.getName() + " in " + cls.getCanonicalName());
-            }
-            boolean deprecated = false;
-            //Deprecated
-            List<JavaAnnotation> annotations = method.getAnnotations();
-            for (JavaAnnotation annotation : annotations) {
-                String annotationName = annotation.getType().getName();
-                if (DocAnnotationConstants.DEPRECATED.equals(annotationName)) {
-                    deprecated = true;
-                }
-            }
-            if (Objects.nonNull(method.getTagByName(DEPRECATED))) {
-                deprecated = true;
-            }
-            methodOrder++;
-            JavaMethodDoc apiMethodDoc = new JavaMethodDoc();
-            String methodDefine = methodDefinition(method);
-            String scapeMethod = methodDefine.replaceAll("<", "&lt;");
-            scapeMethod = scapeMethod.replaceAll(">", "&gt;");
-            apiMethodDoc.setMethodDefinition(methodDefine);
-            apiMethodDoc.setEscapeMethodDefinition(scapeMethod);
-            apiMethodDoc.setOrder(methodOrder);
-            apiMethodDoc.setDesc(DocUtil.getEscapeAndCleanComment(method.getComment()));
-            apiMethodDoc.setName(method.getName());
-            String methodUid = DocUtil.generateId(clazName + method.getName() + methodOrder);
-            apiMethodDoc.setMethodId(methodUid);
-            String apiNoteValue = DocUtil.getNormalTagComments(method, DocTags.API_NOTE, cls.getName());
-            if (StringUtil.isEmpty(apiNoteValue)) {
-                apiNoteValue = method.getComment();
-            }
-            String authorValue = DocUtil.getNormalTagComments(method, DocTags.AUTHOR, cls.getName());
-            if (apiConfig.isShowAuthor() && StringUtil.isNotEmpty(authorValue)) {
-                apiMethodDoc.setAuthor(authorValue);
-            }
-            apiMethodDoc.setDetail(apiNoteValue != null ? apiNoteValue : "");
             if (Objects.nonNull(method.getTagByName(IGNORE))) {
                 continue;
             }
-            apiMethodDoc.setDeprecated(deprecated);
-
+            if (StringUtil.isEmpty(method.getComment()) && apiConfig.isStrict()) {
+                throw new RuntimeException("Unable to find comment for method " + method.getName() + " in " + cls.getCanonicalName());
+            }
+            methodOrder++;
+            RpcJavaMethod apiMethodDoc = convertToRpcJavaMethod(apiConfig,method);
+            apiMethodDoc.setOrder(methodOrder);
+            String methodUid = DocUtil.generateId(clazName + method.getName() + methodOrder);
+            apiMethodDoc.setMethodId(methodUid);
             // build request params
             List<ApiParam> requestParams = requestParams(method, projectBuilder, new AtomicInteger(0));
             // build response params
             List<ApiParam> responseParams = buildReturnApiParams(DocJavaMethod.builder().setJavaMethod(method), projectBuilder);
-
             if (apiConfig.isParamsDataToTree()) {
                 apiMethodDoc.setRequestParams(ApiParamTreeUtil.apiParamToTree(requestParams));
                 apiMethodDoc.setResponseParams(ApiParamTreeUtil.apiParamToTree(responseParams));
@@ -296,7 +265,7 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc>, IBaseD
         return null;
     }
 
-    private void handleJavaApiDoc(JavaClass cls, List<RpcApiDoc> apiDocList, List<JavaMethodDoc> apiMethodDocs,
+    private void handleJavaApiDoc(JavaClass cls, List<RpcApiDoc> apiDocList, List<RpcJavaMethod> apiMethodDocs,
         int order, ProjectDocConfigBuilder builder) {
         String className = cls.getCanonicalName();
         String shortName = cls.getName();
@@ -337,39 +306,5 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc>, IBaseD
         }
         apiDoc.setAuthor(String.join(", ", authorList));
         apiDocList.add(apiDoc);
-    }
-
-    private String methodDefinition(JavaMethod method) {
-        StringBuilder methodBuilder = new StringBuilder();
-        JavaType returnType = method.getReturnType();
-        String simpleReturn = returnType.getCanonicalName();
-        String returnClass = returnType.getGenericCanonicalName();
-        returnClass = returnClass.replace(simpleReturn, JavaClassUtil.getClassSimpleName(simpleReturn));
-        String[] arrays = DocClassUtil.getSimpleGicName(returnClass);
-        for (String str : arrays) {
-            if (str.contains("[")) {
-                str = str.substring(0, str.indexOf("["));
-            }
-            String[] generics = str.split("[<,]");
-            for (String generic : generics) {
-                if (generic.contains("extends")) {
-                    String className = generic.substring(generic.lastIndexOf(" ") + 1);
-                    returnClass = returnClass.replace(className, JavaClassUtil.getClassSimpleName(className));
-                }
-                if (generic.length() != 1 && !generic.contains("extends")) {
-                    returnClass = returnClass.replaceAll(generic, JavaClassUtil.getClassSimpleName(generic));
-                }
-
-            }
-        }
-        methodBuilder.append(returnClass).append(" ");
-        List<String> params = new ArrayList<>();
-        List<JavaParameter> parameters = method.getParameters();
-        for (JavaParameter parameter : parameters) {
-            params.add(parameter.getType().getGenericValue() + " " + parameter.getName());
-        }
-        methodBuilder.append(method.getName()).append("(")
-            .append(String.join(", ", params)).append(")");
-        return methodBuilder.toString();
     }
 }

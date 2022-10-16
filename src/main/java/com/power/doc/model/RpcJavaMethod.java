@@ -25,9 +25,10 @@ package com.power.doc.model;
 import java.util.List;
 
 /**
+ * for rpc
  * @author yu 2020/1/29.
  */
-public class JavaMethodDoc {
+public class RpcJavaMethod {
 
     /**
      * methodId handled by md5

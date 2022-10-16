@@ -22,7 +22,7 @@ import com.power.doc.model.ApiMethodDoc;
 import com.power.doc.model.ApiParam;
 import com.power.doc.model.ApiReqParam;
 import com.power.doc.model.DataDict;
-import com.power.doc.model.JavaMethodDoc;
+import com.power.doc.model.RpcJavaMethod;
 import com.power.doc.model.rpc.RpcApiDependency;
 import com.power.doc.model.torna.Apis;
 import com.power.doc.model.torna.CommonErrorCode;
@@ -164,12 +164,12 @@ public class TornaUtil {
      * @param apiMethodDocs apiMethodDocs
      * @return List of Api
      */
-    public static List<Apis> buildDubboApis(List<JavaMethodDoc> apiMethodDocs) {
+    public static List<Apis> buildDubboApis(List<RpcJavaMethod> apiMethodDocs) {
         //Parameter list
         List<Apis> apis = new ArrayList<>();
         Apis methodApi;
         //Iterative classification interface
-        for (JavaMethodDoc apiMethodDoc : apiMethodDocs) {
+        for (RpcJavaMethod apiMethodDoc : apiMethodDocs) {
             methodApi = new Apis();
             methodApi.setIsFolder(TornaConstants.NO);
             methodApi.setName(apiMethodDoc.getDesc());
