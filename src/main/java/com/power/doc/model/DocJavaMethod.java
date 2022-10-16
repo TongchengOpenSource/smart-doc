@@ -22,10 +22,10 @@
  */
 package com.power.doc.model;
 
-import java.util.Map;
-
 import com.thoughtworks.qdox.model.JavaMethod;
 import com.thoughtworks.qdox.model.JavaType;
+
+import java.util.Map;
 
 /**
  * @author yu 2020/10/30.
@@ -42,6 +42,28 @@ public class DocJavaMethod {
     private Map<String, JavaType> actualTypesMap;
 
     private boolean download;
+
+    /**
+     * mark page
+     */
+    private String page = "";
+
+    /**
+     * api group
+     */
+    private String group;
+
+    private String author;
+
+    /**
+     * method description
+     */
+    private String desc;
+
+    /**
+     * detailed introduction of the method
+     */
+    private String detail;
 
     Map<String, String> paramTagMap;
 
@@ -111,6 +133,51 @@ public class DocJavaMethod {
 
     public DocJavaMethod setParamsComments(Map<String, String> paramsComments) {
         this.paramsComments = paramsComments;
+        return this;
+    }
+
+    public String getPage() {
+        return page;
+    }
+
+    public DocJavaMethod setPage(String page) {
+        this.page = page;
+        return this;
+    }
+
+    public String getGroup() {
+        return group;
+    }
+
+    public DocJavaMethod setGroup(String group) {
+        this.group = group;
+        return this;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public DocJavaMethod setAuthor(String author) {
+        this.author = author;
+        return this;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public DocJavaMethod setDesc(String desc) {
+        this.desc = desc;
+        return this;
+    }
+
+    public String getDetail() {
+        return detail;
+    }
+
+    public DocJavaMethod setDetail(String detail) {
+        this.detail = detail;
         return this;
     }
 }

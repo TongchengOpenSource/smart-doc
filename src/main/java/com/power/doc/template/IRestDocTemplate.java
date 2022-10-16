@@ -301,7 +301,6 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
         String clazName = cls.getCanonicalName();
         boolean paramsDataToTree = projectBuilder.getApiConfig().isParamsDataToTree();
         String group = JavaClassUtil.getClassTagsValue(cls, DocTags.GROUP, Boolean.TRUE);
-        String classAuthor = JavaClassUtil.getClassTagsValue(cls, DocTags.AUTHOR, Boolean.TRUE);
         List<JavaAnnotation> classAnnotations = this.getClassAnnotations(cls, frameworkAnnotations);
         String baseUrl = "";
         Map<String, MappingAnnotation> mappingAnnotationMap = frameworkAnnotations.getMappingAnnotations();
@@ -323,7 +322,10 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
             if (method.isPrivate() || DocUtil.isMatch(apiConfig.getPackageExcludeFilters(), clazName + "." + method.getName())) {
                 continue;
             }
-            docJavaMethods.add(DocJavaMethod.builder().setJavaMethod(method));
+            if (Objects.nonNull(method.getTagByName(IGNORE))) {
+                continue;
+            }
+            docJavaMethods.add(convertToDocJavaMethod(apiConfig,projectBuilder,method,null));
         }
         // add parent class methods
         docJavaMethods.addAll(getParenClassMethods(cls));
@@ -333,7 +335,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
             Map<String, JavaType> actualTypesMap = JavaClassUtil.getActualTypesMap(javaClass);
             for (JavaMethod method : javaClass.getMethods()) {
                 if (method.isDefault()) {
-                    docJavaMethods.add(DocJavaMethod.builder().setJavaMethod(method).setActualTypesMap(actualTypesMap));
+                    docJavaMethods.add(convertToDocJavaMethod(apiConfig,projectBuilder,method,actualTypesMap));
                 }
             }
         }
@@ -341,9 +343,6 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
         int methodOrder = 0;
         for (DocJavaMethod docJavaMethod : docJavaMethods) {
             JavaMethod method = docJavaMethod.getJavaMethod();
-            if (method.isPrivate() || Objects.nonNull(method.getTagByName(IGNORE))) {
-                continue;
-            }
             //handle request mapping
             RequestMapping requestMapping = baseMappingHandler.handle(projectBuilder, baseUrl,
                 method, frameworkAnnotations,
@@ -357,24 +356,13 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
             if (StringUtil.isEmpty(method.getComment()) && apiConfig.isStrict()) {
                 throw new RuntimeException("Unable to find comment for method " + method.getName() + " in " + cls.getCanonicalName());
             }
-            docJavaMethod.setParamTagMap(DocUtil.getCommentsByTag(method, DocTags.PARAM, clazName));
-            docJavaMethod.setParamsComments(DocUtil.getCommentsByTag(method, DocTags.PARAM, null));
 
             ApiMethodDoc apiMethodDoc = new ApiMethodDoc();
-            DocletTag downloadTag = method.getTagByName(DocTags.DOWNLOAD);
-            if (Objects.nonNull(downloadTag)) {
-                apiMethodDoc.setDownload(true);
-            }
-            DocletTag pageTag = method.getTagByName(DocTags.PAGE);
-            if (Objects.nonNull(pageTag)) {
-                String pageUrl = projectBuilder.getServerUrl() + "/" + pageTag.getValue();
-                apiMethodDoc.setPage(UrlUtil.simplifyUrl(pageUrl));
-            }
-            DocletTag docletTag = method.getTagByName(DocTags.GROUP);
-            if (Objects.nonNull(docletTag)) {
-                apiMethodDoc.setGroup(docletTag.getValue());
-            } else {
-                apiMethodDoc.setGroup(group);
+            apiMethodDoc.setDownload(docJavaMethod.isDownload());
+            apiMethodDoc.setPage(docJavaMethod.getPage());
+            apiMethodDoc.setGroup(group);
+            if (Objects.nonNull(docJavaMethod.getGroup())) {
+                apiMethodDoc.setGroup(docJavaMethod.getGroup());
             }
 
             // handle tags
@@ -385,21 +373,10 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
             apiMethodDoc.setOrder(methodOrder);
             apiMethodDoc.setName(method.getName());
             apiMethodDoc.setDesc(method.getComment());
+            apiMethodDoc.setAuthor(docJavaMethod.getAuthor());
+            apiMethodDoc.setDetail(docJavaMethod.getDetail());
             String methodUid = DocUtil.generateId(clazName + method.getName() + methodOrder);
             apiMethodDoc.setMethodId(methodUid);
-            String apiNoteValue = DocUtil.getNormalTagComments(method, DocTags.API_NOTE, cls.getName());
-            if (StringUtil.isEmpty(apiNoteValue)) {
-                apiNoteValue = method.getComment();
-            }
-            Map<String, String> authorMap = DocUtil.getCommentsByTag(method, DocTags.AUTHOR, cls.getName());
-            String authorValue = String.join(", ", new ArrayList<>(authorMap.keySet()));
-            if (apiConfig.isShowAuthor() && StringUtil.isNotEmpty(authorValue)) {
-                apiMethodDoc.setAuthor(StringUtil.removeQuotes(authorValue));
-            }
-            if (apiConfig.isShowAuthor() && StringUtil.isEmpty(authorValue)) {
-                apiMethodDoc.setAuthor(classAuthor);
-            }
-            apiMethodDoc.setDetail(apiNoteValue != null ? apiNoteValue : "");
             //handle headers
             List<ApiReqParam> apiReqHeaders = headerHandler.handle(method, projectBuilder);
             apiReqHeaders = apiReqHeaders.stream().filter(param -> DocUtil.filterPath(requestMapping, param)).collect(Collectors.toList());
@@ -1067,6 +1044,50 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
             }
         }
         return false;
+    }
+
+    default DocJavaMethod convertToDocJavaMethod(ApiConfig apiConfig,ProjectDocConfigBuilder projectBuilder,
+                                                 JavaMethod method,Map<String, JavaType> actualTypesMap) {
+        JavaClass cls = method.getDeclaringClass();
+        String clzName = cls.getCanonicalName();
+        String classAuthor = JavaClassUtil.getClassTagsValue(cls, DocTags.AUTHOR, Boolean.TRUE);
+        DocJavaMethod docJavaMethod = DocJavaMethod.builder().setJavaMethod(method).setActualTypesMap(actualTypesMap);
+        if (Objects.nonNull(method.getTagByName(DocTags.DOWNLOAD))) {
+            docJavaMethod.setDownload(true);
+        }
+        DocletTag pageTag = method.getTagByName(DocTags.PAGE);
+        if (Objects.nonNull(method.getTagByName(DocTags.PAGE))) {
+            String pageUrl = projectBuilder.getServerUrl() + "/" + pageTag.getValue();
+            docJavaMethod.setPage(UrlUtil.simplifyUrl(pageUrl));
+        }
+
+        DocletTag docletTag = method.getTagByName(DocTags.GROUP);
+        if (Objects.nonNull(docletTag)) {
+            docJavaMethod.setGroup(docletTag.getValue());
+        }
+        docJavaMethod.setParamTagMap(DocUtil.getCommentsByTag(method, DocTags.PARAM, clzName));
+        docJavaMethod.setParamsComments(DocUtil.getCommentsByTag(method, DocTags.PARAM, null));
+
+        Map<String, String> authorMap = DocUtil.getCommentsByTag(method, DocTags.AUTHOR, cls.getName());
+        String authorValue = String.join(", ", new ArrayList<>(authorMap.keySet()));
+        if (apiConfig.isShowAuthor() && StringUtil.isNotEmpty(authorValue)) {
+            docJavaMethod.setAuthor(JsonUtil.toPrettyFormat(authorValue));
+        }
+        if (apiConfig.isShowAuthor() && StringUtil.isEmpty(authorValue)) {
+            docJavaMethod.setAuthor(classAuthor);
+        }
+
+        docJavaMethod.setParamTagMap(DocUtil.getCommentsByTag(method, DocTags.PARAM, clzName));
+        docJavaMethod.setParamsComments(DocUtil.getCommentsByTag(method, DocTags.PARAM, null));
+        String comment = DocUtil.getEscapeAndCleanComment(method.getComment());
+        docJavaMethod.setDesc(comment);
+
+        String apiNoteValue = DocUtil.getNormalTagComments(method, DocTags.API_NOTE, cls.getName());
+        if (StringUtil.isEmpty(apiNoteValue)) {
+            apiNoteValue = method.getComment();
+        }
+        docJavaMethod.setDetail(apiNoteValue != null ? apiNoteValue : "");
+        return docJavaMethod;
     }
 
     boolean isEntryPoint(JavaClass javaClass, FrameworkAnnotations frameworkAnnotations);

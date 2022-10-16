@@ -165,7 +165,6 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDo
         String clzName = cls.getCanonicalName();
         boolean paramsDataToTree = projectBuilder.getApiConfig().isParamsDataToTree();
         String group = JavaClassUtil.getClassTagsValue(cls, DocTags.GROUP, Boolean.TRUE);
-        String classAuthor = JavaClassUtil.getClassTagsValue(cls, DocTags.AUTHOR, Boolean.TRUE);
         String baseUrl = "";
         String mediaType = null;
         List<JavaAnnotation> classAnnotations = this.getClassAnnotations(cls, frameworkAnnotations);
@@ -185,7 +184,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDo
             if (method.isPrivate()) {
                 continue;
             }
-            docJavaMethods.add(DocJavaMethod.builder().setJavaMethod(method));
+            docJavaMethods.add(convertToDocJavaMethod(apiConfig,projectBuilder,method,null));
         }
         // add parent class methods
         docJavaMethods.addAll(getParenClassMethods(cls));
@@ -207,42 +206,21 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDo
                 throw new RuntimeException("Unable to find comment for method " + method.getName() + " in " + cls.getCanonicalName());
             }
             ApiMethodDoc apiMethodDoc = new ApiMethodDoc();
-            if (Objects.nonNull(method.getTagByName(DocTags.DOWNLOAD))) {
-                apiMethodDoc.setDownload(true);
-            }
-            DocletTag pageTag = method.getTagByName(DocTags.PAGE);
-            if (Objects.nonNull(method.getTagByName(DocTags.PAGE))) {
-                String pageUrl = projectBuilder.getServerUrl() + "/" + pageTag.getValue();
-                apiMethodDoc.setPage(UrlUtil.simplifyUrl(pageUrl));
-            }
-            DocletTag docletTag = method.getTagByName(DocTags.GROUP);
+            apiMethodDoc.setDownload(docJavaMethod.isDownload());
+            apiMethodDoc.setPage(docJavaMethod.getPage());
             apiMethodDoc.setGroup(group);
-            if (Objects.nonNull(docletTag)) {
-                apiMethodDoc.setGroup(docletTag.getValue());
+            if (Objects.nonNull(docJavaMethod.getGroup())) {
+                apiMethodDoc.setGroup(docJavaMethod.getGroup());
             }
-            docJavaMethod.setParamTagMap(DocUtil.getCommentsByTag(method, DocTags.PARAM, clzName));
-            docJavaMethod.setParamsComments(DocUtil.getCommentsByTag(method, DocTags.PARAM, null));
 
             methodOrder++;
             apiMethodDoc.setName(method.getName());
             apiMethodDoc.setOrder(methodOrder);
-            String comment = DocUtil.getEscapeAndCleanComment(method.getComment());
-            apiMethodDoc.setDesc(comment);
+            apiMethodDoc.setDesc(docJavaMethod.getDesc());
             String methodUid = DocUtil.generateId(clzName + method.getName() + methodOrder);
             apiMethodDoc.setMethodId(methodUid);
-            Map<String, String> authorMap = DocUtil.getCommentsByTag(method, DocTags.AUTHOR, cls.getName());
-            String authorValue = String.join(", ", new ArrayList<>(authorMap.keySet()));
-            if (apiConfig.isShowAuthor() && StringUtil.isNotEmpty(authorValue)) {
-                apiMethodDoc.setAuthor(JsonUtil.toPrettyFormat(authorValue));
-            }
-            if (apiConfig.isShowAuthor() && StringUtil.isEmpty(authorValue)) {
-                apiMethodDoc.setAuthor(classAuthor);
-            }
-            String apiNoteValue = DocUtil.getNormalTagComments(method, DocTags.API_NOTE, cls.getName());
-            if (StringUtil.isEmpty(apiNoteValue)) {
-                apiNoteValue = method.getComment();
-            }
-            apiMethodDoc.setDetail(apiNoteValue != null ? apiNoteValue : "");
+            apiMethodDoc.setAuthor(docJavaMethod.getAuthor());
+            apiMethodDoc.setDetail(docJavaMethod.getDetail());
             List<ApiReqParam> ApiReqParams = new JaxrsHeaderHandler().handle(method, projectBuilder);
             apiMethodDoc.setType(jaxPathMapping.getMethodType());
             apiMethodDoc.setUrl(jaxPathMapping.getUrl());
@@ -293,10 +271,6 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDo
                 apiMethodDoc.setResponseUsage(responseValue);
             } else {
                 apiMethodDoc.setResponseUsage(JsonBuildHelper.buildReturnJson(docJavaMethod, projectBuilder));
-            }
-            // auto mark file download
-            if (Objects.isNull(docletTag)) {
-                apiMethodDoc.setDownload(docJavaMethod.isDownload());
             }
             // build response params
             List<ApiParam> responseParams = buildReturnApiParams(docJavaMethod, projectBuilder);

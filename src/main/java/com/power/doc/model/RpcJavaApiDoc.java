@@ -27,7 +27,7 @@ import java.util.List;
 /**
  * @author yu 2020/1/29.
  */
-public class JavaApiDoc {
+public class RpcJavaApiDoc {
 
     /**
      * Order of controller
@@ -51,7 +51,7 @@ public class JavaApiDoc {
     /**
      * List of method doc
      */
-    private List<JavaMethodDoc> list;
+    private List<RpcJavaMethod> list;
 
     /**
      * method description
@@ -82,11 +82,11 @@ public class JavaApiDoc {
         this.alias = alias;
     }
 
-    public List<JavaMethodDoc> getList() {
+    public List<RpcJavaMethod> getList() {
         return list;
     }
 
-    public void setList(List<JavaMethodDoc> list) {
+    public void setList(List<RpcJavaMethod> list) {
         this.list = list;
     }
 
