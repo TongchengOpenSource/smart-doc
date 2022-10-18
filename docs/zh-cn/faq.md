@@ -116,7 +116,8 @@ No plugin found for prefix 'smart-doc' in the current project and in the plugin 
   
 **那如何在`Windows`上支持`Makefile`呢？**
 
-- `Window`环境下先安装`MinGW`
+- `Window`环境下先安装`MinGW`，`MinGW`安装后有在安装目录的`bin`中有一个`make.exe`，
+可以在`Path`系统环境变量中添加`MinGW`。添加成功后即可。
 - `Idea`中安装`Makefile Support`插件
 
 安装好环境之后即可在`Idea`中打开`Makefile`，然后直接选中具体的构建指令运行了。
