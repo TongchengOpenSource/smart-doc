@@ -4,18 +4,41 @@
 我们整理该文档的目的是减少萌新和菜鸟的一些疑惑，如有问题请仔细查看。当然看在我们辛苦整理文档的份上，
 如果你喜欢`smart-doc`，也请推荐给你的同事或者朋友，好的东西要分享给大家。
 # smart-doc测试用例反馈
-有些bug出现了，简单的issue中添加粘贴几行代码反馈的问题官方很难复现，这种情况下需要提供一个能够复现问题的代码。
+有些`bug`出现了，简单的`issue`中添加粘贴几行代码反馈的问题官方很难复现，这种情况下需要提供一个能够复现问题的代码。
 下面来说面下怎么给官方提供用例
 
 ## 单模块测试用例
 如果你是单模块中就能复现的问题，则提用例的步骤如下：
-- fork [smart-doc-example-cn](https://github.com/smart-doc-group/smart-doc-example-cn)项目到个人仓库中
-- 修改fork的代码添加测试用例，然后项目github上会有一个【Sync fork】的地方，选择给我们提pr即可，后面官方也会合并的测试用例进行问题的测试。
+- `fork` [smart-doc-example-cn](https://github.com/smart-doc-group/smart-doc-example-cn)项目到个人仓库中
+- 修改`fork`的代码添加测试用例，然后项目`github`上会有一个【Sync fork】的地方，选择给我们提pr即可，后面官方也会合并的测试用例进行问题的测试。
 
 ## 多模块项目测试用例反馈
 如果你是在多模块中才能复现的问题，则提用例的步骤如下：
-- fork [spring-boot-maven-multiple-module](https://gitee.com/smart-doc-team/spring-boot-maven-multiple-module)项目到个人仓库中
-- 修改fork的代码添加测试用例，然后项目gitee上会有一个【Pull Request】的地方，选择给我们提pr即可，后面官方也会合并的测试用例进行问题的测试。
+- `fork` [spring-boot-maven-multiple-module](https://gitee.com/smart-doc-team/spring-boot-maven-multiple-module)项目到个人仓库中
+- 修改`fork`的代码添加测试用例，然后项目`gitee`上会有一个【Pull Request】的地方，选择给我们提pr即可，后面官方也会合并的测试用例进行问题的测试。
+
+# 如何提升smart-doc生成文档的速度？
+`smart-doc maven`或者是`gradle`插件在默认请款下会自动分析项目的`pom`或者`gradle`提取依赖关系，
+然后自动去下载依赖的源码并加载到内存中，如果被加载的类越多，在完成源代码加载进入解析阶段就会需要执行扫描很多不必要的类
+过滤。因此提升`smart-doc`生成文档速度最重要的就是让`smart-doc`的插件少加载代码。通常对于一个项目来说，
+和生成文档`api`层直接关联的非常少，这些都是不必要的加载。
+提升速度最直接的方式就是在插件中配置：`include`或者`exclude` 。例如：
+```xml
+<plugin>
+    <groupId>com.github.shalousun</groupId>
+    <artifactId>smart-doc-maven-plugin</artifactId>
+    <version>[最新版本]</version>
+    <configuration>
+        <configFile>./src/main/resources/smart-doc.json</configFile>
+        <excludes>
+            <!--不加载alibaba的相关依赖，提升速度-->
+            <exclude>com.alibaba:.*</exclude>
+        </excludes>
+    </configuration>
+</plugin>
+```
+关键插件的详情配置，插件文档插件使用部分去了解细节。
+
 
 # 项目无法加载smart-doc的插件
 错误信息如下：
