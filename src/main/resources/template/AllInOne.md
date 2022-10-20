@@ -61,7 +61,7 @@ ${doc.headers}
 <%
 for(param in doc.pathParams){
 %>
-${param.field}|${param.type}|${param.required}|${lineBreaksToBr(param.desc)}|${param.version}
+|${param.field}|${param.type}|${param.required}|${lineBreaksToBr(param.desc)}|${param.version}|
 <%}%>
 <%}%>
 <%if(isNotEmpty(doc.queryParams)){%>
@@ -73,7 +73,7 @@ ${param.field}|${param.type}|${param.required}|${lineBreaksToBr(param.desc)}|${p
 <%
 for(param in doc.queryParams){
 %>
-${param.field}|${param.type}|${param.required}|${lineBreaksToBr(param.desc)}|${param.version}
+|${param.field}|${param.type}|${param.required}|${lineBreaksToBr(param.desc)}|${param.version}|
 <%}%>
 <%}%>
 <%if(isNotEmpty(doc.requestParams)){%>
@@ -103,7 +103,7 @@ ${doc.requestUsage}
 <%
 for(param in doc.responseParams){
 %>
-|${param.field}|${param.type}|${lineBreaksToBr(param.desc)}|${param.version}
+|${param.field}|${param.type}|${lineBreaksToBr(param.desc)}|${param.version}|
 <%}%>
 <%}%>
 
