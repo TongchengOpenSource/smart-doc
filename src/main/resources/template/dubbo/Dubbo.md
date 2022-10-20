@@ -33,24 +33,24 @@ for(doc in list){
 <%if(isNotEmpty(doc.requestParams)){%>
 **Invoke-parameters:**
 
-Parameter|Type|Required|Description|Since
----|---|---|---|---
+| Parameter | Type | Required | Description | Since |
+|-----------|------|----------|-------------|-------|
 <%
 for(param in doc.requestParams){
 %>
-${param.field}|${param.type}|${param.required}|${htmlEscape(param.desc)}|${param.version}
+|${param.field}|${param.type}|${param.required}|${htmlEscape(param.desc)}|${param.version}
 <%}%>
 <%}%>
 
 <%if(isNotEmpty(doc.responseParams)){%>
 **Response-fields:**
 
-Field | Type|Description|Since
----|---|---|---
+| Field | Type | Description | Since |
+|-------|------|-------------|-------|
 <%
 for(param in doc.responseParams){
 %>
-${param.field}|${param.type}|${htmlEscape(param.desc)}|${param.version}
+|${param.field}|${param.type}|${htmlEscape(param.desc)}|${param.version}
 <%}%>
 <%}%>
 

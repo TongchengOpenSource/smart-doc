@@ -138,18 +138,6 @@ public interface IBaseDocBuildTemplate {
         apiMethodDoc.setRequestParams(ApiParamTreeUtil.apiParamToTree(apiMethodDoc.getRequestParams()));
     }
 
-    default List<DocJavaMethod> getParenClassMethods(JavaClass cls) {
-        List<DocJavaMethod> docJavaMethods = new ArrayList<>();
-        JavaClass parentClass = cls.getSuperJavaClass();
-        if (Objects.nonNull(parentClass) && !"Object".equals(parentClass.getSimpleName())) {
-            Map<String, JavaType> actualTypesMap = JavaClassUtil.getActualTypesMap(parentClass);
-            List<JavaMethod> parentMethodList = parentClass.getMethods();
-            for (JavaMethod method : parentMethodList) {
-                docJavaMethods.add(DocJavaMethod.builder().setJavaMethod(method).setActualTypesMap(actualTypesMap));
-            }
-        }
-        return docJavaMethods;
-    }
 
     default String formatRequestUrl(Map<String, String> pathParamsMap, Map<String, String> queryParamsMap,
         String serverUrl, String path) {

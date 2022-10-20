@@ -184,10 +184,10 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDo
             if (method.isPrivate()) {
                 continue;
             }
-            docJavaMethods.add(convertToDocJavaMethod(apiConfig,projectBuilder,method,null));
+            docJavaMethods.add(convertToDocJavaMethod(apiConfig, projectBuilder, method, null));
         }
         // add parent class methods
-        docJavaMethods.addAll(getParenClassMethods(cls));
+        docJavaMethods.addAll(getParenClassMethods(apiConfig, projectBuilder, cls));
         List<ApiMethodDoc> methodDocList = new ArrayList<>(methods.size());
         int methodOrder = 0;
         for (DocJavaMethod docJavaMethod : docJavaMethods) {
@@ -201,9 +201,6 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDo
                 .handle(projectBuilder, baseUrl, method, mediaType);
             if (Objects.isNull(jaxPathMapping)) {
                 continue;
-            }
-            if (StringUtil.isEmpty(method.getComment()) && apiConfig.isStrict()) {
-                throw new RuntimeException("Unable to find comment for method " + method.getName() + " in " + cls.getCanonicalName());
             }
             ApiMethodDoc apiMethodDoc = new ApiMethodDoc();
             apiMethodDoc.setDownload(docJavaMethod.isDownload());
