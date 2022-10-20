@@ -913,6 +913,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                         .setQueryParam(queryParam)
                         .setId(paramList.size() + 1)
                         .setType("array")
+                        .setVersion(DocGlobalConstants.DEFAULT_VERSION)
                         .setValue(mockValue);
                     paramList.add(param);
                     if (requestBodyCounter > 0) {
@@ -923,8 +924,10 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                     //file upload
                     ApiParam param = ApiParam.of().setField(paramName)
                         .setType(DocGlobalConstants.PARAM_TYPE_FILE)
-                        .setId(paramList.size() + 1).setQueryParam(true)
-                        .setRequired(required).setVersion(DocGlobalConstants.DEFAULT_VERSION)
+                        .setId(paramList.size() + 1)
+                        .setQueryParam(true)
+                        .setRequired(required)
+                        .setVersion(DocGlobalConstants.DEFAULT_VERSION)
                         .setHasItems(true)
                         .setDesc(comment + "(array of file)");
                     paramList.add(param);
