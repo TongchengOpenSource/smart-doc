@@ -154,9 +154,6 @@ public interface IBaseDocBuildTemplate {
         JavaMethod javaMethod = docJavaMethod.getJavaMethod();
         Map<String, String> replacementMap = builder.getReplaceClassMap();
         Map<String, String> paramTagMap = docJavaMethod.getParamTagMap();
-        if(Objects.isNull(paramTagMap)) {
-            throw new RuntimeException(docJavaMethod.getJavaMethod().getName()+"方法错误");
-        }
         List<JavaParameter> parameterList = javaMethod.getParameters();
         if (parameterList.isEmpty()) {
             return new ArrayList<>(0);
