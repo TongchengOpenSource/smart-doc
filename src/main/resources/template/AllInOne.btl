@@ -67,8 +67,8 @@ ${param.field}|${param.type}|${param.required}|${lineBreaksToBr(param.desc)}|${p
 
 **Query-parameters:**
 
-Parameter | Type|Required|Description|Since
----|---|---|---|---
+|Parameter | Type|Required|Description|Since|
+|---|---|---|---|---|
 <%
 for(param in doc.queryParams){
 %>
@@ -79,12 +79,12 @@ ${param.field}|${param.type}|${param.required}|${lineBreaksToBr(param.desc)}|${p
 
 **Body-parameters:**
 
-Parameter | Type|Required|Description|Since
----|---|---|---|---
+|Parameter | Type|Required|Description|Since|
+|---|---|---|---|---|
 <%
 for(param in doc.requestParams){
 %>
-${param.field}|${param.type}|${param.required}||${lineBreaksToBr(param.desc)}|${param.version}
+|${param.field}|${param.type}|${param.required}||${lineBreaksToBr(param.desc)}|${param.version}
 <%}%>
 <%}%>
 
@@ -97,12 +97,12 @@ ${doc.requestUsage}
 <%if(isNotEmpty(doc.responseParams)){%>
 **Response-fields:**
 
-Field | Type|Description|Since
----|---|---|---
+|Field | Type|Description|Since|
+|---|---|---|---|
 <%
 for(param in doc.responseParams){
 %>
-${param.field}|${param.type}|${lineBreaksToBr(param.desc)}|${param.version}
+|${param.field}|${param.type}|${lineBreaksToBr(param.desc)}|${param.version}
 <%}%>
 <%}%>
 
@@ -122,8 +122,8 @@ ${doc.responseUsage}
 <% } else { %>
 # ${errorListTitle}
 <% } %>
-Error code |Description
----|---
+|Error code |Description|
+|---|---|
 <%
 for(error in errorCodeList){
 %>
@@ -148,12 +148,12 @@ for(dict in dictList){
 ## ${dict.title}
 <% } %>
 
-Code |Type|Description
----|---|---
+|Code |Type|Description|
+|---|---|---|
 <%
 for(dataDict in dict.dataDictList){
 %>
-${dataDict.value}|${dataDict.type}|${htmlEscape(dataDict.desc)}
+|${dataDict.value}|${dataDict.type}|${htmlEscape(dataDict.desc)}|
 <%}%>
 <%}%>
 <%}%>
