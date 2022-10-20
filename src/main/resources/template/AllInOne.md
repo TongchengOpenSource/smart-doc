@@ -2,12 +2,13 @@
 # ${projectName}
 <%}%>
 <%if(isNotEmpty(revisionLogList)){%>
-Version |  Update Time  | Status | Author |  Description
----|---|---|---|---
+
+| Version | Update Time | Status | Author | Description |
+|---------|-------------|--------|--------|-------------|
 <%
 for(revisionLog in revisionLogList){
 %>
-${revisionLog.version}|${revisionLog.revisionTime}|${revisionLog.status}|${revisionLog.author}|${revisionLog.remarks}
+|${revisionLog.version}|${revisionLog.revisionTime}|${revisionLog.status}|${revisionLog.author}|${revisionLog.remarks}|
 <%}%>
 
 <%}%>
@@ -47,16 +48,16 @@ for(doc in api.list){
 
 **Request-headers:**
 
-Header | Type|Required|Description|Since
----|---|---|---|----
+| Header | Type | Required | Description | Since |
+|--------|------|----------|-------------|-------|
 ${doc.headers}
 <%}%>
 <%if(isNotEmpty(doc.pathParams)){%>
 
 **Path-parameters:**
 
-Parameter | Type|Required|Description|Since
----|---|---|---|---
+| Parameter | Type | Required | Description | Since |
+|-----------|------|----------|-------------|-------|
 <%
 for(param in doc.pathParams){
 %>
@@ -67,8 +68,8 @@ ${param.field}|${param.type}|${param.required}|${lineBreaksToBr(param.desc)}|${p
 
 **Query-parameters:**
 
-|Parameter | Type|Required|Description|Since|
-|---|---|---|---|---|
+| Parameter | Type | Required | Description | Since |
+|-----------|------|----------|-------------|-------|
 <%
 for(param in doc.queryParams){
 %>
@@ -79,8 +80,8 @@ ${param.field}|${param.type}|${param.required}|${lineBreaksToBr(param.desc)}|${p
 
 **Body-parameters:**
 
-|Parameter | Type|Required|Description|Since|
-|---|---|---|---|---|
+| Parameter | Type | Required | Description | Since |
+|-----------|------|----------|-------------|-------|
 <%
 for(param in doc.requestParams){
 %>
@@ -97,8 +98,8 @@ ${doc.requestUsage}
 <%if(isNotEmpty(doc.responseParams)){%>
 **Response-fields:**
 
-|Field | Type|Description|Since|
-|---|---|---|---|
+| Field | Type | Description | Since |
+|-------|------|-------------|-------|
 <%
 for(param in doc.responseParams){
 %>
@@ -122,12 +123,13 @@ ${doc.responseUsage}
 <% } else { %>
 # ${errorListTitle}
 <% } %>
-|Error code |Description|
-|---|---|
+
+| Error code | Description |
+|------------|-------------|
 <%
 for(error in errorCodeList){
 %>
-${error.value}|${htmlEscape(error.desc)}
+|${error.value}|${htmlEscape(error.desc)}|
 <%}%>
 <%}%>
 
@@ -148,8 +150,8 @@ for(dict in dictList){
 ## ${dict.title}
 <% } %>
 
-|Code |Type|Description|
-|---|---|---|
+| Code | Type | Description |
+|------|------|-------------|
 <%
 for(dataDict in dict.dataDictList){
 %>

@@ -126,14 +126,12 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
             headers = new ArrayList<>(0);
         }
         for (ApiReqParam header : headers) {
-            if (isAdoc) {
-                builder.append("|");
-            }
-            builder.append(header.getName()).append("|")
+            builder.append("|")
+                .append(header.getName()).append("|")
                 .append(header.getType()).append("|")
                 .append(header.isRequired()).append("|")
                 .append(header.getDesc()).append("|")
-                .append(header.getSince()).append("\n");
+                .append(header.getSince()).append("|");
         }
         return builder.toString();
     }
@@ -325,17 +323,17 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
             if (Objects.nonNull(method.getTagByName(IGNORE))) {
                 continue;
             }
-            docJavaMethods.add(convertToDocJavaMethod(apiConfig,projectBuilder,method,null));
+            docJavaMethods.add(convertToDocJavaMethod(apiConfig, projectBuilder, method, null));
         }
         // add parent class methods
-        docJavaMethods.addAll(getParenClassMethods(cls));
+        docJavaMethods.addAll(getParenClassMethods(apiConfig, projectBuilder, cls));
         List<JavaType> implClasses = cls.getImplements();
         for (JavaType type : implClasses) {
             JavaClass javaClass = (JavaClass) type;
             Map<String, JavaType> actualTypesMap = JavaClassUtil.getActualTypesMap(javaClass);
             for (JavaMethod method : javaClass.getMethods()) {
                 if (method.isDefault()) {
-                    docJavaMethods.add(convertToDocJavaMethod(apiConfig,projectBuilder,method,actualTypesMap));
+                    docJavaMethods.add(convertToDocJavaMethod(apiConfig, projectBuilder, method, actualTypesMap));
                 }
             }
         }
@@ -353,10 +351,6 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
             if (Objects.isNull(requestMapping.getShortUrl())) {
                 continue;
             }
-            if (StringUtil.isEmpty(method.getComment()) && apiConfig.isStrict()) {
-                throw new RuntimeException("Unable to find comment for method " + method.getName() + " in " + cls.getCanonicalName());
-            }
-
             ApiMethodDoc apiMethodDoc = new ApiMethodDoc();
             apiMethodDoc.setDownload(docJavaMethod.isDownload());
             apiMethodDoc.setPage(docJavaMethod.getPage());
@@ -1046,10 +1040,26 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
         return false;
     }
 
-    default DocJavaMethod convertToDocJavaMethod(ApiConfig apiConfig,ProjectDocConfigBuilder projectBuilder,
-                                                 JavaMethod method,Map<String, JavaType> actualTypesMap) {
+    default List<DocJavaMethod> getParenClassMethods(ApiConfig apiConfig, ProjectDocConfigBuilder projectBuilder, JavaClass cls) {
+        List<DocJavaMethod> docJavaMethods = new ArrayList<>();
+        JavaClass parentClass = cls.getSuperJavaClass();
+        if (Objects.nonNull(parentClass) && !"Object".equals(parentClass.getSimpleName())) {
+            Map<String, JavaType> actualTypesMap = JavaClassUtil.getActualTypesMap(parentClass);
+            List<JavaMethod> parentMethodList = parentClass.getMethods();
+            for (JavaMethod method : parentMethodList) {
+                docJavaMethods.add(convertToDocJavaMethod(apiConfig, projectBuilder, method, actualTypesMap));
+            }
+        }
+        return docJavaMethods;
+    }
+
+    default DocJavaMethod convertToDocJavaMethod(ApiConfig apiConfig, ProjectDocConfigBuilder projectBuilder,
+        JavaMethod method, Map<String, JavaType> actualTypesMap) {
         JavaClass cls = method.getDeclaringClass();
         String clzName = cls.getCanonicalName();
+        if (StringUtil.isEmpty(method.getComment()) && apiConfig.isStrict()) {
+            throw new RuntimeException("Unable to find comment for method " + method.getName() + " in " + cls.getCanonicalName());
+        }
         String classAuthor = JavaClassUtil.getClassTagsValue(cls, DocTags.AUTHOR, Boolean.TRUE);
         DocJavaMethod docJavaMethod = DocJavaMethod.builder().setJavaMethod(method).setActualTypesMap(actualTypesMap);
         if (Objects.nonNull(method.getTagByName(DocTags.DOWNLOAD))) {

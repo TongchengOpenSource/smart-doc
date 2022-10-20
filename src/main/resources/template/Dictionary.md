@@ -5,8 +5,8 @@ for(dict in dictList){
 %>
 ## ${dict.title}
 
-|Code |Type|Description|
-|---|---|---|
+| Code | Type | Description |
+|------|------|-------------|
 <%
 for(dataDict in dict.dataDictList){
 %>

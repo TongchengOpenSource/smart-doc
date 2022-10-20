@@ -1,8 +1,8 @@
 
 # Error code list
 
-|Error code |Description|
-|---|---|
+| Error code | Description |
+|------------|-------------|
 <%
 for(error in list){
 %>

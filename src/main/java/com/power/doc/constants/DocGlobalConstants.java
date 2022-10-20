@@ -41,19 +41,19 @@ public interface DocGlobalConstants {
 
     String DOC_LANGUAGE = "smart-doc_language";
 
-    String API_DOC_MD_TPL = "ApiDoc.btl";
+    String API_DOC_MD_TPL = "ApiDoc.md";
 
     String API_DOC_ADOC_TPL = "ApiDoc.adoc";
 
-    String ALL_IN_ONE_MD_TPL = "AllInOne.btl";
+    String ALL_IN_ONE_MD_TPL = "AllInOne.md";
 
     String ALL_IN_ONE_ADOC_TPL = "AllInOne.adoc";
 
     String ALL_IN_ONE_HTML_TPL = "AllInOne.html";
 
-    String HTML_API_DOC_TPL = "HtmlApiDoc.btl";
+    String HTML_API_DOC_TPL = "HtmlApiDoc.html";
 
-    String ERROR_CODE_LIST_MD_TPL = "ErrorCodeList.btl";
+    String ERROR_CODE_LIST_MD_TPL = "ErrorCodeList.md";
 
     String ERROR_CODE_LIST_ADOC_TPL = "ErrorCodeList.adoc";
 
@@ -63,11 +63,11 @@ public interface DocGlobalConstants {
 
     String DICT_LIST_MD = "Dictionary.md";
 
-    String DICT_LIST_MD_TPL = "Dictionary.btl";
+    String DICT_LIST_MD_TPL = "Dictionary.md";
 
     String DICT_LIST_ADOC = "Dictionary.adoc";
 
-    String DICT_LIST_ADOC_TPL = "Dictionary.btl";
+    String DICT_LIST_ADOC_TPL = "Dictionary.md";
 
     String SEARCH_ALL_JS_TPL = "js/search_all.js.btl";
 
