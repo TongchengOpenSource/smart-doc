@@ -131,7 +131,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                 .append(header.getType()).append("|")
                 .append(header.isRequired()).append("|")
                 .append(header.getDesc()).append("|")
-                .append(header.getSince()).append("|");
+                .append(header.getSince()).append("|\n");
         }
         return builder.toString();
     }

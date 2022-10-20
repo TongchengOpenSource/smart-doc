@@ -85,7 +85,7 @@ ${param.field}|${param.type}|${param.required}|${lineBreaksToBr(param.desc)}|${p
 <%
 for(param in doc.requestParams){
 %>
-|${param.field}|${param.type}|${param.required}||${lineBreaksToBr(param.desc)}|${param.version}
+|${param.field}|${param.type}|${param.required}|${lineBreaksToBr(param.desc)}|${param.version}|
 <%}%>
 <%}%>
 
