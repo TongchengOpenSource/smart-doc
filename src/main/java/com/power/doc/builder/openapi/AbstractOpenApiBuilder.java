@@ -84,7 +84,6 @@ public abstract class AbstractOpenApiBuilder {
     abstract Map<String, Object> buildResponsesBody(ApiConfig apiConfig, ApiMethodDoc apiMethodDoc);
 
     protected static final Map<String, String> STRING_COMPONENT = new HashMap<>();
-    protected static final List<String> SCHEMES = Arrays.asList("https", "http");
 
     static {
         STRING_COMPONENT.put("type", "string");
@@ -318,39 +317,14 @@ public abstract class AbstractOpenApiBuilder {
      *
      * @param apiDocs List of ApiDoc
      */
-    public static Map<String, Object> buildComponentsSchema(List<ApiDoc> apiDocs) {
-        Map<String, Object> schemas = new HashMap<>(4);
-        Map<String, Object> component = new HashMap<>();
-        component.put("string", STRING_COMPONENT);
-        apiDocs.forEach(
-            a -> {
-                List<ApiMethodDoc> apiMethodDocs = a.getList();
-                apiMethodDocs.forEach(
-                    method -> {
-                        //request components
-                        String requestSchema = OpenApiSchemaUtil.getClassNameFromParams(method.getRequestParams());
-                        List<ApiParam> requestParams = method.getRequestParams();
-                        Map<String, Object> prop = buildProperties(requestParams, component);
-                        component.put(requestSchema, prop);
-                        //response components
-                        List<ApiParam> responseParams = method.getResponseParams();
-                        String schemaName = OpenApiSchemaUtil.getClassNameFromParams(method.getResponseParams());
-                        component.put(schemaName, buildProperties(responseParams, component));
-                    }
-                );
-            }
-        );
-        component.remove(OpenApiSchemaUtil.NO_BODY_PARAM);
-        schemas.put("schemas", component);
-        return schemas;
-    }
+    abstract public  Map<String, Object> buildComponentsSchema(List<ApiDoc> apiDocs);
 
     /**
      * component schema properties
      *
      * @param apiParam list of ApiParam
      */
-    public static Map<String, Object> buildProperties(List<ApiParam> apiParam, Map<String, Object> component) {
+    public static Map<String, Object> buildProperties(List<ApiParam> apiParam, Map<String, Object> component,String commpentKey) {
         Map<String, Object> properties = new HashMap<>();
         Map<String, Object> propertiesData = new LinkedHashMap<>();
         List<String> requiredList = new ArrayList<>();
@@ -367,7 +341,7 @@ public abstract class AbstractOpenApiBuilder {
                     continue;
                 }
                 String field = param.getField();
-                propertiesData.put(field, buildPropertiesData(param, component, DocGlobalConstants.OPENAPI_3_COMPONENT_KRY));
+                propertiesData.put(field, buildPropertiesData(param, component, commpentKey));
             }
             if (!propertiesData.isEmpty()) {
                 properties.put("properties", propertiesData);
@@ -411,7 +385,7 @@ public abstract class AbstractOpenApiBuilder {
                         propertiesData.put("type", "object");
                         propertiesData.put("description", apiParam.getDesc() + "(object)");
                     } else {
-                        component.put(childSchemaName, buildProperties(apiParam.getChildren(), component));
+                        component.put(childSchemaName, buildProperties(apiParam.getChildren(), component,componentKey));
                         arrayRef.put("$ref", componentKey + childSchemaName);
                         propertiesData.put("items", arrayRef);
                     }
@@ -432,7 +406,7 @@ public abstract class AbstractOpenApiBuilder {
                         propertiesData.put("type", "object");
                         propertiesData.put("description", apiParam.getDesc() + "(object)");
                     } else {
-                        component.put(childSchemaName, buildProperties(apiParam.getChildren(), component));
+                        component.put(childSchemaName, buildProperties(apiParam.getChildren(), component,componentKey));
                         propertiesData.put("$ref", componentKey + childSchemaName);
                     }
                 }

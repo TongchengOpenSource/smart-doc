@@ -3,6 +3,7 @@ package com.power.doc;
 import com.power.common.util.DateTimeUtil;
 import com.power.doc.builder.HtmlApiDocBuilder;
 import com.power.doc.builder.openapi.OpenApiBuilder;
+import com.power.doc.builder.openapi.SwaggerBuilder;
 import com.power.doc.enums.OrderEnum;
 import com.power.doc.model.ApiConfig;
 import com.power.doc.model.ApiDataDictionary;
@@ -50,7 +51,7 @@ public class ApiDocTest {
             //SourcePath.path().setPath("F:\\Personal\\project\\smart\\src\\main\\java")
             //SourcePath.path().setDesc("加载项目外代码").setPath("E:\\ApplicationPower\\ApplicationPower\\Common-util\\src\\main\\java")
         );
-        config.setPackageFilters("com.power.doc.controller.ValidatorTestController");
+        config.setPackageFilters("com.power.doc.controller.UserController");
 //        config.setPackageFilters("com.power.doc.dubbo.*");
 
 //        config.setDataDictionaries(
@@ -99,8 +100,8 @@ public class ApiDocTest {
         long start = System.currentTimeMillis();
 
         //TornaBuilder.buildApiDoc(config);
-        OpenApiBuilder.buildOpenApi(config);
-        HtmlApiDocBuilder.buildApiDoc(config);
+        SwaggerBuilder.buildOpenApi(config);
+        //HtmlApiDocBuilder.buildApiDoc(config);
         //RpcTornaBuilder.buildApiDoc(config);
         //TornaBuilder.buildApiDoc(config);
         //RpcTornaBuilder.buildApiDoc(config);

@@ -50,6 +50,7 @@ import com.power.doc.utils.OpenApiSchemaUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 
 import static com.power.doc.constants.DocGlobalConstants.ARRAY;
+import static com.power.doc.constants.DocGlobalConstants.OPENAPI_3_COMPONENT_KRY;
 
 /**
  * @author xingzi
@@ -257,6 +258,34 @@ public class OpenApiBuilder extends AbstractOpenApiBuilder {
         parameters.put("schema", buildParametersSchema(apiParam));
         return parameters;
     }
+
+    @Override
+    public Map<String, Object> buildComponentsSchema(List<ApiDoc> apiDocs) {
+            Map<String, Object> schemas = new HashMap<>(4);
+            Map<String, Object> component = new HashMap<>();
+            component.put("string", STRING_COMPONENT);
+            apiDocs.forEach(
+                    a -> {
+                        List<ApiMethodDoc> apiMethodDocs = a.getList();
+                        apiMethodDocs.forEach(
+                                method -> {
+                                    //request components
+                                    String requestSchema = OpenApiSchemaUtil.getClassNameFromParams(method.getRequestParams());
+                                    List<ApiParam> requestParams = method.getRequestParams();
+                                    Map<String, Object> prop = buildProperties(requestParams, component,OPENAPI_3_COMPONENT_KRY);
+                                    component.put(requestSchema, prop);
+                                    //response components
+                                    List<ApiParam> responseParams = method.getResponseParams();
+                                    String schemaName = OpenApiSchemaUtil.getClassNameFromParams(method.getResponseParams());
+                                    component.put(schemaName, buildProperties(responseParams, component,OPENAPI_3_COMPONENT_KRY));
+                                }
+                        );
+                    }
+            );
+            component.remove(OpenApiSchemaUtil.NO_BODY_PARAM);
+            schemas.put("schemas", component);
+            return schemas;
+        }
 
 
 }

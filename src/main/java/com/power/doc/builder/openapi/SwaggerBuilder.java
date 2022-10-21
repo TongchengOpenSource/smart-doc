@@ -48,8 +48,9 @@ import com.power.doc.template.IDocBuildTemplate;
 import com.power.doc.utils.JsonUtil;
 import com.power.doc.utils.OpenApiSchemaUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
+import org.apache.commons.lang3.StringUtils;
 
-import static com.power.doc.constants.DocGlobalConstants.ARRAY;
+import static com.power.doc.constants.DocGlobalConstants.*;
 
 
 /**
@@ -92,10 +93,9 @@ public class SwaggerBuilder extends AbstractOpenApiBuilder {
         json.put("swagger", "2.0");
         json.put("info", buildInfo(config));
         json.put("host", config.getServerUrl() == null ? "" : config.getServerUrl());
-        json.put("basePath", config.getPathPrefix());
+        json.put("basePath", StringUtils.isNotBlank(config.getPathPrefix())?config.getPathPrefix():"/");
         Set<OpenApiTag> tags = new HashSet<>();
         json.put("tags", tags);
-        json.put("scheme", SCHEMES);
         json.put("paths", buildPaths(config, apiDocList, tags));
         json.put("definitions", buildComponentsSchema(apiDocList));
 
@@ -157,7 +157,7 @@ public class SwaggerBuilder extends AbstractOpenApiBuilder {
         if (CollectionUtil.isNotEmpty(apiMethodDoc.getRequestParams())) {
             Map<String, Object> parameter = new HashMap<>();
             parameter.put("in", "body");
-            parameter.putAll(buildContentBody(apiConfig, apiMethodDoc, false, DocGlobalConstants.OPENAPI_2_COMPONENT_KRY));
+            parameter.putAll(buildContentBody(apiConfig, apiMethodDoc, false, OPENAPI_2_COMPONENT_KRY));
             parameters.add(parameter);
         }
         request.put("parameters", parameters);
@@ -178,7 +178,7 @@ public class SwaggerBuilder extends AbstractOpenApiBuilder {
         Map<String, Object> responseBody = new HashMap<>(10);
         responseBody.put("description", "OK");
         if (CollectionUtil.isNotEmpty(apiMethodDoc.getResponseParams())) {
-            responseBody.putAll(buildContentBody(apiConfig, apiMethodDoc, true, DocGlobalConstants.OPENAPI_2_COMPONENT_KRY));
+            responseBody.putAll(buildContentBody(apiConfig, apiMethodDoc, true, OPENAPI_2_COMPONENT_KRY));
         }
         return responseBody;
     }
@@ -251,4 +251,30 @@ public class SwaggerBuilder extends AbstractOpenApiBuilder {
         parameters.put("schema", buildParametersSchema(apiParam));
         return parameters;
     }
+
+    @Override
+    public Map<String, Object> buildComponentsSchema(List<ApiDoc> apiDocs) {
+            Map<String, Object> component = new HashMap<>();
+            component.put("string", STRING_COMPONENT);
+            apiDocs.forEach(
+                    a -> {
+                        List<ApiMethodDoc> apiMethodDocs = a.getList();
+                        apiMethodDocs.forEach(
+                                method -> {
+                                    //request components
+                                    String requestSchema = OpenApiSchemaUtil.getClassNameFromParams(method.getRequestParams());
+                                    List<ApiParam> requestParams = method.getRequestParams();
+                                    Map<String, Object> prop = buildProperties(requestParams, component,OPENAPI_2_COMPONENT_KRY);
+                                    component.put(requestSchema, prop);
+                                    //response components
+                                    List<ApiParam> responseParams = method.getResponseParams();
+                                    String schemaName = OpenApiSchemaUtil.getClassNameFromParams(method.getResponseParams());
+                                    component.put(schemaName, buildProperties(responseParams, component,OPENAPI_2_COMPONENT_KRY));
+                                }
+                        );
+                    }
+            );
+            component.remove(OpenApiSchemaUtil.NO_BODY_PARAM);
+            return component;
+        }
 }
