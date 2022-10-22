@@ -1,5 +1,13 @@
 ## smart-doc版本
 
+### 版本号：2.6.1
+
+- 更新日期: 2022-10-23
+- 更新内容：
+  1. 修复枚举渲染和rpc文档字段类型，[#377](https://github.com/smart-doc-group/smart-doc/issues/377)
+  2. markdown文档字段描述填充错误，[#378](https://github.com/smart-doc-group/smart-doc-maven-plugin/issues/378)
+  3. 格式化markdown模板错误
+
 ### 版本号：2.6.0
 
 - 更新日期: 2022-10-15
