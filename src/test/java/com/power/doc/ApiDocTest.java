@@ -4,6 +4,7 @@ import com.power.common.util.DateTimeUtil;
 import com.power.doc.builder.HtmlApiDocBuilder;
 import com.power.doc.builder.openapi.OpenApiBuilder;
 import com.power.doc.builder.openapi.SwaggerBuilder;
+import com.power.doc.builder.rpc.RpcMarkdownBuilder;
 import com.power.doc.enums.OrderEnum;
 import com.power.doc.model.ApiConfig;
 import com.power.doc.model.ApiDataDictionary;
@@ -35,6 +36,7 @@ public class ApiDocTest {
         //config.setAppToken("7b0935531d1144e58a86d7b4f2ad23c6");
 
         config.setDebugEnvName("测试环境");
+        config.setInlineEnum(true);
         config.setStyle("randomLight");
         config.setCreateDebugPage(true);
 //        config.setAuthor("test");
@@ -51,7 +53,7 @@ public class ApiDocTest {
             //SourcePath.path().setPath("F:\\Personal\\project\\smart\\src\\main\\java")
             //SourcePath.path().setDesc("加载项目外代码").setPath("E:\\ApplicationPower\\ApplicationPower\\Common-util\\src\\main\\java")
         );
-        config.setPackageFilters("com.power.doc.controller.UserController");
+        config.setPackageFilters("com.power.doc.dubbo.*");
 //        config.setPackageFilters("com.power.doc.dubbo.*");
 
 //        config.setDataDictionaries(
@@ -100,7 +102,8 @@ public class ApiDocTest {
         long start = System.currentTimeMillis();
 
         //TornaBuilder.buildApiDoc(config);
-        SwaggerBuilder.buildOpenApi(config);
+//        SwaggerBuilder.buildOpenApi(config);
+        RpcMarkdownBuilder.buildApiDoc(config);
         //HtmlApiDocBuilder.buildApiDoc(config);
         //RpcTornaBuilder.buildApiDoc(config);
         //TornaBuilder.buildApiDoc(config);

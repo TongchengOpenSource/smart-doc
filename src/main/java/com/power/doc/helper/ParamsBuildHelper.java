@@ -604,7 +604,7 @@ public class ParamsBuildHelper extends BaseHelper {
             return comment;
         }
         String enumComments = javaClass.getComment();
-        if (projectBuilder.getApiConfig().getInlineEnum()) {
+        if (Boolean.TRUE.equals(projectBuilder.getApiConfig().getInlineEnum())) {
             ApiDataDictionary dataDictionary = projectBuilder.getApiConfig().getDataDictionary(javaClass.getCanonicalName());
             if (Objects.isNull(dataDictionary)) {
                 comment = comment + "<br/>[Enum values:<br/>" + JavaClassUtil.getEnumParams(javaClass) + "]";
