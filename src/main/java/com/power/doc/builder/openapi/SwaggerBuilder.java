@@ -92,7 +92,7 @@ public class SwaggerBuilder extends AbstractOpenApiBuilder {
         Map<String, Object> json = new HashMap<>(8);
         json.put("swagger", "2.0");
         json.put("info", buildInfo(config));
-        json.put("host", config.getServerUrl() == null ? "" : config.getServerUrl());
+        json.put("host", config.getServerUrl() == null ? "127.0.0.1" : config.getServerUrl());
         json.put("basePath", StringUtils.isNotBlank(config.getPathPrefix())?config.getPathPrefix():"/");
         Set<OpenApiTag> tags = new HashSet<>();
         json.put("tags", tags);
@@ -245,10 +245,10 @@ public class SwaggerBuilder extends AbstractOpenApiBuilder {
             parameters.put("name", apiParam.getField());
             parameters.put("description", apiParam.getDesc());
             parameters.put("required", apiParam.isRequired());
-            parameters.put("example", StringUtil.removeQuotes(apiParam.getValue()));
+//            parameters.put("example", StringUtil.removeQuotes(apiParam.getValue()));
         }
         parameters.put("type", apiParam.getType());
-        parameters.put("schema", buildParametersSchema(apiParam));
+        //parameters.put("schema", buildParametersSchema(apiParam));
         return parameters;
     }
 

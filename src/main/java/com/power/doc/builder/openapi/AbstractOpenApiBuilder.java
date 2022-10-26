@@ -49,7 +49,7 @@ import com.power.doc.utils.DocUtil;
 import com.power.doc.utils.OpenApiSchemaUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 
-import static com.power.doc.constants.DocGlobalConstants.ARRAY;
+import static com.power.doc.constants.DocGlobalConstants.*;
 
 
 /**
@@ -160,6 +160,9 @@ public abstract class AbstractOpenApiBuilder {
      */
     public static Map<String, Object> buildContentBody(ApiConfig apiConfig, ApiMethodDoc apiMethodDoc, boolean isRep, String componentKey) {
         Map<String, Object> content = new HashMap<>(8);
+        if(OPENAPI_2_COMPONENT_KRY.equals(componentKey) && !isRep){
+            content.put("name", apiMethodDoc.getName());
+        }
         if (Objects.nonNull(apiMethodDoc.getReturnSchema()) && isRep) {
             content.put("schema", apiMethodDoc.getReturnSchema());
         } else if (!isRep && Objects.nonNull(apiMethodDoc.getRequestSchema())) {
@@ -167,7 +170,8 @@ public abstract class AbstractOpenApiBuilder {
         } else {
             content.put("schema", buildBodySchema(apiMethodDoc, isRep, componentKey));
         }
-        if ((!isRep && apiConfig.isRequestExample()) || (isRep && apiConfig.isResponseExample())) {
+        if (OPENAPI_3_COMPONENT_KRY.equals (componentKey) &&
+                (!isRep && apiConfig.isRequestExample() || (isRep && apiConfig.isResponseExample()))) {
             content.put("examples", buildBodyExample(apiMethodDoc, isRep));
         }
         return content;
@@ -376,8 +380,8 @@ public abstract class AbstractOpenApiBuilder {
             propertiesData.put("description", apiParam.getDesc() + "(map data)");
         }
         if ("array".equals(apiParam.getType())) {
+            propertiesData.put("type", "array");
             if (CollectionUtil.isNotEmpty(apiParam.getChildren())) {
-                propertiesData.put("type", "array");
                 if (!apiParam.isSelfReferenceLoop()) {
                     Map<String, Object> arrayRef = new HashMap<>(4);
                     String childSchemaName = OpenApiSchemaUtil.getClassNameFromParams(apiParam.getChildren());
@@ -391,6 +395,14 @@ public abstract class AbstractOpenApiBuilder {
                     }
                 }
             }
+            //基础数据类型
+            else{
+                Map<String, Object> arrayRef = new HashMap<>(4);
+                arrayRef.put("type", "string");
+                propertiesData.put("items", arrayRef);
+            }
+
+
         }
         if ("file".equals(apiParam.getType())) {
             propertiesData.put("type", "string");
