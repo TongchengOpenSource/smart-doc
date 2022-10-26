@@ -332,10 +332,10 @@ public class DocUtil {
         String[] strArr = str.split("/");
         for (int i = 0; i < strArr.length; i++) {
             String pathParam = strArr[i];
-            if (pathParam.startsWith("http:")||pathParam.startsWith("https")) {
+            if (pathParam.startsWith("http:") || pathParam.startsWith("https:")) {
                 continue;
             }
-            if (pathParam.contains(":")) {
+            if (pathParam.startsWith("{") && pathParam.contains(":")) {
                 strArr[i] = pathParam.substring(0, pathParam.indexOf(":")) + "}";
             }
         }

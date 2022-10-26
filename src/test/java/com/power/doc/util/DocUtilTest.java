@@ -50,4 +50,11 @@ public class DocUtilTest {
 
         System.out.println(DocUtil.isMatch(pattern, controllerName));
     }
+
+    @Test
+    public void  testFormatPathUrl() {
+        System.setProperty(DocGlobalConstants.DOC_LANGUAGE, DocLanguage.CHINESE.getCode());
+        String url = "http://localhost:8080/detail/{id:[a-zA-Z0-9]{3}}/{name:[a-zA-Z0-9]{3}}";
+        System.out.println(DocUtil.formatPathUrl(url));
+    }
 }
