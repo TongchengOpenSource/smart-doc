@@ -325,7 +325,7 @@ public class JavaClassUtil {
             //string comment
             String exception = javaField.getInitializationExpression();
             stringBuilder.append(javaField.getName());
-            stringBuilder.append("(").append(exception).append(")").append("</br>");
+            stringBuilder.append("(").append(exception).append(")").append("<br/>");
         }
         return stringBuilder.toString();
     }
