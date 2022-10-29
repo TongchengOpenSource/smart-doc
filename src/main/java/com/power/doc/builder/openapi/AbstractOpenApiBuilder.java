@@ -286,6 +286,7 @@ public abstract class AbstractOpenApiBuilder {
                 }
             }
         } else {
+            schema.put("type", "integer");
             schema.put("format", "int16".equals(apiParam.getType()) ? "int32" : apiParam.getType());
         }
         return schema;
@@ -370,6 +371,7 @@ public abstract class AbstractOpenApiBuilder {
         String openApiType = DocUtil.javaTypeToOpenApiTypeConvert(apiParam.getType());
         //array object file map
         propertiesData.put("description", apiParam.getDesc());
+        propertiesData.put("example",StringUtil.removeDoubleQuotes(apiParam.getValue()));
 
         if (!"object".equals(openApiType)) {
             propertiesData.put("type", openApiType);

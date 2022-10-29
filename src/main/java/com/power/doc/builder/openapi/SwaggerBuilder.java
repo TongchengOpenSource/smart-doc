@@ -45,6 +45,7 @@ import com.power.doc.model.ApiParam;
 import com.power.doc.model.ApiReqParam;
 import com.power.doc.model.openapi.OpenApiTag;
 import com.power.doc.template.IDocBuildTemplate;
+import com.power.doc.utils.DocUtil;
 import com.power.doc.utils.JsonUtil;
 import com.power.doc.utils.OpenApiSchemaUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
@@ -191,7 +192,8 @@ public class SwaggerBuilder extends AbstractOpenApiBuilder {
             // Handling path parameters
             for (ApiParam apiParam : apiMethodDoc.getPathParams()) {
                 parameters = getStringParams(apiParam, false);
-                parameters.put("type", apiParam.getType());
+                parameters.put("type",  DocUtil.javaTypeToOpenApiTypeConvert(apiParam.getType()));
+
                 parameters.put("in", "path");
                 List<ApiParam> children = apiParam.getChildren();
                 if (CollectionUtil.isEmpty(children)) {
@@ -206,7 +208,7 @@ public class SwaggerBuilder extends AbstractOpenApiBuilder {
                     parametersList.add(parameters);
                 } else {
                     parameters = getStringParams(apiParam, false);
-                    parameters.put("type", apiParam.getType());
+                    parameters.put("type", DocUtil.javaTypeToOpenApiTypeConvert(apiParam.getType()));
                     List<ApiParam> children = apiParam.getChildren();
                     if (CollectionUtil.isEmpty(children)) {
                         parametersList.add(parameters);
@@ -218,7 +220,7 @@ public class SwaggerBuilder extends AbstractOpenApiBuilder {
                 for (ApiReqParam header : apiMethodDoc.getRequestHeaders()) {
                     parameters = new HashMap<>(20);
                     parameters.put("name", header.getName());
-                    parameters.put("type", header.getType());
+                    parameters.put("type", DocUtil.javaTypeToOpenApiTypeConvert(header.getType()));
                     parameters.put("description", header.getDesc());
                     parameters.put("required", header.isRequired());
                     parameters.put("example", header.getValue());
@@ -245,10 +247,10 @@ public class SwaggerBuilder extends AbstractOpenApiBuilder {
             parameters.put("name", apiParam.getField());
             parameters.put("description", apiParam.getDesc());
             parameters.put("required", apiParam.isRequired());
-//            parameters.put("example", StringUtil.removeQuotes(apiParam.getValue()));
+            parameters.put("example", StringUtil.removeQuotes(apiParam.getValue()));
         }
         parameters.put("type", apiParam.getType());
-        //parameters.put("schema", buildParametersSchema(apiParam));
+//        parameters.put("schema", buildParametersSchema(apiParam));
         return parameters;
     }
 
