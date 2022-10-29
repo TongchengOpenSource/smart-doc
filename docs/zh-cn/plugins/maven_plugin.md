@@ -39,6 +39,10 @@
             <!--格式为：groupId:artifactId;参考如下-->
             <!--也可以支持正则式如：com.alibaba:.* -->
             <include>com.alibaba:fastjson</include>
+            <!-- 如果配置了includes的情况下， 使用了mybatis-plus的分页需要include所使用的源码包 -->
+            <include>com.baomidou:mybatis-plus-extension</include>
+            <!-- 如果配置了includes的情况下， 使用了jpa的分页需要include所使用的源码包 -->
+            <include>org.springframework.data:spring-data-commons</include>
         </includes>
     </configuration>
     <executions>
