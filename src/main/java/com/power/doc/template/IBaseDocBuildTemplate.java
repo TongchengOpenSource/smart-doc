@@ -111,7 +111,7 @@ public interface IBaseDocBuildTemplate {
                     docJavaMethod.setReturnSchema(OpenApiSchemaUtil.arrayTypeSchema(gicName));
                     return new ArrayList<>(0);
                 }
-                return ParamsBuildHelper.buildParams(gicName, "", 0, null, Boolean.TRUE,
+                 return ParamsBuildHelper.buildParams(gicName, "", 0, null, Boolean.TRUE,
                     new HashMap<>(), projectBuilder, null, 0, Boolean.FALSE, null);
             } else {
                 return new ArrayList<>(0);

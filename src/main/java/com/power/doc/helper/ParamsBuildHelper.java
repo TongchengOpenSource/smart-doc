@@ -117,7 +117,7 @@ public class ParamsBuildHelper extends BaseHelper {
         List<DocJavaField> fields = JavaClassUtil.getFields(cls, 0, new LinkedHashMap<>());
         if (JavaClassValidateUtil.isPrimitive(simpleName)) {
             String processedType = isShowJavaType ? simpleName : DocClassUtil.processTypeNameForParams(simpleName.toLowerCase());
-            paramList.addAll(primitiveReturnRespComment(processedType, atomicInteger));
+            paramList.addAll(primitiveReturnRespComment(processedType, atomicInteger,pid));
         } else if (JavaClassValidateUtil.isCollection(simpleName) || JavaClassValidateUtil.isArray(simpleName)) {
             if (!JavaClassValidateUtil.isCollection(globGicName[0])) {
                 String gicName = globGicName[0];
@@ -574,14 +574,15 @@ public class ParamsBuildHelper extends BaseHelper {
         ).collect(Collectors.joining(","));
     }
 
-    public static List<ApiParam> primitiveReturnRespComment(String typeName, AtomicInteger atomicInteger) {
+    public static List<ApiParam> primitiveReturnRespComment(String typeName, AtomicInteger atomicInteger,int pid) {
         String comments = "Return " + typeName + ".";
         ApiParam apiParam = ApiParam.of().setClassName(typeName)
-            .setId(atomicOrDefault(atomicInteger, 0))
-            .setField("-")
-            .setType(typeName)
-            .setDesc(comments)
-            .setVersion(DocGlobalConstants.DEFAULT_VERSION);
+                .setId(atomicOrDefault(atomicInteger, pid + 1))
+                .setField("-")
+                .setPid(pid)
+                .setType(typeName)
+                .setDesc(comments)
+                .setVersion(DocGlobalConstants.DEFAULT_VERSION);
 
         List<ApiParam> paramList = new ArrayList<>();
         paramList.add(apiParam);
