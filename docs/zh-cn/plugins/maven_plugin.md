@@ -36,11 +36,10 @@
         <!--includes配置用于配置加载外部依赖源码,配置后插件会按照配置项加载外部源代码而不是自动加载所有，因此使用时需要注意-->
         <!--smart-doc能自动分析依赖树加载所有依赖源码，原则上会影响文档构建效率，因此你可以使用includes来让插件加载你配置的组件-->
         <includes>
-            <!--格式为：groupId:artifactId;参考如下-->
-            <!--也可以支持正则式如：com.alibaba:.* -->
-            <include>com.alibaba:fastjson</include>
-            <!-- 如果配置了includes的情况下， 使用了mybatis-plus的分页需要include所使用的源码包 -->
+             <!-- 使用了mybatis-plus的Page分页需要include所使用的源码包 -->
             <include>com.baomidou:mybatis-plus-extension</include>
+            <!-- 使用了mybatis-plus的IPage分页需要include mybatis-plus-core-->
+            <include>com.baomidou:mybatis-plus-core</include>
             <!-- 如果配置了includes的情况下， 使用了jpa的分页需要include所使用的源码包 -->
             <include>org.springframework.data:spring-data-commons</include>
         </includes>
@@ -57,6 +56,15 @@
     </executions>
 </plugin>
 ```
+- `include`配置规则：`groupId:artifactId`，也可以采用正则`groupId:.*`。
+例如：
+```xml
+ <include>com.alibaba:fastjson</include>
+ <!--加载groupId为com.alibaba的所有依赖-->
+ <include>com.alibaba:.*</include>
+```
+- `exclude`的规则和`include`相同。
+
 使用插件后就不需要在项目的`maven dependencies`中添加`smart-doc`的依赖了，直接使用插件即可。如果需要保留原有单元测试，
 需要引用`smart-doc`的依赖。
 
