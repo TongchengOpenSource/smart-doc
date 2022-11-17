@@ -414,6 +414,9 @@ public class JavaClassUtil {
             List<Item> itemList = enumInformation.stream().map(i -> new Item(i.getName(), i.getType(), i.getValue(), i.getDesc()))
                     .collect(Collectors.toList());
             enumInfo.setItems(itemList);
+            if (StringUtils.isNotEmpty(dataDictionary.getTitle())) {
+                enumInfo.setName(dataDictionary.getTitle());
+            }
             return enumInfo;
         }
 
