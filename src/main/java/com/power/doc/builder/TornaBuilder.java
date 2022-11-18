@@ -39,6 +39,7 @@ import com.thoughtworks.qdox.JavaProjectBuilder;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import static com.power.doc.constants.TornaConstants.DEFAULT_GROUP_CODE;
 import static com.power.doc.utils.TornaUtil.buildApis;
 import static com.power.doc.utils.TornaUtil.buildErrorCode;
 
@@ -113,7 +114,7 @@ public class TornaBuilder {
         }
         tornaApi.setCommonErrorCodes(buildErrorCode(apiConfig, builder));
         // delete default group when only default group
-        tornaApi.setApis(groupApiList.size() == 1 ? groupApiList.get(0).getItems() : groupApiList);
+        tornaApi.setApis(groupApiList.size() == 1 && DEFAULT_GROUP_CODE.equals(groupApiList.get(0).getName()) ? groupApiList.get(0).getItems() : groupApiList);
         // Push to torna
         TornaUtil.pushToTorna(tornaApi, apiConfig, builder);
     }
