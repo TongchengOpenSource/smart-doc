@@ -621,6 +621,7 @@ public class DocUtil {
             case "period":
             case "java.time.zoneddatetime":
             case "java.time.offsetdatetime":
+            case "java.sql.timestamp":
             case "java.lang.character":
             case "character":
             case "org.bson.types.objectid":
