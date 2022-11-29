@@ -639,7 +639,8 @@ public class JavaClassUtil {
         for (JavaType javaType : anImplements) {
             String genericFullyQualifiedName = javaType.getGenericFullyQualifiedName();
             javaClassSet.add(genericFullyQualifiedName);
-            if (Objects.equals("javax.validation.groups.Default", genericFullyQualifiedName)) {
+            if (Objects.equals("javax.validation.groups.Default", genericFullyQualifiedName)
+                ||Objects.equals("jakarta.validation.groups.Default", genericFullyQualifiedName)) {
                 continue;
             }
             JavaClass implementJavaClass = builder.getClassByName(genericFullyQualifiedName);

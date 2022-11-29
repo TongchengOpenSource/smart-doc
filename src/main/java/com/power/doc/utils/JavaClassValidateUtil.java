@@ -258,6 +258,10 @@ public class JavaClassValidateUtil {
             case "javax.servlet.http.HttpServlet":
             case "javax.servlet.http.HttpSession":
             case "javax.servlet.http.HttpServletResponse":
+            case "jakarta.servlet.http.HttpServletRequest":
+            case "jakarta.servlet.http.HttpServlet":
+            case "jakarta.servlet.http.HttpSession":
+            case "jakarta.servlet.http.HttpServletResponse":
             case "org.springframework.web.context.request.WebRequest":
             case "org.springframework.web.reactive.function.server.ServerRequest":
             case "org.springframework.web.multipart.MultipartHttpServletRequest":
@@ -301,12 +305,14 @@ public class JavaClassValidateUtil {
             case "org.springframework.web.multipart.MultipartFile":
             case "org.springframework.web.multipart.MultipartFile[]":
             case "java.util.List<org.springframework.web.multipart.MultipartFile>":
-            case "org.springframework.web.multipart.commons.CommonsMultipartFile":
+            case "org.springframework.web.multipart.commons.CommonsMultipartFile": // spring 6 not supported
             case "org.springframework.web.multipart.commons.CommonsMultipartFile[]":
             case "java.util.List<org.springframework.web.multipart.commons.CommonsMultipartFile>":
             case "javax.servlet.http.Part":
             case "javax.servlet.http.Part[]":
-            case "java.util.List<javax.servlet.http.Part>":
+            case "jakarta.servlet.http.Part":
+            case "jakarta.servlet.http.Part[]":
+            case "java.util.List<jakarta.servlet.http.Part>":
             case "org.noear.solon.core.handle.UploadedFile":
             case "org.noear.solon.core.handle.DownloadedFile":
                 return true;
