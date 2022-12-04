@@ -16,7 +16,7 @@
   "serverUrl": "http://127.0.0.1", //服务器地址,非必须。导出postman建议设置成http://{{server}}方便直接在postman直接设置环境变量
   "serverEnv": "http://{{server}}",//导出postman时系统的公共url全局变量设置 @since 2.4.8,解决导出postman需要修改serverUrl问题
   "pathPrefix": "", //设置path前缀,非必须。如配置Servlet ContextPath 。@since 2.2.3
-  "isStrict": false, //是否开启严格模式
+  "isStrict": false, //是否开启严格模式,严格模式会检查代码注释，在2.6.3即以后的插件版本设置此项时检查到注释错误也会直接中断插件白嵌套的构建周期
   "allInOne": true,  //是否将文档合并到一个文件中，一般推荐为true
   "outPath": "D://md2", //指定文档的输出路径
   "coverOld": true,  //是否覆盖旧的文件，主要用于mardown文件覆盖
@@ -221,7 +221,8 @@
 * 类型：`Boolean`
 * 默认值: `false`
 
-是否开启严格模式。
+是否开启严格模式,严格模式会强制检查代码注释，在2.6.3即以后的插件版本设置此项时检查到注释错误也会直接中断插件白嵌套的构建周期。
+作为团队使用建议使用设置为true，提升对开发人员的注释要求，提升文档的完善度。
 ```json
 {
     "isStrict": true
