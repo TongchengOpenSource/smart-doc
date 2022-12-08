@@ -22,10 +22,6 @@
  */
 package com.power.doc.handler;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.StringUtil;
 import com.power.doc.builder.ProjectDocConfigBuilder;
@@ -39,6 +35,10 @@ import com.power.doc.utils.DocUtil;
 import com.power.doc.utils.JavaClassUtil;
 import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaMethod;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 import static com.power.doc.constants.DocTags.DEPRECATED;
 import static com.power.doc.constants.DocTags.IGNORE;
@@ -64,7 +64,7 @@ public class SpringMVCRequestMappingHandler implements IRequestMappingHandler {
         if (Objects.nonNull(method.getTagByName(IGNORE))) {
             return null;
         }
-        List<JavaAnnotation> annotations = method.getAnnotations();
+        List<JavaAnnotation> annotations = getAnnotations(method);
         String methodType = null;
         String shortUrl = null;
         String mediaType = null;
