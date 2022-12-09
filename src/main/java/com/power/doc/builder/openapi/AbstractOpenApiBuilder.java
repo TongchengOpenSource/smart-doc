@@ -23,14 +23,7 @@
 
 package com.power.doc.builder.openapi;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.StringUtil;
@@ -99,9 +92,18 @@ public abstract class AbstractOpenApiBuilder {
      */
     public Map<String, Object> buildPaths(ApiConfig apiConfig, List<ApiDoc> apiDocList, Set<OpenApiTag> tags) {
         Map<String, Object> pathMap = new HashMap<>(500);
+        //tag 去重
+        Set<String> tagNames = new HashSet<>();
         apiDocList.forEach(
             a -> {
-                tags.add(OpenApiTag.of(a.getDesc(), a.getDesc()));
+                if(!tagNames.contains(a.getDesc())){
+                    String desc = a.getDesc();
+                    if(desc == null || desc.length() == 0){
+                        desc = a.getName();
+                    }
+                    tags.add(OpenApiTag.of(desc, desc));
+                    tagNames.add(desc);
+                }
                 List<ApiMethodDoc> apiMethodDocs = a.getList();
                 apiMethodDocs.forEach(
                     method -> {
