@@ -22,8 +22,7 @@
  */
 package com.power.doc.handler;
 
-import java.util.Objects;
-
+import com.power.common.util.CollectionUtil;
 import com.power.common.util.StringUtil;
 import com.power.common.util.UrlUtil;
 import com.power.doc.builder.ProjectDocConfigBuilder;
@@ -33,7 +32,13 @@ import com.power.doc.model.annotation.FrameworkAnnotations;
 import com.power.doc.model.request.RequestMapping;
 import com.power.doc.utils.DocUrlUtil;
 import com.power.doc.utils.DocUtil;
+import com.thoughtworks.qdox.model.JavaAnnotation;
+import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaMethod;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * @author yu3.sun on 2022/10/1
@@ -59,6 +64,23 @@ public interface IRequestMappingHandler {
             return requestMapping;
         }
         return requestMapping;
+    }
+
+    default List<JavaAnnotation> getAnnotations(JavaMethod method) {
+        List<JavaAnnotation> annotations = new ArrayList<>();
+        // add interface method annotations
+        List<JavaClass> interfaces = method.getDeclaringClass().getInterfaces();
+        if (CollectionUtil.isNotEmpty(interfaces)) {
+            for (JavaClass interfaceClass : interfaces) {
+                JavaMethod interfaceMethod = interfaceClass.getMethod(method.getName(), method.getParameterTypes(), method.isVarArgs());
+                if (interfaceMethod != null) {
+                    // can be overridden by implement class
+                    annotations.addAll(interfaceMethod.getAnnotations());
+                }
+            }
+        }
+        annotations.addAll(method.getAnnotations());
+        return annotations;
     }
 
     RequestMapping handle(ProjectDocConfigBuilder projectBuilder, String controllerBaseUrl, JavaMethod method,
