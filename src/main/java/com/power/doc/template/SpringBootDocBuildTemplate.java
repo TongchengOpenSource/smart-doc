@@ -34,6 +34,7 @@ import java.util.stream.Stream;
 import com.power.doc.builder.ProjectDocConfigBuilder;
 import com.power.doc.constants.DocAnnotationConstants;
 import com.power.doc.constants.DocGlobalConstants;
+import com.power.doc.constants.DocTags;
 import com.power.doc.constants.Methods;
 import com.power.doc.constants.SpringMvcAnnotations;
 import com.power.doc.constants.SpringMvcRequestAnnotationsEnum;
@@ -51,6 +52,7 @@ import com.power.doc.model.annotation.RequestBodyAnnotation;
 import com.power.doc.model.annotation.RequestParamAnnotation;
 import com.power.doc.model.request.RequestMapping;
 import com.power.doc.utils.JavaClassValidateUtil;
+import com.thoughtworks.qdox.model.DocletTag;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaMethod;
 
@@ -192,6 +194,17 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IR
 
     @Override
     public boolean isEntryPoint(JavaClass javaClass, FrameworkAnnotations frameworkAnnotations) {
+        if (javaClass.isAnnotation() || javaClass.isEnum()) {
+            return false;
+        }
+        // use custom doc tag to support Feign.
+        List<DocletTag> docletTags = javaClass.getTags();
+        for (DocletTag docletTag : docletTags) {
+            String value = docletTag.getName();
+            if (DocTags.REST_API.equals(value)) {
+                return true;
+            }
+        }
         return false;
     }
 
