@@ -309,8 +309,12 @@ public class DocClassUtil {
     public static List<JavaAnnotation> getAnnotations(JavaClass cls) {
         JavaClass superClass = cls.getSuperJavaClass();
         List<JavaAnnotation> classAnnotations = new ArrayList<>();
-        if (Objects.nonNull(superClass)) {
-            classAnnotations.addAll(superClass.getAnnotations());
+        try {
+            if (Objects.nonNull(superClass)) {
+                classAnnotations.addAll(superClass.getAnnotations());
+            }
+        } catch (Throwable e) {
+            throw new RuntimeException("Could not obtain annotations for class: "+cls.getFullyQualifiedName()+"\n"+e);
         }
         classAnnotations.addAll(cls.getAnnotations());
         return classAnnotations;
