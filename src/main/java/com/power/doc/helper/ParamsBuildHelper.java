@@ -233,6 +233,9 @@ public class ParamsBuildHelper extends BaseHelper {
                             strRequired = true;
                         }
                     }
+                    if (JavaClassValidateUtil.isJSR303Required(simpleAnnotationName) && isResp) {
+                        strRequired = true;
+                    }
                 }
                 comment.append(JavaFieldUtil.getJsrComment(javaAnnotations));
                 String fieldValue = BaseHelper.getFieldValueFromMock(subTypeName, tagsMap, typeSimpleName);

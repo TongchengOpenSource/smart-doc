@@ -111,7 +111,7 @@ public interface IBaseDocBuildTemplate {
                     docJavaMethod.setReturnSchema(OpenApiSchemaUtil.arrayTypeSchema(gicName));
                     return new ArrayList<>(0);
                 }
-                 return ParamsBuildHelper.buildParams(gicName, "", 0, null, Boolean.TRUE,
+                 return ParamsBuildHelper.buildParams(gicName, "", 0, "true", Boolean.TRUE,
                     new HashMap<>(), projectBuilder, null, 0, Boolean.FALSE, null);
             } else {
                 return new ArrayList<>(0);
@@ -122,11 +122,11 @@ public interface IBaseDocBuildTemplate {
             if (keyValue.length == 0) {
                 return new ArrayList<>(0);
             }
-            return ParamsBuildHelper.buildParams(returnType, "", 0, null, Boolean.TRUE,
+            return ParamsBuildHelper.buildParams(returnType, "", 0, "true", Boolean.TRUE,
                 new HashMap<>(), projectBuilder, null, 0, Boolean.FALSE, null);
         }
         if (StringUtil.isNotEmpty(returnType)) {
-            return ParamsBuildHelper.buildParams(returnType, "", 0, null, Boolean.TRUE,
+            return ParamsBuildHelper.buildParams(returnType, "", 0, "true", Boolean.TRUE,
                 new HashMap<>(), projectBuilder, null, 0, Boolean.FALSE, null);
         }
         return new ArrayList<>(0);
