@@ -45,7 +45,13 @@ public class DocUrlUtil {
             trimBase = trimBase.replace("[", "").replace("]", "");
             for (int i = 0; i < size; i++) {
                 String trimUrl = Optional.ofNullable(StringUtil.trimBlank(urls.get(i))).orElse(StringUtil.EMPTY);
-                String url = baseServer + "/" + trimBase + "/" + trimUrl;
+                String url = baseServer;
+                if (StringUtil.isNotEmpty(trimBase)) {
+                    url = url + "/" + trimBase;
+                }
+                if (StringUtil.isNotEmpty(trimUrl)) {
+                    url = url + "/" + trimUrl;
+                }
                 sb.append(UrlUtil.simplifyUrl(url));
                 if (i < size - 1) {
                     sb.append(DocGlobalConstants.MULTI_URL_SEPARATOR);
