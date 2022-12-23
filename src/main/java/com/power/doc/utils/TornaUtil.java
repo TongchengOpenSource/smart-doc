@@ -318,19 +318,38 @@ public class TornaUtil {
         //response
         if (CollectionUtil.isNotEmpty(repList)) {
             ApiParam apiParam = repList.get(0);
-            boolean isReqList = repList.size() == 1 && ARRAY.equals(apiParam.getType());
-            String className = getType(apiParam.getClassName());
-            apiMethodDoc.setResponseArrayType(JavaClassValidateUtil.isPrimitive(className) ? className : OBJECT);
-            apiMethodDoc.setIsResponseArray(isReqList ? 1 : 0);
+            boolean isArray = repList.size() == 1 && ARRAY.equals(apiParam.getType());
+            if (isArray) {
+                apiMethodDoc.setIsResponseArray(1);
+                Map<String, Object> schemaMap = apiMethodDoc.getReturnSchema();
+                apiMethodDoc.setResponseArrayType(getArrayType(schemaMap));
+            }
         }
         //request
-        if (CollectionUtil.isNotEmpty(repList)) {
-            ApiParam apiParam = repList.get(0);
-            boolean isRepList = reqList.size() == 1 && ARRAY.equals(apiParam.getType());
-            String className = getType(apiParam.getClassName());
-            apiMethodDoc.setRequestArrayType(JavaClassValidateUtil.isPrimitive(className) ? className : OBJECT);
-            apiMethodDoc.setIsRequestArray(isRepList ? 1 : 0);
+        if (CollectionUtil.isNotEmpty(reqList)) {
+            ApiParam apiParam = reqList.get(0);
+            boolean isArray = reqList.size() == 1 && ARRAY.equals(apiParam.getType());
+            if (isArray) {
+                apiMethodDoc.setIsRequestArray(1);
+                Map<String, Object> schemaMap = apiMethodDoc.getRequestSchema();
+                apiMethodDoc.setRequestArrayType(getArrayType(schemaMap));
+            }
         }
+    }
+
+    private static String getArrayType(Map<String, Object> schemaMap) {
+        String arrayType = null;
+        if (Objects.nonNull(schemaMap) && Objects.equals(ARRAY, schemaMap.get("type"))) {
+            Map<String, Object> innerSchemeMap = (Map<String, Object>) schemaMap.get("items");
+            if (Objects.nonNull(innerSchemeMap)) {
+                String type =  (String) innerSchemeMap.get("type");
+                if (StringUtil.isNotEmpty(type)) {
+                    String className = getType(type);
+                    arrayType = JavaClassValidateUtil.isPrimitive(className) ? className : OBJECT;
+                }
+            }
+        }
+        return arrayType;
     }
 
     private static String getType(String typeName) {
