@@ -460,18 +460,10 @@ public class ParamsBuildHelper extends BaseHelper {
                             }
                         }
                     } else if (DocGlobalConstants.JAVA_OBJECT_FULLY.equals(subTypeName)) {
+                        if (StringUtil.isEmpty(param.getDesc())) {
+                            param.setDesc(DocGlobalConstants.ANY_OBJECT_MSG);
+                        }
                         commonHandleParam(paramList, param, isRequired, comment + appendComment, since, strRequired);
-                        fieldPid = Optional.ofNullable(atomicInteger).isPresent() ? param.getId() : paramList.size() + pid;
-                        ApiParam param1 = ApiParam.of()
-                            .setField(preBuilder.append("any object").toString())
-                            .setId(atomicOrDefault(atomicInteger, fieldPid + 1))
-                            .setPid(pid)
-                            .setClassName(className)
-                            .setMaxLength(maxLength)
-                            .setType("object")
-                            .setDesc(DocGlobalConstants.ANY_OBJECT_MSG)
-                            .setVersion(DocGlobalConstants.DEFAULT_VERSION);
-                        paramList.add(param1);
                     } else if (subTypeName.length() == 1) {
                         commonHandleParam(paramList, param, isRequired, comment + appendComment, since, strRequired);
                         fieldPid = Optional.ofNullable(atomicInteger).isPresent() ? param.getId() : paramList.size() + pid;
