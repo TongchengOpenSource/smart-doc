@@ -80,7 +80,7 @@ public class SwaggerBuilder extends AbstractOpenApiBuilder {
      * @param projectBuilder JavaDocBuilder of QDox
      */
     public static void buildOpenApi(ApiConfig config, JavaProjectBuilder projectBuilder) {
-        List<ApiDoc> apiDocList = INSTANCE.getOpenApiDocs(config,projectBuilder);
+        List<ApiDoc> apiDocList = INSTANCE.getOpenApiDocs(config, projectBuilder);
         INSTANCE.openApiCreate(config, apiDocList);
     }
 
@@ -94,7 +94,7 @@ public class SwaggerBuilder extends AbstractOpenApiBuilder {
         json.put("swagger", "2.0");
         json.put("info", buildInfo(config));
         json.put("host", config.getServerUrl() == null ? "127.0.0.1" : config.getServerUrl());
-        json.put("basePath", StringUtils.isNotBlank(config.getPathPrefix())?config.getPathPrefix():"/");
+        json.put("basePath", StringUtils.isNotBlank(config.getPathPrefix()) ? config.getPathPrefix() : "/");
         Set<OpenApiTag> tags = new HashSet<>();
         json.put("tags", tags);
         json.put("paths", buildPaths(config, apiDocList, tags));
@@ -192,7 +192,7 @@ public class SwaggerBuilder extends AbstractOpenApiBuilder {
             // Handling path parameters
             for (ApiParam apiParam : apiMethodDoc.getPathParams()) {
                 parameters = getStringParams(apiParam, false);
-                parameters.put("type",  DocUtil.javaTypeToOpenApiTypeConvert(apiParam.getType()));
+                parameters.put("type", DocUtil.javaTypeToOpenApiTypeConvert(apiParam.getType()));
 
                 parameters.put("in", "path");
                 List<ApiParam> children = apiParam.getChildren();
@@ -247,36 +247,37 @@ public class SwaggerBuilder extends AbstractOpenApiBuilder {
             parameters.put("name", apiParam.getField());
             parameters.put("description", apiParam.getDesc());
             parameters.put("required", apiParam.isRequired());
-            parameters.put("example", StringUtil.removeQuotes(apiParam.getValue()));
         }
-        parameters.put("type", apiParam.getType());
+        if (!OBJECT.equals(apiParam.getType())) {
+            parameters.put("type", apiParam.getType());
+        }
 //        parameters.put("schema", buildParametersSchema(apiParam));
         return parameters;
     }
 
     @Override
     public Map<String, Object> buildComponentsSchema(List<ApiDoc> apiDocs) {
-            Map<String, Object> component = new HashMap<>();
-            component.put("string", STRING_COMPONENT);
-            apiDocs.forEach(
-                    a -> {
-                        List<ApiMethodDoc> apiMethodDocs = a.getList();
-                        apiMethodDocs.forEach(
-                                method -> {
-                                    //request components
-                                    String requestSchema = OpenApiSchemaUtil.getClassNameFromParams(method.getRequestParams());
-                                    List<ApiParam> requestParams = method.getRequestParams();
-                                    Map<String, Object> prop = buildProperties(requestParams, component,OPENAPI_2_COMPONENT_KRY);
-                                    component.put(requestSchema, prop);
-                                    //response components
-                                    List<ApiParam> responseParams = method.getResponseParams();
-                                    String schemaName = OpenApiSchemaUtil.getClassNameFromParams(method.getResponseParams());
-                                    component.put(schemaName, buildProperties(responseParams, component,OPENAPI_2_COMPONENT_KRY));
-                                }
-                        );
-                    }
-            );
-            component.remove(OpenApiSchemaUtil.NO_BODY_PARAM);
-            return component;
-        }
+        Map<String, Object> component = new HashMap<>();
+        component.put("string", STRING_COMPONENT);
+        apiDocs.forEach(
+                a -> {
+                    List<ApiMethodDoc> apiMethodDocs = a.getList();
+                    apiMethodDocs.forEach(
+                            method -> {
+                                //request components
+                                String requestSchema = OpenApiSchemaUtil.getClassNameFromParams(method.getRequestParams());
+                                List<ApiParam> requestParams = method.getRequestParams();
+                                Map<String, Object> prop = buildProperties(requestParams, component, OPENAPI_2_COMPONENT_KRY);
+                                component.put(requestSchema, prop);
+                                //response components
+                                List<ApiParam> responseParams = method.getResponseParams();
+                                String schemaName = OpenApiSchemaUtil.getClassNameFromParams(method.getResponseParams());
+                                component.put(schemaName, buildProperties(responseParams, component, OPENAPI_2_COMPONENT_KRY));
+                            }
+                    );
+                }
+        );
+        component.remove(OpenApiSchemaUtil.NO_BODY_PARAM);
+        return component;
+    }
 }
