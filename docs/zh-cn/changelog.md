@@ -1,5 +1,17 @@
 ## 变更日志
 
+### 版本号：2.6.3
+
+- 更新日期: 2022-12-10
+- 更新内容：
+  1. 单个接口推送到torna目录显示优化，[#385](https://github.com/smart-doc-group/smart-doc/pull/385)
+  2. 修改timestamp类型在文档中显示错误。
+  3. 修改枚举重复问题。
+  4. 支持SpringBoot 3.0和Jakarta EE 10.
+  5. 二维数据推送torna类型错误，[#380](https://github.com/smart-doc-group/smart-doc/issues/380)
+  6. 优化插件对常用无关文档依赖做加载优化。
+  7. 支持controller继承接口中的注解[#pr392](https://github.com/smart-doc-group/smart-doc/pull/392)。
+
 ### 版本号：2.6.2
 
 - 更新日期: 2022-10-29

@@ -53,23 +53,23 @@
     {   //配置数据字典，没有需求可以不设置
         "title": "http状态码字典", //数据字典的名称
         "enumClassName": "com.power.common.enums.HttpCodeEnum", //数据字典枚举类名称
-        "codeField": "code",//数据字典字典码对应的字段名称
-        "descField": "message"//数据字典对象的描述信息字典
+        "codeField": "code", //数据字典字典码对应的字段名称,smart-doc默认采用get前缀作为方法名去反射，但是有枚举并遵循该规则，所以可以自己指定为方法名。
+        "descField": "message" //数据字典对象的描述信息字典，和codeField配置可以配置枚举方法名。
     },
     {
          // @since 2.4.6开始可以配置枚举实现的接口， 当配置接口时title将使用实现枚举的类描述
          // 如果有已经实现的枚举需要忽略的话，可以在实现枚举类上增加@ignore进行忽略
-        "enumClassName": "com.xx.IEnum", 
-        "codeField": "code", //数据字典字典码对应的字段名称
-        "descField": "message" //数据字典对象的描述信息字典
+        "enumClassName": "com.xx.IEnum",
+        "codeField": "code", //数据字典字典码对应的字段名称,smart-doc默认以getCode方法名去反射获取。如果没有get方法可以配置字段对应方法名，例如：code()。
+        "descField": "message" //数据字典对象的描述信息字典，和codeField一样可以配置为方法名,例如：message()
     }
   ],
   "errorCodeDictionaries": [
     {   //错误码列表，没有需求可以不设置
         "title": "title",
         "enumClassName": "com.power.common.enums.HttpCodeEnum", //错误码枚举类
-        "codeField": "code",//错误码的code码字段名称
-        "descField": "message",//错误码的描述信息对应的字段名，
+        "codeField": "code",//错误码的code码字段名称，smart-doc默认采用get前缀作为方法名去反射，但是有枚举并遵循该规则，所以可以自己指定为方法名。
+        "descField": "message",//错误码的描述信息对应的字段名，和codeField配置可以配置枚举方法名,例如：message()
         //自定义错误码解析器，使用枚举定义错误码的忽略此项。https://smart-doc-group.github.io/#/zh-cn/diy/advancedFeatures?id=
         "valuesResolverClass": "" 
     },
@@ -612,8 +612,8 @@ torna环境名称。
         {
             "title": "http状态码字典", //数据字典的名称
             "enumClassName": "com.power.common.enums.HttpCodeEnum", //数据字典枚举类名称
-            "codeField": "code", //数据字典字典码对应的字段名称
-            "descField": "message" //数据字典对象的描述信息字典
+            "codeField": "code", //数据字典字典码对应的字段名称，smart-doc默认以getCode方法名去反射获取。如果没有get方法可以配置字段对应方法名，例如：code()。
+            "descField": "message" //数据字典对象的描述信息字典，和codeField一样可以配置为方法名,例如：message()
         }
     ]
 }
@@ -631,8 +631,8 @@ torna环境名称。
         {
             "title": "title",
             "enumClassName": "com.power.common.enums.HttpCodeEnum", //错误码枚举类
-            "codeField": "code", //错误码的code码字段名称
-            "descField": "message" //错误码的描述信息对应的字段名
+            "codeField": "code", //错误码的code码字段名称，smart-doc默认以getCode方法名去反射获取。如果没有get方法可以配置字段对应方法名，例如：code()。
+            "descField": "message" //错误码的描述信息对应的字段名，和codeField一样可以配置为方法名,例如：message()
         }
     ]
 }

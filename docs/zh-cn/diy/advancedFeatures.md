@@ -260,8 +260,8 @@ public enum OrderEnum {
         {
             "title": "订单状态码字典", //数据字典的名称
             "enumClassName": "com.xx.OrderEnum", //数据字典枚举类名称
-            "codeField": "code", //数据字典字典码对应的字段名称
-            "descField": "message" //数据字典对象的描述信息字典
+            "codeField": "code", //数据字典字典码对应的字段名称,smart-doc默认以getCode方法名去反射获取。如果没有get方法可以配置字段对应方法名，例如：code()。
+            "descField": "message" //数据字典对象的描述信息字典，和codeField一样可以配置为方法名,例如：message()
         },
         {
             "enumClassName": "com.xx.IEnum", //数据字典接口
