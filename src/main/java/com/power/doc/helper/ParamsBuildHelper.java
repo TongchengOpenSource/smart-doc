@@ -90,7 +90,6 @@ public class ParamsBuildHelper extends BaseHelper {
         if (registryClasses.containsKey(className) && level > registryClasses.size()) {
             return paramList;
         }
-        Map<String, CustomField> responseFieldMap = projectBuilder.getCustomRespFieldMap();
         boolean skipTransientField = apiConfig.isSkipTransientField();
         boolean isShowJavaType = projectBuilder.getApiConfig().getShowJavaType();
         boolean requestFieldToUnderline = projectBuilder.getApiConfig().isRequestFieldToUnderline();
@@ -186,12 +185,13 @@ public class ParamsBuildHelper extends BaseHelper {
 
                 boolean strRequired = false;
                 int annotationCounter = 0;
-                CustomField customResponseField = CustomField.nameEquals(fieldName, responseFieldMap);
+                CustomField.Key key = CustomField.Key.create(simpleName, fieldName);
+                CustomField customResponseField = CustomField.nameEquals(key, projectBuilder.getCustomRespFieldMap());
+                CustomField customRequestField = CustomField.nameEquals(key, projectBuilder.getCustomReqFieldMap());
                 if (customResponseField != null && JavaClassUtil.isTargetChildClass(simpleName, customResponseField.getOwnerClassName())
                     && (customResponseField.isIgnore()) && isResp) {
                     continue;
                 }
-                CustomField customRequestField = CustomField.nameEquals(fieldName, projectBuilder.getCustomReqFieldMap());
                 if (customRequestField != null && JavaClassUtil.isTargetChildClass(simpleName, customRequestField.getOwnerClassName())
                     && (customRequestField.isIgnore()) && !isResp) {
                     continue;

@@ -23,6 +23,7 @@
 package com.power.doc.model;
 
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author xingzi
@@ -58,9 +59,9 @@ public class CustomField {
         return new CustomField();
     }
 
-    public static CustomField nameEquals(String fieldName, Map<String, CustomField> customFieldMap) {
-        for (Map.Entry<String, CustomField> c : customFieldMap.entrySet()) {
-            if (fieldName.equals(c.getKey())) {
+    public static CustomField nameEquals(Key key, Map<Key, CustomField> customFieldMap) {
+        for (Map.Entry<Key, CustomField> c : customFieldMap.entrySet()) {
+            if (key.equals(c.getKey())) {
                 return c.getValue();
             }
         }
@@ -128,5 +129,40 @@ public class CustomField {
     public CustomField setIgnore(boolean ignore) {
         this.ignore = ignore;
         return this;
+    }
+
+    public static final class Key {
+
+        /**
+         * owner class
+         */
+        private String ownerClassName;
+
+        /**
+         * field name
+         */
+        private String name;
+
+        private Key(String ownerClassName, String name) {
+            this.ownerClassName = ownerClassName;
+            this.name = name;
+        }
+
+        public static Key create(String className, String fieldName) {
+            return new Key(className, fieldName);
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Key key = (Key) o;
+            return Objects.equals(ownerClassName, key.ownerClassName) && Objects.equals(name, key.name);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(ownerClassName, name);
+        }
     }
 }

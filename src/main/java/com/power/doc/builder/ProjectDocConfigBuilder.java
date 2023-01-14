@@ -74,9 +74,9 @@ public class ProjectDocConfigBuilder {
 
     private final Map<String, Class<? extends Enum>> enumClassMap = new ConcurrentHashMap<>();
 
-    private final Map<String, CustomField> customRespFieldMap = new ConcurrentHashMap<>();
+    private final Map<CustomField.Key, CustomField> customRespFieldMap = new ConcurrentHashMap<>();
 
-    private final Map<String, CustomField> customReqFieldMap = new ConcurrentHashMap<>();
+    private final Map<CustomField.Key, CustomField> customReqFieldMap = new ConcurrentHashMap<>();
 
     private final Map<String, String> replaceClassMap = new ConcurrentHashMap<>();
 
@@ -223,7 +223,8 @@ public class ProjectDocConfigBuilder {
     private void initCustomResponseFieldsMap(ApiConfig config) {
         if (CollectionUtil.isNotEmpty(config.getCustomResponseFields())) {
             for (CustomField field : config.getCustomResponseFields()) {
-                customRespFieldMap.put(field.getOwnerClassName() + "." + field.getName(), field);
+                CustomField.Key key = CustomField.Key.create(field.getOwnerClassName(), field.getName());
+                customRespFieldMap.put(key, field);
             }
         }
     }
@@ -231,7 +232,8 @@ public class ProjectDocConfigBuilder {
     private void initCustomRequestFieldsMap(ApiConfig config) {
         if (CollectionUtil.isNotEmpty(config.getCustomRequestFields())) {
             for (CustomField field : config.getCustomRequestFields()) {
-                customReqFieldMap.put(field.getOwnerClassName() + "." + field.getName(), field);
+                CustomField.Key key = CustomField.Key.create(field.getOwnerClassName(), field.getName());
+                customReqFieldMap.put(key, field);
             }
         }
     }
@@ -325,11 +327,11 @@ public class ProjectDocConfigBuilder {
         return classFilesMap;
     }
 
-    public Map<String, CustomField> getCustomRespFieldMap() {
+    public Map<CustomField.Key, CustomField> getCustomRespFieldMap() {
         return customRespFieldMap;
     }
 
-    public Map<String, CustomField> getCustomReqFieldMap() {
+    public Map<CustomField.Key, CustomField> getCustomReqFieldMap() {
         return customReqFieldMap;
     }
 
