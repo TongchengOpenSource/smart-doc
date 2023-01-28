@@ -2,7 +2,7 @@
 
 ### 版本号：2.6.4
 
-- 更新日期: 2023-02-xx
+- 更新日期: 2023-01-28
 - 更新内容：
   1. 支持没有getter方法的枚举字典提取，[#408](https://github.com/smart-doc-group/smart-doc/issues/408)
   2. 优化插件遇到源码语法错误时的报错提示。[#402](https://github.com/smart-doc-group/smart-doc/issues/402)

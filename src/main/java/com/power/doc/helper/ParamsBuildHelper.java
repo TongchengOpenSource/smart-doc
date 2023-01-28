@@ -1,7 +1,7 @@
 /*
  * smart-doc https://github.com/shalousun/smart-doc
  *
- * Copyright (C) 2018-2022 smart-doc
+ * Copyright (C) 2018-2023 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -119,12 +119,26 @@ public class ParamsBuildHelper extends BaseHelper {
             paramList.addAll(primitiveReturnRespComment(processedType, atomicInteger,pid));
         } else if (JavaClassValidateUtil.isCollection(simpleName) || JavaClassValidateUtil.isArray(simpleName)) {
             if (!JavaClassValidateUtil.isCollection(globGicName[0])) {
-                String gicName = globGicName[0];
-                if (JavaClassValidateUtil.isArray(gicName)) {
-                    gicName = gicName.substring(0, gicName.indexOf("["));
+                String gNameTemp = globGicName[0];
+                String gName = JavaClassValidateUtil.isArray(gNameTemp) ? gNameTemp.substring(0, gNameTemp.indexOf("[")) : globGicName[0];
+                if (JavaClassValidateUtil.isPrimitive(gName)) {
+                    String processedType = isShowJavaType ? simpleName : DocClassUtil.processTypeNameForParams(gName);
+                    ApiParam param = ApiParam.of()
+                        .setId(atomicOrDefault(atomicInteger, pid + 1))
+                        .setField(pre + " -")
+                        .setType("array["+processedType+"]")
+                        .setPid(pid)
+                        .setDesc("array of "+processedType)
+                        .setVersion(DocGlobalConstants.DEFAULT_VERSION)
+                        .setRequired(Boolean.parseBoolean(isRequired));
+                    paramList.add(param);
+                } else {
+                    if (JavaClassValidateUtil.isArray(gNameTemp)) {
+                        gNameTemp = gNameTemp.substring(0, gNameTemp.indexOf("["));
+                    }
+                    paramList.addAll(buildParams(gNameTemp, pre, nextLevel, isRequired, isResp
+                        , registryClasses, projectBuilder, groupClasses, pid, jsonRequest, atomicInteger));
                 }
-                paramList.addAll(buildParams(gicName, pre, nextLevel, isRequired, isResp
-                    , registryClasses, projectBuilder, groupClasses, pid, jsonRequest, atomicInteger));
             }
         } else if (JavaClassValidateUtil.isMap(simpleName)) {
             paramList.addAll(buildMapParam(globGicName, pre, level, isRequired, isResp,
