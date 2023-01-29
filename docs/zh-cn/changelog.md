@@ -1,5 +1,17 @@
 ## 变更日志
 
+### 版本号：2.6.4
+
+- 更新日期: 2023-01-28
+- 更新内容：
+  1. 支持没有getter方法的枚举字典提取，[#408](https://github.com/smart-doc-group/smart-doc/issues/408)
+  2. 优化插件遇到源码语法错误时的报错提示。[#402](https://github.com/smart-doc-group/smart-doc/issues/402)
+  3. URL 结尾存在多余'/' 。[#396](https://github.com/smart-doc-group/smart-doc/issues/396)
+  4. 支持SpringBoot 3.0和Jakarta EE 10.
+  5. 二维数据推送torna类型错误，[#380](https://github.com/smart-doc-group/smart-doc/issues/380)
+  6. 优化插件对常用无关文档依赖做加载优化。
+  7. 支持controller继承接口中的注解[#pr392](https://github.com/smart-doc-group/smart-doc/pull/392)。
+
 ### 版本号：2.6.3
 
 - 更新日期: 2022-12-10
@@ -855,4 +867,4 @@
 ### 版本号：0.1
 - 更新日期：2018-06-25
 - 更新内容：
-  1. 手册将api-doc发布到中央仓库
+  1. 首次将api-doc发布到中央仓库
