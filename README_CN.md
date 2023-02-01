@@ -2,8 +2,11 @@
 
 ![maven](https://img.shields.io/maven-central/v/com.github.shalousun/smart-doc)
 [![License](https://img.shields.io/badge/license-Apache%202-green.svg)](https://www.apache.org/licenses/LICENSE-2.0)
-![closed pull requests](https://img.shields.io/github/issues-pr-closed/shalousun/smart-doc)
+![number of issues closed](https://img.shields.io/github/issues-closed-raw/smart-doc-group/smart-doc)
+![closed pull requests](https://img.shields.io/github/issues-pr-closed/smart-doc-group/smart-doc)
 ![java version](https://img.shields.io/badge/JAVA-1.8+-green.svg)
+![gitee star](https://gitee.com/smart-doc-team/smart-doc/badge/star.svg)
+![git star](https://img.shields.io/github/stars/smart-doc-group/smart-doc.svg)
 
 ## Introduce
 
