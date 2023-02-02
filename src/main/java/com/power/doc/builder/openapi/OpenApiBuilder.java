@@ -32,11 +32,8 @@ import java.util.Set;
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.FileUtil;
 import com.power.common.util.StringUtil;
-import com.power.doc.builder.DocBuilderTemplate;
-import com.power.doc.builder.ProjectDocConfigBuilder;
 import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.constants.Methods;
-import com.power.doc.factory.BuildTemplateFactory;
 import com.power.doc.helper.JavaProjectBuilderHelper;
 import com.power.doc.model.ApiConfig;
 import com.power.doc.model.ApiDoc;
@@ -44,7 +41,6 @@ import com.power.doc.model.ApiMethodDoc;
 import com.power.doc.model.ApiParam;
 import com.power.doc.model.ApiReqParam;
 import com.power.doc.model.openapi.OpenApiTag;
-import com.power.doc.template.IDocBuildTemplate;
 import com.power.doc.utils.JsonUtil;
 import com.power.doc.utils.OpenApiSchemaUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
@@ -56,6 +52,11 @@ import static com.power.doc.constants.DocGlobalConstants.OPENAPI_3_COMPONENT_KRY
  * @author xingzi
  */
 public class OpenApiBuilder extends AbstractOpenApiBuilder {
+
+    @Override
+    String getModuleName() {
+        return OPENAPI_3_COMPONENT_KRY;
+    }
 
     private static final OpenApiBuilder INSTANCE = new OpenApiBuilder();
 
@@ -88,6 +89,7 @@ public class OpenApiBuilder extends AbstractOpenApiBuilder {
      */
     @Override
     public void openApiCreate(ApiConfig config, List<ApiDoc> apiDocList) {
+        this.setComponentKey(getModuleName());
         Map<String, Object> json = new HashMap<>(8);
         json.put("openapi", "3.0.3");
         json.put("info", buildInfo(config));
@@ -145,7 +147,7 @@ public class OpenApiBuilder extends AbstractOpenApiBuilder {
         } else {
             request.put("tags", new String[]{apiDoc.getDesc()});
         }
-        request.put("requestBody", buildRequestBody(apiConfig, apiMethodDoc, DocGlobalConstants.OPENAPI_3_COMPONENT_KRY));
+        request.put("requestBody", buildRequestBody(apiConfig, apiMethodDoc));
         request.put("parameters", buildParameters(apiMethodDoc));
         request.put("responses", buildResponses(apiConfig, apiMethodDoc));
         request.put("deprecated", apiMethodDoc.isDeprecated());
@@ -159,14 +161,14 @@ public class OpenApiBuilder extends AbstractOpenApiBuilder {
      *
      * @param apiMethodDoc ApiMethodDoc
      */
-    private static Map<String, Object> buildRequestBody(ApiConfig apiConfig, ApiMethodDoc apiMethodDoc, String componentKey) {
+    private  Map<String, Object> buildRequestBody(ApiConfig apiConfig, ApiMethodDoc apiMethodDoc) {
         Map<String, Object> requestBody = new HashMap<>(8);
         boolean isPost = (apiMethodDoc.getType().equals(Methods.POST.getValue())
             || apiMethodDoc.getType().equals(Methods.PUT.getValue()) ||
             apiMethodDoc.getType().equals(Methods.PATCH.getValue()));
         //add content of post method
         if (isPost) {
-            requestBody.put("content", buildContent(apiConfig, apiMethodDoc, false, componentKey));
+            requestBody.put("content", buildContent(apiConfig, apiMethodDoc, false));
             return requestBody;
         }
         return null;
@@ -183,7 +185,7 @@ public class OpenApiBuilder extends AbstractOpenApiBuilder {
     public Map<String, Object> buildResponsesBody(ApiConfig apiConfig, ApiMethodDoc apiMethodDoc) {
         Map<String, Object> responseBody = new HashMap<>(10);
         responseBody.put("description", "OK");
-        responseBody.put("content", buildContent(apiConfig, apiMethodDoc, true, DocGlobalConstants.OPENAPI_3_COMPONENT_KRY));
+        responseBody.put("content", buildContent(apiConfig, apiMethodDoc, true));
         return responseBody;
     }
 
@@ -272,12 +274,12 @@ public class OpenApiBuilder extends AbstractOpenApiBuilder {
                                     //request components
                                     String requestSchema = OpenApiSchemaUtil.getClassNameFromParams(method.getRequestParams());
                                     List<ApiParam> requestParams = method.getRequestParams();
-                                    Map<String, Object> prop = buildProperties(requestParams, component,OPENAPI_3_COMPONENT_KRY);
+                                    Map<String, Object> prop = buildProperties(requestParams, component);
                                     component.put(requestSchema, prop);
                                     //response components
                                     List<ApiParam> responseParams = method.getResponseParams();
                                     String schemaName = OpenApiSchemaUtil.getClassNameFromParams(method.getResponseParams());
-                                    component.put(schemaName, buildProperties(responseParams, component,OPENAPI_3_COMPONENT_KRY));
+                                    component.put(schemaName, buildProperties(responseParams, component));
                                 }
                         );
                     }

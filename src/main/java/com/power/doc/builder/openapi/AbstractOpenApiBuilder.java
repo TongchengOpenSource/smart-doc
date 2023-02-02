@@ -59,6 +59,18 @@ import static com.power.doc.constants.DocGlobalConstants.*;
 @SuppressWarnings("all")
 public abstract class AbstractOpenApiBuilder {
 
+    private  String componentKey;
+
+    public String getComponentKey() {
+        return componentKey;
+    }
+
+    public void setComponentKey(String componentKey) {
+        this.componentKey = componentKey;
+    }
+
+    abstract String getModuleName();
+
     /**
      * Create OpenAPI definition
      *
@@ -140,13 +152,13 @@ public abstract class AbstractOpenApiBuilder {
      * @param apiMethodDoc ApiMethodDoc
      * @param isRep        is response
      */
-    public static Map<String, Object> buildContent(ApiConfig apiConfig, ApiMethodDoc apiMethodDoc, boolean isRep, String componentKey) {
+    public  Map<String, Object> buildContent(ApiConfig apiConfig, ApiMethodDoc apiMethodDoc, boolean isRep) {
         Map<String, Object> content = new HashMap<>(8);
         String contentType = apiMethodDoc.getContentType();
         if (isRep) {
             contentType = "*/*";
         }
-        content.put(contentType, buildContentBody(apiConfig, apiMethodDoc, isRep, componentKey));
+        content.put(contentType, buildContentBody(apiConfig, apiMethodDoc, isRep));
         return content;
 
     }
@@ -158,7 +170,7 @@ public abstract class AbstractOpenApiBuilder {
      * @param apiMethodDoc ApiMethodDoc
      * @param isRep        is response
      */
-    public static Map<String, Object> buildContentBody(ApiConfig apiConfig, ApiMethodDoc apiMethodDoc, boolean isRep, String componentKey) {
+    public  Map<String, Object> buildContentBody(ApiConfig apiConfig, ApiMethodDoc apiMethodDoc, boolean isRep) {
         Map<String, Object> content = new HashMap<>(8);
         if(OPENAPI_2_COMPONENT_KRY.equals(componentKey) && !isRep){
             content.put("name", apiMethodDoc.getName());
@@ -168,7 +180,7 @@ public abstract class AbstractOpenApiBuilder {
         } else if (!isRep && Objects.nonNull(apiMethodDoc.getRequestSchema())) {
             content.put("schema", apiMethodDoc.getRequestSchema());
         } else {
-            content.put("schema", buildBodySchema(apiMethodDoc, isRep, componentKey));
+            content.put("schema", buildBodySchema(apiMethodDoc, isRep));
         }
         if (OPENAPI_3_COMPONENT_KRY.equals (componentKey) &&
                 (!isRep && apiConfig.isRequestExample() || (isRep && apiConfig.isResponseExample()))) {
@@ -184,17 +196,17 @@ public abstract class AbstractOpenApiBuilder {
      * @param apiMethodDoc ApiMethodDoc
      * @param isRep        is response
      */
-    public static Map<String, Object> buildBodySchema(ApiMethodDoc apiMethodDoc, boolean isRep, String componentsKey) {
+    public  Map<String, Object> buildBodySchema(ApiMethodDoc apiMethodDoc, boolean isRep) {
         Map<String, Object> schema = new HashMap<>(10);
         Map<String, Object> innerScheme = new HashMap<>(10);
         String requestRef;
         if (apiMethodDoc.getContentType().equals(DocGlobalConstants.URL_CONTENT_TYPE)) {
-            requestRef = componentsKey + OpenApiSchemaUtil.getClassNameFromParams(apiMethodDoc.getQueryParams());
+            requestRef = componentKey + OpenApiSchemaUtil.getClassNameFromParams(apiMethodDoc.getQueryParams());
         } else {
-            requestRef = componentsKey + OpenApiSchemaUtil.getClassNameFromParams(apiMethodDoc.getRequestParams());
+            requestRef = componentKey + OpenApiSchemaUtil.getClassNameFromParams(apiMethodDoc.getRequestParams());
         }
         //remove special characters in url
-        String responseRef = componentsKey + OpenApiSchemaUtil.getClassNameFromParams(apiMethodDoc.getResponseParams());
+        String responseRef = componentKey + OpenApiSchemaUtil.getClassNameFromParams(apiMethodDoc.getResponseParams());
 
         //List param
         if (apiMethodDoc.getIsRequestArray() == 1) {
@@ -329,7 +341,7 @@ public abstract class AbstractOpenApiBuilder {
      *
      * @param apiParam list of ApiParam
      */
-    public static Map<String, Object> buildProperties(List<ApiParam> apiParam, Map<String, Object> component,String commpentKey) {
+    public  Map<String, Object> buildProperties(List<ApiParam> apiParam, Map<String, Object> component) {
         Map<String, Object> properties = new HashMap<>();
         Map<String, Object> propertiesData = new LinkedHashMap<>();
         List<String> requiredList = new ArrayList<>();
@@ -346,7 +358,7 @@ public abstract class AbstractOpenApiBuilder {
                     continue;
                 }
                 String field = param.getField();
-                propertiesData.put(field, buildPropertiesData(param, component, commpentKey));
+                propertiesData.put(field, buildPropertiesData(param, component));
             }
             if (!propertiesData.isEmpty()) {
                 properties.put("properties", propertiesData);
@@ -366,7 +378,7 @@ public abstract class AbstractOpenApiBuilder {
      *
      * @param apiParam ApiParam
      */
-    private static Map<String, Object> buildPropertiesData(ApiParam apiParam, Map<String, Object> component, String componentKey) {
+    private  Map<String, Object> buildPropertiesData(ApiParam apiParam, Map<String, Object> component) {
         Map<String, Object> propertiesData = new HashMap<>();
         String openApiType = DocUtil.javaTypeToOpenApiTypeConvert(apiParam.getType());
         //array object file map
@@ -391,7 +403,7 @@ public abstract class AbstractOpenApiBuilder {
                         propertiesData.put("type", "object");
                         propertiesData.put("description", apiParam.getDesc() + "(object)");
                     } else {
-                        component.put(childSchemaName, buildProperties(apiParam.getChildren(), component,componentKey));
+                        component.put(childSchemaName, buildProperties(apiParam.getChildren(), component));
                         arrayRef.put("$ref", componentKey + childSchemaName);
                         propertiesData.put("items", arrayRef);
                     }
@@ -420,7 +432,7 @@ public abstract class AbstractOpenApiBuilder {
                         propertiesData.put("type", "object");
                         propertiesData.put("description", apiParam.getDesc() + "(object)");
                     } else {
-                        component.put(childSchemaName, buildProperties(apiParam.getChildren(), component,componentKey));
+                        component.put(childSchemaName, buildProperties(apiParam.getChildren(), component));
                         propertiesData.put("$ref", componentKey + childSchemaName);
                     }
                 }
