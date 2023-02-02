@@ -271,14 +271,14 @@ public class SwaggerBuilder extends AbstractOpenApiBuilder {
                     apiMethodDocs.forEach(
                             method -> {
                                 //request components
-                                String requestSchema = OpenApiSchemaUtil.getClassNameFromParams(method.getRequestParams());
+                                String requestSchema = OpenApiSchemaUtil.getClassNameFromParams(method.getRequestParams(), COMPONENT_REQUEST_SUFFIX);
                                 List<ApiParam> requestParams = method.getRequestParams();
-                                Map<String, Object> prop = buildProperties(requestParams, component);
+                                Map<String, Object> prop = buildProperties(requestParams, component, false);
                                 component.put(requestSchema, prop);
                                 //response components
                                 List<ApiParam> responseParams = method.getResponseParams();
-                                String schemaName = OpenApiSchemaUtil.getClassNameFromParams(method.getResponseParams());
-                                component.put(schemaName, buildProperties(responseParams, component));
+                                String schemaName = OpenApiSchemaUtil.getClassNameFromParams(method.getResponseParams(), COMPONENT_RESPONSE_SUFFIX);
+                                component.put(schemaName, buildProperties(responseParams, component, true));
                             }
                     );
                 }
