@@ -384,7 +384,9 @@ public abstract class AbstractOpenApiBuilder {
         String openApiType = DocUtil.javaTypeToOpenApiTypeConvert(apiParam.getType());
         //array object file map
         propertiesData.put("description", apiParam.getDesc());
-        propertiesData.put("example", StringUtil.removeDoubleQuotes(apiParam.getValue()));
+        if (StringUtil.isNotEmpty(apiParam.getValue())) {
+            propertiesData.put("example", StringUtil.removeDoubleQuotes(apiParam.getValue()));
+        }
 
         if (!"object".equals(openApiType)) {
             propertiesData.put("type", openApiType);
