@@ -39,8 +39,8 @@ import com.power.doc.model.ApiParam;
  */
 public class OpenApiSchemaUtil {
 
-    public final static String NO_BODY_PARAM = "NO_BODY_PARAM";
-    final static Pattern p = Pattern.compile("[A-Z]\\w+.*?|[A-Z]");
+    public static final String NO_BODY_PARAM = "NO_BODY_PARAM";
+    static final Pattern PATTRRN = Pattern.compile("[A-Z]\\w+.*?|[A-Z]");
 
     public static Map<String, Object> primaryTypeSchema(String primaryType) {
         Map<String, Object> map = new HashMap<>();
@@ -81,22 +81,22 @@ public class OpenApiSchemaUtil {
         return map;
     }
 
-    public static String getClassNameFromParams(List<ApiParam> apiParams) {
+    public static String getClassNameFromParams(List<ApiParam> apiParams, String suffix) {
         // if array[Primitive] or Primitive
         if (CollectionUtil.isNotEmpty(apiParams) && apiParams.size() == 1
-            && CollectionUtil.isEmpty(apiParams.get(0).getChildren())) {
+                && CollectionUtil.isEmpty(apiParams.get(0).getChildren())) {
             return "string";
         }
         for (ApiParam a : apiParams) {
             if (StringUtil.isNotEmpty(a.getClassName())) {
-                return OpenApiSchemaUtil.delClassName(a.getClassName());
+                return OpenApiSchemaUtil.delClassName(a.getClassName()) + suffix;
             }
         }
         return NO_BODY_PARAM;
     }
 
     public static String delClassName(String className) {
-        return String.join("", getPatternResult(p, className));
+        return String.join("", getPatternResult(PATTRRN, className));
     }
 
     public static List<String> getPatternResult(Pattern p, String content) {

@@ -33,6 +33,8 @@ import com.power.doc.model.torna.TornaDic;
 import com.power.doc.model.torna.TornaRequestInfo;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 
+import com.thoughtworks.qdox.model.JavaMethod;
+import com.thoughtworks.qdox.model.JavaParameter;
 import org.apache.commons.lang3.StringUtils;
 
 import static com.power.doc.constants.DocGlobalConstants.ARRAY;
@@ -65,8 +67,8 @@ public class TornaUtil {
 
     public static boolean setDebugEnv(ApiConfig apiConfig, TornaApi tornaApi) {
         boolean hasDebugEnv = StringUtils.isNotBlank(apiConfig.getDebugEnvName())
-            &&
-            StringUtils.isNotBlank(apiConfig.getDebugEnvUrl());
+                &&
+                StringUtils.isNotBlank(apiConfig.getDebugEnvUrl());
         //Set up the test environment
         List<DebugEnv> debugEnvs = new ArrayList<>();
         if (hasDebugEnv) {
@@ -82,22 +84,22 @@ public class TornaUtil {
     public static void printDebugInfo(ApiConfig apiConfig, String responseMsg, Map<String, String> requestJson, String category) {
         if (apiConfig.isTornaDebug()) {
             String sb = "Configuration information : \n" +
-                "OpenUrl: " +
-                apiConfig.getOpenUrl() +
-                "\n" +
-                "appToken: " +
-                apiConfig.getAppToken() +
-                "\n";
+                    "OpenUrl: " +
+                    apiConfig.getOpenUrl() +
+                    "\n" +
+                    "appToken: " +
+                    apiConfig.getAppToken() +
+                    "\n";
             System.out.println(sb);
             try {
                 JsonElement element = JsonParser.parseString(responseMsg);
                 TornaRequestInfo info = new TornaRequestInfo()
-                    .of()
-                    .setCategory(category)
-                    .setCode(element.getAsJsonObject().get(TornaConstants.CODE).getAsString())
-                    .setMessage(element.getAsJsonObject().get(TornaConstants.MESSAGE).getAsString())
-                    .setRequestInfo(requestJson)
-                    .setResponseInfo(responseMsg);
+                        .of()
+                        .setCategory(category)
+                        .setCode(element.getAsJsonObject().get(TornaConstants.CODE).getAsString())
+                        .setMessage(element.getAsJsonObject().get(TornaConstants.MESSAGE).getAsString())
+                        .setRequestInfo(requestJson)
+                        .setResponseInfo(responseMsg);
                 System.out.println(info.buildInfo());
             } catch (Exception e) {
                 //Ex : Nginx Error,Tomcat Error
@@ -143,7 +145,7 @@ public class TornaUtil {
             }
 
             if (CollectionUtil.isNotEmpty(apiMethodDoc.getQueryParams())
-                && DocGlobalConstants.FILE_CONTENT_TYPE.equals(apiMethodDoc.getContentType())) {
+                    && DocGlobalConstants.FILE_CONTENT_TYPE.equals(apiMethodDoc.getContentType())) {
                 // file upload
                 methodApi.setRequestParams(buildParams(apiMethodDoc.getQueryParams()));
             } else if (CollectionUtil.isNotEmpty(apiMethodDoc.getQueryParams())) {
@@ -281,8 +283,8 @@ public class TornaUtil {
             for (ApiDocDict doc : apiDocDicts) {
                 tornaDic = new TornaDic();
                 tornaDic.setName(doc.getTitle())
-                    .setDescription(DocUtil.replaceNewLineToHtmlBr(doc.getDescription()))
-                    .setItems(buildTornaDicItems(doc.getDataDictList()));
+                        .setDescription(DocUtil.replaceNewLineToHtmlBr(doc.getDescription()))
+                        .setItems(buildTornaDicItems(doc.getDataDictList()));
                 dics.add(tornaDic);
             }
         }
@@ -310,31 +312,29 @@ public class TornaUtil {
      *
      * @param apiMethodDoc 请求参数
      */
-    public static void setTornaArrayTags(ApiMethodDoc apiMethodDoc) {
-        List<ApiParam> reqList = apiMethodDoc.getRequestParams();
-        List<ApiParam> repList = apiMethodDoc.getResponseParams();
+    public static void setTornaArrayTags(JavaMethod method, ApiMethodDoc apiMethodDoc) {
+        String returnTypeName = method.getReturnType().getCanonicalName();
         apiMethodDoc.setIsRequestArray(0);
         apiMethodDoc.setIsResponseArray(0);
+        boolean respArray = JavaClassValidateUtil.isCollection(returnTypeName) || JavaClassValidateUtil.isArray(returnTypeName);
         //response
-        if (CollectionUtil.isNotEmpty(repList)) {
-            ApiParam apiParam = repList.get(0);
-            boolean isArray = repList.size() == 1 && ARRAY.equals(apiParam.getType());
-            if (isArray) {
-                apiMethodDoc.setIsResponseArray(1);
-                Map<String, Object> schemaMap = apiMethodDoc.getReturnSchema();
-                apiMethodDoc.setResponseArrayType(getArrayType(schemaMap));
-            }
+        if (respArray) {
+            apiMethodDoc.setIsResponseArray(1);
+            apiMethodDoc.setResponseArrayType(getType(method.getReturnType().getGenericCanonicalName()));
         }
         //request
-        if (CollectionUtil.isNotEmpty(reqList)) {
-            ApiParam apiParam = reqList.get(0);
-            boolean isArray = reqList.size() == 1 && ARRAY.equals(apiParam.getType());
-            if (isArray) {
-                apiMethodDoc.setIsRequestArray(1);
-                Map<String, Object> schemaMap = apiMethodDoc.getRequestSchema();
-                apiMethodDoc.setRequestArrayType(getArrayType(schemaMap));
+        if (CollectionUtil.isNotEmpty(method.getParameters()) && CollectionUtil.isNotEmpty(apiMethodDoc.getRequestParams())) {
+            for (JavaParameter param : method.getParameters()) {
+                String typeName = param.getType().getCanonicalName();
+                boolean reqArray = JavaClassValidateUtil.isCollection(typeName) || JavaClassValidateUtil.isArray(typeName);
+                if (reqArray) {
+                    apiMethodDoc.setIsRequestArray(1);
+                    apiMethodDoc.setRequestArrayType(getType(param.getType().getGenericCanonicalName()));
+                    break;
+                }
             }
         }
+
     }
 
     private static String getArrayType(Map<String, Object> schemaMap) {
@@ -342,7 +342,7 @@ public class TornaUtil {
         if (Objects.nonNull(schemaMap) && Objects.equals(ARRAY, schemaMap.get("type"))) {
             Map<String, Object> innerSchemeMap = (Map<String, Object>) schemaMap.get("items");
             if (Objects.nonNull(innerSchemeMap)) {
-                String type =  (String) innerSchemeMap.get("type");
+                String type = (String) innerSchemeMap.get("type");
                 if (StringUtil.isNotEmpty(type)) {
                     String className = getType(type);
                     arrayType = JavaClassValidateUtil.isPrimitive(className) ? className : OBJECT;

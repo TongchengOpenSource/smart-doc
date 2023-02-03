@@ -249,4 +249,8 @@ public interface DocGlobalConstants {
     String OPENAPI_2_COMPONENT_KRY = "#/definitions/";
 
     String OPENAPI_3_COMPONENT_KRY = "#/components/schemas/";
+
+    String COMPONENT_REQUEST_SUFFIX = "_request";
+
+    String COMPONENT_RESPONSE_SUFFIX = "_response";
 }

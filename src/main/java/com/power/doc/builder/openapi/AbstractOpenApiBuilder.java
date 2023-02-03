@@ -59,6 +59,18 @@ import static com.power.doc.constants.DocGlobalConstants.*;
 @SuppressWarnings("all")
 public abstract class AbstractOpenApiBuilder {
 
+    private String componentKey;
+
+    public String getComponentKey() {
+        return componentKey;
+    }
+
+    public void setComponentKey(String componentKey) {
+        this.componentKey = componentKey;
+    }
+
+    abstract String getModuleName();
+
     /**
      * Create OpenAPI definition
      *
@@ -100,22 +112,22 @@ public abstract class AbstractOpenApiBuilder {
     public Map<String, Object> buildPaths(ApiConfig apiConfig, List<ApiDoc> apiDocList, Set<OpenApiTag> tags) {
         Map<String, Object> pathMap = new HashMap<>(500);
         apiDocList.forEach(
-            a -> {
-                tags.add(OpenApiTag.of(a.getDesc(), a.getDesc()));
-                List<ApiMethodDoc> apiMethodDocs = a.getList();
-                apiMethodDocs.forEach(
-                    method -> {
-                        String url = method.getPath().replace("//", "/");
-                        Map<String, Object> request = buildPathUrls(apiConfig, method, a);
-                        if (!pathMap.containsKey(url)) {
-                            pathMap.put(url, request);
-                        } else {
-                            Map<String, Object> oldRequest = (Map<String, Object>) pathMap.get(url);
-                            oldRequest.putAll(request);
-                        }
-                    }
-                );
-            }
+                a -> {
+                    tags.add(OpenApiTag.of(a.getDesc(), a.getDesc()));
+                    List<ApiMethodDoc> apiMethodDocs = a.getList();
+                    apiMethodDocs.forEach(
+                            method -> {
+                                String url = method.getPath().replace("//", "/");
+                                Map<String, Object> request = buildPathUrls(apiConfig, method, a);
+                                if (!pathMap.containsKey(url)) {
+                                    pathMap.put(url, request);
+                                } else {
+                                    Map<String, Object> oldRequest = (Map<String, Object>) pathMap.get(url);
+                                    oldRequest.putAll(request);
+                                }
+                            }
+                    );
+                }
         );
         return pathMap;
     }
@@ -140,13 +152,13 @@ public abstract class AbstractOpenApiBuilder {
      * @param apiMethodDoc ApiMethodDoc
      * @param isRep        is response
      */
-    public static Map<String, Object> buildContent(ApiConfig apiConfig, ApiMethodDoc apiMethodDoc, boolean isRep, String componentKey) {
+    public Map<String, Object> buildContent(ApiConfig apiConfig, ApiMethodDoc apiMethodDoc, boolean isRep) {
         Map<String, Object> content = new HashMap<>(8);
         String contentType = apiMethodDoc.getContentType();
         if (isRep) {
             contentType = "*/*";
         }
-        content.put(contentType, buildContentBody(apiConfig, apiMethodDoc, isRep, componentKey));
+        content.put(contentType, buildContentBody(apiConfig, apiMethodDoc, isRep));
         return content;
 
     }
@@ -158,19 +170,20 @@ public abstract class AbstractOpenApiBuilder {
      * @param apiMethodDoc ApiMethodDoc
      * @param isRep        is response
      */
-    public static Map<String, Object> buildContentBody(ApiConfig apiConfig, ApiMethodDoc apiMethodDoc, boolean isRep, String componentKey) {
+    public Map<String, Object> buildContentBody(ApiConfig apiConfig, ApiMethodDoc apiMethodDoc, boolean isRep) {
         Map<String, Object> content = new HashMap<>(8);
-        if(OPENAPI_2_COMPONENT_KRY.equals(componentKey) && !isRep){
-            content.put("name", apiMethodDoc.getName());
-        }
         if (Objects.nonNull(apiMethodDoc.getReturnSchema()) && isRep) {
             content.put("schema", apiMethodDoc.getReturnSchema());
         } else if (!isRep && Objects.nonNull(apiMethodDoc.getRequestSchema())) {
             content.put("schema", apiMethodDoc.getRequestSchema());
         } else {
-            content.put("schema", buildBodySchema(apiMethodDoc, isRep, componentKey));
+            content.put("schema", buildBodySchema(apiMethodDoc, isRep));
         }
-        if (OPENAPI_3_COMPONENT_KRY.equals (componentKey) &&
+
+        if (OPENAPI_2_COMPONENT_KRY.equals(componentKey) && !isRep) {
+            content.put("name", apiMethodDoc.getName());
+        }
+        if (OPENAPI_3_COMPONENT_KRY.equals(componentKey) &&
                 (!isRep && apiConfig.isRequestExample() || (isRep && apiConfig.isResponseExample()))) {
             content.put("examples", buildBodyExample(apiMethodDoc, isRep));
         }
@@ -184,17 +197,17 @@ public abstract class AbstractOpenApiBuilder {
      * @param apiMethodDoc ApiMethodDoc
      * @param isRep        is response
      */
-    public static Map<String, Object> buildBodySchema(ApiMethodDoc apiMethodDoc, boolean isRep, String componentsKey) {
+    public Map<String, Object> buildBodySchema(ApiMethodDoc apiMethodDoc, boolean isRep) {
         Map<String, Object> schema = new HashMap<>(10);
         Map<String, Object> innerScheme = new HashMap<>(10);
         String requestRef;
         if (apiMethodDoc.getContentType().equals(DocGlobalConstants.URL_CONTENT_TYPE)) {
-            requestRef = componentsKey + OpenApiSchemaUtil.getClassNameFromParams(apiMethodDoc.getQueryParams());
+            requestRef = componentKey + OpenApiSchemaUtil.getClassNameFromParams(apiMethodDoc.getQueryParams(), COMPONENT_REQUEST_SUFFIX);
         } else {
-            requestRef = componentsKey + OpenApiSchemaUtil.getClassNameFromParams(apiMethodDoc.getRequestParams());
+            requestRef = componentKey + OpenApiSchemaUtil.getClassNameFromParams(apiMethodDoc.getRequestParams(), COMPONENT_REQUEST_SUFFIX);
         }
         //remove special characters in url
-        String responseRef = componentsKey + OpenApiSchemaUtil.getClassNameFromParams(apiMethodDoc.getResponseParams());
+        String responseRef = componentKey + OpenApiSchemaUtil.getClassNameFromParams(apiMethodDoc.getResponseParams(), COMPONENT_RESPONSE_SUFFIX);
 
         //List param
         if (apiMethodDoc.getIsRequestArray() == 1) {
@@ -239,8 +252,8 @@ public abstract class AbstractOpenApiBuilder {
         content.put("summary", "test data");
         if (!isRep) {
             content.put("value", StringUtil.isEmpty(
-                apiMethodDoc.getRequestExample().getJsonBody()) ? apiMethodDoc.getRequestExample().getExampleBody() :
-                apiMethodDoc.getRequestExample().getJsonBody());
+                    apiMethodDoc.getRequestExample().getJsonBody()) ? apiMethodDoc.getRequestExample().getExampleBody() :
+                    apiMethodDoc.getRequestExample().getJsonBody());
         } else {
             content.put("value", apiMethodDoc.getResponseUsage());
         }
@@ -322,14 +335,14 @@ public abstract class AbstractOpenApiBuilder {
      *
      * @param apiDocs List of ApiDoc
      */
-    abstract public  Map<String, Object> buildComponentsSchema(List<ApiDoc> apiDocs);
+    abstract public Map<String, Object> buildComponentsSchema(List<ApiDoc> apiDocs);
 
     /**
      * component schema properties
      *
      * @param apiParam list of ApiParam
      */
-    public static Map<String, Object> buildProperties(List<ApiParam> apiParam, Map<String, Object> component,String commpentKey) {
+    public Map<String, Object> buildProperties(List<ApiParam> apiParam, Map<String, Object> component, boolean isResp) {
         Map<String, Object> properties = new HashMap<>();
         Map<String, Object> propertiesData = new LinkedHashMap<>();
         List<String> requiredList = new ArrayList<>();
@@ -346,7 +359,7 @@ public abstract class AbstractOpenApiBuilder {
                     continue;
                 }
                 String field = param.getField();
-                propertiesData.put(field, buildPropertiesData(param, component, commpentKey));
+                propertiesData.put(field, buildPropertiesData(param, component, isResp));
             }
             if (!propertiesData.isEmpty()) {
                 properties.put("properties", propertiesData);
@@ -366,12 +379,12 @@ public abstract class AbstractOpenApiBuilder {
      *
      * @param apiParam ApiParam
      */
-    private static Map<String, Object> buildPropertiesData(ApiParam apiParam, Map<String, Object> component, String componentKey) {
+    private Map<String, Object> buildPropertiesData(ApiParam apiParam, Map<String, Object> component, boolean isResp) {
         Map<String, Object> propertiesData = new HashMap<>();
         String openApiType = DocUtil.javaTypeToOpenApiTypeConvert(apiParam.getType());
         //array object file map
         propertiesData.put("description", apiParam.getDesc());
-        propertiesData.put("example",StringUtil.removeDoubleQuotes(apiParam.getValue()));
+        propertiesData.put("example", StringUtil.removeDoubleQuotes(apiParam.getValue()));
 
         if (!"object".equals(openApiType)) {
             propertiesData.put("type", openApiType);
@@ -386,25 +399,24 @@ public abstract class AbstractOpenApiBuilder {
             if (CollectionUtil.isNotEmpty(apiParam.getChildren())) {
                 if (!apiParam.isSelfReferenceLoop()) {
                     Map<String, Object> arrayRef = new HashMap<>(4);
-                    String childSchemaName = OpenApiSchemaUtil.getClassNameFromParams(apiParam.getChildren());
+                    String suffix = isResp ? COMPONENT_RESPONSE_SUFFIX : COMPONENT_REQUEST_SUFFIX;
+                    String childSchemaName = OpenApiSchemaUtil.getClassNameFromParams(apiParam.getChildren(), suffix);
                     if (childSchemaName.contains(OpenApiSchemaUtil.NO_BODY_PARAM)) {
                         propertiesData.put("type", "object");
                         propertiesData.put("description", apiParam.getDesc() + "(object)");
                     } else {
-                        component.put(childSchemaName, buildProperties(apiParam.getChildren(), component,componentKey));
+                        component.put(childSchemaName, buildProperties(apiParam.getChildren(), component, isResp));
                         arrayRef.put("$ref", componentKey + childSchemaName);
                         propertiesData.put("items", arrayRef);
                     }
                 }
             }
             //基础数据类型
-            else{
+            else {
                 Map<String, Object> arrayRef = new HashMap<>(4);
                 arrayRef.put("type", "string");
                 propertiesData.put("items", arrayRef);
             }
-
-
         }
         if ("file".equals(apiParam.getType())) {
             propertiesData.put("type", "string");
@@ -414,13 +426,14 @@ public abstract class AbstractOpenApiBuilder {
             if (CollectionUtil.isNotEmpty(apiParam.getChildren())) {
                 propertiesData.put("type", "object");
                 propertiesData.put("description", apiParam.getDesc() + "(object)");
+                String suffix = isResp ? COMPONENT_RESPONSE_SUFFIX : COMPONENT_REQUEST_SUFFIX;
                 if (!apiParam.isSelfReferenceLoop()) {
-                    String childSchemaName = OpenApiSchemaUtil.getClassNameFromParams(apiParam.getChildren());
+                    String childSchemaName = OpenApiSchemaUtil.getClassNameFromParams(apiParam.getChildren(), suffix);
                     if (childSchemaName.contains(OpenApiSchemaUtil.NO_BODY_PARAM)) {
                         propertiesData.put("type", "object");
                         propertiesData.put("description", apiParam.getDesc() + "(object)");
                     } else {
-                        component.put(childSchemaName, buildProperties(apiParam.getChildren(), component,componentKey));
+                        component.put(childSchemaName, buildProperties(apiParam.getChildren(), component, isResp));
                         propertiesData.put("$ref", componentKey + childSchemaName);
                     }
                 }

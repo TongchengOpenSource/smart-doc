@@ -79,7 +79,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
     AtomicInteger atomicInteger = new AtomicInteger(1);
 
     default List<ApiDoc> processApiData(ProjectDocConfigBuilder projectBuilder, FrameworkAnnotations frameworkAnnotations,
-        List<ApiReqParam> configApiReqParams, IRequestMappingHandler baseMappingHandler, IHeaderHandler headerHandler) {
+                                        List<ApiReqParam> configApiReqParams, IRequestMappingHandler baseMappingHandler, IHeaderHandler headerHandler) {
         ApiConfig apiConfig = projectBuilder.getApiConfig();
         List<ApiDoc> apiDocList = new ArrayList<>();
         int order = 0;
@@ -105,7 +105,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                 order = Integer.parseInt(strOrder);
             }
             List<ApiMethodDoc> apiMethodDocs = buildEntryPointMethod(cls, apiConfig, projectBuilder,
-                frameworkAnnotations, configApiReqParams, baseMappingHandler, headerHandler);
+                    frameworkAnnotations, configApiReqParams, baseMappingHandler, headerHandler);
             this.handleApiDoc(cls, apiDocList, apiMethodDocs, order, apiConfig.isMd5EncryptedHtmlName());
         }
         apiDocList = handleTagsApiDoc(apiDocList);
@@ -114,8 +114,8 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
         } else if (setCustomOrder) {
             // while set custom oder
             return apiDocList.stream()
-                .sorted(Comparator.comparing(ApiDoc::getOrder))
-                .peek(p -> p.setOrder(atomicInteger.getAndAdd(1))).collect(Collectors.toList());
+                    .sorted(Comparator.comparing(ApiDoc::getOrder))
+                    .peek(p -> p.setOrder(atomicInteger.getAndAdd(1))).collect(Collectors.toList());
         }
         return apiDocList;
     }
@@ -127,11 +127,11 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
         }
         for (ApiReqParam header : headers) {
             builder.append("|")
-                .append(header.getName()).append("|")
-                .append(header.getType()).append("|")
-                .append(header.isRequired()).append("|")
-                .append(header.getDesc()).append("|")
-                .append(header.getSince()).append("|\n");
+                    .append(header.getName()).append("|")
+                    .append(header.getType()).append("|")
+                    .append(header.isRequired()).append("|")
+                    .append(header.getDesc()).append("|")
+                    .append(header.getSince()).append("|\n");
         }
         return builder.toString();
     }
@@ -180,12 +180,12 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
         }
         String type = ValidateUtil.isPositiveInteger(paramValue) ? "int32" : "string";
         ApiParam apiParam = ApiParam.of().setField(paramName)
-            .setId(paramList.size() + 1)
-            .setQueryParam(true)
-            .setValue(paramValue)
-            .setType(type).setDesc(description)
-            .setRequired(true)
-            .setVersion(DocGlobalConstants.DEFAULT_VERSION);
+                .setId(paramList.size() + 1)
+                .setQueryParam(true)
+                .setValue(paramValue)
+                .setType(type).setDesc(description)
+                .setRequired(true)
+                .setVersion(DocGlobalConstants.DEFAULT_VERSION);
         paramList.add(apiParam);
         mappingParams.put(paramName, null);
     }
@@ -294,8 +294,8 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
     }
 
     default List<ApiMethodDoc> buildEntryPointMethod(final JavaClass cls, ApiConfig apiConfig,
-        ProjectDocConfigBuilder projectBuilder, FrameworkAnnotations frameworkAnnotations,
-        List<ApiReqParam> configApiReqParams, IRequestMappingHandler baseMappingHandler, IHeaderHandler headerHandler) {
+                                                     ProjectDocConfigBuilder projectBuilder, FrameworkAnnotations frameworkAnnotations,
+                                                     List<ApiReqParam> configApiReqParams, IRequestMappingHandler baseMappingHandler, IHeaderHandler headerHandler) {
         String clazName = cls.getCanonicalName();
         boolean paramsDataToTree = projectBuilder.getApiConfig().isParamsDataToTree();
         String group = JavaClassUtil.getClassTagsValue(cls, DocTags.GROUP, Boolean.TRUE);
@@ -310,7 +310,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
             }
             if (CollectionUtil.isNotEmpty(mappingAnnotation.getPathProps())) {
                 baseUrl = StringUtil.removeQuotes(DocUtil.getPathUrl(annotation, mappingAnnotation.getPathProps()
-                    .toArray(new String[0])));
+                        .toArray(new String[0])));
             }
         }
 
@@ -343,8 +343,8 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
             JavaMethod method = docJavaMethod.getJavaMethod();
             //handle request mapping
             RequestMapping requestMapping = baseMappingHandler.handle(projectBuilder, baseUrl,
-                method, frameworkAnnotations,
-                (javaClass, mapping) -> this.requestMappingPostProcess(javaClass, method, mapping));
+                    method, frameworkAnnotations,
+                    (javaClass, mapping) -> this.requestMappingPostProcess(javaClass, method, mapping));
             if (Objects.isNull(requestMapping)) {
                 continue;
             }
@@ -382,7 +382,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
             apiMethodDoc.setDeprecated(requestMapping.isDeprecated());
 
             final List<ApiReqParam> apiReqParamList = configApiReqParams.stream()
-                .filter(param -> DocUtil.filterPath(requestMapping, param)).collect(Collectors.toList());
+                    .filter(param -> DocUtil.filterPath(requestMapping, param)).collect(Collectors.toList());
 
             // build request params
             ApiMethodReqParam apiMethodReqParam = requestParams(docJavaMethod, projectBuilder, apiReqParamList, frameworkAnnotations);
@@ -398,7 +398,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
             final Map<String, List<ApiReqParam>> reqParamMap = configApiReqParams.stream().collect(Collectors.groupingBy(ApiReqParam::getParamIn));
             final List<ApiReqParam> headerParamList = reqParamMap.getOrDefault(ApiReqParamInTypeEnum.HEADER.getValue(), Collections.emptyList());
             allApiReqHeaders = Stream.of(headerParamList, apiReqHeaders).filter(Objects::nonNull)
-                .flatMap(Collection::stream).distinct().filter(param -> DocUtil.filterPath(requestMapping, param)).collect(Collectors.toList());
+                    .flatMap(Collection::stream).distinct().filter(param -> DocUtil.filterPath(requestMapping, param)).collect(Collectors.toList());
 
             //reduce create in template
             apiMethodDoc.setHeaders(this.createDocRenderHeaders(allApiReqHeaders, apiConfig.isAdoc()));
@@ -417,7 +417,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 
             // build request json
             ApiRequestExample requestExample = buildReqJson(docJavaMethod, apiMethodDoc, requestMapping.getMethodType(),
-                projectBuilder, frameworkAnnotations);
+                    projectBuilder, frameworkAnnotations);
             String requestJson = requestExample.getExampleBody();
             // set request example detail
             apiMethodDoc.setRequestExample(requestExample);
@@ -439,7 +439,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
             apiMethodDoc.setRequestSchema(docJavaMethod.getRequestSchema());
             apiMethodDoc.setResponseParams(responseParams);
 
-            TornaUtil.setTornaArrayTags(apiMethodDoc);
+            TornaUtil.setTornaArrayTags(docJavaMethod.getJavaMethod(), apiMethodDoc);
             methodDocList.add(apiMethodDoc);
         }
 
@@ -447,15 +447,15 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
     }
 
     default ApiRequestExample buildReqJson(DocJavaMethod javaMethod, ApiMethodDoc apiMethodDoc, String methodType,
-        ProjectDocConfigBuilder configBuilder, FrameworkAnnotations frameworkAnnotations) {
+                                           ProjectDocConfigBuilder configBuilder, FrameworkAnnotations frameworkAnnotations) {
         JavaMethod method = javaMethod.getJavaMethod();
         Map<String, String> pathParamsMap = new LinkedHashMap<>();
         Map<String, String> queryParamsMap = new LinkedHashMap<>();
 
         apiMethodDoc.getPathParams().stream().filter(Objects::nonNull).filter(p -> StringUtil.isNotEmpty(p.getValue()) || p.isConfigParam())
-            .forEach(param -> pathParamsMap.put(param.getSourceField(), param.getValue()));
+                .forEach(param -> pathParamsMap.put(param.getSourceField(), param.getValue()));
         apiMethodDoc.getQueryParams().stream().filter(Objects::nonNull).filter(p -> StringUtil.isNotEmpty(p.getValue()) || p.isConfigParam())
-            .forEach(param -> queryParamsMap.put(param.getSourceField(), param.getValue()));
+                .forEach(param -> queryParamsMap.put(param.getSourceField(), param.getValue()));
         List<JavaAnnotation> methodAnnotations = method.getAnnotations();
         Map<String, MappingAnnotation> mappingAnnotationMap = frameworkAnnotations.getMappingAnnotations();
         for (JavaAnnotation annotation : methodAnnotations) {
@@ -487,10 +487,10 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
             url = apiMethodDoc.getServerUrl() + "/" + url;
             url = UrlUtil.simplifyUrl(url);
             CurlRequest curlRequest = CurlRequest.builder()
-                .setContentType(apiMethodDoc.getContentType())
-                .setType(methodType)
-                .setReqHeaders(reqHeaderList)
-                .setUrl(url);
+                    .setContentType(apiMethodDoc.getContentType())
+                    .setType(methodType)
+                    .setReqHeaders(reqHeaderList)
+                    .setUrl(url);
             String format = CurlUtil.toCurl(curlRequest);
             return ApiRequestExample.builder().setUrl(apiMethodDoc.getUrl()).setExampleBody(format);
         }
@@ -556,7 +556,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                         requestExample.setJsonBody(mockValue).setJson(true);
                     } else {
                         String json = JsonBuildHelper.buildJson(typeName, gicTypeName, Boolean.FALSE, 0, new HashMap<>(), groupClasses,
-                            configBuilder);
+                                configBuilder);
                         requestExample.setJsonBody(JsonUtil.toPrettyFormat(json)).setJson(true);
                     }
                     queryParamsMap.remove(paramName);
@@ -621,9 +621,9 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                     gicName = gicName.substring(0, gicName.indexOf("["));
                 }
                 if (!JavaClassValidateUtil.isPrimitive(gicName)
-                    && !configBuilder.getJavaProjectBuilder().getClassByName(gicName).isEnum()) {
+                        && !configBuilder.getJavaProjectBuilder().getClassByName(gicName).isEnum()) {
                     throw new RuntimeException("can't support binding Collection on method "
-                        + method.getName() + "Check it in " + method.getDeclaringClass().getCanonicalName());
+                            + method.getName() + "Check it in " + method.getDeclaringClass().getCanonicalName());
                 }
                 String value;
                 JavaClass javaClass1 = configBuilder.getClassByName(gicName);
@@ -659,7 +659,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
         // set content-type to fromData
         boolean hasFormDataUploadFile = formDataList.stream().anyMatch(form -> Objects.equals(form.getType(), DocGlobalConstants.PARAM_TYPE_FILE));
         Map<Boolean, List<FormData>> formDataGroupMap = formDataList.stream()
-            .collect(Collectors.groupingBy(e -> Objects.equals(e.getType(), DocGlobalConstants.PARAM_TYPE_FILE)));
+                .collect(Collectors.groupingBy(e -> Objects.equals(e.getType(), DocGlobalConstants.PARAM_TYPE_FILE)));
         List<FormData> fileFormDataList = formDataGroupMap.getOrDefault(Boolean.TRUE, new ArrayList<>());
         if (hasFormDataUploadFile) {
             formDataList = formDataGroupMap.getOrDefault(Boolean.FALSE, new ArrayList<>());
@@ -680,7 +680,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
             //for post put
             path = DocUtil.formatAndRemove(path, pathParamsMap);
             body = UrlUtil.urlJoin(DocGlobalConstants.EMPTY, queryParamsMap)
-                .replace("?", DocGlobalConstants.EMPTY);
+                    .replace("?", DocGlobalConstants.EMPTY);
             body = StringUtil.removeQuotes(body);
             url = apiMethodDoc.getServerUrl() + "/" + path;
             url = UrlUtil.simplifyUrl(url);
@@ -690,30 +690,30 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                     url = url + "?" + body;
                 }
                 CurlRequest curlRequest = CurlRequest.builder()
-                    .setBody(requestExample.getJsonBody())
-                    .setContentType(apiMethodDoc.getContentType())
-                    .setType(methodType)
-                    .setReqHeaders(reqHeaderList)
-                    .setUrl(url);
+                        .setBody(requestExample.getJsonBody())
+                        .setContentType(apiMethodDoc.getContentType())
+                        .setType(methodType)
+                        .setReqHeaders(reqHeaderList)
+                        .setUrl(url);
                 exampleBody = CurlUtil.toCurl(curlRequest);
             } else {
                 CurlRequest curlRequest;
                 if (StringUtil.isNotEmpty(body)) {
                     curlRequest = CurlRequest.builder()
-                        .setBody(body)
-                        .setContentType(apiMethodDoc.getContentType())
-                        .setFileFormDataList(fileFormDataList)
-                        .setType(methodType)
-                        .setReqHeaders(reqHeaderList)
-                        .setUrl(url);
+                            .setBody(body)
+                            .setContentType(apiMethodDoc.getContentType())
+                            .setFileFormDataList(fileFormDataList)
+                            .setType(methodType)
+                            .setReqHeaders(reqHeaderList)
+                            .setUrl(url);
                 } else {
                     curlRequest = CurlRequest.builder()
-                        .setBody(requestExample.getJsonBody())
-                        .setContentType(apiMethodDoc.getContentType())
-                        .setFileFormDataList(fileFormDataList)
-                        .setType(methodType)
-                        .setReqHeaders(reqHeaderList)
-                        .setUrl(url);
+                            .setBody(requestExample.getJsonBody())
+                            .setContentType(apiMethodDoc.getContentType())
+                            .setFileFormDataList(fileFormDataList)
+                            .setType(methodType)
+                            .setReqHeaders(reqHeaderList)
+                            .setUrl(url);
                 }
                 exampleBody = CurlUtil.toCurl(curlRequest);
             }
@@ -722,23 +722,23 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
             // for get delete
             url = formatRequestUrl(pathParamsMap, queryParamsMap, apiMethodDoc.getServerUrl(), path);
             CurlRequest curlRequest = CurlRequest.builder()
-                .setBody(requestExample.getJsonBody())
-                .setContentType(apiMethodDoc.getContentType())
-                .setType(methodType)
-                .setReqHeaders(reqHeaderList)
-                .setUrl(url);
+                    .setBody(requestExample.getJsonBody())
+                    .setContentType(apiMethodDoc.getContentType())
+                    .setType(methodType)
+                    .setReqHeaders(reqHeaderList)
+                    .setUrl(url);
             exampleBody = CurlUtil.toCurl(curlRequest);
 
             requestExample.setExampleBody(exampleBody)
-                .setJsonBody(requestExample.isJson() ? requestExample.getJsonBody() : DocGlobalConstants.EMPTY)
-                .setUrl(url);
+                    .setJsonBody(requestExample.isJson() ? requestExample.getJsonBody() : DocGlobalConstants.EMPTY)
+                    .setUrl(url);
         }
         return requestExample;
     }
 
 
     default ApiMethodReqParam requestParams(final DocJavaMethod docJavaMethod, ProjectDocConfigBuilder builder,
-        List<ApiReqParam> configApiReqParams, FrameworkAnnotations frameworkAnnotations) {
+                                            List<ApiReqParam> configApiReqParams, FrameworkAnnotations frameworkAnnotations) {
         JavaMethod javaMethod = docJavaMethod.getJavaMethod();
         boolean isStrict = builder.getApiConfig().isStrict();
         String className = javaMethod.getDeclaringClass().getCanonicalName();
@@ -768,22 +768,22 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
             }
         }
         final Map<String, Map<String, ApiReqParam>> collect = configApiReqParams.stream().collect(Collectors.groupingBy(ApiReqParam::getParamIn,
-            Collectors.toMap(ApiReqParam::getName, m -> m, (k1, k2) -> k1)));
+                Collectors.toMap(ApiReqParam::getName, m -> m, (k1, k2) -> k1)));
         final Map<String, ApiReqParam> pathReqParamMap = collect.getOrDefault(ApiReqParamInTypeEnum.PATH.getValue(), Collections.emptyMap());
         final Map<String, ApiReqParam> queryReqParamMap = collect.getOrDefault(ApiReqParamInTypeEnum.QUERY.getValue(), Collections.emptyMap());
         List<DocJavaParameter> parameterList = getJavaParameterList(builder, docJavaMethod, frameworkAnnotations);
         if (parameterList.isEmpty()) {
             AtomicInteger querySize = new AtomicInteger(paramList.size() + 1);
             paramList.addAll(queryReqParamMap.values().stream()
-                .map(p -> ApiReqParam.convertToApiParam(p).setQueryParam(true).setId(querySize.getAndIncrement()))
-                .collect(Collectors.toList()));
+                    .map(p -> ApiReqParam.convertToApiParam(p).setQueryParam(true).setId(querySize.getAndIncrement()))
+                    .collect(Collectors.toList()));
             AtomicInteger pathSize = new AtomicInteger(1);
             return ApiMethodReqParam.builder()
-                .setPathParams(new ArrayList<>(pathReqParamMap.values().stream()
-                    .map(p -> ApiReqParam.convertToApiParam(p).setPathParam(true).setId(pathSize.getAndIncrement()))
-                    .collect(Collectors.toList())))
-                .setQueryParams(paramList)
-                .setRequestParams(new ArrayList<>(0));
+                    .setPathParams(new ArrayList<>(pathReqParamMap.values().stream()
+                            .map(p -> ApiReqParam.convertToApiParam(p).setPathParam(true).setId(pathSize.getAndIncrement()))
+                            .collect(Collectors.toList())))
+                    .setQueryParams(paramList)
+                    .setRequestParams(new ArrayList<>(0));
         }
         boolean requestFieldToUnderline = builder.getApiConfig().isRequestFieldToUnderline();
         int requestBodyCounter = 0;
@@ -800,7 +800,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
             String fullTypeName = apiParameter.getFullyQualifiedName();
             if (!paramTagMap.containsKey(paramName) && JavaClassValidateUtil.isPrimitive(fullTypeName) && isStrict) {
                 throw new RuntimeException("ERROR: Unable to find javadoc @param for actual param \""
-                    + paramName + "\" in method " + javaMethod.getName() + " from " + className);
+                        + paramName + "\" in method " + javaMethod.getName() + " from " + className);
             }
             StringBuilder comment = new StringBuilder(this.paramCommentResolve(paramTagMap.get(paramName)));
             if (requestFieldToUnderline) {
@@ -820,7 +820,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                     continue out;
                 }
                 if (frameworkAnnotations.getRequestParamAnnotation().getAnnotationName().equals(annotationName) ||
-                    frameworkAnnotations.getPathVariableAnnotation().getAnnotationName().equals(annotationName)) {
+                        frameworkAnnotations.getPathVariableAnnotation().getAnnotationName().equals(annotationName)) {
                     String defaultValueProp = DocAnnotationConstants.DEFAULT_VALUE_PROP;
                     String requiredProp = DocAnnotationConstants.REQUIRED_PROP;
                     if (frameworkAnnotations.getRequestParamAnnotation().getAnnotationName().equals(annotationName)) {
@@ -850,7 +850,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                 if (frameworkAnnotations.getRequestBodyAnnotation().getAnnotationName().equals(annotationName)) {
                     if (requestBodyCounter > 0) {
                         throw new RuntimeException("You have use @RequestBody Passing multiple variables  for method "
-                            + javaMethod.getName() + " in " + className + ",@RequestBody annotation could only bind one variables.");
+                                + javaMethod.getName() + " in " + className + ",@RequestBody annotation could only bind one variables.");
                     }
                     mockValue = JsonBuildHelper.buildJson(fullTypeName, typeName, Boolean.FALSE, 0, new HashMap<>(), groupClasses, builder);
                     requestBodyCounter++;
@@ -862,9 +862,9 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
             //file upload
             if (JavaClassValidateUtil.isFile(typeName)) {
                 ApiParam param = ApiParam.of().setField(paramName).setType(DocGlobalConstants.PARAM_TYPE_FILE)
-                    .setId(paramList.size() + 1).setQueryParam(true)
-                    .setRequired(required).setVersion(DocGlobalConstants.DEFAULT_VERSION)
-                    .setDesc(comment.toString());
+                        .setId(paramList.size() + 1).setQueryParam(true)
+                        .setRequired(required).setVersion(DocGlobalConstants.DEFAULT_VERSION)
+                        .setDesc(comment.toString());
                 if (typeName.contains("[]") || typeName.endsWith(">")) {
                     comment.append("(array of file)");
                     param.setType(DocGlobalConstants.PARAM_TYPE_FILE);
@@ -891,13 +891,13 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                 if (gicJavaClass.isEnum()) {
                     Object value = JavaClassUtil.getEnumValue(gicJavaClass, Boolean.TRUE);
                     ApiParam param = ApiParam.of().setField(paramName).setDesc(comment + ",[array of enum]")
-                        .setRequired(required)
-                        .setPathParam(isPathVariable)
-                        .setQueryParam(queryParam)
-                        .setId(paramList.size() + 1)
-                        .setEnumValues(JavaClassUtil.getEnumValues(gicJavaClass))
-                        .setEnumInfo(JavaClassUtil.getEnumInfo(gicJavaClass, builder))
-                        .setType("array").setValue(String.valueOf(value));
+                            .setRequired(required)
+                            .setPathParam(isPathVariable)
+                            .setQueryParam(queryParam)
+                            .setId(paramList.size() + 1)
+                            .setEnumValues(JavaClassUtil.getEnumValues(gicJavaClass))
+                            .setEnumInfo(JavaClassUtil.getEnumInfo(gicJavaClass, builder))
+                            .setType("array").setValue(String.valueOf(value));
                     paramList.add(param);
                     if (requestBodyCounter > 0) {
                         Map<String, Object> map = OpenApiSchemaUtil.arrayTypeSchema(gicName);
@@ -906,15 +906,15 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                 } else if (JavaClassValidateUtil.isPrimitive(gicName)) {
                     String shortSimple = DocClassUtil.processTypeNameForParams(gicName);
                     ApiParam param = ApiParam.of()
-                        .setField(paramName)
-                        .setDesc(comment + ",[array of " + shortSimple + "]")
-                        .setRequired(required)
-                        .setPathParam(isPathVariable)
-                        .setQueryParam(queryParam)
-                        .setId(paramList.size() + 1)
-                        .setType("array")
-                        .setVersion(DocGlobalConstants.DEFAULT_VERSION)
-                        .setValue(mockValue);
+                            .setField(paramName)
+                            .setDesc(comment + ",[array of " + shortSimple + "]")
+                            .setRequired(required)
+                            .setPathParam(isPathVariable)
+                            .setQueryParam(queryParam)
+                            .setId(paramList.size() + 1)
+                            .setType("array")
+                            .setVersion(DocGlobalConstants.DEFAULT_VERSION)
+                            .setValue(mockValue);
                     paramList.add(param);
                     if (requestBodyCounter > 0) {
                         Map<String, Object> map = OpenApiSchemaUtil.arrayTypeSchema(gicName);
@@ -923,33 +923,33 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                 } else if (JavaClassValidateUtil.isFile(gicName)) {
                     //file upload
                     ApiParam param = ApiParam.of().setField(paramName)
-                        .setType(DocGlobalConstants.PARAM_TYPE_FILE)
-                        .setId(paramList.size() + 1)
-                        .setQueryParam(true)
-                        .setRequired(required)
-                        .setVersion(DocGlobalConstants.DEFAULT_VERSION)
-                        .setHasItems(true)
-                        .setDesc(comment + "(array of file)");
+                            .setType(DocGlobalConstants.PARAM_TYPE_FILE)
+                            .setId(paramList.size() + 1)
+                            .setQueryParam(true)
+                            .setRequired(required)
+                            .setVersion(DocGlobalConstants.DEFAULT_VERSION)
+                            .setHasItems(true)
+                            .setDesc(comment + "(array of file)");
                     paramList.add(param);
                 } else {
                     if (requestBodyCounter > 0) {
                         //for json
                         paramList.addAll(ParamsBuildHelper.buildParams(gicNameArr[0], DocGlobalConstants.EMPTY, 0,
-                            String.valueOf(required), Boolean.FALSE, new HashMap<>(), builder,
-                            groupClasses, 0, Boolean.TRUE, null));
+                                String.valueOf(required), Boolean.FALSE, new HashMap<>(), builder,
+                                groupClasses, 0, Boolean.TRUE, null));
                     }
                 }
             } else if (JavaClassValidateUtil.isPrimitive(fullTypeName)) {
                 ApiParam param = ApiParam.of()
-                    .setField(paramName)
-                    .setType(DocClassUtil.processTypeNameForParams(simpleName))
-                    .setId(paramList.size() + 1)
-                    .setPathParam(isPathVariable)
-                    .setQueryParam(queryParam)
-                    .setValue(mockValue)
-                    .setDesc(comment.toString())
-                    .setRequired(required)
-                    .setVersion(DocGlobalConstants.DEFAULT_VERSION);
+                        .setField(paramName)
+                        .setType(DocClassUtil.processTypeNameForParams(simpleName))
+                        .setId(paramList.size() + 1)
+                        .setPathParam(isPathVariable)
+                        .setQueryParam(queryParam)
+                        .setValue(mockValue)
+                        .setDesc(comment.toString())
+                        .setRequired(required)
+                        .setVersion(DocGlobalConstants.DEFAULT_VERSION);
                 paramList.add(param);
                 if (requestBodyCounter > 0) {
                     Map<String, Object> map = OpenApiSchemaUtil.primaryTypeSchema(simpleName);
@@ -957,18 +957,18 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                 }
             } else if (JavaClassValidateUtil.isMap(fullTypeName)) {
                 log.warning("When using smart-doc, it is not recommended to use Map to receive parameters, Check it in "
-                    + javaMethod.getDeclaringClass().getCanonicalName() + "#" + javaMethod.getName());
+                        + javaMethod.getDeclaringClass().getCanonicalName() + "#" + javaMethod.getName());
                 //is map without Gic
                 if (JavaClassValidateUtil.isMap(typeName)) {
                     ApiParam apiParam = ApiParam.of()
-                        .setField(paramName)
-                        .setType("map")
-                        .setId(paramList.size() + 1)
-                        .setPathParam(isPathVariable)
-                        .setQueryParam(queryParam)
-                        .setDesc(comment.toString())
-                        .setRequired(required)
-                        .setVersion(DocGlobalConstants.DEFAULT_VERSION);
+                            .setField(paramName)
+                            .setType("map")
+                            .setId(paramList.size() + 1)
+                            .setPathParam(isPathVariable)
+                            .setQueryParam(queryParam)
+                            .setDesc(comment.toString())
+                            .setRequired(required)
+                            .setVersion(DocGlobalConstants.DEFAULT_VERSION);
                     paramList.add(apiParam);
                     if (requestBodyCounter > 0) {
                         Map<String, Object> map = OpenApiSchemaUtil.mapTypeSchema("object");
@@ -979,14 +979,14 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                 String[] gicNameArr = DocClassUtil.getSimpleGicName(typeName);
                 if (JavaClassValidateUtil.isPrimitive(gicNameArr[1])) {
                     ApiParam apiParam = ApiParam.of()
-                        .setField(paramName)
-                        .setType("map")
-                        .setId(paramList.size() + 1)
-                        .setPathParam(isPathVariable)
-                        .setQueryParam(queryParam)
-                        .setDesc(comment.toString())
-                        .setRequired(required)
-                        .setVersion(DocGlobalConstants.DEFAULT_VERSION);
+                            .setField(paramName)
+                            .setType("map")
+                            .setId(paramList.size() + 1)
+                            .setPathParam(isPathVariable)
+                            .setQueryParam(queryParam)
+                            .setDesc(comment.toString())
+                            .setRequired(required)
+                            .setVersion(DocGlobalConstants.DEFAULT_VERSION);
                     paramList.add(apiParam);
                     if (requestBodyCounter > 0) {
                         Map<String, Object> map = OpenApiSchemaUtil.mapTypeSchema(gicNameArr[1]);
@@ -994,8 +994,8 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                     }
                 } else {
                     paramList.addAll(ParamsBuildHelper.buildParams(gicNameArr[1], DocGlobalConstants.EMPTY, 0,
-                        String.valueOf(required), Boolean.FALSE, new HashMap<>(),
-                        builder, groupClasses, 0, Boolean.FALSE, null));
+                            String.valueOf(required), Boolean.FALSE, new HashMap<>(),
+                            builder, groupClasses, 0, Boolean.FALSE, null));
                 }
 
             }
@@ -1004,19 +1004,19 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                 String o = JavaClassUtil.getEnumParams(javaClass);
                 Object value = JavaClassUtil.getEnumValue(javaClass, isPathVariable || queryParam);
                 ApiParam param = ApiParam.of().setField(paramName)
-                    .setId(paramList.size() + 1)
-                    .setPathParam(isPathVariable)
-                    .setQueryParam(queryParam)
-                    .setValue(String.valueOf(value))
-                    .setType("enum").setDesc(StringUtil.removeQuotes(o))
-                    .setRequired(required)
-                    .setVersion(DocGlobalConstants.DEFAULT_VERSION)
-                    .setEnumInfo(JavaClassUtil.getEnumInfo(javaClass, builder))
-                    .setEnumValues(JavaClassUtil.getEnumValues(javaClass));
+                        .setId(paramList.size() + 1)
+                        .setPathParam(isPathVariable)
+                        .setQueryParam(queryParam)
+                        .setValue(String.valueOf(value))
+                        .setType("enum").setDesc(StringUtil.removeQuotes(o))
+                        .setRequired(required)
+                        .setVersion(DocGlobalConstants.DEFAULT_VERSION)
+                        .setEnumInfo(JavaClassUtil.getEnumInfo(javaClass, builder))
+                        .setEnumValues(JavaClassUtil.getEnumValues(javaClass));
                 paramList.add(param);
             } else {
                 paramList.addAll(ParamsBuildHelper.buildParams(typeName, DocGlobalConstants.EMPTY, 0,
-                    String.valueOf(required), Boolean.FALSE, new HashMap<>(), builder, groupClasses, 0, Boolean.FALSE, null));
+                        String.valueOf(required), Boolean.FALSE, new HashMap<>(), builder, groupClasses, 0, Boolean.FALSE, null));
             }
         }
         return ApiParamTreeUtil.buildMethodReqParam(paramList, queryReqParamMap, pathReqParamMap, requestBodyCounter);
@@ -1057,7 +1057,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
     }
 
     default DocJavaMethod convertToDocJavaMethod(ApiConfig apiConfig, ProjectDocConfigBuilder projectBuilder,
-        JavaMethod method, Map<String, JavaType> actualTypesMap) {
+                                                 JavaMethod method, Map<String, JavaType> actualTypesMap) {
         JavaClass cls = method.getDeclaringClass();
         String clzName = cls.getCanonicalName();
         if (StringUtil.isEmpty(method.getComment()) && apiConfig.isStrict()) {

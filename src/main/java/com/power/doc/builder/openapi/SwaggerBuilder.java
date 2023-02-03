@@ -84,12 +84,18 @@ public class SwaggerBuilder extends AbstractOpenApiBuilder {
         INSTANCE.openApiCreate(config, apiDocList);
     }
 
+    @Override
+    String getModuleName() {
+        return OPENAPI_2_COMPONENT_KRY;
+    }
+
     /**
      * Build OpenApi
      *
      * @param config Configuration of smart-doc
      */
     public void openApiCreate(ApiConfig config, List<ApiDoc> apiDocList) {
+        this.setComponentKey(getModuleName());
         Map<String, Object> json = new HashMap<>(8);
         json.put("swagger", "2.0");
         json.put("info", buildInfo(config));
@@ -158,7 +164,7 @@ public class SwaggerBuilder extends AbstractOpenApiBuilder {
         if (CollectionUtil.isNotEmpty(apiMethodDoc.getRequestParams())) {
             Map<String, Object> parameter = new HashMap<>();
             parameter.put("in", "body");
-            parameter.putAll(buildContentBody(apiConfig, apiMethodDoc, false, OPENAPI_2_COMPONENT_KRY));
+            parameter.putAll(buildContentBody(apiConfig, apiMethodDoc, false));
             parameters.add(parameter);
         }
         request.put("parameters", parameters);
@@ -179,7 +185,7 @@ public class SwaggerBuilder extends AbstractOpenApiBuilder {
         Map<String, Object> responseBody = new HashMap<>(10);
         responseBody.put("description", "OK");
         if (CollectionUtil.isNotEmpty(apiMethodDoc.getResponseParams())) {
-            responseBody.putAll(buildContentBody(apiConfig, apiMethodDoc, true, OPENAPI_2_COMPONENT_KRY));
+            responseBody.putAll(buildContentBody(apiConfig, apiMethodDoc, true));
         }
         return responseBody;
     }
@@ -265,14 +271,14 @@ public class SwaggerBuilder extends AbstractOpenApiBuilder {
                     apiMethodDocs.forEach(
                             method -> {
                                 //request components
-                                String requestSchema = OpenApiSchemaUtil.getClassNameFromParams(method.getRequestParams());
+                                String requestSchema = OpenApiSchemaUtil.getClassNameFromParams(method.getRequestParams(), COMPONENT_REQUEST_SUFFIX);
                                 List<ApiParam> requestParams = method.getRequestParams();
-                                Map<String, Object> prop = buildProperties(requestParams, component, OPENAPI_2_COMPONENT_KRY);
+                                Map<String, Object> prop = buildProperties(requestParams, component, false);
                                 component.put(requestSchema, prop);
                                 //response components
                                 List<ApiParam> responseParams = method.getResponseParams();
-                                String schemaName = OpenApiSchemaUtil.getClassNameFromParams(method.getResponseParams());
-                                component.put(schemaName, buildProperties(responseParams, component, OPENAPI_2_COMPONENT_KRY));
+                                String schemaName = OpenApiSchemaUtil.getClassNameFromParams(method.getResponseParams(), COMPONENT_RESPONSE_SUFFIX);
+                                component.put(schemaName, buildProperties(responseParams, component, true));
                             }
                     );
                 }
