@@ -659,6 +659,7 @@ public class DocUtil {
             case "boolean":
                 return "boolean";
             case "multipartfile":
+            case "file":
                 return "file";
             default:
                 return "object";

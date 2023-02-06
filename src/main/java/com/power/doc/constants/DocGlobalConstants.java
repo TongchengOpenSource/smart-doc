@@ -253,4 +253,8 @@ public interface DocGlobalConstants {
     String COMPONENT_REQUEST_SUFFIX = "_request";
 
     String COMPONENT_RESPONSE_SUFFIX = "_response";
+
+    String SWAGGER_FILE_TAG = "formData";
+
+    String OPENAPI_TAG = "default";
 }

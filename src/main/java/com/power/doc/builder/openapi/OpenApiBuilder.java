@@ -141,16 +141,18 @@ public class OpenApiBuilder extends AbstractOpenApiBuilder {
         Map<String, Object> request = new HashMap<>(20);
         request.put("summary", apiMethodDoc.getDesc());
         request.put("description", apiMethodDoc.getDetail());
+        String tag = StringUtil.isEmpty(apiDoc.getDesc()) ? OPENAPI_TAG : apiDoc.getDesc();
         if (StringUtil.isNotEmpty(apiMethodDoc.getGroup())) {
-            request.put("tags", new String[]{apiDoc.getDesc()});
+            request.put("tags", new String[]{tag});
         } else {
-            request.put("tags", new String[]{apiDoc.getDesc()});
+            request.put("tags", new String[]{tag});
         }
         request.put("requestBody", buildRequestBody(apiConfig, apiMethodDoc));
         request.put("parameters", buildParameters(apiMethodDoc));
         request.put("responses", buildResponses(apiConfig, apiMethodDoc));
         request.put("deprecated", apiMethodDoc.isDeprecated());
-        request.put("operationId", String.join("", OpenApiSchemaUtil.getPatternResult("[A-Za-z0-9{}]*", apiMethodDoc.getPath())));
+        String operationId = apiMethodDoc.getUrl().replace(apiMethodDoc.getServerUrl(),"");
+        request.put("operationId", String.join("", OpenApiSchemaUtil.getPatternResult("[A-Za-z0-9{}]*", operationId)));
 
         return request;
     }
