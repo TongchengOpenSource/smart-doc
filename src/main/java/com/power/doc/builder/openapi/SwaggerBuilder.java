@@ -44,6 +44,7 @@ import com.power.doc.utils.DocUtil;
 import com.power.doc.utils.JsonUtil;
 import com.power.doc.utils.OpenApiSchemaUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
+import com.thoughtworks.qdox.model.JavaClass;
 import org.apache.commons.lang3.StringUtils;
 
 import static com.power.doc.constants.DocGlobalConstants.*;
@@ -277,7 +278,6 @@ public class SwaggerBuilder extends AbstractOpenApiBuilder {
                 } else {
                     parameters.put("type", "integer");
                 }
-
             }
 
         }
