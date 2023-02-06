@@ -1090,8 +1090,6 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
             docJavaMethod.setAuthor(classAuthor);
         }
 
-        docJavaMethod.setParamTagMap(DocUtil.getCommentsByTag(method, DocTags.PARAM, clzName));
-        docJavaMethod.setParamsComments(DocUtil.getCommentsByTag(method, DocTags.PARAM, null));
         String comment = DocUtil.getEscapeAndCleanComment(method.getComment());
         docJavaMethod.setDesc(comment);
 
