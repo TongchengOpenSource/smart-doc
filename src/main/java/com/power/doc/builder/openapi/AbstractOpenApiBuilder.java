@@ -113,11 +113,12 @@ public abstract class AbstractOpenApiBuilder {
         Map<String, Object> pathMap = new HashMap<>(500);
         apiDocList.forEach(
                 a -> {
-                    tags.add(OpenApiTag.of(a.getDesc(), a.getDesc()));
+                    String tag = StringUtil.isEmpty(a.getDesc()) ? OPENAPI_TAG : a.getDesc();
+                    tags.add(OpenApiTag.of(tag, tag));
                     List<ApiMethodDoc> apiMethodDocs = a.getList();
                     apiMethodDocs.forEach(
                             method -> {
-                                String url = method.getPath().replace("//", "/");
+                                String url = method.getUrl().replace(method.getServerUrl(), "").replace("//", "/");
                                 Map<String, Object> request = buildPathUrls(apiConfig, method, a);
                                 if (!pathMap.containsKey(url)) {
                                     pathMap.put(url, request);
@@ -208,22 +209,23 @@ public abstract class AbstractOpenApiBuilder {
         }
         //remove special characters in url
         String responseRef = componentKey + OpenApiSchemaUtil.getClassNameFromParams(apiMethodDoc.getResponseParams(), COMPONENT_RESPONSE_SUFFIX);
-
-        //List param
-        if (apiMethodDoc.getIsRequestArray() == 1) {
-            schema.put("type", ARRAY);
-            innerScheme.put("$ref", requestRef);
-            schema.put("items", innerScheme);
-        } else if (apiMethodDoc.getIsResponseArray() == 1) {
-            schema.put("type", ARRAY);
-            innerScheme.put("$ref", responseRef);
-            schema.put("items", innerScheme);
-        } else if (isRep && CollectionUtil.isNotEmpty(apiMethodDoc.getResponseParams())) {
-            schema.put("$ref", responseRef);
-        } else if (!isRep && CollectionUtil.isNotEmpty(apiMethodDoc.getRequestParams())) {
-            schema.put("$ref", requestRef);
+        if (!isRep && CollectionUtil.isNotEmpty(apiMethodDoc.getRequestParams())) {
+            if (apiMethodDoc.getIsRequestArray() == 1) {
+                schema.put("type", ARRAY);
+                innerScheme.put("$ref", requestRef);
+                schema.put("items", innerScheme);
+            } else {
+                schema.put("$ref", requestRef);
+            }
+        } else {
+            if (apiMethodDoc.getIsResponseArray() == 1) {
+                schema.put("type", ARRAY);
+                innerScheme.put("$ref", responseRef);
+                schema.put("items", innerScheme);
+            } else if (CollectionUtil.isNotEmpty(apiMethodDoc.getResponseParams())) {
+                schema.put("$ref", responseRef);
+            }
         }
-
         return schema;
     }
 
@@ -384,7 +386,9 @@ public abstract class AbstractOpenApiBuilder {
         String openApiType = DocUtil.javaTypeToOpenApiTypeConvert(apiParam.getType());
         //array object file map
         propertiesData.put("description", apiParam.getDesc());
-        propertiesData.put("example", StringUtil.removeDoubleQuotes(apiParam.getValue()));
+        if (StringUtil.isNotEmpty(apiParam.getValue())) {
+            propertiesData.put("example", StringUtil.removeDoubleQuotes(apiParam.getValue()));
+        }
 
         if (!"object".equals(openApiType)) {
             propertiesData.put("type", openApiType);

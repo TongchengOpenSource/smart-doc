@@ -22,12 +22,7 @@
  */
 package com.power.doc.builder.openapi;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.FileUtil;
@@ -49,6 +44,7 @@ import com.power.doc.utils.DocUtil;
 import com.power.doc.utils.JsonUtil;
 import com.power.doc.utils.OpenApiSchemaUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
+import com.thoughtworks.qdox.model.JavaClass;
 import org.apache.commons.lang3.StringUtils;
 
 import static com.power.doc.constants.DocGlobalConstants.*;
@@ -154,10 +150,11 @@ public class SwaggerBuilder extends AbstractOpenApiBuilder {
         Map<String, Object> request = new HashMap<>(20);
         request.put("summary", apiMethodDoc.getDesc());
         request.put("description", apiMethodDoc.getDetail());
+        String tag = StringUtil.isEmpty(apiDoc.getDesc()) ? OPENAPI_TAG : apiDoc.getDesc();
         if (StringUtil.isNotEmpty(apiMethodDoc.getGroup())) {
-            request.put("tags", new String[]{apiDoc.getDesc()});
+            request.put("tags", new String[]{tag});
         } else {
-            request.put("tags", new String[]{apiDoc.getDesc()});
+            request.put("tags", new String[]{tag});
         }
         List<Map<String, Object>> parameters = buildParameters(apiMethodDoc);
         //requestBody
@@ -167,12 +164,33 @@ public class SwaggerBuilder extends AbstractOpenApiBuilder {
             parameter.putAll(buildContentBody(apiConfig, apiMethodDoc, false));
             parameters.add(parameter);
         }
+        if (hasFile(parameters)) {
+            List<String> formData = new ArrayList<>();
+            formData.add(FILE_CONTENT_TYPE);
+            request.put("consumes", formData);
+        }
         request.put("parameters", parameters);
         request.put("responses", buildResponses(apiConfig, apiMethodDoc));
         request.put("deprecated", apiMethodDoc.isDeprecated());
-        request.put("operationId", String.join("", OpenApiSchemaUtil.getPatternResult("[A-Za-z0-9{}]*", apiMethodDoc.getPath())));
+        String operationId = apiMethodDoc.getUrl().replace(apiMethodDoc.getServerUrl(), "");
+        request.put("operationId", String.join("", OpenApiSchemaUtil.getPatternResult("[A-Za-z0-9{}]*", operationId)));
 
         return request;
+    }
+
+    /**
+     * 是否有文件
+     *
+     * @param parameters
+     * @return
+     */
+    private boolean hasFile(List<Map<String, Object>> parameters) {
+        for (Map<String, Object> param : parameters) {
+            if (SWAGGER_FILE_TAG.equals(param.get("in"))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -184,7 +202,9 @@ public class SwaggerBuilder extends AbstractOpenApiBuilder {
     public Map<String, Object> buildResponsesBody(ApiConfig apiConfig, ApiMethodDoc apiMethodDoc) {
         Map<String, Object> responseBody = new HashMap<>(10);
         responseBody.put("description", "OK");
-        if (CollectionUtil.isNotEmpty(apiMethodDoc.getResponseParams())) {
+        if (CollectionUtil.isNotEmpty(apiMethodDoc.getResponseParams()) ||
+                Objects.nonNull(apiMethodDoc.getReturnSchema())
+        ) {
             responseBody.putAll(buildContentBody(apiConfig, apiMethodDoc, true));
         }
         return responseBody;
@@ -199,15 +219,11 @@ public class SwaggerBuilder extends AbstractOpenApiBuilder {
             for (ApiParam apiParam : apiMethodDoc.getPathParams()) {
                 parameters = getStringParams(apiParam, false);
                 parameters.put("type", DocUtil.javaTypeToOpenApiTypeConvert(apiParam.getType()));
-
                 parameters.put("in", "path");
-                List<ApiParam> children = apiParam.getChildren();
-                if (CollectionUtil.isEmpty(children)) {
-                    parametersList.add(parameters);
-                }
+                parametersList.add(parameters);
             }
             for (ApiParam apiParam : apiMethodDoc.getQueryParams()) {
-                if (apiParam.isHasItems()) {
+                if (apiParam.getType().equals(ARRAY) || apiParam.isHasItems()) {
                     parameters = getStringParams(apiParam, false);
                     parameters.put("type", ARRAY);
                     parameters.put("items", getStringParams(apiParam, true));
@@ -215,10 +231,7 @@ public class SwaggerBuilder extends AbstractOpenApiBuilder {
                 } else {
                     parameters = getStringParams(apiParam, false);
                     parameters.put("type", DocUtil.javaTypeToOpenApiTypeConvert(apiParam.getType()));
-                    List<ApiParam> children = apiParam.getChildren();
-                    if (CollectionUtil.isEmpty(children)) {
-                        parametersList.add(parameters);
-                    }
+                    parametersList.add(parameters);
                 }
             }
             //with headers
@@ -243,21 +256,33 @@ public class SwaggerBuilder extends AbstractOpenApiBuilder {
     Map<String, Object> getStringParams(ApiParam apiParam, boolean hasItems) {
         Map<String, Object> parameters;
         parameters = new HashMap<>(20);
-        if ("file".equalsIgnoreCase(apiParam.getType())) {
-            parameters.put("in", "formData");
-
-        } else {
-            parameters.put("in", "query");
-        }
         if (!hasItems) {
+            if ("file".equalsIgnoreCase(apiParam.getType())) {
+                parameters.put("in", SWAGGER_FILE_TAG);
+            } else {
+                parameters.put("in", "query");
+            }
             parameters.put("name", apiParam.getField());
             parameters.put("description", apiParam.getDesc());
             parameters.put("required", apiParam.isRequired());
-        }
-        if (!OBJECT.equals(apiParam.getType())) {
             parameters.put("type", apiParam.getType());
+        } else {
+            if (OBJECT.equals(apiParam.getType()) || (ARRAY.equals(apiParam.getType()) && apiParam.isHasItems())) {
+                parameters.put("type", "object(complex POJO please use @RequestBody)");
+            } else {
+                String desc = apiParam.getDesc();
+                if (desc.contains(PARAM_TYPE_FILE)) {
+                    parameters.put("type", PARAM_TYPE_FILE);
+                } else if (desc.contains("string")) {
+                    parameters.put("type", "string");
+                } else {
+                    parameters.put("type", "integer");
+                }
+            }
+
         }
-//        parameters.put("schema", buildParametersSchema(apiParam));
+
+
         return parameters;
     }
 
@@ -286,4 +311,5 @@ public class SwaggerBuilder extends AbstractOpenApiBuilder {
         component.remove(OpenApiSchemaUtil.NO_BODY_PARAM);
         return component;
     }
+
 }

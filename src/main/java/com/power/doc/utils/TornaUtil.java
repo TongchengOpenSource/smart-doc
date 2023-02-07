@@ -323,7 +323,7 @@ public class TornaUtil {
             apiMethodDoc.setResponseArrayType(getType(method.getReturnType().getGenericCanonicalName()));
         }
         //request
-        if (CollectionUtil.isNotEmpty(method.getParameters()) && CollectionUtil.isNotEmpty(apiMethodDoc.getRequestParams())) {
+        if (CollectionUtil.isNotEmpty(method.getParameters())) {
             for (JavaParameter param : method.getParameters()) {
                 String typeName = param.getType().getCanonicalName();
                 boolean reqArray = JavaClassValidateUtil.isCollection(typeName) || JavaClassValidateUtil.isArray(typeName);
