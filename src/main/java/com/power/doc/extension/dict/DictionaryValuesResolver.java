@@ -22,14 +22,37 @@
  */
 package com.power.doc.extension.dict;
 
-import java.util.Collection;
-
 import com.power.common.model.EnumDictionary;
 
+import javax.annotation.Nonnull;
+import java.util.Collection;
+import java.util.Collections;
+
 /**
- * https://github.com/smart-doc-group/smart-doc/issues/338
+ * @see <a href="https://github.com/smart-doc-group/smart-doc/issues/338">issues-338</a>
  */
 public interface DictionaryValuesResolver {
 
-    <T extends EnumDictionary> Collection<T> resolve();
+    /**
+     * resolve the dictionary, if an exception occurs, return empty collection instead of null
+     * default behaviour is the same as {@link #resolve()}
+     *
+     * @param clazz dictionary class
+     * @return the dictionary
+     */
+    @Nonnull
+    default <T extends EnumDictionary> Collection<T> resolve(@Nonnull Class<?> clazz) {
+        return resolve();
+    }
+
+    /**
+     * resolve the dictionary, for compatibility, do not return null
+     *
+     * @see #resolve(Class)
+     */
+    @Nonnull
+    default <T extends EnumDictionary> Collection<T> resolve() {
+        return Collections.emptyList();
+    }
+
 }
