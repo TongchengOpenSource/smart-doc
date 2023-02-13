@@ -728,7 +728,7 @@ public class DocUtil {
             return new ArrayList<>(0);
         } else {
             ClassLoader classLoader = config.getClassLoader();
-            List<ApiErrorCode> errorCodeList = new ArrayList<>();
+            Set<ApiErrorCode> errorCodeList = new HashSet<>();
             try {
                 for (ApiErrorCodeDictionary dictionary : errorCodeDictionaries) {
                     Class<?> clzz = dictionary.getEnumClass();
@@ -778,7 +778,7 @@ public class DocUtil {
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
-            return errorCodeList;
+            return new ArrayList<>(errorCodeList);
         }
     }
 
