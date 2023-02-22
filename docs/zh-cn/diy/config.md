@@ -30,7 +30,7 @@
   "sortByTitle":false,//接口标题排序，默认为false,@since 1.8.7版本开始
   "showAuthor":true,//是否显示接口作者名称，默认是true,不想显示可关闭
   "requestFieldToUnderline":true,//自动将驼峰入参字段在文档中转为下划线格式,//@since 1.8.7版本开始
-  "responseFieldToUnderline":true,//自动将驼峰入参字段在文档中转为下划线格式,//@since 1.8.7版本开始
+  "responseFieldToUnderline":true,//自动将驼峰响应字段在文档中转为下划线格式,//@since 1.8.7版本开始
   "inlineEnum":true,//设置为true会将枚举详情展示到参数表中，默认关闭，//@since 1.8.8版本开始
   "recursionLimit":7,//设置允许递归执行的次数用于避免一些对象解析卡主，默认是7，正常为3次以内，//@since 1.8.8版本开始
   "allInOneDocFileName":"index.html",//自定义设置输出文档名称, @since 1.9.0
@@ -374,7 +374,7 @@
 * 默认值: `false`
 * @since `1.8.7`
 
-自动将驼峰入参字段在文档中转为下划线格式。
+自动将驼峰响应字段在文档中转为下划线格式。
 ```json
 {
     "responseFieldToUnderline": true
