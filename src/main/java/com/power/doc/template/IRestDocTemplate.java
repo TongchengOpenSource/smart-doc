@@ -803,9 +803,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                         + paramName + "\" in method " + javaMethod.getName() + " from " + className);
             }
             StringBuilder comment = new StringBuilder(this.paramCommentResolve(paramTagMap.get(paramName)));
-            if (requestFieldToUnderline) {
-                paramName = StringUtil.camelToUnderline(paramName);
-            }
+
             JavaClass javaClass = builder.getJavaProjectBuilder().getClassByName(fullTypeName);
             String mockValue = JavaFieldUtil.createMockValue(paramsComments, paramName, typeName, simpleTypeName);
             List<JavaAnnotation> annotations = parameter.getAnnotations();
@@ -859,6 +857,9 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                 required = Boolean.parseBoolean(strRequired);
             }
             comment.append(JavaFieldUtil.getJsrComment(annotations));
+            if (requestFieldToUnderline && !isPathVariable) {
+                paramName = StringUtil.camelToUnderline(paramName);
+            }
             //file upload
             if (JavaClassValidateUtil.isFile(typeName)) {
                 ApiParam param = ApiParam.of().setField(paramName).setType(DocGlobalConstants.PARAM_TYPE_FILE)
