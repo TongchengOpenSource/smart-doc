@@ -1,5 +1,17 @@
 ## smart-doc版本
 
+
+### 版本号：2.6.5
+
+- 更新日期: 2023-02-27
+- 更新内容：
+  1. 修复集合或者数组入参推送torna数据错误，[#415](https://github.com/smart-doc-group/smart-doc/issues/415)
+  2. 文档泛型支持数组类型标注。[#421](https://github.com/smart-doc-group/smart-doc/issues/421)
+  3. list<Primitive Type> 和list<File> 类型openapi生成错误。[#423](https://github.com/smart-doc-group/smart-doc/issues/423)
+  4. 修复设置requestFieldToUnderline为true时path参数丢失，[#103](https://github.com/smart-doc-group/smart-doc/issues/103)
+  5. 优化自定义字典值处理接口DictionaryValuesResolver[#pr428](https://github.com/smart-doc-group/smart-doc/pull/428)。
+  6. 修复HTML模版文档的描述展示[#pr438](https://github.com/smart-doc-group/smart-doc/pull/438)。
+
 ### 版本号：2.6.4
 
 - 更新日期: 2023-01-28
