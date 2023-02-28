@@ -58,8 +58,8 @@ public class SpringMVCRequestMappingHandler implements IRequestMappingHandler {
      */
     @Override
     public RequestMapping handle(ProjectDocConfigBuilder projectBuilder, String controllerBaseUrl,
-        JavaMethod method, FrameworkAnnotations frameworkAnnotations,
-        RequestMappingFunc requestMappingFunc) {
+                                 JavaMethod method, FrameworkAnnotations frameworkAnnotations,
+                                 RequestMappingFunc requestMappingFunc) {
 
         if (Objects.nonNull(method.getTagByName(IGNORE))) {
             return null;
@@ -80,13 +80,14 @@ public class SpringMVCRequestMappingHandler implements IRequestMappingHandler {
             if (Objects.isNull(mappingAnnotation)) {
                 continue;
             }
-            Object produces = annotation.getNamedParameter(mappingAnnotation.getProducesProp());
-            if (Objects.nonNull(produces)) {
-                mediaType = produces.toString();
+            // get consumes of annotation
+            Object consumes = annotation.getNamedParameter("consumes");
+            if (Objects.nonNull(consumes)) {
+                mediaType = consumes.toString();
             }
             if (CollectionUtil.isNotEmpty(mappingAnnotation.getPathProps())) {
                 shortUrl = DocUtil.getPathUrl(annotation, mappingAnnotation.getPathProps()
-                    .toArray(new String[0]));
+                        .toArray(new String[0]));
             }
             if (StringUtil.isNotEmpty(mappingAnnotation.getMethodType())) {
                 methodType = mappingAnnotation.getMethodType();
@@ -101,12 +102,13 @@ public class SpringMVCRequestMappingHandler implements IRequestMappingHandler {
             }
         }
         RequestMapping requestMapping = RequestMapping.builder()
-            .setMediaType(mediaType)
-            .setMethodType(methodType)
-            .setDeprecated(deprecated)
-            .setShortUrl(shortUrl);
+                .setMediaType(mediaType)
+                .setMethodType(methodType)
+                .setDeprecated(deprecated)
+                .setShortUrl(shortUrl);
         requestMapping = formatMappingData(projectBuilder, controllerBaseUrl, requestMapping);
         requestMappingFunc.process(method.getDeclaringClass(), requestMapping);
         return requestMapping;
     }
+
 }
