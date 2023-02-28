@@ -320,7 +320,9 @@ public class TornaUtil {
         //response
         if (respArray) {
             apiMethodDoc.setIsResponseArray(1);
-            apiMethodDoc.setResponseArrayType(getType(method.getReturnType().getGenericCanonicalName()));
+            String className = getType(method.getReturnType().getGenericCanonicalName());
+            String arrayType = JavaClassValidateUtil.isPrimitive(className) ? className : OBJECT;
+            apiMethodDoc.setResponseArrayType(arrayType);
         }
         //request
         if (CollectionUtil.isNotEmpty(method.getParameters())) {
@@ -329,7 +331,9 @@ public class TornaUtil {
                 boolean reqArray = JavaClassValidateUtil.isCollection(typeName) || JavaClassValidateUtil.isArray(typeName);
                 if (reqArray) {
                     apiMethodDoc.setIsRequestArray(1);
-                    apiMethodDoc.setRequestArrayType(getType(param.getType().getGenericCanonicalName()));
+                    String className = getType(param.getType().getGenericCanonicalName());
+                    String arrayType = JavaClassValidateUtil.isPrimitive(className) ? className : OBJECT;
+                    apiMethodDoc.setRequestArrayType(arrayType);
                     break;
                 }
             }
