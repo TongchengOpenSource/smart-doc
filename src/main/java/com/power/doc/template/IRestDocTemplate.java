@@ -279,9 +279,9 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
             }
             // use first annotation's value
             if (classMediaType == null) {
-                AnnotationValue consumes = annotation.getProperty("consumes");
+                Object consumes = annotation.getNamedParameter(mappingAnnotation.getConsumesProp());
                 if (consumes != null) {
-                    classMediaType = consumes.getParameterValue().toString();
+                    classMediaType = consumes.toString();
                 }
             }
         }
