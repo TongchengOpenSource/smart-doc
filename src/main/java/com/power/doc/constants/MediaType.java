@@ -104,7 +104,14 @@ public class MediaType implements Serializable {
     }
 
     public static String valueOf(String name) {
-        return fieldMap.get(name.replace("MediaType.", ""));
+        // if not springframework MediaType constant, return original value
+        if (!name.contains("MediaType.")) return name.replace("\"", "");
+        String[] split = name.replace("[", "").replace("]", "").split(",");
+        return Arrays.stream(split)
+                .map(it -> it.replace("MediaType.", "").trim())
+                .distinct()
+                .map(fieldMap::get)
+                .collect(Collectors.joining(";"));
     }
 
 }
