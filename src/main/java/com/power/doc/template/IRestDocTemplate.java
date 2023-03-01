@@ -264,6 +264,8 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
         String group = JavaClassUtil.getClassTagsValue(cls, DocTags.GROUP, Boolean.TRUE);
         List<JavaAnnotation> classAnnotations = this.getClassAnnotations(cls, frameworkAnnotations);
         String baseUrl = "";
+        // the requestMapping annotation's consumes value on class
+        String classMediaType = null;
         Map<String, MappingAnnotation> mappingAnnotationMap = frameworkAnnotations.getMappingAnnotations();
         for (JavaAnnotation annotation : classAnnotations) {
             String annotationName = annotation.getType().getValue();
@@ -274,6 +276,13 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
             if (CollectionUtil.isNotEmpty(mappingAnnotation.getPathProps())) {
                 baseUrl = StringUtil.removeQuotes(DocUtil.getPathUrl(annotation, mappingAnnotation.getPathProps()
                         .toArray(new String[0])));
+            }
+            // use first annotation's value
+            if (classMediaType == null) {
+                AnnotationValue consumes = annotation.getProperty("consumes");
+                if (consumes != null) {
+                    classMediaType = consumes.getParameterValue().toString();
+                }
             }
         }
 
@@ -319,6 +328,9 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
             String mediaType = requestMapping.getMediaType();
             if (Objects.nonNull(mediaType)) {
                 apiMethodDoc.setContentType(MediaType.valueOf(mediaType));
+            } else if (Objects.nonNull(classMediaType)) {
+                // if method does not contain consumes parameter, then use the value of class
+                apiMethodDoc.setContentType(MediaType.valueOf(classMediaType));
             }
             apiMethodDoc.setDownload(docJavaMethod.isDownload());
             apiMethodDoc.setPage(docJavaMethod.getPage());
