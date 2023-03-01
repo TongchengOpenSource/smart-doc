@@ -16,6 +16,9 @@ public class MappingAnnotation {
 
     private String producesProp;
 
+
+    private String consumesProp;
+
     private String methodProp;
 
     private String methodType;
@@ -53,6 +56,15 @@ public class MappingAnnotation {
 
     public MappingAnnotation setAnnotationFullyName(String annotationFullyName) {
         this.annotationFullyName = annotationFullyName;
+        return this;
+    }
+
+    public String getConsumesProp() {
+        return consumesProp;
+    }
+
+    public MappingAnnotation setConsumesProp(String consumesProp) {
+        this.consumesProp = consumesProp;
         return this;
     }
 
@@ -100,4 +112,5 @@ public class MappingAnnotation {
         this.scope = Arrays.asList(scope);
         return this;
     }
+
 }
