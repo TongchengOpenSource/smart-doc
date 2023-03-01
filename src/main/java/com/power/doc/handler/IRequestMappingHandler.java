@@ -60,6 +60,7 @@ public interface IRequestMappingHandler {
             url = UrlUtil.simplifyUrl(StringUtil.trim(url)) + urlSuffix;
             shortUrl = UrlUtil.simplifyUrl(StringUtil.trim(shortUrl)) + urlSuffix;
             url = DocUtil.formatPathUrl(url);
+            shortUrl = DocUtil.formatPathUrl(shortUrl);
             requestMapping.setUrl(url).setShortUrl(shortUrl);
             return requestMapping;
         }
