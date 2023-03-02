@@ -37,12 +37,13 @@ public class ApiDocTest {
         config.setCoverOld(true);
         config.setOutPath("./demoOut");
         config.setMd5EncryptedHtmlName(true);
+        config.setFramework("JAX-RS");
         // 不指定SourcePaths默认加载代码为项目src/main/java下的
         config.setSourceCodePaths(
                 SourceCodePath.builder().setDesc("本项目代码")
                         .setPath("./demo/src/main/java")
         );
-        config.setPackageFilters("com.example.demo.controller.TestController");
+        config.setPackageFilters("com.example.demo.controller.*");
 
         long start = System.currentTimeMillis();
         ApiDocBuilder.buildApiDoc(config);
