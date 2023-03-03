@@ -2,6 +2,7 @@ package com.power.doc;
 
 import com.power.common.util.DateTimeUtil;
 import com.power.doc.builder.ApiDocBuilder;
+import com.power.doc.constants.FrameworkEnum;
 import com.power.doc.model.ApiConfig;
 import com.power.doc.model.SourceCodePath;
 import org.junit.jupiter.api.Test;
@@ -37,7 +38,7 @@ public class ApiDocTest {
         config.setCoverOld(true);
         config.setOutPath("./demoOut");
         config.setMd5EncryptedHtmlName(true);
-        config.setFramework("JAX-RS");
+        config.setFramework(FrameworkEnum.SPRING.getFramework());
         // 不指定SourcePaths默认加载代码为项目src/main/java下的
         config.setSourceCodePaths(
                 SourceCodePath.builder().setDesc("本项目代码")
