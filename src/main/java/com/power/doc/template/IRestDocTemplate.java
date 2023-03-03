@@ -441,7 +441,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
             String annotationName = annotation.getType().getName();
             MappingAnnotation mappingAnnotation = mappingAnnotationMap.get(annotationName);
             if (Objects.nonNull(mappingAnnotation) && StringUtil.isNotEmpty(mappingAnnotation.getParamsProp())) {
-                Object paramsObjects = annotation.getNamedParameter("params");
+                Object paramsObjects = annotation.getNamedParameter(mappingAnnotation.getParamsProp());
                 if (Objects.isNull(paramsObjects)) {
                     continue;
                 }
