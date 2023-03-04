@@ -151,7 +151,7 @@ public class OpenApiBuilder extends AbstractOpenApiBuilder {
         request.put("parameters", buildParameters(apiMethodDoc));
         request.put("responses", buildResponses(apiConfig, apiMethodDoc));
         request.put("deprecated", apiMethodDoc.isDeprecated());
-        String operationId = apiMethodDoc.getUrl().replace(apiMethodDoc.getServerUrl(),"");
+        String operationId = apiMethodDoc.getUrl().replace(apiMethodDoc.getServerUrl(), "");
         request.put("operationId", String.join("", OpenApiSchemaUtil.getPatternResult("[A-Za-z0-9{}]*", operationId)));
 
         return request;
@@ -239,26 +239,30 @@ public class OpenApiBuilder extends AbstractOpenApiBuilder {
     Map<String, Object> getStringParams(ApiParam apiParam, boolean hasItems) {
         Map<String, Object> parameters;
         parameters = new HashMap<>(20);
-        boolean isFile = "file".equalsIgnoreCase(apiParam.getType());
         if (!hasItems) {
             parameters.put("name", apiParam.getField());
             parameters.put("description", apiParam.getDesc());
             parameters.put("required", apiParam.isRequired());
-            parameters.put("example", StringUtil.removeQuotes(apiParam.getValue()));
-        } else {
-            if (isFile) {
-                parameters.put("type", "string");
-                parameters.put("format", "binary");
-            } else {
-                parameters.put("type", apiParam.getType());
-            }
-        }
-        if (isFile) {
-            parameters.put("in", "formData");
-        } else {
             parameters.put("in", "query");
+            parameters.put("schema", buildParametersSchema(apiParam));
+        } else {
+            if (OBJECT.equals(apiParam.getType()) ||
+                    (ARRAY.equals(apiParam.getType()) && apiParam.isHasItems())) {
+                parameters.put("type", "object");
+                parameters.put("description", "(complex POJO please use @RequestBody)");
+            } else {
+                String desc = apiParam.getDesc();
+                if (desc.contains(PARAM_TYPE_FILE)) {
+                    parameters.put("type", PARAM_TYPE_FILE);
+                } else if (desc.contains("string")) {
+                    parameters.put("type", "string");
+                } else {
+                    parameters.put("type", "integer");
+                }
+            }
+            parameters.putAll(buildParametersSchema(apiParam));
         }
-        parameters.put("schema", buildParametersSchema(apiParam));
+
         return parameters;
     }
 
