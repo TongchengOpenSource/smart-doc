@@ -282,27 +282,27 @@ public abstract class AbstractOpenApiBuilder {
         Map<String, Object> schema = new HashMap<>(10);
         String openApiType = DocUtil.javaTypeToOpenApiTypeConvert(apiParam.getType());
         schema.put("type", openApiType);
-        if ("object".equals(openApiType) || "string".equals(openApiType)) {
-            if ("file".equals(apiParam.getType())) {
-                schema.put("format", "binary");
-                schema.put("type", "string");
-            } else if ("enum".equals(apiParam.getType())) {
+        if ("file".equals(apiParam.getType())) {
+            schema.put("format", "binary");
+            schema.put("type", "string");
+        } else if ("object".equals(openApiType)) {
+            if ("enum".equals(apiParam.getType())) {
                 schema.put("enum", apiParam.getEnumValues());
-            } else if (ARRAY.equals(apiParam.getType())) {
-                if (CollectionUtil.isNotEmpty(apiParam.getEnumValues())) {
-                    schema.put("type", "string");
-                    schema.put("items", apiParam.getEnumValues());
-                } else {
-                    schema.put("type", ARRAY);
-                    Map<String, String> map = new HashMap<>(4);
-                    map.put("type", "string");
-                    map.put("format", "string");
-                    schema.put("items", map);
-                }
+            }
+        } else if (ARRAY.equals(apiParam.getType())) {
+            if (CollectionUtil.isNotEmpty(apiParam.getEnumValues())) {
+                schema.put("type", "string");
+                schema.put("items", apiParam.getEnumValues());
+            } else {
+                schema.put("type", ARRAY);
+                Map<String, String> map = new HashMap<>(4);
+                map.put("type", "string");
+                map.put("format", "string");
+                schema.put("items", map);
             }
         } else {
-            schema.put("type", "integer");
-            schema.put("format", "int16".equals(apiParam.getType()) ? "int32" : apiParam.getType());
+            schema.put("type", apiParam.getType());
+            schema.put("format", "integer");
         }
         return schema;
     }
