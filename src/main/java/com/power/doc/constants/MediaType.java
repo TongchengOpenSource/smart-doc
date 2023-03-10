@@ -49,7 +49,14 @@ public class MediaType implements Serializable {
 
     public static final String APPLICATION_JSON_VALUE = "application/json";
 
+    /**
+     * Add for JAX-RS
+     */
+    public static final String APPLICATION_JSON = "application/json";
+
     public static final String APPLICATION_OCTET_STREAM_VALUE = "application/octet-stream";
+
+    public static final String APPLICATION_OCTET_STREAM = "application/octet-stream";
 
     public static final String APPLICATION_PDF_VALUE = "application/pdf";
 
@@ -73,6 +80,8 @@ public class MediaType implements Serializable {
 
     public static final String MULTIPART_FORM_DATA_VALUE = "multipart/form-data";
 
+    public static final String MULTIPART_FORM_DATA = "multipart/form-data";
+
     public static final String MULTIPART_MIXED_VALUE = "multipart/mixed";
 
     public static final String MULTIPART_RELATED_VALUE = "multipart/related";
@@ -81,9 +90,12 @@ public class MediaType implements Serializable {
 
     public static final String TEXT_HTML_VALUE = "text/html";
 
+    public static final String TEXT_HTML = "text/html";
     public static final String TEXT_MARKDOWN_VALUE = "text/markdown";
 
     public static final String TEXT_PLAIN_VALUE = "text/plain";
+
+    public static final String TEXT_PLAIN = "text/plain";
 
     public static final String TEXT_XML_VALUE = "text/xml";
 
