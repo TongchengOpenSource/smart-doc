@@ -1,4 +1,22 @@
 ## smart-doc版本
+### 版本号：2.6.6
+
+- 更新日期: 2023-03-08
+- 更新内容：
+  1. 修复集合或者数组入参推送torna数据错误，[#415](https://github.com/smart-doc-group/smart-doc/issues/415)
+  2. 请求注解consumes支持。[#424](https://github.com/smart-doc-group/smart-doc/issues/424)
+  3. url中path param占位符解析优化。[#447](https://github.com/smart-doc-group/smart-doc/issues/447）
+ 
+### 版本号：2.6.5
+
+- 更新日期: 2023-02-27
+- 更新内容：
+  1. 修复集合或者数组入参推送torna数据错误，[#415](https://github.com/smart-doc-group/smart-doc/issues/415)
+  2. 文档泛型支持数组类型标注。[#421](https://github.com/smart-doc-group/smart-doc/issues/421)
+  3. list<Primitive Type> 和list<File> 类型openapi生成错误。[#423](https://github.com/smart-doc-group/smart-doc/issues/423)
+  4. 修复设置requestFieldToUnderline为true时path参数丢失，[#103](https://github.com/smart-doc-group/smart-doc/issues/103)
+  5. 优化自定义字典值处理接口DictionaryValuesResolver[#pr428](https://github.com/smart-doc-group/smart-doc/pull/428)
+  6. 修复HTML模版文档的描述展示[#pr438](https://github.com/smart-doc-group/smart-doc/pull/438)
 
 ### 版本号：2.6.4
 
@@ -658,8 +676,8 @@
 - 更新内容：
     1. 修改进去版本更新导致的泛型解析问题。
     2. 修改1.8.9版本修改后带来的dubbo接口文档显示问题
-    2. 修改smart-doc-maven-plugin生成dubbo文档时缺乏配置文件错误问题。
-    3. 修改gradle插件的对多模块的支持。
+    3. 修改smart-doc-maven-plugin生成dubbo文档时缺乏配置文件错误问题。
+    4. 修改gradle插件的对多模块的支持。
 
 #### 版本号：1.9.0
 

@@ -968,7 +968,7 @@ public class DocUtil {
                 }
                 if (propVal != null) {
                     propVal = delPropertiesUrl(propVal, visitedPlaceholders);
-                    result.replace(startIndex, endIndex + PLACEHOLDER_PREFIX.length(), propVal);
+                    result.replace(startIndex-1, endIndex + PLACEHOLDER_PREFIX.length()-1, propVal);
                     startIndex = result.indexOf(PLACEHOLDER_PREFIX, startIndex + propVal.length());
                 } else {
                     // Proceed with unprocessed value.
