@@ -34,6 +34,7 @@ import com.power.doc.utils.DocUrlUtil;
 import com.power.doc.utils.DocUtil;
 import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaMethod;
+import com.thoughtworks.qdox.model.expression.AnnotationValue;
 
 import java.util.*;
 
@@ -62,7 +63,10 @@ public class JaxrsPathHandler {
 
     Map<String, String> constantsMap;
 
-    public JaxrsPathMapping handle(ProjectDocConfigBuilder projectBuilder, String baseUrl, JavaMethod method, String mediaType) {
+    public JaxrsPathMapping handle(ProjectDocConfigBuilder projectBuilder,
+                                   String baseUrl,
+                                   JavaMethod method,
+                                   String mediaType) {
 
         List<JavaAnnotation> annotations = method.getAnnotations();
         this.constantsMap = projectBuilder.getConstantsMap();
@@ -74,7 +78,8 @@ public class JaxrsPathHandler {
         for (JavaAnnotation annotation : annotations) {
             String annotationName = annotation.getType().getFullyQualifiedName();
             // method level annotation will override class level annotation
-            if (annotationName.equals(JakartaJaxrsAnnotations.JAX_CONSUMES)) {
+            if (annotationName.equals(JakartaJaxrsAnnotations.JAX_CONSUMES)
+                    || annotationName.equals(JAXRSAnnotations.JAX_CONSUMES_FULLY)) {
                 Object value = annotation.getNamedParameter("value");
                 if (Objects.nonNull(value)) {
                     mediaType = MediaType.valueOf(value.toString());
