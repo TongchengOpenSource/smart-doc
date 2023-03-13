@@ -87,7 +87,7 @@ public class DocJavaField {
     /**
      * owner class
      */
-    private String ownerClassName;
+    private String declaringClassName;
 
     public static DocJavaField builder() {
         return new DocJavaField();
@@ -219,12 +219,12 @@ public class DocJavaField {
         return this;
     }
 
-    public String getOwnerClassName() {
-        return ownerClassName;
+    public String getDeclaringClassName() {
+        return declaringClassName;
     }
 
-    public DocJavaField setOwnerClassName(String ownerClassName) {
-        this.ownerClassName = ownerClassName;
+    public DocJavaField setDeclaringClassName(String declaringClassName) {
+        this.declaringClassName = declaringClassName;
         return this;
     }
 }

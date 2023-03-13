@@ -146,7 +146,7 @@ public class JavaClassUtil {
                     }
                     JavaField javaField = new DefaultJavaField(javaMethod.getReturns(), methodName);
                     DocJavaField docJavaField = DocJavaField.builder()
-                            .setOwnerClassName(className)
+                            .setDeclaringClassName(className)
                             .setFieldName(methodName)
                             .setJavaField(javaField)
                             .setComment(comment)
@@ -197,7 +197,7 @@ public class JavaClassUtil {
                     docJavaField.setAnnotations(method.getAnnotations());
                     docJavaField.setComment(comment);
                     docJavaField.setFieldName(methodName);
-                    docJavaField.setOwnerClassName(className);
+                    docJavaField.setDeclaringClassName(className);
                     addedFields.put(methodName, docJavaField);
                 }
             }
@@ -255,7 +255,7 @@ public class JavaClassUtil {
                             .setActualJavaType(actualType)
                             .setAnnotations(javaField.getAnnotations())
                             .setFieldName(fieldName)
-                            .setOwnerClassName(className);
+                            .setDeclaringClassName(className);
                     if (addedFields.containsKey(fieldName)) {
                         addedFields.remove(fieldName);
                         addedFields.put(fieldName, docJavaField);
