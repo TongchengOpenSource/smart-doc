@@ -102,7 +102,7 @@
        "ownerClassName":"com.xxx.constant.entity.Result", //属性对应的类全路径
        "value":"200", //默认值或者mock值
        "required":true, //是否必填
-       "ignore":false //是否忽略
+       "ignore":false //是否忽略配置字段
   }],
   "requestHeaders": [{ //设置请求头，没有需求可以不设置
       "name": "token",//请求头名称
