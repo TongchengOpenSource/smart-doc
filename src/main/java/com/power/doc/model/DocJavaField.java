@@ -84,11 +84,6 @@ public class DocJavaField {
 
     private boolean isEnum;
 
-    /**
-     * owner class
-     */
-    private String ownerClassName;
-
     public static DocJavaField builder() {
         return new DocJavaField();
     }
@@ -216,15 +211,6 @@ public class DocJavaField {
 
     public DocJavaField setFieldName(String fieldName) {
         this.fieldName = fieldName;
-        return this;
-    }
-
-    public String getOwnerClassName() {
-        return ownerClassName;
-    }
-
-    public DocJavaField setOwnerClassName(String ownerClassName) {
-        this.ownerClassName = ownerClassName;
         return this;
     }
 }
