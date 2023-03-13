@@ -198,6 +198,7 @@ public class ParamsBuildHelper extends BaseHelper {
                 boolean strRequired = false;
                 int annotationCounter = 0;
                 CustomField.Key key = CustomField.Key.create(docField.getDeclaringClassName(), fieldName);
+
                 CustomField customResponseField = CustomField.nameEquals(key, projectBuilder.getCustomRespFieldMap());
                 CustomField customRequestField = CustomField.nameEquals(key, projectBuilder.getCustomReqFieldMap());
                 if (customResponseField != null && JavaClassUtil.isTargetChildClass(simpleName, customResponseField.getOwnerClassName())

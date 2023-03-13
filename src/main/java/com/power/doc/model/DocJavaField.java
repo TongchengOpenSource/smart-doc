@@ -89,6 +89,7 @@ public class DocJavaField {
      */
     private String declaringClassName;
 
+
     public static DocJavaField builder() {
         return new DocJavaField();
     }
