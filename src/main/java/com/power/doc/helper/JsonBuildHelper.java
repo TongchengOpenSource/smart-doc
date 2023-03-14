@@ -290,7 +290,8 @@ public class JsonBuildHelper extends BaseHelper {
                 }
                 String typeSimpleName = field.getType().getSimpleName();
                 String fieldGicName = docField.getGenericCanonicalName();
-                CustomField.Key key = CustomField.Key.create(docField.getOwnerClassName(), fieldName);
+                CustomField.Key key = CustomField.Key.create(docField.getDeclaringClassName(), fieldName);
+
                 CustomField customResponseField = CustomField.nameEquals(key, builder.getCustomRespFieldMap());
                 CustomField customRequestField = CustomField.nameEquals(key, builder.getCustomReqFieldMap());
                 if (customRequestField != null) {
