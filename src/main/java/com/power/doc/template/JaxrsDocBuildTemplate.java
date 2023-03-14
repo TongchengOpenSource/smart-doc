@@ -48,6 +48,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.power.doc.constants.DocGlobalConstants.FILE_CONTENT_TYPE;
+import static com.power.doc.constants.DocGlobalConstants.URL_CONTENT_TYPE;
 import static com.power.doc.constants.DocTags.IGNORE;
 
 /**
@@ -128,7 +129,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDo
         boolean paramsDataToTree = projectBuilder.getApiConfig().isParamsDataToTree();
         String group = JavaClassUtil.getClassTagsValue(cls, DocTags.GROUP, Boolean.TRUE);
         String baseUrl = "";
-        String mediaType = null;
+        String mediaType = URL_CONTENT_TYPE;
         List<JavaAnnotation> classAnnotations = this.getClassAnnotations(cls, frameworkAnnotations);
         for (JavaAnnotation annotation : classAnnotations) {
             String annotationName = annotation.getType().getFullyQualifiedName();
@@ -137,7 +138,8 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDo
                 baseUrl = StringUtil.removeQuotes(DocUtil.getRequestHeaderValue(annotation));
             }
             // use first annotation's value
-            if (Objects.isNull(mediaType) && annotationName.equals(JakartaJaxrsAnnotations.JAX_CONSUMES)) {
+            if (annotationName.equals(JakartaJaxrsAnnotations.JAX_CONSUMES)
+                    || annotationName.equals(JAXRSAnnotations.JAX_CONSUMES_FULLY)) {
                 Object value = annotation.getNamedParameter("value");
                 if (Objects.nonNull(value)) {
                     mediaType = MediaType.valueOf(value.toString());

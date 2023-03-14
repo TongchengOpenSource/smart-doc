@@ -61,9 +61,7 @@ import com.thoughtworks.qdox.model.JavaField;
 
 import org.apache.commons.lang3.StringUtils;
 
-import static com.power.doc.constants.DocGlobalConstants.ARRAY;
-import static com.power.doc.constants.DocGlobalConstants.DEFAULT_VERSION;
-import static com.power.doc.constants.DocGlobalConstants.JAVA_OBJECT_FULLY;
+import static com.power.doc.constants.DocGlobalConstants.*;
 
 /**
  * @author yu 2019/12/21.
@@ -199,7 +197,7 @@ public class ParamsBuildHelper extends BaseHelper {
 
                 boolean strRequired = false;
                 int annotationCounter = 0;
-                CustomField.Key key = CustomField.Key.create(simpleName, fieldName);
+                CustomField.Key key = CustomField.Key.create(docField.getOwnerClassName(), fieldName);
                 CustomField customResponseField = CustomField.nameEquals(key, projectBuilder.getCustomRespFieldMap());
                 CustomField customRequestField = CustomField.nameEquals(key, projectBuilder.getCustomReqFieldMap());
                 if (customResponseField != null && JavaClassUtil.isTargetChildClass(simpleName, customResponseField.getOwnerClassName())
@@ -321,7 +319,11 @@ public class ParamsBuildHelper extends BaseHelper {
 
                     JavaClass enumClass = ParamUtil.handleSeeEnum(param, field, projectBuilder, jsonRequest, tagsMap);
                     if (Objects.nonNull(enumClass)) {
-                        comment = new StringBuilder(StringUtils.isEmpty(comment.toString()) ? enumClass.getComment() : comment.toString());
+                        String enumClassComment = EMPTY;
+                        if (StringUtil.isNotEmpty(enumClass.getComment())) {
+                            enumClassComment = enumClass.getComment();
+                        }
+                        comment = new StringBuilder(StringUtils.isEmpty(comment.toString()) ? enumClassComment : comment.toString());
                         String enumComment = handleEnumComment(enumClass, projectBuilder);
                         param.setDesc(comment + enumComment);
                     }
