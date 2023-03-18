@@ -1,5 +1,7 @@
 package com.power.doc.model.openapi;
 
+import java.util.Objects;
+
 /**
  * open api tag
  *
@@ -44,5 +46,18 @@ public class OpenApiTag {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        OpenApiTag that = (OpenApiTag) o;
+        return Objects.equals(getName(), that.getName()) && Objects.equals(getDescription(), that.getDescription());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getName(), getDescription());
     }
 }
