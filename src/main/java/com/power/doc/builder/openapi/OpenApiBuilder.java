@@ -28,6 +28,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.FileUtil;
@@ -44,6 +45,7 @@ import com.power.doc.model.openapi.OpenApiTag;
 import com.power.doc.utils.JsonUtil;
 import com.power.doc.utils.OpenApiSchemaUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
+import org.apache.commons.lang3.StringUtils;
 
 import static com.power.doc.constants.DocGlobalConstants.*;
 
@@ -151,8 +153,10 @@ public class OpenApiBuilder extends AbstractOpenApiBuilder {
         request.put("parameters", buildParameters(apiMethodDoc));
         request.put("responses", buildResponses(apiConfig, apiMethodDoc));
         request.put("deprecated", apiMethodDoc.isDeprecated());
-        String operationId = apiMethodDoc.getUrl().replace(apiMethodDoc.getServerUrl(), "");
-        request.put("operationId", String.join("", OpenApiSchemaUtil.getPatternResult("[A-Za-z0-9{}]*", operationId)));
+        List<String> paths = OpenApiSchemaUtil.getPatternResult("[A-Za-z0-9_{}]*", apiMethodDoc.getPath());
+        paths.add(apiMethodDoc.getType());
+        String operationId = paths.stream().filter(StringUtils::isNotEmpty).collect(Collectors.joining("-"));
+        request.put("operationId", operationId);
 
         return request;
     }
