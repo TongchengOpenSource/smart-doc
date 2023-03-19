@@ -23,8 +23,7 @@
 package com.power.doc.model;
 
 import java.io.Serializable;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.power.common.util.StringUtil;
 import com.power.doc.constants.DocGlobalConstants;
@@ -37,6 +36,8 @@ public class ApiMethodDoc implements Serializable, Cloneable {
 
 
     private static final long serialVersionUID = 7211922919532562867L;
+
+    private ApiDoc clazzDoc;
 
     /**
      * methodId handled by md5
@@ -202,6 +203,8 @@ public class ApiMethodDoc implements Serializable, Cloneable {
      * tags
      */
     private String[] tags;
+
+    private final Set<TagDoc> tagRefs = Collections.synchronizedSet(new LinkedHashSet<>());
 
     public Integer getIsRequestArray() {
         return isRequestArray;
@@ -463,6 +466,18 @@ public class ApiMethodDoc implements Serializable, Cloneable {
     public ApiMethodDoc setTags(String[] tags) {
         this.tags = tags;
         return this;
+    }
+
+    public Set<TagDoc> getTagRefs() {
+        return tagRefs;
+    }
+
+    public ApiDoc getClazzDoc() {
+        return clazzDoc;
+    }
+
+    public void setClazzDoc(ApiDoc clazzDoc) {
+        this.clazzDoc = clazzDoc;
     }
 
     @Override

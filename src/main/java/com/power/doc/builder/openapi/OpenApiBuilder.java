@@ -36,11 +36,7 @@ import com.power.common.util.StringUtil;
 import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.constants.Methods;
 import com.power.doc.helper.JavaProjectBuilderHelper;
-import com.power.doc.model.ApiConfig;
-import com.power.doc.model.ApiDoc;
-import com.power.doc.model.ApiMethodDoc;
-import com.power.doc.model.ApiParam;
-import com.power.doc.model.ApiReqParam;
+import com.power.doc.model.*;
 import com.power.doc.model.openapi.OpenApiTag;
 import com.power.doc.utils.JsonUtil;
 import com.power.doc.utils.OpenApiSchemaUtil;
@@ -143,12 +139,13 @@ public class OpenApiBuilder extends AbstractOpenApiBuilder {
         Map<String, Object> request = new HashMap<>(20);
         request.put("summary", apiMethodDoc.getDesc());
         request.put("description", apiMethodDoc.getDetail());
-        String tag = StringUtil.isEmpty(apiDoc.getDesc()) ? OPENAPI_TAG : apiDoc.getDesc();
-        if (StringUtil.isNotEmpty(apiMethodDoc.getGroup())) {
-            request.put("tags", new String[]{tag});
-        } else {
-            request.put("tags", new String[]{tag});
-        }
+//        String tag = StringUtil.isEmpty(apiDoc.getDesc()) ? OPENAPI_TAG : apiDoc.getDesc();
+//        if (StringUtil.isNotEmpty(apiMethodDoc.getGroup())) {
+//            request.put("tags", new String[]{tag});
+//        } else {
+//            request.put("tags", new String[]{tag});
+//        }
+        request.put("tags", apiMethodDoc.getTagRefs().stream().map(TagDoc::getTag).toArray());
         request.put("requestBody", buildRequestBody(apiConfig, apiMethodDoc));
         request.put("parameters", buildParameters(apiMethodDoc));
         request.put("responses", buildResponses(apiConfig, apiMethodDoc));
