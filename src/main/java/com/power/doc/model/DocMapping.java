@@ -6,7 +6,8 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Mapping Relationship
+ * @author CKM
+ * @apiNote Relational Mapping 2023/03/20 10:13:00
  */
 public class DocMapping {
 

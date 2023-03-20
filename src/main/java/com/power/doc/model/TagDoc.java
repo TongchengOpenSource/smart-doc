@@ -2,6 +2,11 @@ package com.power.doc.model;
 
 import java.util.*;
 
+/**
+ * @author CKM
+ *
+ * @apiNote tag relationship 2023/03/20 10:13:00
+ */
 public class TagDoc {
     private String tag;
 
