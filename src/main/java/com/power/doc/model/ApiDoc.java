@@ -23,9 +23,7 @@
 package com.power.doc.model;
 
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import com.power.common.util.StringUtil;
 
@@ -57,6 +55,7 @@ public class ApiDoc implements Comparable<ApiDoc> {
      */
     private String[] tags;
 
+    private final Set<TagDoc> tagRefs = Collections.synchronizedSet(new LinkedHashSet<>());
     /**
      * group
      *
@@ -220,6 +219,10 @@ public class ApiDoc implements Comparable<ApiDoc> {
         this.childrenApiDocs = childrenApiDocs;
     }
 
+    public Set<TagDoc> getTagRefs() {
+        return tagRefs;
+    }
+
     @Override
     public int compareTo(ApiDoc o) {
         if (Objects.nonNull(o.getDesc())) {
@@ -232,15 +235,15 @@ public class ApiDoc implements Comparable<ApiDoc> {
     public String toString() {
         final StringBuilder sb = new StringBuilder("{");
         sb.append("\"order\":")
-            .append(order);
+                .append(order);
         sb.append(",\"name\":\"")
-            .append(name).append('\"');
+                .append(name).append('\"');
         sb.append(",\"alias\":\"")
-            .append(alias).append('\"');
+                .append(alias).append('\"');
         sb.append(",\"list\":")
-            .append(list);
+                .append(list);
         sb.append(",\"desc\":\"")
-            .append(desc).append('\"');
+                .append(desc).append('\"');
         sb.append('}');
         return sb.toString();
     }

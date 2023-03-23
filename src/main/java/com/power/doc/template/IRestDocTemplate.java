@@ -109,7 +109,11 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 
         // handle class tags
         List<DocletTag> classTags = cls.getTagsByName(DocTags.TAG);
-        apiDoc.setTags(classTags.stream().map(DocletTag::getValue).toArray(String[]::new));
+        Set<String> tagSet = classTags.stream().map(DocletTag::getValue)
+                .map(StringUtils::trim)
+                .collect(Collectors.toCollection(LinkedHashSet::new));
+        String[] tags = tagSet.toArray(new String[]{});
+        apiDoc.setTags(tags);
 
         if (isUseMD5) {
             String name = DocUtil.generateId(apiDoc.getName());
@@ -119,6 +123,22 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
         apiDoc.setDesc(desc);
         apiDoc.setList(apiMethodDocs);
         apiDocList.add(apiDoc);
+
+        tagSet.add(StringUtils.trim(desc));
+        for (String tag : tagSet) {
+            DocMapping.tagDocPut(tag, apiDoc, null);
+            for (ApiMethodDoc methodDoc : apiMethodDocs) {
+                DocMapping.tagDocPut(tag, null, methodDoc);
+            }
+        }
+        for (ApiMethodDoc methodDoc : apiMethodDocs) {
+            String[] docTags = methodDoc.getTags();
+            methodDoc.setClazzDoc(apiDoc);
+            if (ArrayUtils.isEmpty(docTags)) continue;
+            for (String tag : docTags) {
+                DocMapping.tagDocPut(tag, null, methodDoc);
+            }
+        }
     }
 
 

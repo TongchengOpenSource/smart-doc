@@ -38,11 +38,7 @@ import com.power.doc.builder.DocBuilderTemplate;
 import com.power.doc.builder.ProjectDocConfigBuilder;
 import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.factory.BuildTemplateFactory;
-import com.power.doc.model.ApiConfig;
-import com.power.doc.model.ApiDoc;
-import com.power.doc.model.ApiMethodDoc;
-import com.power.doc.model.ApiParam;
-import com.power.doc.model.ApiReqParam;
+import com.power.doc.model.*;
 import com.power.doc.model.openapi.OpenApiTag;
 import com.power.doc.template.IDocBuildTemplate;
 import com.power.doc.utils.DocUtil;
@@ -111,25 +107,21 @@ public abstract class AbstractOpenApiBuilder {
      */
     public Map<String, Object> buildPaths(ApiConfig apiConfig, List<ApiDoc> apiDocList, Set<OpenApiTag> tags) {
         Map<String, Object> pathMap = new HashMap<>(500);
-        apiDocList.forEach(
-                a -> {
-                    String tag = StringUtil.isEmpty(a.getDesc()) ? OPENAPI_TAG : a.getDesc();
-                    tags.add(OpenApiTag.of(tag, tag));
-                    List<ApiMethodDoc> apiMethodDocs = a.getList();
-                    apiMethodDocs.forEach(
-                            method -> {
-                                String url = method.getUrl().replace(method.getServerUrl(), "").replace("//", "/");
-                                Map<String, Object> request = buildPathUrls(apiConfig, method, a);
-                                if (!pathMap.containsKey(url)) {
-                                    pathMap.put(url, request);
-                                } else {
-                                    Map<String, Object> oldRequest = (Map<String, Object>) pathMap.get(url);
-                                    oldRequest.putAll(request);
-                                }
-                            }
-                    );
-                }
-        );
+        Set<ApiMethodDoc> methodDocs = DocMapping.METHOD_DOCS;
+        for (ApiMethodDoc methodDoc : methodDocs) {
+            String path = methodDoc.getPath();
+            Map<String, Object> request = buildPathUrls(apiConfig, methodDoc, methodDoc.getClazzDoc());
+            if (!pathMap.containsKey(path)) {
+                pathMap.put(path, request);
+            } else {
+                Map<String, Object> oldRequest = (Map<String, Object>) pathMap.get(path);
+                oldRequest.putAll(request);
+            }
+        }
+        for (Map.Entry<String, TagDoc> docEntry : DocMapping.TAG_DOC.entrySet()) {
+            String tag = docEntry.getKey();
+            tags.add(OpenApiTag.of(tag, tag));
+        }
         return pathMap;
     }
 
