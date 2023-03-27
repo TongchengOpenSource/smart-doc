@@ -346,7 +346,7 @@ public abstract class AbstractOpenApiBuilder {
                 if (param.isRequired()) {
                     requiredList.add(param.getField());
                 }
-                if (param.getType().equals("map") && paramsSize == 1) {
+                if (param.getType().equals("map") &&StringUtil.isEmpty(param.getClassName())) {
                     continue;
                 }
                 if (param.isQueryParam() || param.isPathParam()) {

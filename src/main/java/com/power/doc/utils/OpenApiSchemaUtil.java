@@ -84,6 +84,7 @@ public class OpenApiSchemaUtil {
     public static String getClassNameFromParams(List<ApiParam> apiParams, String suffix) {
         // if array[Primitive] or Primitive
         if (CollectionUtil.isNotEmpty(apiParams) && apiParams.size() == 1
+                && StringUtil.isEmpty(apiParams.get(0).getClassName())
                 && CollectionUtil.isEmpty(apiParams.get(0).getChildren())) {
             return "string";
         }
