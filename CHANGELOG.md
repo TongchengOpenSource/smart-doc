@@ -1,4 +1,15 @@
 ## smart-doc版本
+
+### 版本号：2.6.7
+
+- 更新日期: 2023-03-28
+- 更新内容：
+  1. 修复JAX-RS Produces注解使用时contentType为空的bug，[#415](https://github.com/smart-doc-group/smart-doc/issues/415)
+  2. 修复不能忽略被继承类中相应字段bug。[#453](https://github.com/smart-doc-group/smart-doc/issues/453)
+  3. 修复使用@see tag时的未写注释导致空指针问腿。[#451](https://github.com/smart-doc-group/smart-doc/issues/451）
+  4. 修复openapi的生成bug。[#458](https://github.com/smart-doc-group/smart-doc/issues/458)
+  5. 修复openapi无法归类的问题。 [#pr460](https://github.com/smart-doc-group/smart-doc/pull/460)
+
 ### 版本号：2.6.6
 
 - 更新日期: 2023-03-08
