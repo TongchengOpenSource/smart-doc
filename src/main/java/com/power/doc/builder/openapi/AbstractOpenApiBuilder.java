@@ -1,5 +1,5 @@
 /*
- * smart-doc https://github.com/shalousun/smart-doc
+ * smart-doc https://github.com/smart-doc-group/smart-doc
  *
  * Copyright (C) 2018-2023 smart-doc
  *
@@ -81,6 +81,7 @@ public abstract class AbstractOpenApiBuilder {
      * @param apiConfig    Configuration of smart-doc
      * @param apiMethodDoc Data of method
      * @param apiDoc       singe api doc
+     * @return Map of request urls
      */
     abstract Map<String, Object> buildPathUrlsRequest(ApiConfig apiConfig, ApiMethodDoc apiMethodDoc, ApiDoc apiDoc);
 

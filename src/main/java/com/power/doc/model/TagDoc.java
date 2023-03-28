@@ -1,5 +1,5 @@
 /*
- * smart-doc https://github.com/shalousun/smart-doc
+ * smart-doc https://github.com/smart-doc-group/smart-doc
  *
  * Copyright (C) 2018-2023 smart-doc
  *
@@ -27,7 +27,7 @@ import java.util.*;
 /**
  * @author CKM
  *
- * @apiNote tag relationship 2023/03/20 10:13:00
+ * tag relationship 2023/03/20 10:13:00
  */
 public class TagDoc {
     private String tag;
