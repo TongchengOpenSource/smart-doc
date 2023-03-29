@@ -286,18 +286,31 @@ public class DocUtil {
         if (!str.contains(":")) {
             return str;
         }
-        String[] strArr = str.split("/");
-        for (int i = 0; i < strArr.length; i++) {
-            String pathParam = strArr[i];
-            if (pathParam.startsWith("http:") || pathParam.startsWith("https:")) {
-                continue;
+
+        StringBuilder urlBuilder = new StringBuilder();
+        String[] urls = str.split(";");
+        int index = 0;
+        for (String url : urls) {
+            String[] strArr = url.split("/");
+            for (int i = 0; i < strArr.length; i++) {
+                String pathParam = strArr[i];
+                if (pathParam.startsWith("http:")
+                        || pathParam.startsWith("https:")
+                        || pathParam.startsWith("{{")) {
+                    continue;
+                }
+                if (pathParam.startsWith("{") && pathParam.contains(":")) {
+                    strArr[i] = pathParam.substring(0, pathParam.indexOf(":")) + "}";
+                }
             }
-            if (pathParam.startsWith("{") && pathParam.contains(":")) {
-                strArr[i] = pathParam.substring(0, pathParam.indexOf(":")) + "}";
+            if (index < urls.length - 1) {
+                urlBuilder.append(StringUtils.join(Arrays.asList(strArr), '/')).append(";");
+            } else {
+                urlBuilder.append(StringUtils.join(Arrays.asList(strArr), '/'));
             }
+            index++;
         }
-        str = StringUtils.join(Arrays.asList(strArr), '/');
-        return str;
+        return urlBuilder.toString();
     }
 
     /**
@@ -356,6 +369,9 @@ public class DocUtil {
         StringBuilder sb = new StringBuilder();
         Stack<Character> stack = new Stack<>();
         for (char s : chars) {
+            if ('[' == s || ']' == s) {
+                continue;
+            }
             if ('{' == s) {
                 stack.push(s);
             }
@@ -968,7 +984,7 @@ public class DocUtil {
                 }
                 if (propVal != null) {
                     propVal = delPropertiesUrl(propVal, visitedPlaceholders);
-                    result.replace(startIndex-1, endIndex + PLACEHOLDER_PREFIX.length()-1, propVal);
+                    result.replace(startIndex - 1, endIndex + PLACEHOLDER_PREFIX.length() - 1, propVal);
                     startIndex = result.indexOf(PLACEHOLDER_PREFIX, startIndex + propVal.length());
                 } else {
                     // Proceed with unprocessed value.
