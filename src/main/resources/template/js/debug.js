@@ -83,14 +83,14 @@ $("button").on("click", function () {
 
     if ("multipart/form-data" === contentType) {
         finalUrl = castToGetUri(url, pathParamData);
-        queryParamData = getInputData($queryElement, true,true)
+        queryParamData = getInputData($queryElement, true, true)
         body = queryParamData;
         ajaxOptions.processData = false;
         ajaxOptions.contentType = false;
     } else if ("POST" === method && contentType !== "multipart/form-data"
         && contentType !== "application/json") {
         finalUrl = castToGetUri(url, pathParamData);
-        queryParamData = getInputData($queryElement,true)
+        queryParamData = getInputData($queryElement, true)
         body = queryParamData;
     } else {
         queryParamData = getInputData($queryElement)
@@ -157,6 +157,10 @@ $(".check-all").on("click", function () {
 })
 
 function castToGetUri(url, pathParams, params) {
+    if (undefined !== url) {
+        let urls = url.split(";")
+        url = urls[0];
+    }
     if (pathParams instanceof Object && !(pathParams instanceof Array)) {
         url = url.format(pathParams)
     }
