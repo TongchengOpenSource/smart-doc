@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * copied from springframework<br/>
+ * copied from springframework<br>
  * as defined in the HTTP specification.
  *
  * @author Arjen Poutsma
