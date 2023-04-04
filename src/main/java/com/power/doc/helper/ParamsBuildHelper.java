@@ -296,7 +296,7 @@ public class ParamsBuildHelper extends BaseHelper {
                             .setId(atomicOrDefault(atomicInteger, paramList.size() + pid + 1))
                             .setMaxLength(maxLength)
                             .setDesc(comment.toString())
-                            .setRequired(Boolean.parseBoolean(isRequired))
+                            .setRequired(strRequired)
                             .setVersion(since);
                     if (fieldGicName.contains("[]") || fieldGicName.endsWith(">")) {
                         param.setType(DocGlobalConstants.PARAM_TYPE_FILE);
