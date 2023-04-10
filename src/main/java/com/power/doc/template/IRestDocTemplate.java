@@ -555,10 +555,10 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                     strRequired = "true";
                 }
                 if (frameworkAnnotations.getRequestBodyAnnotation().getAnnotationName().equals(annotationName)) {
-                    if (requestBodyCounter > 0) {
-                        throw new RuntimeException("You have use @RequestBody Passing multiple variables  for method "
-                                + javaMethod.getName() + " in " + className + ",@RequestBody annotation could only bind one variables.");
-                    }
+//                    if (requestBodyCounter > 0) {
+//                        throw new RuntimeException("You have use @RequestBody Passing multiple variables  for method "
+//                                + javaMethod.getName() + " in " + className + ",@RequestBody annotation could only bind one variables.");
+//                    }
                     mockValue = JsonBuildHelper.buildJson(fullTypeName, typeName, Boolean.FALSE, 0, new HashMap<>(), groupClasses, builder);
                     requestBodyCounter++;
                     isRequestBody = true;
