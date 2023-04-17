@@ -318,7 +318,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
             docJavaMethods.add(convertToDocJavaMethod(apiConfig, projectBuilder, method, null));
         }
         // add parent class methods
-        docJavaMethods.addAll(getParenClassMethods(apiConfig, projectBuilder, cls));
+        docJavaMethods.addAll(getParentsClassMethods(apiConfig, projectBuilder, cls));
         List<JavaType> implClasses = cls.getImplements();
         for (JavaType type : implClasses) {
             JavaClass javaClass = (JavaClass) type;
@@ -1046,7 +1046,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
         return false;
     }
 
-    default List<DocJavaMethod> getParenClassMethods(ApiConfig apiConfig, ProjectDocConfigBuilder projectBuilder, JavaClass cls) {
+    default List<DocJavaMethod> getParentsClassMethods(ApiConfig apiConfig, ProjectDocConfigBuilder projectBuilder, JavaClass cls) {
         List<DocJavaMethod> docJavaMethods = new ArrayList<>();
         JavaClass parentClass = cls.getSuperJavaClass();
         if (Objects.nonNull(parentClass) && !"Object".equals(parentClass.getSimpleName())) {
@@ -1055,6 +1055,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
             for (JavaMethod method : parentMethodList) {
                 docJavaMethods.add(convertToDocJavaMethod(apiConfig, projectBuilder, method, actualTypesMap));
             }
+            docJavaMethods.addAll(getParentsClassMethods(apiConfig, projectBuilder, parentClass));
         }
         return docJavaMethods;
     }
