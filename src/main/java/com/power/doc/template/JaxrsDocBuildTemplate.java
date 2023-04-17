@@ -157,7 +157,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDo
             docJavaMethods.add(convertToDocJavaMethod(apiConfig, projectBuilder, method, null));
         }
         // add parent class methods
-        docJavaMethods.addAll(getParenClassMethods(apiConfig, projectBuilder, cls));
+        docJavaMethods.addAll(getParentsClassMethods(apiConfig, projectBuilder, cls));
         List<ApiMethodDoc> methodDocList = new ArrayList<>(methods.size());
         int methodOrder = 0;
         for (DocJavaMethod docJavaMethod : docJavaMethods) {
