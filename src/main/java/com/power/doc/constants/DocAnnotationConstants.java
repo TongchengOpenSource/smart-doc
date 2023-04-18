@@ -46,6 +46,11 @@ public interface DocAnnotationConstants {
 
     String SHORT_JSON_PROPERTY = "JsonProperty";
 
+    /**
+     * issue #484 gson alias annotation
+     */
+    String GSON_ALIAS_NAME = "SerializedName";
+
     String SHORT_JSON_FIELD = "JSONField";
 
     String REQUIRED_PROP = "required";
