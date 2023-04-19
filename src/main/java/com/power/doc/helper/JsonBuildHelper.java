@@ -282,7 +282,8 @@ public class JsonBuildHelper extends BaseHelper {
                         if (null != annotation.getProperty(DocAnnotationConstants.NAME_PROP)) {
                             fieldName = StringUtil.removeQuotes(annotation.getProperty(DocAnnotationConstants.NAME_PROP).toString());
                         }
-                    } else if (DocAnnotationConstants.SHORT_JSON_PROPERTY.equals(annotationName)) {
+                    } else if (DocAnnotationConstants.SHORT_JSON_PROPERTY.equals(annotationName) ||
+                            DocAnnotationConstants.GSON_ALIAS_NAME.equals(annotationName)) {
                         if (null != annotation.getProperty(DocAnnotationConstants.VALUE_PROP)) {
                             fieldName = StringUtil.removeQuotes(annotation.getProperty(DocAnnotationConstants.VALUE_PROP).toString());
                         }
