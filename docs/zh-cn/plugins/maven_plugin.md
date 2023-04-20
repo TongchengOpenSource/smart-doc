@@ -36,7 +36,9 @@
         <!--includes配置用于配置加载外部依赖源码,配置后插件会按照配置项加载外部源代码而不是自动加载所有，因此使用时需要注意-->
         <!--smart-doc能自动分析依赖树加载所有依赖源码，原则上会影响文档构建效率，因此你可以使用includes来让插件加载你配置的组件-->
         <includes>
-             <!-- 使用了mybatis-plus的Page分页需要include所使用的源码包 -->
+            <!--格式为：groupId:artifactId;参考如下-->
+            <!--也可以支持正则式如：com.alibaba:.* -->
+            <!-- 使用了mybatis-plus的Page分页需要include所使用的源码包 -->
             <include>com.baomidou:mybatis-plus-extension</include>
             <!-- 使用了mybatis-plus的IPage分页需要include mybatis-plus-core-->
             <include>com.baomidou:mybatis-plus-core</include>
