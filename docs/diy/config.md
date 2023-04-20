@@ -21,6 +21,7 @@ Example of a complete configuration file
   "coverOld": true, // Whether to overwrite old files, mainly used for mardown file overwrite
    "createDebugPage": true,//Create a page that can be used to test your APIs like swagger
    "packageFilters": "", // controller package filtering, multiple package names separated by commas
+  "packageExcludeFilters": "",//Exclude subpackages under the packageFilters package
   "md5EncryptedHtmlName": false, // only used if each controller generates an html file
   "style":"xt256", //set highlight
   "projectName": "smart-doc", // Configure your own project name
@@ -244,6 +245,21 @@ controller package filtering, multiple package names separated by commas.
     "packageFilters": "com.test.controller.*"
 }
 ```
+
+
+## packageExcludeFilters
+* 必填：`false`
+* 类型：`String`
+* 默认值: `null`
+
+Exclude subpackages under the packageFilters package
+> PS: Since 2.2.2, we need to adopt regularity: com.test.controller.res.*
+```json
+{
+    "packageExcludeFilters": "com.test.controller.res.*"
+}
+```
+
 
 ## md5EncryptedHtmlName
 * required: `false`
