@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 
 import com.power.common.util.CollectionUtil;
 import com.power.doc.constants.DocLanguage;
+import com.power.doc.handler.ICustomJavaMethodHandler;
 import com.power.doc.model.rpc.RpcApiDependency;
 
 /**
@@ -348,6 +349,10 @@ public class ApiConfig {
      * @since 2.2.5
      */
     private boolean responseParamsTable = Boolean.TRUE;
+    /**
+     * @since 2.6.8
+     */
+    private ICustomJavaMethodHandler customJavaMethodHandler;
 
     public String getCodePath() {
         return codePath;
@@ -927,5 +932,13 @@ public class ApiConfig {
 
     public void setServerEnv(String serverEnv) {
         this.serverEnv = serverEnv;
+    }
+
+    public ICustomJavaMethodHandler getCustomJavaMethodHandler() {
+        return customJavaMethodHandler;
+    }
+
+    public void setCustomJavaMethodHandler(ICustomJavaMethodHandler customJavaMethodHandler) {
+        this.customJavaMethodHandler = customJavaMethodHandler;
     }
 }
