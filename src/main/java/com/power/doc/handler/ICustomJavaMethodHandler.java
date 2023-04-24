@@ -28,8 +28,9 @@ import com.thoughtworks.qdox.model.JavaClass;
 import java.util.List;
 
 /**
+ * handle customized operation for {@link DocJavaMethod}.
+ *
  * @author yangyang
- * @date 2023/4/23
  */
 @FunctionalInterface
 public interface ICustomJavaMethodHandler {
