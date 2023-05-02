@@ -34,4 +34,11 @@ public class ParamUtil {
         }
         return seeEnum;
     }
+
+    public static String formatMockValue(String mock) {
+        if (StringUtil.isEmpty(mock)) {
+            return mock;
+        }
+        return mock.replaceAll("\\\\","");
+    }
 }
