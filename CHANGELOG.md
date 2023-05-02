@@ -1,4 +1,16 @@
 ## smart-doc版本
+### 版本号：2.6.8
+
+- 更新日期: 2023-05-02
+- 更新内容：
+  1. 支持扩展对DocJavaMethod进行数据自定义处理，[#488](https://github.com/smart-doc-group/smart-doc/issues/488)
+  2. 修复mock值中使用cron表达式后转义值问题。[#487](https://github.com/smart-doc-group/smart-doc/issues/487)
+  3. 支持gson别名解析。 [#485](https://github.com/smart-doc-group/smart-doc/pull/485）
+  4. 修复无法获取多层继承的父类接口bug。[#480](https://github.com/smart-doc-group/smart-doc/issues/480)
+  5. 支持接口中使用多个@RequestBody。 [#pr475](https://github.com/smart-doc-group/smart-doc/pull/475)
+  6. 升级jquery，[#pr474](https://github.com/smart-doc-group/smart-doc/pull/474)
+  7. 修复file字段required设置，[#pr470](https://github.com/smart-doc-group/smart-doc/pull/470)
+  8. 修复多path错误，[#466](https://github.com/smart-doc-group/smart-doc/issues/466)
 
 ### 版本号：2.6.7
 
