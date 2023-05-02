@@ -37,10 +37,7 @@ import com.power.doc.model.ApiConfig;
 import com.power.doc.model.CustomField;
 import com.power.doc.model.DocJavaField;
 import com.power.doc.model.FormData;
-import com.power.doc.utils.DocClassUtil;
-import com.power.doc.utils.DocUtil;
-import com.power.doc.utils.JavaClassUtil;
-import com.power.doc.utils.JavaClassValidateUtil;
+import com.power.doc.utils.*;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaField;
 
@@ -143,7 +140,7 @@ public class FormDataBuildHelper {
             } else if (JavaClassValidateUtil.isPrimitive(subTypeName)) {
                 String fieldValue;
                 if (tagsMap.containsKey(DocTags.MOCK) && StringUtil.isNotEmpty(tagsMap.get(DocTags.MOCK))) {
-                    fieldValue = tagsMap.get(DocTags.MOCK);
+                    fieldValue = ParamUtil.formatMockValue(tagsMap.get(DocTags.MOCK));
                 } else {
                     fieldValue = DocUtil.getValByTypeAndFieldName(typeSimpleName, field.getName());
                 }
@@ -162,7 +159,7 @@ public class FormDataBuildHelper {
             } else if (javaClass.isEnum()) {
                 Object value = JavaClassUtil.getEnumValue(javaClass, Boolean.TRUE);
                 if (tagsMap.containsKey(DocTags.MOCK) && StringUtil.isNotEmpty(tagsMap.get(DocTags.MOCK))) {
-                    value = tagsMap.get(DocTags.MOCK);
+                    value = ParamUtil.formatMockValue(tagsMap.get(DocTags.MOCK));
                 }
                 FormData formData = new FormData();
                 formData.setKey(pre + fieldName);
@@ -180,7 +177,7 @@ public class FormDataBuildHelper {
                 if (JavaClassValidateUtil.isPrimitive(gName)) {
                     String fieldValue;
                     if (tagsMap.containsKey(DocTags.MOCK) && StringUtil.isNotEmpty(tagsMap.get(DocTags.MOCK))) {
-                        fieldValue = tagsMap.get(DocTags.MOCK);
+                        fieldValue = ParamUtil.formatMockValue(tagsMap.get(DocTags.MOCK));
                     } else {
                         String val = DocUtil.getValByTypeAndFieldName(gName, field.getName());
                         fieldValue = val + "," + val;

@@ -89,7 +89,7 @@ public class JavaFieldUtil {
                 mockValue = DocUtil.getValByTypeAndFieldName(simpleTypeName, paramName, Boolean.TRUE);
             }
         }
-        return mockValue;
+        return ParamUtil.formatMockValue(mockValue);
     }
 
     /**

@@ -53,7 +53,7 @@ public class CurlUtil {
             sb.append(" -k");
         }
         if (StringUtil.isNotEmpty(request.getContentType()) &&
-            !DocGlobalConstants.URL_CONTENT_TYPE.equals(request.getContentType())) {
+                !DocGlobalConstants.URL_CONTENT_TYPE.equals(request.getContentType())) {
             sb.append(" -H");
             sb.append(" 'Content-Type: ").append(request.getContentType()).append("'");
         }
@@ -64,7 +64,7 @@ public class CurlUtil {
                     sb.append(" '").append(reqHeader.getName()).append("'");
                 } else {
                     sb.append(" '").append(reqHeader.getName()).append(':')
-                        .append(reqHeader.getValue()).append("'");
+                            .append(reqHeader.getValue()).append("'");
                 }
             }
         }
@@ -77,7 +77,8 @@ public class CurlUtil {
         sb.append(" -i");
         // append request url
         sb.append(" ").append(request.getUrl());
-        if (StringUtil.isNotEmpty(request.getBody())) {
+        if (StringUtil.isNotEmpty(request.getBody()) &&
+                !DocGlobalConstants.URL_CONTENT_TYPE.equals(request.getContentType())) {
             sb.append(" --data");
             sb.append(" '").append(request.getBody()).append("'");
         }
