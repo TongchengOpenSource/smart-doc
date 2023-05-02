@@ -329,6 +329,10 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                 }
             }
         }
+        // call ICustomJavaMethodHandler
+        if (apiConfig.getCustomJavaMethodHandler() != null) {
+            docJavaMethods = apiConfig.getCustomJavaMethodHandler().apply(cls, docJavaMethods);
+        }
         List<ApiMethodDoc> methodDocList = new ArrayList<>(methods.size());
         int methodOrder = 0;
         for (DocJavaMethod docJavaMethod : docJavaMethods) {
