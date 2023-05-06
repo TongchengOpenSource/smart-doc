@@ -46,7 +46,7 @@
         <dependency>
             <groupId>com.ibeetl</groupId>
             <artifactId>beetl</artifactId>
-            <version>3.14.1.RELEASE</version>
+            <version>3.15.2.RELEASE</version>
         </dependency>
         <dependency>
             <groupId>com.github.shalousun</groupId>
