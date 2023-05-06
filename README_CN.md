@@ -87,7 +87,7 @@ the [LICENSE](https://gitee.com/smart-doc-team/smart-doc/blob/master/LICENSE) fi
 &nbsp;&nbsp;
 <img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/known-users/tianbo-tech.png" title="杭州天铂云科" width="135px" height="83px"/>
 &nbsp;&nbsp;
-<img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/known-users/tcsklogo.jpeg" title="同程数科" width="135px" height="83px"/>
+<img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/known-users/tcsklogo.jpeg" title="同程数科" width="200px" height="83px"/>
 
 ## Award situation
 

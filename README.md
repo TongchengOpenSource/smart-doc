@@ -71,7 +71,7 @@ smart-doc better.
 &nbsp;&nbsp;
 <img src="https://raw.githubusercontent.com/smart-doc-group/smart-doc/master/images/known-users/tianbo-tech.png" title="tianbo tech" width="127px" height="70px"/>
 &nbsp;&nbsp;
-<img src="https://raw.githubusercontent.com/smart-doc-group/smart-doc/master/images/known-users/tcsklogo.jpeg" title="同程数科" width="135px" height="83px"/>
+<img src="https://raw.githubusercontent.com/smart-doc-group/smart-doc/master/images/known-users/tcsklogo.jpeg" title="同程数科" width="200px" height="83px"/>
 
 ## Acknowledgements
 
