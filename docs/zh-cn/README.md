@@ -73,7 +73,7 @@ smart-doc + [Torna](http://torna.cn/) 组成行业领先的文档生成和管理
 &nbsp;&nbsp;<img src="https://www.hand-china.com/static/img/hand-logo.svg" title="上海汉得信息技术股份有限公司" width="260px" height="83px"/>
 &nbsp;&nbsp;<img src="../_images/known-users/shunfeng.png" title="顺丰" width="83px" height="83px"/>
 &nbsp;&nbsp;<img src="../_images/known-users/yuanmengjiankang.png" title="远盟健康" width="260px" height="83px"/>
-
+&nbsp;&nbsp;<img src="../_images/known-users/tcsklogo.jpeg" title="同程数科" width="200px" height="83px"/>
 ## 获奖情况
 
 - 2020 年度 OSC 中国开源项目评选”活动中获得「最积极运营项目」
