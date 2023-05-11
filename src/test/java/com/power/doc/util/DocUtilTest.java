@@ -19,7 +19,7 @@ public class DocUtilTest {
     @Test
     public void test() {
         System.setProperty(DocGlobalConstants.DOC_LANGUAGE, DocLanguage.CHINESE.getCode());
-        String str = DocUtil.getValByTypeAndFieldName("string", "hostName");
+        String str = DocUtil.getValByTypeAndFieldName("string", "name");
         System.out.println(str);
     }
 
