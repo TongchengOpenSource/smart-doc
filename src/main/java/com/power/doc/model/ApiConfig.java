@@ -354,6 +354,11 @@ public class ApiConfig {
      */
     private ICustomJavaMethodHandler customJavaMethodHandler;
 
+    /**
+     * @since 2.6.9
+     */
+    private boolean randomMock;
+
     public String getCodePath() {
         return codePath;
     }
@@ -940,5 +945,13 @@ public class ApiConfig {
 
     public void setCustomJavaMethodHandler(ICustomJavaMethodHandler customJavaMethodHandler) {
         this.customJavaMethodHandler = customJavaMethodHandler;
+    }
+
+    public boolean isRandomMock() {
+        return randomMock;
+    }
+
+    public void setRandomMock(boolean randomMock) {
+        this.randomMock = randomMock;
     }
 }

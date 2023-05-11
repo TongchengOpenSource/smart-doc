@@ -58,7 +58,7 @@ public class BaseDocBuilderTemplate {
         ClasspathResourceLoader resourceLoader = new ClasspathResourceLoader("/template/");
         Resource resource = resourceLoader.getResource(source);
         try (FileWriter fileWriter = new FileWriter(target, false);
-            Reader reader = resource.openReader()) {
+             Reader reader = resource.openReader()) {
             char[] c = new char[1024 * 1024];
             int temp;
             int len = 0;
@@ -97,6 +97,7 @@ public class BaseDocBuilderTemplate {
         if (Objects.isNull(config)) {
             throw new NullPointerException("ApiConfig can't be null");
         }
+        System.setProperty(DocGlobalConstants.RANDOM_MOCK, String.valueOf(config.isRandomMock()));
         if (Objects.nonNull(config.getLanguage())) {
             System.setProperty(DocGlobalConstants.DOC_LANGUAGE, config.getLanguage().getCode());
         } else {
@@ -107,12 +108,12 @@ public class BaseDocBuilderTemplate {
         if (Objects.isNull(config.getRevisionLogs())) {
             String strTime = DateTimeUtil.long2Str(NOW, DateTimeUtil.DATE_FORMAT_SECOND);
             config.setRevisionLogs(
-                RevisionLog.builder()
-                    .setRevisionTime(strTime)
-                    .setAuthor("@" + System.getProperty("user.name"))
-                    .setVersion("v" + strTime)
-                    .setRemarks("Created by smart-doc")
-                    .setStatus("auto")
+                    RevisionLog.builder()
+                            .setRevisionTime(strTime)
+                            .setAuthor("@" + System.getProperty("user.name"))
+                            .setVersion("v" + strTime)
+                            .setRemarks("Created by smart-doc")
+                            .setStatus("auto")
             );
         }
         if (StringUtil.isEmpty(config.getFramework())) {

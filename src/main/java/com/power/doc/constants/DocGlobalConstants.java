@@ -41,6 +41,7 @@ public interface DocGlobalConstants {
 
     String DOC_LANGUAGE = "smart-doc_language";
 
+    String RANDOM_MOCK = "randomMock";
     String API_DOC_MD_TPL = "ApiDoc.md";
 
     String API_DOC_ADOC_TPL = "ApiDoc.adoc";

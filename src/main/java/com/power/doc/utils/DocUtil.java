@@ -39,6 +39,8 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -72,6 +74,7 @@ public class DocUtil {
         fieldValue.put("author-string", faker.book().author());
         fieldValue.put("url-string", faker.internet().url());
         fieldValue.put("username-string", faker.name().username());
+        fieldValue.put("code-int", "0");
         fieldValue.put("index-int", "1");
         fieldValue.put("index-integer", "1");
         fieldValue.put("page-int", "1");
@@ -131,7 +134,14 @@ public class DocUtil {
      */
     public static String jsonValueByType(String typeName) {
         String type = typeName.contains(".") ? typeName.substring(typeName.lastIndexOf(".") + 1) : typeName;
-        String value = RandomUtil.randomValueByType(type);
+        String randomMock = System.getProperty(DocGlobalConstants.RANDOM_MOCK);
+        Boolean randomMockFlag = Boolean.parseBoolean(randomMock);
+        String value = "";
+        if (randomMockFlag) {
+            value = RandomUtil.randomValueByType(type);
+        } else {
+            value = generateDefaultValueByType(type);
+        }
         if (javaPrimaryType(type)) {
             return value;
         } else if ("Void".equals(type)) {
@@ -145,19 +155,24 @@ public class DocUtil {
 
 
     /**
-     * Generate random field values based on field field names and type.
+     * Generate random field values based on field names and type.
      *
      * @param typeName  field type name
      * @param filedName field name
      * @return random value
      */
     public static String getValByTypeAndFieldName(String typeName, String filedName) {
+        String randomMock = System.getProperty(DocGlobalConstants.RANDOM_MOCK);
+        Boolean randomMockFlag = Boolean.parseBoolean(randomMock);
         boolean isArray = true;
         String type = typeName.contains("java.lang") ? typeName.substring(typeName.lastIndexOf(".") + 1) : typeName;
         String key = filedName.toLowerCase() + "-" + type.toLowerCase();
         StringBuilder value = null;
         if (!type.contains("[")) {
             isArray = false;
+        }
+        if (!randomMockFlag) {
+            return jsonValueByType(typeName);
         }
         for (Map.Entry<String, String> entry : fieldValue.entrySet()) {
             if (key.contains(entry.getKey())) {
@@ -1030,5 +1045,52 @@ public class DocUtil {
             }
         }
         return true;
+    }
+
+    public static String generateDefaultValueByType(String type) {
+        switch (type) {
+            //12
+            case "char":
+                return "";
+            case "Integer":    //4
+            case "int":
+            case "Long": //-5
+            case "long":
+            case "BigDecimal":    //3
+            case "BigInteger":
+                return "0";
+            case "Double": //8
+            case "double":
+            case "Float": //6
+            case "float":
+                return "0.0";
+            case "short":
+            case "Short":
+                return "0";
+            case "boolean":
+            case "Boolean":
+                return "true";
+            case "Time":  //91
+            case "Date":
+            case "Timestamp":
+            case "LocalDateTime":
+                return DateTimeUtil.DATE_FORMAT_SECOND;
+            case "LocalTime":
+                return DateTimeUtil.LOCAL_TIME;
+            case "Year":
+                return DateTimeUtil.YEAR;
+            case "MonthDay":
+                return DateTimeUtil.MONTH_DAY;
+            case "YearMonth":
+                return DateTimeUtil.YEAR_MONTH;
+            case "LocalDate":
+                return DateTimeUtil.DATE_FORMAT_DAY;
+            case "ZonedDateTime":
+                return DateTimeUtil.DATE_FORMAT_ZONED_DATE_TIME;
+            case "OffsetDateTime":
+                return OffsetDateTime.now().toString();
+            default:
+                return "";
+        }
     }
 }
