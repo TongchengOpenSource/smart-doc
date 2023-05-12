@@ -189,9 +189,7 @@ public class ParamsBuildHelper extends BaseHelper {
                 //since tag value
                 String since = DocGlobalConstants.DEFAULT_VERSION;
 
-                if (tagsMap.containsKey(DocTags.IGNORE)) {
-                    continue;
-                } else if (tagsMap.containsKey(DocTags.SINCE)) {
+                if (tagsMap.containsKey(DocTags.SINCE)) {
                     since = tagsMap.get(DocTags.SINCE);
                 }
 

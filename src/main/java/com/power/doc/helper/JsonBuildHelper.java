@@ -254,11 +254,6 @@ public class JsonBuildHelper extends BaseHelper {
                     fieldName = StringUtil.camelToUnderline(fieldName);
                 }
                 Map<String, String> tagsMap = DocUtil.getFieldTagsValue(field, docField);
-                if (!isResp) {
-                    if (tagsMap.containsKey(DocTags.IGNORE)) {
-                        continue;
-                    }
-                }
                 List<JavaAnnotation> annotations = docField.getAnnotations();
                 for (JavaAnnotation annotation : annotations) {
                     String annotationName = annotation.getType().getValue();

@@ -22,13 +22,22 @@
  */
 package com.power.doc.model;
 
+import com.thoughtworks.qdox.model.JavaMethod;
+import com.thoughtworks.qdox.model.JavaType;
+
 import java.util.List;
+import java.util.Map;
 
 /**
  * for rpc
  * @author yu 2020/1/29.
  */
 public class RpcJavaMethod {
+
+    /**
+     * java method
+     */
+    private JavaMethod javaMethod;
 
     /**
      * methodId handled by md5
@@ -96,107 +105,144 @@ public class RpcJavaMethod {
      */
     private boolean deprecated;
 
+    private Map<String, JavaType> actualTypesMap;
+
+    public static RpcJavaMethod builder() {
+        return new RpcJavaMethod();
+    }
+
+    public JavaMethod getJavaMethod() {
+        return javaMethod;
+    }
+
+    public RpcJavaMethod setJavaMethod(JavaMethod javaMethod) {
+        this.javaMethod = javaMethod;
+        return this;
+    }
+
     public String getMethodId() {
         return methodId;
     }
 
-    public void setMethodId(String methodId) {
+    public RpcJavaMethod setMethodId(String methodId) {
         this.methodId = methodId;
+        return this;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public RpcJavaMethod setName(String name) {
         this.name = name;
+        return this;
     }
 
     public int getOrder() {
         return order;
     }
 
-    public void setOrder(int order) {
+    public RpcJavaMethod setOrder(int order) {
         this.order = order;
+        return this;
     }
 
     public String getDesc() {
         return desc;
     }
 
-    public void setDesc(String desc) {
+    public RpcJavaMethod setDesc(String desc) {
         this.desc = desc;
+        return this;
     }
 
     public String getDetail() {
         return detail;
     }
 
-    public void setDetail(String detail) {
+    public RpcJavaMethod setDetail(String detail) {
         this.detail = detail;
+        return this;
     }
 
     public String getThrowsInfo() {
         return throwsInfo;
     }
 
-    public void setThrowsInfo(String throwsInfo) {
+    public RpcJavaMethod setThrowsInfo(String throwsInfo) {
         this.throwsInfo = throwsInfo;
+        return this;
     }
 
     public String getReturnClassInfo() {
         return returnClassInfo;
     }
 
-    public void setReturnClassInfo(String returnClassInfo) {
+    public RpcJavaMethod setReturnClassInfo(String returnClassInfo) {
         this.returnClassInfo = returnClassInfo;
+        return this;
     }
 
     public String getAuthor() {
         return author;
     }
 
-    public void setAuthor(String author) {
+    public RpcJavaMethod setAuthor(String author) {
         this.author = author;
+        return this;
     }
 
     public List<ApiParam> getResponseParams() {
         return responseParams;
     }
 
-    public void setResponseParams(List<ApiParam> responseParams) {
+    public RpcJavaMethod setResponseParams(List<ApiParam> responseParams) {
         this.responseParams = responseParams;
+        return this;
     }
 
     public boolean isDeprecated() {
         return deprecated;
     }
 
-    public void setDeprecated(boolean deprecated) {
+    public RpcJavaMethod setDeprecated(boolean deprecated) {
         this.deprecated = deprecated;
+        return this;
     }
 
     public List<ApiParam> getRequestParams() {
         return requestParams;
     }
 
-    public void setRequestParams(List<ApiParam> requestParams) {
+    public RpcJavaMethod setRequestParams(List<ApiParam> requestParams) {
         this.requestParams = requestParams;
+        return this;
     }
 
     public String getMethodDefinition() {
         return methodDefinition;
     }
 
-    public void setMethodDefinition(String methodDefinition) {
+    public RpcJavaMethod setMethodDefinition(String methodDefinition) {
         this.methodDefinition = methodDefinition;
+        return this;
     }
 
     public String getEscapeMethodDefinition() {
         return escapeMethodDefinition;
     }
 
-    public void setEscapeMethodDefinition(String escapeMethodDefinition) {
+    public RpcJavaMethod setEscapeMethodDefinition(String escapeMethodDefinition) {
         this.escapeMethodDefinition = escapeMethodDefinition;
+        return this;
+    }
+
+    public Map<String, JavaType> getActualTypesMap() {
+        return actualTypesMap;
+    }
+
+    public RpcJavaMethod setActualTypesMap(Map<String, JavaType> actualTypesMap) {
+        this.actualTypesMap = actualTypesMap;
+        return this;
     }
 }

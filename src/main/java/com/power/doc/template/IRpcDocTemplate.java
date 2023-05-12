@@ -23,17 +23,22 @@
 package com.power.doc.template;
 
 import com.power.common.util.StringUtil;
+import com.power.common.util.UrlUtil;
+import com.power.doc.builder.ProjectDocConfigBuilder;
 import com.power.doc.constants.DocAnnotationConstants;
 import com.power.doc.constants.DocTags;
 import com.power.doc.model.ApiConfig;
+import com.power.doc.model.DocJavaMethod;
 import com.power.doc.model.RpcJavaMethod;
 import com.power.doc.utils.DocClassUtil;
 import com.power.doc.utils.DocUtil;
 import com.power.doc.utils.JavaClassUtil;
+import com.power.doc.utils.JsonUtil;
 import com.thoughtworks.qdox.model.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import static com.power.doc.constants.DocTags.DEPRECATED;
@@ -41,14 +46,15 @@ import static com.power.doc.constants.DocTags.DEPRECATED;
 /**
  * @author yu 2022/10/16.
  */
-public interface IRpcDocTemplate extends IBaseDocBuildTemplate{
+public interface IRpcDocTemplate extends IBaseDocBuildTemplate {
 
-    default RpcJavaMethod convertToRpcJavaMethod(ApiConfig apiConfig, JavaMethod method) {
+    default RpcJavaMethod convertToRpcJavaMethod(ApiConfig apiConfig, JavaMethod method, Map<String, JavaType> actualTypesMap) {
         JavaClass cls = method.getDeclaringClass();
-
         RpcJavaMethod rpcJavaMethod = new RpcJavaMethod();
+        rpcJavaMethod.setJavaMethod(method);
         rpcJavaMethod.setName(method.getName());
-        String methodDefine = methodDefinition(method);
+        rpcJavaMethod.setActualTypesMap(actualTypesMap);
+        String methodDefine = methodDefinition(method, actualTypesMap);
         String scapeMethod = methodDefine.replaceAll("<", "&lt;");
         scapeMethod = scapeMethod.replaceAll(">", "&gt;");
 
@@ -81,11 +87,11 @@ public interface IRpcDocTemplate extends IBaseDocBuildTemplate{
         return rpcJavaMethod;
     }
 
-    default String methodDefinition(JavaMethod method) {
+    default String methodDefinition(JavaMethod method, Map<String, JavaType> actualTypesMap) {
         StringBuilder methodBuilder = new StringBuilder();
         JavaType returnType = method.getReturnType();
-        String simpleReturn = returnType.getCanonicalName();
-        String returnClass = returnType.getGenericCanonicalName();
+        String simpleReturn = replaceTypeName(returnType.getCanonicalName(),actualTypesMap,Boolean.TRUE);
+        String returnClass = replaceTypeName(returnType.getGenericCanonicalName(),actualTypesMap,Boolean.TRUE);
         returnClass = returnClass.replace(simpleReturn, JavaClassUtil.getClassSimpleName(simpleReturn));
         String[] arrays = DocClassUtil.getSimpleGicName(returnClass);
         for (String str : arrays) {
@@ -108,10 +114,42 @@ public interface IRpcDocTemplate extends IBaseDocBuildTemplate{
         List<String> params = new ArrayList<>();
         List<JavaParameter> parameters = method.getParameters();
         for (JavaParameter parameter : parameters) {
-            params.add(parameter.getType().getGenericValue() + " " + parameter.getName());
+            String typeName = replaceTypeName(parameter.getType().getGenericValue(),actualTypesMap,Boolean.TRUE);
+            params.add(typeName + " " + parameter.getName());
         }
         methodBuilder.append(method.getName()).append("(")
                 .append(String.join(", ", params)).append(")");
         return methodBuilder.toString();
+    }
+
+    default List<RpcJavaMethod> getParentsClassMethods(ApiConfig apiConfig, JavaClass cls) {
+        List<RpcJavaMethod> docJavaMethods = new ArrayList<>();
+        JavaClass parentClass = cls.getSuperJavaClass();
+        if (Objects.nonNull(parentClass) && !"Object".equals(parentClass.getSimpleName())) {
+            Map<String, JavaType> actualTypesMap = JavaClassUtil.getActualTypesMap(parentClass);
+            List<JavaMethod> parentMethodList = parentClass.getMethods();
+            for (JavaMethod method : parentMethodList) {
+                docJavaMethods.add(convertToRpcJavaMethod(apiConfig, method, actualTypesMap));
+            }
+            docJavaMethods.addAll(getParentsClassMethods(apiConfig, parentClass));
+        }
+        return docJavaMethods;
+    }
+
+    default String replaceTypeName(String type,Map<String, JavaType> actualTypesMap,boolean simple){
+        if (Objects.isNull(actualTypesMap)) {
+            return type;
+        }
+
+        for (Map.Entry<String,JavaType> entry:actualTypesMap.entrySet()){
+            if (type.contains(entry.getKey())) {
+                if(simple) {
+                    return type.replace(entry.getKey(),entry.getValue().getGenericValue());
+                } else {
+                    return type.replace(entry.getKey(),entry.getValue().getGenericFullyQualifiedName());
+                }
+            }
+        }
+        return type;
     }
 }
