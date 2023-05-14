@@ -1,4 +1,15 @@
 ## smart-doc版本
+
+### 版本号：2.6.9
+
+- 更新日期: 2023-05-14
+- 更新内容：
+  1. 修复qdox不允许将字段名命名为permits关键字的bug，[#498](https://github.com/smart-doc-group/smart-doc/issues/498)
+  2. dubbo接口继承父类时，父类中接口未解析问题修复。[#493](https://github.com/smart-doc-group/smart-doc/issues/493)
+  3. 优化插件对许多无关依赖的过滤，提升插件开箱即用的能力。
+  4. 支持禁用随机mock值生成，[#497](https://github.com/smart-doc-group/smart-doc/issues/497)
+
+
 ### 版本号：2.6.8
 
 - 更新日期: 2023-05-02
