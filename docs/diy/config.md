@@ -18,7 +18,7 @@ Example of a complete configuration file
   "isStrict": false, // whether to enable strict mode
   "allInOne": true, // whether to merge documents into one file, generally recommended as true
   "outPath": "D: // md2", // Specify the output path of the document
-  "randomMock":false,// Whether to generate a random mock, the default is false，@since 2.6.9
+  "randomMock": false,// Whether to generate a random mock, the default is false，@since 2.6.9
   "coverOld": true, // Whether to overwrite old files, mainly used for mardown file overwrite
   "createDebugPage": true,//Create a page that can be used to test your APIs like swagger
   "packageFilters": "", // controller package filtering, multiple package names separated by commas
