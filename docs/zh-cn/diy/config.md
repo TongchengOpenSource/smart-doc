@@ -19,6 +19,7 @@
   "isStrict": false, //是否开启严格模式,严格模式会检查代码注释，在2.6.3即以后的插件版本设置此项时检查到注释错误也会直接中断插件白嵌套的构建周期
   "allInOne": true,  //是否将文档合并到一个文件中，一般推荐为true
   "outPath": "D://md2", //指定文档的输出路径
+  "randomMock":false,//是否生成随机mock，默认false，@since 2.6.9
   "coverOld": true,  //是否覆盖旧的文件，主要用于mardown文件覆盖
   "createDebugPage": true,//@since 2.0.0 创建一个类似swagger的可调试接口的文档页面，仅在AllInOne模式中起作用。
   "packageFilters": "",//controller包过滤，多个包用英文逗号隔开，2.2.2开始需要采用正则：com.test.controller.*
