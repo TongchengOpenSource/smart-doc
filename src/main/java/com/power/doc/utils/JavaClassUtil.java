@@ -155,7 +155,9 @@ public class JavaClassUtil {
                             .setFullyQualifiedName(javaField.getType()
                                     .getFullyQualifiedName())
                             .setGenericCanonicalName(javaField.getType()
-                                    .getGenericCanonicalName());
+                                    .getGenericCanonicalName())
+                            .setGenericFullyQualifiedName(javaField.getType().getGenericFullyQualifiedName());
+
                     addedFields.put(methodName, docJavaField);
                 }
             }
@@ -165,7 +167,10 @@ public class JavaClassUtil {
             }
             if (!cls1.isEnum()) {
                 JavaClass parentClass = cls1.getSuperJavaClass();
-                getFields(parentClass, counter, addedFields, actualJavaTypes);
+                if (Objects.nonNull(parentClass) && !"java.lang.Object".equals(parentClass.getName())) {
+                    getFields(parentClass, counter, addedFields, actualJavaTypes);
+                }
+
                 List<JavaType> implClasses = cls1.getImplements();
                 for (JavaType type : implClasses) {
                     JavaClass javaClass = (JavaClass) type;
@@ -223,7 +228,8 @@ public class JavaClassUtil {
 
                     DocJavaField docJavaField = DocJavaField.builder();
                     boolean typeChecked = false;
-                    String gicName = javaField.getType().getGenericCanonicalName();
+                    JavaType fieldType = javaField.getType();
+                    String gicName = fieldType.getGenericCanonicalName();
 
                     String actualType = null;
                     if (JavaClassValidateUtil.isCollection(subTypeName) &&
@@ -252,6 +258,7 @@ public class JavaClassUtil {
                             .setJavaField(javaField)
                             .setFullyQualifiedName(subTypeName)
                             .setGenericCanonicalName(gicName)
+                            .setGenericFullyQualifiedName(fieldType.getGenericFullyQualifiedName())
                             .setActualJavaType(actualType)
                             .setAnnotations(javaField.getAnnotations())
                             .setFieldName(fieldName)
@@ -645,7 +652,7 @@ public class JavaClassUtil {
             String genericFullyQualifiedName = javaType.getGenericFullyQualifiedName();
             javaClassSet.add(genericFullyQualifiedName);
             if (Objects.equals("javax.validation.groups.Default", genericFullyQualifiedName)
-                ||Objects.equals("jakarta.validation.groups.Default", genericFullyQualifiedName)) {
+                    || Objects.equals("jakarta.validation.groups.Default", genericFullyQualifiedName)) {
                 continue;
             }
             JavaClass implementJavaClass = builder.getClassByName(genericFullyQualifiedName);
@@ -752,4 +759,6 @@ public class JavaClassUtil {
         }
         return ignoreFields;
     }
+
+
 }

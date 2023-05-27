@@ -65,6 +65,11 @@ public class DocJavaField {
     private String genericCanonicalName;
 
     /**
+     * genericFullyQualifiedName
+     */
+    private String genericFullyQualifiedName;
+
+    /**
      * field generic actualJavaType;
      */
     private String actualJavaType;
@@ -226,6 +231,15 @@ public class DocJavaField {
 
     public DocJavaField setDeclaringClassName(String declaringClassName) {
         this.declaringClassName = declaringClassName;
+        return this;
+    }
+
+    public String getGenericFullyQualifiedName() {
+        return genericFullyQualifiedName;
+    }
+
+    public DocJavaField setGenericFullyQualifiedName(String genericFullyQualifiedName) {
+        this.genericFullyQualifiedName = genericFullyQualifiedName;
         return this;
     }
 }
