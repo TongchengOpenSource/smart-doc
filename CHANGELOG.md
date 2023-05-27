@@ -1,5 +1,12 @@
 ## smart-doc版本
 
+### 版本号：2.7.0
+
+- 更新日期: 2023-06-0x
+- 更新内容：
+  1. 支持在子类使用@JsonIgnore忽略后，同时忽略父类中的同名字段，[#509](https://github.com/smart-doc-group/smart-doc/issues/509)
+  2. 修复内部类嵌套结构formdata example错误。[pr#512](https://github.com/smart-doc-group/smart-doc/pull/512)
+
 ### 版本号：2.6.9
 
 - 更新日期: 2023-05-14

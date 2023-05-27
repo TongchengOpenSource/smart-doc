@@ -208,13 +208,6 @@ public class JavaClassUtil {
             }
             if (!cls1.isInterface()) {
                 for (JavaField javaField : cls1.getFields()) {
-                    long count = javaField.getAnnotations().stream()
-                            .filter(annotation -> DocAnnotationConstants.SHORT_JSON_IGNORE.equals(
-                                    annotation.getType().getSimpleName()))
-                            .count();
-                    if (count > 0) {
-                        continue;
-                    }
                     String fieldName = javaField.getName();
                     String subTypeName = javaField.getType().getFullyQualifiedName();
 
@@ -224,6 +217,15 @@ public class JavaClassUtil {
                     }
                     if (fieldName.startsWith("is") && ("boolean".equals(subTypeName))) {
                         fieldName = StringUtil.firstToLowerCase(fieldName.substring(2));
+                    }
+                    long count = javaField.getAnnotations().stream()
+                            .filter(annotation -> DocAnnotationConstants.SHORT_JSON_IGNORE.equals(annotation.getType().getSimpleName()))
+                            .count();
+                    if (count > 0) {
+                        if (addedFields.containsKey(fieldName)) {
+                            addedFields.remove(fieldName);
+                        }
+                        continue;
                     }
 
                     DocJavaField docJavaField = DocJavaField.builder();
