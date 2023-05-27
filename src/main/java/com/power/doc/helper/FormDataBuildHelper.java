@@ -211,7 +211,7 @@ public class FormDataBuildHelper {
 //                }
 //                n++;
             } else {
-                formDataList.addAll(getFormData(fieldGicName, registryClasses, counter, builder, pre + fieldName + "."));
+                formDataList.addAll(getFormData(javaClass.getGenericFullyQualifiedName(), registryClasses, counter, builder, pre + fieldName + "."));
             }
         }
         return formDataList;
