@@ -1,15 +1,15 @@
 package com.power.doc.util;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.constants.DocLanguage;
 import com.power.doc.enums.IEnum;
 import com.power.doc.enums.OrderEnum;
 import com.power.doc.utils.DocUtil;
-
 import org.junit.jupiter.api.Test;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author yu 2018/12/10.
@@ -23,18 +23,20 @@ public class DocUtilTest {
         System.out.println(str);
     }
 
-    /* @Test*/
+    @Test
     public void testFormatAndRemove() {
         System.setProperty(DocGlobalConstants.DOC_LANGUAGE, DocLanguage.CHINESE.getCode());
         Map<String, String> params = new HashMap<>();
         params.put("name", "dd");
         params.put("age", "0");
 
-        String url2 = "/user/getUserById/{name}/{age}";
-        String me = DocUtil.formatAndRemove(url2, params);
+        String url2 = "${server.error.path:${error.path:/error}}/test/{name:[a-zA-Z0-9]{3}}/{bb}/add";
+        System.out.println(DocUtil.formatAndRemove(url2, params));
 
-        System.out.println(params.size());
-        System.out.println(me);
+        params.put("name", "dd");
+        params.put("age", "0");
+        String url3 = "http://localhost:8080/detail/{id:[a-zA-Z0-9]{3}}/{name:[a-zA-Z0-9]{3}}";
+        System.out.println(DocUtil.formatAndRemove(url3, params));
     }
 
     @Test
@@ -52,9 +54,21 @@ public class DocUtilTest {
     }
 
     @Test
-    public void  testFormatPathUrl() {
+    public void testFormatPathUrl() {
         System.setProperty(DocGlobalConstants.DOC_LANGUAGE, DocLanguage.CHINESE.getCode());
         String url = "http://localhost:8080/detail/{id:[a-zA-Z0-9]{3}}/{name:[a-zA-Z0-9]{3}}";
         System.out.println(DocUtil.formatPathUrl(url));
+    }
+
+
+    @Test
+    public void testSplitPathBySlash() {
+        String str = "${server.error.path:${error.path:/error}}/test/{name:[a-zA-Z0-9]{3}}/{bb}/add";
+        List<String> paths = DocUtil.splitPathBySlash(str);
+        for (String s : paths) {
+            if (s != null) {
+                System.out.println(s);
+            }
+        }
     }
 }
