@@ -250,22 +250,38 @@ public class DocUtil {
         if (hasSystemProperties(str)) {
             str = DocUtil.delPropertiesUrl(str, new HashSet<>());
         }
+        if (!str.contains(":")) {
+            return str;
+        }
         if (str.contains(":")) {
-            String[] strArr = str.split("/");
-            for (int i = 0; i < strArr.length; i++) {
-                String pathParam = strArr[i];
-                if (pathParam.contains(":")) {
+            List<String> pathList = splitPathBySlash(str);
+            List<String> finalPaths = new ArrayList<>(pathList.size());
+            for (String pathParam : pathList) {
+                if (pathParam.startsWith("http:") || pathParam.startsWith("https:")) {
+                    finalPaths.add(pathParam+"/");
+                    continue;
+                }
+                if (pathParam.startsWith("${")) {
+                    finalPaths.add(pathParam);
+                    continue;
+                }
+                if (pathParam.contains(":") && pathParam.startsWith("{")) {
                     int length = pathParam.length();
                     String reg = pathParam.substring(pathParam.indexOf(":") + 1, length - 1);
                     Generex generex = new Generex(reg);
                     // Generate random String
                     String randomStr = generex.random();
                     String key = pathParam.substring(1, pathParam.indexOf(":"));
-                    values.computeIfPresent(key, (k, v) -> v = randomStr);
-                    strArr[i] = pathParam.substring(0, pathParam.indexOf(":")) + "}";
+                    if (!values.containsKey(key)) {
+                        values.put(key, randomStr);
+                    }
+                    String path = pathParam.substring(0, pathParam.indexOf(":")) + "}";
+                    finalPaths.add(path);
+                    continue;
                 }
+                finalPaths.add(pathParam);
             }
-            str = StringUtils.join(Arrays.asList(strArr), '/');
+            str = StringUtils.join(finalPaths, '/');
         }
         StringBuilder builder = new StringBuilder(str);
         Set<Map.Entry<String, String>> entries = values.entrySet();
@@ -1045,5 +1061,38 @@ public class DocUtil {
             }
         }
         return true;
+    }
+
+    /**
+     * split url by '/'
+     * example: ${server.error.path:${error.path:/error}}/test/{name:[a-zA-Z0-9]{3}}/{bb}/add
+     *
+     * @param url
+     * @return List of path
+     */
+    public static List<String> splitPathBySlash(String url) {
+        if (StringUtil.isEmpty(url)) {
+            return new ArrayList<>(0);
+        }
+        String[] result = url.split("/");
+        List<String> path = new ArrayList<>();
+        for (int i = 0; i < result.length; i++) {
+            if (StringUtil.isEmpty(result[i])) {
+                continue;
+            }
+            if (i < result.length - 1) {
+                if ((result[i].startsWith("${") && !result[i].endsWith("}"))
+                        && (!result[i + 1].startsWith("${") && result[i + 1].endsWith("}"))) {
+                    String merged = result[i] + "/" + result[i + 1];
+                    path.add(merged);
+                    i++;
+                } else {
+                    path.add(result[i]);
+                }
+            } else {
+                path.add(result[i]);
+            }
+        }
+        return path;
     }
 }
