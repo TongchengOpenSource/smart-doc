@@ -1,5 +1,65 @@
 ## 变更日志
 
+### 版本号：2.7.0
+
+- 更新日期: 2023-06-10
+- 更新内容：
+  1. 支持在子类使用@JsonIgnore忽略后，同时忽略父类中的同名字段，[#509](https://github.com/smart-doc-group/smart-doc/issues/509)
+  2. 修复内部类嵌套结构formdata example错误。[pr#512](https://github.com/smart-doc-group/smart-doc/pull/512)
+  3. 修复url中使用环境变量表达式时解析错误，[#515](https://github.com/smart-doc-group/smart-doc/issues/515)
+
+### 版本号：2.6.9
+
+- 更新日期: 2023-05-14
+- 更新内容：
+  1. 修复qdox不允许将字段名命名为permits关键字的bug，[#498](https://github.com/smart-doc-group/smart-doc/issues/498)
+  2. dubbo接口继承父类时，父类中接口未解析问题修复。[#493](https://github.com/smart-doc-group/smart-doc/issues/493)
+  3. 优化插件对许多无关依赖的过滤，提升插件开箱即用的能力。
+  4. 支持禁用随机mock值生成，[#497](https://github.com/smart-doc-group/smart-doc/issues/497)
+
+
+### 版本号：2.6.8
+
+- 更新日期: 2023-05-02
+- 更新内容：
+  1. 支持扩展对DocJavaMethod进行数据自定义处理，[#488](https://github.com/smart-doc-group/smart-doc/issues/488)
+  2. 修复mock值中使用cron表达式后转义值问题。[#487](https://github.com/smart-doc-group/smart-doc/issues/487)
+  3. 支持gson别名解析。 [#485](https://github.com/smart-doc-group/smart-doc/pull/485）
+  4. 修复无法获取多层继承的父类接口bug。[#480](https://github.com/smart-doc-group/smart-doc/issues/480)
+  5. 支持接口中使用多个@RequestBody。 [#pr475](https://github.com/smart-doc-group/smart-doc/pull/475)
+  6. 升级jquery，[#pr474](https://github.com/smart-doc-group/smart-doc/pull/474)
+  7. 修复file字段required设置，[#pr470](https://github.com/smart-doc-group/smart-doc/pull/470)
+  8. 修复多path错误，[#466](https://github.com/smart-doc-group/smart-doc/issues/466)
+
+### 版本号：2.6.7
+
+- 更新日期: 2023-03-28
+- 更新内容：
+  1. 修复JAX-RS Produces注解使用时contentType为空的bug，[#415](https://github.com/smart-doc-group/smart-doc/issues/415)
+  2. 修复不能忽略被继承类中相应字段bug。[#453](https://github.com/smart-doc-group/smart-doc/issues/453)
+  3. 修复使用@see tag时的未写注释导致空指针问腿。[#451](https://github.com/smart-doc-group/smart-doc/issues/451）
+  4. 修复openapi的生成bug。[#458](https://github.com/smart-doc-group/smart-doc/issues/458)
+  5. 修复openapi无法归类的问题。 [#pr460](https://github.com/smart-doc-group/smart-doc/pull/460)
+
+### 版本号：2.6.6
+
+- 更新日期: 2023-03-08
+- 更新内容：
+  1. 修复集合或者数组入参推送torna数据错误，[#415](https://github.com/smart-doc-group/smart-doc/issues/415)
+  2. 请求注解consumes支持。[#424](https://github.com/smart-doc-group/smart-doc/issues/424)
+  3. url中path param占位符解析优化。[#447](https://github.com/smart-doc-group/smart-doc/issues/447）
+
+### 版本号：2.6.5
+
+- 更新日期: 2023-02-27
+- 更新内容：
+  1. 修复集合或者数组入参推送torna数据错误，[#415](https://github.com/smart-doc-group/smart-doc/issues/415)
+  2. 文档泛型支持数组类型标注。[#421](https://github.com/smart-doc-group/smart-doc/issues/421)
+  3. list<Primitive Type> 和list<File> 类型openapi生成错误。[#423](https://github.com/smart-doc-group/smart-doc/issues/423)
+  4. 修复设置requestFieldToUnderline为true时path参数丢失，[#103](https://github.com/smart-doc-group/smart-doc/issues/103)
+  5. 优化自定义字典值处理接口DictionaryValuesResolver[#pr428](https://github.com/smart-doc-group/smart-doc/pull/428)
+  6. 修复HTML模版文档的描述展示[#pr438](https://github.com/smart-doc-group/smart-doc/pull/438)
+
 ### 版本号：2.6.4
 
 - 更新日期: 2023-01-28
