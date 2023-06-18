@@ -258,4 +258,6 @@ public interface DocGlobalConstants {
     String SWAGGER_FILE_TAG = "formData";
 
     String OPENAPI_TAG = "default";
+
+    String DEFAULT_FILTER_METHOD = "*";
 }
