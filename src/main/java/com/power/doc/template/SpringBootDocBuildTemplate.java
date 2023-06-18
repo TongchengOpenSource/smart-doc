@@ -120,7 +120,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IR
                 .setMethodProp("method")
                 .setParamsProp("params")
                 .setScope("class", "method")
-                .setPathProps(DocAnnotationConstants.VALUE_PROP, DocAnnotationConstants.NAME_PROP, DocAnnotationConstants.PATH_PROP);
+                .setPathProps(DocAnnotationConstants.VALUE_PROP, DocAnnotationConstants.PATH_PROP);
         mappingAnnotations.put(requestMappingAnnotation.getAnnotationName(), requestMappingAnnotation);
 
         MappingAnnotation postMappingAnnotation = MappingAnnotation.builder()
@@ -130,7 +130,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IR
                 .setMethodProp("method")
                 .setParamsProp("params")
                 .setMethodType(Methods.POST.getValue())
-                .setPathProps(DocAnnotationConstants.VALUE_PROP, DocAnnotationConstants.NAME_PROP, DocAnnotationConstants.PATH_PROP);
+                .setPathProps(DocAnnotationConstants.VALUE_PROP, DocAnnotationConstants.PATH_PROP);
         mappingAnnotations.put(postMappingAnnotation.getAnnotationName(), postMappingAnnotation);
 
         MappingAnnotation getMappingAnnotation = MappingAnnotation.builder()
@@ -140,7 +140,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IR
                 .setMethodProp("method")
                 .setParamsProp("params")
                 .setMethodType(Methods.GET.getValue())
-                .setPathProps(DocAnnotationConstants.VALUE_PROP, DocAnnotationConstants.NAME_PROP, DocAnnotationConstants.PATH_PROP);
+                .setPathProps(DocAnnotationConstants.VALUE_PROP, DocAnnotationConstants.PATH_PROP);
         mappingAnnotations.put(getMappingAnnotation.getAnnotationName(), getMappingAnnotation);
 
         MappingAnnotation putMappingAnnotation = MappingAnnotation.builder()
@@ -150,7 +150,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IR
                 .setParamsProp("params")
                 .setMethodProp("method")
                 .setMethodType(Methods.PUT.getValue())
-                .setPathProps(DocAnnotationConstants.VALUE_PROP, DocAnnotationConstants.NAME_PROP, DocAnnotationConstants.PATH_PROP);
+                .setPathProps(DocAnnotationConstants.VALUE_PROP, DocAnnotationConstants.PATH_PROP);
         mappingAnnotations.put(putMappingAnnotation.getAnnotationName(), putMappingAnnotation);
 
         MappingAnnotation patchMappingAnnotation = MappingAnnotation.builder()
@@ -160,7 +160,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IR
                 .setMethodProp("method")
                 .setParamsProp("params")
                 .setMethodType(Methods.PATCH.getValue())
-                .setPathProps(DocAnnotationConstants.VALUE_PROP, DocAnnotationConstants.NAME_PROP, DocAnnotationConstants.PATH_PROP);
+                .setPathProps(DocAnnotationConstants.VALUE_PROP, DocAnnotationConstants.PATH_PROP);
         mappingAnnotations.put(patchMappingAnnotation.getAnnotationName(), patchMappingAnnotation);
 
         MappingAnnotation deleteMappingAnnotation = MappingAnnotation.builder()
@@ -170,7 +170,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IR
                 .setMethodProp("method")
                 .setParamsProp("params")
                 .setMethodType(Methods.DELETE.getValue())
-                .setPathProps(DocAnnotationConstants.VALUE_PROP, DocAnnotationConstants.NAME_PROP, DocAnnotationConstants.PATH_PROP);
+                .setPathProps(DocAnnotationConstants.VALUE_PROP, DocAnnotationConstants.PATH_PROP);
         mappingAnnotations.put(deleteMappingAnnotation.getAnnotationName(), deleteMappingAnnotation);
 
         MappingAnnotation feignClientAnnotation = MappingAnnotation.builder()
