@@ -22,7 +22,7 @@
   "randomMock": false,//是否生成随机mock，默认false，@since 2.6.9
   "coverOld": true,  //是否覆盖旧的文件，主要用于mardown文件覆盖
   "createDebugPage": true,//@since 2.0.0 创建一个类似swagger的可调试接口的文档页面，仅在AllInOne模式中起作用。
-  "packageFilters": "",//controller包过滤，多个包用英文逗号隔开，2.2.2开始需要采用正则：com.test.controller.*
+  "packageFilters": "",//controller包过滤，多个包用英文逗号隔开，2.2.2开始需要采用正则：com.test.controller.*，2.7.1开始支持方法级别正则：com.test.controller.TestController.*
   "packageExcludeFilters": "",//对packageFilters排除子包，多个包用英文逗号隔开，2.2.2开始需要采用正则：com.test.controller.res.*
   "md5EncryptedHtmlName": false,//只有每个controller生成一个html文件时才使用
   "style":"xt256", //基于highlight.js的代码高设置,可选值很多可查看码云wiki，喜欢配色统一简洁的同学可以不设置
@@ -286,10 +286,21 @@
 * 默认值: `null`
 
 `Controller`包过滤，多个包用英文逗号隔开。
-> PS: 2.2.2开始需要采用正则：com.test.controller.*
+> PS: 2.2.2开始需要采用正则：com.test.controller.* ，2.7.1开始支持方法级别正则：com.test.controller.TestController.*
+
+下面举例出几种常用的 case，`smart-doc`可根据正则精准控制文档的输出粒度。
 ```json
 {
-    "packageFilters": "com.test.controller.*"
+    "packageFilters": "com.test.controller.*", // 输出 controller 包下所有的接口
+    "packageFilters": "com.example.controller.PetController", // 只输出 PetController 的接口
+    "packageFilters": "com.example.controller.*Controller", // 输出 controller 包下以 Controller 后缀为类名的所有接口
+    "packageFilters": "com.example.controller.Pet.*", // 输出 controller 包下以 Pet 开头为类名的所有接口
+    "packageFilters": "com.example.controller.Pet.*Controller", // 输出 controller 包下符合 Pet*Controller 类名的所有接口
+    "packageFilters": "com.example.controller.PetController.getPetInfo", // 输出 PetController 中 getPetInfo 方法接口
+    "packageFilters": "com.example.controller.PetController.*", // 输出 PetController 中所有的接口
+    "packageFilters": "com.example.controller.PetController.get.*", // 只输出 PetController 类中以 get 为方法名开头的所有接口
+    "packageFilters": "com.example.controller.PetController.*Info", // 只输出 PetController 类中以 Info 为方法名结尾的所有接口
+    "packageFilters": "com.example.controller.PetController.get.*Info", // 只输出 PetController 类中符合 get.*Info 为方法名的所有接口
 }
 ```
 
