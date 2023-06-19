@@ -22,7 +22,7 @@
   "randomMock": false,//是否生成随机mock，默认false，@since 2.6.9
   "coverOld": true,  //是否覆盖旧的文件，主要用于mardown文件覆盖
   "createDebugPage": true,//@since 2.0.0 创建一个类似swagger的可调试接口的文档页面，仅在AllInOne模式中起作用。
-  "packageFilters": "",//controller包过滤，多个包用英文逗号隔开，2.2.2开始需要采用正则：com.test.controller.*
+  "packageFilters": "",//controller包过滤，多个包用英文逗号隔开，2.2.2开始需要采用正则：com.test.controller.*，2.7.1开始支持方法级别正则：com.test.controller.TestController.*
   "packageExcludeFilters": "",//对packageFilters排除子包，多个包用英文逗号隔开，2.2.2开始需要采用正则：com.test.controller.res.*
   "md5EncryptedHtmlName": false,//只有每个controller生成一个html文件时才使用
   "style":"xt256", //基于highlight.js的代码高设置,可选值很多可查看码云wiki，喜欢配色统一简洁的同学可以不设置
@@ -286,7 +286,7 @@
 * 默认值: `null`
 
 `Controller`包过滤，多个包用英文逗号隔开。
-> PS: 2.2.2开始需要采用正则：com.test.controller.*
+> PS: 2.2.2开始需要采用正则：com.test.controller.* ，2.7.1开始支持方法级别正则：com.test.controller.TestController.*
 ```json
 {
     "packageFilters": "com.test.controller.*"
