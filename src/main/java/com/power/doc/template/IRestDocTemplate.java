@@ -47,7 +47,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
         for (JavaClass cls : classes) {
             if (StringUtil.isNotEmpty(apiConfig.getPackageFilters())) {
                 // from smart config
-                if (!DocUtil.isMatch(apiConfig.getPackageFilters(), cls.getCanonicalName())) {
+                if (!DocUtil.isMatch(apiConfig.getPackageFilters(), cls)) {
                     continue;
                 }
             }
@@ -62,6 +62,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                 setCustomOrder = true;
                 order = Integer.parseInt(strOrder);
             }
+
             List<ApiMethodDoc> apiMethodDocs = buildEntryPointMethod(cls, apiConfig, projectBuilder,
                     frameworkAnnotations, configApiReqParams, baseMappingHandler, headerHandler);
             this.handleApiDoc(cls, apiDocList, apiMethodDocs, order, apiConfig.isMd5EncryptedHtmlName());
@@ -277,8 +278,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
             FrameworkAnnotations frameworkAnnotations,
             List<ApiReqParam> configApiReqParams,
             IRequestMappingHandler baseMappingHandler,
-            IHeaderHandler headerHandler
-    ) {
+            IHeaderHandler headerHandler) {
         String clazName = cls.getCanonicalName();
         boolean paramsDataToTree = projectBuilder.getApiConfig().isParamsDataToTree();
         String group = JavaClassUtil.getClassTagsValue(cls, DocTags.GROUP, Boolean.TRUE);
@@ -306,6 +306,9 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
             }
         }
 
+        Set<String> filterMethods = DocUtil.findFilterMethods(clazName);
+        boolean needAllMethods = filterMethods.contains(DocGlobalConstants.DEFAULT_FILTER_METHOD);
+
         List<JavaMethod> methods = cls.getMethods();
         List<DocJavaMethod> docJavaMethods = new ArrayList<>(methods.size());
         for (JavaMethod method : methods) {
@@ -315,7 +318,9 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
             if (Objects.nonNull(method.getTagByName(IGNORE))) {
                 continue;
             }
-            docJavaMethods.add(convertToDocJavaMethod(apiConfig, projectBuilder, method, null));
+            if (needAllMethods || filterMethods.contains(method.getName())) {
+                docJavaMethods.add(convertToDocJavaMethod(apiConfig, projectBuilder, method, null));
+            }
         }
         // add parent class methods
         docJavaMethods.addAll(getParentsClassMethods(apiConfig, projectBuilder, cls));

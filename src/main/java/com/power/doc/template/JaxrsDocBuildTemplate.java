@@ -84,7 +84,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDo
         for (JavaClass cls : classes) {
             if (StringUtil.isNotEmpty(apiConfig.getPackageFilters())) {
                 // from smart config
-                if (!DocUtil.isMatch(apiConfig.getPackageFilters(), cls.getCanonicalName())) {
+                if (!DocUtil.isMatch(apiConfig.getPackageFilters(), cls)) {
                     continue;
                 }
             }
@@ -147,6 +147,9 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDo
             }
         }
 
+        Set<String> filterMethods = DocUtil.findFilterMethods(clzName);
+        boolean needAllMethods = filterMethods.contains(DocGlobalConstants.DEFAULT_FILTER_METHOD);
+
         List<JavaMethod> methods = cls.getMethods();
         List<DocJavaMethod> docJavaMethods = new ArrayList<>(methods.size());
         // filter  private method
@@ -154,7 +157,9 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDo
             if (method.isPrivate()) {
                 continue;
             }
-            docJavaMethods.add(convertToDocJavaMethod(apiConfig, projectBuilder, method, null));
+            if (needAllMethods || filterMethods.contains(method.getName())) {
+                docJavaMethods.add(convertToDocJavaMethod(apiConfig, projectBuilder, method, null));
+            }
         }
         // add parent class methods
         docJavaMethods.addAll(getParentsClassMethods(apiConfig, projectBuilder, cls));

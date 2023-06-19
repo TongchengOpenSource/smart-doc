@@ -39,8 +39,6 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -58,10 +56,10 @@ import static com.power.doc.model.SystemPlaceholders.*;
  */
 public class DocUtil {
 
-    private static Faker faker = new Faker(new Locale("en-US"));
-    private static Faker enFaker = new Faker(new Locale("en-US"));
+    private static final Faker faker = new Faker(new Locale("en-US"));
+    private static final Faker enFaker = new Faker(new Locale("en-US"));
 
-    private static Map<String, String> fieldValue = new LinkedHashMap<>();
+    private static final Map<String, String> fieldValue = new LinkedHashMap<>();
 
     static {
         fieldValue.put("uuid-string", UUID.randomUUID().toString());
@@ -127,6 +125,16 @@ public class DocUtil {
     }
 
     /**
+     * Cache the regex and its pattern object
+     */
+    private static final Map<String, Pattern> patternCache = new HashMap<>();
+
+    /**
+     * "packageFilters" cache
+     */
+    private static final Map<String, Set<String>> filterMethodCache = new HashMap<>();
+
+    /**
      * Generate a random value based on java type name.
      *
      * @param typeName field type name
@@ -147,9 +155,7 @@ public class DocUtil {
         } else if ("Void".equals(type)) {
             return "null";
         } else {
-            StringBuilder builder = new StringBuilder();
-            builder.append("\"").append(value).append("\"");
-            return builder.toString();
+            return "\"" + value + "\"";
         }
     }
 
@@ -238,6 +244,110 @@ public class DocUtil {
         return false;
     }
 
+    /**
+     * match the controller package
+     *
+     * @param packageFilters package filter
+     * @param controllerClass controller class
+     * @return boolean
+     */
+    public static boolean isMatch(String packageFilters, JavaClass controllerClass) {
+        if (StringUtil.isEmpty(packageFilters)) {
+            return false;
+        }
+
+        String controllerName = controllerClass.getCanonicalName();
+
+        String[] filters = packageFilters.split(",");
+
+        for (String filter : filters) {
+            if (filter.contains("*")) {
+                Pattern pattern = getPattern(filter);
+
+                // if the pattern matches the controller canonical name,
+                // that means the user want all methods in this controller
+                boolean matchControllerName = pattern.matcher(controllerName).matches();
+                if (matchControllerName) {
+                    cacheFilterMethods(controllerName, Collections.singleton(DocGlobalConstants.DEFAULT_FILTER_METHOD));
+                    return true;
+                } else {
+                    // try to match the methods in this controller
+                    List<String> controllerMethods = controllerClass.getMethods()
+                            .stream()
+                            .map(JavaMember::getName)
+                            .collect(Collectors.toList());
+                    Set<String> methodsMatch = controllerMethods.stream()
+                            .filter(method -> pattern.matcher(controllerName + "." + method).matches())
+                            .collect(Collectors.toSet());
+                    if (!methodsMatch.isEmpty()) {
+                        cacheFilterMethods(controllerName, methodsMatch);
+                        return true;
+                    }
+                }
+            } else if (controllerName.equals(filter) || controllerName.contains(filter)) {
+                // the filter is just the controller canonical name,
+                // or the controller is in a sub package
+                cacheFilterMethods(controllerName, Collections.singleton(DocGlobalConstants.DEFAULT_FILTER_METHOD));
+                return true;
+            } else if (filter.contains(controllerName)) {
+                // the filter is point to a method
+                String method = filter.replace(controllerName, "").replace(".", "");
+                cacheFilterMethods(controllerName, Collections.singleton(method));
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Get pattern from the cache by a regex string.
+     * If there is no cache, then compile a new pattern object and put it into cache
+     *
+     * @param regex a regex string
+     * @return a usable pattern object
+     */
+    private static Pattern getPattern(String regex) {
+        Pattern pattern = patternCache.get(regex);
+        if (pattern == null) {
+            pattern = Pattern.compile(regex);
+            patternCache.put(regex, pattern);
+        }
+        return pattern;
+    }
+
+    /**
+     * Put the specified method names into a cache.
+     *
+     * @param controller the controller canonical name
+     * @param methods the methods will be cached
+     */
+    private static void cacheFilterMethods(String controller, Set<String> methods) {
+        filterMethodCache.put(controller, methods);
+    }
+
+    /**
+     * Get filter method name from cache, no cache will return "*", which means all methods.
+     *
+     * @param controller the controller canonical name
+     * @return the cached methods or "*"
+     */
+    private static Set<String> getFilterMethodsCache(String controller) {
+        return filterMethodCache.getOrDefault(controller, Collections.singleton(DocGlobalConstants.DEFAULT_FILTER_METHOD));
+    }
+
+    /**
+     * Find methods if the user specified in "packageFilters".
+     * If not specified, return "*" by default, which means need all methods.
+     *
+     * @param controllerName controllerName
+     * @return the methods user specified
+     * @see #cacheFilterMethods(String, Set)
+     * @see #isMatch(String, JavaClass)
+     */
+    public static Set<String> findFilterMethods(String controllerName) {
+        return getFilterMethodsCache(controllerName);
+    }
 
     /**
      * An interpreter for strings with named placeholders.
@@ -541,9 +651,7 @@ public class DocUtil {
     }
 
     public static String handleJsonStr(String content) {
-        StringBuilder builder = new StringBuilder();
-        builder.append("\"").append(content).append("\"");
-        return builder.toString();
+        return "\"" + content + "\"";
     }
 
     public static Map<String, String> formDataToMap(List<FormData> formDataList) {

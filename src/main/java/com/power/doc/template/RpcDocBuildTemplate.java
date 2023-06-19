@@ -82,7 +82,7 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc>, IRpcDo
         for (JavaClass cls : projectBuilder.getJavaProjectBuilder().getClasses()) {
             if (StringUtil.isNotEmpty(apiConfig.getPackageFilters())) {
                 // check package
-                if (!DocUtil.isMatch(apiConfig.getPackageFilters(), cls.getCanonicalName())) {
+                if (!DocUtil.isMatch(apiConfig.getPackageFilters(), cls)) {
                     continue;
                 }
             }
@@ -119,6 +119,10 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc>, IRpcDo
         String clazName = cls.getCanonicalName();
         List<JavaMethod> methods = cls.getMethods();
         List<RpcJavaMethod> methodDocList = new ArrayList<>(methods.size());
+
+        Set<String> filterMethods = DocUtil.findFilterMethods(clazName);
+        boolean needAllMethods = filterMethods.contains(DocGlobalConstants.DEFAULT_FILTER_METHOD);
+
         for (JavaMethod method : methods) {
             if (method.isPrivate()) {
                 continue;
@@ -129,8 +133,10 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc>, IRpcDo
             if (StringUtil.isEmpty(method.getComment()) && apiConfig.isStrict()) {
                 throw new RuntimeException("Unable to find comment for method " + method.getName() + " in " + cls.getCanonicalName());
             }
-            RpcJavaMethod apiMethodDoc = convertToRpcJavaMethod(apiConfig, method, null);
-            methodDocList.add(apiMethodDoc);
+            if (needAllMethods || filterMethods.contains(method.getName())) {
+                RpcJavaMethod apiMethodDoc = convertToRpcJavaMethod(apiConfig, method, null);
+                methodDocList.add(apiMethodDoc);
+            }
 
 
         }
