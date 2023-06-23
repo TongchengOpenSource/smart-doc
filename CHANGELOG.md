@@ -1,5 +1,12 @@
 ## smart-doc版本
 
+### 版本号：2.7.1
+
+- 更新日期: 2023-06-23
+- 更新内容：
+  1. 修复Spring各个Mapping注解的name解析使用错误，[#518](https://github.com/smart-doc-group/smart-doc/issues/518)
+  2. packageFilters 参数支持到方法级别。[#519](https://github.com/smart-doc-group/smart-doc/issues/519)
+
 ### 版本号：2.7.0
 
 - 更新日期: 2023-06-10
