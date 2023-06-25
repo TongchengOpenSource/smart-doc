@@ -258,6 +258,11 @@ public class DocUtil {
 
         String controllerName = controllerClass.getCanonicalName();
 
+        boolean pointToMethod = false;
+        // if the 'packageFilters' is point to the method, add all candidate methods into this container
+        int capacity = Math.max((int) (controllerClass.getMethods().size() / 0.75F) + 1, 16);
+        Set<String> filterMethods = new HashSet<>(capacity);
+        
         String[] filters = packageFilters.split(",");
 
         for (String filter : filters) {
@@ -280,8 +285,8 @@ public class DocUtil {
                             .filter(method -> pattern.matcher(controllerName + "." + method).matches())
                             .collect(Collectors.toSet());
                     if (!methodsMatch.isEmpty()) {
-                        cacheFilterMethods(controllerName, methodsMatch);
-                        return true;
+                        pointToMethod = true;
+                        filterMethods.addAll(methodsMatch);
                     }
                 }
             } else if (controllerName.equals(filter) || controllerName.contains(filter)) {
@@ -291,12 +296,17 @@ public class DocUtil {
                 return true;
             } else if (filter.contains(controllerName)) {
                 // the filter is point to a method
+                pointToMethod = true;
                 String method = filter.replace(controllerName, "").replace(".", "");
-                cacheFilterMethods(controllerName, Collections.singleton(method));
-                return true;
+                filterMethods.add(method);
             }
         }
 
+        if (pointToMethod) {
+            cacheFilterMethods(controllerName, filterMethods);
+            return true;
+        }
+        
         return false;
     }
 
