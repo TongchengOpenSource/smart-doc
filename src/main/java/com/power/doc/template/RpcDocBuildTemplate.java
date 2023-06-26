@@ -142,16 +142,19 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc>, IRpcDo
         }
         // add parent class methods
         methodDocList.addAll(getParentsClassMethods(apiConfig, cls));
-        List<JavaType> implClasses = cls.getImplements();
-        for (JavaType type : implClasses) {
-            JavaClass javaClass = (JavaClass) type;
-            Map<String, JavaType> actualTypesMap = JavaClassUtil.getActualTypesMap(javaClass);
-            for (JavaMethod method : javaClass.getMethods()) {
-                if (!method.isDefault()) {
-                    methodDocList.add(convertToRpcJavaMethod(apiConfig, method, actualTypesMap));
+        if (cls.isInterface() || cls.isAbstract()) {
+            List<JavaType> implClasses = cls.getImplements();
+            for (JavaType type : implClasses) {
+                JavaClass javaClass = (JavaClass) type;
+                Map<String, JavaType> actualTypesMap = JavaClassUtil.getActualTypesMap(javaClass);
+                for (JavaMethod method : javaClass.getMethods()) {
+                    if (!method.isDefault()) {
+                        methodDocList.add(convertToRpcJavaMethod(apiConfig, method, actualTypesMap));
+                    }
                 }
             }
         }
+
         int methodOrder = 0;
         List<RpcJavaMethod> rpcJavaMethods = new ArrayList<>(methodDocList.size());
         for (RpcJavaMethod method : methodDocList) {
