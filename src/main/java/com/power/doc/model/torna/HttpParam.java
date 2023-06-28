@@ -42,8 +42,17 @@ public class HttpParam {
     private String msg;
     private String solution;
     private List<HttpParam> children;
-
     private Integer orderIndex;
+    private String version;
+
+    public String getVersion() {
+        return version;
+    }
+
+    public HttpParam setVersion(String version) {
+        this.version = version;
+        return this;
+    }
 
     public EnumInfo getEnumInfo() {
         return enumInfo;
