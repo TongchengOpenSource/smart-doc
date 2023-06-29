@@ -24,17 +24,13 @@ package com.power.doc.builder;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Random;
-import java.util.Set;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 import java.util.logging.Logger;
 
 import com.power.common.constants.Charset;
@@ -105,7 +101,7 @@ public class ProjectDocConfigBuilder {
         javaProjectBuilder.setEncoding(Charset.DEFAULT_CHARSET);
         this.javaProjectBuilder = javaProjectBuilder;
         try {
-            this.loadJavaSource(apiConfig.getSourceCodePaths(), this.javaProjectBuilder);
+            this.loadJavaSource(apiConfig, this.javaProjectBuilder);
         } catch (Exception e) {
             log.warning(e.getMessage());
         }
@@ -170,11 +166,16 @@ public class ProjectDocConfigBuilder {
         return cls;
     }
 
-    private void loadJavaSource(List<SourceCodePath> paths, JavaProjectBuilder builder) {
-        if (CollectionUtil.isEmpty(paths)) {
+    private void loadJavaSource(ApiConfig config, JavaProjectBuilder builder) {
+        if (CollectionUtil.isNotEmpty(config.getJarSourcePaths())) {
+            for (SourceCodePath path : config.getJarSourcePaths()) {
+                loadJarJavaSource(path.getPath(), builder);
+            }
+        }
+        if (CollectionUtil.isEmpty(config.getSourceCodePaths())) {
             builder.addSourceTree(new File(DocGlobalConstants.PROJECT_CODE_PATH));
         } else {
-            for (SourceCodePath path : paths) {
+            for (SourceCodePath path : config.getSourceCodePaths()) {
                 if (null == path) {
                     continue;
                 }
@@ -197,6 +198,51 @@ public class ProjectDocConfigBuilder {
                 log.warning(e.getMessage());
             }
         });
+    }
+
+    public void loadJarJavaSource(String path, JavaProjectBuilder builder) {
+        OutputStream out;
+        if (!path.endsWith(".jar")) {
+            return;
+        }
+        try (JarFile jarFile = new JarFile(path)) {
+            builder.setEncoding(Charset.DEFAULT_CHARSET);
+            Enumeration<JarEntry> entryEnumeration = jarFile.entries();
+            while (entryEnumeration.hasMoreElements()) {
+                JarEntry entry = entryEnumeration.nextElement();
+                if (entry.getName().endsWith(".java")) {
+                    InputStream is = jarFile.getInputStream(entry);
+                    File file = new File(DocGlobalConstants.JAR_TEMP + entry.getName());
+                    if (!file.exists()) {
+                        file.getParentFile().mkdirs();
+                    }
+                    out = Files.newOutputStream(file.toPath());
+                    int len;
+                    while ((len = is.read()) != -1) {
+                        out.write(len);
+                    }
+                    is.close();
+                    out.close();
+                }
+            }
+            File file = new File(DocGlobalConstants.JAR_TEMP);
+            builder.addSourceTree(file);
+            deleteDir(file);
+        } catch (IOException e) {
+            log.info("jar" + path + " load  error ,e :" + e);
+        }
+    }
+
+    public static void deleteDir(File file) {
+        File[] files = file.listFiles();
+        if (file.isFile() || Objects.isNull(files) || files.length == 0) {
+            file.delete();
+        } else {
+            for (File f : files) {
+                deleteDir(f);
+            }
+        }
+        file.delete();
     }
 
     private void initClassFilesMap() {

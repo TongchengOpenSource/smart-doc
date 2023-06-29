@@ -260,4 +260,6 @@ public interface DocGlobalConstants {
     String OPENAPI_TAG = "default";
 
     String DEFAULT_FILTER_METHOD = "*";
+
+    String JAR_TEMP = "./smart-temp/";
 }

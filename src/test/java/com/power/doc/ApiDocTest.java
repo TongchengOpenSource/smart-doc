@@ -2,6 +2,7 @@ package com.power.doc;
 
 import com.power.common.util.DateTimeUtil;
 import com.power.doc.builder.ApiDocBuilder;
+import com.power.doc.builder.HtmlApiDocBuilder;
 import com.power.doc.constants.FrameworkEnum;
 import com.power.doc.model.ApiConfig;
 import com.power.doc.model.SourceCodePath;
@@ -34,20 +35,24 @@ public class ApiDocTest {
         // config.setAuthor("test");
         config.setDebugEnvUrl("http://127.0.0.1");
         // config.setTornaDebug(true);
-        config.setAllInOne(true);
+        config.setAllInOne(false);
         config.setCoverOld(true);
-        config.setOutPath("./demoOut");
-        config.setMd5EncryptedHtmlName(true);
+        config.setOutPath("D://md3");
+        // config.setMd5EncryptedHtmlName(true);
         config.setFramework(FrameworkEnum.SPRING.getFramework());
         // 不指定SourcePaths默认加载代码为项目src/main/java下的
         config.setSourceCodePaths(
                 SourceCodePath.builder().setDesc("本项目代码")
-                        .setPath("./demo/src/main/java")
+                        .setPath("C:\\Users\\xingzi\\Desktop\\example")
         );
         config.setPackageFilters("com.example.demo.controller.*");
 
+
+        config.setJarSourcePaths(SourceCodePath.builder()
+                .setPath("D:\\xxxx-sources.jar")
+        );
         long start = System.currentTimeMillis();
-        ApiDocBuilder.buildApiDoc(config);
+        HtmlApiDocBuilder.buildApiDoc(config);
         // HtmlApiDocBuilder.buildApiDoc(config);
         long end = System.currentTimeMillis();
         DateTimeUtil.printRunTime(end, start);

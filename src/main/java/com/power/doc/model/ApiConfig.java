@@ -77,6 +77,11 @@ public class ApiConfig {
     private List<SourceCodePath> sourceCodePaths;
 
     /**
+     * third source jar path
+     */
+    private List<SourceCodePath> jarSourcePaths;
+
+    /**
      * list of Request headers
      */
     private List<ApiReqParam> requestHeaders;
@@ -609,17 +614,17 @@ public class ApiConfig {
             return null;
         }
         return this.dataDictionaries.stream().filter((apiDataDictionary ->
-            {
-                boolean equalsName = enumClassName.equalsIgnoreCase(apiDataDictionary.getEnumClassName());
+                {
+                    boolean equalsName = enumClassName.equalsIgnoreCase(apiDataDictionary.getEnumClassName());
 
-                Set<Class<? extends Enum>> enumImplementSet = apiDataDictionary.getEnumImplementSet();
-                if (CollectionUtil.isEmpty(enumImplementSet)) {
-                    return equalsName;
-                }
-                Set<String> collect = enumImplementSet.stream().map(Class::getName).collect(Collectors.toSet());
-                return equalsName || collect.contains(enumClassName);
-            }))
-            .findFirst().orElse(null);
+                    Set<Class<? extends Enum>> enumImplementSet = apiDataDictionary.getEnumImplementSet();
+                    if (CollectionUtil.isEmpty(enumImplementSet)) {
+                        return equalsName;
+                    }
+                    Set<String> collect = enumImplementSet.stream().map(Class::getName).collect(Collectors.toSet());
+                    return equalsName || collect.contains(enumClassName);
+                }))
+                .findFirst().orElse(null);
     }
 
     public List<ApiErrorCodeDictionary> getErrorCodeDictionaries() {
@@ -953,5 +958,18 @@ public class ApiConfig {
 
     public void setRandomMock(boolean randomMock) {
         this.randomMock = randomMock;
+    }
+
+    public List<SourceCodePath> getJarSourcePaths() {
+        return jarSourcePaths;
+    }
+
+    public ApiConfig setJarSourcePaths(List<SourceCodePath> jarSourcePaths) {
+        this.jarSourcePaths = jarSourcePaths;
+        return this;
+    }
+
+    public void setJarSourcePaths(SourceCodePath... jarSourcePaths) {
+        this.jarSourcePaths = CollectionUtil.asList(jarSourcePaths);
     }
 }
