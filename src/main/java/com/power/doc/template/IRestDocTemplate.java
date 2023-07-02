@@ -206,7 +206,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
         apiDocList.forEach(doc -> {
             String[] tags = doc.getTags();
             if (ArrayUtils.isEmpty(tags)) {
-                tags = new String[]{doc.getName()};
+                tags = new String[]{doc.getPackageName() + "." + doc.getName()};
             }
 
             for (String tag : tags) {
