@@ -234,13 +234,10 @@ public class TornaUtil {
                 type = TornaConstants.PARAM_TYPE_FILE_ARRAY;
             }
             httpParam.setType(type);
+            httpParam.setVersion(apiParam.getVersion());
             httpParam.setRequired(apiParam.isRequired() ? TornaConstants.YES : TornaConstants.NO);
             httpParam.setExample(StringUtil.removeQuotes(apiParam.getValue()));
-            if (StringUtil.isNotEmpty(apiParam.getVersion()) && !DocGlobalConstants.DEFAULT_VERSION.equals(apiParam.getVersion())) {
-                httpParam.setDescription(DocUtil.replaceNewLineToHtmlBr(apiParam.getDesc()) + "@since " + apiParam.getVersion());
-            } else {
-                httpParam.setDescription(DocUtil.replaceNewLineToHtmlBr(apiParam.getDesc()));
-            }
+            httpParam.setDescription(DocUtil.replaceNewLineToHtmlBr(apiParam.getDesc()));
             httpParam.setEnumInfo(apiParam.getEnumInfo());
             if (apiParam.getChildren() != null) {
                 httpParam.setChildren(buildParams(apiParam.getChildren()));

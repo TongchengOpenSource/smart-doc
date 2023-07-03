@@ -52,6 +52,16 @@ public class Apis {
     private Integer isResponseArray;
     private String responseArrayType;
     private String deprecated;
+    private String version;
+
+    public String getVersion() {
+        return version;
+    }
+
+    public Apis setVersion(String version) {
+        this.version = version;
+        return this;
+    }
 
     public Integer getIsRequestArray() {
         return isRequestArray;
