@@ -287,7 +287,7 @@ public class ParamsBuildHelper extends BaseHelper {
                         && JavaClassUtil.isTargetChildClass(simpleName, customResponseField.getOwnerClassName()) && isResp) {
                     fieldName = customResponseField.getReplaceName();
                 }
-                // file
+                // Analyzing File Type Field
                 if (JavaClassValidateUtil.isFile(fieldGicName)) {
                     ApiParam param = ApiParam.of().setField(pre + fieldName).setType("file")
                             .setClassName(className)
@@ -350,7 +350,7 @@ public class ParamsBuildHelper extends BaseHelper {
                     ApiParam param = ApiParam.of().setField(pre + fieldName).setClassName(className).setPid(pid).setMaxLength(maxLength);
                     param.setId(atomicOrDefault(atomicInteger, paramList.size() + param.getPid() + 1));
                     String processedType;
-                    if (typeSimpleName.length() == 1) {
+                    if (fieldGicName.length() == 1) {
                         String gicName = DocGlobalConstants.JAVA_OBJECT_FULLY;
                         if (Objects.nonNull(genericMap.get(typeSimpleName))) {
                             gicName = genericMap.get(subTypeName);
@@ -475,12 +475,12 @@ public class ParamsBuildHelper extends BaseHelper {
                                         , isResp, registryClasses, projectBuilder, groupClasses, fieldPid, jsonRequest, atomicInteger));
                             }
                         }
-                    } else if (DocGlobalConstants.JAVA_OBJECT_FULLY.equals(subTypeName)) {
+                    } else if (DocGlobalConstants.JAVA_OBJECT_FULLY.equals(fieldGicName)) {
                         if (StringUtil.isEmpty(param.getDesc())) {
                             param.setDesc(DocGlobalConstants.ANY_OBJECT_MSG);
                         }
                         commonHandleParam(paramList, param, isRequired, comment + appendComment, since, strRequired);
-                    } else if (subTypeName.length() == 1) {
+                    } else if (fieldGicName.length() == 1) {
                         commonHandleParam(paramList, param, isRequired, comment + appendComment, since, strRequired);
                         fieldPid = Optional.ofNullable(atomicInteger).isPresent() ? param.getId() : paramList.size() + pid;
                         // handle java generic or object

@@ -406,7 +406,7 @@ public class JsonBuildHelper extends BaseHelper {
                                 .append(buildJson(gicName, fieldGicName, isResp, nextLevel, registryClasses, groupClasses, builder))
                                 .append("},");
                         }
-                    } else if (subTypeName.length() == 1) {
+                    } else if (fieldGicName.length() == 1) {
                         if (!typeName.equals(genericCanonicalName)) {
                             String gicName = genericMap.get(subTypeName) == null ? globGicName[0] : genericMap.get(subTypeName);
                             if (JavaClassValidateUtil.isPrimitive(gicName)) {
@@ -418,14 +418,14 @@ public class JsonBuildHelper extends BaseHelper {
                         } else {
                             data0.append("{},");
                         }
-                    } else if (DocGlobalConstants.JAVA_OBJECT_FULLY.equals(subTypeName)) {
+                    } else if (DocGlobalConstants.JAVA_OBJECT_FULLY.equals(fieldGicName)) {
                         if (StringUtil.isNotEmpty(field.getComment())) {
                             // from source code
                             data0.append("{\"object\":\"any object\"},");
                         } else {
                             data0.append("{},");
                         }
-                    } else if (typeName.equals(subTypeName)) {
+                    } else if (typeName.equals(fieldGicName)) {
                         data0.append("{\"$ref\":\"...\"}").append(",");
                     } else {
                         javaClass = field.getType();
