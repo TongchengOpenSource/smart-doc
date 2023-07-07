@@ -22,8 +22,7 @@
  */
 package com.power.doc.utils;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
+import java.lang.reflect.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -36,6 +35,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.power.common.model.BaseResult;
 import com.power.common.model.EnumDictionary;
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.EnumUtil;
@@ -255,6 +255,14 @@ public class JavaClassUtil {
                     String comment = javaField.getComment();
                     if (Objects.isNull(comment)) {
                         comment = DocGlobalConstants.NO_COMMENTS_FOUND;
+                    }
+                    // Getting the Original Defined Type of Field
+                    if (!docJavaField.isFile() || !docJavaField.isEnum() || !docJavaField.isPrimitive()
+                            || "java.lang.Object".equals(gicName)) {
+                        String genericFieldTypeName = getFieldGenericType(javaField);
+                        if (StringUtil.isNotEmpty(genericFieldTypeName)) {
+                            gicName = genericFieldTypeName;
+                        }
                     }
                     docJavaField.setComment(comment)
                             .setJavaField(javaField)
@@ -690,20 +698,32 @@ public class JavaClassUtil {
     }
 
     public static void genericParamMap(Map<String, String> genericMap, JavaClass cls, String[] globGicName) {
-        if (Objects.nonNull(cls) && Objects.nonNull(cls.getTypeParameters())) {
-            List<JavaTypeVariable<JavaGenericDeclaration>> variables = cls.getTypeParameters();
+        if (Objects.isNull(cls) || Objects.isNull(cls.getTypeParameters())) {
+            return;
+        }
+        List<JavaTypeVariable<JavaGenericDeclaration>> variables = cls.getTypeParameters();
+        if (variables.size() > 0) {
             for (int i = 0; i < cls.getTypeParameters().size() && i < globGicName.length; i++) {
                 genericMap.put(variables.get(i).getName(), globGicName[i]);
             }
+            return;
+        }
+        try {
+            Class c = Class.forName(cls.getCanonicalName());
+            TypeVariable[] tValue = c.getTypeParameters();
+            for (int i = 0; i < tValue.length && i < globGicName.length; i++) {
+                genericMap.put(tValue[i].getName(), globGicName[i]);
+            }
+        } catch (ClassNotFoundException e) {
+            // skip
         }
     }
 
     public static String javaTypeFormat(String returnType) {
         if (returnType.contains("?")) {
             return returnType.replaceAll("[?\\s]", "").replaceAll("extends", "");
-        } else {
-            return returnType;
         }
+        return returnType;
     }
 
     public static boolean isTargetChildClass(String sourceClass, String targetClass) {
@@ -763,4 +783,24 @@ public class JavaClassUtil {
     }
 
 
+    /**
+     * @param javaField
+     * @return
+     */
+    private static String getFieldGenericType(JavaField javaField) {
+        if (JavaClassValidateUtil.isPrimitive(javaField.getType().getGenericCanonicalName())
+                || (javaField.isFinal() && javaField.isPrivate())) {
+            return null;
+        }
+        String name = javaField.getName();
+        try {
+            Class c = Class.forName(javaField.getDeclaringClass().getCanonicalName());
+            Field f = c.getDeclaredField(name);
+            f.setAccessible(true);
+            Type t = f.getGenericType();
+            return StringUtil.trim(t.getTypeName());
+        } catch (NoSuchFieldException | ClassNotFoundException e) {
+            return null;
+        }
+    }
 }
