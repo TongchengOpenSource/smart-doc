@@ -8,6 +8,7 @@
   2. 修复[2.6.9, 2.7.1]版本dubbo rpc重复生成接口文档bug。[#531](https://github.com/smart-doc-group/smart-doc/issues/531)
   3. 修改不通类方法接口同名时归档错误问题，[#531](https://github.com/smart-doc-group/smart-doc/issues/534)
   4. torna增加version推送，[#535](https://github.com/smart-doc-group/smart-doc/issues/535)
+  5. 删除自定义@required tag，@ignore tag不在支持字段忽略。使用jsr规则替代。
 
 ### 版本号：2.7.1
 
