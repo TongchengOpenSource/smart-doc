@@ -248,11 +248,7 @@ public class ParamsBuildHelper extends BaseHelper {
                 }
                 comment.append(JavaFieldUtil.getJsrComment(javaAnnotations));
                 String fieldValue = BaseHelper.getFieldValueFromMock(subTypeName, tagsMap, typeSimpleName);
-                if (annotationCounter < 1) {
-                    if (tagsMap.containsKey(DocTags.REQUIRED)) {
-                        strRequired = true;
-                    }
-                }
+
 
                 // cover response value
                 if (Objects.nonNull(customResponseField) && isResp && Objects.nonNull(customResponseField.getValue())

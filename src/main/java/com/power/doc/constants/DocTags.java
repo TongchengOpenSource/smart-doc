@@ -33,11 +33,6 @@ public interface DocTags {
     String SINCE = "since";
 
     /**
-     * java required tag
-     */
-    String REQUIRED = "required";
-
-    /**
      * java param tag
      */
     String PARAM = "param";

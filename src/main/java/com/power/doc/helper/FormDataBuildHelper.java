@@ -118,9 +118,6 @@ public class FormDataBuildHelper {
                 fieldName = StringUtil.camelToUnderline(fieldName);
             }
             Map<String, String> tagsMap = DocUtil.getFieldTagsValue(field, docField);
-            if (tagsMap.containsKey(DocTags.IGNORE)) {
-                continue;
-            }
             String typeSimpleName = field.getType().getSimpleName();
             if (JavaClassValidateUtil.isMap(subTypeName)) {
                 continue;
