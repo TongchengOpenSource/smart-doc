@@ -1,5 +1,23 @@
 ## 变更日志
 
+
+### 版本号：2.7.2
+
+- 更新日期: 2023-07-09
+- 更新内容：
+  1. 支持无源代码下的范型解析，[#539](https://github.com/smart-doc-group/smart-doc/issues/539)
+  2. 修复[2.6.9, 2.7.1]版本dubbo rpc重复生成接口文档bug。[#531](https://github.com/smart-doc-group/smart-doc/issues/531)
+  3. 修改不通类方法接口同名时归档错误问题，[#531](https://github.com/smart-doc-group/smart-doc/issues/534)
+  4. torna增加version推送，[#535](https://github.com/smart-doc-group/smart-doc/issues/535)
+  5. 删除自定义@required tag，@ignore tag不在支持字段忽略。使用jsr规则替代。
+
+### 版本号：2.7.1
+
+- 更新日期: 2023-06-23
+- 更新内容：
+  1. 修复Spring各个Mapping注解的name解析使用错误，[#518](https://github.com/smart-doc-group/smart-doc/issues/518)
+  2. packageFilters 参数支持到方法级别。[#519](https://github.com/smart-doc-group/smart-doc/issues/519)
+
 ### 版本号：2.7.0
 
 - 更新日期: 2023-06-10
