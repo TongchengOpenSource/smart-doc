@@ -101,7 +101,6 @@ public String resp(@RequestBody String name){
 | tag名称                       | 描述                                                                                                                                    |
 |-----------------------------|---------------------------------------------------------------------------------------------------------------------------------------|
 | `@ignore`                   | `@ignore` 如果`@ignore`加到方法上，则接口方法不会输出到文档。从`1.8.4`开始`@ignore`支持添加到`Controller`上进行忽略不想生成文档的接口类。`@ignore`也可以用于方法上忽略某个请求参数。                |
-| `@required`                 | 如果你没有使用`JSR303`参数验证规范实现的方式来标注字段，就可以使用`@required`去标注请求参数对象的字段，标注`smart-doc`在输出参数列表时会设置为`true`。【不建议使用，以后会删除】                            |
 | `@mock`                     | 从`smart-doc 1.8.0`开始，`@mock` `tag`用于在对象基本类型字段设置自定义文档展示值。设置值后`smart-doc`不再帮你生成随机值。方便可以通过`smart-doc`直接输出交付文档。                           |
 | `@dubbo`                    | 从`smart-doc 1.8.7`开始，`@dubbo` `tag`用于在`Dubbo`的`API`接口类上添加让`smart-doc`可以扫描到`Dubbo RPC`的接口生成文档。                                         |
 | `@restApi`                  | 从`smart-doc 1.8.8`开始，`@restApi` `tag`用于支持`smart-doc`去扫描`Spring Cloud Feign`的定义接口生成文档。                                                 |
@@ -143,7 +142,6 @@ public class SubUser {
 
     /**
      *  创建时间
-     *  @ignore
      */
     private Timestamp createTime;
 
@@ -167,51 +165,7 @@ public class SubUser {
 | idCard      | string | 身份证                | false    |
 | gender      | int    | 性别                 | false    |
 
-## 2.2 `@required`使用(不推荐)
-官方已经支持`JSR-303`，未来的版本中这个会被移除。 不建议采用这种无法做到表现和行为一致的方式，
-请使用`JSR-303`参数验证规范。`smart-doc`原生支持`JSR-303`，甚至是`JSR-303`的分组验证
-也是支持的。
-```java
-public class SubUser {
-
-    /**
-     * 用户名称
-     */
-    private String subUserName;
-
-    /**
-     * 身份证
-     */
-    private String idCard;
-
-    /**
-     * 性别
-     * @required
-     */
-    private int gender;
-
-    /**
-     *  创建时间
-     *  @ignore
-     */
-    private Timestamp createTime;
-
-}
-
-
-```
-
-在`Controller`层用`SubUser`作为参数接收，`smart-doc`输出的参数请求文档：
-
-| Parameter   | Type   | Description        | Required |
-|-------------|--------|--------------------|----------|
-| subUserName | string | 用户名称               | false    |
-| numbers     | number | No comments found. | false    |
-| idCard      | string | 身份证                | false    |
-| gender      | int    | 性别                 | true     |
-
-
-## 2.3 `@mock`使用
+## 2.2 `@mock`使用
 
 ```java
 public class SimpleUser {
@@ -242,7 +196,7 @@ public class SimpleUser {
     "password":"12356"
 }
 ```
-## 2.4 `@download`使用
+## 2.3 `@download`使用
 用于告诉`smart-doc`。你的`Controller`中某一个方法是文件下载接口，
 `smart-doc`在生成`debug`调试页面时，可以生成一个文件下载的请求。后台参考代码如下：
 
