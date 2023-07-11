@@ -111,7 +111,7 @@ public class ParamsBuildHelper extends BaseHelper {
             fieldNameConvert = PropertyNameHelper.translate(clsAnnotation);
         }
         JavaClassUtil.genericParamMap(genericMap, cls, globGicName);
-        List<DocJavaField> fields = JavaClassUtil.getFields(cls, 0, new LinkedHashMap<>());
+        List<DocJavaField> fields = JavaClassUtil.getFields(cls, 0, new LinkedHashMap<>(),projectBuilder.getApiConfig().getClassLoader());
         if (JavaClassValidateUtil.isPrimitive(simpleName)) {
             String processedType = isShowJavaType ? simpleName : DocClassUtil.processTypeNameForParams(simpleName.toLowerCase());
             paramList.addAll(primitiveReturnRespComment(processedType, atomicInteger, pid));

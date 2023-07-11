@@ -85,9 +85,9 @@ public class JavaClassUtil {
      * @param addedFields added fields,Field deduplication
      * @return list of JavaField
      */
-    public static List<DocJavaField> getFields(JavaClass cls1, int counter, Map<String, DocJavaField> addedFields) {
+    public static List<DocJavaField> getFields(JavaClass cls1, int counter, Map<String, DocJavaField> addedFields, ClassLoader classLoader) {
         Map<String, JavaType> actualJavaTypes = new HashMap<>(10);
-        List<DocJavaField> fields = getFields(cls1, counter, addedFields, actualJavaTypes);
+        List<DocJavaField> fields = getFields(cls1, counter, addedFields, actualJavaTypes, classLoader);
         fields.stream().filter(f -> f.getGenericCanonicalName() != null)
                 .forEach(f -> actualJavaTypes.entrySet().stream()
                         .filter(e -> f.getGenericCanonicalName().equals(e.getKey()))
@@ -110,7 +110,7 @@ public class JavaClassUtil {
      * @return list of JavaField
      */
     private static List<DocJavaField> getFields(JavaClass cls1, int counter, Map<String, DocJavaField> addedFields,
-                                                Map<String, JavaType> actualJavaTypes) {
+                                                Map<String, JavaType> actualJavaTypes, ClassLoader classLoader) {
         List<DocJavaField> fieldList = new ArrayList<>();
         if (Objects.isNull(cls1)) {
             return fieldList;
@@ -168,13 +168,13 @@ public class JavaClassUtil {
             if (!cls1.isEnum()) {
                 JavaClass parentClass = cls1.getSuperJavaClass();
                 if (Objects.nonNull(parentClass) && !"java.lang.Object".equals(parentClass.getName())) {
-                    getFields(parentClass, counter, addedFields, actualJavaTypes);
+                    getFields(parentClass, counter, addedFields, actualJavaTypes, classLoader);
                 }
 
                 List<JavaType> implClasses = cls1.getImplements();
                 for (JavaType type : implClasses) {
                     JavaClass javaClass = (JavaClass) type;
-                    getFields(javaClass, counter, addedFields, actualJavaTypes);
+                    getFields(javaClass, counter, addedFields, actualJavaTypes, classLoader);
                 }
             }
             actualJavaTypes.putAll(getActualTypesMap(cls1));
@@ -259,7 +259,7 @@ public class JavaClassUtil {
                     // Getting the Original Defined Type of Field
                     if (!docJavaField.isFile() || !docJavaField.isEnum() || !docJavaField.isPrimitive()
                             || "java.lang.Object".equals(gicName)) {
-                        String genericFieldTypeName = getFieldGenericType(javaField);
+                        String genericFieldTypeName = getFieldGenericType(javaField,classLoader);
                         if (StringUtil.isNotEmpty(genericFieldTypeName)) {
                             gicName = genericFieldTypeName;
                         }
@@ -787,14 +787,19 @@ public class JavaClassUtil {
      * @param javaField
      * @return
      */
-    private static String getFieldGenericType(JavaField javaField) {
+    private static String getFieldGenericType(JavaField javaField, ClassLoader classLoader) {
         if (JavaClassValidateUtil.isPrimitive(javaField.getType().getGenericCanonicalName())
                 || (javaField.isFinal() && javaField.isPrivate())) {
             return null;
         }
         String name = javaField.getName();
         try {
-            Class c = Class.forName(javaField.getDeclaringClass().getCanonicalName());
+            Class c;
+            if (Objects.nonNull(classLoader)) {
+                c = classLoader.loadClass(javaField.getDeclaringClass().getCanonicalName());
+            } else {
+                c = Class.forName(javaField.getDeclaringClass().getCanonicalName());
+            }
             Field f = c.getDeclaredField(name);
             f.setAccessible(true);
             Type t = f.getGenericType();

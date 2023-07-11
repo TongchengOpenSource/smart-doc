@@ -85,17 +85,17 @@ public class JsonBuildHelper extends BaseHelper {
             return StringUtil.removeQuotes(DocUtil.jsonValueByType(typeName));
         }
         if (DocGlobalConstants.JAVA_STRING_FULLY.equals(method.getReturnType().getGenericCanonicalName())
-            && Objects.isNull(responseBodyAdvice)) {
+                && Objects.isNull(responseBodyAdvice)) {
             return "string";
         }
         String returnTypeGenericCanonicalName = method.getReturnType().getGenericCanonicalName();
         if (Objects.nonNull(responseBodyAdvice)
-            && Objects.isNull(method.getTagByName(IGNORE_RESPONSE_BODY_ADVICE))) {
+                && Objects.isNull(method.getTagByName(IGNORE_RESPONSE_BODY_ADVICE))) {
             if (!returnTypeGenericCanonicalName.startsWith(responseBodyAdvice)) {
                 StringBuilder sb = new StringBuilder();
                 sb.append(responseBodyAdvice)
-                    .append("<")
-                    .append(returnTypeGenericCanonicalName).append(">");
+                        .append("<")
+                        .append(returnTypeGenericCanonicalName).append(">");
                 returnTypeGenericCanonicalName = sb.toString();
             }
         }
@@ -121,7 +121,7 @@ public class JsonBuildHelper extends BaseHelper {
         }
 
         return JsonUtil.toPrettyFormat(buildJson(typeName, returnType, Boolean.TRUE, 0,
-            new HashMap<>(), new HashSet<>(0), builder));
+                new HashMap<>(), new HashSet<>(0), builder));
     }
 
     /**
@@ -135,7 +135,7 @@ public class JsonBuildHelper extends BaseHelper {
      * @return String
      */
     public static String buildJson(String typeName, String genericCanonicalName,
-        boolean isResp, int counter, Map<String, String> registryClasses, Set<String> groupClasses, ProjectDocConfigBuilder builder) {
+                                   boolean isResp, int counter, Map<String, String> registryClasses, Set<String> groupClasses, ProjectDocConfigBuilder builder) {
 
         Map<String, String> genericMap = new HashMap<>(10);
         JavaClass javaClass = builder.getJavaProjectBuilder().getClassByName(typeName);
@@ -214,8 +214,8 @@ public class JsonBuildHelper extends BaseHelper {
             String gicName = genericCanonicalName.substring(genericCanonicalName.indexOf(",") + 1, genericCanonicalName.lastIndexOf(">"));
             if (DocGlobalConstants.JAVA_OBJECT_FULLY.equals(gicName)) {
                 data.append("{").append("\"mapKey\":")
-                    .append("{\"waring\":\"You may use java.util.Object for Map value; smart-doc can't be handle.\"}")
-                    .append("}");
+                        .append("{\"waring\":\"You may use java.util.Object for Map value; smart-doc can't be handle.\"}")
+                        .append("}");
             } else if (JavaClassValidateUtil.isPrimitive(gicName)) {
                 data.append("{").append("\"mapKey1\":").append(DocUtil.jsonValueByType(gicName)).append(",");
                 data.append("\"mapKey2\":").append(DocUtil.jsonValueByType(gicName)).append("}");
@@ -225,7 +225,7 @@ public class JsonBuildHelper extends BaseHelper {
                 data.append("{").append("\"mapKey\":").append(json).append("}");
             } else {
                 data.append("{").append("\"mapKey\":")
-                    .append(buildJson(gicName, genericCanonicalName, isResp, counter + 1, registryClasses, groupClasses, builder)).append("}");
+                        .append(buildJson(gicName, genericCanonicalName, isResp, counter + 1, registryClasses, groupClasses, builder)).append("}");
             }
             return data.toString();
         } else if (DocGlobalConstants.JAVA_OBJECT_FULLY.equals(typeName)) {
@@ -237,7 +237,7 @@ public class JsonBuildHelper extends BaseHelper {
         } else {
             boolean requestFieldToUnderline = builder.getApiConfig().isRequestFieldToUnderline();
             boolean responseFieldToUnderline = builder.getApiConfig().isResponseFieldToUnderline();
-            List<DocJavaField> fields = JavaClassUtil.getFields(cls, 0, new LinkedHashMap<>());
+            List<DocJavaField> fields = JavaClassUtil.getFields(cls, 0, new LinkedHashMap<>(), builder.getApiConfig().getClassLoader());
             Map<String, String> ignoreFields = JavaClassUtil.getClassJsonIgnoreFields(cls);
             out:
             for (DocJavaField docField : fields) {
@@ -287,7 +287,7 @@ public class JsonBuildHelper extends BaseHelper {
                 CustomField customRequestField = CustomField.nameEquals(key, builder.getCustomReqFieldMap());
                 if (customRequestField != null) {
                     if (JavaClassUtil.isTargetChildClass(typeName, customRequestField.getOwnerClassName()) && (customRequestField.isIgnore())
-                        && !isResp) {
+                            && !isResp) {
                         continue;
                     } else {
                         fieldName = StringUtil.isEmpty(customRequestField.getReplaceName()) ? fieldName : customRequestField.getReplaceName();
@@ -295,7 +295,7 @@ public class JsonBuildHelper extends BaseHelper {
                 }
                 if (customResponseField != null) {
                     if (JavaClassUtil.isTargetChildClass(typeName, customResponseField.getOwnerClassName()) && (customResponseField.isIgnore())
-                        && isResp) {
+                            && isResp) {
                         continue;
                     } else {
                         fieldName = StringUtil.isEmpty(customResponseField.getReplaceName()) ? fieldName : customResponseField.getReplaceName();
@@ -346,9 +346,9 @@ public class JsonBuildHelper extends BaseHelper {
                             } else {
                                 if (!typeName.equals(gicName1)) {
                                     data0.append("[").append(
-                                            buildJson(DocClassUtil.getSimpleName(gicName1), gicName1, isResp, nextLevel, registryClasses, groupClasses,
-                                                builder))
-                                        .append("]").append(",");
+                                                    buildJson(DocClassUtil.getSimpleName(gicName1), gicName1, isResp, nextLevel, registryClasses, groupClasses,
+                                                            builder))
+                                            .append("]").append(",");
                                 } else {
                                     data0.append("[{\"$ref\":\"..\"}]").append(",");
                                 }
@@ -366,7 +366,7 @@ public class JsonBuildHelper extends BaseHelper {
                                     continue;
                                 }
                                 data0.append("[").append(buildJson(gicName, fieldGicName, isResp, nextLevel, registryClasses, groupClasses, builder))
-                                    .append("]").append(",");
+                                        .append("]").append(",");
                             } else {
                                 data0.append("[{\"$ref\":\"..\"}]").append(",");
                             }
@@ -395,16 +395,16 @@ public class JsonBuildHelper extends BaseHelper {
                             } else {
                                 if (!typeName.equals(gicName1)) {
                                     data0.append("{").append("\"mapKey\":")
-                                        .append(buildJson(DocClassUtil.getSimpleName(gicName1), gicName1, isResp, nextLevel, registryClasses,
-                                            groupClasses, builder)).append("},");
+                                            .append(buildJson(DocClassUtil.getSimpleName(gicName1), gicName1, isResp, nextLevel, registryClasses,
+                                                    groupClasses, builder)).append("},");
                                 } else {
                                     data0.append("{\"mapKey\":{}},");
                                 }
                             }
                         } else {
                             data0.append("{").append("\"mapKey\":")
-                                .append(buildJson(gicName, fieldGicName, isResp, nextLevel, registryClasses, groupClasses, builder))
-                                .append("},");
+                                    .append(buildJson(gicName, fieldGicName, isResp, nextLevel, registryClasses, groupClasses, builder))
+                                    .append("},");
                         }
                     } else if (fieldGicName.length() == 1) {
                         if (!typeName.equals(genericCanonicalName)) {
