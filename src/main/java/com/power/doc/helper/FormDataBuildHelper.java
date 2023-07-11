@@ -80,8 +80,7 @@ public class FormDataBuildHelper {
         String simpleName = DocClassUtil.getSimpleName(className);
         String[] globGicName = DocClassUtil.getSimpleGicName(className);
         JavaClass cls = builder.getJavaProjectBuilder().getClassByName(simpleName);
-        List<DocJavaField> fields = JavaClassUtil.getFields(cls, 0, new LinkedHashMap<>());
-
+        List<DocJavaField> fields = JavaClassUtil.getFields(cls, 0, new LinkedHashMap<>(),builder.getApiConfig().getClassLoader());
         if (JavaClassValidateUtil.isPrimitive(simpleName)) {
             FormData formData = new FormData();
             formData.setKey(pre);
