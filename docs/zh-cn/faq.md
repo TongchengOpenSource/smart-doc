@@ -184,6 +184,7 @@ No plugin found for prefix 'smart-doc' in the current project and in the plugin 
 
 
 # 如何发布公共库源码
+在需要发布的公共库代码中添加`maven-source-plugin`插件
 ```xml
 <!-- Source -->
 <plugin>
