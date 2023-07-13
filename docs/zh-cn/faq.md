@@ -182,6 +182,28 @@ No plugin found for prefix 'smart-doc' in the current project and in the plugin 
   
 > 关于插件的配置请在本文档中查看各插件的详细配置项，然后按照说明来配置。
 
+
+# 如何发布公共库源码
+```xml
+<!-- Source -->
+<plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-source-plugin</artifactId>
+    <version>3.2.1</version>
+    <executions>
+        <execution>
+            <phase>package</phase>
+            <goals>
+                <goal>jar-no-fork</goal>
+            </goals>
+        </execution>
+    </executions>
+</plugin>
+```
+这样发布的时候就会生成一个`[your jar name]-sources.jar`的源码包，这个包也会一起发布到私有仓库。这样就可以通过`classifier`来指定`sources`了。如果还是不清楚可以直接参考`smart-doc`源码的`pom.xml`配置。
+
+**注意：** 经测试验证，如果只是通过`install`到本地，即便是指定了`sources`也无法读取到源码，只有将公用的模块`deploy`到`nexus`这样的私服上才能正常使用。
+
 # smart-doc如何做多环境配置？
 在成熟的开发团队中，通常会有：研发、测试、预发、生产四大部署环境，即便是很小的公司，也有开发和线上环境。
 不同的环境环境通常会有下面的一些区别：
