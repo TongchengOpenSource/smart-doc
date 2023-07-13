@@ -5,16 +5,16 @@
 如果你喜欢`smart-doc`，也请推荐给你的同事或者朋友，好的东西要分享给大家。
 # smart-doc测试用例反馈
 有些`bug`出现了，简单的`issue`中添加粘贴几行代码反馈的问题官方很难复现，这种情况下需要提供一个能够复现问题的代码。
-下面来说面下怎么给官方提供用例
+下面来说面下怎么给官方提供用例。
 
 ## 单模块测试用例
 如果你是单模块中就能复现的问题，则提用例的步骤如下：
-- `fork` [smart-doc-example-cn](https://github.com/smart-doc-group/smart-doc-example-cn)项目到个人仓库中
+- `fork` [smart-doc-example-cn](https://github.com/smart-doc-group/smart-doc-example-cn)项目到个人仓库中；
 - 修改`fork`的代码添加测试用例，然后项目`github`上会有一个【Sync fork】的地方，选择给我们提pr即可，后面官方也会合并的测试用例进行问题的测试。
 
 ## 多模块项目测试用例反馈
 如果你是在多模块中才能复现的问题，则提用例的步骤如下：
-- `fork` [spring-boot-maven-multiple-module](https://gitee.com/smart-doc-team/spring-boot-maven-multiple-module)项目到个人仓库中
+- `fork` [spring-boot-maven-multiple-module](https://gitee.com/smart-doc-team/spring-boot-maven-multiple-module)项目到个人仓库中；
 - 修改`fork`的代码添加测试用例，然后项目`gitee`上会有一个【Pull Request】的地方，选择给我们提pr即可，后面官方也会合并的测试用例进行问题的测试。
 
 # 如何提升smart-doc生成文档的速度？
@@ -184,7 +184,7 @@ No plugin found for prefix 'smart-doc' in the current project and in the plugin 
 
 
 # 如何发布公共库源码
-在需要发布的公共库代码中添加`maven-source-plugin`插件
+在需要发布的公共库`pom.xml`文件中添加`maven-source-plugin`插件
 ```xml
 <!-- Source -->
 <plugin>
@@ -201,15 +201,17 @@ No plugin found for prefix 'smart-doc' in the current project and in the plugin 
     </executions>
 </plugin>
 ```
-这样发布的时候就会生成一个`[your jar name]-sources.jar`的源码包，这个包也会一起发布到私有仓库。这样就可以通过`classifier`来指定`sources`了。如果还是不清楚可以直接参考`smart-doc`源码的`pom.xml`配置。
+这样发布的时候就会生成一个`[your jar name]-sources.jar`的源码包，这个包也会一起发布到私有仓库。
+发布成功后`smart-doc`的`maven`或者`gradle`插件可以根据依赖自定下载`jar`对应`xx.sources.jar`载入源码进行解析。
+如果还是不清楚可以直接参考`smart-doc`源码的`pom.xml`配置。
 
 **注意：** 经测试验证，如果只是通过`install`到本地，即便是指定了`sources`也无法读取到源码，只有将公用的模块`deploy`到`nexus`这样的私服上才能正常使用。
 
 # smart-doc如何做多环境配置？
 在成熟的开发团队中，通常会有：研发、测试、预发、生产四大部署环境，即便是很小的公司，也有开发和线上环境。
 不同的环境环境通常会有下面的一些区别：
-- 服务器地址不相同
-- 请求头设置不同
+- 服务器地址不相同；
+- 请求头设置不同；
 - 鉴权参数这些不同。
 
 过去时不时的有人问`smart-doc`怎么支持多环境，其实一个配置文件把多个环境的都配置进去，
@@ -247,7 +249,7 @@ Yapi这些过去的开源产品，目前已经不怎么更新维护，也不像T
 
 如果你有该疑问，那么你应该先思考下几点问题：
 
-- `smart-doc`这么简单的问题都没解决，它为何会有这么多用户，并且这些用户中也不缺乏国内大厂企业。
+- `smart-doc`这么简单的问题都没解决，它为何会有这么多用户，并且这些用户中也不缺乏国内大厂企业；
 - 一个很多基础功能都不具备的开源软件变得流行是不符合逻辑的。
 
 真正聪明的人，都是懂得分析情况去反思自己。
@@ -255,8 +257,8 @@ Yapi这些过去的开源产品，目前已经不怎么更新维护，也不像T
 言归正题，官方的`demo`提供了很多复杂的泛型分析例子，并且生成文档良好，但是在你自己项目中在泛型中申明了具体类型，`smart-doc`却没有分析正确。
 只要原因有两点：
 - `smart-doc`没有加载到你的源码(来自项目外的代码或者是本模块外的代码)，`JAVA`在编译后泛型变成了`Object`类型。如果`smart-doc`没有读取到源代码，
-  只是从`class`中通过反射获取字段类型时就无法知道那是泛型，最终无法正确分析。没获取到加载到源码通常有一个很明显的显示，实体的字段注释全部为`No comments found.`。
-- 你使用了不太规范的泛型定义，例如使用多字母定义泛型，如下使用BR作为泛型定义
+  只是从`class`中通过反射获取字段类型时就无法知道那是泛型，最终无法正确分析。没获取到加载到源码通常有一个很明显的显示，实体的字段注释全部为`No comments found.`；
+- 你使用了不太规范的泛型定义，例如使用多字母定义泛型，如下使用BR作为泛型定义。
 
 ```
 public abstract class BaseResult<BR> implements Serializable {
@@ -288,7 +290,7 @@ public abstract class BaseResult<BR> implements Serializable {
 **注意你不要祈求官方会去修改支持多字母泛型定义，`smart-doc`在为大家带来方便的同时，规范一直是我们坚守的信念。** 
 
 # 示例中$ref是什么意思？
-`smart-doc`提供了强大的分析结构分析能力，包括能够处理代码中的环形引用。但是一般环形引用的对象生成的json中会包含下面的文本端
+`smart-doc`提供了强大的分析结构分析能力，包括能够处理代码中的环形引用。但是一般环形引用的对象生成的json中会包含下面的文本端。
 ```
 "$ref":"..."
 ```
@@ -329,11 +331,11 @@ mvn -X -Dfile.encoding=UTF-8 smart-doc:html
 ```
 如果错误是来自第三方依赖的代码，基本不用管，因为生成文档时很少会需要用到第三方库的类。
 当错误来自我们自身的业务代码时就需要关心下了，因为会影响文档的生成。这个通常是我们代码中使用到了`java`的保留关键字，例如方法的参数名、类的字段名。
-可以根据告警信息去查看具体带代码行和字符起是位置 ，例如上面的提示是因为代码`17`行定义了
+可以根据告警信息去查看具体带代码行和字符起是位置 ，例如上面的提示是因为代码`17`行定义了。
 ```
     private String record;
 ```
-然后第`20`个字符`r`，这就是字段触发了`jdk 14`的保留关键字。代码行比较长的话可以用复制代码去打印。查看字符
+然后第`20`个字符`r`，这就是字段触发了`jdk 14`的保留关键字。代码行比较长的话可以用复制代码去打印。查看字符。
 ```
 String code = "    private String record";
 char[] arr = code.toCharArray();
