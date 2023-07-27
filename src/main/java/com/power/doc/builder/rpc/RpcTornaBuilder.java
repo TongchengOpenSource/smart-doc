@@ -66,6 +66,7 @@ public class RpcTornaBuilder {
     public static void buildApiDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
         config.setParamsDataToTree(true);
         RpcDocBuilderTemplate builderTemplate = new RpcDocBuilderTemplate();
+        checkAndInit(config);
         List<RpcApiDoc> apiDocList = builderTemplate.getRpcApiDoc(config, javaProjectBuilder);
         buildTorna(apiDocList, config, javaProjectBuilder);
     }

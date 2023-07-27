@@ -204,6 +204,20 @@ public class ApiMethodDoc implements Serializable, Cloneable {
      */
     private String[] tags;
 
+    /**
+     * 版本号
+     */
+    private String version;
+
+    public String getVersion() {
+        return version;
+    }
+
+    public ApiMethodDoc setVersion(String version) {
+        this.version = version;
+        return this;
+    }
+
     private final Set<TagDoc> tagRefs = Collections.synchronizedSet(new LinkedHashSet<>());
 
     public Integer getIsRequestArray() {
