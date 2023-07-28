@@ -451,7 +451,7 @@ public abstract class AbstractOpenApiBuilder {
      */
     public List<ApiDoc> getOpenApiDocs(ApiConfig config, JavaProjectBuilder projectBuilder) {
         DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
-        builderTemplate.checkAndInit(config, false);
+        builderTemplate.checkAndInit(config, Boolean.TRUE);
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, projectBuilder);
         config.setParamsDataToTree(true);
         IDocBuildTemplate docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework());

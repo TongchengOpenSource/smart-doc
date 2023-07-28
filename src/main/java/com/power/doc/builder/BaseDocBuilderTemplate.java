@@ -83,7 +83,7 @@ public class BaseDocBuilderTemplate {
      */
     public void checkAndInit(ApiConfig config, boolean checkOutPath) {
         this.checkAndInitForGetApiData(config);
-        if (StringUtil.isEmpty(config.getOutPath()) && !checkOutPath) {
+        if (StringUtil.isEmpty(config.getOutPath()) && checkOutPath) {
             throw new RuntimeException("doc output path can't be null or empty");
         }
     }

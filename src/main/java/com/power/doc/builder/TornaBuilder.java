@@ -69,7 +69,7 @@ public class TornaBuilder {
     public static void buildApiDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
         config.setParamsDataToTree(true);
         DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
-        builderTemplate.checkAndInit(config, Boolean.TRUE);
+        builderTemplate.checkAndInit(config, Boolean.FALSE);
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
         IDocBuildTemplate<ApiDoc> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework());
         List<ApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder);
