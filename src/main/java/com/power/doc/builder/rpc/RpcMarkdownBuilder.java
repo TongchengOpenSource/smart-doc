@@ -59,7 +59,7 @@ public class RpcMarkdownBuilder {
      * @param javaProjectBuilder ProjectDocConfigBuilder
      */
     public static void buildApiDoc(ApiConfig apiConfig, JavaProjectBuilder javaProjectBuilder) {
-        apiConfig.setAdoc(false);
+        apiConfig.setAdoc(Boolean.FALSE);
         RpcDocBuilderTemplate builderTemplate = new RpcDocBuilderTemplate();
         List<RpcApiDoc> apiDocList = builderTemplate.getRpcApiDoc(apiConfig, javaProjectBuilder);
         if (apiConfig.isAllInOne()) {

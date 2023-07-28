@@ -68,7 +68,7 @@ public class PostmanJsonBuilder {
      */
     public static void buildPostmanCollection(ApiConfig config) {
         DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
-        builderTemplate.checkAndInit(config, false);
+        builderTemplate.checkAndInit(config, Boolean.TRUE);
         JavaProjectBuilder javaProjectBuilder = JavaProjectBuilderHelper.create();
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
         postManCreate(config, configBuilder);
@@ -82,7 +82,7 @@ public class PostmanJsonBuilder {
      */
     public static void buildPostmanCollection(ApiConfig config, JavaProjectBuilder projectBuilder) {
         DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
-        builderTemplate.checkAndInit(config, false);
+        builderTemplate.checkAndInit(config, Boolean.TRUE);
         if (StringUtil.isNotEmpty(config.getServerEnv())) {
             config.setServerUrl(config.getServerEnv());
         }
