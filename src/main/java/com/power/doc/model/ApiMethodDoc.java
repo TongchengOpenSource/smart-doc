@@ -205,7 +205,7 @@ public class ApiMethodDoc implements Serializable, Cloneable {
     private String[] tags;
 
     /**
-     * 版本号
+     * version
      */
     private String version;
 
