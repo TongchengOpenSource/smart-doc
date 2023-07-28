@@ -107,6 +107,18 @@ public class RpcJavaMethod {
 
     private Map<String, JavaType> actualTypesMap;
 
+
+    private String version;
+
+    public String getVersion() {
+        return version;
+    }
+
+    public RpcJavaMethod setVersion(String version) {
+        this.version = version;
+        return this;
+    }
+
     public static RpcJavaMethod builder() {
         return new RpcJavaMethod();
     }

@@ -66,6 +66,8 @@ public interface IRpcDocTemplate extends IBaseDocBuildTemplate {
         if (StringUtil.isEmpty(apiNoteValue)) {
             apiNoteValue = method.getComment();
         }
+        String version = DocUtil.getNormalTagComments(method, DocTags.SINCE, cls.getName());
+        rpcJavaMethod.setVersion(version);
         rpcJavaMethod.setDetail(apiNoteValue != null ? apiNoteValue : "");
         // set author
         String authorValue = DocUtil.getNormalTagComments(method, DocTags.AUTHOR, cls.getName());
@@ -90,8 +92,8 @@ public interface IRpcDocTemplate extends IBaseDocBuildTemplate {
     default String methodDefinition(JavaMethod method, Map<String, JavaType> actualTypesMap) {
         StringBuilder methodBuilder = new StringBuilder();
         JavaType returnType = method.getReturnType();
-        String simpleReturn = replaceTypeName(returnType.getCanonicalName(),actualTypesMap,Boolean.TRUE);
-        String returnClass = replaceTypeName(returnType.getGenericCanonicalName(),actualTypesMap,Boolean.TRUE);
+        String simpleReturn = replaceTypeName(returnType.getCanonicalName(), actualTypesMap, Boolean.TRUE);
+        String returnClass = replaceTypeName(returnType.getGenericCanonicalName(), actualTypesMap, Boolean.TRUE);
         returnClass = returnClass.replace(simpleReturn, JavaClassUtil.getClassSimpleName(simpleReturn));
         String[] arrays = DocClassUtil.getSimpleGicName(returnClass);
         for (String str : arrays) {
@@ -114,7 +116,7 @@ public interface IRpcDocTemplate extends IBaseDocBuildTemplate {
         List<String> params = new ArrayList<>();
         List<JavaParameter> parameters = method.getParameters();
         for (JavaParameter parameter : parameters) {
-            String typeName = replaceTypeName(parameter.getType().getGenericValue(),actualTypesMap,Boolean.TRUE);
+            String typeName = replaceTypeName(parameter.getType().getGenericValue(), actualTypesMap, Boolean.TRUE);
             params.add(typeName + " " + parameter.getName());
         }
         methodBuilder.append(method.getName()).append("(")
@@ -136,17 +138,17 @@ public interface IRpcDocTemplate extends IBaseDocBuildTemplate {
         return docJavaMethods;
     }
 
-    default String replaceTypeName(String type,Map<String, JavaType> actualTypesMap,boolean simple){
+    default String replaceTypeName(String type, Map<String, JavaType> actualTypesMap, boolean simple) {
         if (Objects.isNull(actualTypesMap)) {
             return type;
         }
 
-        for (Map.Entry<String,JavaType> entry:actualTypesMap.entrySet()){
+        for (Map.Entry<String, JavaType> entry : actualTypesMap.entrySet()) {
             if (type.contains(entry.getKey())) {
-                if(simple) {
-                    return type.replace(entry.getKey(),entry.getValue().getGenericValue());
+                if (simple) {
+                    return type.replace(entry.getKey(), entry.getValue().getGenericValue());
                 } else {
-                    return type.replace(entry.getKey(),entry.getValue().getGenericFullyQualifiedName());
+                    return type.replace(entry.getKey(), entry.getValue().getGenericFullyQualifiedName());
                 }
             }
         }

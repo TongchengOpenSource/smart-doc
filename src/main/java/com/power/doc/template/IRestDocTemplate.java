@@ -364,6 +364,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
             apiMethodDoc.setDownload(docJavaMethod.isDownload());
             apiMethodDoc.setPage(docJavaMethod.getPage());
             apiMethodDoc.setGroup(group);
+            apiMethodDoc.setVersion(docJavaMethod.getVersion());
             if (Objects.nonNull(docJavaMethod.getGroup())) {
                 apiMethodDoc.setGroup(docJavaMethod.getGroup());
             }
@@ -1105,6 +1106,8 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 
         String comment = DocUtil.getEscapeAndCleanComment(method.getComment());
         docJavaMethod.setDesc(comment);
+        String version = DocUtil.getNormalTagComments(method, DocTags.SINCE, cls.getName());
+        docJavaMethod.setVersion(version);
 
         String apiNoteValue = DocUtil.getNormalTagComments(method, DocTags.API_NOTE, cls.getName());
         if (StringUtil.isEmpty(apiNoteValue)) {

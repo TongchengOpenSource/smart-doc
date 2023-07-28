@@ -69,6 +69,17 @@ public class DocJavaMethod {
 
     Map<String, String> paramsComments;
 
+    private String version;
+
+    public String getVersion() {
+        return version;
+    }
+
+    public DocJavaMethod setVersion(String version) {
+        this.version = version;
+        return this;
+    }
+
     public static DocJavaMethod builder() {
         return new DocJavaMethod();
     }
