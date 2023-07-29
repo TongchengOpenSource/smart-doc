@@ -12,8 +12,8 @@ public class DocPathUtilTest {
 
     @Test
     public void testMatches() {
-        String a= System.getProperty(DocGlobalConstants.DOC_LANGUAGE);
-       Boolean flag = Boolean.parseBoolean(a);
+        String a = System.getProperty(DocGlobalConstants.DOC_LANGUAGE);
+        Boolean flag = Boolean.parseBoolean(a);
         System.out.println(flag);
         String pattern = "/app/page/**";
         String path = "/app/page/{pageIndex}/{pageSize}/{ag}";

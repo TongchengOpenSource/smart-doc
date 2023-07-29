@@ -62,7 +62,6 @@ public class HtmlApiDocBuilder {
 
     private static final String ERROR_CODE_HTML = "error.html";
     private static final String DICT_HTML = "dict.html";
-    private static final long now = System.currentTimeMillis();
     private static String INDEX_HTML = "index.html";
 
     /**

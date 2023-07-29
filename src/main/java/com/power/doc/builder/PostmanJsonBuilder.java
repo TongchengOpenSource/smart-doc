@@ -103,10 +103,10 @@ public class PostmanJsonBuilder {
         List<ItemBean> itemBeans = new ArrayList<>();
         List<ApiMethodDoc> apiMethodDocs = apiDoc.getList();
         apiMethodDocs.forEach(
-            apiMethodDoc -> {
-                ItemBean itemBean1 = buildItem(apiMethodDoc);
-                itemBeans.add(itemBean1);
-            }
+                apiMethodDoc -> {
+                    ItemBean itemBean1 = buildItem(apiMethodDoc);
+                    itemBeans.add(itemBean1);
+                }
         );
         itemBean.setItem(itemBeans);
         return itemBean;
@@ -142,11 +142,17 @@ public class PostmanJsonBuilder {
         String url = Optional.ofNullable(apiMethodDoc.getRequestExample().getUrl()).orElse(apiMethodDoc.getUrl());
         urlBean.setRaw(DocPathUtil.toPostmanPath(url));
         String shortUrl = DocPathUtil.toPostmanPath(apiMethodDoc.getPath());
-        String[] paths = shortUrl.split("/");
+        String[] paths;
+        if (StringUtil.isNotEmpty(shortUrl)) {
+            paths = shortUrl.split("/");
+        } else {
+            paths = new String[0];
+        }
         List<String> pathList = new ArrayList<>();
         String serverPath = CollectionUtil.isNotEmpty(urlBean.getPath()) ? urlBean.getPath().get(0) : "";
         // Add server path
-        if (CollectionUtil.isNotEmpty(urlBean.getPath()) && !shortUrl.contains(serverPath)) {
+        if (CollectionUtil.isNotEmpty(urlBean.getPath()) && StringUtil.isNotEmpty(shortUrl)
+                && !shortUrl.contains(serverPath)) {
             String[] serverPaths = serverPath.split("/");
             pathList.addAll(Arrays.asList(serverPaths));
         }
@@ -156,7 +162,7 @@ public class PostmanJsonBuilder {
                 pathList.add(str);
             }
         }
-        if (shortUrl.endsWith("/")) {
+        if (StringUtil.isNotEmpty(shortUrl) && shortUrl.endsWith("/")) {
             pathList.add("");
         }
 
@@ -164,7 +170,7 @@ public class PostmanJsonBuilder {
 
         List<ParamBean> queryParams = new ArrayList<>();
         if (!apiMethodDoc.getType().equals(Methods.POST.getValue()) ||
-            apiMethodDoc.getContentType().contains(DocGlobalConstants.JSON_CONTENT_TYPE)) {
+                apiMethodDoc.getContentType().contains(DocGlobalConstants.JSON_CONTENT_TYPE)) {
             for (ApiParam apiParam : apiMethodDoc.getQueryParams()) {
                 ParamBean queryParam = new ParamBean();
                 queryParam.setDescription(apiParam.getDesc());
@@ -236,15 +242,15 @@ public class PostmanJsonBuilder {
         List<HeaderBean> headerBeans = new ArrayList<>();
         List<ApiReqParam> headers = apiMethodDoc.getRequestHeaders();
         headers.forEach(
-            apiReqHeader -> {
-                HeaderBean headerBean = new HeaderBean();
-                headerBean.setKey(apiReqHeader.getName());
-                headerBean.setName(apiReqHeader.getName());
-                headerBean.setValue(apiReqHeader.getValue());
-                headerBean.setDisabled(!apiReqHeader.isRequired());
-                headerBean.setDescription(apiReqHeader.getDesc());
-                headerBeans.add(headerBean);
-            }
+                apiReqHeader -> {
+                    HeaderBean headerBean = new HeaderBean();
+                    headerBean.setKey(apiReqHeader.getName());
+                    headerBean.setName(apiReqHeader.getName());
+                    headerBean.setValue(apiReqHeader.getValue());
+                    headerBean.setDisabled(!apiReqHeader.isRequired());
+                    headerBean.setDescription(apiReqHeader.getDesc());
+                    headerBeans.add(headerBean);
+                }
         );
 
         return headerBeans;
@@ -257,10 +263,10 @@ public class PostmanJsonBuilder {
         requestItem.setInfo(new InfoBean(config.getProjectName()));
         List<ItemBean> itemBeans = new ArrayList<>();
         apiDocList.forEach(
-            apiDoc -> {
-                ItemBean itemBean = buildItemBean(apiDoc);
-                itemBeans.add(itemBean);
-            }
+                apiDoc -> {
+                    ItemBean itemBean = buildItemBean(apiDoc);
+                    itemBeans.add(itemBean);
+                }
         );
         requestItem.setItem(itemBeans);
         String filePath = config.getOutPath();

@@ -22,17 +22,8 @@
  */
 package com.power.doc.builder.openapi;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.FileUtil;
-import com.power.common.util.StringUtil;
 import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.constants.Methods;
 import com.power.doc.helper.JavaProjectBuilderHelper;
@@ -42,6 +33,9 @@ import com.power.doc.utils.JsonUtil;
 import com.power.doc.utils.OpenApiSchemaUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.power.doc.constants.DocGlobalConstants.*;
 

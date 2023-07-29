@@ -25,6 +25,12 @@ package com.power.doc.function;
 import com.power.doc.model.request.RequestMapping;
 import com.thoughtworks.qdox.model.JavaClass;
 
+
+/**
+ * beetl template function
+ * @author yu 2022/12/02.
+ */
+
 @FunctionalInterface
 public interface RequestMappingFunc {
 

@@ -22,6 +22,9 @@
  */
 package com.power.doc.model.framework;
 
+/**
+ * @author yusun 2021/06/30.
+ */
 public class PageableAsQueryParam {
 
     /**
