@@ -22,30 +22,20 @@
  */
 package com.power.doc.builder.openapi;
 
-import java.util.*;
-
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.FileUtil;
 import com.power.common.util.StringUtil;
-import com.power.doc.builder.DocBuilderTemplate;
-import com.power.doc.builder.ProjectDocConfigBuilder;
 import com.power.doc.constants.DocGlobalConstants;
-import com.power.doc.factory.BuildTemplateFactory;
 import com.power.doc.helper.JavaProjectBuilderHelper;
-import com.power.doc.model.ApiConfig;
-import com.power.doc.model.ApiDoc;
-import com.power.doc.model.ApiGroup;
-import com.power.doc.model.ApiMethodDoc;
-import com.power.doc.model.ApiParam;
-import com.power.doc.model.ApiReqParam;
+import com.power.doc.model.*;
 import com.power.doc.model.openapi.OpenApiTag;
-import com.power.doc.template.IDocBuildTemplate;
 import com.power.doc.utils.DocUtil;
 import com.power.doc.utils.JsonUtil;
 import com.power.doc.utils.OpenApiSchemaUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
-import com.thoughtworks.qdox.model.JavaClass;
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.*;
 
 import static com.power.doc.constants.DocGlobalConstants.*;
 

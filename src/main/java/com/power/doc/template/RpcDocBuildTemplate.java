@@ -22,21 +22,9 @@
  */
 package com.power.doc.template;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
-
 import com.power.common.util.StringUtil;
 import com.power.common.util.ValidateUtil;
 import com.power.doc.builder.ProjectDocConfigBuilder;
-import com.power.doc.constants.DocAnnotationConstants;
 import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.constants.DocTags;
 import com.power.doc.constants.DubboAnnotationConstants;
@@ -47,20 +35,13 @@ import com.power.doc.model.DocJavaMethod;
 import com.power.doc.model.RpcJavaMethod;
 import com.power.doc.model.annotation.FrameworkAnnotations;
 import com.power.doc.model.rpc.RpcApiDoc;
-import com.power.doc.utils.ApiParamTreeUtil;
-import com.power.doc.utils.DocClassUtil;
-import com.power.doc.utils.DocUtil;
-import com.power.doc.utils.JavaClassUtil;
-import com.power.doc.utils.JavaClassValidateUtil;
-import com.power.doc.utils.JavaFieldUtil;
-import com.thoughtworks.qdox.model.DocletTag;
-import com.thoughtworks.qdox.model.JavaAnnotation;
-import com.thoughtworks.qdox.model.JavaClass;
-import com.thoughtworks.qdox.model.JavaMethod;
-import com.thoughtworks.qdox.model.JavaParameter;
-import com.thoughtworks.qdox.model.JavaType;
+import com.power.doc.utils.*;
+import com.thoughtworks.qdox.model.*;
 
-import static com.power.doc.constants.DocTags.DEPRECATED;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
+
 import static com.power.doc.constants.DocTags.IGNORE;
 
 /**

@@ -23,15 +23,6 @@
 
 package com.power.doc.builder.openapi;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.StringUtil;
 import com.power.doc.builder.DocBuilderTemplate;
@@ -44,6 +35,8 @@ import com.power.doc.template.IDocBuildTemplate;
 import com.power.doc.utils.DocUtil;
 import com.power.doc.utils.OpenApiSchemaUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
+
+import java.util.*;
 
 import static com.power.doc.constants.DocGlobalConstants.*;
 
