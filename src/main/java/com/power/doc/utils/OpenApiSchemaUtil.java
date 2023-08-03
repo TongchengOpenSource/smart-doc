@@ -80,10 +80,25 @@ public class OpenApiSchemaUtil {
         map.put("$ref", builder.toString());
         return map;
     }
-
+    
     public static String getClassNameFromParams(List<ApiParam> apiParams, String suffix) {
         // if array[Primitive] or Primitive
         if (CollectionUtil.isNotEmpty(apiParams) && apiParams.size() == 1
+                && StringUtil.isEmpty(apiParams.get(0).getClassName())
+                && CollectionUtil.isEmpty(apiParams.get(0).getChildren())) {
+            return "string";
+        }
+        for (ApiParam a : apiParams) {
+            if (StringUtil.isNotEmpty(a.getClassName())) {
+                return OpenApiSchemaUtil.delClassName(a.getClassName()) + suffix;
+            }
+        }
+        return NO_BODY_PARAM;
+    }
+
+    public static String getClassNameFromParams2(List<ApiParam> apiParams, String suffix) {
+        // if array[Primitive] or Primitive
+        if (CollectionUtil.isNotEmpty(apiParams)
                 && StringUtil.isEmpty(apiParams.get(0).getClassName())
                 && CollectionUtil.isEmpty(apiParams.get(0).getChildren())) {
             return "string";

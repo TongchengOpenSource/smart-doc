@@ -189,9 +189,9 @@ public abstract class AbstractOpenApiBuilder {
         Map<String, Object> innerScheme = new HashMap<>(10);
         String requestRef;
         if (apiMethodDoc.getContentType().equals(DocGlobalConstants.URL_CONTENT_TYPE)) {
-            requestRef = componentKey + OpenApiSchemaUtil.getClassNameFromParams(apiMethodDoc.getQueryParams(), COMPONENT_REQUEST_SUFFIX);
+            requestRef = componentKey + OpenApiSchemaUtil.getClassNameFromParams2(apiMethodDoc.getQueryParams(), COMPONENT_REQUEST_SUFFIX);
         } else {
-            requestRef = componentKey + OpenApiSchemaUtil.getClassNameFromParams(apiMethodDoc.getRequestParams(), COMPONENT_REQUEST_SUFFIX);
+            requestRef = componentKey + OpenApiSchemaUtil.getClassNameFromParams2(apiMethodDoc.getRequestParams(), COMPONENT_REQUEST_SUFFIX);
         }
         //remove special characters in url
         String responseRef = componentKey + OpenApiSchemaUtil.getClassNameFromParams(apiMethodDoc.getResponseParams(), COMPONENT_RESPONSE_SUFFIX);
