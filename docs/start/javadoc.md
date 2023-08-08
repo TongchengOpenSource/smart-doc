@@ -74,7 +74,13 @@ There are relatively few native Javadoc tags in Java, which cannot meet some usa
 | @tag                      | @since 2.2.5, @tag is used to classify controller methods. You can assign methods under different controllers to multiple categories, and you can also directly assign controllers to one category or multiple categories.                                                                                                                                                                                                                                                                                                                                                                         |
 
 ## 2.1 @ignore use
+
+**Starting in 2.6.9, @ignore is no longer supported on fields.**
+
 ```java
+/**
+* Here's an early version of the wrong demonstration
+*/
 public class SubUser {
 
     /**
@@ -97,11 +103,12 @@ public class SubUser {
      *  @ignore
      */
     private Timestamp createTime;
-
 }
-
-
 ```
+
+In the future, @ignore will only be used in method and class comments.
+
+> For entity fields, it is recommended to use the Json Transformation Framework's annotations to ignore them. The use of @ignore on fields is an early mistake demonstrated by smart-doc, and the ability of @ignore to ignore fields will be taken down in future releases. Jackson and Fastjson annotations are supported by smart-doc, and it is not officially recommended to use this approach, which fails to achieve consistency in presentation and behavior.
 
 In the Controller layer, use SubUser as a parameter to receive, and the parameter request document output by smart-doc:
 
