@@ -23,10 +23,8 @@
 package com.power.doc.utils;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Stack;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 
@@ -35,6 +33,7 @@ import com.power.doc.filter.ReturnTypeProcessor;
 import com.power.doc.model.ApiReturn;
 import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaClass;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Description:
@@ -44,14 +43,47 @@ import com.thoughtworks.qdox.model.JavaClass;
  */
 public class DocClassUtil {
 
+    private static final String INTERNAL_CLASS_DELIMITER = "$";
 
     /**
-     * get class names by generic class name
+     * get class names by generic class name.
+     *
+     * <br/> Supports on generic juxtaposition
      *
      * @param typeName generic class name
      * @return array of string
      */
     public static String[] getSimpleGicName(String typeName) {
+        /*
+            need to split fieldGicName when classes are nested and use the generic.
+
+            e.g. fieldGicName="SupperClassName<T>$ChildClassName<T>"
+
+            https://github.com/smart-doc-group/smart-doc/issues/561
+        */
+        String[] gNameArr;
+        if (typeName.contains(INTERNAL_CLASS_DELIMITER)) {
+            String[] splitTypeNames = typeName.split("\\$");
+
+            // Call the DocClassUtil.getSimpleGicName() on the split string and collect all the results
+            gNameArr = Arrays.stream(splitTypeNames).filter(StringUtils::isNotBlank)
+                    .map(DocClassUtil::getSimpleGicNameFromNestedName)
+                    .map(Arrays::asList).flatMap(Collection::stream).distinct().toArray(String[]::new);
+        } else {
+            gNameArr = DocClassUtil.getSimpleGicNameFromNestedName(typeName);
+        }
+        return gNameArr;
+    }
+
+    /**
+     * get class names by generic class name
+     *
+     * <br/>Supports on generic nesting but not generic juxtaposition
+     *
+     * @param typeName generic class name
+     * @return array of string
+     */
+    private static String[] getSimpleGicNameFromNestedName(String typeName) {
         if (JavaClassValidateUtil.isCollection(typeName)) {
             typeName = typeName + "<T>";
         } else if (JavaClassValidateUtil.isArray(typeName)) {
