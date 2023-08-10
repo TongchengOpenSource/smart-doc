@@ -315,7 +315,7 @@ Exception in thread "main" java.lang.Error: Error: could not match input
 如果你在使用中遇到该错误，建议在使用`smart-doc`的`maven`或者是`gradle`插件的时候明确通过插件的`include`配置项
 来加载必要的源码。避免插件自动加载了一些和API文档生成无关的旧依赖，同时也可以显著提升生成文档的速度。
 
-大仙上面错误是，如果使用`maven`插件，你可以试用`mvn -X`参数让插件打印`debug`，然后查看是到加载那个`resource`出现了错误，例如：
+打印上面错误： 如果使用`maven`插件，你可以试用`mvn -X`参数让插件打印`debug`，然后查看是到加载那个`resource`出现了错误，例如：
 ```java
 mvn -X -Dfile.encoding=UTF-8 smart-doc:html
 ```
