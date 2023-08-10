@@ -92,8 +92,8 @@ public class DocClassUtil {
         for (char c : typeName.toCharArray()) {
             if (c == '<' || c == '>') {
                 ltLen += (c == '<') ? 1 : -1;
-                // Skip the outermost symbols
-                if (ltLen == 1) {
+                // Skip the outermost symbols <
+                if (c == '<' && ltLen == 1) {
                     continue;
                 }
             }
