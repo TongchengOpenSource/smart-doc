@@ -23,10 +23,7 @@
 package com.power.doc.utils;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Stack;
+import java.util.*;
 
 import javax.annotation.Nonnull;
 
@@ -65,16 +62,51 @@ public class DocClassUtil {
             if (JavaClassValidateUtil.isMap(pre)) {
                 return getMapKeyValueType(typeName);
             }
-            String type = typeName.substring(typeName.indexOf("<") + 1, typeName.lastIndexOf(">"));
             if (JavaClassValidateUtil.isCollection(pre)) {
+                String type = typeName.substring(typeName.indexOf("<") + 1, typeName.lastIndexOf(">"));
                 return type.split(" ");
             }
-            String[] arr = type.split(",");
+
+            String[] arr = Arrays.stream(getGicName(typeName))
+                    .map(str -> str.split(","))
+                    .map(Arrays::asList)
+                    .flatMap(Collection::stream)
+                    .toArray(String[]::new);
+
             return classNameFix(arr);
         } else {
             return new String[0];
         }
     }
+
+    /**
+     * get class names by generic class name.<br>
+     *  "controller.R<T,A>$Data<T,A>"  =====>  ["T,A", "T,A"]
+     * @param typeName  generic class name
+     * @return array of string
+     */
+    static String[] getGicName(String typeName) {
+        StringBuilder builder = new StringBuilder(typeName.length());
+        List<String> ginNameList = new ArrayList<>();
+        int ltLen = 0;
+        for (char c : typeName.toCharArray()) {
+            if (c == '<' || c == '>') {
+                ltLen += (c == '<') ? 1 : -1;
+                // Skip the outermost symbols <
+                if (c == '<' && ltLen == 1) {
+                    continue;
+                }
+            }
+            if (ltLen > 0) {
+                builder.append(c);
+            } else if (ltLen == 0 && c == '>') {
+                ginNameList.add(builder.toString());
+                builder.setLength(0);
+            }
+        }
+        return ginNameList.toArray(new String[0]);
+    }
+
 
     /**
      * Get a simple type name from a generic class name
@@ -83,11 +115,17 @@ public class DocClassUtil {
      * @return String
      */
     public static String getSimpleName(String gicName) {
-        if (gicName.contains("<")) {
-            return gicName.substring(0, gicName.indexOf("<"));
-        } else {
-            return gicName;
+        // remove strings contained in '< >'  and < >.  e.g. controller.R<T,A>$Data<T,A>  =====>  controller.R$Data
+        StringBuilder builder = new StringBuilder(gicName.length());
+        int ltLen = 0;
+        for (char c : gicName.toCharArray()) {
+            if (c == '<' || c == '>') {
+                ltLen += (c == '<') ? 1 : -1;
+            } else if (ltLen <= 0) {
+                builder.append(c);
+            }
         }
+        return builder.toString();
     }
 
     /**
@@ -314,7 +352,7 @@ public class DocClassUtil {
                 classAnnotations.addAll(superClass.getAnnotations());
             }
         } catch (Throwable e) {
-            throw new RuntimeException("Could not obtain annotations for class: "+cls.getFullyQualifiedName()+"\n"+e);
+            throw new RuntimeException("Could not obtain annotations for class: " + cls.getFullyQualifiedName() + "\n" + e);
         }
         classAnnotations.addAll(cls.getAnnotations());
         return classAnnotations;
