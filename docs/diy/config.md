@@ -20,7 +20,7 @@ Example of a complete configuration file
   "outPath": "D: // md2", // Specify the output path of the document
   "randomMock": false,// Whether to generate a random mock, the default is false，@since 2.6.9
   "coverOld": true, // Whether to overwrite old files, mainly used for mardown file overwrite
-  "createDebugPage": true,//Create a page that can be used to test your APIs like swagger
+  "createDebugPage": true,//Since @2.0.0, Create a page that can be used to test your APIs like swagger, only works in AllInOne mode. Since @2.0.1, debug pages can be generated for html documents in both allInOne and non-allInOne modes.
   "packageFilters": "", // controller package filtering, multiple package names separated by commas
   "packageExcludeFilters": "",//Exclude subpackages under the packageFilters package
   "md5EncryptedHtmlName": false, // only used if each controller generates an html file
@@ -228,6 +228,7 @@ Whether to overwrite old files, mainly used for markdown file overwriting.
 
 smart-doc supports the creation of pages for debugging interfaces similar to swagger ui.
 Of course, this can only be used in AllInOne mode.
+Since @2.0.1, debug pages can be generated for html documents in both allInOne and non-allInOne modes.
 ```json
 {
     "createDebugPage": false
