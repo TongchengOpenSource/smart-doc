@@ -267,15 +267,16 @@ public abstract class AbstractOpenApiBuilder {
     public Map<String, Object> buildParametersSchema(ApiParam apiParam) {
         Map<String, Object> schema = new HashMap<>(10);
         String openApiType = DocUtil.javaTypeToOpenApiTypeConvert(apiParam.getType());
+        // The values of openApiType are "file", "object", "array","string",  "integer","number"
         schema.put("type", openApiType);
-        if ("file".equals(apiParam.getType())) {
+        if ("file".equals(openApiType)) {
             schema.put("format", "binary");
             schema.put("type", "string");
         } else if ("object".equals(openApiType)) {
             if ("enum".equals(apiParam.getType())) {
                 schema.put("enum", apiParam.getEnumValues());
             }
-        } else if (ARRAY.equals(apiParam.getType())) {
+        } else if (ARRAY.equals(openApiType)) {
             if (CollectionUtil.isNotEmpty(apiParam.getEnumValues())) {
                 schema.put("type", "string");
                 schema.put("items", apiParam.getEnumValues());
@@ -287,8 +288,8 @@ public abstract class AbstractOpenApiBuilder {
                 schema.put("items", map);
             }
         } else {
-            schema.put("type", apiParam.getType());
-            schema.put("format", "integer");
+            // "string", "integer", "number"
+            schema.put("format", apiParam.getType());
         }
         return schema;
     }
@@ -340,7 +341,7 @@ public abstract class AbstractOpenApiBuilder {
                 if (param.isRequired()) {
                     requiredList.add(param.getField());
                 }
-                if (param.getType().equals("map") &&StringUtil.isEmpty(param.getClassName())) {
+                if (param.getType().equals("map") && StringUtil.isEmpty(param.getClassName())) {
                     continue;
                 }
                 if (param.isQueryParam() || param.isPathParam()) {
