@@ -17,6 +17,10 @@ need to inject annotations into the code like Swagger.
 
 [quick start](https://smart-doc-group.github.io/#/)
 
+## Documentation
+* [English](https://smart-doc-group.github.io/#/)
+* [中文](https://smart-doc-group.github.io/#/zh-cn/)
+
 ## Features
 
 - Zero annotation, zero learning cost, only need to write standard JAVA document comments.
