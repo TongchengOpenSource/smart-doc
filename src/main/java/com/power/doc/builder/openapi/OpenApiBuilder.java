@@ -132,7 +132,10 @@ public class OpenApiBuilder extends AbstractOpenApiBuilder {
     public Map<String, Object> buildPathUrlsRequest(ApiConfig apiConfig, ApiMethodDoc apiMethodDoc, ApiDoc apiDoc) {
         Map<String, Object> request = new HashMap<>(20);
         request.put("summary", apiMethodDoc.getDesc());
-        request.put("description", apiMethodDoc.getDetail());
+        if (!Objects.equals(apiMethodDoc.getDesc(), apiMethodDoc.getDetail())) {
+            // When summary and description are equal, there is only one
+            request.put("description", apiMethodDoc.getDetail());
+        }
 //        String tag = StringUtil.isEmpty(apiDoc.getDesc()) ? OPENAPI_TAG : apiDoc.getDesc();
 //        if (StringUtil.isNotEmpty(apiMethodDoc.getGroup())) {
 //            request.put("tags", new String[]{tag});
