@@ -381,8 +381,7 @@ public class ParamsBuildHelper extends BaseHelper {
                             param.setValue(fieldValue);
                         }
                         if (globGicName.length > 0 && "java.util.List".equals(fieldGicName)) {
-                            // no generic, just object
-                            fieldGicName = fieldGicName + "<" + DocGlobalConstants.JAVA_OBJECT_FULLY + ">";
+                            fieldGicName = fieldGicName + "<T>";
                         }
                         if (JavaClassValidateUtil.isArray(subTypeName)) {
                             fieldGicName = fieldGicName.substring(0, fieldGicName.lastIndexOf("["));

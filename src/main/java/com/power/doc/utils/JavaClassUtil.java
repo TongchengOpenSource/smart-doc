@@ -22,53 +22,29 @@
  */
 package com.power.doc.utils;
 
-import java.lang.reflect.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import com.power.common.model.BaseResult;
 import com.power.common.model.EnumDictionary;
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.EnumUtil;
 import com.power.common.util.StringUtil;
 import com.power.doc.builder.ProjectDocConfigBuilder;
-import com.power.doc.constants.DocAnnotationConstants;
-import com.power.doc.constants.DocGlobalConstants;
-import com.power.doc.constants.DocTags;
-import com.power.doc.constants.DocValidatorAnnotationEnum;
-import com.power.doc.constants.ValidatorAnnotations;
+import com.power.doc.constants.*;
 import com.power.doc.model.ApiConfig;
 import com.power.doc.model.ApiDataDictionary;
 import com.power.doc.model.DocJavaField;
 import com.power.doc.model.torna.EnumInfo;
 import com.power.doc.model.torna.Item;
 import com.thoughtworks.qdox.JavaProjectBuilder;
-import com.thoughtworks.qdox.model.DocletTag;
-import com.thoughtworks.qdox.model.JavaAnnotation;
-import com.thoughtworks.qdox.model.JavaClass;
-import com.thoughtworks.qdox.model.JavaField;
-import com.thoughtworks.qdox.model.JavaGenericDeclaration;
-import com.thoughtworks.qdox.model.JavaMethod;
-import com.thoughtworks.qdox.model.JavaParameterizedType;
-import com.thoughtworks.qdox.model.JavaType;
-import com.thoughtworks.qdox.model.JavaTypeVariable;
+import com.thoughtworks.qdox.model.*;
 import com.thoughtworks.qdox.model.expression.AnnotationValue;
 import com.thoughtworks.qdox.model.expression.AnnotationValueList;
-import com.thoughtworks.qdox.model.expression.Expression;
 import com.thoughtworks.qdox.model.expression.TypeRef;
 import com.thoughtworks.qdox.model.impl.DefaultJavaField;
 import com.thoughtworks.qdox.model.impl.DefaultJavaParameterizedType;
-
 import org.apache.commons.lang3.StringUtils;
+
+import java.lang.reflect.*;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Handle JavaClass
@@ -152,10 +128,8 @@ public class JavaClassUtil {
                             .setComment(comment)
                             .setDocletTags(javaMethod.getTags())
                             .setAnnotations(javaMethod.getAnnotations())
-                            .setFullyQualifiedName(javaField.getType()
-                                    .getFullyQualifiedName())
-                            .setGenericCanonicalName(javaField.getType()
-                                    .getGenericCanonicalName())
+                            .setFullyQualifiedName(javaField.getType().getFullyQualifiedName())
+                            .setGenericCanonicalName(getReturnGenericType(javaMethod, classLoader))
                             .setGenericFullyQualifiedName(javaField.getType().getGenericFullyQualifiedName());
 
                     addedFields.put(methodName, docJavaField);
@@ -805,6 +779,29 @@ public class JavaClassUtil {
             Type t = f.getGenericType();
             return StringUtil.trim(t.getTypeName());
         } catch (NoSuchFieldException | ClassNotFoundException e) {
+            return null;
+        }
+    }
+
+    private static String getReturnGenericType(JavaMethod javaMethod, ClassLoader classLoader) {
+        String methodName = javaMethod.getName();
+        String canonicalName = javaMethod.getDeclaringClass().getCanonicalName();
+        try {
+            Class<?> c;
+            if (Objects.nonNull(classLoader)) {
+                c = classLoader.loadClass(canonicalName);
+            } else {
+                c = Class.forName(canonicalName);
+            }
+
+            Optional<String> returnName = Arrays.stream(c.getDeclaredMethods())
+                    .filter(method -> Objects.equals(method.getName(), methodName))
+                    .findFirst()
+                    .map(Method::getGenericReturnType)
+                    .map(Type::getTypeName);
+
+            return StringUtil.trim(returnName.orElse(null));
+        } catch (ClassNotFoundException e) {
             return null;
         }
     }
