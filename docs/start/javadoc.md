@@ -73,10 +73,10 @@ There are relatively few native Javadoc tags in Java, which cannot meet some usa
 | @response                 | @since smart-doc 2.2.0, the response tag is marked on the controller method to allow you to define the returned json example by yourself. It is recommended to use it only when returning basic types, such as: Result<String> This generic type is a response of a simple primitive type.                                                                                                                                                                                                                                                                                                         |
 | @tag                      | @since 2.2.5, @tag is used to classify controller methods. You can assign methods under different controllers to multiple categories, and you can also directly assign controllers to one category or multiple categories.                                                                                                                                                                                                                                                                                                                                                                         |
 
-## 2.1 @ignore use
-
-**Starting in 2.6.9, @ignore is no longer supported on fields.**
-
+## 2.1 @ignore use(deprecated using on field since 2.6.9)
+The @ignore annotation can only be applied to methods or classes, not on fields.
+Use the @JsonIgnore annotation from the JSON library for instead.
+Cause using @ignore on a field doesn't actually prevent it from being returned.
 ```java
 /**
 * Here's an early version of the wrong demonstration
@@ -96,6 +96,7 @@ public class SubUser {
     /**
      * gender
      */
+    @JsonIgnore
     private int gender;
 
     /**
