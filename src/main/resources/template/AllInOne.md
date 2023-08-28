@@ -91,7 +91,7 @@ for(param in doc.requestParams){
 
 <%if(isNotEmpty(doc.requestUsage)&&isRequestExample){%>
 **Request-example:**
-```
+```bash
 ${doc.requestUsage}
 ```
 <%}%>
@@ -109,7 +109,7 @@ for(param in doc.responseParams){
 
 <%if(isNotEmpty(doc.responseUsage)&&isResponseExample){%>
 **Response-example:**
-```
+```json
 ${doc.responseUsage}
 ```
 <%}%>
