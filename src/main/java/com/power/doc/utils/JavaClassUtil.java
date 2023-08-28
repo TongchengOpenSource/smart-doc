@@ -99,171 +99,171 @@ public class JavaClassUtil {
                 || cls1.isEnum() || "Serializable".equals(cls1.getSimpleName())
                 || "ZonedDateTime".equals(cls1.getSimpleName())) {
             return fieldList;
-        } else {
-            String className = cls1.getFullyQualifiedName();
-            if (cls1.isInterface() &&
-                    !JavaClassValidateUtil.isCollection(className) &&
-                    !JavaClassValidateUtil.isMap(className)) {
-                List<JavaMethod> methods = cls1.getMethods();
-                for (JavaMethod javaMethod : methods) {
-                    String methodName = javaMethod.getName();
-                    int paramSize = javaMethod.getParameters().size();
-                    boolean enable = false;
-                    if (methodName.startsWith("get") && !"get".equals(methodName) && paramSize == 0) {
-                        methodName = StringUtil.firstToLowerCase(methodName.substring(3));
-                        enable = true;
-                    } else if (methodName.startsWith("is") && !"is".equals(methodName) && paramSize == 0) {
-                        methodName = StringUtil.firstToLowerCase(methodName.substring(2));
-                        enable = true;
-                    }
-                    if (!enable || addedFields.containsKey(methodName)) {
-                        continue;
-                    }
-                    String comment = javaMethod.getComment();
-                    if (StringUtil.isEmpty(comment)) {
-                        comment = DocGlobalConstants.NO_COMMENTS_FOUND;
-                    }
-                    JavaField javaField = new DefaultJavaField(javaMethod.getReturns(), methodName);
-                    DocJavaField docJavaField = DocJavaField.builder()
-                            .setDeclaringClassName(className)
-                            .setFieldName(methodName)
-                            .setJavaField(javaField)
-                            .setComment(comment)
-                            .setDocletTags(javaMethod.getTags())
-                            .setAnnotations(javaMethod.getAnnotations())
-                            .setFullyQualifiedName(javaField.getType().getFullyQualifiedName())
-                            .setGenericCanonicalName(getReturnGenericType(javaMethod, classLoader))
-                            .setGenericFullyQualifiedName(javaField.getType().getGenericFullyQualifiedName());
-
-                    addedFields.put(methodName, docJavaField);
-                }
-            }
-            // ignore enum parent class
-            if (actualJavaTypes == null) {
-                actualJavaTypes = new HashMap<>(10);
-            }
-            if (!cls1.isEnum()) {
-                JavaClass parentClass = cls1.getSuperJavaClass();
-                if (Objects.nonNull(parentClass) && !"java.lang.Object".equals(parentClass.getName())) {
-                    getFields(parentClass, counter, addedFields, actualJavaTypes, classLoader);
-                }
-
-                List<JavaType> implClasses = cls1.getImplements();
-                for (JavaType type : implClasses) {
-                    JavaClass javaClass = (JavaClass) type;
-                    getFields(javaClass, counter, addedFields, actualJavaTypes, classLoader);
-                }
-            }
-            actualJavaTypes.putAll(getActualTypesMap(cls1));
-            List<JavaMethod> javaMethods = cls1.getMethods();
-            for (JavaMethod method : javaMethods) {
-                String methodName = method.getName();
-                if (method.getAnnotations().size() < 1) {
-                    continue;
-                }
-                int paramSize = method.getParameters().size();
+        }
+        String className = cls1.getFullyQualifiedName();
+        if (cls1.isInterface() &&
+                !JavaClassValidateUtil.isCollection(className) &&
+                !JavaClassValidateUtil.isMap(className)) {
+            List<JavaMethod> methods = cls1.getMethods();
+            for (JavaMethod javaMethod : methods) {
+                String methodName = javaMethod.getName();
+                int paramSize = javaMethod.getParameters().size();
+                boolean enable = false;
                 if (methodName.startsWith("get") && !"get".equals(methodName) && paramSize == 0) {
                     methodName = StringUtil.firstToLowerCase(methodName.substring(3));
+                    enable = true;
                 } else if (methodName.startsWith("is") && !"is".equals(methodName) && paramSize == 0) {
                     methodName = StringUtil.firstToLowerCase(methodName.substring(2));
+                    enable = true;
                 }
-                if (addedFields.containsKey(methodName)) {
-                    String comment = method.getComment();
-                    if (Objects.isNull(comment)) {
-                        comment = addedFields.get(methodName).getComment();
-                    }
-                    if (StringUtil.isEmpty(comment)) {
-                        comment = DocGlobalConstants.NO_COMMENTS_FOUND;
-                    }
-                    DocJavaField docJavaField = addedFields.get(methodName);
-                    docJavaField.setAnnotations(method.getAnnotations());
-                    docJavaField.setComment(comment);
-                    docJavaField.setFieldName(methodName);
-                    docJavaField.setDeclaringClassName(className);
-                    addedFields.put(methodName, docJavaField);
+                if (!enable || addedFields.containsKey(methodName)) {
+                    continue;
                 }
+                String comment = javaMethod.getComment();
+                if (StringUtil.isEmpty(comment)) {
+                    comment = DocGlobalConstants.NO_COMMENTS_FOUND;
+                }
+                JavaField javaField = new DefaultJavaField(javaMethod.getReturns(), methodName);
+                DocJavaField docJavaField = DocJavaField.builder()
+                        .setDeclaringClassName(className)
+                        .setFieldName(methodName)
+                        .setJavaField(javaField)
+                        .setComment(comment)
+                        .setDocletTags(javaMethod.getTags())
+                        .setAnnotations(javaMethod.getAnnotations())
+                        .setFullyQualifiedName(javaField.getType().getFullyQualifiedName())
+                        .setGenericCanonicalName(getReturnGenericType(javaMethod, classLoader))
+                        .setGenericFullyQualifiedName(javaField.getType().getGenericFullyQualifiedName());
+
+                addedFields.put(methodName, docJavaField);
             }
-            if (!cls1.isInterface()) {
-                for (JavaField javaField : cls1.getFields()) {
-                    String fieldName = javaField.getName();
-                    String subTypeName = javaField.getType().getFullyQualifiedName();
+        }
+        // ignore enum parent class
+        if (actualJavaTypes == null) {
+            actualJavaTypes = new HashMap<>(10);
+        }
+        if (!cls1.isEnum()) {
+            JavaClass parentClass = cls1.getSuperJavaClass();
+            if (Objects.nonNull(parentClass) && !"java.lang.Object".equals(parentClass.getName())) {
+                getFields(parentClass, counter, addedFields, actualJavaTypes, classLoader);
+            }
 
-                    if (javaField.isStatic() || "this$0".equals(fieldName) ||
-                            JavaClassValidateUtil.isIgnoreFieldTypes(subTypeName)) {
-                        continue;
-                    }
-                    if (fieldName.startsWith("is") && ("boolean".equals(subTypeName))) {
-                        fieldName = StringUtil.firstToLowerCase(fieldName.substring(2));
-                    }
-                    long count = javaField.getAnnotations().stream()
-                            .filter(annotation -> DocAnnotationConstants.SHORT_JSON_IGNORE.equals(annotation.getType().getSimpleName()))
-                            .count();
-                    if (count > 0) {
-                        if (addedFields.containsKey(fieldName)) {
-                            addedFields.remove(fieldName);
-                        }
-                        continue;
-                    }
+            List<JavaType> implClasses = cls1.getImplements();
+            for (JavaType type : implClasses) {
+                JavaClass javaClass = (JavaClass) type;
+                getFields(javaClass, counter, addedFields, actualJavaTypes, classLoader);
+            }
+        }
+        actualJavaTypes.putAll(getActualTypesMap(cls1));
+        List<JavaMethod> javaMethods = cls1.getMethods();
+        for (JavaMethod method : javaMethods) {
+            String methodName = method.getName();
+            if (method.getAnnotations().size() < 1) {
+                continue;
+            }
+            int paramSize = method.getParameters().size();
+            if (methodName.startsWith("get") && !"get".equals(methodName) && paramSize == 0) {
+                methodName = StringUtil.firstToLowerCase(methodName.substring(3));
+            } else if (methodName.startsWith("is") && !"is".equals(methodName) && paramSize == 0) {
+                methodName = StringUtil.firstToLowerCase(methodName.substring(2));
+            }
+            if (addedFields.containsKey(methodName)) {
+                String comment = method.getComment();
+                if (Objects.isNull(comment)) {
+                    comment = addedFields.get(methodName).getComment();
+                }
+                if (StringUtil.isEmpty(comment)) {
+                    comment = DocGlobalConstants.NO_COMMENTS_FOUND;
+                }
+                DocJavaField docJavaField = addedFields.get(methodName);
+                docJavaField.setAnnotations(method.getAnnotations());
+                docJavaField.setComment(comment);
+                docJavaField.setFieldName(methodName);
+                docJavaField.setDeclaringClassName(className);
+                addedFields.put(methodName, docJavaField);
+            }
+        }
+        if (!cls1.isInterface()) {
+            for (JavaField javaField : cls1.getFields()) {
+                String fieldName = javaField.getName();
+                String subTypeName = javaField.getType().getFullyQualifiedName();
 
-                    DocJavaField docJavaField = DocJavaField.builder();
-                    boolean typeChecked = false;
-                    JavaType fieldType = javaField.getType();
-                    String gicName = fieldType.getGenericCanonicalName();
-
-                    String actualType = null;
-                    if (JavaClassValidateUtil.isCollection(subTypeName) &&
-                            !JavaClassValidateUtil.isCollection(gicName)) {
-                        String[] gNameArr = DocClassUtil.getSimpleGicName(gicName);
-                        actualType = JavaClassUtil.getClassSimpleName(gNameArr[0]);
-                        docJavaField.setArray(true);
-                        typeChecked = true;
-                    }
-                    if (JavaClassValidateUtil.isPrimitive(subTypeName) && !typeChecked) {
-                        docJavaField.setPrimitive(true);
-                        typeChecked = true;
-                    }
-                    if (JavaClassValidateUtil.isFile(subTypeName) && !typeChecked) {
-                        docJavaField.setFile(true);
-                        typeChecked = true;
-                    }
-                    if (javaField.getType().isEnum() && !typeChecked) {
-                        docJavaField.setEnum(true);
-                    }
-                    String comment = javaField.getComment();
-                    if (Objects.isNull(comment)) {
-                        comment = DocGlobalConstants.NO_COMMENTS_FOUND;
-                    }
-                    // Getting the Original Defined Type of Field
-                    if (!docJavaField.isFile() || !docJavaField.isEnum() || !docJavaField.isPrimitive()
-                            || "java.lang.Object".equals(gicName)) {
-                        String genericFieldTypeName = getFieldGenericType(javaField,classLoader);
-                        if (StringUtil.isNotEmpty(genericFieldTypeName)) {
-                            gicName = genericFieldTypeName;
-                        }
-                    }
-                    docJavaField.setComment(comment)
-                            .setJavaField(javaField)
-                            .setFullyQualifiedName(subTypeName)
-                            .setGenericCanonicalName(gicName)
-                            .setGenericFullyQualifiedName(fieldType.getGenericFullyQualifiedName())
-                            .setActualJavaType(actualType)
-                            .setAnnotations(javaField.getAnnotations())
-                            .setFieldName(fieldName)
-                            .setDeclaringClassName(className);
+                if (javaField.isStatic() || "this$0".equals(fieldName) ||
+                        JavaClassValidateUtil.isIgnoreFieldTypes(subTypeName)) {
+                    continue;
+                }
+                if (fieldName.startsWith("is") && ("boolean".equals(subTypeName))) {
+                    fieldName = StringUtil.firstToLowerCase(fieldName.substring(2));
+                }
+                long count = javaField.getAnnotations().stream()
+                        .filter(annotation -> DocAnnotationConstants.SHORT_JSON_IGNORE.equals(annotation.getType().getSimpleName()))
+                        .count();
+                if (count > 0) {
                     if (addedFields.containsKey(fieldName)) {
                         addedFields.remove(fieldName);
-                        addedFields.put(fieldName, docJavaField);
-                        continue;
                     }
-                    addedFields.put(fieldName, docJavaField);
+                    continue;
                 }
+
+                DocJavaField docJavaField = DocJavaField.builder();
+                boolean typeChecked = false;
+                JavaType fieldType = javaField.getType();
+                String gicName = fieldType.getGenericCanonicalName();
+
+                String actualType = null;
+                if (JavaClassValidateUtil.isCollection(subTypeName) &&
+                        !JavaClassValidateUtil.isCollection(gicName)) {
+                    String[] gNameArr = DocClassUtil.getSimpleGicName(gicName);
+                    actualType = JavaClassUtil.getClassSimpleName(gNameArr[0]);
+                    docJavaField.setArray(true);
+                    typeChecked = true;
+                }
+                if (JavaClassValidateUtil.isPrimitive(subTypeName) && !typeChecked) {
+                    docJavaField.setPrimitive(true);
+                    typeChecked = true;
+                }
+                if (JavaClassValidateUtil.isFile(subTypeName) && !typeChecked) {
+                    docJavaField.setFile(true);
+                    typeChecked = true;
+                }
+                if (javaField.getType().isEnum() && !typeChecked) {
+                    docJavaField.setEnum(true);
+                }
+                String comment = javaField.getComment();
+                if (Objects.isNull(comment)) {
+                    comment = DocGlobalConstants.NO_COMMENTS_FOUND;
+                }
+                // Getting the Original Defined Type of Field
+                if (!docJavaField.isFile() || !docJavaField.isEnum() || !docJavaField.isPrimitive()
+                        || "java.lang.Object".equals(gicName)) {
+                    String genericFieldTypeName = getFieldGenericType(javaField, classLoader);
+                    if (StringUtil.isNotEmpty(genericFieldTypeName)) {
+                        gicName = genericFieldTypeName;
+                    }
+                }
+                docJavaField.setComment(comment)
+                        .setJavaField(javaField)
+                        .setFullyQualifiedName(subTypeName)
+                        .setGenericCanonicalName(gicName)
+                        .setGenericFullyQualifiedName(fieldType.getGenericFullyQualifiedName())
+                        .setActualJavaType(actualType)
+                        .setAnnotations(javaField.getAnnotations())
+                        .setFieldName(fieldName)
+                        .setDeclaringClassName(className);
+                if (addedFields.containsKey(fieldName)) {
+                    addedFields.remove(fieldName);
+                    addedFields.put(fieldName, docJavaField);
+                    continue;
+                }
+                addedFields.put(fieldName, docJavaField);
             }
-            List<DocJavaField> parentFieldList = addedFields.values()
-                    .stream()
-                    .filter(Objects::nonNull)
-                    .collect(Collectors.toList());
-            fieldList.addAll(parentFieldList);
         }
+        List<DocJavaField> parentFieldList = addedFields.values()
+                .stream()
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+        fieldList.addAll(parentFieldList);
+
         return fieldList;
     }
 
