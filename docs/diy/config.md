@@ -174,7 +174,7 @@ Set the path prefix, such as configuring Servlet ContextPath.
 ## isStrict
 * required: `false`
 * type:`Boolean`
-* default: `flase`
+* default: `false`
 
 If strict mode is set to true, 
 Smart-doc enforces that the public methods of every interface in the code have comments.
