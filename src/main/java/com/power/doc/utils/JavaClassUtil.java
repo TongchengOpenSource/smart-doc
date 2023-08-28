@@ -64,15 +64,18 @@ public class JavaClassUtil {
     public static List<DocJavaField> getFields(JavaClass cls1, int counter, Map<String, DocJavaField> addedFields, ClassLoader classLoader) {
         Map<String, JavaType> actualJavaTypes = new HashMap<>(10);
         List<DocJavaField> fields = getFields(cls1, counter, addedFields, actualJavaTypes, classLoader);
-        fields.stream().filter(f -> f.getGenericCanonicalName() != null)
-                .forEach(f -> actualJavaTypes.entrySet().stream()
-                        .filter(e -> f.getGenericCanonicalName().equals(e.getKey()))
-                        .forEach(e ->
-                                f.setGenericCanonicalName(f.getGenericCanonicalName()
-                                                .replace(e.getKey(), e.getValue().getGenericCanonicalName()))
-                                        .setFullyQualifiedName(f.getFullyQualifiedName()
-                                                .replace(e.getKey(), e.getValue().getFullyQualifiedName()))
-                                        .setActualJavaType(e.getValue().getFullyQualifiedName())));
+
+        for (DocJavaField field : fields) {
+            String genericCanonicalName = field.getGenericCanonicalName();
+            if (genericCanonicalName == null) {
+                continue;
+            }
+            JavaType actualJavaType = actualJavaTypes.get(genericCanonicalName);
+
+            field.setGenericCanonicalName(genericCanonicalName.replace(genericCanonicalName, actualJavaType.getGenericCanonicalName()));
+            field.setFullyQualifiedName(field.getFullyQualifiedName().replace(genericCanonicalName, actualJavaType.getFullyQualifiedName()));
+            field.setActualJavaType(actualJavaType.getFullyQualifiedName());
+        }
         return fields;
     }
 
