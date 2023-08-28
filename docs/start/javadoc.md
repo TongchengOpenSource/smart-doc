@@ -78,6 +78,9 @@ The @ignore annotation can only be applied to methods or classes, not on fields.
 Use the @JsonIgnore annotation from the JSON library for instead.
 Cause using @ignore on a field doesn't actually prevent it from being returned.
 ```java
+/**
+* Here's an early version of the wrong demonstration
+*/
 public class SubUser {
 
     /**
@@ -101,11 +104,12 @@ public class SubUser {
      *  @ignore
      */
     private Timestamp createTime;
-
 }
-
-
 ```
+
+In the future, @ignore will only be used in method and class comments.
+
+> For entity fields, it is recommended to use the Json Transformation Framework's annotations to ignore them. The use of @ignore on fields is an early mistake demonstrated by smart-doc, and the ability of @ignore to ignore fields will be taken down in future releases. Jackson and Fastjson annotations are supported by smart-doc, and it is not officially recommended to use this approach, which fails to achieve consistency in presentation and behavior.
 
 In the Controller layer, use SubUser as a parameter to receive, and the parameter request document output by smart-doc:
 

@@ -21,7 +21,7 @@
   "outPath": "D://md2", //指定文档的输出路径
   "randomMock": false,//是否生成随机mock，默认false，@since 2.6.9
   "coverOld": true,  //是否覆盖旧的文件，主要用于mardown文件覆盖
-  "createDebugPage": true,//@since 2.0.0 创建一个类似swagger的可调试接口的文档页面，仅在AllInOne模式中起作用。
+  "createDebugPage": true,//@since 2.0.0 创建一个类似swagger的可调试接口的文档页面，仅在AllInOne模式中起作用。从@2.0.1开始，对html文档，都能够生成debug页面。
   "packageFilters": "",//controller包过滤，多个包用英文逗号隔开，2.2.2开始需要采用正则：com.test.controller.*，2.7.1开始支持方法级别正则：com.test.controller.TestController.*
   "packageExcludeFilters": "",//对packageFilters排除子包，多个包用英文逗号隔开，2.2.2开始需要采用正则：com.test.controller.res.*
   "md5EncryptedHtmlName": false,//只有每个controller生成一个html文件时才使用
@@ -273,7 +273,10 @@
 * 默认值: `false`
 * @since `2.0.0`
 
-`smart-doc`支持创一个类似`Swagger`那种可调试接口的`HTML`文档页面，仅在`AllInOne`模式中起作用。
+`smart-doc`支持创一个类似`Swagger`那种可调试接口的`HTML`文档页面，仅在`AllInOne`模式中起作用。 
+从@2.0.1开始，对html文档，无论是allInOne还是非allInOne模式都能够生成debug页面。
+
+@since 2.0.1 
 ```json
 {
     "createDebugPage": false
