@@ -1,5 +1,19 @@
 ## 变更日志
 
+### 版本号：2.7.5
+
+- 更新日期: 2023-08-20
+- 更新内容：
+  1. fix内部类嵌套泛型解析异常，[#561](https://github.com/smart-doc-group/smart-doc/issues/561)
+
+### 版本号：2.7.4
+
+- 更新日期: 2023-08-01
+- 更新内容：
+  1. 修复torna-rpc推送检查outpath错误，[#556](https://github.com/smart-doc-group/smart-doc/issues/556)
+  2. 完善torna version推送 [pr#557](https://github.com/smart-doc-group/smart-doc/pull/557)
+
+
 ### 版本号：2.7.3
 
 - 更新日期: 2023-07-20

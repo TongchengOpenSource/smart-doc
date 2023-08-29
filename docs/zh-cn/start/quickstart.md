@@ -25,29 +25,17 @@
     <groupId>com.github.shalousun</groupId>
     <artifactId>smart-doc-maven-plugin</artifactId>
     <version>[最新版本]</version>
-    <configuration>
-        <!--指定生成文档的使用的配置文件,配置文件放在自己的项目中-->
-        <configFile>./src/main/resources/smart-doc.json</configFile>
-        <!--指定项目名称-->
-        <projectName>测试</projectName>
-        <!--smart-doc实现自动分析依赖树加载第三方依赖的源码，如果一些框架依赖库加载不到导致报错，这时请使用excludes排除掉-->
-        <excludes>
-            <!--格式为：groupId:artifactId;参考如下-->
-            <!--也可以支持正则式如：com.alibaba:.* -->
-            <exclude>com.alibaba:fastjson</exclude>
-        </excludes>
-        <!--includes配置用于配置加载外部依赖源码,配置后插件会按照配置项加载外部源代码而不是自动加载所有，因此使用时需要注意-->
-        <!--smart-doc能自动分析依赖树加载所有依赖源码，原则上会影响文档构建效率，因此你可以使用includes来让插件加载你配置的组件-->
-        <includes>
-            <!--格式为：groupId:artifactId;参考如下-->
-            <!--也可以支持正则式如：com.alibaba:.* -->
+    <configuration> 
+        <configFile>./src/main/resources/smart-doc.json</configFile>  
+        <projectName>${project.description}</projectName>  
+        <includes>  
             <!-- 使用了mybatis-plus的Page分页需要include所使用的源码包 -->
             <include>com.baomidou:mybatis-plus-extension</include>
             <!-- 使用了mybatis-plus的IPage分页需要include mybatis-plus-core-->
             <include>com.baomidou:mybatis-plus-core</include>
-            <!-- 如果配置了includes的情况下， 使用了jpa的分页需要include所使用的源码包 -->
-            <include>org.springframework.data:spring-data-commons</include>
-        </includes>
+            <!-- 使用了jpa的分页需要include所使用的源码包 -->
+            <include>org.springframework.data:spring-data-commons</include>             
+        </includes> 
     </configuration>
     <executions>
         <execution>
@@ -61,19 +49,8 @@
     </executions>
 </plugin>
 ```
-- `include`配置规则：`groupId:artifactId`，也可以采用正则`groupId:.*`。
-  例如：
-```xml
- <include>com.alibaba:fastjson</include>
- <!--加载groupId为com.alibaba的所有依赖-->
- <include>com.alibaba:.*</include>
-```
-- `exclude`的规则和`include`相同。
 
-
-> 请勿盲目复制上述maven插件的配置项，请先仔细阅读每个配置项的注释，然后根据自己项目情况去配置。
-否则可能造成生成文档时无法加载源代码注释。
-
+插件详细配置请参考具体文档（**插件使用进阶 | maven插件使用进阶**）
 
 #### Use Maven Command
 
