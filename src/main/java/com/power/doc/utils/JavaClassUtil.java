@@ -788,23 +788,19 @@ public class JavaClassUtil {
 
     private static String getReturnGenericType(JavaMethod javaMethod, ClassLoader classLoader) {
         String methodName = javaMethod.getName();
-        String canonicalName = javaMethod.getDeclaringClass().getCanonicalName();
+        String canonicalClassName = javaMethod.getDeclaringClass().getCanonicalName();
         try {
             Class<?> c;
             if (Objects.nonNull(classLoader)) {
-                c = classLoader.loadClass(canonicalName);
+                c = classLoader.loadClass(canonicalClassName);
             } else {
-                c = Class.forName(canonicalName);
+                c = Class.forName(canonicalClassName);
             }
 
-            Optional<String> returnName = Arrays.stream(c.getDeclaredMethods())
-                    .filter(method -> Objects.equals(method.getName(), methodName))
-                    .findFirst()
-                    .map(Method::getGenericReturnType)
-                    .map(Type::getTypeName);
-
-            return StringUtil.trim(returnName.orElse(null));
-        } catch (ClassNotFoundException e) {
+            Method m = c.getDeclaredMethod(methodName);
+            Type t = m.getGenericReturnType();
+            return StringUtil.trim(t.getTypeName());
+        } catch (ClassNotFoundException | NoSuchMethodException  e) {
             return null;
         }
     }
