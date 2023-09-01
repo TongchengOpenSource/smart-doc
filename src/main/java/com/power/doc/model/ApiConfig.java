@@ -146,6 +146,11 @@ public class ApiConfig {
      * adoc flag
      */
     private boolean adoc;
+
+    /**
+     * http flag
+     */
+    private boolean http;
     /**
      * default /src/main/java
      */
@@ -595,6 +600,14 @@ public class ApiConfig {
 
     public void setAdoc(boolean adoc) {
         this.adoc = adoc;
+    }
+
+    public boolean isHttp() {
+        return http;
+    }
+
+    public void setHttp(boolean http) {
+        this.http = http;
     }
 
     public List<ApiDataDictionary> getDataDictionaries() {
