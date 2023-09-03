@@ -1,5 +1,15 @@
 ## 变更日志
 
+### 版本号：2.7.6
+
+- 更新日期: 2023-09-3
+- 更新内容：
+  1. 优化smart-doc常量获取，支持静态导入的常量获取。[qdox #1](https://github.com/smart-doc-group/qdox/pull/1)
+  2. 无源代码第三方接口范型方法的解析支持，[pr#587](https://github.com/smart-doc-group/smart-doc/pull/587)
+  3. 生成Mardown代码块添加语言类型支持，[#566](https://github.com/smart-doc-group/smart-doc/pull/566)
+  4. 修复openapi生成summary和description设置，[#580](https://github.com/smart-doc-group/smart-doc/issues/580)
+  5. 修复生成的openapi.json中接口的路径参数赋予format错误,[#578](https://github.com/smart-doc-group/smart-doc/issues/578)
+
 ### 版本号：2.7.5
 
 - 更新日期: 2023-08-20
