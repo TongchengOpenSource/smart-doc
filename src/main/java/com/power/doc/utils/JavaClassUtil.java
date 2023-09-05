@@ -64,7 +64,7 @@ public class JavaClassUtil {
     public static List<DocJavaField> getFields(JavaClass cls1, int counter, Map<String, DocJavaField> addedFields, ClassLoader classLoader) {
         Map<String, JavaType> actualJavaTypes = new HashMap<>(10);
         List<DocJavaField> fields = getFields(cls1, counter, addedFields, actualJavaTypes, classLoader);
-        List<DocJavaField> convertFields = new ArrayList<>();
+
         for (DocJavaField field : fields) {
             String genericCanonicalName = field.getGenericCanonicalName();
             if (Objects.isNull(genericCanonicalName)) {
@@ -77,9 +77,8 @@ public class JavaClassUtil {
             field.setGenericCanonicalName(genericCanonicalName.replace(genericCanonicalName, actualJavaType.getGenericCanonicalName()));
             field.setFullyQualifiedName(field.getFullyQualifiedName().replace(genericCanonicalName, actualJavaType.getFullyQualifiedName()));
             field.setActualJavaType(actualJavaType.getFullyQualifiedName());
-            convertFields.add(field);
         }
-        return convertFields;
+        return fields;
     }
 
     /**
