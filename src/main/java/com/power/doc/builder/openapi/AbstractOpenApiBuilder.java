@@ -303,7 +303,7 @@ public abstract class AbstractOpenApiBuilder {
         Map<String, Object> schema = new HashMap<>(10);
         String openApiType = DocUtil.javaTypeToOpenApiTypeConvert(header.getType());
         schema.put("type", openApiType);
-        schema.put("format", "int16".equals(header.getType()) ? "int32" : header.getType());
+        schema.put("format", openApiType);
         return schema;
     }
 

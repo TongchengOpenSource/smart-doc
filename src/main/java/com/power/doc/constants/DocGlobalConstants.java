@@ -262,4 +262,6 @@ public interface DocGlobalConstants {
     String DEFAULT_FILTER_METHOD = "*";
 
     String JAR_TEMP = "./smart-temp/";
+
+    String DEFAULT_PRIMITIVE = "defaultPrimitive";
 }

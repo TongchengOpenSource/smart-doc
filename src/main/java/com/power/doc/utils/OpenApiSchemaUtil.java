@@ -32,6 +32,7 @@ import java.util.regex.Pattern;
 
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.StringUtil;
+import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.model.ApiParam;
 
 /**
@@ -86,7 +87,7 @@ public class OpenApiSchemaUtil {
         if (CollectionUtil.isNotEmpty(apiParams) && apiParams.size() == 1
                 && StringUtil.isEmpty(apiParams.get(0).getClassName())
                 && CollectionUtil.isEmpty(apiParams.get(0).getChildren())) {
-            return "string";
+            return DocGlobalConstants.DEFAULT_PRIMITIVE;
         }
         for (ApiParam a : apiParams) {
             if (StringUtil.isNotEmpty(a.getClassName())) {

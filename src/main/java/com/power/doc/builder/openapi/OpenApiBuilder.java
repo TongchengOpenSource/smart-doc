@@ -268,7 +268,7 @@ public class OpenApiBuilder extends AbstractOpenApiBuilder {
     public Map<String, Object> buildComponentsSchema(List<ApiDoc> apiDocs) {
         Map<String, Object> schemas = new HashMap<>(4);
         Map<String, Object> component = new HashMap<>();
-        component.put("string", STRING_COMPONENT);
+        component.put(DEFAULT_PRIMITIVE, STRING_COMPONENT);
         apiDocs.forEach(
                 a -> {
                     List<ApiMethodDoc> apiMethodDocs = a.getList();
