@@ -24,6 +24,7 @@ package com.power.doc.builder.openapi;
 
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.FileUtil;
+import com.power.doc.constants.ComponentTypeEnum;
 import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.constants.Methods;
 import com.power.doc.helper.JavaProjectBuilderHelper;
@@ -88,7 +89,7 @@ public class OpenApiBuilder extends AbstractOpenApiBuilder {
         Set<OpenApiTag> tags = new HashSet<>();
         json.put("tags", tags);
         json.put("paths", buildPaths(config, apiDocList, tags));
-        json.put("components", buildComponentsSchema(apiDocList));
+        json.put("components", buildComponentsSchema(apiDocList, ComponentTypeEnum.getComponentEnumByCode(config.getComponentType())));
 
         String filePath = config.getOutPath();
         filePath = filePath + DocGlobalConstants.OPEN_API_JSON;
@@ -265,7 +266,7 @@ public class OpenApiBuilder extends AbstractOpenApiBuilder {
     }
 
     @Override
-    public Map<String, Object> buildComponentsSchema(List<ApiDoc> apiDocs) {
+    public Map<String, Object> buildComponentsSchema(List<ApiDoc> apiDocs, ComponentTypeEnum componentTypeEnum) {
         Map<String, Object> schemas = new HashMap<>(4);
         Map<String, Object> component = new HashMap<>();
         component.put(DEFAULT_PRIMITIVE, STRING_COMPONENT);
@@ -275,13 +276,13 @@ public class OpenApiBuilder extends AbstractOpenApiBuilder {
                     apiMethodDocs.forEach(
                             method -> {
                                 //request components
-                                String requestSchema = OpenApiSchemaUtil.getClassNameFromParams(method.getRequestParams(), COMPONENT_REQUEST_SUFFIX);
+                                String requestSchema = OpenApiSchemaUtil.getClassNameFromParams(method.getRequestParams());
                                 List<ApiParam> requestParams = method.getRequestParams();
                                 Map<String, Object> prop = buildProperties(requestParams, component, false);
                                 component.put(requestSchema, prop);
                                 //response components
                                 List<ApiParam> responseParams = method.getResponseParams();
-                                String schemaName = OpenApiSchemaUtil.getClassNameFromParams(method.getResponseParams(), COMPONENT_RESPONSE_SUFFIX);
+                                String schemaName = OpenApiSchemaUtil.getClassNameFromParams(method.getResponseParams());
                                 component.put(schemaName, buildProperties(responseParams, component, true));
                             }
                     );

@@ -21,7 +21,7 @@ public class ApiDocTest {
      */
     @Test
     public void testBuilderControllersApi() {
-        ApiConfig config = new ApiConfig();
+        ApiConfig config = ApiConfig.getInstance();
         config.setServerUrl("http://127.0.0.1:8899");
         // config.setStrict(true);
         config.setOpenUrl("http://localhost:7700/api");

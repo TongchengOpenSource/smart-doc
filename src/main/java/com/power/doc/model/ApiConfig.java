@@ -40,6 +40,15 @@ import com.power.doc.model.rpc.RpcApiDependency;
  */
 public class ApiConfig {
 
+    private final static ApiConfig apiConfig = new ApiConfig();
+
+    private ApiConfig() {
+    }
+
+    public static ApiConfig getInstance() {
+        return apiConfig;
+    }
+
     /**
      * Web server base url
      */
@@ -363,6 +372,21 @@ public class ApiConfig {
      * @since 2.6.9
      */
     private boolean randomMock;
+
+    /**
+     * build random component for openApi
+     * @see com.power.doc.constants.ComponentTypeEnum
+     */
+    private Integer componentType;
+
+    public Integer getComponentType() {
+        return componentType;
+    }
+
+    public ApiConfig setComponentType(Integer componentType) {
+        this.componentType = componentType;
+        return this;
+    }
 
     public String getCodePath() {
         return codePath;

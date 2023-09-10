@@ -251,9 +251,6 @@ public interface DocGlobalConstants {
 
     String OPENAPI_3_COMPONENT_KRY = "#/components/schemas/";
 
-    String COMPONENT_REQUEST_SUFFIX = "_request";
-
-    String COMPONENT_RESPONSE_SUFFIX = "_response";
 
     String SWAGGER_FILE_TAG = "formData";
 
