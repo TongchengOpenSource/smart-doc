@@ -376,7 +376,11 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
             methodOrder++;
             apiMethodDoc.setOrder(methodOrder);
             apiMethodDoc.setName(method.getName());
-            apiMethodDoc.setDesc(method.getComment());
+            String common = method.getComment();
+            if (StringUtil.isEmpty(common)) {
+                common = JavaClassUtil.getSameSignatureMethodCommonFromInterface(cls, method);
+            }
+            apiMethodDoc.setDesc(common);
             apiMethodDoc.setAuthor(docJavaMethod.getAuthor());
             apiMethodDoc.setDetail(docJavaMethod.getDetail());
             String methodUid = DocUtil.generateId(clazName + method.getName() + methodOrder);

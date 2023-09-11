@@ -271,6 +271,30 @@ public class JavaClassUtil {
 
 
     /**
+     * Get Common for methods with the same signature from interfaces
+     * @param cls cls
+     * @param method method
+     * @return common
+     */
+    public static String getSameSignatureMethodCommonFromInterface(JavaClass cls, JavaMethod method) {
+
+        List<JavaMethod> methodsBySignature = cls.getMethodsBySignature(method.getName(), method.getParameterTypes(), true, method.isVarArgs());
+
+        for (JavaMethod sameSignatureMethod : methodsBySignature) {
+            if (sameSignatureMethod == method
+                || sameSignatureMethod.getDeclaringClass() == null
+                || !sameSignatureMethod.getDeclaringClass().isInterface()) {
+                continue;
+            }
+            if (sameSignatureMethod.getComment() != null){
+                return sameSignatureMethod.getComment();
+            }
+        }
+        return null;
+    }
+
+
+    /**
      * get enum value
      *
      * @param javaClass    enum class
