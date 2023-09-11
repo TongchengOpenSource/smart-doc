@@ -174,7 +174,8 @@
     }
   ],
   "requestParamsTable": true, // 是否将请求参数表展示在文档中，默认true，@since 2.2.5
-  "responseParamsTable": true //是否将响应参数表展示在文档中, 默认true，@since 2.2.5
+  "responseParamsTable": true, //是否将响应参数表展示在文档中, 默认true，@since 2.2.5
+  "componentType":1 //openapi 生成component key模式。1.随机名称 支持@Validated 2. 用于通过openapi生成代码模式。不支持@Validated
 }
 ```
 **注意：** 如果配置类名时使用到内部类不要写错了，子类是使用`$`符号相连，
@@ -959,5 +960,19 @@ torna环境名称。
 ```json
 {
     "randomMock": false
+}
+```
+
+## randomMock
+* 必填：`false`
+* 类型：`Integer`
+* 默认值: 1
+* 可选值: 1,2
+* @since `2.7.7` :new:
+
+openapi 生成component key模式。1.随机名称 支持@Validated 2. 用于通过openapi生成代码模式。不支持@Validated
+```json
+{
+    "componentType": 1
 }
 ```

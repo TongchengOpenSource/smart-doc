@@ -143,7 +143,8 @@ public void testConstantsRequestParams(@RequestParam(required = false,
 如果是单元测试，配置参考如下
 
 ```java
-ApiConfig config = new ApiConfig();
+ApiConfig config = new ApiConfig();// @Deprecated
+ApiConfig config = ApiConfig.getInstance();
 config.setApiConstants(
        ApiConstant.builder().setConstantsClass(RequestParamConstant.class),
        ApiConstant.builder().setConstantsClass(RequestValueConstant.class),
@@ -294,7 +295,8 @@ public enum OrderEnum {
 代码示例如下：
 
 ```java
-ApiConfig config = new ApiConfig();
+ApiConfig config = new ApiConfig();// @Deprecated
+ApiConfig config = ApiConfig.getInstance();
 //以前的版本为setSourcePaths，SourceCodePath为SourcePath
 config.setSourceCodePaths(
         SourceCodePath.path().setDesc("本项目代码").setPath("src/main/java"),

@@ -369,7 +369,8 @@ Of course, the source code of mybatis-plus must also be introduced into the proj
 Starting from smart-doc version 1.7.8, smart-doc supports the generation of Postman JSON files. You can use smart-doc to generate Postman JSON files for the entire project or all interfaces of a microservice. Then test by importing the JSON file into Postman's Collections. Export JSON.
 
 ```java
-ApiConfig config = new ApiConfig();
+ApiConfig config = new ApiConfig();//  @Deprecated
+ApiConfig config = ApiConfig.getInstance();
 //To export postman, it is recommended to set the server like this, and then establish a server environment variable in postman. When debugging, you only need to modify the value of server according to the actual server.
 config.setServerUrl("http://{{server}}");
 //The config has been omitted, please refer to other documents for detailed configuration

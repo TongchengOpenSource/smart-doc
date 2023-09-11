@@ -142,7 +142,8 @@ Example of a complete configuration file
     }
   ],
   "requestParamsTable": true, // Whether to display the request parameter table in the document, the default is true, @since 2.2.5
-  "responseParamsTable": true // Whether to display the response parameter table in the document, the default is true, @since 2.2.5
+  "responseParamsTable": true, // Whether to display the response parameter table in the document, the default is true, @since 2.2.5
+  "componentType": 1 // openapi component key generator 1:  support @Validated 2: don't support @Validated, for openapi generator
 }
 ```
 
@@ -867,5 +868,19 @@ Whether to display the response parameter table in the document.
 ```json
 {
     "responseParamsTable": true
+}
+```
+
+
+## componentType
+* required: `false`
+* type:`Integer`
+* default: `1`
+* @since `2.7.7` :new:
+
+openapi component key generator 1:  support @Validated 2: don't support @Validated, for openapi generator
+```json
+{
+    "componentType": 1
 }
 ```
