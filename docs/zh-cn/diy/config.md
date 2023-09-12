@@ -963,16 +963,16 @@ torna环境名称。
 }
 ```
 
-## randomMock
-* 必填：`false`
-* 类型：`Integer`
-* 默认值: 1
-* 可选值: 1,2
-* @since `2.7.7` :new:
+## componentType
+* required: `false`
+* type:`String`
+* default: `RANDOM`
+* @since `2.7.8` :new:
 
-openapi 生成component key模式。1.随机名称 支持@Validated 2. 用于通过openapi生成代码模式。不支持@Validated
+openapi component key generator RANDOM :  支持 @Validated 分组校验 NORMAL: 不支持 @Validated, 用于 openapi 生成代码
 ```json
 {
-    "componentType": 1
+    "componentType": "RANDOM"
 }
 ```
+

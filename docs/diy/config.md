@@ -874,13 +874,13 @@ Whether to display the response parameter table in the document.
 
 ## componentType
 * required: `false`
-* type:`Integer`
-* default: `1`
-* @since `2.7.7` :new:
+* type:`String`
+* default: `RANDOM`
+* @since `2.7.8` :new:
 
-openapi component key generator 1:  support @Validated 2: don't support @Validated, for openapi generator
+openapi component key generator RANDOM :  support @Validated NORMAL: don't support @Validated, for openapi generator
 ```json
 {
-    "componentType": 1
+    "componentType": "RANDOM"
 }
 ```
