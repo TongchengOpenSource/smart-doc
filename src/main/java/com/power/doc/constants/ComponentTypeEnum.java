@@ -11,21 +11,21 @@ public enum ComponentTypeEnum {
     /**
      * support @Validated
      */
-    RANDOM(1),
+    RANDOM("RANDOM"),
     /**
      * don't support @Validated,
      * for openapi generator
      */
-    NORMAL(2);
+    NORMAL("NORMAL");
 
-    ComponentTypeEnum(Integer componentType) {
+    ComponentTypeEnum(String componentType) {
         this.componentType = componentType;
     }
 
     /**
-     * openapi 类型
+     * openapi component generator Key type
      */
-    private final Integer componentType;
+    private final String componentType;
 
     public static String getRandomName(ComponentTypeEnum componentTypeEnum, ApiMethodDoc apiMethodDoc) {
         if (componentTypeEnum.equals(RANDOM)) {
@@ -34,11 +34,11 @@ public enum ComponentTypeEnum {
         return StringUtils.EMPTY;
     }
 
-    public Integer getComponentType() {
+    public String getComponentType() {
         return componentType;
     }
 
-    public static ComponentTypeEnum getComponentEnumByCode(Integer code) {
+    public static ComponentTypeEnum getComponentEnumByCode(String code) {
         for (ComponentTypeEnum typeEnum : ComponentTypeEnum.values()) {
             if (typeEnum.getComponentType().equals(code)) {
                 return typeEnum;

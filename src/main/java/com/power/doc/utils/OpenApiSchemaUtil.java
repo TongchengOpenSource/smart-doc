@@ -98,11 +98,11 @@ public class OpenApiSchemaUtil {
                 && CollectionUtil.isEmpty(apiParams.get(0).getChildren())) {
             return DocGlobalConstants.DEFAULT_PRIMITIVE;
         }
-        //随机值
+        //random name
         if (componentTypeEnum.equals(ComponentTypeEnum.RANDOM)) {
             return DigestUtils.md5Hex(GSON.toJson(apiParams));
         }
-        //参数值
+        //className
         for (ApiParam a : apiParams) {
             if (StringUtil.isNotEmpty(a.getClassName())) {
                 return OpenApiSchemaUtil.delClassName(a.getClassName());

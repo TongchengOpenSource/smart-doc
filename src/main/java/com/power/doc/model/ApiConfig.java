@@ -377,13 +377,13 @@ public class ApiConfig {
      * build random component for openApi
      * @see com.power.doc.constants.ComponentTypeEnum
      */
-    private Integer componentType;
+    private String componentType;
 
-    public Integer getComponentType() {
+    public String getComponentType() {
         return componentType;
     }
 
-    public ApiConfig setComponentType(Integer componentType) {
+    public ApiConfig setComponentType(String componentType) {
         this.componentType = componentType;
         return this;
     }
