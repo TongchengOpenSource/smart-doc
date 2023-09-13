@@ -893,7 +893,7 @@ public class DocUtil {
             return new ArrayList<>(0);
         } else {
             ClassLoader classLoader = config.getClassLoader();
-            Set<ApiErrorCode> errorCodeList = new HashSet<>();
+            Set<ApiErrorCode> errorCodeList = new LinkedHashSet<>();
             try {
                 for (ApiErrorCodeDictionary dictionary : errorCodeDictionaries) {
                     Class<?> clzz = dictionary.getEnumClass();
