@@ -31,8 +31,17 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.power.common.util.CollectionUtil;
+import com.power.common.util.MD6Util;
 import com.power.common.util.StringUtil;
+import com.power.doc.constants.ComponentTypeEnum;
+import com.power.doc.constants.DocGlobalConstants;
+import com.power.doc.model.ApiConfig;
+import com.power.doc.model.ApiMethodDoc;
 import com.power.doc.model.ApiParam;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang3.StringUtils;
+
+import static com.power.doc.constants.TornaConstants.GSON;
 
 /**
  * @author yu 2020/11/29.
@@ -81,16 +90,22 @@ public class OpenApiSchemaUtil {
         return map;
     }
 
-    public static String getClassNameFromParams(List<ApiParam> apiParams, String suffix) {
+    public static String getClassNameFromParams(List<ApiParam> apiParams) {
+        ComponentTypeEnum componentTypeEnum = ComponentTypeEnum.getComponentEnumByCode(ApiConfig.getInstance().getComponentType());
         // if array[Primitive] or Primitive
         if (CollectionUtil.isNotEmpty(apiParams) && apiParams.size() == 1
                 && StringUtil.isEmpty(apiParams.get(0).getClassName())
                 && CollectionUtil.isEmpty(apiParams.get(0).getChildren())) {
-            return "string";
+            return DocGlobalConstants.DEFAULT_PRIMITIVE;
         }
+        //random name
+        if (componentTypeEnum.equals(ComponentTypeEnum.RANDOM)) {
+            return DigestUtils.md5Hex(GSON.toJson(apiParams));
+        }
+        //className
         for (ApiParam a : apiParams) {
             if (StringUtil.isNotEmpty(a.getClassName())) {
-                return OpenApiSchemaUtil.delClassName(a.getClassName()) + suffix;
+                return OpenApiSchemaUtil.delClassName(a.getClassName());
             }
         }
         return NO_BODY_PARAM;

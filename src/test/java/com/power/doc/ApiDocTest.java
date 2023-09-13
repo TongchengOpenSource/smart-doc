@@ -19,9 +19,11 @@ public class ApiDocTest {
     /**
      * 包括设置请求头，缺失注释的字段批量在文档生成期使用定义好的注释
      */
+    @Deprecated
     @Test
     public void testBuilderControllersApi() {
-        ApiConfig config = new ApiConfig();
+        @Deprecated
+        ApiConfig config = ApiConfig.getInstance();
         config.setServerUrl("http://127.0.0.1:8899");
         // config.setStrict(true);
         config.setOpenUrl("http://localhost:7700/api");

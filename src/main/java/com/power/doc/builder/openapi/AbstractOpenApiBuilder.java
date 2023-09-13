@@ -1,24 +1,24 @@
 /*
- * smart-doc https://github.com/smart-doc-group/smart-doc
+ *smart-doc https://github.com/smart-doc-group/smart-doc
  *
- * Copyright (C) 2018-2023 smart-doc
+ *Copyright(C)2018-2023smart-doc
  *
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
+ *Licensed to the Apache Software Foundation(ASF)under one
+ *or more contributor license agreements.See the NOTICE file
+ *distributed with this work for additional information
+ *regarding copyright ownership.The ASF licenses this file
+ *to you under the Apache License,Version2.0(the
+ *"License");you may not use this file except in compliance
+ *with the License.You may obtain a copy of the License at
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ *http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ *Unless required by applicable law or agreed to in writing,
+ *software distributed under the License is distributed on an
+ *"AS IS"BASIS,WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *KIND,either express or implied.See the License for the
+ *specific language governing permissions and limitations
+ *under the License.
  */
 
 package com.power.doc.builder.openapi;
@@ -27,6 +27,7 @@ import com.power.common.util.CollectionUtil;
 import com.power.common.util.StringUtil;
 import com.power.doc.builder.DocBuilderTemplate;
 import com.power.doc.builder.ProjectDocConfigBuilder;
+import com.power.doc.constants.ComponentTypeEnum;
 import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.factory.BuildTemplateFactory;
 import com.power.doc.model.*;
@@ -164,7 +165,7 @@ public abstract class AbstractOpenApiBuilder {
         } else if (!isRep && Objects.nonNull(apiMethodDoc.getRequestSchema())) {
             content.put("schema", apiMethodDoc.getRequestSchema());
         } else {
-            content.put("schema", buildBodySchema(apiMethodDoc, isRep));
+            content.put("schema", buildBodySchema(apiMethodDoc, ComponentTypeEnum.getComponentEnumByCode(apiConfig.getComponentType()), isRep));
         }
 
         if (OPENAPI_2_COMPONENT_KRY.equals(componentKey) && !isRep) {
@@ -184,17 +185,18 @@ public abstract class AbstractOpenApiBuilder {
      * @param apiMethodDoc ApiMethodDoc
      * @param isRep        is response
      */
-    public Map<String, Object> buildBodySchema(ApiMethodDoc apiMethodDoc, boolean isRep) {
+    public Map<String, Object> buildBodySchema(ApiMethodDoc apiMethodDoc, ComponentTypeEnum componentTypeEnum, boolean isRep) {
         Map<String, Object> schema = new HashMap<>(10);
         Map<String, Object> innerScheme = new HashMap<>(10);
         String requestRef;
+        String randomName = ComponentTypeEnum.getRandomName(componentTypeEnum, apiMethodDoc);
         if (apiMethodDoc.getContentType().equals(DocGlobalConstants.URL_CONTENT_TYPE)) {
-            requestRef = componentKey + OpenApiSchemaUtil.getClassNameFromParams(apiMethodDoc.getQueryParams(), COMPONENT_REQUEST_SUFFIX);
+            requestRef = componentKey + OpenApiSchemaUtil.getClassNameFromParams(apiMethodDoc.getQueryParams());
         } else {
-            requestRef = componentKey + OpenApiSchemaUtil.getClassNameFromParams(apiMethodDoc.getRequestParams(), COMPONENT_REQUEST_SUFFIX);
+            requestRef = componentKey + OpenApiSchemaUtil.getClassNameFromParams(apiMethodDoc.getRequestParams());
         }
         //remove special characters in url
-        String responseRef = componentKey + OpenApiSchemaUtil.getClassNameFromParams(apiMethodDoc.getResponseParams(), COMPONENT_RESPONSE_SUFFIX);
+        String responseRef = componentKey + OpenApiSchemaUtil.getClassNameFromParams(apiMethodDoc.getResponseParams());
         if (!isRep && CollectionUtil.isNotEmpty(apiMethodDoc.getRequestParams())) {
             if (apiMethodDoc.getIsRequestArray() == 1) {
                 schema.put("type", ARRAY);
@@ -303,7 +305,7 @@ public abstract class AbstractOpenApiBuilder {
         Map<String, Object> schema = new HashMap<>(10);
         String openApiType = DocUtil.javaTypeToOpenApiTypeConvert(header.getType());
         schema.put("type", openApiType);
-        schema.put("format", "int16".equals(header.getType()) ? "int32" : header.getType());
+        schema.put("format", openApiType);
         return schema;
     }
 
@@ -324,7 +326,7 @@ public abstract class AbstractOpenApiBuilder {
      *
      * @param apiDocs List of ApiDoc
      */
-    abstract public Map<String, Object> buildComponentsSchema(List<ApiDoc> apiDocs);
+    abstract public Map<String, Object> buildComponentsSchema(List<ApiDoc> apiDocs, ComponentTypeEnum componentTypeEnum);
 
     /**
      * component schema properties
@@ -390,8 +392,7 @@ public abstract class AbstractOpenApiBuilder {
             if (CollectionUtil.isNotEmpty(apiParam.getChildren())) {
                 if (!apiParam.isSelfReferenceLoop()) {
                     Map<String, Object> arrayRef = new HashMap<>(4);
-                    String suffix = isResp ? COMPONENT_RESPONSE_SUFFIX : COMPONENT_REQUEST_SUFFIX;
-                    String childSchemaName = OpenApiSchemaUtil.getClassNameFromParams(apiParam.getChildren(), suffix);
+                    String childSchemaName = OpenApiSchemaUtil.getClassNameFromParams(apiParam.getChildren());
                     if (childSchemaName.contains(OpenApiSchemaUtil.NO_BODY_PARAM)) {
                         propertiesData.put("type", "object");
                         propertiesData.put("description", apiParam.getDesc() + "(object)");
@@ -417,9 +418,8 @@ public abstract class AbstractOpenApiBuilder {
             if (CollectionUtil.isNotEmpty(apiParam.getChildren())) {
                 propertiesData.put("type", "object");
                 propertiesData.put("description", apiParam.getDesc() + "(object)");
-                String suffix = isResp ? COMPONENT_RESPONSE_SUFFIX : COMPONENT_REQUEST_SUFFIX;
                 if (!apiParam.isSelfReferenceLoop()) {
-                    String childSchemaName = OpenApiSchemaUtil.getClassNameFromParams(apiParam.getChildren(), suffix);
+                    String childSchemaName = OpenApiSchemaUtil.getClassNameFromParams(apiParam.getChildren());
                     if (childSchemaName.contains(OpenApiSchemaUtil.NO_BODY_PARAM)) {
                         propertiesData.put("type", "object");
                         propertiesData.put("description", apiParam.getDesc() + "(object)");
