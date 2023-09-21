@@ -55,7 +55,9 @@ mvn clean install -Dmaven.test.skip=true
 
 ## TODO
 
-- Jakarta RS-API 2.x
+- GRPC
+- SOCKET
+- WORD
 
 ## Who is using
 
@@ -91,4 +93,4 @@ file for details.
 
 ## Contact
 
-Email： 836575280@qq.com
+Email： opensource@ly.com
