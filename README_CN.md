@@ -59,7 +59,9 @@ mvn clean install -Dmaven.test.skip=true
 
 ## TODO
 
-- Jakarta RS-API 2.x
+- GRPC
+- SOCKET
+- WORD
 
 ## License
 
@@ -107,9 +109,3 @@ the [LICENSE](https://gitee.com/smart-doc-team/smart-doc/blob/master/LICENSE) fi
 <img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/smart-doc-qq2.jpeg" title="qq群2" width="200px" height="210px"/>
 
 > 1群已满，有问题请加2群。
-
-## Donate
-
-如果您觉得我们的开源软件对你有所帮助，请扫下方二维码打赏我们一杯咖啡
-
-<img src="https://images.gitee.com/uploads/images/2020/0831/225756_9aecdd4d_144669.png" width="200px" height="210px"/>
