@@ -73,6 +73,6 @@ Thanks to [JetBrains SoftWare](https://www.jetbrains.com) for providing free Ope
 
 ## Contact
 
-Email： 836575280@qq.com
+Email： opensource@ly.com
 
 
