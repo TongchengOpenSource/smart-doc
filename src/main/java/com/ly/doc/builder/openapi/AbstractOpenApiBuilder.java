@@ -189,6 +189,20 @@ public abstract class AbstractOpenApiBuilder {
     public Map<String, Object> buildBodySchema(ApiMethodDoc apiMethodDoc, ComponentTypeEnum componentTypeEnum, boolean isRep) {
         Map<String, Object> schema = new HashMap<>(10);
         Map<String, Object> innerScheme = new HashMap<>(10);
+        // For response
+        if (isRep) {
+            String responseRef = componentKey + OpenApiSchemaUtil.getClassNameFromParams(apiMethodDoc.getResponseParams());
+            if (apiMethodDoc.getIsResponseArray() == 1) {
+                schema.put("type", ARRAY);
+                innerScheme.put("$ref", responseRef);
+                schema.put("items", innerScheme);
+            } else if (CollectionUtil.isNotEmpty(apiMethodDoc.getResponseParams())) {
+                schema.put("$ref", responseRef);
+            }
+            return schema;
+        }
+
+        // for request
         String requestRef;
         String randomName = ComponentTypeEnum.getRandomName(componentTypeEnum, apiMethodDoc);
         if (apiMethodDoc.getContentType().equals(DocGlobalConstants.URL_CONTENT_TYPE)) {
@@ -197,22 +211,13 @@ public abstract class AbstractOpenApiBuilder {
             requestRef = componentKey + OpenApiSchemaUtil.getClassNameFromParams(apiMethodDoc.getRequestParams());
         }
         //remove special characters in url
-        String responseRef = componentKey + OpenApiSchemaUtil.getClassNameFromParams(apiMethodDoc.getResponseParams());
-        if (!isRep && CollectionUtil.isNotEmpty(apiMethodDoc.getRequestParams())) {
+        if (CollectionUtil.isNotEmpty(apiMethodDoc.getRequestParams())) {
             if (apiMethodDoc.getIsRequestArray() == 1) {
                 schema.put("type", ARRAY);
                 innerScheme.put("$ref", requestRef);
                 schema.put("items", innerScheme);
             } else {
                 schema.put("$ref", requestRef);
-            }
-        } else {
-            if (apiMethodDoc.getIsResponseArray() == 1) {
-                schema.put("type", ARRAY);
-                innerScheme.put("$ref", responseRef);
-                schema.put("items", innerScheme);
-            } else if (CollectionUtil.isNotEmpty(apiMethodDoc.getResponseParams())) {
-                schema.put("$ref", responseRef);
             }
         }
         return schema;

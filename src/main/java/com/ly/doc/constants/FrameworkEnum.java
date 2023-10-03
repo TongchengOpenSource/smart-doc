@@ -32,22 +32,22 @@ public enum FrameworkEnum {
     /**
      * Apache Dubbo
      */
-    DUBBO("dubbo", "com.power.doc.template.RpcDocBuildTemplate"),
+    DUBBO("dubbo", "com.ly.doc.template.RpcDocBuildTemplate"),
 
     /**
      * Spring Framework
      */
-    SPRING("spring", "com.power.doc.template.SpringBootDocBuildTemplate"),
+    SPRING("spring", "com.ly.doc.template.SpringBootDocBuildTemplate"),
 
     /**
      * Solon
      */
-    SOLON("solon", "com.power.doc.template.SolonDocBuildTemplate"),
+    SOLON("solon", "com.ly.doc.template.SolonDocBuildTemplate"),
 
     /**
      * JAX-RS
      */
-    JAX_RS("JAX-RS", "com.power.doc.template.JaxrsDocBuildTemplate");
+    JAX_RS("JAX-RS", "com.ly.doc.template.JaxrsDocBuildTemplate");
 
     /**
      * Framework name
