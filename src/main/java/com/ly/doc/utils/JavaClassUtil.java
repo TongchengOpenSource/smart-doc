@@ -95,17 +95,17 @@ public class JavaClassUtil {
         List<DocJavaField> fieldList = new ArrayList<>();
         if (Objects.isNull(cls1)) {
             return fieldList;
-        } else if ("Object".equals(cls1.getSimpleName()) || "Timestamp".equals(cls1.getSimpleName()) ||
-                "Date".equals(cls1.getSimpleName()) || "Locale".equals(cls1.getSimpleName())
-                || "ClassLoader".equals(cls1.getSimpleName()) || JavaClassValidateUtil.isMap(cls1.getFullyQualifiedName())
-                || cls1.isEnum() || "Serializable".equals(cls1.getSimpleName())
-                || "ZonedDateTime".equals(cls1.getSimpleName())) {
+        }
+        // ignore enum class
+        if (cls1.isEnum()){
             return fieldList;
         }
+        // ignore class in jdk
         String className = cls1.getFullyQualifiedName();
-        if (cls1.isInterface() &&
-                !JavaClassValidateUtil.isCollection(className) &&
-                !JavaClassValidateUtil.isMap(className)) {
+        if (JavaClassValidateUtil.isJdkClass(className)) {
+            return fieldList;
+        }
+        if (cls1.isInterface()) {
             List<JavaMethod> methods = cls1.getMethods();
             for (JavaMethod javaMethod : methods) {
                 String methodName = javaMethod.getName();
@@ -140,22 +140,18 @@ public class JavaClassUtil {
                 addedFields.put(methodName, docJavaField);
             }
         }
-        // ignore enum parent class
-        if (actualJavaTypes == null) {
-            actualJavaTypes = new HashMap<>(10);
-        }
-        if (!cls1.isEnum()) {
-            JavaClass parentClass = cls1.getSuperJavaClass();
-            if (Objects.nonNull(parentClass) && !"java.lang.Object".equals(parentClass.getName())) {
-                getFields(parentClass, counter, addedFields, actualJavaTypes, classLoader);
-            }
 
-            List<JavaType> implClasses = cls1.getImplements();
-            for (JavaType type : implClasses) {
-                JavaClass javaClass = (JavaClass) type;
-                getFields(javaClass, counter, addedFields, actualJavaTypes, classLoader);
-            }
+        JavaClass parentClass = cls1.getSuperJavaClass();
+        if (Objects.nonNull(parentClass)) {
+            getFields(parentClass, counter, addedFields, actualJavaTypes, classLoader);
         }
+
+        List<JavaType> implClasses = cls1.getImplements();
+        for (JavaType type : implClasses) {
+            JavaClass javaClass = (JavaClass) type;
+            getFields(javaClass, counter, addedFields, actualJavaTypes, classLoader);
+        }
+
         actualJavaTypes.putAll(getActualTypesMap(cls1));
         List<JavaMethod> javaMethods = cls1.getMethods();
         for (JavaMethod method : javaMethods) {
