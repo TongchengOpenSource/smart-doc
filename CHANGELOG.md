@@ -1,5 +1,10 @@
 ## smart-doc版本
 
+### 版本号：2.7.8
+- 更新日期: 
+- 更新内容：
+  1. 修复Java 16+版本反射获取字段是jdk中的类时异常 [#615](https://github.com/smart-doc-group/smart-doc/issues/615)
+
 ### 版本号：2.7.7
 
 - 更新日期: 2023-09-11
