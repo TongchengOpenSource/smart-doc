@@ -13,6 +13,7 @@ assignees: ''
 * smart-doc version:
 * plugin version (e.g. smart-doc-maven-plugin or smart-doc-gradle-plugin):
 * build tool version(maven or gradle):
+* jdk version:
 
 ## Expected Behavior(您期望的结果)
 
