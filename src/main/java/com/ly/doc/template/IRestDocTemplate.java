@@ -985,7 +985,6 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                 .collect(Collectors.groupingBy(e -> Objects.equals(e.getType(), DocGlobalConstants.PARAM_TYPE_FILE)));
         List<FormData> fileFormDataList = formDataGroupMap.getOrDefault(Boolean.TRUE, new ArrayList<>());
         if (hasFormDataUploadFile) {
-            formDataList = formDataGroupMap.getOrDefault(Boolean.FALSE, new ArrayList<>());
             apiMethodDoc.setContentType(FILE_CONTENT_TYPE);
         }
 
