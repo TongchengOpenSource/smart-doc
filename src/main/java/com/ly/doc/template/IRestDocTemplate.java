@@ -930,6 +930,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                 }
                 formData.setDescription(comment);
                 formData.setValue(mockValue);
+                formData.setSrc(new ArrayList(0));
                 formDataList.add(formData);
             } else if (JavaClassValidateUtil.isPrimitive(typeName) && !requestParam) {
                 FormData formData = new FormData();

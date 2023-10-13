@@ -28,7 +28,7 @@ public class FormData {
     private String key;
     private String type;
     private String description;
-    private String src;
+    private Object src;
     private String value;
     /**
      * openapi items
@@ -60,11 +60,11 @@ public class FormData {
         this.type = type;
     }
 
-    public String getSrc() {
+    public Object getSrc() {
         return src;
     }
 
-    public void setSrc(String src) {
+    public void setSrc(Object src) {
         this.src = src;
     }
 
@@ -87,11 +87,12 @@ public class FormData {
     @Override
     public String toString() {
         return "FormData{" +
-            "key='" + key + '\'' +
-            ", type='" + type + '\'' +
-            ", description='" + description + '\'' +
-            ", src='" + src + '\'' +
-            ", value='" + value + '\'' +
-            '}';
+                "key='" + key + '\'' +
+                ", type='" + type + '\'' +
+                ", description='" + description + '\'' +
+                ", src=" + src +
+                ", value='" + value + '\'' +
+                ", hasItems=" + hasItems +
+                '}';
     }
 }
