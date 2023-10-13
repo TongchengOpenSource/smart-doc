@@ -60,7 +60,7 @@ public class JavaFieldUtil {
      */
     public static void buildCustomField(StringBuilder data0, String typeSimpleName, CustomField customField) {
         Object val = customField.getValue();
-        if (null != val) {
+        if (Objects.nonNull(val)) {
             if (DocUtil.javaPrimaryType(typeSimpleName)) {
                 data0.append(val).append(",");
             } else {
@@ -70,10 +70,10 @@ public class JavaFieldUtil {
     }
 
     /**
-     * @param paramsComments 参数列表
-     * @param paramName      参数名称
-     * @param typeName       参数数据类型
-     * @param simpleTypeName 参数简单数据类型
+     * @param paramsComments param comments
+     * @param paramName      param name
+     * @param typeName       param type
+     * @param simpleTypeName simple type name
      * @return mock value
      */
     public static String createMockValue(Map<String, String> paramsComments, String paramName, String typeName, String simpleTypeName) {
