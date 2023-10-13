@@ -288,7 +288,7 @@ public class JsonBuildHelper extends BaseHelper {
                 CustomField customResponseField = CustomField.nameEquals(key, builder.getCustomRespFieldMap());
                 CustomField customRequestField = CustomField.nameEquals(key, builder.getCustomReqFieldMap());
                 if (Objects.nonNull(customRequestField)) {
-                    if (JavaClassUtil.isTargetChildClass(typeName, customRequestField.getOwnerClassName()) && (customRequestField.isIgnore())
+                    if (JavaClassUtil.isTargetChildClass(docField.getDeclaringClassName(), customRequestField.getOwnerClassName()) && (customRequestField.isIgnore())
                             && !isResp) {
                         continue;
                     } else {
@@ -296,7 +296,7 @@ public class JsonBuildHelper extends BaseHelper {
                     }
                 }
                 if (Objects.nonNull(customResponseField)) {
-                    if (JavaClassUtil.isTargetChildClass(typeName, customResponseField.getOwnerClassName()) && (customResponseField.isIgnore())
+                    if (JavaClassUtil.isTargetChildClass(docField.getDeclaringClassName(), customResponseField.getOwnerClassName()) && (customResponseField.isIgnore())
                             && isResp) {
                         continue;
                     } else {

@@ -197,11 +197,11 @@ public class ParamsBuildHelper extends BaseHelper {
 
                 CustomField customResponseField = CustomField.nameEquals(key, projectBuilder.getCustomRespFieldMap());
                 CustomField customRequestField = CustomField.nameEquals(key, projectBuilder.getCustomReqFieldMap());
-                if (customResponseField != null && JavaClassUtil.isTargetChildClass(simpleName, customResponseField.getOwnerClassName())
+                if (customResponseField != null && JavaClassUtil.isTargetChildClass(docField.getDeclaringClassName(), customResponseField.getOwnerClassName())
                         && (customResponseField.isIgnore()) && isResp) {
                     continue;
                 }
-                if (customRequestField != null && JavaClassUtil.isTargetChildClass(simpleName, customRequestField.getOwnerClassName())
+                if (customRequestField != null && JavaClassUtil.isTargetChildClass(docField.getDeclaringClassName(), customRequestField.getOwnerClassName())
                         && (customRequestField.isIgnore()) && !isResp) {
                     continue;
                 }
