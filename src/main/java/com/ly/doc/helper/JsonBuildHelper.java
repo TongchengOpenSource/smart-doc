@@ -31,6 +31,7 @@ import java.util.Set;
 import com.ly.doc.constants.DocAnnotationConstants;
 import com.ly.doc.constants.DocGlobalConstants;
 import com.ly.doc.utils.*;
+import com.power.common.util.CollectionUtil;
 import com.power.common.util.StringUtil;
 import com.ly.doc.builder.ProjectDocConfigBuilder;
 import com.ly.doc.constants.DocTags;
@@ -256,6 +257,9 @@ public class JsonBuildHelper extends BaseHelper {
                 for (JavaAnnotation annotation : annotations) {
                     String annotationName = annotation.getType().getValue();
                     if (ValidatorAnnotations.NULL.equals(annotationName) && !isResp) {
+                        if (CollectionUtil.isEmpty(groupClasses)) {
+                            continue out;
+                        }
                         Set<String> groupClassList = JavaClassUtil.getParamGroupJavaClass(annotation);
                         for (String groupClass : groupClassList) {
                             if (groupClasses.contains(groupClass)) {
@@ -283,7 +287,7 @@ public class JsonBuildHelper extends BaseHelper {
 
                 CustomField customResponseField = CustomField.nameEquals(key, builder.getCustomRespFieldMap());
                 CustomField customRequestField = CustomField.nameEquals(key, builder.getCustomReqFieldMap());
-                if (customRequestField != null) {
+                if (Objects.nonNull(customRequestField)) {
                     if (JavaClassUtil.isTargetChildClass(typeName, customRequestField.getOwnerClassName()) && (customRequestField.isIgnore())
                             && !isResp) {
                         continue;
@@ -291,7 +295,7 @@ public class JsonBuildHelper extends BaseHelper {
                         fieldName = StringUtil.isEmpty(customRequestField.getReplaceName()) ? fieldName : customRequestField.getReplaceName();
                     }
                 }
-                if (customResponseField != null) {
+                if (Objects.nonNull(customResponseField)) {
                     if (JavaClassUtil.isTargetChildClass(typeName, customResponseField.getOwnerClassName()) && (customResponseField.isIgnore())
                             && isResp) {
                         continue;

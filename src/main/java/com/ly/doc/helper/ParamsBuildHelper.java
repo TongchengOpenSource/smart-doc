@@ -220,6 +220,9 @@ public class ParamsBuildHelper extends BaseHelper {
                             fieldName = StringUtil.removeQuotes(annotation.getProperty(DocAnnotationConstants.VALUE_PROP).toString());
                         }
                     } else if (ValidatorAnnotations.NULL.equals(simpleAnnotationName) && !isResp) {
+                        if (CollectionUtil.isEmpty(groupClasses)) {
+                            continue out;
+                        }
                         Set<String> groupClassList = JavaClassUtil.getParamGroupJavaClass(annotation);
                         for (String javaClass : groupClassList) {
                             if (groupClasses.contains(javaClass)) {
