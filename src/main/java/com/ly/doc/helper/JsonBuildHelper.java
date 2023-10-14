@@ -303,6 +303,7 @@ public class JsonBuildHelper extends BaseHelper {
                         fieldName = StringUtil.isEmpty(customResponseField.getReplaceName()) ? fieldName : customResponseField.getReplaceName();
                     }
                 }
+                fieldName = fieldName.trim();
                 data0.append("\"").append(fieldName).append("\":");
                 String fieldValue = getFieldValueFromMock(subTypeName, tagsMap, typeSimpleName);
                 if (JavaClassValidateUtil.isPrimitive(subTypeName)) {
