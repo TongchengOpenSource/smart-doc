@@ -284,6 +284,7 @@ public class ParamsBuildHelper extends BaseHelper {
                         && JavaClassUtil.isTargetChildClass(simpleName, customResponseField.getOwnerClassName()) && isResp) {
                     fieldName = customResponseField.getReplaceName();
                 }
+                fieldName = fieldName.trim();
                 // Analyzing File Type Field
                 if (JavaClassValidateUtil.isFile(fieldGicName)) {
                     ApiParam param = ApiParam.of().setField(pre + fieldName).setType("file")
