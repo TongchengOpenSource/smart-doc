@@ -1,14 +1,14 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-    <groupId>com.github.shalousun</groupId>
+    <groupId>com.ly.smart-doc</groupId>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>smart-doc</artifactId>
     <packaging>jar</packaging>
-    <version>2.7.6</version>
+    <version>2.7.8</version>
 
     <name>smart-doc</name>
-    <url>https://github.com/smart-doc-group/smart-doc.git</url>
+    <url>https://github.com/TongchengOpenSource/smart-doc.git</url>
     <description>Smart-doc is a tool that supports both JAVA RESTFUL API and Apache Dubbo RPC interface document
         generation.
     </description>
@@ -21,9 +21,9 @@
         </license>
     </licenses>
     <scm>
-        <url>https://github.com/smart-doc-group/smart-doc.git</url>
-        <connection>scm:https://github.com/smart-doc-group/smart-doc.git</connection>
-        <developerConnection>scm:https://github.com/smart-doc-group/smart-doc.git</developerConnection>
+        <url>https://github.com/TongchengOpenSource/smart-doc.git</url>
+        <connection>scm:https://github.com/TongchengOpenSource/smart-doc.git</connection>
+        <developerConnection>scm:https://github.com/TongchengOpenSource/smart-doc.git</developerConnection>
     </scm>
     <developers>
         <developer>
@@ -61,7 +61,7 @@
         <dependency>
             <groupId>com.github.shalousun</groupId>
             <artifactId>common-util</artifactId>
-            <version>2.2.0</version>
+            <version>2.2.1</version>
         </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>
@@ -141,12 +141,12 @@
             </build>
             <distributionManagement>
                 <snapshotRepository>
-                    <id>oss</id>
-                    <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+                    <id>oss01</id>
+                    <url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
                 </snapshotRepository>
                 <repository>
-                    <id>oss</id>
-                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+                    <id>oss01</id>
+                    <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
                 </repository>
             </distributionManagement>
         </profile>

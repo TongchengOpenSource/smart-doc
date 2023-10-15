@@ -1,12 +1,30 @@
 ## smart-doc版本
 
+### 版本号：3.0.0
+- 更新日期: 
+- 更新内容：
+  1. 修复Java 16+版本反射获取字段是jdk中的类时异常 [#615](https://github.com/smart-doc-group/smart-doc/issues/615)
+  2. 修复枚举字典显示错乱问题，维持代码中编写的顺序，[#603](https://github.com/TongchengOpenSource/smart-doc/issues/603)
+  3. 支持获取接口的注释，[#573](https://github.com/TongchengOpenSource/smart-doc/pull/573)
+  4. 生成html页面支持多文件上传。[#594](https://github.com/TongchengOpenSource/smart-doc/issues/594)
+  5. 无参请求生成时生成的OpenAPI文档错误。[#616](https://github.com/TongchengOpenSource/smart-doc/issues/616)
+  6. 扫描文档时丢弃对JDK原生类型的反射，避免高版本JDK反射时报错。[pr#621](https://github.com/TongchengOpenSource/smart-doc/pull/621)
+  7. 修复生成postman collection后导入到postman缺少file文件参数问题。[#622](https://github.com/TongchengOpenSource/smart-doc/issues/622)
+
+
+### 版本号：2.7.7
+
+- 更新日期: 2023-09-11
+- 更新内容：
+  1. fix 2.7.6版本文档丢字段的bug.
+
 ### 版本号：2.7.6
 
 - 更新日期: 2023-09-3
 - 更新内容：
   1. 优化smart-doc常量获取，支持静态导入的常量获取。[qdox #1](https://github.com/smart-doc-group/qdox/pull/1)
   2. 无源代码第三方接口范型方法的解析支持，[pr#587](https://github.com/smart-doc-group/smart-doc/pull/587)
-  3. 生成Mardown代码块添加语言类型支持，[#566](https://github.com/smart-doc-group/smart-doc/pull/566)
+  3. 生成Markdown代码块添加语言类型支持，[#566](https://github.com/smart-doc-group/smart-doc/pull/566)
   4. 修复openapi生成summary和description设置，[#580](https://github.com/smart-doc-group/smart-doc/issues/580)
   5. 修复生成的openapi.json中接口的路径参数赋予format错误,[#578](https://github.com/smart-doc-group/smart-doc/issues/578)
 
