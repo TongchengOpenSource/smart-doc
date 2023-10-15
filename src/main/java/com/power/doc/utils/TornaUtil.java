@@ -38,14 +38,7 @@ import com.power.common.util.OkHttp3Util;
 import com.power.common.util.StringUtil;
 import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.constants.TornaConstants;
-import com.power.doc.model.ApiConfig;
-import com.power.doc.model.ApiDocDict;
-import com.power.doc.model.ApiErrorCode;
-import com.power.doc.model.ApiMethodDoc;
-import com.power.doc.model.ApiParam;
-import com.power.doc.model.ApiReqParam;
-import com.power.doc.model.DataDict;
-import com.power.doc.model.RpcJavaMethod;
+import com.power.doc.model.*;
 import com.power.doc.model.rpc.RpcApiDependency;
 import com.power.doc.model.torna.Apis;
 import com.power.doc.model.torna.CommonErrorCode;
@@ -333,11 +326,13 @@ public class TornaUtil {
      *
      * @param apiMethodDoc 请求参数
      */
-    public static void setTornaArrayTags(JavaMethod method, ApiMethodDoc apiMethodDoc) {
+    public static void setTornaArrayTags(JavaMethod method, ApiMethodDoc apiMethodDoc, ApiConfig apiConfig) {
         String returnTypeName = method.getReturnType().getCanonicalName();
         apiMethodDoc.setIsRequestArray(0);
         apiMethodDoc.setIsResponseArray(0);
-        boolean respArray = JavaClassValidateUtil.isCollection(returnTypeName) || JavaClassValidateUtil.isArray(returnTypeName);
+        String responseBodyAdviceClassName = apiConfig.getResponseBodyAdvice().getClassName();
+        String realReturnTypeName = StringUtil.isEmpty(responseBodyAdviceClassName) ? returnTypeName : responseBodyAdviceClassName;
+        boolean respArray = JavaClassValidateUtil.isCollection(realReturnTypeName) || JavaClassValidateUtil.isArray(realReturnTypeName);
         //response
         if (respArray) {
             apiMethodDoc.setIsResponseArray(1);
@@ -347,9 +342,11 @@ public class TornaUtil {
         }
         //request
         if (CollectionUtil.isNotEmpty(method.getParameters())) {
+            String requestBodyAdviceClassName = apiConfig.getRequestBodyAdvice().getClassName();
             for (JavaParameter param : method.getParameters()) {
                 String typeName = param.getType().getCanonicalName();
-                boolean reqArray = JavaClassValidateUtil.isCollection(typeName) || JavaClassValidateUtil.isArray(typeName);
+                String realTypeName = StringUtil.isEmpty(requestBodyAdviceClassName) ? typeName : requestBodyAdviceClassName;
+                boolean reqArray = JavaClassValidateUtil.isCollection(realTypeName) || JavaClassValidateUtil.isArray(realTypeName);
                 if (reqArray) {
                     apiMethodDoc.setIsRequestArray(1);
                     String className = getType(param.getType().getGenericCanonicalName());
