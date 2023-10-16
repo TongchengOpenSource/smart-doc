@@ -23,30 +23,19 @@
 
 package com.ly.doc.utils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.ly.doc.constants.DocGlobalConstants;
+import com.ly.doc.model.*;
 import com.ly.doc.model.rpc.RpcApiDependency;
 import com.power.common.model.EnumDictionary;
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.OkHttp3Util;
 import com.power.common.util.StringUtil;
 import com.ly.doc.constants.TornaConstants;
-import com.ly.doc.model.ApiConfig;
-import com.ly.doc.model.ApiDocDict;
-import com.ly.doc.model.ApiErrorCode;
-import com.ly.doc.model.ApiMethodDoc;
-import com.ly.doc.model.ApiParam;
-import com.ly.doc.model.ApiReqParam;
-import com.ly.doc.model.DataDict;
-import com.ly.doc.model.RpcJavaMethod;
 import com.ly.doc.model.torna.Apis;
 import com.ly.doc.model.torna.CommonErrorCode;
 import com.ly.doc.model.torna.DebugEnv;
@@ -335,7 +324,7 @@ public class TornaUtil {
         String returnTypeName = method.getReturnType().getCanonicalName();
         apiMethodDoc.setIsRequestArray(0);
         apiMethodDoc.setIsResponseArray(0);
-        String responseBodyAdviceClassName = apiConfig.getResponseBodyAdvice().getClassName();
+        String responseBodyAdviceClassName = Optional.ofNullable(apiConfig).map(ApiConfig::getResponseBodyAdvice).map(BodyAdvice::getClassName).orElse(StringUtil.EMPTY);
         String realReturnTypeName = StringUtil.isEmpty(responseBodyAdviceClassName) ? returnTypeName : responseBodyAdviceClassName;
         boolean respArray = JavaClassValidateUtil.isCollection(realReturnTypeName) || JavaClassValidateUtil.isArray(realReturnTypeName);
         //response
@@ -347,7 +336,7 @@ public class TornaUtil {
         }
         //request
         if (CollectionUtil.isNotEmpty(method.getParameters())) {
-            String requestBodyAdviceClassName = apiConfig.getRequestBodyAdvice().getClassName();
+            String requestBodyAdviceClassName = Optional.ofNullable(apiConfig).map(ApiConfig::getRequestBodyAdvice).map(BodyAdvice::getClassName).orElse(StringUtil.EMPTY);
             for (JavaParameter param : method.getParameters()) {
                 String typeName = param.getType().getCanonicalName();
                 String realTypeName = StringUtil.isEmpty(requestBodyAdviceClassName) ? typeName : requestBodyAdviceClassName;
