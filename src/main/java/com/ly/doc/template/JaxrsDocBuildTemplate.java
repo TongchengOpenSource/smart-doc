@@ -249,7 +249,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDo
             apiMethodDoc.setRequestSchema(docJavaMethod.getRequestSchema());
             apiMethodDoc.setResponseParams(responseParams);
             methodDocList.add(apiMethodDoc);
-            TornaUtil.setTornaArrayTags(docJavaMethod.getJavaMethod(), apiMethodDoc);
+            TornaUtil.setTornaArrayTags(docJavaMethod.getJavaMethod(), apiMethodDoc, apiConfig);
         }
         return methodDocList;
     }

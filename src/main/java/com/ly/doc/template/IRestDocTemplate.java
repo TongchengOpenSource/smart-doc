@@ -473,7 +473,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
             apiMethodDoc.setRequestSchema(docJavaMethod.getRequestSchema());
             apiMethodDoc.setResponseParams(responseParams);
 
-            TornaUtil.setTornaArrayTags(docJavaMethod.getJavaMethod(), apiMethodDoc);
+            TornaUtil.setTornaArrayTags(docJavaMethod.getJavaMethod(), apiMethodDoc, apiConfig);
             methodDocList.add(apiMethodDoc);
         }
 
