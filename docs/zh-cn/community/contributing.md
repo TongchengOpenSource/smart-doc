@@ -10,7 +10,7 @@ smart-doc自2018年开源以来，受到社区很多小伙伴的关注。 衷心
 
 2、Clone您fork的项目到本地仓库，创建其他分支以进行修改。
 
-3、在本地环境中运行smart-doc，并确认所做的改动是否生效。可参考 快速开始 了解如何启动smart-doc并生成API文档。
+3、在本地环境中运行smart-doc，并确认所做的改动是否生效。可参考 [快速开始](https://smart-doc-group.github.io/#/zh-cn/start/quickstart) 了解如何启动smart-doc并生成API文档。
 
 4、完成修改后，推送提交并提交Pull Request给smart-doc的主仓库。请参考Pull Request流程 来提交合并请求。
 
