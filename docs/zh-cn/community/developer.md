@@ -32,7 +32,7 @@ smart-doc社区包含Maintainer、Committer、Contributor等角色，每种角�
 
 成为Contributor的标准：
 - 提交过PR并被合并，包括不限于文档、代码、案例等；
-- 在iLogtail开源社区参与相关问题讨论，并能积极回复。
+- 在smart-doc开源社区参与相关问题讨论，并能积极回复。
 
 ## 如何成为Contributor及Committer
 只要您对smart-doc项目有兴趣，每个人都可以成为smart-doc项目的Contributor。
