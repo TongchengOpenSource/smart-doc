@@ -19,7 +19,7 @@ smart-doc社区包含Maintainer、Committer、Contributor等角色，每种角�
 是对smart-doc社区某些特定领域做出突出贡献的人 
 
 成为Committer的标准：
-- 能够长时间地并持续性地贡献Issue、PR 代码、测试用例、文档、案例）；
+- 能够长时间地并持续性地贡献Issue、PR 代码、测试用例、文档、案例)，社区贡献10个及以上PR；
 - 参与重要 Feature 的讨论、设计、开发、测试；
 - 参与 Code Review。
 
