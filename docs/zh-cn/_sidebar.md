@@ -27,5 +27,5 @@
 - [扩展开发](zh-cn/expand.md)
 - [变更日志](zh-cn/changelog.md)
 - 社区
-  - [团队](zh-cn/community/team.md)
-  - [开源贡献](zh-cn/community/contributing.md)
+  - [贡献指南](zh-cn/community/contributing.md)
+  - [开发者](zh-cn/community/developer.md)
