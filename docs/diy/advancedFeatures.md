@@ -292,13 +292,13 @@ Let's first look at how to use the classifier to load the source code package.
 <dependency>
      <groupId>com.github.shalousun</groupId>
      <artifactId>common-util</artifactId>
-     <version>1.8.6</version>
+     <version>2.1.1</version>
 </dependency>
 <!--Depending on the library source code, plug-ins using smart-doc do not need to use this method to load sources-->
 <dependency>
      <groupId>com.github.shalousun</groupId>
      <artifactId>common-util</artifactId>
-     <version>1.8.6</version>
+     <version>2.1.1</version>
      <classifier>sources</classifier>
      <!--Set to test, the source will not be put into the final product package when the project is released-->
      <scope>test</scope>

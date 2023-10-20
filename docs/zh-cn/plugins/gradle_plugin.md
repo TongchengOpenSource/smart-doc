@@ -13,7 +13,7 @@
 Using the plugins DSL:
 ```gradle
 plugins {
-  id "com.github.shalousun.smart-doc" version "[最新版本]"
+  id "com.ly.smart-doc" version "[最新版本]"
 }
 ```
 #### Using legacy plugin application
@@ -33,10 +33,10 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.github.shalousun:smart-doc-gradle-plugin:[最新版本]'
+        classpath 'com.ly.smart-doc:smart-doc-gradle-plugin:[最新版本]'
     }
 }
-apply(plugin = "com.github.shalousun.smart-doc")
+apply(plugin = "com.ly.smart-doc")
 ```
 
 **`buildscript`配置添加到`build.gradle`的顶部** 。
@@ -67,7 +67,7 @@ smartdoc {
 
 ```gradle
 subprojects{
-    apply plugin: 'com.github.shalousun.smart-doc'
+    apply plugin: 'com.ly.smart-doc'
     smartdoc {
         //
         configFile = file("src/main/resources/smart-doc.json")
@@ -239,7 +239,7 @@ gradle tornaRpc
 ![idea中smart-doc-gradle插件使用](../../_images/idea-gradle-plugin.png "usage.png")
 
 # 插件源码
-https://gitee.com/smart-doc-team/smart-doc-gradle-plugin
+https://github.com/TongchengOpenSource/smart-doc-gradle-plugin
 
 # gradle多模块构建配置参考
 [【smart-doc-gradle-plugin集成demo】](https://gitee.com/smart-doc-team/smart-doc-gradle-plugin-demo)

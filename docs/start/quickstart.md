@@ -21,7 +21,7 @@ For multi-module maven, put the smart-doc plug-in configuration into the pom of 
 
 ```xml
 <plugin>
-    <groupId>com.github.shalousun</groupId>
+    <groupId>com.ly.smart-doc</groupId>
     <artifactId>smart-doc-maven-plugin</artifactId>
     <version>[latest]</version>
     <configuration>
@@ -106,7 +106,7 @@ The official provides an example of SpringBoot integrating smart-doc to generate
 Using the plugins DSL:
 ```gradle
 plugins {
-  id "com.github.shalousun.smart-doc" version "[latest]"
+  id "com.ly.smart-doc" version "[latest]"
 }
 ```
 
@@ -119,10 +119,10 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.github.shalousun:smart-doc-gradle-plugin:[latest]'
+        classpath 'com.ly.smart-doc:smart-doc-gradle-plugin:[latest]'
     }
 }
-apply(plugin = "com.github.shalousun.smart-doc")
+apply(plugin = "com.ly.smart-doc")
 ```
 
 **Plug-in configuration items**
@@ -155,7 +155,7 @@ smartdoc {
 For multi-module gradle, put the smart-doc plug-in configuration into subprojects of the root directory build.gradle.
 ```
 subprojects{
-    apply plugin: 'com.github.shalousun.smart-doc'
+    apply plugin: 'com.ly.smart-doc'
     smartdoc {
         //
         configFile = file("src/main/resources/smart-doc.json")

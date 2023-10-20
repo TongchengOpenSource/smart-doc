@@ -1,5 +1,5 @@
 
-# smart-doc <small> ![maven](https://img.shields.io/maven-central/v/com.github.shalousun/smart-doc) </small>
+# smart-doc <small> ![maven](https://img.shields.io/maven-central/v/com.ly.smart-doc/smart-doc) </small>
 
 
 > A non-intrusive api interface document generator.
