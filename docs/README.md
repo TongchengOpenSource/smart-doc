@@ -1,7 +1,7 @@
 ## smart-doc
 
 
-![maven](https://img.shields.io/maven-central/v/com.github.shalousun/smart-doc)
+![maven](https://img.shields.io/maven-central/v/com.ly.smart-doc/smart-doc)
 [![License](https://img.shields.io/badge/license-Apache%202-green.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 ![number of issues closed](https://img.shields.io/github/issues-closed-raw/smart-doc-group/smart-doc)
 ![closed pull requests](https://img.shields.io/github/issues-pr-closed/smart-doc-group/smart-doc)

@@ -12,7 +12,7 @@
 添加`smart-doc`依赖主要是方便直接查看到源码调试。未发生错误，不需要调试事并不需要在自己的项目中添加`smart-doc`依赖。
 ```
 dependencies {
-    testCompile 'com.github.shalousun:smart-doc:【最新版本】'
+    testCompile 'com.ly.smart-doc:smart-doc:【最新版本】'
 }
 ```
 找到`smart-doc`源码打上断点。操作如下图：

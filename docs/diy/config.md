@@ -876,7 +876,7 @@ Whether to display the response parameter table in the document.
 * required: `false`
 * type:`String`
 * default: `RANDOM`
-* @since `2.7.8` :new:
+* @since `3.0.0` :new:
 
 openapi component key generator RANDOM :  support @Validated NORMAL: don't support @Validated, for openapi generator
 ```json
