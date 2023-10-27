@@ -110,7 +110,7 @@ smart-doc会自动分析依赖树加载所有依赖源码，不过这样会存�
 ####  excludes & includes 最佳实践
 1. 要使用include，加载需要的源码，如果不需要别的依赖，可以写项目自身的 `groupId:artifactId`
 
-2. 遇到报错后，使用excludds排除报错依赖
+2. 遇到报错后，使用excludes排除报错依赖
  
 
 ## 插件 executions
