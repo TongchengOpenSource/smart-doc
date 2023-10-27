@@ -25,7 +25,7 @@
 提升速度最直接的方式就是在插件中配置：`include`或者`exclude` 。例如：
 ```xml
 <plugin>
-    <groupId>com.github.shalousun</groupId>
+    <groupId>com.ly.smart-doc</groupId>
     <artifactId>smart-doc-maven-plugin</artifactId>
     <version>[最新版本]</version>
     <configuration>

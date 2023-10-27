@@ -11,7 +11,7 @@
 
 ```
 <dependency>
-     <groupId>com.github.shalousun</groupId>
+     <groupId>com.ly.smart-doc</groupId>
      <artifactId>smart-doc</artifactId>
      <version>[最新版本]</version>
      <scope>test</scope>
@@ -32,7 +32,7 @@
 
 ```
 <dependency>
-    <groupId>com.github.shalousun</groupId>
+    <groupId>com.ly.smart-doc</groupId>
     <artifactId>smart-doc-maven-plugin</artifactId>
     <version>【maven仓库最新版本】</version>
 </dependency>

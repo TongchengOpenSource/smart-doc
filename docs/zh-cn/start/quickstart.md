@@ -22,7 +22,7 @@
 
 ```xml
 <plugin>
-    <groupId>com.github.shalousun</groupId>
+    <groupId>com.ly.smart-doc</groupId>
     <artifactId>smart-doc-maven-plugin</artifactId>
     <version>[最新版本]</version>
     <configuration> 
@@ -102,7 +102,7 @@ mvn clean install -Dmaven.test.skip=true
 ### Using the plugins DSL:
 ```gradle
 plugins {
-  id "com.github.shalousun.smart-doc" version "[最新版本]"
+  id "com.ly.smart-doc" version "[最新版本]"
 }
 ```
 
@@ -122,10 +122,10 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.github.shalousun:smart-doc-gradle-plugin:[最新版本]'
+        classpath 'com.ly.smart-doc:smart-doc-gradle-plugin:[最新版本]'
     }
 }
-apply(plugin = "com.github.shalousun.smart-doc")
+apply(plugin = "com.ly.smart-doc")
 ```
 
 **插件配置项**
@@ -158,7 +158,7 @@ smartdoc {
 对于多模块的`Gradle`，把`smart-doc`插件相关配置放到根目录`build.gradle`的`subprojects`中。
 ```gradle
 subprojects{
-    apply plugin: 'com.github.shalousun.smart-doc'
+    apply plugin: 'com.ly.smart-doc'
     smartdoc {
         //
         configFile = file("src/main/resources/smart-doc.json")

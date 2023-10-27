@@ -12,7 +12,7 @@ The integration method is as follows.
 Add `smart-doc-maven-plugin` to your `Dubbo Service API` or `Dubbo Provider` module. Of course you only need to select one method
 ```xml
 <plugin>
-    <groupId>com.github.shalousun</groupId>
+    <groupId>com.ly.smart-doc</groupId>
     <artifactId>smart-doc-maven-plugin</artifactId>
     <version>[Latest version]</version>
     <configuration>
@@ -23,7 +23,7 @@ Add `smart-doc-maven-plugin` to your `Dubbo Service API` or `Dubbo Provider` mod
         <!--smart-doc realizes automatic analysis of the dependency tree to load the source code of third-party dependencies. If some framework dependency libraries cannot be loaded and cause an error, please use excludes to exclude -->
         <excludes>
             <!--The format is: groupId:artifactId; reference is as follows-->
-            <!- ​​Starting from version 1.0.7, you can also use regular matching to exclude, such as: poi.* -->
+            <!-- Starting from version 1.0.7, you can also use regular matching to exclude, such as: poi.* -->
             <exclude>com.alibaba:fastjson</exclude>
         </excludes>
         <!--Since version 1.0.8, the plugin provides includes support-->
