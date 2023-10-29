@@ -16,3 +16,7 @@
 - [Document Effect](docsImages.md)
 - [Expand Development](expand.md)
 - [Changelog](changelog.md "Changelog")
+
+- Advanced Plugin Usage
+  - [Advanced use of maven plugin](en/plugins/maven_plugin.md "maven插件")
+  - [Maven plugin debugging](en/plugins/maven-plugin-debug.md "maven插件调试")

@@ -3,7 +3,7 @@
 官方并不能根据这些简单的错误信息来解决问题，因为用户的使用环境和所写的代码都是我们无法模拟的。
 因此我们希望使用`smart-doc-maven-plugin`的用户在报错时能够通过`debug`来获取到更详细的信息。
 在提`issue`时添加详细的问题描述，这样也能帮助我们更加快速的修改问题。
-下面将介绍如来调试`smart-doc-maven-plugin`插件。
+下面将介绍如何来调试`smart-doc-maven-plugin`插件。
 
 # 添加smart-doc依赖
 因为`smart-doc-maven-plugin`最终是使用`smart-doc`来完成项目的源码分析和文档生成的，

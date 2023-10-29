@@ -110,7 +110,7 @@ smart-doc会自动分析依赖树加载所有依赖源码，不过这样会存�
 ####  excludes & includes 最佳实践
 1. 要使用include，加载需要的源码，如果不需要别的依赖，可以写项目自身的 `groupId:artifactId`
 
-2. 遇到报错后，使用excludds排除报错依赖
+2. 遇到报错后，使用excludes排除报错依赖
  
 
 ## 插件 executions
@@ -164,7 +164,7 @@ mvn -Dfile.encoding=UTF-8 smart-doc:rpc-adoc
 // 生成dubbo接口文档推送到torna
 mvn -Dfile.encoding=UTF-8 smart-doc:torna-rpc
 ```
-在使用`mvn`命令构建是如果想查看`debug`日志，`debug`日志也能够帮助你去分析`smart-doc-maven`插件的源码加载情况，可以加一个`-X`参数。例如：
+在使用`mvn`命令构建时如果想查看`debug`日志，`debug`日志也能够帮助你去分析`smart-doc-maven`插件的源码加载情况，可以加一个`-X`参数。例如：
 ```
 mvn -X -Dfile.encoding=UTF-8 smart-doc:html
 ```
@@ -224,7 +224,7 @@ mvn smart-doc:markdown -Dfile.encoding=UTF-8  -pl :web2 -am
 
 [【多模块测试用例参考】](https://gitee.com/smart-doc-team/spring-boot-maven-multiple-module)
 
-**注意：**   **怎么去使用插件并没有固定的模式，最重要的是熟练`Maven`的一些列操作，然后根据自己的项目情况来调整。技巧娴熟就能应对自如。
+**注意：**   **怎么去使用插件并没有固定的模式，最重要的是熟练`Maven`的一些操作，然后根据自己的项目情况来调整。技巧娴熟就能应对自如。
 对于插件的使用，从`smart-doc-maven-plugin 1.2.0`开始，插件是能够自动分析生成模块的依赖来加载必要的源码，
 并不会将所有模块的接口文档合并到一个文档中。** 
 

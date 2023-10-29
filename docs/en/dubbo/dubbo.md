@@ -1,15 +1,15 @@
 ## Dubbo document generation
 
-Smart-doc supports the generation of Apache Dubbo service interfaces documentation from version 1.8.7. The following describes how to use the smart-doc tool to generate dubbo's rpc internal interface documentation.
+`Smart-doc` supports the generation of `Apache Dubbo Service API` documentation from version `1.8.7`. The following describes how to use the `smart-doc` tool to generate `Dubbo's RPC` internal interface documentation.
 ### Introduce
-Smart-doc developed the maven plug-in and gradle based on the principle of simple use, through plug-ins to reduce the integration difficulty of smart-doc and remove the dependency intrusiveness. You can select the relevant plug-in according to the dependency build management tool you use. The following uses the smart-doc-maven-plugin plug-in to integrate smart-doc to generate dubbo as an example. Of course, you have two options for integrating smart-doc to generate dubbo rpc interface documentation:
+`Smart-doc` developed the `maven` plug-in and `gradle` based on the principle of simple use, through plug-ins to reduce the integration difficulty of smart-doc and remove the dependency intrusiveness. You can select the relevant plug-in according to the dependency build management tool you use. The following uses the `smart-doc-maven-plugin` plug-in to integrate `smart-doc` to generate `Ddubbo` as an example. Of course, you have two options for integrating `smart-doc` to generate `Dubbo RPC` interface documentation:
 
-- Use smart-doc to scan Dubbo service api module
-- Use smart-doc to scan Dubbo provider module
+- Use `smart-doc` to scan Dubbo service api module
+- Use `smart-doc` to scan Dubbo provider module
 
-Let's look at the integration method.
+The integration method is as follows.
 #### Add plugin
-Add smart-doc-maven-plugin to your dubbo service api or dubbo provider module. Of course you only need to select one method
+Add `smart-doc-maven-plugin` to your `Dubbo Service API` or `Dubbo Provider` module. Of course you only need to select one method
 ```xml
 <plugin>
     <groupId>com.ly.smart-doc</groupId>
@@ -46,7 +46,7 @@ Add smart-doc-maven-plugin to your dubbo service api or dubbo provider module. O
 ```
 
 #### Add configuration files required by smart-doc
-Add the smart-doc.json configuration file to your dubbo service api or dubbo provider module resources.
+Add the `smart-doc.json` configuration file to your `Dubbo Service API` or `Dubbo Provider` module resources.
 
 ```json
 {
@@ -62,11 +62,11 @@ Add the smart-doc.json configuration file to your dubbo service api or dubbo pro
    "rpcConsumerConfig":"src/main/resources/consumer-example.conf"//Add dubbo consumer integration configuration to the document to facilitate the integration party to quickly integrate
 }
 ```
-About smart-doc, if you need more detailed configuration for generating documents, please refer to other documents on the official project wiki.
+About `smart-doc`, if you need more detailed configuration for generating documents, please refer to other documents on the official project wiki.
 
 **rpcConsumerConfig：**
 
-If you want to make dubbo consumer integration faster, you can put the integration configuration example in `consumer-example.conf`, and Smart-doc will output the example directly to the document.
+If you want to make `Dubbo Consumer` integration faster, you can put the integration configuration example in `consumer-example.conf`, and smart-doc will output the example directly to the document.
 
 ```
 dubbo:
@@ -81,10 +81,10 @@ dubbo:
 ```
 
 ### Apache Dubbo provider interface scan
-As mentioned above, smart-doc supports scanning Apache Dubbo service api or dubbo provider separately. The scanning principle is mainly through the recognition of @dubbo annotation tags (idea can support adding custom annotation tags to remind you can refer to the smart-doc wiki document introduction) or dubbo's @service annotations.
+As mentioned above, `smart-doc` supports scanning `Dubbo Service API` or `Dubbo Provider` separately. The scanning principle is mainly through the recognition of `@dubbo` annotation tags (idea can support adding custom annotation tags to remind you can refer to the `smart-doc` wiki document introduction) or `Dubbo's @service` annotations.
 
 #### Scan Apache Dubbo Service API
-The dubbo service api is usually a very concise dubbo interface definition. If you need smart-doc to scan the dubbo interface, you need to add the @dubbo annotation tag. Examples are as follows:
+The `Dubbo Service API` is usually a very concise `Dubbo` interface definition. If you need `smart-doc` to scan the `Dubbo` interface, you need to add the `@dubbo` annotation `tag``. Examples are as follows:
 
 ```java
 /**
@@ -115,7 +115,7 @@ public interface UserService {
 ```
 
 #### Scan Dubbo provider
-If you want to generate rpc interface documentation through dubbo provider, you don't need to add any other annotation tags, smart-doc automatically scans @service annotations to complete.
+If you want to generate `RPC` interface documentation through `Dubbo Provider`, you don't need to add any other annotation `tags`, `smart-doc` automatically scans `@service` annotations to complete.
 
 ```java
 /**
@@ -156,7 +156,7 @@ public class UserServiceImpl implements UserService {
 ```
 
 #### Generate operation
-Run the plug-in's document generation command directly through the maven command or click the plug-in's visualization command directly in idea.
+Run the plug-in's document generation command directly through the maven command `mvc` or click the plug-in's visualization command directly in `IDEA`.
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20200705230512435.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3NoYWxvdXN1bg==,size_16,color_FFFFFF,t_70)
 
-Run rpc-html etc. to generate dubbo rpc document
+Run `rpc-html` etc. to generate `Dubbo RPC` document

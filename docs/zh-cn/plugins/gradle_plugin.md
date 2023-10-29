@@ -41,7 +41,7 @@ apply(plugin = "com.ly.smart-doc")
 
 **`buildscript`配置添加到`build.gradle`的顶部** 。
 ### Plugin options
-是`smart-do`c插件使用还需要在`build.gradle`添加一些常见本身的配置
+使用`smart-doc`插件还需要在`build.gradle`添加一些常见本身的配置
 
 | Option | Default value | Required| Description                                                                                     |
 | ------ | ------------- | -------------|-------------------------------------------------------------------------------------------------|
