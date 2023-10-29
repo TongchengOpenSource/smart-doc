@@ -18,5 +18,5 @@
 - [Changelog](changelog.md "Changelog")
 
 - Advanced Plugin Usage
-  - [maven插件使用进阶](en/plugins/maven_plugin.md "maven插件")
-  - [maven插件调试](en/plugins/maven-plugin-debug.md "maven插件调试")
+  - [Advanced use of maven plugin](en/plugins/maven_plugin.md "maven插件")
+  - [Maven plugin debugging](en/plugins/maven-plugin-debug.md "maven插件调试")
