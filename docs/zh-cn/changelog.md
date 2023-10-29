@@ -1,5 +1,19 @@
 ## 变更日志
 
+### 版本号：3.0.0
+- 更新日期: 2023-10-20
+- 更新内容：
+  1. 修复Java 16+版本反射获取字段是jdk中的类时异常。 [#615](https://github.com/smart-doc-group/smart-doc/issues/615)
+  2. 修复枚举字典显示错乱问题，维持代码中编写的顺序。[#603](https://github.com/TongchengOpenSource/smart-doc/issues/603)
+  3. 支持获取接口的注释，[#573](https://github.com/TongchengOpenSource/smart-doc/pull/573)
+  4. 生成html页面支持多文件上传。[#594](https://github.com/TongchengOpenSource/smart-doc/issues/594)
+  5. 无参请求生成时生成的OpenAPI文档错误。[#616](https://github.com/TongchengOpenSource/smart-doc/issues/616)
+  6. 扫描文档时丢弃对JDK原生类型的反射，避免高版本JDK反射时报错。[pr#621](https://github.com/TongchengOpenSource/smart-doc/pull/621)
+  7. 修复生成postman collection后导入到postman缺少file文件参数问题。[#622](https://github.com/TongchengOpenSource/smart-doc/issues/622)
+  8. 修复配置ResponseBodyAdvice后torna推送数据错误问题。[#599](https://github.com/TongchengOpenSource/smart-doc/issues/599)
+  9. 修复customResponseFields无法忽略字段的bug。 [#625](https://github.com/TongchengOpenSource/smart-doc/issues/625)
+  10. 修复请求参数标记@Null注解时字段没被忽略的bug。[#608](https://github.com/TongchengOpenSource/smart-doc/issues/608)
+
 ### 版本号：2.7.7
 - 更新日期: 2023-09-11
 - 更新内容：
