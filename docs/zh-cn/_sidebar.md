@@ -19,8 +19,8 @@
 - 插件使用进阶
   - [maven插件使用进阶](zh-cn/plugins/maven_plugin.md "maven插件")
   - [maven插件调试](zh-cn/plugins/maven-plugin-debug.md "maven插件调试")
-  - [gradle插件使用进阶](zh-cn/plugins/gradle_plugin.md "maven插件")
-  - [gradle插件调试](zh-cn/plugins/gradle_plugin_debug.md "maven插件调试")
+  - [gradle插件使用进阶](zh-cn/plugins/gradle_plugin.md "gradle插件")
+  - [gradle插件调试](zh-cn/plugins/gradle_plugin_debug.md "gradle插件调试")
 - FAQ使用常见问题
   - [使用问题集](zh-cn/faq.md)
 - [文档效果](zh-cn/docsImages.md)
