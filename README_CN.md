@@ -103,9 +103,9 @@ the [LICENSE](https://gitee.com/smart-doc-team/smart-doc/blob/master/LICENSE) fi
 
 ## Contact
 
-愿意参与构建smart-doc或者是需要交流问题可以加入qq群：
+愿意参与构建`smart-doc`或者是需要交流问题可以扫描微信二维码发送`smart-doc`备注信息后管理园拉进群，[常见问题答疑](https://smart-doc-group.github.io/#/zh-cn/faq)
 
-<img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/smart-doc-qq.png" title="qq群" width="200px" height="210px"/>
+<img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/wechat.png" title="qq群" width="200px" height="210px"/>
 <img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/smart-doc-qq2.jpeg" title="qq群2" width="200px" height="210px"/>
 
 > 1群已满，有问题请加2群。
