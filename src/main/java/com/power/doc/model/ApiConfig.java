@@ -148,9 +148,9 @@ public class ApiConfig {
     private boolean adoc;
 
     /**
-     * http flag
+     * rest flag
      */
-    private boolean http;
+    private boolean rest;
     /**
      * default /src/main/java
      */
@@ -602,12 +602,12 @@ public class ApiConfig {
         this.adoc = adoc;
     }
 
-    public boolean isHttp() {
-        return http;
+    public boolean isRest() {
+        return rest;
     }
 
-    public void setHttp(boolean http) {
-        this.http = http;
+    public void setRest(boolean rest) {
+        this.rest = rest;
     }
 
     public List<ApiDataDictionary> getDataDictionaries() {

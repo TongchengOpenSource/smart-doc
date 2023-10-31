@@ -427,8 +427,8 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 
             // build request json
             ApiRequestExample requestExample = buildReqJson(docJavaMethod, apiMethodDoc, requestMapping.getMethodType(), projectBuilder, frameworkAnnotations);
-            String requestJson = projectBuilder.getApiConfig().isHttp()
-                    ? buildHttpJson(docJavaMethod, apiMethodDoc, requestMapping.getMethodType(), projectBuilder, frameworkAnnotations)
+            String requestJson = projectBuilder.getApiConfig().isRest()
+                    ? buildRestJson(docJavaMethod, apiMethodDoc, requestMapping.getMethodType(), projectBuilder, frameworkAnnotations)
                     : requestExample.getExampleBody();
             // set request example detail
             apiMethodDoc.setRequestExample(requestExample);
@@ -743,7 +743,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
         return ApiParamTreeUtil.buildMethodReqParam(paramList, queryReqParamMap, pathReqParamMap, requestBodyCounter);
     }
 
-    default String buildHttpJson(DocJavaMethod docJavaMethod, ApiMethodDoc apiMethodDoc, String methodType, ProjectDocConfigBuilder projectBuilder, FrameworkAnnotations frameworkAnnotations) {
+    default String buildRestJson(DocJavaMethod docJavaMethod, ApiMethodDoc apiMethodDoc, String methodType, ProjectDocConfigBuilder projectBuilder, FrameworkAnnotations frameworkAnnotations) {
         Boolean isGet = methodType.equals("GET");
         Boolean isFile = apiMethodDoc.getContentType().equals(FILE_CONTENT_TYPE);
         String boundary = UUIDUtil.getUuid32();
