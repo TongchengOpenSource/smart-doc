@@ -1,6 +1,6 @@
 <h1 align="center"><a href="https://github.com/smart-doc-group/smart-doc" target="_blank">Smart-Doc Project</a></h1>
 
-![maven](https://img.shields.io/maven-central/v/com.github.shalousun/smart-doc)
+![maven](https://img.shields.io/maven-central/v/com.ly.smart-doc/smart-doc)
 [![License](https://img.shields.io/badge/license-Apache%202-green.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 ![number of issues closed](https://img.shields.io/github/issues-closed-raw/smart-doc-group/smart-doc)
 ![closed pull requests](https://img.shields.io/github/issues-pr-closed/smart-doc-group/smart-doc)
@@ -59,7 +59,9 @@ mvn clean install -Dmaven.test.skip=true
 
 ## TODO
 
-- Jakarta RS-API 2.x
+- GRPC
+- SOCKET
+- WORD
 
 ## License
 
@@ -77,6 +79,7 @@ the [LICENSE](https://gitee.com/smart-doc-team/smart-doc/blob/master/LICENSE) fi
 ![IFLYTEK](https://gitee.com/smart-doc-team/smart-doc/raw/master/images/known-users/iflytek.png)
 &nbsp;&nbsp;<img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/known-users/oneplus.png" title="一加" width="83px" height="83px"/>
 &nbsp;&nbsp;<img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/known-users/xiaomi.png" title="小米" width="170px" height="83px"/>
+&nbsp;&nbsp;<img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/known-users//ly.jpeg" title="Xiaomi" width="260px" height="83px"/>
 &nbsp;&nbsp;<img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/known-users/neusoft.png" title="东软集团" width="180px" height="83px"/>
 &nbsp;&nbsp;<img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/known-users/zhongkezhilian.png" title="中科智链" width="272px" height="83px"/>
 &nbsp;&nbsp;<img src="https://www.hand-china.com/static/img/hand-logo.svg" title="上海汉得信息技术股份有限公司" width="260px" height="83px"/>
@@ -100,15 +103,9 @@ the [LICENSE](https://gitee.com/smart-doc-team/smart-doc/blob/master/LICENSE) fi
 
 ## Contact
 
-愿意参与构建smart-doc或者是需要交流问题可以加入qq群：
+愿意参与构建`smart-doc`或者是需要交流问题可以扫描微信二维码发送`smart-doc`备注信息后管理园拉进群，[常见问题答疑](https://smart-doc-group.github.io/#/zh-cn/faq)
 
-<img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/smart-doc-qq.png" title="qq群" width="200px" height="210px"/>
+<img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/wechat.png" title="qq群" width="200px" height="210px"/>
 <img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/smart-doc-qq2.jpeg" title="qq群2" width="200px" height="210px"/>
 
 > 1群已满，有问题请加2群。
-
-## Donate
-
-如果您觉得我们的开源软件对你有所帮助，请扫下方二维码打赏我们一杯咖啡
-
-<img src="https://images.gitee.com/uploads/images/2020/0831/225756_9aecdd4d_144669.png" width="200px" height="210px"/>

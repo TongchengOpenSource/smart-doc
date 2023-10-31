@@ -1,6 +1,6 @@
 <h1 align="center">Smart-Doc Project</h1>
 
-![maven](https://img.shields.io/maven-central/v/com.github.shalousun/smart-doc)
+![maven](https://img.shields.io/maven-central/v/com.ly.smart-doc/smart-doc)
 [![License](https://img.shields.io/badge/license-Apache%202-green.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 ![number of issues closed](https://img.shields.io/github/issues-closed-raw/smart-doc-group/smart-doc)
 ![closed pull requests](https://img.shields.io/github/issues-pr-closed/smart-doc-group/smart-doc)
@@ -55,7 +55,9 @@ mvn clean install -Dmaven.test.skip=true
 
 ## TODO
 
-- Jakarta RS-API 2.x
+- GRPC
+- SOCKET
+- WORD
 
 ## Who is using
 
@@ -66,6 +68,7 @@ smart-doc better.
 ![IFLYTEK](https://raw.githubusercontent.com/smart-doc-group/smart-doc/master/images/known-users/iflytek.png)
 &nbsp;&nbsp;<img src="https://raw.githubusercontent.com/smart-doc-group/smart-doc/master/images/known-users/oneplus.png" title="OnePlus" width="83px" height="83px"/>
 &nbsp;&nbsp;<img src="https://raw.githubusercontent.com/smart-doc-group/smart-doc/master/images/known-users/xiaomi.png" title="Xiaomi" width="170px" height="83px"/>
+&nbsp;&nbsp;<img src="https://raw.githubusercontent.com/smart-doc-group/smart-doc/master/images/known-users/ly.jpeg" title="Xiaomi" width="200px" height="100px"/>
 &nbsp;&nbsp;<img src="https://raw.githubusercontent.com/smart-doc-group/smart-doc/master/images/known-users/neusoft.png" title="东软集团" width="170px" height="83px"/>
 &nbsp;&nbsp;<img src="https://www.hand-china.com/static/img/hand-logo.svg" title="上海汉得信息技术股份有限公司" width="260px" height="83px"/>
 &nbsp;&nbsp;<img src="https://raw.githubusercontent.com/smart-doc-group/smart-doc/master/images/known-users/shunfeng.png" title="顺丰" width="83px" height="83px"/>
@@ -90,4 +93,4 @@ file for details.
 
 ## Contact
 
-Email： 836575280@qq.com
+Email： opensource@ly.com
