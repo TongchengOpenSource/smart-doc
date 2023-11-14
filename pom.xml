@@ -73,6 +73,11 @@
             <artifactId>slf4j-api</artifactId>
             <version>2.0.7</version>
         </dependency>
+        <dependency>
+            <groupId>org.eclipse.jgit</groupId>
+            <artifactId>org.eclipse.jgit</artifactId>
+            <version>5.13.2.202306221912-r</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>

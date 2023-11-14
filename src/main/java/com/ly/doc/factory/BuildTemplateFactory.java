@@ -21,6 +21,7 @@
 package com.ly.doc.factory;
 
 import com.ly.doc.constants.FrameworkEnum;
+import com.ly.doc.model.IDoc;
 import com.ly.doc.template.IDocBuildTemplate;
 
 /**
@@ -35,10 +36,10 @@ public class BuildTemplateFactory {
      * @param <T>       API doc type
      * @return Implements of IDocBuildTemplate
      */
-    public static <T> IDocBuildTemplate getDocBuildTemplate(String framework) {
+    public static <T extends IDoc> IDocBuildTemplate<T> getDocBuildTemplate(String framework) {
         String className = FrameworkEnum.getClassNameByFramework(framework);
         try {
-            return (IDocBuildTemplate) Class.forName(className).newInstance();
+            return (IDocBuildTemplate<T>) Class.forName(className).newInstance();
         } catch (InstantiationException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {

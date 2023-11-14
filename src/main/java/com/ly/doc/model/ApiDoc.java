@@ -23,9 +23,10 @@ package com.ly.doc.model;
 
 import java.util.*;
 
+import com.power.common.util.CollectionUtil;
 import com.power.common.util.StringUtil;
 
-public class ApiDoc implements Comparable<ApiDoc> {
+public class ApiDoc implements IDoc, Comparable<ApiDoc> {
 
     /**
      * Order of controller
@@ -245,4 +246,19 @@ public class ApiDoc implements Comparable<ApiDoc> {
         sb.append('}');
         return sb.toString();
     }
+
+    @Override
+    public String getDocClass() {
+        return this.packageName + "." + this.name;
+    }
+
+    @Override
+    public List<IMethod> getMethods() {
+        if (CollectionUtil.isEmpty(this.list)) {
+            return Collections.emptyList();
+        }
+
+        return new ArrayList<>(this.list);
+    }
+
 }

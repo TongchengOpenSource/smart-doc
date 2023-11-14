@@ -58,4 +58,8 @@ public class JsonUtil {
         Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
         return gson.toJson(src);
     }
+
+    public static <T> T toObject(String json, Class<T> clazz) {
+        return new Gson().fromJson(json, clazz);
+    }
 }

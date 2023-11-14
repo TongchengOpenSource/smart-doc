@@ -23,14 +23,16 @@ package com.ly.doc.model;
 import java.io.Serializable;
 import java.util.*;
 
+import com.ly.doc.utils.ParamUtil;
 import com.power.common.util.StringUtil;
 import com.ly.doc.constants.DocGlobalConstants;
 import com.ly.doc.model.request.ApiRequestExample;
+import com.thoughtworks.qdox.model.JavaClass;
 
 /**
  * java api method info model.
  */
-public class ApiMethodDoc implements Serializable, Cloneable {
+public class ApiMethodDoc implements IMethod, Serializable, Cloneable {
 
 
     private static final long serialVersionUID = 7211922919532562867L;
@@ -548,5 +550,28 @@ public class ApiMethodDoc implements Serializable, Cloneable {
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException("clone apiMethodDoc is error", e);
         }
+    }
+
+    @Override
+    public JavaClass getDeclaringClass() {
+        return null;
+    }
+
+    @Override
+    public String getMethodName() {
+        return this.name;
+    }
+
+    @Override
+    public List<String> getArgsClasses() {
+        ArrayList<ApiParam> paramList = new ArrayList<>(this.pathParams);
+        paramList.addAll(this.requestParams);
+        paramList.addAll(this.queryParams);
+        return ParamUtil.extractQualifiedName(paramList);
+    }
+
+    @Override
+    public List<String> getReturnClasses() {
+        return ParamUtil.extractQualifiedName(this.responseParams);
     }
 }

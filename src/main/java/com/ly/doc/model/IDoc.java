@@ -18,36 +18,23 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.ly.doc.extension.dict;
+package com.ly.doc.model;
 
-import com.power.common.model.EnumDictionary;
-
-import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
 
 /**
- * @see <a href="https://github.com/smart-doc-group/smart-doc/issues/338">issues-338</a>
+ * @author Fio
  */
-public interface DictionaryValuesResolver {
+public interface IDoc {
 
     /**
-     * resolve the dictionary, if an exception occurs, return empty collection instead of null
-     * default behaviour is the same as {@link #resolve()}
-     *
-     * @param clazz dictionary class
-     * @return the dictionary
+     * doc class qualified name
      */
-    default <T extends EnumDictionary> Collection<T> resolve(Class<?> clazz) {
-        return resolve();
-    }
+    String getDocClass();
 
     /**
-     * resolve the dictionary, for compatibility, do not return null
      *
-     * @see #resolve(Class)
      */
-    default <T extends EnumDictionary> Collection<T> resolve() {
-        return Collections.emptyList();
-    }
+    List<IMethod> getMethods();
 
 }

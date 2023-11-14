@@ -20,6 +20,8 @@
  */
 package com.ly.doc.model;
 
+import com.ly.doc.utils.ParamUtil;
+import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaMethod;
 import com.thoughtworks.qdox.model.JavaType;
 
@@ -30,7 +32,7 @@ import java.util.Map;
  * for rpc
  * @author yu 2020/1/29.
  */
-public class RpcJavaMethod {
+public class RpcJavaMethod implements IMethod {
 
     /**
      * java method
@@ -254,5 +256,25 @@ public class RpcJavaMethod {
     public RpcJavaMethod setActualTypesMap(Map<String, JavaType> actualTypesMap) {
         this.actualTypesMap = actualTypesMap;
         return this;
+    }
+
+    @Override
+    public JavaClass getDeclaringClass() {
+        return this.javaMethod.getDeclaringClass();
+    }
+
+    @Override
+    public String getMethodName() {
+        return this.name;
+    }
+
+    @Override
+    public List<String> getArgsClasses() {
+        return ParamUtil.extractQualifiedName(this.requestParams);
+    }
+
+    @Override
+    public List<String> getReturnClasses() {
+        return ParamUtil.extractQualifiedName(this.responseParams);
     }
 }

@@ -53,12 +53,12 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc>, IRpcDo
     private final AtomicInteger atomicInteger = new AtomicInteger(1);
 
     @Override
-    public List<RpcApiDoc> getApiData(ProjectDocConfigBuilder projectBuilder) {
+    public List<RpcApiDoc> renderApi(ProjectDocConfigBuilder projectBuilder, Collection<JavaClass> candidateClasses) {
         ApiConfig apiConfig = projectBuilder.getApiConfig();
         List<RpcApiDoc> apiDocList = new ArrayList<>();
         int order = 0;
         boolean setCustomOrder = false;
-        for (JavaClass cls : projectBuilder.getJavaProjectBuilder().getClasses()) {
+        for (JavaClass cls : candidateClasses) {
             if (StringUtil.isNotEmpty(apiConfig.getPackageFilters())) {
                 // check package
                 if (!DocUtil.isMatch(apiConfig.getPackageFilters(), cls)) {
