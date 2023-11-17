@@ -61,13 +61,13 @@ import com.thoughtworks.qdox.model.JavaMethod;
 public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDocTemplate {
 
     @Override
-    public List<ApiDoc> getApiData(ProjectDocConfigBuilder projectBuilder) {
+    public List<ApiDoc> renderApi(ProjectDocConfigBuilder projectBuilder, Collection<JavaClass> candidateClasses) {
         ApiConfig apiConfig = projectBuilder.getApiConfig();
         List<ApiReqParam> configApiReqParams = Stream.of(apiConfig.getRequestHeaders(), apiConfig.getRequestParams()).filter(Objects::nonNull)
             .flatMap(Collection::stream).collect(Collectors.toList());
         FrameworkAnnotations frameworkAnnotations = registeredAnnotations();
         List<ApiDoc> apiDocList = processApiData(projectBuilder, frameworkAnnotations, configApiReqParams,
-            new SolonRequestMappingHandler(), new SolonRequestHeaderHandler());
+            new SolonRequestMappingHandler(), new SolonRequestHeaderHandler(), candidateClasses);
         // sort
         if (apiConfig.isSortByTitle()) {
             Collections.sort(apiDocList);
@@ -83,6 +83,11 @@ public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDo
 
     @Override
     public boolean isEntryPoint(JavaClass cls, FrameworkAnnotations frameworkAnnotations) {
+        boolean isDefaultEntryPoint = defaultEntryPoint(cls, frameworkAnnotations);
+        if (isDefaultEntryPoint) {
+            return true;
+        }
+
         for (JavaAnnotation annotation : cls.getAnnotations()) {
             String name = annotation.getType().getValue();
             if (SolonAnnotations.REMOTING.equals(name)) {

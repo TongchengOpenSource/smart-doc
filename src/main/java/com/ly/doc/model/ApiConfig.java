@@ -378,6 +378,16 @@ public class ApiConfig {
      */
     private String componentType;
 
+    /**
+     * whether to build the doc incrementally
+     */
+    private boolean increment;
+
+    /**
+     * the doc module absolute path, used for dependency tree file
+     */
+    private String baseDir;
+
     public String getComponentType() {
         return componentType;
     }
@@ -994,5 +1004,21 @@ public class ApiConfig {
 
     public void setJarSourcePaths(SourceCodePath... jarSourcePaths) {
         this.jarSourcePaths = CollectionUtil.asList(jarSourcePaths);
+    }
+
+    public boolean isIncrement() {
+        return increment;
+    }
+
+    public void setIncrement(boolean increment) {
+        this.increment = increment;
+    }
+
+    public String getBaseDir() {
+        return baseDir;
+    }
+
+    public void setBaseDir(String baseDir) {
+        this.baseDir = baseDir;
     }
 }

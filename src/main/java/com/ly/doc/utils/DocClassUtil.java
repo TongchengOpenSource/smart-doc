@@ -23,8 +23,6 @@ package com.ly.doc.utils;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
-import javax.annotation.Nonnull;
-
 import com.ly.doc.model.ApiReturn;
 import com.power.common.util.StringUtil;
 import com.ly.doc.filter.ReturnTypeProcessor;
@@ -356,7 +354,7 @@ public class DocClassUtil {
         return classAnnotations;
     }
 
-    public static <T> T newInstance(@Nonnull Class<T> classWithNoArgsConstructor) {
+    public static <T> T newInstance(Class<T> classWithNoArgsConstructor) {
         try {
             return classWithNoArgsConstructor.getConstructor().newInstance();
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException |

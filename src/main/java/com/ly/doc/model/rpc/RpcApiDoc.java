@@ -20,15 +20,20 @@
  */
 package com.ly.doc.model.rpc;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import com.ly.doc.model.IDoc;
+import com.ly.doc.model.IMethod;
 import com.ly.doc.model.RpcJavaMethod;
+import com.power.common.util.CollectionUtil;
 
 /**
  * @author yu 2020/5/16.
  */
-public class RpcApiDoc implements Comparable<RpcApiDoc> {
+public class RpcApiDoc implements IDoc, Comparable<RpcApiDoc> {
 
     /**
      * Order of controller
@@ -196,5 +201,18 @@ public class RpcApiDoc implements Comparable<RpcApiDoc> {
             return desc.compareTo(o.getDesc());
         }
         return name.compareTo(o.getName());
+    }
+
+    @Override
+    public String getDocClass() {
+        return this.name;
+    }
+
+    @Override
+    public List<IMethod> getMethods() {
+        if (CollectionUtil.isEmpty(this.list)) {
+            return Collections.emptyList();
+        }
+        return new ArrayList<>(this.list);
     }
 }

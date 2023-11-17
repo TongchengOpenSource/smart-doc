@@ -1,12 +1,12 @@
 package com.ly.doc.utils;
 
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 import com.ly.doc.builder.ProjectDocConfigBuilder;
 import com.ly.doc.constants.DocGlobalConstants;
 import com.ly.doc.constants.DocTags;
 import com.ly.doc.model.ApiParam;
+import com.power.common.util.CollectionUtil;
 import com.power.common.util.StringUtil;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaField;
@@ -40,5 +40,29 @@ public class ParamUtil {
             return mock;
         }
         return mock.replaceAll("\\\\","");
+    }
+
+    public static List<String> extractQualifiedName(List<ApiParam> paramList) {
+        if (CollectionUtil.isEmpty(paramList)) {
+            return Collections.emptyList();
+        }
+
+        Set<String> set = new HashSet<>();
+        for (ApiParam param : paramList) {
+            String className = param.getClassName();
+
+            if (StringUtil.isEmpty(className)) {
+                continue;
+            }
+
+            int index = className.indexOf("<");
+            if (index > -1) {
+                className = className.substring(0, index);
+            }
+
+            set.add(className);
+        }
+
+        return new ArrayList<>(set);
     }
 }

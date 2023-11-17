@@ -57,14 +57,14 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
     AtomicInteger atomicInteger = new AtomicInteger(1);
 
     default List<ApiDoc> processApiData(ProjectDocConfigBuilder projectBuilder, FrameworkAnnotations frameworkAnnotations,
-                                        List<ApiReqParam> configApiReqParams, IRequestMappingHandler baseMappingHandler, IHeaderHandler headerHandler) {
+                                        List<ApiReqParam> configApiReqParams, IRequestMappingHandler baseMappingHandler, IHeaderHandler headerHandler,
+                                        Collection<JavaClass> javaClasses) {
         ApiConfig apiConfig = projectBuilder.getApiConfig();
         List<ApiDoc> apiDocList = new ArrayList<>();
         int order = 0;
         boolean setCustomOrder = false;
-        Collection<JavaClass> classes = projectBuilder.getJavaProjectBuilder().getClasses();
         // exclude  class is ignore
-        for (JavaClass cls : classes) {
+        for (JavaClass cls : javaClasses) {
             if (StringUtil.isNotEmpty(apiConfig.getPackageFilters())) {
                 // from smart config
                 if (!DocUtil.isMatch(apiConfig.getPackageFilters(), cls)) {
@@ -73,7 +73,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
             }
             // from tag
             DocletTag ignoreTag = cls.getTagByName(DocTags.IGNORE);
-            if (!defaultEntryPoint(cls, frameworkAnnotations) || Objects.nonNull(ignoreTag)) {
+            if (!isEntryPoint(cls, frameworkAnnotations) || Objects.nonNull(ignoreTag)) {
                 continue;
             }
             String strOrder = JavaClassUtil.getClassTagsValue(cls, DocTags.ORDER, Boolean.TRUE);
@@ -1068,16 +1068,11 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
         }
         List<JavaAnnotation> classAnnotations = DocClassUtil.getAnnotations(cls);
         Map<String, EntryAnnotation> entryAnnotationMap = frameworkAnnotations.getEntryAnnotations();
-        for (JavaAnnotation annotation : classAnnotations) {
+
+        return classAnnotations.stream().anyMatch(annotation -> {
             String name = annotation.getType().getValue();
-            if (entryAnnotationMap.containsKey(name)) {
-                return true;
-            }
-            if (isEntryPoint(cls, frameworkAnnotations)) {
-                return true;
-            }
-        }
-        return false;
+            return entryAnnotationMap.containsKey(name);
+        });
     }
 
     default List<DocJavaMethod> getParentsClassMethods(ApiConfig apiConfig, ProjectDocConfigBuilder projectBuilder, JavaClass cls) {

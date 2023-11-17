@@ -44,13 +44,13 @@ import java.util.stream.Stream;
 public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDocTemplate {
 
     @Override
-    public List<ApiDoc> getApiData(ProjectDocConfigBuilder projectBuilder) {
+    public List<ApiDoc> renderApi(ProjectDocConfigBuilder projectBuilder, Collection<JavaClass> candidateClasses) {
         ApiConfig apiConfig = projectBuilder.getApiConfig();
         List<ApiReqParam> configApiReqParams = Stream.of(apiConfig.getRequestHeaders(), apiConfig.getRequestParams()).filter(Objects::nonNull)
                 .flatMap(Collection::stream).collect(Collectors.toList());
         FrameworkAnnotations frameworkAnnotations = registeredAnnotations();
         List<ApiDoc> apiDocList = this.processApiData(projectBuilder, frameworkAnnotations,
-                configApiReqParams, new SpringMVCRequestMappingHandler(), new SpringMVCRequestHeaderHandler());
+                configApiReqParams, new SpringMVCRequestMappingHandler(), new SpringMVCRequestHeaderHandler(), candidateClasses);
         // sort
         if (apiConfig.isSortByTitle()) {
             Collections.sort(apiDocList);
@@ -182,6 +182,11 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IR
 
     @Override
     public boolean isEntryPoint(JavaClass javaClass, FrameworkAnnotations frameworkAnnotations) {
+        boolean isDefaultEntryPoint = defaultEntryPoint(javaClass, frameworkAnnotations);
+        if (isDefaultEntryPoint) {
+            return true;
+        }
+
         if (javaClass.isAnnotation() || javaClass.isEnum()) {
             return false;
         }

@@ -68,16 +68,15 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDo
 
 
     @Override
-    public List<ApiDoc> getApiData(ProjectDocConfigBuilder projectBuilder) {
+    public List<ApiDoc> renderApi(ProjectDocConfigBuilder projectBuilder, Collection<JavaClass> candidateClasses) {
         ApiConfig apiConfig = projectBuilder.getApiConfig();
         FrameworkAnnotations frameworkAnnotations = registeredAnnotations();
         this.headers = apiConfig.getRequestHeaders();
         List<ApiDoc> apiDocList = new ArrayList<>();
         int order = 0;
-        Collection<JavaClass> classes = projectBuilder.getJavaProjectBuilder().getClasses();
         boolean setCustomOrder = false;
         // exclude  class is ignore
-        for (JavaClass cls : classes) {
+        for (JavaClass cls : candidateClasses) {
             if (StringUtil.isNotEmpty(apiConfig.getPackageFilters())) {
                 // from smart config
                 if (!DocUtil.isMatch(apiConfig.getPackageFilters(), cls)) {
@@ -283,6 +282,11 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDo
 
     @Override
     public boolean isEntryPoint(JavaClass cls, FrameworkAnnotations frameworkAnnotations) {
+        boolean isDefaultEntryPoint = defaultEntryPoint(cls, frameworkAnnotations);
+        if (isDefaultEntryPoint) {
+            return true;
+        }
+
         if (cls.isAnnotation() || cls.isEnum()) {
             return false;
         }

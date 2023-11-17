@@ -20,34 +20,45 @@
  */
 package com.ly.doc.template;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
-
-import com.ly.doc.model.ApiConfig;
-import com.ly.doc.model.ApiDoc;
-import com.ly.doc.model.ApiGroup;
-import com.ly.doc.model.ApiMethodDoc;
+import com.ly.doc.builder.ProjectDocConfigBuilder;
+import com.ly.doc.constants.TornaConstants;
+import com.ly.doc.helper.DocBuildHelper;
+import com.ly.doc.model.dependency.FileDiff;
+import com.ly.doc.model.*;
+import com.ly.doc.model.annotation.FrameworkAnnotations;
+import com.ly.doc.utils.DocPathUtil;
 import com.ly.doc.utils.DocUtil;
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.StringUtil;
-import com.ly.doc.builder.ProjectDocConfigBuilder;
-import com.ly.doc.constants.TornaConstants;
-import com.ly.doc.model.annotation.FrameworkAnnotations;
-import com.ly.doc.utils.DocPathUtil;
+import com.thoughtworks.qdox.JavaProjectBuilder;
+import com.thoughtworks.qdox.model.JavaClass;
+
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * @author yu 2019/12/21.
  */
-public interface IDocBuildTemplate<T> {
+public interface IDocBuildTemplate<T extends IDoc> {
 
-    List<T> getApiData(ProjectDocConfigBuilder projectBuilder);
+    default List<T> getApiData(ProjectDocConfigBuilder projectBuilder) {
+        DocBuildHelper docBuildHelper = DocBuildHelper.create(projectBuilder);
+
+        preRender(docBuildHelper);
+
+        Collection<JavaClass> candidateClasses = getCandidateClasses(projectBuilder, docBuildHelper);
+        List<T> apiList = renderApi(projectBuilder, candidateClasses);
+
+        postRender(docBuildHelper, apiList);
+
+        return apiList;
+    }
+
+    List<T> renderApi(ProjectDocConfigBuilder projectBuilder, Collection<JavaClass> candidateClasses);
 
     FrameworkAnnotations registeredAnnotations();
-
 
     /**
      * handle group api docs
@@ -93,8 +104,8 @@ public interface IDocBuildTemplate<T> {
                     continue;
                 }
                 List<ApiMethodDoc> methodDocs = doc.getList().stream()
-                    .filter(l -> DocPathUtil.matches(l.getPath(), group.getPaths(), null))
-                    .collect(Collectors.toList());
+                        .filter(l -> DocPathUtil.matches(l.getPath(), group.getPaths(), null))
+                        .collect(Collectors.toList());
                 doc.setList(methodDocs);
             }
         }
@@ -113,4 +124,77 @@ public interface IDocBuildTemplate<T> {
         finalApiDocs.forEach(group -> group.setOrder(order.getAndIncrement()));
         return finalApiDocs;
     }
+
+    /**
+     * If build doc incrementally, we will filter the classes changed
+     * from the commit-id in increment-config-file.
+     * If not, we will return all classes.
+     *
+     * @param docBuilder      docBuilder
+     * @param docBuildHelper incrementHelper
+     * @return the candidate classes
+     */
+    default Collection<JavaClass> getCandidateClasses(ProjectDocConfigBuilder docBuilder, DocBuildHelper docBuildHelper) {
+        ApiConfig apiConfig = docBuilder.getApiConfig();
+        JavaProjectBuilder javaProjectBuilder = docBuilder.getJavaProjectBuilder();
+
+        if (!apiConfig.isIncrement()) {
+            return javaProjectBuilder.getClasses();
+        }
+
+        if (StringUtil.isEmpty(docBuildHelper.getDependencyTree().getCommitId())) {
+            // There is no commit-id, which means the user haven't built the whole project.
+            // We need to build the whole project this time,
+            // and record the latest commit-id and the newest api dependency tree.
+            return javaProjectBuilder.getClasses();
+        }
+
+        Set<FileDiff> fileDiffList = docBuildHelper.getChangedFilesFromVCS(new Predicate<String>() {
+            @Override
+            public boolean test(String s) {
+                return isEntryPoint(javaProjectBuilder, s);
+            }
+        });
+        if (CollectionUtil.isEmpty(fileDiffList)) {
+            return Collections.emptyList();
+        }
+
+        Collection<JavaClass> result = new ArrayList<>(fileDiffList.size());
+        fileDiffList.forEach(item -> {
+            try {
+                JavaClass javaClass = javaProjectBuilder.getClassByName(item.getNewQualifiedName());
+                result.add(javaClass);
+            } catch (Exception ignore) {}
+        });
+
+        return result;
+    }
+
+    default void preRender(DocBuildHelper docBuildHelper) {
+
+    }
+
+    default void postRender(DocBuildHelper docBuildHelper, List<T> apiList) {
+        docBuildHelper.rebuildDependencyTree(apiList);
+    }
+
+    default boolean isEntryPoint(JavaProjectBuilder javaProjectBuilder, String javaClassName) {
+        if (StringUtil.isEmpty(javaClassName)) {
+            return false;
+        }
+
+        JavaClass javaClass = null;
+        try {
+            javaClass = javaProjectBuilder.getClassByName(javaClassName);
+        } catch (Exception ignore) {}
+
+        if (javaClass == null) {
+            return false;
+        }
+
+        return isEntryPoint(javaClass, registeredAnnotations());
+    }
+
+    boolean isEntryPoint(JavaClass javaClass, FrameworkAnnotations frameworkAnnotations);
+
 }
