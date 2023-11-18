@@ -57,13 +57,4 @@ public enum ComponentTypeEnum {
     public String getComponentType() {
         return componentType;
     }
-
-    public static ComponentTypeEnum getComponentEnumByCode(String code) {
-        for (ComponentTypeEnum typeEnum : ComponentTypeEnum.values()) {
-            if (typeEnum.getComponentType().equals(code)) {
-                return typeEnum;
-            }
-        }
-        return RANDOM;
-    }
 }
