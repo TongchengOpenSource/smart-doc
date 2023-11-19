@@ -29,7 +29,7 @@
                 <ul class="sectlevel2" style="${myStyle}"><%for(doc in api.list){%>
                     <li><%if(doc.deprecated){%><a href="${alias}.html#_${api.order}_${doc.order}_${doc.desc}">${api.order}.${doc.order}.&nbsp;<span
                             class="line-through">${htmlEscape(doc.desc)}</span></a><%}else{%><a
-                            href="${alias}.html#_${api.order}_${doc.order}_${doc.desc}">${api.order}.${doc.order}.&nbsp;${htmlEscape(doc.desc)}</a><%}%>
+                            href="${alias}.html#${doc.methodId}">${api.order}.${doc.order}.&nbsp;${htmlEscape(doc.desc)}</a><%}%>
                     </li>
                     <%}%>
                 </ul>
@@ -37,9 +37,9 @@
             <%}else{%>
             <li class="${liClass}"><a class="dd" href="${api.alias}.html#header">${api.order}.&nbsp;${htmlEscape(api.desc)}</a>
                 <ul class="sectlevel2" style="${myStyle}"><%for(doc in api.list){%>
-                    <li><%if(doc.deprecated){%><a href="${api.alias}.html#_${api.order}_${doc.order}_${doc.desc}">${api.order}.${doc.order}.&nbsp;<span
+                    <li><%if(doc.deprecated){%><a href="${api.alias}.html#${doc.methodId}">${api.order}.${doc.order}.&nbsp;<span
                             class="line-through">${htmlEscape(doc.desc)}</span></a><%}else{%><a
-                            href="${api.alias}.html#_${api.order}_${doc.order}_${doc.desc}">${api.order}.${doc.order}.&nbsp;${htmlEscape(doc.desc)}</a><%}%>
+                            href="${api.alias}.html#${doc.methodId}">${api.order}.${doc.order}.&nbsp;${htmlEscape(doc.desc)}</a><%}%>
                     </li>
                     <%}%>
                 </ul>
@@ -62,11 +62,11 @@
     <div class="sect1"><h2 id="_${desc}"><a class="anchor" href="#_${desc}"></a><a class="link" href="#_${desc}">${order}.&nbsp;${htmlEscape(desc)}</a>
     </h2>
         <div class="sectionbody"><%for(doc in list){%>
-            <div class="sect2"><h3 id="_${order}_${doc.order}_${doc.desc}">
-                <a class="anchor" href="#_${order}_${doc.order}_${doc.desc}"></a><%if(doc.deprecated){%><a
-                    class="link" href="#_${order}_${doc.order}_${doc.desc}">${order}.${doc.order}.&nbsp;<span
+            <div class="sect2"><h3 id="${doc.methodId}">
+                <a class="anchor" href="#${doc.methodId}"></a><%if(doc.deprecated){%><a
+                    class="link" href="#${doc.methodId}">${order}.${doc.order}.&nbsp;<span
                     class="line-through">${htmlEscape(doc.desc)}</span></a><%}else{%>
-                <a class="link" href="#_${order}_${doc.order}_${doc.desc}">${order}.${doc.order}.&nbsp;${htmlEscape(doc.desc)}</a><%}%>
+                <a class="link" href="#${doc.methodId}">${order}.${doc.order}.&nbsp;${htmlEscape(doc.desc)}</a><%}%>
             </h3>
                 <div class="paragraph"><p><strong>URL:</strong><a href="${doc.url}" class="bare">&nbsp;${doc.url}</a>
                 </p></div>
