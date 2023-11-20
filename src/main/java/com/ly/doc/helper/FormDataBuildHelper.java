@@ -197,14 +197,7 @@ public class FormDataBuildHelper {
                         }
                     }
                 }
-            } else if (subTypeName.length() == 1 || DocGlobalConstants.JAVA_OBJECT_FULLY.equals(subTypeName)) {
-                //  For Generics,do nothing, spring mvc not support
-//                if (n < globGicName.length) {
-//                    String gicName = globGicName[n];
-//                    formDataList.addAll(getFormData(gicName, registryClasses, counter, builder, pre + fieldName + "."));
-//                }
-//                n++;
-            } else {
+            }else {
                 formDataList.addAll(getFormData(javaClass.getGenericFullyQualifiedName(), registryClasses, counter, builder, pre + fieldName + "."));
             }
         }
