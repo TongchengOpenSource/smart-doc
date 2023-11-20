@@ -57,14 +57,14 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
     AtomicInteger atomicInteger = new AtomicInteger(1);
 
     default List<ApiDoc> processApiData(ProjectDocConfigBuilder projectBuilder, FrameworkAnnotations frameworkAnnotations,
-                                        List<ApiReqParam> configApiReqParams, IRequestMappingHandler baseMappingHandler, IHeaderHandler headerHandler,
-                                        Collection<JavaClass> javaClasses) {
+                                        List<ApiReqParam> configApiReqParams, IRequestMappingHandler baseMappingHandler, IHeaderHandler headerHandler) {
         ApiConfig apiConfig = projectBuilder.getApiConfig();
         List<ApiDoc> apiDocList = new ArrayList<>();
         int order = 0;
         boolean setCustomOrder = false;
+        Collection<JavaClass> classes = projectBuilder.getJavaProjectBuilder().getClasses();
         // exclude  class is ignore
-        for (JavaClass cls : javaClasses) {
+        for (JavaClass cls : classes) {
             if (StringUtil.isNotEmpty(apiConfig.getPackageFilters())) {
                 // from smart config
                 if (!DocUtil.isMatch(apiConfig.getPackageFilters(), cls)) {
@@ -73,7 +73,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
             }
             // from tag
             DocletTag ignoreTag = cls.getTagByName(DocTags.IGNORE);
-            if (!isEntryPoint(cls, frameworkAnnotations) || Objects.nonNull(ignoreTag)) {
+            if (!defaultEntryPoint(cls, frameworkAnnotations) || Objects.nonNull(ignoreTag)) {
                 continue;
             }
             String strOrder = JavaClassUtil.getClassTagsValue(cls, DocTags.ORDER, Boolean.TRUE);
@@ -589,10 +589,6 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                     strRequired = "true";
                 }
                 if (frameworkAnnotations.getRequestBodyAnnotation().getAnnotationName().equals(annotationName)) {
-//                    if (requestBodyCounter > 0) {
-//                        throw new RuntimeException("You have use @RequestBody Passing multiple variables  for method "
-//                                + javaMethod.getName() + " in " + className + ",@RequestBody annotation could only bind one variables.");
-//                    }
                     mockValue = JsonBuildHelper.buildJson(fullTypeName, typeName, Boolean.FALSE, 0, new HashMap<>(), groupClasses, builder);
                     requestBodyCounter++;
                     isRequestBody = true;
@@ -1068,11 +1064,16 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
         }
         List<JavaAnnotation> classAnnotations = DocClassUtil.getAnnotations(cls);
         Map<String, EntryAnnotation> entryAnnotationMap = frameworkAnnotations.getEntryAnnotations();
-
-        return classAnnotations.stream().anyMatch(annotation -> {
+        for (JavaAnnotation annotation : classAnnotations) {
             String name = annotation.getType().getValue();
-            return entryAnnotationMap.containsKey(name);
-        });
+            if (entryAnnotationMap.containsKey(name)) {
+                return true;
+            }
+            if (isEntryPoint(cls, frameworkAnnotations)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     default List<DocJavaMethod> getParentsClassMethods(ApiConfig apiConfig, ProjectDocConfigBuilder projectBuilder, JavaClass cls) {
