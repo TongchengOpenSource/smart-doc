@@ -20,13 +20,8 @@
  */
 package com.ly.doc.constants;
 
-/**
- * Java EE has been renamed Jakarta EE, this class is an upgraded replacement for {@link JAXRSAnnotations}
- * <p>
- * JAX-RS Annotations
- *
- * @author youngledo
- */
+// @author youngledo
+ 
 public final class JakartaJaxrsAnnotations {
 
     /**
