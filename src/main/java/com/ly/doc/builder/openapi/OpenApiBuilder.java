@@ -135,12 +135,7 @@ public class OpenApiBuilder extends AbstractOpenApiBuilder {
             // When summary and description are equal, there is only one
             request.put("description", apiMethodDoc.getDetail());
         }
-//        String tag = StringUtil.isEmpty(apiDoc.getDesc()) ? OPENAPI_TAG : apiDoc.getDesc();
-//        if (StringUtil.isNotEmpty(apiMethodDoc.getGroup())) {
-//            request.put("tags", new String[]{tag});
-//        } else {
-//            request.put("tags", new String[]{tag});
-//        }
+        
         request.put("tags", apiMethodDoc.getTagRefs().stream().map(TagDoc::getTag).toArray());
         request.put("requestBody", buildRequestBody(apiConfig, apiMethodDoc));
         request.put("parameters", buildParameters(apiMethodDoc));
