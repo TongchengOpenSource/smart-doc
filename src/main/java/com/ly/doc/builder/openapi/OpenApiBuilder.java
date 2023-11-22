@@ -33,6 +33,14 @@ import com.ly.doc.helper.JavaProjectBuilderHelper;
 import com.ly.doc.model.openapi.OpenApiTag;
 import com.ly.doc.utils.JsonUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
+
+import src.main.java.com.ly.doc.model.ApiConfig;
+import src.main.java.com.ly.doc.model.ApiDoc;
+import src.main.java.com.ly.doc.model.ApiMethodDoc;
+import src.main.java.com.ly.doc.model.ApiParam;
+import src.main.java.com.ly.doc.model.ApiReqParam;
+import src.main.java.com.ly.doc.model.TagDoc;
+
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
@@ -261,28 +269,8 @@ public class OpenApiBuilder extends AbstractOpenApiBuilder {
     @Override
     public Map<String, Object> buildComponentsSchema(List<ApiDoc> apiDocs, ComponentTypeEnum componentTypeEnum) {
         Map<String, Object> schemas = new HashMap<>(4);
-        Map<String, Object> component = new HashMap<>();
-        component.put(DocGlobalConstants.DEFAULT_PRIMITIVE, STRING_COMPONENT);
-        apiDocs.forEach(
-                a -> {
-                    List<ApiMethodDoc> apiMethodDocs = a.getList();
-                    apiMethodDocs.forEach(
-                            method -> {
-                                //request components
-                                String requestSchema = OpenApiSchemaUtil.getClassNameFromParams(method.getRequestParams());
-                                List<ApiParam> requestParams = method.getRequestParams();
-                                Map<String, Object> prop = buildProperties(requestParams, component, false);
-                                component.put(requestSchema, prop);
-                                //response components
-                                List<ApiParam> responseParams = method.getResponseParams();
-                                String schemaName = OpenApiSchemaUtil.getClassNameFromParams(method.getResponseParams());
-                                component.put(schemaName, buildProperties(responseParams, component, true));
-                            }
-                    );
-                }
-        );
-        component.remove(OpenApiSchemaUtil.NO_BODY_PARAM);
-        schemas.put("schemas", component);
+         schemas.put("schemas",
+                OpenApiSchemaUtil.buildComponentsSchema(apiDocs, componentTypeEnum, STRING_COMPONENT, this));
         return schemas;
     }
 }
