@@ -25,7 +25,7 @@ public class QboxScanSourceTest {
         String outPath = Paths.get("target").toAbsolutePath().toString();
 
         // config and scan
-        ApiConfig config = ApiConfig.getInstance();
+        ApiConfig config = new ApiConfig();
         config.setServerUrl("HSF://127.0.0.1:8088");
         config.setOpenUrl("http://demo.torna.cn/api");
         config.setDebugEnvName("测试环境");
