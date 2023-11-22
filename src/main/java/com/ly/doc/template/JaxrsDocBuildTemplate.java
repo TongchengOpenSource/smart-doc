@@ -39,6 +39,33 @@ import com.ly.doc.model.request.JaxrsPathMapping;
 import com.ly.doc.model.request.RequestMapping;
 import com.thoughtworks.qdox.model.*;
 
+import src.main.java.com.ly.doc.constants.DocAnnotationConstants;
+import src.main.java.com.ly.doc.constants.DocGlobalConstants;
+import src.main.java.com.ly.doc.constants.DocTags;
+import src.main.java.com.ly.doc.constants.JAXRSAnnotations;
+import src.main.java.com.ly.doc.constants.JakartaJaxrsAnnotations;
+import src.main.java.com.ly.doc.constants.MediaType;
+import src.main.java.com.ly.doc.model.ApiConfig;
+import src.main.java.com.ly.doc.model.ApiDoc;
+import src.main.java.com.ly.doc.model.ApiMethodDoc;
+import src.main.java.com.ly.doc.model.ApiMethodReqParam;
+import src.main.java.com.ly.doc.model.ApiParam;
+import src.main.java.com.ly.doc.model.ApiReqParam;
+import src.main.java.com.ly.doc.model.DocJavaMethod;
+import src.main.java.com.ly.doc.model.DocJavaParameter;
+import src.main.java.com.ly.doc.model.FormData;
+import src.main.java.com.ly.doc.utils.ApiParamTreeUtil;
+import src.main.java.com.ly.doc.utils.CurlUtil;
+import src.main.java.com.ly.doc.utils.DocClassUtil;
+import src.main.java.com.ly.doc.utils.DocPathUtil;
+import src.main.java.com.ly.doc.utils.DocUrlUtil;
+import src.main.java.com.ly.doc.utils.DocUtil;
+import src.main.java.com.ly.doc.utils.JavaClassUtil;
+import src.main.java.com.ly.doc.utils.JavaClassValidateUtil;
+import src.main.java.com.ly.doc.utils.JavaFieldUtil;
+import src.main.java.com.ly.doc.utils.JsonUtil;
+import src.main.java.com.ly.doc.utils.TornaUtil;
+
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
@@ -118,8 +145,8 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDo
      * @return List<ApiMethodDoc>
      */
     private List<ApiMethodDoc> buildControllerMethod(final JavaClass cls, ApiConfig apiConfig,
-                                                     ProjectDocConfigBuilder projectBuilder,
-                                                     FrameworkAnnotations frameworkAnnotations) {
+            ProjectDocConfigBuilder projectBuilder,
+            FrameworkAnnotations frameworkAnnotations) {
         String clzName = cls.getCanonicalName();
         boolean paramsDataToTree = projectBuilder.getApiConfig().isParamsDataToTree();
         String group = JavaClassUtil.getClassTagsValue(cls, DocTags.GROUP, Boolean.TRUE);
@@ -542,7 +569,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDo
     }
 
     private ApiRequestExample buildReqJson(DocJavaMethod javaMethod, ApiMethodDoc apiMethodDoc, String methodType,
-                                           ProjectDocConfigBuilder configBuilder) {
+            ProjectDocConfigBuilder configBuilder) {
         JavaMethod method = javaMethod.getJavaMethod();
         Map<String, String> pathParamsMap = new LinkedHashMap<>();
         List<DocJavaParameter> parameterList = getJavaParameterList(configBuilder, javaMethod, null);
@@ -652,7 +679,6 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDo
                 }
             }
 
-
         }
         requestExample.setFormDataList(formDataList);
         String[] paths = apiMethodDoc.getPath().split(";");
@@ -661,25 +687,13 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDo
         String exampleBody;
         String url;
         if (JakartaJaxrsAnnotations.POST.equals(methodType) || JakartaJaxrsAnnotations.PUT.equals(methodType)) {
-            //for post put
-            path = DocUtil.formatAndRemove(path, pathParamsMap);
-            body = UrlUtil.urlJoin(DocGlobalConstants.EMPTY, DocUtil.formDataToMap(formDataList))
-                    .replace("?", DocGlobalConstants.EMPTY);
-            body = StringUtil.removeQuotes(body);
-            url = apiMethodDoc.getServerUrl() + "/" + path;
-            url = UrlUtil.simplifyUrl(url);
+            // for post put
+            body = DocUrlUtil.buildBody(formDataList);
+            url = DocUrlUtil.buildUrl(path, apiMethodDoc, pathParamsMap, body);
 
             if (requestExample.isJson()) {
-                if (StringUtil.isNotEmpty(body)) {
-                    url = url + "?" + body;
-                }
-                CurlRequest curlRequest = CurlRequest.builder()
-                        .setBody(requestExample.getJsonBody())
-                        .setContentType(apiMethodDoc.getContentType())
-                        .setType(methodType)
-                        .setReqHeaders(reqHeaderList)
-                        .setUrl(url);
-                exampleBody = CurlUtil.toCurl(curlRequest);
+                exampleBody = CurlUtil.buildCurlRequest(url, requestExample, apiMethodDoc, body, methodType,
+                        reqHeaderList);
             } else {
                 CurlRequest curlRequest;
                 if (StringUtil.isNotEmpty(body)) {

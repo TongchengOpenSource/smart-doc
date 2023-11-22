@@ -28,6 +28,10 @@ import com.ly.doc.model.ApiReqParam;
 import com.ly.doc.model.FormData;
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.StringUtil;
+
+import src.main.java.com.ly.doc.model.ApiMethodDoc;
+import src.main.java.com.ly.doc.model.request.ApiRequestExample;
+
 import com.ly.doc.model.request.CurlRequest;
 
 /**
@@ -81,5 +85,24 @@ public class CurlUtil {
             sb.append(" '").append(request.getBody()).append("'");
         }
         return sb.toString();
+    }
+
+    public static String buildCurlRequest(String url, ApiRequestExample requestExample, ApiMethodDoc apiMethodDoc,
+            String body, String methodType, List<ApiReqParam> reqHeaderList) {
+        if (requestExample.isJson()) {
+            if (StringUtil.isNotEmpty(body)) {
+                url = url + "?" + body;
+            }
+
+            CurlRequest curlRequest = CurlRequest.builder()
+                    .setBody(requestExample.getJsonBody())
+                    .setContentType(apiMethodDoc.getContentType())
+                    .setType(methodType)
+                    .setReqHeaders(reqHeaderList)
+                    .setUrl(url);
+
+            return CurlUtil.toCurl(curlRequest);
+        }
+        return null;
     }
 }

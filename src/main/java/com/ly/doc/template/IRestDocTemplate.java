@@ -38,6 +38,35 @@ import com.ly.doc.model.request.CurlRequest;
 import com.ly.doc.model.request.RequestMapping;
 import com.thoughtworks.qdox.model.*;
 import com.thoughtworks.qdox.model.expression.AnnotationValue;
+
+import src.main.java.com.ly.doc.constants.ApiReqParamInTypeEnum;
+import src.main.java.com.ly.doc.constants.DocAnnotationConstants;
+import src.main.java.com.ly.doc.constants.DocGlobalConstants;
+import src.main.java.com.ly.doc.constants.DocTags;
+import src.main.java.com.ly.doc.constants.MediaType;
+import src.main.java.com.ly.doc.constants.Methods;
+import src.main.java.com.ly.doc.model.ApiConfig;
+import src.main.java.com.ly.doc.model.ApiDoc;
+import src.main.java.com.ly.doc.model.ApiMethodDoc;
+import src.main.java.com.ly.doc.model.ApiMethodReqParam;
+import src.main.java.com.ly.doc.model.ApiParam;
+import src.main.java.com.ly.doc.model.ApiReqParam;
+import src.main.java.com.ly.doc.model.DocJavaMethod;
+import src.main.java.com.ly.doc.model.DocJavaParameter;
+import src.main.java.com.ly.doc.model.DocMapping;
+import src.main.java.com.ly.doc.model.FormData;
+import src.main.java.com.ly.doc.utils.ApiParamTreeUtil;
+import src.main.java.com.ly.doc.utils.CurlUtil;
+import src.main.java.com.ly.doc.utils.DocClassUtil;
+import src.main.java.com.ly.doc.utils.DocUrlUtil;
+import src.main.java.com.ly.doc.utils.DocUtil;
+import src.main.java.com.ly.doc.utils.JavaClassUtil;
+import src.main.java.com.ly.doc.utils.JavaClassValidateUtil;
+import src.main.java.com.ly.doc.utils.JavaFieldUtil;
+import src.main.java.com.ly.doc.utils.JsonUtil;
+import src.main.java.com.ly.doc.utils.OpenApiSchemaUtil;
+import src.main.java.com.ly.doc.utils.TornaUtil;
+
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -57,7 +86,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
     AtomicInteger atomicInteger = new AtomicInteger(1);
 
     default List<ApiDoc> processApiData(ProjectDocConfigBuilder projectBuilder, FrameworkAnnotations frameworkAnnotations,
-                                        List<ApiReqParam> configApiReqParams, IRequestMappingHandler baseMappingHandler, IHeaderHandler headerHandler) {
+            List<ApiReqParam> configApiReqParams, IRequestMappingHandler baseMappingHandler, IHeaderHandler headerHandler) {
         ApiConfig apiConfig = projectBuilder.getApiConfig();
         List<ApiDoc> apiDocList = new ArrayList<>();
         int order = 0;
@@ -115,7 +144,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
         return builder.toString();
     }
 
-
+    
     default void handleApiDoc(JavaClass cls, List<ApiDoc> apiDocList, List<ApiMethodDoc> apiMethodDocs, int order, boolean isUseMD5) {
         String controllerName = cls.getName();
         ApiDoc apiDoc = new ApiDoc();
@@ -481,7 +510,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
     }
 
     default ApiMethodReqParam requestParams(final DocJavaMethod docJavaMethod, ProjectDocConfigBuilder builder,
-                                            List<ApiReqParam> configApiReqParams, FrameworkAnnotations frameworkAnnotations) {
+            List<ApiReqParam> configApiReqParams, FrameworkAnnotations frameworkAnnotations) {
         JavaMethod javaMethod = docJavaMethod.getJavaMethod();
         boolean isStrict = builder.getApiConfig().isStrict();
         String className = javaMethod.getDeclaringClass().getCanonicalName();
@@ -511,7 +540,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
             }
         }
         final Map<String, Map<String, ApiReqParam>> collect = configApiReqParams.stream().collect(Collectors.groupingBy(ApiReqParam::getParamIn,
-                Collectors.toMap(ApiReqParam::getName, m -> m, (k1, k2) -> k1)));
+                        Collectors.toMap(ApiReqParam::getName, m -> m, (k1, k2) -> k1)));
         final Map<String, ApiReqParam> pathReqParamMap = collect.getOrDefault(ApiReqParamInTypeEnum.PATH.getValue(), Collections.emptyMap());
         final Map<String, ApiReqParam> queryReqParamMap = collect.getOrDefault(ApiReqParamInTypeEnum.QUERY.getValue(), Collections.emptyMap());
         List<DocJavaParameter> parameterList = getJavaParameterList(builder, docJavaMethod, frameworkAnnotations);
@@ -763,7 +792,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
     }
 
     default ApiRequestExample buildReqJson(DocJavaMethod javaMethod, ApiMethodDoc apiMethodDoc, String methodType,
-                                           ProjectDocConfigBuilder configBuilder, FrameworkAnnotations frameworkAnnotations) {
+            ProjectDocConfigBuilder configBuilder, FrameworkAnnotations frameworkAnnotations) {
         JavaMethod method = javaMethod.getJavaMethod();
         Map<String, String> pathParamsMap = new LinkedHashMap<>();
         Map<String, String> queryParamsMap = new LinkedHashMap<>();
@@ -997,24 +1026,12 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
         queryParamsMap.putAll(formDataToMap);
         if (Methods.POST.getValue().equals(methodType) || Methods.PUT.getValue().equals(methodType)) {
             // for post put
-            path = DocUtil.formatAndRemove(path, pathParamsMap);
-            body = UrlUtil.urlJoin(DocGlobalConstants.EMPTY, queryParamsMap)
-                    .replace("?", DocGlobalConstants.EMPTY);
-            body = StringUtil.removeQuotes(body);
-            url = apiMethodDoc.getServerUrl() + "/" + path;
-            url = UrlUtil.simplifyUrl(url);
+            body = DocUrlUtil.buildBody(formDataList);
+            url = DocUrlUtil.buildUrl(path, apiMethodDoc, pathParamsMap, body);
 
             if (requestExample.isJson()) {
-                if (StringUtil.isNotEmpty(body)) {
-                    url = url + "?" + body;
-                }
-                CurlRequest curlRequest = CurlRequest.builder()
-                        .setBody(requestExample.getJsonBody())
-                        .setContentType(apiMethodDoc.getContentType())
-                        .setType(methodType)
-                        .setReqHeaders(reqHeaderList)
-                        .setUrl(url);
-                exampleBody = CurlUtil.toCurl(curlRequest);
+                exampleBody = CurlUtil.buildCurlRequest(url, requestExample, apiMethodDoc, body, methodType,
+                        reqHeaderList);
             } else {
                 CurlRequest curlRequest;
                 if (StringUtil.isNotEmpty(body)) {
@@ -1091,7 +1108,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
     }
 
     default DocJavaMethod convertToDocJavaMethod(ApiConfig apiConfig, ProjectDocConfigBuilder projectBuilder,
-                                                 JavaMethod method, Map<String, JavaType> actualTypesMap) {
+            JavaMethod method, Map<String, JavaType> actualTypesMap) {
         JavaClass cls = method.getDeclaringClass();
         String clzName = cls.getCanonicalName();
         if (StringUtil.isEmpty(method.getComment()) && apiConfig.isStrict()) {
