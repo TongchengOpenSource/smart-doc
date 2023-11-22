@@ -163,4 +163,11 @@ public class OpenApiSchemaUtil {
         component.remove(OpenApiSchemaUtil.NO_BODY_PARAM);
         return component;
     }
+
+    public static Map<String, Object> buildInfo(ApiConfig apiConfig) {
+        Map<String, Object> infoMap = new HashMap<>(8);
+        infoMap.put("title", apiConfig.getProjectName() == null ? "Project Name is Null." : apiConfig.getProjectName());
+        infoMap.put("version", "1.0.0");
+        return infoMap;
+    }
 }

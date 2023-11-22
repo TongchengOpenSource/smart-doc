@@ -90,7 +90,7 @@ public class SwaggerBuilder extends AbstractOpenApiBuilder {
         this.setComponentKey(getModuleName());
         Map<String, Object> json = new HashMap<>(8);
         json.put("swagger", "2.0");
-        json.put("info", buildInfo(config));
+        json.put("info", OpenApiSchemaUtil.buildInfo(config));
         json.put("host", config.getServerUrl() == null ? "127.0.0.1" : config.getServerUrl());
         json.put("basePath", StringUtils.isNotBlank(config.getPathPrefix()) ? config.getPathPrefix() : "/");
         Set<OpenApiTag> tags = new HashSet<>();
@@ -103,19 +103,7 @@ public class SwaggerBuilder extends AbstractOpenApiBuilder {
         String data = JsonUtil.toPrettyJson(json);
         FileUtil.nioWriteFile(data, filePath);
     }
-
-    /**
-     * Build openapi info
-     *
-     * @param apiConfig Configuration of smart-doc
-     */
-    private static Map<String, Object> buildInfo(ApiConfig apiConfig) {
-        Map<String, Object> infoMap = new HashMap<>(8);
-        infoMap.put("title", apiConfig.getProjectName() == null ? "Project Name is Null." : apiConfig.getProjectName());
-        infoMap.put("version", "1.0.0");
-        return infoMap;
-    }
-
+    
     /**
      * Build Servers
      *
