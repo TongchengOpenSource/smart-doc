@@ -34,6 +34,9 @@ import com.ly.doc.model.torna.Apis;
 import com.ly.doc.model.torna.TornaApi;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 
+import src.main.java.com.ly.doc.constants.DocGlobalConstants;
+import src.main.java.com.ly.doc.model.ApiMethodDoc;
+
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -93,7 +96,7 @@ public class TornaBuilder {
             for (ApiDoc a : childrenApiDocs) {
                 api = new Apis();
                 api.setName(StringUtils.isBlank(a.getDesc()) ? a.getName() : a.getDesc());
-                api.setItems(TornaUtil.buildApis(a.getList(), TornaUtil.setDebugEnv(apiConfig, tornaApi)));
+                api.setItems(buildApis(a.getList(), TornaUtil.setDebugEnv(apiConfig, tornaApi)));
                 api.setIsFolder(TornaConstants.YES);
                 api.setAuthor(a.getAuthor());
                 api.setOrderIndex(a.getOrder());
@@ -113,6 +116,64 @@ public class TornaBuilder {
         tornaApi.setApis(groupApiList.size() == 1 && DEFAULT_GROUP_CODE.equals(groupApiList.get(0).getName()) ? groupApiList.get(0).getItems() : groupApiList);
         // Push to torna
         TornaUtil.pushToTorna(tornaApi, apiConfig, builder);
+    }
+
+    private static String subFirstUrlOrPath(String url) {
+        if (StringUtil.isEmpty(url)) {
+            return StringUtil.EMPTY;
+        }
+        if (!url.contains(DocGlobalConstants.MULTI_URL_SEPARATOR)) {
+            return url;
+        }
+        String[] split = StringUtil.split(url, DocGlobalConstants.MULTI_URL_SEPARATOR);
+        return split[0];
+    }
+
+    public static List<Apis> buildApis(List<ApiMethodDoc> apiMethodDocs, boolean hasDebugEnv) {
+        // Parameter list
+        List<Apis> apis = new ArrayList<>();
+        Apis methodApi;
+        // Iterative classification interface
+        for (ApiMethodDoc apiMethodDoc : apiMethodDocs) {
+            methodApi = new Apis();
+            methodApi.setIsFolder(TornaConstants.NO);
+            methodApi.setName(apiMethodDoc.getDesc());
+            methodApi.setUrl(
+                    hasDebugEnv ? subFirstUrlOrPath(apiMethodDoc.getPath()) : subFirstUrlOrPath(apiMethodDoc.getUrl()));
+            methodApi.setHttpMethod(apiMethodDoc.getType());
+            methodApi.setContentType(apiMethodDoc.getContentType());
+            methodApi.setDescription(apiMethodDoc.getDetail());
+            methodApi.setIsShow(TornaConstants.YES);
+            methodApi.setAuthor(apiMethodDoc.getAuthor());
+            methodApi.setOrderIndex(apiMethodDoc.getOrder());
+            methodApi.setVersion(apiMethodDoc.getVersion());
+
+            methodApi.setHeaderParams(TornaUtil.buildHerder(apiMethodDoc.getRequestHeaders()));
+            methodApi.setResponseParams(TornaUtil.buildParams(apiMethodDoc.getResponseParams()));
+            methodApi.setIsRequestArray(apiMethodDoc.getIsRequestArray());
+            methodApi.setIsResponseArray(apiMethodDoc.getIsResponseArray());
+            methodApi.setRequestArrayType(apiMethodDoc.getRequestArrayType());
+            methodApi.setResponseArrayType(apiMethodDoc.getResponseArrayType());
+            methodApi.setDeprecated(apiMethodDoc.isDeprecated() ? "Deprecated" : null);
+            // Path
+            if (CollectionUtil.isNotEmpty(apiMethodDoc.getPathParams())) {
+                methodApi.setPathParams(TornaUtil.buildParams(apiMethodDoc.getPathParams()));
+            }
+
+            if (CollectionUtil.isNotEmpty(apiMethodDoc.getQueryParams())
+                    && DocGlobalConstants.FILE_CONTENT_TYPE.equals(apiMethodDoc.getContentType())) {
+                // file upload
+                methodApi.setRequestParams(TornaUtil.buildParams(apiMethodDoc.getQueryParams()));
+            } else if (CollectionUtil.isNotEmpty(apiMethodDoc.getQueryParams())) {
+                methodApi.setQueryParams(TornaUtil.buildParams(apiMethodDoc.getQueryParams()));
+            }
+            // Json
+            if (CollectionUtil.isNotEmpty(apiMethodDoc.getRequestParams())) {
+                methodApi.setRequestParams(TornaUtil.buildParams(apiMethodDoc.getRequestParams()));
+            }
+            apis.add(methodApi);
+        }
+        return apis;
     }
 }
 

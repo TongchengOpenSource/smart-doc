@@ -91,117 +91,6 @@ public class TornaUtil {
         return hasDebugEnv;
     }
 
-    public static void printDebugInfo(ApiConfig apiConfig, String responseMsg, Map<String, String> requestJson, String category) {
-        if (apiConfig.isTornaDebug()) {
-            String sb = "Configuration information : \n" +
-                    "OpenUrl: " +
-                    apiConfig.getOpenUrl() +
-                    "\n" +
-                    "appToken: " +
-                    apiConfig.getAppToken() +
-                    "\n";
-            System.out.println(sb);
-            try {
-                JsonElement element = JsonParser.parseString(responseMsg);
-                TornaRequestInfo info = new TornaRequestInfo()
-                        .of()
-                        .setCategory(category)
-                        .setCode(element.getAsJsonObject().get(TornaConstants.CODE).getAsString())
-                        .setMessage(element.getAsJsonObject().get(TornaConstants.MESSAGE).getAsString())
-                        .setRequestInfo(requestJson)
-                        .setResponseInfo(responseMsg);
-                System.out.println(info.buildInfo());
-            } catch (Exception e) {
-                //Ex : Nginx Error,Tomcat Error
-                System.out.println("Response Error : \n" + responseMsg);
-            }
-        }
-    }
-
-    /**
-     * build apis
-     *
-     * @param apiMethodDocs apiMethodDocs
-     * @param hasDebugEnv   has debug environment
-     * @return List of Api
-     */
-    public static List<Apis> buildApis(List<ApiMethodDoc> apiMethodDocs, boolean hasDebugEnv) {
-        //Parameter list
-        List<Apis> apis = new ArrayList<>();
-        Apis methodApi;
-        //Iterative classification interface
-        for (ApiMethodDoc apiMethodDoc : apiMethodDocs) {
-            methodApi = new Apis();
-            methodApi.setIsFolder(TornaConstants.NO);
-            methodApi.setName(apiMethodDoc.getDesc());
-            methodApi.setUrl(hasDebugEnv ? subFirstUrlOrPath(apiMethodDoc.getPath()) : subFirstUrlOrPath(apiMethodDoc.getUrl()));
-            methodApi.setHttpMethod(apiMethodDoc.getType());
-            methodApi.setContentType(apiMethodDoc.getContentType());
-            methodApi.setDescription(apiMethodDoc.getDetail());
-            methodApi.setIsShow(TornaConstants.YES);
-            methodApi.setAuthor(apiMethodDoc.getAuthor());
-            methodApi.setOrderIndex(apiMethodDoc.getOrder());
-            methodApi.setVersion(apiMethodDoc.getVersion());
-
-            methodApi.setHeaderParams(buildHerder(apiMethodDoc.getRequestHeaders()));
-            methodApi.setResponseParams(buildParams(apiMethodDoc.getResponseParams()));
-            methodApi.setIsRequestArray(apiMethodDoc.getIsRequestArray());
-            methodApi.setIsResponseArray(apiMethodDoc.getIsResponseArray());
-            methodApi.setRequestArrayType(apiMethodDoc.getRequestArrayType());
-            methodApi.setResponseArrayType(apiMethodDoc.getResponseArrayType());
-            methodApi.setDeprecated(apiMethodDoc.isDeprecated() ? "Deprecated" : null);
-            //Path
-            if (CollectionUtil.isNotEmpty(apiMethodDoc.getPathParams())) {
-                methodApi.setPathParams(buildParams(apiMethodDoc.getPathParams()));
-            }
-
-            if (CollectionUtil.isNotEmpty(apiMethodDoc.getQueryParams())
-                    && DocGlobalConstants.FILE_CONTENT_TYPE.equals(apiMethodDoc.getContentType())) {
-                // file upload
-                methodApi.setRequestParams(buildParams(apiMethodDoc.getQueryParams()));
-            } else if (CollectionUtil.isNotEmpty(apiMethodDoc.getQueryParams())) {
-                methodApi.setQueryParams(buildParams(apiMethodDoc.getQueryParams()));
-            }
-            //Json
-            if (CollectionUtil.isNotEmpty(apiMethodDoc.getRequestParams())) {
-                methodApi.setRequestParams(buildParams(apiMethodDoc.getRequestParams()));
-            }
-            apis.add(methodApi);
-        }
-        return apis;
-    }
-
-    /**
-     * build apis
-     *
-     * @param apiMethodDocs apiMethodDocs
-     * @return List of Api
-     */
-    public static List<Apis> buildDubboApis(List<RpcJavaMethod> apiMethodDocs) {
-        //Parameter list
-        List<Apis> apis = new ArrayList<>();
-        Apis methodApi;
-        //Iterative classification interface
-        for (RpcJavaMethod apiMethodDoc : apiMethodDocs) {
-            methodApi = new Apis();
-            methodApi.setIsFolder(TornaConstants.NO);
-            methodApi.setName(apiMethodDoc.getDesc());
-            methodApi.setDescription(apiMethodDoc.getDetail());
-            methodApi.setIsShow(TornaConstants.YES);
-            methodApi.setAuthor(apiMethodDoc.getAuthor());
-            methodApi.setUrl(apiMethodDoc.getMethodDefinition());
-            methodApi.setResponseParams(buildParams(apiMethodDoc.getResponseParams()));
-            methodApi.setOrderIndex(apiMethodDoc.getOrder());
-            methodApi.setDeprecated(apiMethodDoc.isDeprecated() ? "Deprecated" : null);
-            //Json
-            if (CollectionUtil.isNotEmpty(apiMethodDoc.getRequestParams())) {
-                methodApi.setRequestParams(buildParams(apiMethodDoc.getRequestParams()));
-            }
-            apis.add(methodApi);
-        }
-        return apis;
-    }
-
     /**
      * build request header
      *
@@ -256,16 +145,6 @@ public class TornaUtil {
             bodies.add(httpParam);
         }
         return bodies;
-    }
-
-    public static String buildDependencies(List<RpcApiDependency> dependencies) {
-        StringBuilder s = new StringBuilder();
-        if (CollectionUtil.isNotEmpty(dependencies)) {
-            for (RpcApiDependency r : dependencies) {
-                s.append(r.toString()).append("\n\n");
-            }
-        }
-        return s.toString();
     }
 
     public static List<CommonErrorCode> buildErrorCode(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
@@ -353,21 +232,6 @@ public class TornaUtil {
 
     }
 
-    private static String getArrayType(Map<String, Object> schemaMap) {
-        String arrayType = null;
-        if (Objects.nonNull(schemaMap) && Objects.equals(DocGlobalConstants.ARRAY, schemaMap.get("type"))) {
-            Map<String, Object> innerSchemeMap = (Map<String, Object>) schemaMap.get("items");
-            if (Objects.nonNull(innerSchemeMap)) {
-                String type = (String) innerSchemeMap.get("type");
-                if (StringUtil.isNotEmpty(type)) {
-                    String className = getType(type);
-                    arrayType = JavaClassValidateUtil.isPrimitive(className) ? className : DocGlobalConstants.OBJECT;
-                }
-            }
-        }
-        return arrayType;
-    }
-
     private static String getType(String typeName) {
         String gicType;
         //get generic type
@@ -380,16 +244,5 @@ public class TornaUtil {
             gicType = gicType.substring(0, gicType.indexOf("["));
         }
         return gicType.substring(gicType.lastIndexOf(".") + 1).toLowerCase();
-    }
-
-    private static String subFirstUrlOrPath(String url) {
-        if (StringUtil.isEmpty(url)) {
-            return StringUtil.EMPTY;
-        }
-        if (!url.contains(DocGlobalConstants.MULTI_URL_SEPARATOR)) {
-            return url;
-        }
-        String[] split = StringUtil.split(url, DocGlobalConstants.MULTI_URL_SEPARATOR);
-        return split[0];
     }
 }

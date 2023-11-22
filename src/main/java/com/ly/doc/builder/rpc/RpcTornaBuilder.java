@@ -33,6 +33,9 @@ import com.ly.doc.helper.JavaProjectBuilderHelper;
 import com.ly.doc.model.torna.TornaApi;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 
+import src.main.java.com.ly.doc.model.RpcJavaMethod;
+import src.main.java.com.ly.doc.model.rpc.RpcApiDependency;
+
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -77,14 +80,14 @@ public class RpcTornaBuilder {
             api = new Apis();
             api.setName(StringUtils.isBlank(a.getDesc()) ? a.getName() : a.getDesc());
             TornaUtil.setDebugEnv(apiConfig, tornaApi);
-            api.setItems(TornaUtil.buildDubboApis(a.getList()));
+            api.setItems(buildDubboApis(a.getList()));
             api.setIsFolder(TornaConstants.YES);
             api.setAuthor(a.getAuthor());
             api.setDubboInfo(new DubboInfo().builder()
                 .setAuthor(a.getAuthor())
                 .setProtocol(a.getProtocol())
                 .setVersion(a.getVersion())
-                .setDependency(TornaUtil.buildDependencies(apiConfig.getRpcApiDependencies()))
+                .setDependency(buildDependencies(apiConfig.getRpcApiDependencies()))
                 .setInterfaceName(a.getName()));
             api.setOrderIndex(a.getOrder());
             apisList.add(api);
@@ -93,5 +96,40 @@ public class RpcTornaBuilder {
         tornaApi.setApis(apisList);
         // Push to torna
         TornaUtil.pushToTorna(tornaApi, apiConfig, builder);
+    }
+
+     public static List<Apis> buildDubboApis(List<RpcJavaMethod> apiMethodDocs) {
+        // Parameter list
+        List<Apis> apis = new ArrayList<>();
+        Apis methodApi;
+        // Iterative classification interface
+        for (RpcJavaMethod apiMethodDoc : apiMethodDocs) {
+            methodApi = new Apis();
+            methodApi.setIsFolder(TornaConstants.NO);
+            methodApi.setName(apiMethodDoc.getDesc());
+            methodApi.setDescription(apiMethodDoc.getDetail());
+            methodApi.setIsShow(TornaConstants.YES);
+            methodApi.setAuthor(apiMethodDoc.getAuthor());
+            methodApi.setUrl(apiMethodDoc.getMethodDefinition());
+            methodApi.setResponseParams(TornaUtil.buildParams(apiMethodDoc.getResponseParams()));
+            methodApi.setOrderIndex(apiMethodDoc.getOrder());
+            methodApi.setDeprecated(apiMethodDoc.isDeprecated() ? "Deprecated" : null);
+            // Json
+            if (CollectionUtil.isNotEmpty(apiMethodDoc.getRequestParams())) {
+                methodApi.setRequestParams(TornaUtil.buildParams(apiMethodDoc.getRequestParams()));
+            }
+            apis.add(methodApi);
+        }
+        return apis;
+    }
+
+    public static String buildDependencies(List<RpcApiDependency> dependencies) {
+        StringBuilder s = new StringBuilder();
+        if (CollectionUtil.isNotEmpty(dependencies)) {
+            for (RpcApiDependency r : dependencies) {
+                s.append(r.toString()).append("\n\n");
+            }
+        }
+        return s.toString();
     }
 }
