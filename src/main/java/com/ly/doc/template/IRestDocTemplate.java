@@ -714,17 +714,8 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                     }
                 }
             } else if (JavaClassValidateUtil.isPrimitive(fullTypeName)) {
-                ApiParam param = ApiParam.of()
-                        .setField(paramName)
-                        .setType(DocClassUtil.processTypeNameForParams(simpleName))
-                        .setId(paramList.size() + 1)
-                        .setPathParam(isPathVariable)
-                        .setQueryParam(queryParam)
-                        .setValue(mockValue)
-                        .setDesc(comment.toString())
-                        .setRequired(required)
-                        .setVersion(DocGlobalConstants.DEFAULT_VERSION);
-                paramList.add(param);
+                paramList.add(ApiParamTreeUtil.createAndAddApiParam(paramList, paramName, simpleName, isPathVariable,
+                        queryParam, mockValue, comment, required));
                 if (requestBodyCounter > 0) {
                     Map<String, Object> map = OpenApiSchemaUtil.primaryTypeSchema(simpleName);
                     docJavaMethod.setRequestSchema(map);

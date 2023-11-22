@@ -469,17 +469,8 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDo
                     paramList.addAll(apiParamList);
                 }
             } else if (JavaClassValidateUtil.isPrimitive(fullTypeName)) {
-                ApiParam param = ApiParam.of()
-                        .setField(paramName)
-                        .setType(DocClassUtil.processTypeNameForParams(simpleName))
-                        .setId(paramList.size() + 1)
-                        .setPathParam(isPathVariable)
-                        .setQueryParam(queryParam)
-                        .setValue(mockValue)
-                        .setDesc(comment.toString())
-                        .setRequired(required)
-                        .setVersion(DocGlobalConstants.DEFAULT_VERSION);
-                paramList.add(param);
+                paramList.add(ApiParamTreeUtil.createAndAddApiParam(paramList, paramName, simpleName, isPathVariable,
+                        queryParam, mockValue, comment, required));
             } else if (JavaClassValidateUtil.isMap(fullTypeName)) {
                 log.warning("When using smart-doc, it is not recommended to use Map to receive parameters, Check it in "
                         + javaMethod.getDeclaringClass().getCanonicalName() + "#" + javaMethod.getName());

@@ -147,4 +147,26 @@ public class ApiParamTreeUtil {
             .setQueryParams(queryParams);
     }
 
+    public static ApiParam createAndAddApiParam(
+            List<ApiParam> paramList,
+            String paramName,
+            String simpleName,
+            boolean isPathVariable,
+            boolean queryParam,
+            String mockValue,
+            StringBuilder comment,
+            boolean required) {
+        ApiParam param = ApiParam.of()
+                .setField(paramName)
+                .setType(DocClassUtil.processTypeNameForParams(simpleName))
+                .setId(paramList.size() + 1)
+                .setPathParam(isPathVariable)
+                .setQueryParam(queryParam)
+                .setValue(mockValue)
+                .setDesc(comment.toString())
+                .setRequired(required)
+                .setVersion(DocGlobalConstants.DEFAULT_VERSION);
+
+        return param;
+    }
 }
