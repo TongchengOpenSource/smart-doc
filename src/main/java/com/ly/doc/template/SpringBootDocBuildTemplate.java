@@ -44,13 +44,13 @@ import java.util.stream.Stream;
 public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDocTemplate {
 
     @Override
-    public List<ApiDoc> renderApi(ProjectDocConfigBuilder projectBuilder, Collection<JavaClass> candidateClasses) {
+    public List<ApiDoc> getApiData(ProjectDocConfigBuilder projectBuilder) {
         ApiConfig apiConfig = projectBuilder.getApiConfig();
         List<ApiReqParam> configApiReqParams = Stream.of(apiConfig.getRequestHeaders(), apiConfig.getRequestParams()).filter(Objects::nonNull)
                 .flatMap(Collection::stream).collect(Collectors.toList());
         FrameworkAnnotations frameworkAnnotations = registeredAnnotations();
         List<ApiDoc> apiDocList = this.processApiData(projectBuilder, frameworkAnnotations,
-                configApiReqParams, new SpringMVCRequestMappingHandler(), new SpringMVCRequestHeaderHandler(), candidateClasses);
+                configApiReqParams, new SpringMVCRequestMappingHandler(), new SpringMVCRequestHeaderHandler());
         // sort
         if (apiConfig.isSortByTitle()) {
             Collections.sort(apiDocList);
@@ -68,125 +68,118 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IR
     @Override
     public FrameworkAnnotations registeredAnnotations() {
         FrameworkAnnotations annotations = FrameworkAnnotations.builder();
-        HeaderAnnotation headerAnnotation = HeaderAnnotation.builder()
-                .setAnnotationName(SpringMvcAnnotations.REQUEST_HERDER)
-                .setValueProp(DocAnnotationConstants.VALUE_PROP)
-                .setDefaultValueProp(DocAnnotationConstants.DEFAULT_VALUE_PROP)
-                .setRequiredProp(DocAnnotationConstants.REQUIRED_PROP);
-        // add header annotation
+    
+        // Header Annotation
+        HeaderAnnotation headerAnnotation = buildHeaderAnnotation();
         annotations.setHeaderAnnotation(headerAnnotation);
-
-        // add entry annotation
-        Map<String, EntryAnnotation> entryAnnotations = new HashMap<>();
-        EntryAnnotation controllerAnnotation = EntryAnnotation.builder()
-                .setAnnotationName(SpringMvcAnnotations.CONTROLLER)
-                .setAnnotationFullyName(SpringMvcAnnotations.CONTROLLER);
-        entryAnnotations.put(controllerAnnotation.getAnnotationName(), controllerAnnotation);
-
-        EntryAnnotation restController = EntryAnnotation.builder()
-                .setAnnotationName(SpringMvcAnnotations.REST_CONTROLLER);
-        entryAnnotations.put(restController.getAnnotationName(), restController);
+    
+        // Entry Annotations
+        Map<String, EntryAnnotation> entryAnnotations = buildEntryAnnotations();
         annotations.setEntryAnnotations(entryAnnotations);
-
-        // add request body annotation
-        RequestBodyAnnotation bodyAnnotation = RequestBodyAnnotation.builder()
-                .setAnnotationName(SpringMvcAnnotations.REQUEST_BODY)
-                .setAnnotationFullyName(SpringMvcAnnotations.REQUEST_BODY_FULLY);
+    
+        // Request Body Annotation
+        RequestBodyAnnotation bodyAnnotation = buildRequestBodyAnnotation();
         annotations.setRequestBodyAnnotation(bodyAnnotation);
-
-        // request param annotation
-        RequestParamAnnotation requestAnnotation = RequestParamAnnotation.builder()
-                .setAnnotationName(SpringMvcAnnotations.REQUEST_PARAM)
-                .setDefaultValueProp(DocAnnotationConstants.DEFAULT_VALUE_PROP)
-                .setRequiredProp(DocAnnotationConstants.REQUIRED_PROP);
+    
+        // Request Param Annotation
+        RequestParamAnnotation requestAnnotation = buildRequestParamAnnotation();
         annotations.setRequestParamAnnotation(requestAnnotation);
-
-        // add path variable annotation
-        PathVariableAnnotation pathVariableAnnotation = PathVariableAnnotation.builder()
-                .setAnnotationName(SpringMvcAnnotations.PATH_VARIABLE)
-                .setDefaultValueProp(DocAnnotationConstants.DEFAULT_VALUE_PROP)
-                .setRequiredProp(DocAnnotationConstants.REQUIRED_PROP);
+    
+        // Path Variable Annotation
+        PathVariableAnnotation pathVariableAnnotation = buildPathVariableAnnotation();
         annotations.setPathVariableAnnotation(pathVariableAnnotation);
-
-        // add mapping annotations
-        Map<String, MappingAnnotation> mappingAnnotations = new HashMap<>();
-
-        MappingAnnotation requestMappingAnnotation = MappingAnnotation.builder()
-                .setAnnotationName(SpringMvcAnnotations.REQUEST_MAPPING)
-                .setConsumesProp("consumes")
-                .setProducesProp("produces")
-                .setMethodProp("method")
-                .setParamsProp("params")
-                .setScope("class", "method")
-                .setPathProps(DocAnnotationConstants.VALUE_PROP, DocAnnotationConstants.PATH_PROP);
-        mappingAnnotations.put(requestMappingAnnotation.getAnnotationName(), requestMappingAnnotation);
-
-        MappingAnnotation postMappingAnnotation = MappingAnnotation.builder()
-                .setAnnotationName(SpringMvcAnnotations.POST_MAPPING)
-                .setConsumesProp("consumes")
-                .setProducesProp("produces")
-                .setMethodProp("method")
-                .setParamsProp("params")
-                .setMethodType(Methods.POST.getValue())
-                .setPathProps(DocAnnotationConstants.VALUE_PROP, DocAnnotationConstants.PATH_PROP);
-        mappingAnnotations.put(postMappingAnnotation.getAnnotationName(), postMappingAnnotation);
-
-        MappingAnnotation getMappingAnnotation = MappingAnnotation.builder()
-                .setAnnotationName(SpringMvcAnnotations.GET_MAPPING)
-                .setConsumesProp("consumes")
-                .setProducesProp("produces")
-                .setMethodProp("method")
-                .setParamsProp("params")
-                .setMethodType(Methods.GET.getValue())
-                .setPathProps(DocAnnotationConstants.VALUE_PROP, DocAnnotationConstants.PATH_PROP);
-        mappingAnnotations.put(getMappingAnnotation.getAnnotationName(), getMappingAnnotation);
-
-        MappingAnnotation putMappingAnnotation = MappingAnnotation.builder()
-                .setAnnotationName(SpringMvcAnnotations.PUT_MAPPING)
-                .setConsumesProp("consumes")
-                .setProducesProp("produces")
-                .setParamsProp("params")
-                .setMethodProp("method")
-                .setMethodType(Methods.PUT.getValue())
-                .setPathProps(DocAnnotationConstants.VALUE_PROP, DocAnnotationConstants.PATH_PROP);
-        mappingAnnotations.put(putMappingAnnotation.getAnnotationName(), putMappingAnnotation);
-
-        MappingAnnotation patchMappingAnnotation = MappingAnnotation.builder()
-                .setAnnotationName(SpringMvcAnnotations.PATCH_MAPPING)
-                .setConsumesProp("consumes")
-                .setProducesProp("produces")
-                .setMethodProp("method")
-                .setParamsProp("params")
-                .setMethodType(Methods.PATCH.getValue())
-                .setPathProps(DocAnnotationConstants.VALUE_PROP, DocAnnotationConstants.PATH_PROP);
-        mappingAnnotations.put(patchMappingAnnotation.getAnnotationName(), patchMappingAnnotation);
-
-        MappingAnnotation deleteMappingAnnotation = MappingAnnotation.builder()
-                .setAnnotationName(SpringMvcAnnotations.DELETE_MAPPING)
-                .setConsumesProp("consumes")
-                .setProducesProp("produces")
-                .setMethodProp("method")
-                .setParamsProp("params")
-                .setMethodType(Methods.DELETE.getValue())
-                .setPathProps(DocAnnotationConstants.VALUE_PROP, DocAnnotationConstants.PATH_PROP);
-        mappingAnnotations.put(deleteMappingAnnotation.getAnnotationName(), deleteMappingAnnotation);
-
-        MappingAnnotation feignClientAnnotation = MappingAnnotation.builder()
-                .setAnnotationName(DocGlobalConstants.FEIGN_CLIENT)
-                .setAnnotationFullyName(DocGlobalConstants.FEIGN_CLIENT_FULLY);
-        mappingAnnotations.put(feignClientAnnotation.getAnnotationName(), feignClientAnnotation);
-
+    
+        // Mapping Annotations
+        Map<String, MappingAnnotation> mappingAnnotations = buildMappingAnnotations();
         annotations.setMappingAnnotations(mappingAnnotations);
+    
         return annotations;
     }
+    
+    private HeaderAnnotation buildHeaderAnnotation() {
+        return HeaderAnnotation.builder()
+            .setAnnotationName(SpringMvcAnnotations.REQUEST_HERDER)
+            .setValueProp(DocAnnotationConstants.VALUE_PROP)
+            .setDefaultValueProp(DocAnnotationConstants.DEFAULT_VALUE_PROP)
+            .setRequiredProp(DocAnnotationConstants.REQUIRED_PROP);
+    }
+    
+    private Map<String, EntryAnnotation> buildEntryAnnotations() {
+        Map<String, EntryAnnotation> entryAnnotations = new HashMap<>();
+        
+        entryAnnotations.putAll(buildEntryAnnotation(SpringMvcAnnotations.CONTROLLER, SpringMvcAnnotations.CONTROLLER));
+        entryAnnotations.putAll(buildEntryAnnotation(SpringMvcAnnotations.REST_CONTROLLER, null));
+        entryAnnotations.putAll(buildEntryAnnotation("org.springframework.stereotype.Component", null));
+        
+        return entryAnnotations;
+    }
+    
+    private Map<String, EntryAnnotation> buildEntryAnnotation(String annotationName, String annotationFullyName) {
+        EntryAnnotation entryAnnotation = EntryAnnotation.builder()
+            .setAnnotationName(annotationName)
+            .setAnnotationFullyName(annotationFullyName);
+        
+        Map<String, EntryAnnotation> entryAnnotations = new HashMap<>();
+        entryAnnotations.put(entryAnnotation.getAnnotationName(), entryAnnotation);
+    
+        return entryAnnotations;
+    }
+    
+    private RequestBodyAnnotation buildRequestBodyAnnotation() {
+        return RequestBodyAnnotation.builder()
+            .setAnnotationName(SpringMvcAnnotations.REQUEST_BODY)
+            .setAnnotationFullyName(SpringMvcAnnotations.REQUEST_BODY_FULLY);
+    }
+    
+    private RequestParamAnnotation buildRequestParamAnnotation() {
+        return RequestParamAnnotation.builder()
+            .setAnnotationName(SpringMvcAnnotations.REQUEST_PARAM)
+            .setDefaultValueProp(DocAnnotationConstants.DEFAULT_VALUE_PROP)
+            .setRequiredProp(DocAnnotationConstants.REQUIRED_PROP);
+    }
+    
+    private PathVariableAnnotation buildPathVariableAnnotation() {
+        return PathVariableAnnotation.builder()
+            .setAnnotationName(SpringMvcAnnotations.PATH_VARIABLE)
+            .setDefaultValueProp(DocAnnotationConstants.DEFAULT_VALUE_PROP)
+            .setRequiredProp(DocAnnotationConstants.REQUIRED_PROP);
+    }
+    
+    private Map<String, MappingAnnotation> buildMappingAnnotations() {
+        Map<String, MappingAnnotation> mappingAnnotations = new HashMap<>();
+    
+        mappingAnnotations.putAll(buildMappingAnnotation(SpringMvcAnnotations.REQUEST_MAPPING, null, null));
+        mappingAnnotations.putAll(buildMappingAnnotation(SpringMvcAnnotations.POST_MAPPING, Methods.POST.getValue(), null));
+        mappingAnnotations.putAll(buildMappingAnnotation(SpringMvcAnnotations.GET_MAPPING, Methods.GET.getValue(), null));
+        mappingAnnotations.putAll(buildMappingAnnotation(SpringMvcAnnotations.PUT_MAPPING, Methods.PUT.getValue(), null));
+        mappingAnnotations.putAll(buildMappingAnnotation(SpringMvcAnnotations.PATCH_MAPPING, Methods.PATCH.getValue(), null));
+        mappingAnnotations.putAll(buildMappingAnnotation(SpringMvcAnnotations.DELETE_MAPPING, Methods.DELETE.getValue(), null));
+        mappingAnnotations.putAll(buildMappingAnnotation(DocGlobalConstants.FEIGN_CLIENT, null, DocGlobalConstants.FEIGN_CLIENT_FULLY));
+    
+        return mappingAnnotations;
+    }
+    
+    private Map<String, MappingAnnotation> buildMappingAnnotation(String annotationName, String methodType, String annotationFullyName) {
+        MappingAnnotation mappingAnnotation = MappingAnnotation.builder()
+            .setAnnotationName(annotationName)
+            .setConsumesProp("consumes")
+            .setProducesProp("produces")
+            .setMethodProp("method")
+            .setParamsProp("params")
+            .setScope("class", "method")
+            .setPathProps(DocAnnotationConstants.VALUE_PROP, DocAnnotationConstants.PATH_PROP)
+            .setMethodType(methodType)
+            .setAnnotationFullyName(annotationFullyName);
+        
+        Map<String, MappingAnnotation> mappingAnnotations = new HashMap<>();
+        mappingAnnotations.put(mappingAnnotation.getAnnotationName(), mappingAnnotation);
+    
+        return mappingAnnotations;
+    }
+    
 
     @Override
     public boolean isEntryPoint(JavaClass javaClass, FrameworkAnnotations frameworkAnnotations) {
-        boolean isDefaultEntryPoint = defaultEntryPoint(javaClass, frameworkAnnotations);
-        if (isDefaultEntryPoint) {
-            return true;
-        }
-
         if (javaClass.isAnnotation() || javaClass.isEnum()) {
             return false;
         }
