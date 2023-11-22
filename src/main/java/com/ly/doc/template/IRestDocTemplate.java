@@ -509,6 +509,29 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
         return methodDocList;
     }
 
+    default void processMappingAnnotations(List<JavaAnnotation> methodAnnotations, Map<String, String> queryParamsMap,
+            Map<String, MappingAnnotation> mappingAnnotationMap) {
+        for (JavaAnnotation annotation : methodAnnotations) {
+            String annotationName = annotation.getType().getName();
+            MappingAnnotation mappingAnnotation = mappingAnnotationMap.get(annotationName);
+            if (Objects.nonNull(mappingAnnotation) && StringUtil.isNotEmpty(mappingAnnotation.getParamsProp())) {
+                Object paramsObjects = annotation.getNamedParameter(mappingAnnotation.getParamsProp());
+                if (Objects.isNull(paramsObjects)) {
+                    continue;
+                }
+                String params = StringUtil.removeQuotes(paramsObjects.toString());
+                if (!params.startsWith("[")) {
+                    mappingParamProcess(paramsObjects.toString(), queryParamsMap);
+                    continue;
+                }
+                List<String> headers = (LinkedList) paramsObjects;
+                for (String str : headers) {
+                    mappingParamProcess(str, queryParamsMap);
+                }
+            }
+        }
+    }
+
     default ApiMethodReqParam requestParams(final DocJavaMethod docJavaMethod, ProjectDocConfigBuilder builder,
             List<ApiReqParam> configApiReqParams, FrameworkAnnotations frameworkAnnotations) {
         JavaMethod javaMethod = docJavaMethod.getJavaMethod();
@@ -520,25 +543,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
         Map<String, String> mappingParams = new HashMap<>();
         List<JavaAnnotation> methodAnnotations = javaMethod.getAnnotations();
         Map<String, MappingAnnotation> mappingAnnotationMap = frameworkAnnotations.getMappingAnnotations();
-        for (JavaAnnotation annotation : methodAnnotations) {
-            String annotationName = annotation.getType().getName();
-            MappingAnnotation mappingAnnotation = mappingAnnotationMap.get(annotationName);
-            if (Objects.nonNull(mappingAnnotation) && StringUtil.isNotEmpty(mappingAnnotation.getParamsProp())) {
-                Object paramsObjects = annotation.getNamedParameter(mappingAnnotation.getParamsProp());
-                if (Objects.isNull(paramsObjects)) {
-                    continue;
-                }
-                String params = StringUtil.removeQuotes(paramsObjects.toString());
-                if (!params.startsWith("[")) {
-                    mappingParamToApiParam(paramsObjects.toString(), paramList, mappingParams);
-                    continue;
-                }
-                List<String> headers = (LinkedList) paramsObjects;
-                for (String str : headers) {
-                    mappingParamToApiParam(str, paramList, mappingParams);
-                }
-            }
-        }
+        processMappingAnnotations(methodAnnotations, mappingParams, mappingAnnotationMap);
         final Map<String, Map<String, ApiReqParam>> collect = configApiReqParams.stream().collect(Collectors.groupingBy(ApiReqParam::getParamIn,
                         Collectors.toMap(ApiReqParam::getName, m -> m, (k1, k2) -> k1)));
         final Map<String, ApiReqParam> pathReqParamMap = collect.getOrDefault(ApiReqParamInTypeEnum.PATH.getValue(), Collections.emptyMap());
@@ -803,25 +808,8 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                 .forEach(param -> queryParamsMap.put(param.getSourceField(), param.getValue()));
         List<JavaAnnotation> methodAnnotations = method.getAnnotations();
         Map<String, MappingAnnotation> mappingAnnotationMap = frameworkAnnotations.getMappingAnnotations();
-        for (JavaAnnotation annotation : methodAnnotations) {
-            String annotationName = annotation.getType().getName();
-            MappingAnnotation mappingAnnotation = mappingAnnotationMap.get(annotationName);
-            if (Objects.nonNull(mappingAnnotation) && StringUtil.isNotEmpty(mappingAnnotation.getParamsProp())) {
-                Object paramsObjects = annotation.getNamedParameter(mappingAnnotation.getParamsProp());
-                if (Objects.isNull(paramsObjects)) {
-                    continue;
-                }
-                String params = StringUtil.removeQuotes(paramsObjects.toString());
-                if (!params.startsWith("[")) {
-                    mappingParamProcess(paramsObjects.toString(), queryParamsMap);
-                    continue;
-                }
-                List<String> headers = (LinkedList) paramsObjects;
-                for (String str : headers) {
-                    mappingParamProcess(str, queryParamsMap);
-                }
-            }
-        }
+        processMappingAnnotations(methodAnnotations, queryParamsMap, mappingAnnotationMap);
+
         List<DocJavaParameter> parameterList = getJavaParameterList(configBuilder, javaMethod, frameworkAnnotations);
         List<ApiReqParam> reqHeaderList = apiMethodDoc.getRequestHeaders();
         if (parameterList.size() < 1) {
