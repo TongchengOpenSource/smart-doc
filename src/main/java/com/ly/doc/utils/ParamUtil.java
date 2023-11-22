@@ -65,4 +65,36 @@ public class ParamUtil {
 
         return new ArrayList<>(set);
     }
+
+    public static JavaClass getSeeEnum(JavaField javaField, ProjectDocConfigBuilder builder) {
+        if (Objects.isNull(javaField)) {
+            return null;
+        }
+        JavaClass javaClass = javaField.getType();
+        if (javaClass.isEnum()) {
+            return javaClass;
+        }
+
+        DocletTag see = javaField.getTagByName(DocTags.SEE);
+        if (Objects.isNull(see)) {
+            return null;
+        }
+        String value = see.getValue();
+        if (!JavaClassValidateUtil.isClassName(value)) {
+            return null;
+        }
+        // not FullyQualifiedName
+        if (!StringUtils.contains(value, ".")) {
+            List<String> imports = javaField.getDeclaringClass().getSource().getImports();
+            String finalValue = value;
+            value = imports.stream().filter(i -> StringUtils.endsWith(i, finalValue)).findFirst()
+                    .orElse(StringUtils.EMPTY);
+        }
+
+        JavaClass enumClass = builder.getJavaProjectBuilder().getClassByName(value);
+        if (enumClass.isEnum()) {
+            return enumClass;
+        }
+        return null;
+    }
 }

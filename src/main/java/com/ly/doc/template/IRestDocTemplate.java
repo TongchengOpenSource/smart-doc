@@ -85,6 +85,31 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
     Logger log = Logger.getLogger(IRestDocTemplate.class.getName());
     AtomicInteger atomicInteger = new AtomicInteger(1);
 
+      /**
+     * Get Common for methods with the same signature from interfaces
+     * 
+     * @param cls    cls
+     * @param method method
+     * @return common
+     */
+    public static String getSameSignatureMethodCommonFromInterface(JavaClass cls, JavaMethod method) {
+
+        List<JavaMethod> methodsBySignature = cls.getMethodsBySignature(method.getName(), method.getParameterTypes(),
+                true, method.isVarArgs());
+
+        for (JavaMethod sameSignatureMethod : methodsBySignature) {
+            if (sameSignatureMethod == method
+                    || sameSignatureMethod.getDeclaringClass() == null
+                    || !sameSignatureMethod.getDeclaringClass().isInterface()) {
+                continue;
+            }
+            if (sameSignatureMethod.getComment() != null) {
+                return sameSignatureMethod.getComment();
+            }
+        }
+        return null;
+    }
+
     default List<ApiDoc> processApiData(ProjectDocConfigBuilder projectBuilder, FrameworkAnnotations frameworkAnnotations,
             List<ApiReqParam> configApiReqParams, IRequestMappingHandler baseMappingHandler, IHeaderHandler headerHandler) {
         ApiConfig apiConfig = projectBuilder.getApiConfig();
@@ -427,7 +452,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
             apiMethodDoc.setName(method.getName());
             String common = method.getComment();
             if (StringUtil.isEmpty(common)) {
-                common = JavaClassUtil.getSameSignatureMethodCommonFromInterface(cls, method);
+                common = getSameSignatureMethodCommonFromInterface(cls, method);
             }
             apiMethodDoc.setDesc(common);
             apiMethodDoc.setAuthor(docJavaMethod.getAuthor());
