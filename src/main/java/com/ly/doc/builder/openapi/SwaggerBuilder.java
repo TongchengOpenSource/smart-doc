@@ -21,7 +21,6 @@
  */
 package com.ly.doc.builder.openapi;
 
-import com.ly.doc.constants.ComponentTypeEnum;
 import com.ly.doc.constants.DocGlobalConstants;
 import com.ly.doc.model.*;
 import com.ly.doc.utils.DocUtil;
@@ -88,7 +87,7 @@ public class SwaggerBuilder extends AbstractOpenApiBuilder {
         Set<OpenApiTag> tags = new HashSet<>();
         json.put("tags", tags);
         json.put("paths", buildPaths(config, apiDocList, tags));
-        json.put("definitions", buildComponentsSchema(apiDocList, ComponentTypeEnum.getComponentEnumByCode(config.getComponentType())));
+        json.put("definitions", buildComponentsSchema(apiDocList));
 
         String filePath = config.getOutPath();
         filePath = filePath + DocGlobalConstants.OPEN_API_JSON;
@@ -275,7 +274,7 @@ public class SwaggerBuilder extends AbstractOpenApiBuilder {
     }
 
     @Override
-    public Map<String, Object> buildComponentsSchema(List<ApiDoc> apiDocs, ComponentTypeEnum componentTypeEnum) {
+    public Map<String, Object> buildComponentsSchema(List<ApiDoc> apiDocs) {
         Map<String, Object> component = new HashMap<>();
         component.put(DocGlobalConstants.DEFAULT_PRIMITIVE, STRING_COMPONENT);
         apiDocs.forEach(

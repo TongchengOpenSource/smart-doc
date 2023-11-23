@@ -81,6 +81,7 @@ public class BaseDocBuilderTemplate {
         if (StringUtil.isEmpty(config.getOutPath()) && checkOutPath) {
             throw new RuntimeException("doc output path can't be null or empty");
         }
+        ApiConfig.setInstance(config);
     }
 
     /**

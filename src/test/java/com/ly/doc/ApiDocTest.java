@@ -22,7 +22,7 @@ public class ApiDocTest {
     @Test
     public void testBuilderControllersApi() {
         @Deprecated
-        ApiConfig config = ApiConfig.getInstance();
+        ApiConfig config = new ApiConfig();
         config.setServerUrl("http://127.0.0.1:8899");
         // config.setStrict(true);
         config.setOpenUrl("http://localhost:7700/api");

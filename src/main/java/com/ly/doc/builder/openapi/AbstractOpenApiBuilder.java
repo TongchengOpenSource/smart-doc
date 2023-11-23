@@ -166,7 +166,7 @@ public abstract class AbstractOpenApiBuilder {
         } else if (!isRep && Objects.nonNull(apiMethodDoc.getRequestSchema())) {
             content.put("schema", apiMethodDoc.getRequestSchema());
         } else {
-            content.put("schema", buildBodySchema(apiMethodDoc, ComponentTypeEnum.getComponentEnumByCode(apiConfig.getComponentType()), isRep));
+            content.put("schema", buildBodySchema(apiMethodDoc, isRep));
         }
 
         if (OPENAPI_2_COMPONENT_KRY.equals(componentKey) && !isRep) {
@@ -186,7 +186,7 @@ public abstract class AbstractOpenApiBuilder {
      * @param apiMethodDoc ApiMethodDoc
      * @param isRep        is response
      */
-    public Map<String, Object> buildBodySchema(ApiMethodDoc apiMethodDoc, ComponentTypeEnum componentTypeEnum, boolean isRep) {
+    public Map<String, Object> buildBodySchema(ApiMethodDoc apiMethodDoc, boolean isRep) {
         Map<String, Object> schema = new HashMap<>(10);
         Map<String, Object> innerScheme = new HashMap<>(10);
         // For response
@@ -204,7 +204,7 @@ public abstract class AbstractOpenApiBuilder {
 
         // for request
         String requestRef;
-        String randomName = ComponentTypeEnum.getRandomName(componentTypeEnum, apiMethodDoc);
+        String randomName = ComponentTypeEnum.getRandomName(ApiConfig.getInstance().getComponentType(), apiMethodDoc);
         if (apiMethodDoc.getContentType().equals(DocGlobalConstants.URL_CONTENT_TYPE)) {
             requestRef = componentKey + OpenApiSchemaUtil.getClassNameFromParams(apiMethodDoc.getQueryParams());
         } else {
@@ -332,7 +332,7 @@ public abstract class AbstractOpenApiBuilder {
      *
      * @param apiDocs List of ApiDoc
      */
-    abstract public Map<String, Object> buildComponentsSchema(List<ApiDoc> apiDocs, ComponentTypeEnum componentTypeEnum);
+    abstract public Map<String, Object> buildComponentsSchema(List<ApiDoc> apiDocs);
 
     /**
      * component schema properties
