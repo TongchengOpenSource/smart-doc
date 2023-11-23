@@ -10,12 +10,13 @@ import com.ly.doc.model.torna.TornaRequestInfo;
 
 import src.main.java.com.ly.doc.constants.DocAnnotationConstants;
 import src.main.java.com.ly.doc.constants.DocGlobalConstants;
+import src.main.java.com.ly.doc.constants.ValidatorAnnotations;
 import src.main.java.com.ly.doc.model.DocJavaField;
 
 public class Utils {
 
-  // TornaUtils
-  public static void printDebugInfo(ApiConfig apiConfig, String responseMsg, Map<String, String> requestJson,
+    // TornaUtils
+    public static void printDebugInfo(ApiConfig apiConfig, String responseMsg, Map<String, String> requestJson,
       String category) {
     if (apiConfig.isTornaDebug()) {
       String sb = "Configuration information : \n" +
@@ -43,7 +44,7 @@ public class Utils {
     }
   }
 
-  // JavaClassUtils
+  // JavaClassUtil
     private static List<DocJavaField> getFields(JavaClass cls1, int counter, Map<String, DocJavaField> addedFields,
                                             Map<String, JavaType> actualJavaTypes, ClassLoader classLoader) {
         List<DocJavaField> fieldList = new ArrayList<>();
@@ -189,4 +190,134 @@ public class Utils {
           }
       }
     
+    public static List<AnnotationValue> getAnnotationValues(List<String> validates, JavaAnnotation javaAnnotation) {
+        List<AnnotationValue> annotationValueList = new ArrayList<>();
+        String simpleName = javaAnnotation.getType().getValue();
+        if (simpleName.equalsIgnoreCase(ValidatorAnnotations.VALIDATED)) {
+        if (Objects.nonNull(javaAnnotation.getProperty(DocAnnotationConstants.VALUE_PROP))) {
+            AnnotationValue v = javaAnnotation.getProperty(DocAnnotationConstants.VALUE_PROP);
+            if (v instanceof AnnotationValueList) {
+            annotationValueList = ((AnnotationValueList) v).getValueList();
+            }
+            if (v instanceof TypeRef) {
+            annotationValueList.add(v);
+            }
+        }
+        } else if (validates.contains(simpleName)) {
+        if (Objects.nonNull(javaAnnotation.getProperty(DocAnnotationConstants.GROUP_PROP))) {
+            AnnotationValue v = javaAnnotation.getProperty(DocAnnotationConstants.GROUP_PROP);
+            if (v instanceof AnnotationValueList) {
+            annotationValueList = ((AnnotationValueList) v).getValueList();
+            }
+            if (v instanceof TypeRef) {
+            annotationValueList.add(v);
+            }
+        }
+        }
+        return annotationValueList;
+    }
+
+    public static Map<String, String> getJsonIgnoresProp(JavaAnnotation annotation, String propName) {
+        Map<String, String> ignoreFields = new HashMap<>();
+        Object ignoresObject = annotation.getNamedParameter(propName);
+        if (Objects.isNull(ignoresObject)) {
+        return ignoreFields;
+        }
+        if (ignoresObject instanceof String) {
+        String prop = StringUtil.removeQuotes(ignoresObject.toString());
+        ignoreFields.put(prop, null);
+        return ignoreFields;
+        }
+        LinkedList<String> ignorePropList = (LinkedList) ignoresObject;
+        for (String str : ignorePropList) {
+        String prop = StringUtil.removeQuotes(str);
+        ignoreFields.put(prop, null);
+        }
+        return ignoreFields;
+     }
+  
+  // DocClassUtil
+  public static String[] getGicName(String typeName) {
+    StringBuilder builder = new StringBuilder(typeName.length());
+    List<String> ginNameList = new ArrayList<>();
+    int ltLen = 0;
+    for (char c : typeName.toCharArray()) {
+      if (c == '<' || c == '>') {
+        ltLen += (c == '<') ? 1 : -1;
+        // Skip the outermost symbols <
+        if (c == '<' && ltLen == 1) {
+          continue;
+        }
+      }
+      if (ltLen > 0) {
+        builder.append(c);
+      } else if (ltLen == 0 && c == '>') {
+        ginNameList.add(builder.toString());
+        builder.setLength(0);
+      }
+    }
+    return ginNameList.toArray(new String[0]);
   }
+
+  public static String[] classNameFix(String[] arr) {
+    List<String> classes = new ArrayList<>();
+    List<Integer> indexList = new ArrayList<>();
+    int globIndex = 0;
+    int length = arr.length;
+    for (int i = 0; i < length; i++) {
+      if (classes.size() > 0) {
+        int index = classes.size() - 1;
+        if (!isClassName(classes.get(index))) {
+          globIndex = globIndex + 1;
+          if (globIndex < length) {
+            indexList.add(globIndex);
+            String className = classes.get(index) + "," + arr[globIndex];
+            classes.set(index, className);
+          }
+        } else {
+          globIndex = globIndex + 1;
+          if (globIndex < length) {
+            if (isClassName(arr[globIndex])) {
+              indexList.add(globIndex);
+              classes.add(arr[globIndex]);
+            } else {
+              if (!indexList.contains(globIndex) && !indexList.contains(globIndex + 1)) {
+                indexList.add(globIndex);
+                classes.add(arr[globIndex] + "," + arr[globIndex + 1]);
+                globIndex = globIndex + 1;
+                indexList.add(globIndex);
+              }
+            }
+          }
+        }
+      } else {
+        if (isClassName(arr[i])) {
+          indexList.add(i);
+          classes.add(arr[i]);
+        } else {
+          if (!indexList.contains(i) && !indexList.contains(i + 1)) {
+            globIndex = i + 1;
+            classes.add(arr[i] + "," + arr[globIndex]);
+            indexList.add(i);
+            indexList.add(i + 1);
+          }
+        }
+      }
+    }
+    return classes.toArray(new String[0]);
+  }
+
+  private static boolean isClassName(String className) {
+    className = className.replaceAll("[^<>]", "");
+    Stack<Character> stack = new Stack<>();
+    for (char c : className.toCharArray()) {
+      if (c == '<') {
+        stack.push('>');
+      } else if (stack.isEmpty() || c != stack.pop()) {
+        return false;
+      }
+    }
+    return stack.isEmpty();
+  }
+
+}
