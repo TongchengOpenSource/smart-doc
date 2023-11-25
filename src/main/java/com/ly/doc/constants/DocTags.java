@@ -127,4 +127,14 @@ public interface DocTags {
      * tag @see
      */
     String SEE = "see";
+
+    /**
+     * tag @protocol
+     */
+    String PROTOCOL = "protocol";
+
+    /**
+     * dubbo service name
+     */
+    String SERVICE = "service";
 }

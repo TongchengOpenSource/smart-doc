@@ -110,7 +110,7 @@ public class JavaFieldUtil {
             if (DocAnnotationConstants.LENGTH.equalsIgnoreCase(simpleAnnotationName)) {
                 annotationValue = annotation.getProperty(DocAnnotationConstants.MAX);
             }
-            if (!Objects.isNull(annotationValue)) {
+            if (Objects.nonNull(annotationValue)) {
                 maxLength = annotationValue.toString();
             }
         }

@@ -211,8 +211,6 @@ public interface DocGlobalConstants {
 
     String ENUM = "enum";
 
-    String DUBBO_SWAGGER = "org.apache.dubbo.rpc.protocol.rest.integration.swagger.DubboSwaggerApiListingResource";
-
     String ARRAY = "array";
     String PARAM_TYPE_FILE = "file";
 
