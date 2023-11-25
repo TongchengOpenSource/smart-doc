@@ -38,4 +38,6 @@ public interface DubboAnnotationConstants {
      * support ali dubbo
      */
     String ALI_DUBBO_SERVICE = "com.alibaba.dubbo.config.annotation.Service";
+
+    String DUBBO_SWAGGER = "org.apache.dubbo.rpc.protocol.rest.integration.swagger.DubboSwaggerApiListingResource";
 }

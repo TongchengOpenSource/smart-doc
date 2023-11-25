@@ -35,6 +35,7 @@ import com.ly.doc.constants.DubboAnnotationConstants;
 import com.ly.doc.helper.ParamsBuildHelper;
 import com.ly.doc.model.annotation.FrameworkAnnotations;
 import com.thoughtworks.qdox.model.*;
+import com.thoughtworks.qdox.model.expression.AnnotationValue;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -248,7 +249,7 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc>, IRpcDo
 
     public boolean isEntryPoint(JavaClass cls, FrameworkAnnotations frameworkAnnotations) {
         // Exclude DubboSwaggerService from dubbo 2.7.x
-        if (DocGlobalConstants.DUBBO_SWAGGER.equals(cls.getCanonicalName())) {
+        if (DubboAnnotationConstants.DUBBO_SWAGGER.equals(cls.getCanonicalName())) {
             return false;
         }
         List<JavaAnnotation> classAnnotations = cls.getAnnotations();
@@ -303,6 +304,26 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc>, IRpcDo
         }
         apiDoc.setDesc(DocUtil.getEscapeAndCleanComment(comment));
         apiDoc.setList(apiMethodDocs);
+
+        List<JavaAnnotation> annotations = cls.getAnnotations();
+        for (JavaAnnotation annotation:annotations) {
+            String name = annotation.getType().getCanonicalName();
+            if (!DubboAnnotationConstants.DUBBO_SERVICE.equals(name)) {
+                continue;
+            }
+            AnnotationValue versionValue = annotation.getProperty("version");
+            if (Objects.nonNull(versionValue)) {
+                apiDoc.setVersion(StringUtil.removeDoubleQuotes(versionValue.getParameterValue().toString()));
+            }
+            AnnotationValue protocolValue = annotation.getProperty("protocol");
+            if (Objects.nonNull(protocolValue)) {
+                apiDoc.setProtocol(StringUtil.removeDoubleQuotes(protocolValue.getParameterValue().toString()));
+            }
+            AnnotationValue interfaceNameValue = annotation.getProperty("interfaceName");
+            if (Objects.nonNull(interfaceNameValue)) {
+                apiDoc.setName(StringUtil.removeDoubleQuotes(interfaceNameValue.getParameterValue().toString()));
+            }
+        }
         List<DocletTag> docletTags = cls.getTags();
         List<String> authorList = new ArrayList<>();
         for (DocletTag docletTag : docletTags) {
@@ -312,6 +333,14 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc>, IRpcDo
             }
             if (DocTags.AUTHOR.equals(name)) {
                 authorList.add(docletTag.getValue());
+            }
+            // set rpc protocol
+            if (DocTags.PROTOCOL.equals(name)) {
+                apiDoc.setProtocol(docletTag.getValue());
+            }
+            // set rpc service name
+            if (DocTags.SERVICE.equals(name)) {
+                apiDoc.setName(docletTag.getValue());
             }
         }
         apiDoc.setAuthor(String.join(", ", authorList));
