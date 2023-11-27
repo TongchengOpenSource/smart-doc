@@ -117,9 +117,10 @@ public abstract class AbstractOpenApiBuilder {
         }
         for (Map.Entry<String, TagDoc> docEntry : DocMapping.TAG_DOC.entrySet()) {
             String tag = docEntry.getKey();
-            //添加controller作为tag
-            tags.addAll(docEntry.getValue().getClazzDocs().stream().map(ApiDoc::getName)
-                    .map(name -> OpenApiTag.of(name, name))
+            tags.addAll(docEntry.getValue().getClazzDocs()
+                    .stream()
+                    //优化tag形式,兼容swagger
+                    .map(doc -> OpenApiTag.of(doc.getName(), doc.getDesc()))
                     .collect(Collectors.toSet()));
         }
         return pathMap;
