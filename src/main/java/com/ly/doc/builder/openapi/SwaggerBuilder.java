@@ -156,6 +156,7 @@ public class SwaggerBuilder extends AbstractOpenApiBuilder {
         request.put("responses", buildResponses(apiConfig, apiMethodDoc));
         request.put("deprecated", apiMethodDoc.isDeprecated());
         String operationId = apiMethodDoc.getUrl().replace(apiMethodDoc.getServerUrl(), "");
+        //make sure operationId is unique and can be used as a method name
         request.put("operationId",apiMethodDoc.getName()+"_"+apiMethodDoc.getMethodId()+"UsingOn"+apiMethodDoc.getType());
 
         return request;
