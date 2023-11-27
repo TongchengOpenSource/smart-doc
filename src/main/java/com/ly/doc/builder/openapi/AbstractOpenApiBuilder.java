@@ -119,7 +119,7 @@ public abstract class AbstractOpenApiBuilder {
             String tag = docEntry.getKey();
             tags.addAll(docEntry.getValue().getClazzDocs()
                     .stream()
-                    //优化tag形式,兼容swagger
+                    //optimize tag content for copatible to swagger
                     .map(doc -> OpenApiTag.of(doc.getName(), doc.getDesc()))
                     .collect(Collectors.toSet()));
         }
