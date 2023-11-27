@@ -137,12 +137,8 @@ public class SwaggerBuilder extends AbstractOpenApiBuilder {
         Map<String, Object> request = new HashMap<>(20);
         request.put("summary", apiMethodDoc.getDesc());
         request.put("description", apiMethodDoc.getDetail());
-        String tag = StringUtil.isEmpty(apiDoc.getDesc()) ? DocGlobalConstants.OPENAPI_TAG : apiDoc.getDesc();
-        if (StringUtil.isNotEmpty(apiMethodDoc.getGroup())) {
-            request.put("tags", new String[]{tag});
-        } else {
-            request.put("tags", new String[]{tag});
-        }
+        request.put("tags", Arrays.asList(apiDoc.getName(),apiDoc.getDesc(), apiMethodDoc.getGroup())
+                .stream().filter(StringUtil::isNotEmpty).toArray(n->new String[n]));
         List<Map<String, Object>> parameters = buildParameters(apiMethodDoc);
         //requestBody
         if (CollectionUtil.isNotEmpty(apiMethodDoc.getRequestParams())) {
@@ -160,7 +156,8 @@ public class SwaggerBuilder extends AbstractOpenApiBuilder {
         request.put("responses", buildResponses(apiConfig, apiMethodDoc));
         request.put("deprecated", apiMethodDoc.isDeprecated());
         String operationId = apiMethodDoc.getUrl().replace(apiMethodDoc.getServerUrl(), "");
-        request.put("operationId", String.join("", OpenApiSchemaUtil.getPatternResult("[A-Za-z0-9{}]*", operationId)));
+        //make sure operationId is unique and can be used as a method name
+        request.put("operationId",apiMethodDoc.getName()+"_"+apiMethodDoc.getMethodId()+"UsingOn"+apiMethodDoc.getType());
 
         return request;
     }
