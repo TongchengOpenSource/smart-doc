@@ -39,6 +39,7 @@ import com.ly.doc.utils.OpenApiSchemaUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.ly.doc.constants.DocGlobalConstants.*;
 
@@ -116,7 +117,10 @@ public abstract class AbstractOpenApiBuilder {
         }
         for (Map.Entry<String, TagDoc> docEntry : DocMapping.TAG_DOC.entrySet()) {
             String tag = docEntry.getKey();
-            tags.add(OpenApiTag.of(tag, tag));
+            //添加controller作为tag
+            tags.addAll(docEntry.getValue().getClazzDocs().stream().map(ApiDoc::getName)
+                    .map(name -> OpenApiTag.of(name, name))
+                    .collect(Collectors.toSet()));
         }
         return pathMap;
     }
