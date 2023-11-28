@@ -42,6 +42,8 @@ public interface DocGlobalConstants {
     String RANDOM_MOCK = "randomMock";
     String API_DOC_MD_TPL = "ApiDoc.md";
 
+    String JMETER_TPL = "JMeter.jmx";
+
     String API_DOC_ADOC_TPL = "ApiDoc.adoc";
 
     String ALL_IN_ONE_MD_TPL = "AllInOne.md";
