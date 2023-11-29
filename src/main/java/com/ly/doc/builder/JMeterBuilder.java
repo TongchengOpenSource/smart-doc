@@ -60,13 +60,13 @@ public class JMeterBuilder {
         DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
         builderTemplate.checkAndInit(config, Boolean.TRUE);
         config.setAdoc(false);
+        config.setShowJavaType(true);
         config.setParamsDataToTree(false);
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
         IDocBuildTemplate<ApiDoc> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework());
         List<ApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder);
         String version = config.isCoverOld() ? "" : "-V" + DateTimeUtil.long2Str(System.currentTimeMillis(), DATE_FORMAT);
         String docName = builderTemplate.allInOneDocName(config, "JmeterApiDoc" + version + ".jmx", ".jmx");
-//        apiDocList = docBuildTemplate.handleApiGroup(apiDocList, config);
         builderTemplate.buildAllInOne(apiDocList, config, javaProjectBuilder, DocGlobalConstants.JMETER_TPL, docName);
     }
 }

@@ -65,7 +65,7 @@ ${consumerConfigExample}
 
 <%}%>
 
-**Definition：** ${doc.methodDefinition}
+**Definition：** ${doc.escapeMethodDefinition}
 
 <%if(isNotEmpty(doc.author)){%>
 **Author:** ${doc.author}
@@ -79,7 +79,7 @@ ${consumerConfigExample}
 | Parameter | Type | Required | Description | Since |
 |-----------|------|----------|-------------|-------|
 <% for(param in doc.requestParams){ %>
-|${param.field}|${param.type}|${param.required}|${lineBreaksToBr(param.desc)}|${param.version}|
+|${param.field}|${htmlEscape(param.type)}|${param.required}|${lineBreaksToBr(param.desc)}|${param.version}|
 <%}%>
 <%}%>
 
@@ -89,7 +89,7 @@ ${consumerConfigExample}
 | Field | Type | Description | Since |
 |-------|------|-------------|-------|
 <% for(param in doc.responseParams){ %>
-|${param.field}|${param.type}|${lineBreaksToBr(param.desc)}|${param.version}|
+|${param.field}|${htmlEscape(param.type)}|${lineBreaksToBr(param.desc)}|${param.version}|
 <%}%>
 <%}%>
 
