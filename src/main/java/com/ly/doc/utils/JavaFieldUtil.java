@@ -158,4 +158,9 @@ public class JavaFieldUtil {
         return finalSb.toString();
     }
 
+
+    public static String convertToSimpleTypeName(String str){
+        String regex = "\\b\\w+\\.(?=\\w+\\b)";
+        return  str.replaceAll(regex, "");
+    }
 }

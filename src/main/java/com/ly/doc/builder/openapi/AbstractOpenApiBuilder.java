@@ -413,9 +413,7 @@ public abstract class AbstractOpenApiBuilder {
                         propertiesData.put("items", arrayRef);
                     }
                 }
-            }
-            //基础数据类型
-            else {
+            } else {
                 Map<String, Object> arrayRef = new HashMap<>(4);
                 arrayRef.put("type", "string");
                 propertiesData.put("items", arrayRef);
@@ -455,6 +453,7 @@ public abstract class AbstractOpenApiBuilder {
      * @param projectBuilder JavaDocBuilder of QDox
      */
     public List<ApiDoc> getOpenApiDocs(ApiConfig config, JavaProjectBuilder projectBuilder) {
+        config.setShowJavaType(false);
         DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
         builderTemplate.checkAndInit(config, Boolean.TRUE);
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, projectBuilder);

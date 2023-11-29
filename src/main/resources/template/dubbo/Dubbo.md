@@ -22,7 +22,7 @@ for(doc in list){
 
 <%}%>
 
-**Definition：** ${doc.methodDefinition}
+**Definition：** ${doc.escapeMethodDefinition}
 
 <%if(isNotEmpty(doc.author)){%>
 **Author:** ${doc.author}
@@ -38,7 +38,7 @@ for(doc in list){
 <%
 for(param in doc.requestParams){
 %>
-|${param.field}|${param.type}|${param.required}|${htmlEscape(param.desc)}|${param.version}
+|${param.field}|${htmlEscape(param.type)}|${param.required}|${htmlEscape(param.desc)}|${param.version}
 <%}%>
 <%}%>
 
@@ -50,7 +50,7 @@ for(param in doc.requestParams){
 <%
 for(param in doc.responseParams){
 %>
-|${param.field}|${param.type}|${htmlEscape(param.desc)}|${param.version}
+|${param.field}|${htmlEscape(param.type)}|${htmlEscape(param.desc)}|${param.version}
 <%}%>
 <%}%>
 
