@@ -15,7 +15,10 @@
             "desc": "desc", //请求头描述信息
             "value": "kk", //不设置默认null
             "required": false, //是否必须
-            "since": "-" //什么版本添加的改请求头
+            "since": "-", //什么版本添加的改请求头
+            // since 2.2.2
+            "pathPatterns": "/app/test/**", //只有以/app/test/开头的url才会有此请求头
+            "excludePathPatterns": "/app/login" // 登录url=/app/page/将不会有该请求头
         }
     ]
 }
@@ -26,24 +29,6 @@
 - `pathPatterns` 配置请求头的作用路径，和拦截器配置`pathPatterns`一致的，多个正则式之间用逗号隔开。
 - `excludePathPatterns` 配置在那些`path`上忽略该请求头。和拦截器的`excludePathPatterns`一致的，多个正则式之间用逗号隔开。
 
-所以你可以根据自己的需求来增加上面两个配置属性。例如：
-
-```json
-{
-    "requestHeaders": [ //设置请求头，没有需求可以不设置
-        {
-            "name": "token", //请求头名称
-            "type": "string", //请求头类型
-            "desc": "desc", //请求头描述信息
-            "value": "kk", //不设置默认null
-            "required": false, //是否必须
-            "since": "-", //什么版本添加的改请求头
-            "pathPatterns": "/app/test/**", //只有以/app/test/开头的url才会有此请求头
-            "excludePathPatterns": "/app/login" // 登录url=/app/page/将不会有该请求头
-        }
-    ]
-}
-```
 > smart-doc完全借鉴了Spring的PathMatcher的匹配，因此相关的路径正则规则也是和PathMatcher一致的，
 使用时请自行研究下PathMatcher并书写正确正则表达式，否则可能配置了后效果和你想的不一样。
 
@@ -103,7 +88,7 @@ public CommonResult<Void> configQueryParamPost(String configQueryParam) {
 ```
 
 ## 静态常量替换
->2.4.2版本开始，这个配置无需在手动添加，smart-doc可以自动识别静态常量的使用。
+**`2.4.2`版本开始，这个配置无需在手动添加，`smart-doc`可以自动识别静态常量的使用。**
 
 在`Java Web`接口开发的过程中，有用户会在`Controller`的`path`中使用静态场景。因此也是希望`smart-doc`能够解析静态常量获取到真实的值。
 下面来看下例子：
@@ -254,7 +239,7 @@ public enum OrderEnum {
     }
 }
 ```
-配置一下就可以导出， @since 2.4.6版本开始，此配置支持配置枚举所实现的接口来获取子类实现类， 如果有已经实现的枚举需要忽略的话，可以在实现枚举类上增加@ignore进行忽略。
+配置一下就可以导出， `@since 2.4.6`版本开始，此配置支持配置枚举所实现的接口来获取子类实现类， 如果有已经实现的枚举需要忽略的话，可以在实现枚举类上增加`@ignore`进行忽略。
 ```json
 {
     "dataDictionaries": [
@@ -316,13 +301,13 @@ config.setSourceCodePaths(
 ```xml
 <!--依赖的库-->
 <dependency>
-    <groupId>com.github.shalousun</groupId>
+    <groupId>com.ly.smart-doc</groupId>
     <artifactId>common-util</artifactId>
     <version>1.8.6</version>
 </dependency>
 <!--依赖库源码，使用smart-doc的插件无需使用这种方式加载sources-->
 <dependency>
-    <groupId>com.github.shalousun</groupId>
+    <groupId>com.ly.smart-doc</groupId>
     <artifactId>common-util</artifactId>
     <version>1.8.6</version>
     <classifier>sources</classifier>

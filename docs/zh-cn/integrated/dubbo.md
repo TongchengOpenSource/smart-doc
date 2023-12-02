@@ -160,4 +160,3 @@ public class UserServiceImpl implements UserService {
 ![maven-smart-doc](https://img-blog.csdnimg.cn/20200705230512435.png)
 
 运行`rpc-html`等就能生成`Dubbo RPC`文档
-

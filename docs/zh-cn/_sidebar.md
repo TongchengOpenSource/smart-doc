@@ -1,31 +1,31 @@
-- 入门
+- 基础
 
-  - [快速开始](zh-cn/start/quickstart.md "快速开始")
-  - [注释tags说明](zh-cn/start/javadoc.md "注释TAGS说明")
-  - [最佳实践](zh-cn/start/bestPractice.md "最佳实践")
+  * [简介](zh-cn/README.md)
+  * [快速开始](zh-cn/start/quickStart.md)
+  * [使用指南](zh-cn/start/guide.md)
+  * [最佳实践](zh-cn/start/bestPractice.md)
+  * [示例](zh-cn/start/example.md)
 
-- 定制化
-  - [配置项](zh-cn/diy/config.md "配置项")
-  - [高级特性](zh-cn/diy/advancedFeatures.md)
-  - [代码高亮](zh-cn/diy/highlight.md)
-  - [接口调试集成](zh-cn/diy/integrated.md)
+
+- 高级
+  - [配置项](zh-cn/advanced/config.md "配置项")
+  - [高级特性](zh-cn/advanced/advancedFeatures.md)
+  - [接口调试](zh-cn/advanced/debug.md)
+  - [扩展](zh-cn/advanced/expand.md)
   
-- Torna集成
-  - [torna企业级接口管理](zh-cn/torna/tornaIntegration.md "torna企业级接口管理")
-- Apache Dubbo
-  - [构建Dubbo接口文档](zh-cn/dubbo/dubbo.md "dubbo文档生成")
-- JAX-RS Support
-  - [JAX-RS规范框架支持](zh-cn/jaxrs/jaxrs.md "Jaxrs规范支持")
-- 插件使用进阶
-  - [maven插件使用进阶](zh-cn/plugins/maven_plugin.md "maven插件")
-  - [maven插件调试](zh-cn/plugins/maven-plugin-debug.md "maven插件调试")
-  - [gradle插件使用进阶](zh-cn/plugins/gradle_plugin.md "gradle插件")
-  - [gradle插件调试](zh-cn/plugins/gradle_plugin_debug.md "gradle插件调试")
-- FAQ使用常见问题
-  - [使用问题集](zh-cn/faq.md)
-- [文档效果](zh-cn/docsImages.md)
-- [扩展开发](zh-cn/expand.md)
-- [变更日志](zh-cn/changelog.md)
+- 集成框架
+  - [torna](zh-cn/integrated/torna.md "torna")
+  * [dubbo](zh-cn/integrated/dubbo.md)
+  * [jax-rs](zh-cn/integrated/jax-rs.md)
+
+- 插件
+  * [maven](zh-cn/plugins/maven.md)
+  * [gradle](zh-cn/plugins/gradle.md)
+
+- FAQ
+  - [常见问题](zh-cn/faq/faq.md)
+  
 - 社区
-  - [贡献指南](zh-cn/community/contributing.md)
+  * [理念](zh-cn/community/idea.md)
   - [开发者](zh-cn/community/developer.md)
+  - [如何共建](zh-cn/community/contributing.md)

@@ -1,22 +1,30 @@
-- Getting started
-  - [Quick start](start/quickstart.md "Quick start")
-  - [Doc tags](start/javadoc.md "Doc tags")
-  - [Best Practice](start/bestPractice.md "Best Practice")
+-Base
+   * [Introduction](README.md)
+   * [Quick Start](start/quickStart.md)
+   * [Guide](start/guide.md)
+   * [Best Practice](start/bestPractice.md)
+   * [Example](start/example.md)
 
-- Customization Configuration
-  - [Configuration](diy/config.md "Configuration")
-  - [Advanced Features](diy/advancedFeatures.md)
-  - [Code Highlight](diy/highlight.md)
-  - [UI integration](diy/integrated.md)
 
-- Apache Dubbo
-  - [Dubbo configuration](en/dubbo/dubbo.md "Dubbo")
-- JAX-RS Support
-  - [JAX-RS configuration](en/jaxrs/jaxrs.md)
-- [Document Effect](docsImages.md)
-- [Expand Development](expand.md)
-- [Changelog](changelog.md "Changelog")
+- Advanced
+   - [Configuration](advanced/config.md "Configuration")
+   - [Advanced Features](advanced/advancedFeatures.md)
+   - [Debug](advanced/debug.md)
+   - [Extended](advanced/expand.md)
+  
+- Integrated framework
+   - [torna](integrated/torna.md "torna")
+   * [dubbo](integrated/dubbo.md)
+   * [jax-rs](integrated/jax-rs.md)
 
-- Advanced Plugin Usage
-  - [Advanced use of maven plugin](en/plugins/maven_plugin.md "maven插件")
-  - [Maven plugin debugging](en/plugins/maven-plugin-debug.md "maven插件调试")
+- Plugins
+   * [maven](plugins/maven.md)
+   * [gradle](plugins/gradle.md)
+
+- FAQ
+   - [FAQ](faq/faq.md)
+  
+- Community
+   * [idea](community/idea.md)
+   - [Developer](community/developer.md)
+   - [How to contribute](community/contributing.md)

@@ -3,22 +3,22 @@
 smart-doc自2018年开源以来，受到社区很多小伙伴的关注。 衷心地希望越来越多的社区同学能参与到smart-doc项目中来，
 我们一起把smart-doc做好！
 
-# 如何贡献？
+## 如何贡献？
 如果您想为smart-doc 做出贡献，可以按照以下步骤进行：
 
 1、在GitHub上Fork smart-doc的代码库到您的个人仓库中。
 
 2、Clone您fork的项目到本地仓库，创建其他分支以进行修改。
 
-3、在本地环境中运行smart-doc，并确认所做的改动是否生效。可参考 [快速开始](https://smart-doc-group.github.io/#/zh-cn/start/quickstart) 了解如何启动smart-doc并生成API文档。
+3、在本地环境中运行smart-doc，并确认所做的改动是否生效。可参考 [快速开始](zh-cn/start/quickStart.md) 了解如何启动smart-doc并生成API文档。
 
-4、完成修改后，推送提交并提交Pull Request给smart-doc的主仓库。请参考[Pull Request](https://smart-doc-group.github.io/#/zh-cn/community/pull-request-process.md)流程 来提交合并请求。
+4、完成修改后，推送提交并提交Pull Request给smart-doc的主仓库。请参考[Pull Request](zh-cn/community/pull-request-process.md)流程 来提交合并请求。
 
 5、等待社区Committer审核并合并您的Pull Request。
 
 6、如果合并成功，恭喜您已经成功做出了贡献！
 
-# 注意的事项
+## 注意的事项
 在为smart-doc 提交贡献时，请注意以下事项：
 
 - 如果您想添加新功能或者功能升级，请先开Issue讨论。
@@ -35,18 +35,18 @@ smart-doc自2018年开源以来，受到社区很多小伙伴的关注。 衷心
 
 - 最后，我们欢迎任何形式的贡献，包括但不限于代码、文档、Issue 提出等
 
-# Code review
+## Code review
 所有的代码都需要经过Committer进行review。以下是我们推荐的一些原则：
 - 可读性：所有提交请遵循良好的代码规范、文档规范。
 - 优雅性：代码简练、复用度高，有着完善的设计。
 - 测试：对于普通的方法在smart-doc上添加单元测试，对于用户接口代码请在[smart-doc-example-cn](https://github.com/smart-doc-group/smart-doc-example-cn)
 添加测试用例并完成提交测试验证。
 
-# 案例分享
+## 案例分享
 我们非常欢迎您分享任何关于smart-doc的使用案例。欢迎大家投稿，分享smart-doc的使用案例。
 对于优秀的案例分享者，社区也会后续也会给予一些奖励。
 
-# 参与社区讨论
+## 参与社区讨论
 如果您在使用smart-doc中遇到任何问题，欢迎到[Discussions](https://github.com/TongchengOpenSource/smart-doc/discussions)进行交流互动。
 也欢迎在这里帮助其他使用者解答一些使用中的问题。
 

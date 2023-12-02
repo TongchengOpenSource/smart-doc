@@ -1,4 +1,4 @@
-## smart-doc
+### smart-doc
 
 
 ![maven](https://img.shields.io/maven-central/v/com.ly.smart-doc/smart-doc)
@@ -12,7 +12,7 @@
 
 > smart-doc是一款同时支持JAVA REST API和Apache Dubbo RPC接口文档生成的工具。
 
-## 概述
+### 概述
 `smart-doc`在业内率先提出基于`JAVA`泛型定义推导的理念， 完全基于接口源码来分析生成接口文档，不采用任何注解侵入到业务代码中。
 你只需要按照`java-doc`标准编写注释， `smart-doc`就能帮你生成一个简易明了的`Markdown`、`HTML5`、`Postman Collection2.0+`、`OpenAPI 3.0+`的文档。
 
@@ -20,7 +20,7 @@
 
 查看[快速开始](zh-cn/start/quickstart.md)了解详情。
 
-## 特性
+### 特性
 
 - 零注解、零学习成本、只需要写标准`JAVA`注释。
 - 基于源代码接口定义自动推导，强大的返回结构推导。
@@ -38,7 +38,7 @@
 - `debug`接口调试`html5`页面完全支持文件上传，下载(`@download tag`标记下载方法)测试。
 
 
-## 最佳实践
+### 最佳实践
 
 smart-doc + [Torna](http://torna.cn/) 组成行业领先的文档生成和管理解决方案，使用`smart-doc`无侵入完成`JAVA`源代码分析和提取注释生成`API`文档，自动将文档推送到`Torna`企业级接口文档管理平台。
 ![smart-doc + Torna](../_images/smart-to-torna.png)
@@ -48,19 +48,20 @@ smart-doc + [Torna](http://torna.cn/) 组成行业领先的文档生成和管理
 > Torna是由smart-doc官方独家推动联合研发的企业级文档管理系统，因此smart-doc官方不会对接其它任何的外部文档管理系统，例如像showdoc、yapi 之类的对接请自定内部处理，也不要再给我们提其他文档系统对接的PR。我们核心是把smart-doc+Torna的这套方案打造好
 
 
-## TODO
+### TODO
 - `GRPC`
 
-## Contact
+### Contact
 
 愿意参与构建`smart-doc`或者是需要交流问题可以扫描微信二维码发送`smart-doc`备注信息后管理员拉进群，[常见问题答疑](https://smart-doc-group.github.io/#/zh-cn/faq)
 
-<img src="../_images/wechat.png" title="qq群" width="200px" height="210px"/>
+<img src="../_images/smart-doc-qq.jpg" title="qq群" width="200px" height="210px"/>
 <img src="../_images/smart-doc-qq2.jpeg" title="qq群2" width="200px" height="210px"/>
 
+> 1群已满，有问题请加2群。
 
 
-## 谁在使用
+### 谁在使用
 
 > 排名不分先后，更多接入公司，欢迎在[此处](https://github.com/smart-doc-group/smart-doc/issues/12)登记（仅供开源用户参考）
 
@@ -75,16 +76,16 @@ smart-doc + [Torna](http://torna.cn/) 组成行业领先的文档生成和管理
 &nbsp;&nbsp;<img src="../_images/known-users/ly.jpeg" title="同程旅行" width="200px" height="100px"/>
 &nbsp;&nbsp;<img src="../_images/known-users/tcsklogo.jpeg" title="同程数科" width="200px" height="83px"/>
 
-## 获奖情况
+### 获奖情况
 
 - 2020 年度 OSC 中国开源项目评选”活动中获得「最积极运营项目」
 
 
-## 致谢
+### 致谢
 感谢[JetBrains SoftWare](https://www.jetbrains.com) 为本开源项目提供的免费Open Source license。<br/>
 <img src="../_images/jetbrains-variant-3.png" width="260px" height="220px"/>
 
-## License
+### License
 
 `smart-doc` is under the Apache 2.0 license. See the [LICENSE](https://github.com/smart-doc-group/smart-doc/blob/master/LICENSE) file for details.
 

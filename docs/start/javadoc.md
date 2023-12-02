@@ -2,11 +2,11 @@
 
 The original intention of smart-doc is to remove the intrusion of annotations by using javadoc document comments. Therefore, every additional function of smart-doc is to consider the native tags of javadoc. The following is an introduction to some javadoc tags used by smart-doc. .
 
-| tag name    | description                                                                                                                                                                                                                                                                         |
-|-------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| @param      | For the Spring Boot interface layer, for simple type parameters, you must write a comment description when using @param, and for Entity type smart-doc, it will not be checked.                                                                                                     |
-| @deprecated | Can be used in comments to mark that the interface is obsolete, and the effect is the same as the @Deprecated annotation                                                                                                                                                            |
-| @apiNote    | @apiNote is a new document tag for java, smart-doc uses @apiNote as a detailed description of the method, so you can use apiNote to write a long note. If a method does not write @apiNote annotation description, smart-doc directly uses the method default annotation to fill in |
+|  tag name   |  description   |
+| --- | --- |
+|  @param  | For the Spring Boot interface layer, for simple type parameters, you must write a comment description when using @param, and for Entity type smart-doc, it will not be checked.    |
+|  @deprecated  |Can be used in comments to mark that the interface is obsolete, and the effect is the same as the @Deprecated annotation|
+|  @apiNote | @apiNote is a new document tag for java, smart-doc uses @apiNote as a detailed description of the method, so you can use apiNote to write a long note. If a method does not write @apiNote annotation description, smart-doc directly uses the method default annotation to fill in|
 
 
 # javadoc Usage
@@ -113,11 +113,11 @@ In the future, @ignore will only be used in method and class comments.
 
 In the Controller layer, use SubUser as a parameter to receive, and the parameter request document output by smart-doc:
 
-| Parameter   | Type   | Description | Required |
-|-------------|--------|-------------|----------|
-| subUserName | string | user name   | false    |
-| idCard      | string | ID card     | false    |
-| gender      | int    | gender      | false    |
+| Parameter | Type | Description | Required |
+| --- | --- | --- | --- |
+| subUserName | string | user name | false |
+| idCard | string | ID card | false |
+| gender | int | gender | false|
 
 ## 2.2 @mock use
 
