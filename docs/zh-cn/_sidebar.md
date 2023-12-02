@@ -1,7 +1,7 @@
 - 基础
 
   * [简介](zh-cn/README.md)
-  * [快速开始](zh-cn/start/quickStart.md)
+  * [快速开始](zh-cn/start/quickstart.md)
   * [使用指南](zh-cn/start/guide.md)
   * [最佳实践](zh-cn/start/bestPractice.md)
   * [示例](zh-cn/start/example.md)

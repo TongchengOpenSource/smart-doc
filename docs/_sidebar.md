@@ -1,6 +1,6 @@
 -Base
    * [Introduction](README.md)
-   * [Quick Start](start/quickStart.md)
+   * [Quick Start](start/quickstart.md)
    * [Guide](start/guide.md)
    * [Best Practice](start/bestPractice.md)
    * [Example](start/example.md)
