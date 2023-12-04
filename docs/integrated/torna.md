@@ -10,7 +10,7 @@ However, smart-doc and smart-doc's maven and gradle plug-ins are free. The basic
 ### Full document process automation
 smart-doc + [Torna](http://torna.cn) form an industry-leading document generation and management solution. Use smart-doc to complete Java source code analysis and extract comments to generate API documents without intrusion, and automatically push the documents to Torna enterprise-level interface document management platform.
 
-![smart-doc+torna](https://raw.githubusercontent.com/chenqi146/smart-doc.github.io/book/_images/smart-to-torna.png)
+![smart-doc+torna](https://github.com/smart-doc-group/smart-doc-group.github.io/raw/master/docs/_images/smart-to-torna.png)
 
 >Smart-doc 2.0.9 is required to support pushing documents to torna. Of course, it is recommended that students using smart-doc pay attention to the release of the new version. It is recommended to use the latest versions of both smart-doc and torna.
 ### How to automatically push documents to torna
@@ -42,9 +42,9 @@ If you are an administrator, you can view it in torna's space management.
 
 Check the tokens of related projects in the space
 
-![Enter picture description](https://raw.githubusercontent.com/chenqi146/smart-doc.github.io/book/_images/224356_2bc8c3b7_144669.png "Screenshot.png")
+![Enter picture description](https://github.com/smart-doc-group/smart-doc-group.github.io/raw/master/docs/_images/224356_2bc8c3b7_144669.png "Screenshot.png")
 
 ### Push operation
 After integrating smart-doc and completing the push configuration, you can use the maven or gradle plug-in using smart-doc to directly push the document to torna.
-![Enter picture description](https://raw.githubusercontent.com/chenqi146/smart-doc.github.io/book/_images/224947_853e59e3_144669.png "Screenshot.png")
+![Enter picture description](https://github.com/smart-doc-group/smart-doc-group.github.io/raw/master/docs/_images/224947_853e59e3_144669.png "Screenshot.png")
 > If you want to use the command line or gradle, please check the smart-doc official maven and gradle plug-in documentation, which will not be described here.

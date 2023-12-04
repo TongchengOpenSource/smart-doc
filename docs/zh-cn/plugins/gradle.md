@@ -125,7 +125,7 @@ gradle tornaRpc
 ##### Use IDEA
 当你使用`Idea`时，可以通过`Gradle Helper`插件选择生成何种文档。
 
-![idea中smart-doc-gradle插件使用](https://raw.githubusercontent.com/chenqi146/smart-doc.github.io/book/_images/idea-gradle-plugin.png "usage.png")
+![idea中smart-doc-gradle插件使用](https://github.com/smart-doc-group/smart-doc-group.github.io/raw/master/docs/_images/idea-gradle-plugin.png "usage.png")
 
 ### 插件源码
 https://github.com/TongchengOpenSource/smart-doc-gradle-plugin
@@ -148,11 +148,11 @@ dependencies {
 }
 ```
 找到`smart-doc`源码打上断点。操作如下图：
-![打断点示例](https://raw.githubusercontent.com/chenqi146/smart-doc.github.io/book/_images/002115_04d0246d_144669.png "debug1.png")
+![打断点示例](https://github.com/smart-doc-group/smart-doc-group.github.io/raw/master/docs/_images/002115_04d0246d_144669.png "debug1.png")
 ### 命令行终端设置debug模式
 `Gradle`插件的调试并不像调试`JAVA`程序和`Maven`插件那么简单。在`IDEA`上直接点击`debug`启动相关操作就可以直接调试了。
 需要实现在命令行设置调试模式。操作如下图：
-![设置debug模式](https://raw.githubusercontent.com/chenqi146/smart-doc.github.io/book/_images/003046_3cb24659_144669.png "debug2.png")
+![设置debug模式](https://github.com/smart-doc-group/smart-doc-group.github.io/raw/master/docs/_images/003046_3cb24659_144669.png "debug2.png")
 图中主要是打开命令行终端指定让`smart-doc-gradle-plugin`的某一个`task`使用`debug`模式运行, 
 如上图所示指定构建`html`文档的`task`来开启`debug`模式，命令示例如下：
 
@@ -170,9 +170,9 @@ gradle wrapper
 ```
 ### 添加一个远程调试监听
 点击 **Edit Configurations**
-![输入图片说明](https://raw.githubusercontent.com/chenqi146/smart-doc.github.io/book/_images/004033_cd63df34_144669.png "remote1.png")
+![输入图片说明](https://github.com/smart-doc-group/smart-doc-group.github.io/raw/master/docs/_images/004033_cd63df34_144669.png "remote1.png")
 点开左边的“+”号，点击“Remote”
-![添加remote](https://raw.githubusercontent.com/chenqi146/smart-doc.github.io/book/_images/004113_df83ee8d_144669.png "remote2.png")
+![添加remote](https://github.com/smart-doc-group/smart-doc-group.github.io/raw/master/docs/_images/004113_df83ee8d_144669.png "remote2.png")
 ### 执行调试
 完成上面的操作后即可用`debug`调试进入插件和`smart-doc`了，然后查看`smart-doc`的执行情况。操作如下图
-![执行调试](https://raw.githubusercontent.com/chenqi146/smart-doc.github.io/book/_images/004808_63ad37db_144669.png "debug3.png")
+![执行调试](https://github.com/smart-doc-group/smart-doc-group.github.io/raw/master/docs/_images/004808_63ad37db_144669.png "debug3.png")

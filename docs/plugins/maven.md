@@ -165,7 +165,7 @@ Default locale: zh_CN, platform encoding: GBK
 OS name: "windows 10", version: "10.0", arch: "amd64", family: "dos"
 ```
 ### 5.2 Generate documentation in `IDEA`
-![Use of smart-doc-maven plug-in in idea](https://raw.githubusercontent.com/chenqi146/smart-doc.github.io/book/_images/idea-maven-plugin.png "maven_plugin_tasks.png")
+![Use of smart-doc-maven plug-in in idea](https://github.com/smart-doc-group/smart-doc-group.github.io/raw/master/docs/_images/idea-maven-plugin.png "maven_plugin_tasks.png")
 
 ### Plug-in source code
 [smart-doc’s maven plug-in source code](https://gitee.com/smart-doc-team/smart-doc-maven-plugin)
@@ -194,11 +194,11 @@ Usually the actual debugged code is `smart-doc`. But this process is mainly chec
 
 ## Add breakpoint
 Add breakpoints as shown in the figure
-![Enter image description](https://raw.githubusercontent.com/chenqi146/smart-doc.github.io/book/_images/232807_f88b94b2_144669.png "maven-debug1.png")
+![Enter image description](https://github.com/smart-doc-group/smart-doc-group.github.io/raw/master/docs/_images/232807_f88b94b2_144669.png "maven-debug1.png")
 
 ## Run the build target in Debug mode
 It is very simple for the `maven` plug-in to run `debug` in `idea`. The operation is as shown below.
-![Start debug](https://raw.githubusercontent.com/chenqi146/smart-doc.github.io/book/_images/233101_c48191e6_144669.png "maven-debug2.png")
+![Start debug](https://github.com/smart-doc-group/smart-doc-group.github.io/raw/master/docs/_images/233101_c48191e6_144669.png "maven-debug2.png")
 This way you can go directly to the breakpoint.
 
 **Tips:** The above is the source code of `smart-doc` that is used as an entrance to debug through the plug-in. If you want to debug the source code execution process of the plug-in itself, add the plug-in dependencies to the project dependencies, as follows:

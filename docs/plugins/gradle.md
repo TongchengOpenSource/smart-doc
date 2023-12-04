@@ -124,7 +124,7 @@ gradle tornaRpc
 ##### Use IDEA
 When you use `Idea`, you can choose what kind of documentation to generate through the `Gradle Helper` plugin.
 
-![Use of smart-doc-gradle plug-in in idea](https://raw.githubusercontent.com/chenqi146/smart-doc.github.io/book/_images/idea-gradle-plugin.png "usage.png")
+![Use of smart-doc-gradle plug-in in idea](https://github.com/smart-doc-group/smart-doc-group.github.io/raw/master/docs/_images/idea-gradle-plugin.png "usage.png")
 
 ### Plug-in source code
 https://github.com/TongchengOpenSource/smart-doc-gradle-plugin
@@ -147,11 +147,11 @@ dependencies {
 }
 ```
 Find the `smart-doc` source code and put a breakpoint. The operation is as follows:
-![Break point example](https://raw.githubusercontent.com/chenqi146/smart-doc.github.io/book/_images/002115_04d0246d_144669.png "debug1.png")
+![Break point example](https://github.com/smart-doc-group/smart-doc-group.github.io/raw/master/docs/_images/002115_04d0246d_144669.png "debug1.png")
 ### Command line terminal to set debug mode
 Debugging the `Gradle` plugin is not as simple as debugging `JAVA` programs and `Maven` plugins. You can debug directly by clicking `debug` on `IDEA` to start related operations.
 It is necessary to set the debugging mode on the command line. The operation is as follows:
-![Set debug mode](https://raw.githubusercontent.com/chenqi146/smart-doc.github.io/book/_images/003046_3cb24659_144669.png "debug2.png")
+![Set debug mode](https://github.com/smart-doc-group/smart-doc-group.github.io/raw/master/docs/_images/003046_3cb24659_144669.png "debug2.png")
 The main thing in the figure is to open the command line terminal and specify a certain `task` of `smart-doc-gradle-plugin` to run in `debug` mode.
 As shown in the figure above, specify the `task` to build the `html` document to enable the `debug` mode. The command example is as follows:
 
@@ -169,9 +169,9 @@ gradle wrapper
 ```
 ### Add a remote debugging listener
 Click **Edit Configurations**
-![Enter picture description](https://raw.githubusercontent.com/chenqi146/smart-doc.github.io/book/_images/004033_cd63df34_144669.png "remote1.png")
+![Enter picture description](https://github.com/smart-doc-group/smart-doc-group.github.io/raw/master/docs/_images/004033_cd63df34_144669.png "remote1.png")
 Click on the "+" sign on the left and click "Remote"
-![Add remote](https://raw.githubusercontent.com/chenqi146/smart-doc.github.io/book/_images/004113_df83ee8d_144669.png "remote2.png")
+![Add remote](https://github.com/smart-doc-group/smart-doc-group.github.io/raw/master/docs/_images/004113_df83ee8d_144669.png "remote2.png")
 ### Perform debugging
 After completing the above operation, you can use `debug` to debug the plug-in and `smart-doc`, and then check the execution status of `smart-doc`. The operation is as shown below
-![Execute debugging](https://raw.githubusercontent.com/chenqi146/smart-doc.github.io/book/_images/004808_63ad37db_144669.png "debug3.png")
+![Execute debugging](https://github.com/smart-doc-group/smart-doc-group.github.io/raw/master/docs/_images/004808_63ad37db_144669.png "debug3.png")

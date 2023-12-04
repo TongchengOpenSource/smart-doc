@@ -176,7 +176,7 @@ Default locale: zh_CN, platform encoding: GBK
 OS name: "windows 10", version: "10.0", arch: "amd64", family: "dos"
 ```
 ### 5.2 在`IDEA`中生成文档
-![idea中smart-doc-maven插件使用](https://raw.githubusercontent.com/chenqi146/smart-doc.github.io/book/_images/idea-maven-plugin.png "maven_plugin_tasks.png")
+![idea中smart-doc-maven插件使用](https://github.com/smart-doc-group/smart-doc-group.github.io/raw/master/docs/_images/idea-maven-plugin.png "maven_plugin_tasks.png")
 
 ### 插件源码
 [smart-doc的maven插件源代码](https://gitee.com/smart-doc-team/smart-doc-maven-plugin)
@@ -205,11 +205,11 @@ OS name: "windows 10", version: "10.0", arch: "amd64", family: "dos"
 
 ## 添加断点
 添加断点如图所示
-![输入图片说明](https://raw.githubusercontent.com/chenqi146/smart-doc.github.io/book/_images/232807_f88b94b2_144669.png "maven-debug1.png")
+![输入图片说明](https://github.com/smart-doc-group/smart-doc-group.github.io/raw/master/docs/_images/232807_f88b94b2_144669.png "maven-debug1.png")
 
 ## Debug模式运行构建目标
 `maven`插件在`idea`中运行`debug`非常简单，操作如下图。
-![启动debug](https://raw.githubusercontent.com/chenqi146/smart-doc.github.io/book/_images/233101_c48191e6_144669.png "maven-debug2.png")
+![启动debug](https://github.com/smart-doc-group/smart-doc-group.github.io/raw/master/docs/_images/233101_c48191e6_144669.png "maven-debug2.png")
 这样就可以直接进入断点了。
 
 **提示：** 上面是通过插件去作为入口调试`smart-doc`的源码，如果你想调试插件本身的源码执行过程，则将插件的依赖添加到项目依赖中,如下：
