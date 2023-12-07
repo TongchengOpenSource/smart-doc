@@ -116,7 +116,7 @@ public abstract class AbstractOpenApiBuilder {
                     Map<String, Object> oldRequest = (Map<String, Object>) pathMap.get(path);
                     oldRequest.putAll(request);
                 }
-        	}
+            }
         }
         for (Map.Entry<String, TagDoc> docEntry : DocMapping.TAG_DOC.entrySet()) {
             String tag = docEntry.getKey();
