@@ -275,11 +275,13 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 
     default List<JavaAnnotation> getClassAnnotations(JavaClass cls, FrameworkAnnotations frameworkAnnotations) {
         List<JavaAnnotation> annotationsList = new ArrayList<>(cls.getAnnotations());
-        Map<String, EntryAnnotation> mappingAnnotationMap = frameworkAnnotations.getEntryAnnotations();
+        Map<String, EntryAnnotation> entryAnnotationMap = frameworkAnnotations.getEntryAnnotations();
+        Map<String, MappingAnnotation> mappingAnnotationMap = frameworkAnnotations.getMappingAnnotations();
         boolean flag = annotationsList.stream().anyMatch(item -> {
             String annotationName = item.getType().getValue();
             String fullyName = item.getType().getFullyQualifiedName();
-            return mappingAnnotationMap.containsKey(annotationName) || mappingAnnotationMap.containsKey(fullyName);
+            return (entryAnnotationMap.containsKey(annotationName) || entryAnnotationMap.containsKey(fullyName))&&
+                    (mappingAnnotationMap.containsKey(annotationName)||mappingAnnotationMap.containsKey(fullyName));
         });
         // child override parent set
         if (flag) {
@@ -288,6 +290,12 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
         JavaClass superJavaClass = cls.getSuperJavaClass();
         if (Objects.nonNull(superJavaClass) && !"Object".equals(superJavaClass.getSimpleName())) {
             annotationsList.addAll(getClassAnnotations(superJavaClass, frameworkAnnotations));
+        }
+        List<JavaClass> interfaseList = cls.getInterfaces();
+        if(!CollectionUtil.isEmpty(interfaseList)){
+            for (JavaClass javaInterface : interfaseList) {
+                annotationsList.addAll(getClassAnnotations(javaInterface,frameworkAnnotations));
+            }
         }
         return annotationsList;
     }
