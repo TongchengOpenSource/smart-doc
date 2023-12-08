@@ -292,7 +292,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
             annotationsList.addAll(getClassAnnotations(superJavaClass, frameworkAnnotations));
         }
         List<JavaClass> interfaseList = cls.getInterfaces();
-        if(!CollectionUtil.isEmpty(interfaseList)){
+        if(CollectionUtil.isNotEmpty(interfaseList)){
             for (JavaClass javaInterface : interfaseList) {
                 annotationsList.addAll(getClassAnnotations(javaInterface,frameworkAnnotations));
             }
