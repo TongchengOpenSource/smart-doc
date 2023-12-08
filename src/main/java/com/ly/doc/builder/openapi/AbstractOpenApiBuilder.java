@@ -106,13 +106,16 @@ public abstract class AbstractOpenApiBuilder {
         Map<String, Object> pathMap = new HashMap<>(500);
         Set<ApiMethodDoc> methodDocs = DocMapping.METHOD_DOCS;
         for (ApiMethodDoc methodDoc : methodDocs) {
-            String path = methodDoc.getPath();
-            Map<String, Object> request = buildPathUrls(apiConfig, methodDoc, methodDoc.getClazzDoc());
-            if (!pathMap.containsKey(path)) {
-                pathMap.put(path, request);
-            } else {
-                Map<String, Object> oldRequest = (Map<String, Object>) pathMap.get(path);
-                oldRequest.putAll(request);
+            String [] paths = methodDoc.getPath().split(";");
+            for(String path : paths) {
+                path = path.trim();
+                Map<String, Object> request = buildPathUrls(apiConfig, methodDoc, methodDoc.getClazzDoc());
+                if (!pathMap.containsKey(path)) {
+                    pathMap.put(path, request);
+                } else {
+                    Map<String, Object> oldRequest = (Map<String, Object>) pathMap.get(path);
+                    oldRequest.putAll(request);
+                }
             }
         }
         for (Map.Entry<String, TagDoc> docEntry : DocMapping.TAG_DOC.entrySet()) {
