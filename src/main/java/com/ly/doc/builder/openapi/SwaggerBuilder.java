@@ -21,7 +21,6 @@
  */
 package com.ly.doc.builder.openapi;
 
-import com.ly.doc.constants.ComponentTypeEnum;
 import com.ly.doc.constants.DocGlobalConstants;
 import com.ly.doc.model.*;
 import com.ly.doc.utils.DocUtil;
@@ -88,7 +87,7 @@ public class SwaggerBuilder extends AbstractOpenApiBuilder {
         Set<OpenApiTag> tags = new HashSet<>();
         json.put("tags", tags);
         json.put("paths", buildPaths(config, apiDocList, tags));
-        json.put("definitions", buildComponentsSchema(apiDocList, ComponentTypeEnum.getComponentEnumByCode(config.getComponentType())));
+        json.put("definitions", buildComponentsSchema(apiDocList));
 
         String filePath = config.getOutPath();
         filePath = filePath + DocGlobalConstants.OPEN_API_JSON;
@@ -138,12 +137,8 @@ public class SwaggerBuilder extends AbstractOpenApiBuilder {
         Map<String, Object> request = new HashMap<>(20);
         request.put("summary", apiMethodDoc.getDesc());
         request.put("description", apiMethodDoc.getDetail());
-        String tag = StringUtil.isEmpty(apiDoc.getDesc()) ? DocGlobalConstants.OPENAPI_TAG : apiDoc.getDesc();
-        if (StringUtil.isNotEmpty(apiMethodDoc.getGroup())) {
-            request.put("tags", new String[]{tag});
-        } else {
-            request.put("tags", new String[]{tag});
-        }
+        request.put("tags", Arrays.asList(apiDoc.getName(),apiDoc.getDesc(), apiMethodDoc.getGroup())
+                .stream().filter(StringUtil::isNotEmpty).toArray(n->new String[n]));
         List<Map<String, Object>> parameters = buildParameters(apiMethodDoc);
         //requestBody
         if (CollectionUtil.isNotEmpty(apiMethodDoc.getRequestParams())) {
@@ -161,7 +156,8 @@ public class SwaggerBuilder extends AbstractOpenApiBuilder {
         request.put("responses", buildResponses(apiConfig, apiMethodDoc));
         request.put("deprecated", apiMethodDoc.isDeprecated());
         String operationId = apiMethodDoc.getUrl().replace(apiMethodDoc.getServerUrl(), "");
-        request.put("operationId", String.join("", OpenApiSchemaUtil.getPatternResult("[A-Za-z0-9{}]*", operationId)));
+        //make sure operationId is unique and can be used as a method name
+        request.put("operationId",apiMethodDoc.getName()+"_"+apiMethodDoc.getMethodId()+"UsingOn"+apiMethodDoc.getType());
 
         return request;
     }
@@ -275,7 +271,7 @@ public class SwaggerBuilder extends AbstractOpenApiBuilder {
     }
 
     @Override
-    public Map<String, Object> buildComponentsSchema(List<ApiDoc> apiDocs, ComponentTypeEnum componentTypeEnum) {
+    public Map<String, Object> buildComponentsSchema(List<ApiDoc> apiDocs) {
         Map<String, Object> component = new HashMap<>();
         component.put(DocGlobalConstants.DEFAULT_PRIMITIVE, STRING_COMPONENT);
         apiDocs.forEach(

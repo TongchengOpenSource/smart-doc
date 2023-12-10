@@ -39,6 +39,7 @@ import com.ly.doc.utils.OpenApiSchemaUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.ly.doc.constants.DocGlobalConstants.*;
 
@@ -105,18 +106,25 @@ public abstract class AbstractOpenApiBuilder {
         Map<String, Object> pathMap = new HashMap<>(500);
         Set<ApiMethodDoc> methodDocs = DocMapping.METHOD_DOCS;
         for (ApiMethodDoc methodDoc : methodDocs) {
-            String path = methodDoc.getPath();
-            Map<String, Object> request = buildPathUrls(apiConfig, methodDoc, methodDoc.getClazzDoc());
-            if (!pathMap.containsKey(path)) {
-                pathMap.put(path, request);
-            } else {
-                Map<String, Object> oldRequest = (Map<String, Object>) pathMap.get(path);
-                oldRequest.putAll(request);
+            String [] paths = methodDoc.getPath().split(";");
+            for(String path : paths) {
+                path = path.trim();
+                Map<String, Object> request = buildPathUrls(apiConfig, methodDoc, methodDoc.getClazzDoc());
+                if (!pathMap.containsKey(path)) {
+                    pathMap.put(path, request);
+                } else {
+                    Map<String, Object> oldRequest = (Map<String, Object>) pathMap.get(path);
+                    oldRequest.putAll(request);
+                }
             }
         }
         for (Map.Entry<String, TagDoc> docEntry : DocMapping.TAG_DOC.entrySet()) {
             String tag = docEntry.getKey();
-            tags.add(OpenApiTag.of(tag, tag));
+            tags.addAll(docEntry.getValue().getClazzDocs()
+                    .stream()
+                    //optimize tag content for compatible to swagger
+                    .map(doc -> OpenApiTag.of(doc.getName(), doc.getDesc()))
+                    .collect(Collectors.toSet()));
         }
         return pathMap;
     }
@@ -166,7 +174,7 @@ public abstract class AbstractOpenApiBuilder {
         } else if (!isRep && Objects.nonNull(apiMethodDoc.getRequestSchema())) {
             content.put("schema", apiMethodDoc.getRequestSchema());
         } else {
-            content.put("schema", buildBodySchema(apiMethodDoc, ComponentTypeEnum.getComponentEnumByCode(apiConfig.getComponentType()), isRep));
+            content.put("schema", buildBodySchema(apiMethodDoc, isRep));
         }
 
         if (OPENAPI_2_COMPONENT_KRY.equals(componentKey) && !isRep) {
@@ -186,7 +194,7 @@ public abstract class AbstractOpenApiBuilder {
      * @param apiMethodDoc ApiMethodDoc
      * @param isRep        is response
      */
-    public Map<String, Object> buildBodySchema(ApiMethodDoc apiMethodDoc, ComponentTypeEnum componentTypeEnum, boolean isRep) {
+    public Map<String, Object> buildBodySchema(ApiMethodDoc apiMethodDoc, boolean isRep) {
         Map<String, Object> schema = new HashMap<>(10);
         Map<String, Object> innerScheme = new HashMap<>(10);
         // For response
@@ -204,7 +212,7 @@ public abstract class AbstractOpenApiBuilder {
 
         // for request
         String requestRef;
-        String randomName = ComponentTypeEnum.getRandomName(componentTypeEnum, apiMethodDoc);
+        String randomName = ComponentTypeEnum.getRandomName(ApiConfig.getInstance().getComponentType(), apiMethodDoc);
         if (apiMethodDoc.getContentType().equals(DocGlobalConstants.URL_CONTENT_TYPE)) {
             requestRef = componentKey + OpenApiSchemaUtil.getClassNameFromParams(apiMethodDoc.getQueryParams());
         } else {
@@ -332,7 +340,7 @@ public abstract class AbstractOpenApiBuilder {
      *
      * @param apiDocs List of ApiDoc
      */
-    abstract public Map<String, Object> buildComponentsSchema(List<ApiDoc> apiDocs, ComponentTypeEnum componentTypeEnum);
+    abstract public Map<String, Object> buildComponentsSchema(List<ApiDoc> apiDocs);
 
     /**
      * component schema properties
@@ -408,9 +416,7 @@ public abstract class AbstractOpenApiBuilder {
                         propertiesData.put("items", arrayRef);
                     }
                 }
-            }
-            //基础数据类型
-            else {
+            } else {
                 Map<String, Object> arrayRef = new HashMap<>(4);
                 arrayRef.put("type", "string");
                 propertiesData.put("items", arrayRef);
@@ -450,6 +456,7 @@ public abstract class AbstractOpenApiBuilder {
      * @param projectBuilder JavaDocBuilder of QDox
      */
     public List<ApiDoc> getOpenApiDocs(ApiConfig config, JavaProjectBuilder projectBuilder) {
+        config.setShowJavaType(false);
         DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
         builderTemplate.checkAndInit(config, Boolean.TRUE);
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, projectBuilder);

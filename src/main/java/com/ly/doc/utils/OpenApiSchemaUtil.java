@@ -88,7 +88,7 @@ public class OpenApiSchemaUtil {
     }
 
     public static String getClassNameFromParams(List<ApiParam> apiParams) {
-        ComponentTypeEnum componentTypeEnum = ComponentTypeEnum.getComponentEnumByCode(ApiConfig.getInstance().getComponentType());
+        ComponentTypeEnum componentTypeEnum = ApiConfig.getInstance().getComponentType();
         // if array[Primitive] or Primitive
         if (CollectionUtil.isNotEmpty(apiParams) && apiParams.size() == 1
                 && StringUtil.isEmpty(apiParams.get(0).getClassName())

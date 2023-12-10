@@ -21,6 +21,7 @@
 package com.ly.doc.model;
 
 import java.util.List;
+import java.util.Objects;
 
 import com.ly.doc.model.torna.EnumInfo;
 
@@ -51,6 +52,11 @@ public class ApiParam {
      * field type
      */
     private String type;
+
+    /**
+     * genericFullyQualifiedName of type name
+     */
+    private String fullyTypeName;
 
     /**
      * description
@@ -116,7 +122,7 @@ public class ApiParam {
      */
     private boolean configParam;
     /**
-     * 自循环引用
+     * Self  Reference loop
      */
     private boolean selfReferenceLoop;
 
@@ -288,30 +294,45 @@ public class ApiParam {
         return selfReferenceLoop;
     }
 
-    public void setSelfReferenceLoop(boolean selfReferenceLoop) {
+    public ApiParam setSelfReferenceLoop(boolean selfReferenceLoop) {
         this.selfReferenceLoop = selfReferenceLoop;
+        return this;
+    }
+
+    public String getFullyTypeName() {
+        if (Objects.isNull(fullyTypeName)) {
+            return type;
+        }
+        return fullyTypeName;
+    }
+
+    public ApiParam setFullyTypeName(String fullyTypeName) {
+        this.fullyTypeName = fullyTypeName;
+        return this;
     }
 
     @Override
     public String toString() {
         return "ApiParam{" +
-            "id=" + id +
-            ", field='" + field + '\'' +
-            ", type='" + type + '\'' +
-            ", desc='" + desc + '\'' +
-            ", required=" + required +
-            ", version='" + version + '\'' +
-            ", pid=" + pid +
-            ", pathParam=" + pathParam +
-            ", queryParam=" + queryParam +
-            ", value='" + value + '\'' +
-            ", children=" + children +
-            ", hasItems=" + hasItems +
-            ", enumValues=" + enumValues +
-            ", enumInfo=" + enumInfo +
-            ", maxLength='" + maxLength + '\'' +
-            ", configParam=" + configParam +
-            ", selfReferenceLoop=" + selfReferenceLoop +
-            '}';
+                "className='" + className + '\'' +
+                ", id=" + id +
+                ", field='" + field + '\'' +
+                ", type='" + type + '\'' +
+                ", fullyTypeName='" + fullyTypeName + '\'' +
+                ", desc='" + desc + '\'' +
+                ", required=" + required +
+                ", version='" + version + '\'' +
+                ", pid=" + pid +
+                ", pathParam=" + pathParam +
+                ", queryParam=" + queryParam +
+                ", value='" + value + '\'' +
+                ", children=" + children +
+                ", hasItems=" + hasItems +
+                ", enumValues=" + enumValues +
+                ", enumInfo=" + enumInfo +
+                ", maxLength='" + maxLength + '\'' +
+                ", configParam=" + configParam +
+                ", selfReferenceLoop=" + selfReferenceLoop +
+                '}';
     }
 }

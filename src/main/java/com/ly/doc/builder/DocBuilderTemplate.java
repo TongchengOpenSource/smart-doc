@@ -143,6 +143,7 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
         tpl.binding(TemplateVariable.API_DOC_LIST.getVariable(), apiDocList);
         tpl.binding(TemplateVariable.ERROR_CODE_LIST.getVariable(), errorCodeList);
         tpl.binding(TemplateVariable.VERSION_LIST.getVariable(), config.getRevisionLogs());
+        tpl.binding(TemplateVariable.LANGUAGE.getVariable(), config.getLanguage());
         tpl.binding(TemplateVariable.VERSION.getVariable(), now);
         tpl.binding(TemplateVariable.INDEX_ALIAS.getVariable(), index);
         tpl.binding(TemplateVariable.CREATE_TIME.getVariable(), strTime);

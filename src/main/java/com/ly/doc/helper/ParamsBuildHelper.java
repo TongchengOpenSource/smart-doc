@@ -111,14 +111,14 @@ public class ParamsBuildHelper extends BaseHelper {
         JavaClassUtil.genericParamMap(genericMap, cls, globGicName);
         List<DocJavaField> fields = JavaClassUtil.getFields(cls, 0, new LinkedHashMap<>(),projectBuilder.getApiConfig().getClassLoader());
         if (JavaClassValidateUtil.isPrimitive(simpleName)) {
-            String processedType = isShowJavaType ? simpleName : DocClassUtil.processTypeNameForParams(simpleName.toLowerCase());
+            String processedType = processFieldTypeName(isShowJavaType,simpleName);
             paramList.addAll(primitiveReturnRespComment(processedType, atomicInteger, pid));
         } else if (JavaClassValidateUtil.isCollection(simpleName) || JavaClassValidateUtil.isArray(simpleName)) {
             if (!JavaClassValidateUtil.isCollection(globGicName[0])) {
                 String gNameTemp = globGicName[0];
                 String gName = JavaClassValidateUtil.isArray(gNameTemp) ? gNameTemp.substring(0, gNameTemp.indexOf("[")) : globGicName[0];
                 if (JavaClassValidateUtil.isPrimitive(gName)) {
-                    String processedType = isShowJavaType ? simpleName : DocClassUtil.processTypeNameForParams(gName);
+                    String processedType = isShowJavaType ? JavaFieldUtil.convertToSimpleTypeName(simpleName) : DocClassUtil.processTypeNameForParams(gName);
                     ApiParam param = ApiParam.of()
                             .setId(atomicOrDefault(atomicInteger, pid + 1))
                             .setField(pre + " -")
@@ -310,7 +310,7 @@ public class ParamsBuildHelper extends BaseHelper {
                     ApiParam param = ApiParam.of().setClassName(className).setField(pre + fieldName);
                     param.setPid(pid).setMaxLength(maxLength).setValue(fieldValue);
                     param.setId(atomicOrDefault(atomicInteger, paramList.size() + param.getPid() + 1));
-                    String processedType = isShowJavaType ? subTypeName : DocClassUtil.processTypeNameForParams(subTypeName.toLowerCase());
+                    String processedType = processFieldTypeName(isShowJavaType,subTypeName);
                     param.setType(processedType);
                     // handle param
                     commonHandleParam(paramList, param, isRequired, comment.toString(), since, strRequired);
@@ -363,7 +363,7 @@ public class ParamsBuildHelper extends BaseHelper {
                             processedType = DocClassUtil.processTypeNameForParams(typeSimpleName.toLowerCase());
                         }
                     } else {
-                        processedType = isShowJavaType ? typeSimpleName : DocClassUtil.processTypeNameForParams(typeSimpleName.toLowerCase());
+                        processedType = processFieldTypeName(isShowJavaType,typeSimpleName);
                     }
                     param.setType(processedType);
                     JavaClass javaClass = field.getType();
@@ -375,7 +375,7 @@ public class ParamsBuildHelper extends BaseHelper {
                     } else if (JavaClassValidateUtil.isCollection(subTypeName) || JavaClassValidateUtil.isArray(subTypeName)) {
                         if (isShowJavaType) {
                             // rpc
-                            param.setType(subTypeName);
+                            param.setType(JavaFieldUtil.convertToSimpleTypeName(docField.getGenericFullyQualifiedName()));
                         } else {
                             param.setType("array");
                         }
@@ -554,7 +554,7 @@ public class ParamsBuildHelper extends BaseHelper {
         List<ApiParam> paramList = new ArrayList<>();
         if (JavaClassValidateUtil.isPrimitive(mapKeySimpleName)) {
             boolean isShowJavaType = projectBuilder.getApiConfig().getShowJavaType();
-            String valueSimpleNameType = isShowJavaType ? valueSimpleName : DocClassUtil.processTypeNameForParams(valueSimpleName.toLowerCase());
+            String valueSimpleNameType = processFieldTypeName(isShowJavaType,valueSimpleName);
             ApiParam apiParam = ApiParam.of().setField(pre + "mapKey")
                     .setType(valueSimpleNameType)
                     .setClassName(valueSimpleName)
@@ -645,5 +645,13 @@ public class ParamsBuildHelper extends BaseHelper {
             return atomicInteger.incrementAndGet();
         }
         return defaultVal;
+    }
+
+    private static String processFieldTypeName(boolean isShowJavaType,String fieldTypeName) {
+        if (isShowJavaType) {
+            return JavaFieldUtil.convertToSimpleTypeName(fieldTypeName);
+        } else {
+            return DocClassUtil.processTypeNameForParams(fieldTypeName.toLowerCase());
+        }
     }
 }

@@ -39,14 +39,7 @@ import com.ly.doc.handler.ICustomJavaMethodHandler;
  */
 public class ApiConfig {
 
-    private final static ApiConfig apiConfig = new ApiConfig();
-
-    private ApiConfig() {
-    }
-
-    public static ApiConfig getInstance() {
-        return apiConfig;
-    }
+    private static ApiConfig instance;
 
     /**
      * Web server base url
@@ -376,7 +369,7 @@ public class ApiConfig {
      * build random component for openApi
      * @see ComponentTypeEnum
      */
-    private String componentType;
+    private ComponentTypeEnum componentType = ComponentTypeEnum.RANDOM;
 
     /**
      * whether to build the doc incrementally
@@ -388,13 +381,12 @@ public class ApiConfig {
      */
     private String baseDir;
 
-    public String getComponentType() {
-        return componentType;
+    public static ApiConfig getInstance() {
+        return instance;
     }
 
-    public ApiConfig setComponentType(String componentType) {
-        this.componentType = componentType;
-        return this;
+    public static void setInstance(ApiConfig instance) {
+        ApiConfig.instance = instance;
     }
 
     public String getCodePath() {
@@ -1004,6 +996,15 @@ public class ApiConfig {
 
     public void setJarSourcePaths(SourceCodePath... jarSourcePaths) {
         this.jarSourcePaths = CollectionUtil.asList(jarSourcePaths);
+    }
+
+    public ComponentTypeEnum getComponentType() {
+        return componentType;
+    }
+
+    public ApiConfig setComponentType(ComponentTypeEnum componentType) {
+        this.componentType = componentType;
+        return this;
     }
 
     public boolean isIncrement() {

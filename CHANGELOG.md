@@ -1,9 +1,10 @@
 ## smart-doc版本
 
 ### 版本号：3.0.1
-- 更新日期: 2023-10-20
+- 更新日期: 2023-12.xx
 - 更新内容：
-  1. xxx
+  1. 优化Dubbo文档设置，[#649](https://github.com/smart-doc-group/smart-doc/issues/649)
+  2. 优化Dubbo文档中字段类型展示，[#648](https://github.com/smart-doc-group/smart-doc/issues/648)
 
 ### 版本号：3.0.0
 - 更新日期: 2023-10-20

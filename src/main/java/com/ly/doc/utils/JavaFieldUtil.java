@@ -110,7 +110,7 @@ public class JavaFieldUtil {
             if (DocAnnotationConstants.LENGTH.equalsIgnoreCase(simpleAnnotationName)) {
                 annotationValue = annotation.getProperty(DocAnnotationConstants.MAX);
             }
-            if (!Objects.isNull(annotationValue)) {
+            if (Objects.nonNull(annotationValue)) {
                 maxLength = annotationValue.toString();
             }
         }
@@ -158,4 +158,9 @@ public class JavaFieldUtil {
         return finalSb.toString();
     }
 
+
+    public static String convertToSimpleTypeName(String str){
+        String regex = "\\b\\w+\\.(?=\\w+\\b)";
+        return  str.replaceAll(regex, "");
+    }
 }

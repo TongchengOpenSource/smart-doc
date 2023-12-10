@@ -41,6 +41,7 @@ public enum TemplateVariable {
     ERROR_LIST_TITLE("errorListTitle"),
     CREATE_TIME("createTime"),
     PROJECT_NAME("projectName"),
+    LANGUAGE("language"),
     DICT_LIST("dictList"),
     DICT_LIST_TITLE("dictListTitle"),
     DICT_ORDER("dictListOrder"),
