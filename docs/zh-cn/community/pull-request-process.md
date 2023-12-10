@@ -28,7 +28,7 @@
 ![image](https://github.com/smart-doc-group/smart-doc-group.github.io/assets/50514081/0be96dfd-6a78-495b-8618-49994f417f93)
 
 2. **认真填写title和comment**。`title`简单描述你的意图，`comment`中详细描述过程。可以参考已关闭的`pr`)。
-   
+
 ![image](../../_images/pr.png)
 
 3. **处理review**。如果你的`pull request`很完美，会直接被社区采纳。如果社区`review`发现问题，会有评论，我们可以直接讨论，最后解决问题了，要点击 `Resolve conversation`。
