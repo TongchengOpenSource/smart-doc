@@ -50,6 +50,8 @@ public interface DocGlobalConstants {
 
     String ALL_IN_ONE_HTML_TPL = "AllInOne.html";
 
+    String ALL_IN_ONE_WORD_XML_TPL = "word/AllInOneWordTemplate.xml";
+
     String HTML_API_DOC_TPL = "HtmlApiDoc.html";
 
     String ERROR_CODE_LIST_MD_TPL = "ErrorCodeList.md";
