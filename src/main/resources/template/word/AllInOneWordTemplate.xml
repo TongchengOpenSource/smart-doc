@@ -2128,44 +2128,44 @@
         <%
         for(l in strutil.split(doc.requestUsage, "\n")){
         %>
-            <w:p>
-                <w:pPr>
-                    <w:keepNext w:val="0"/>
-                    <w:keepLines w:val="0"/>
-                    <w:widowControl/>
-                    <w:suppressLineNumbers w:val="0"/>
+        <w:p>
+            <w:pPr>
+                <w:keepNext w:val="0"/>
+                <w:keepLines w:val="0"/>
+                <w:widowControl/>
+                <w:suppressLineNumbers w:val="0"/>
+                <w:shd w:val="clear" w:fill="1E1E1E"/>
+                <w:spacing w:line="285" w:lineRule="atLeast"/>
+                <w:jc w:val="left"/>
+                <w:rPr>
+                    <w:rFonts w:hint="default" w:ascii="Consolas" w:hAnsi="Consolas" w:eastAsia="Consolas"
+                              w:cs="Consolas"/>
+                    <w:b w:val="0"/>
+                    <w:bCs w:val="0"/>
+                    <w:color w:val="D4D4D4"/>
+                    <w:kern w:val="0"/>
+                    <w:sz w:val="21"/>
+                    <w:szCs w:val="21"/>
                     <w:shd w:val="clear" w:fill="1E1E1E"/>
-                    <w:spacing w:line="285" w:lineRule="atLeast"/>
-                    <w:jc w:val="left"/>
-                    <w:rPr>
-                        <w:rFonts w:hint="default" w:ascii="Consolas" w:hAnsi="Consolas" w:eastAsia="Consolas"
-                                  w:cs="Consolas"/>
-                        <w:b w:val="0"/>
-                        <w:bCs w:val="0"/>
-                        <w:color w:val="D4D4D4"/>
-                        <w:kern w:val="0"/>
-                        <w:sz w:val="21"/>
-                        <w:szCs w:val="21"/>
-                        <w:shd w:val="clear" w:fill="1E1E1E"/>
-                        <w:lang w:val="en-US" w:eastAsia="zh-CN" w:bidi="ar"/>
-                    </w:rPr>
-                </w:pPr>
-                <w:r>
-                    <w:rPr>
-                        <w:rFonts w:hint="default" w:ascii="Consolas" w:hAnsi="Consolas" w:eastAsia="Consolas"
-                                  w:cs="Consolas"/>
-                        <w:b w:val="0"/>
-                        <w:bCs w:val="0"/>
-                        <w:color w:val="D4D4D4"/>
-                        <w:kern w:val="0"/>
-                        <w:sz w:val="21"/>
-                        <w:szCs w:val="21"/>
-                        <w:shd w:val="clear" w:fill="1E1E1E"/>
-                        <w:lang w:val="en-US" w:eastAsia="zh-CN" w:bidi="ar"/>
-                    </w:rPr>
-                    <w:t>${wordXmlEscape(l)}</w:t>
-                </w:r>
-            </w:p>
+                    <w:lang w:val="en-US" w:eastAsia="zh-CN" w:bidi="ar"/>
+                </w:rPr>
+            </w:pPr>
+            <w:r>
+                <w:rPr>
+                    <w:rFonts w:hint="default" w:ascii="Consolas" w:hAnsi="Consolas" w:eastAsia="Consolas"
+                              w:cs="Consolas"/>
+                    <w:b w:val="0"/>
+                    <w:bCs w:val="0"/>
+                    <w:color w:val="D4D4D4"/>
+                    <w:kern w:val="0"/>
+                    <w:sz w:val="21"/>
+                    <w:szCs w:val="21"/>
+                    <w:shd w:val="clear" w:fill="1E1E1E"/>
+                    <w:lang w:val="en-US" w:eastAsia="zh-CN" w:bidi="ar"/>
+                </w:rPr>
+                <w:t>${wordXmlEscape(l)}</w:t>
+            </w:r>
+        </w:p>
         <%}%>
 
         <%}%>
@@ -2495,60 +2495,517 @@
                 <w:t>Response-example:</w:t>
             </w:r>
         </w:p>
-            <%
-            for(l in strutil.split(doc.responseUsage, "\n")){
-            %>
-            <w:p>
-                <w:pPr>
-                    <w:keepNext w:val="0"/>
-                    <w:keepLines w:val="0"/>
-                    <w:widowControl/>
-                    <w:suppressLineNumbers w:val="0"/>
+        <%
+        for(l in strutil.split(doc.responseUsage, "\n")){
+        %>
+        <w:p>
+            <w:pPr>
+                <w:keepNext w:val="0"/>
+                <w:keepLines w:val="0"/>
+                <w:widowControl/>
+                <w:suppressLineNumbers w:val="0"/>
+                <w:shd w:val="clear" w:fill="1E1E1E"/>
+                <w:spacing w:line="285" w:lineRule="atLeast"/>
+                <w:jc w:val="left"/>
+                <w:rPr>
+                    <w:rFonts w:hint="default" w:ascii="Consolas" w:hAnsi="Consolas" w:eastAsia="Consolas"
+                              w:cs="Consolas"/>
+                    <w:b w:val="0"/>
+                    <w:bCs w:val="0"/>
+                    <w:color w:val="D4D4D4"/>
+                    <w:kern w:val="0"/>
+                    <w:sz w:val="21"/>
+                    <w:szCs w:val="21"/>
                     <w:shd w:val="clear" w:fill="1E1E1E"/>
-                    <w:spacing w:line="285" w:lineRule="atLeast"/>
-                    <w:jc w:val="left"/>
-                    <w:rPr>
-                        <w:rFonts w:hint="default" w:ascii="Consolas" w:hAnsi="Consolas" w:eastAsia="Consolas"
-                                  w:cs="Consolas"/>
-                        <w:b w:val="0"/>
-                        <w:bCs w:val="0"/>
-                        <w:color w:val="D4D4D4"/>
-                        <w:kern w:val="0"/>
-                        <w:sz w:val="21"/>
-                        <w:szCs w:val="21"/>
-                        <w:shd w:val="clear" w:fill="1E1E1E"/>
-                        <w:lang w:val="en-US" w:eastAsia="zh-CN" w:bidi="ar"/>
-                    </w:rPr>
-                </w:pPr>
-                <w:r>
-                    <w:rPr>
-                        <w:rFonts w:hint="default" w:ascii="Consolas" w:hAnsi="Consolas" w:eastAsia="Consolas"
-                                  w:cs="Consolas"/>
-                        <w:b w:val="0"/>
-                        <w:bCs w:val="0"/>
-                        <w:color w:val="D4D4D4"/>
-                        <w:kern w:val="0"/>
-                        <w:sz w:val="21"/>
-                        <w:szCs w:val="21"/>
-                        <w:shd w:val="clear" w:fill="1E1E1E"/>
-                        <w:lang w:val="en-US" w:eastAsia="zh-CN" w:bidi="ar"/>
-                    </w:rPr>
-                    <w:t>${wordXmlEscape(l)}</w:t>
-                </w:r>
-            </w:p>
+                    <w:lang w:val="en-US" w:eastAsia="zh-CN" w:bidi="ar"/>
+                </w:rPr>
+            </w:pPr>
+            <w:r>
+                <w:rPr>
+                    <w:rFonts w:hint="default" w:ascii="Consolas" w:hAnsi="Consolas" w:eastAsia="Consolas"
+                              w:cs="Consolas"/>
+                    <w:b w:val="0"/>
+                    <w:bCs w:val="0"/>
+                    <w:color w:val="D4D4D4"/>
+                    <w:kern w:val="0"/>
+                    <w:sz w:val="21"/>
+                    <w:szCs w:val="21"/>
+                    <w:shd w:val="clear" w:fill="1E1E1E"/>
+                    <w:lang w:val="en-US" w:eastAsia="zh-CN" w:bidi="ar"/>
+                </w:rPr>
+                <w:t>${wordXmlEscape(l)}</w:t>
+            </w:r>
+        </w:p>
+        <%}%>
+        <%}%>
+
+
+
+
+
+        <%}%>
+
+
+        <%}%>
+
+
+        <%}%>
+
+
+
+        <%if(isNotEmpty(errorCodeList)){
+        %>
+        <w:p>
+            <w:pPr>
+                <w:pStyle w:val="2"/>
+                <w:numPr>
+                    <w:ilvl w:val="0"/>
+                    <w:numId w:val="2"/>
+                </w:numPr>
+                <w:bidi w:val="0"/>
+                <w:ind w:left="425" w:leftChars="0" w:hanging="425" w:firstLineChars="0"/>
+                <w:rPr>
+                    <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
+                    <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
+                </w:rPr>
+            </w:pPr>
+            <w:r>
+                <w:rPr>
+                    <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
+                    <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
+                </w:rPr>
+                <w:t>${wordXmlEscape(errorListTitle)}</w:t>
+            </w:r>
+        </w:p>
+
+        <w:tbl>
+            <w:tblPr>
+                <w:tblStyle w:val="13"/>
+                <w:tblpPr w:leftFromText="180" w:rightFromText="180" w:vertAnchor="text" w:horzAnchor="page" w:tblpX="2057" w:tblpY="94"/>
+                <w:tblOverlap w:val="never"/>
+                <w:tblW w:w="0" w:type="auto"/>
+                <w:tblInd w:w="0" w:type="dxa"/>
+                <w:tblBorders>
+                    <w:top w:val="single" w:color="auto" w:sz="4" w:space="0"/>
+                    <w:left w:val="single" w:color="auto" w:sz="4" w:space="0"/>
+                    <w:bottom w:val="single" w:color="auto" w:sz="4" w:space="0"/>
+                    <w:right w:val="single" w:color="auto" w:sz="4" w:space="0"/>
+                    <w:insideH w:val="single" w:color="auto" w:sz="4" w:space="0"/>
+                    <w:insideV w:val="single" w:color="auto" w:sz="4" w:space="0"/>
+                </w:tblBorders>
+                <w:tblLayout w:type="autofit"/>
+                <w:tblCellMar>
+                    <w:top w:w="0" w:type="dxa"/>
+                    <w:left w:w="108" w:type="dxa"/>
+                    <w:bottom w:w="0" w:type="dxa"/>
+                    <w:right w:w="108" w:type="dxa"/>
+                </w:tblCellMar>
+            </w:tblPr>
+            <w:tblGrid>
+                <w:gridCol w:w="4080"/>
+                <w:gridCol w:w="4080"/>
+            </w:tblGrid>
+            <w:tr>
+                <w:tblPrEx>
+                    <w:tblBorders>
+                        <w:top w:val="single" w:color="auto" w:sz="4" w:space="0"/>
+                        <w:left w:val="single" w:color="auto" w:sz="4" w:space="0"/>
+                        <w:bottom w:val="single" w:color="auto" w:sz="4" w:space="0"/>
+                        <w:right w:val="single" w:color="auto" w:sz="4" w:space="0"/>
+                        <w:insideH w:val="single" w:color="auto" w:sz="4" w:space="0"/>
+                        <w:insideV w:val="single" w:color="auto" w:sz="4" w:space="0"/>
+                    </w:tblBorders>
+                    <w:tblCellMar>
+                        <w:top w:w="0" w:type="dxa"/>
+                        <w:left w:w="108" w:type="dxa"/>
+                        <w:bottom w:w="0" w:type="dxa"/>
+                        <w:right w:w="108" w:type="dxa"/>
+                    </w:tblCellMar>
+                </w:tblPrEx>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcW w:w="4080" w:type="dxa"/>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:rPr>
+                                <w:rFonts w:hint="default" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
+                                <w:b/>
+                                <w:bCs/>
+                                <w:vertAlign w:val="baseline"/>
+                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
+                            </w:rPr>
+                        </w:pPr>
+                        <w:r>
+                            <w:rPr>
+                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
+                                <w:b/>
+                                <w:bCs/>
+                                <w:vertAlign w:val="baseline"/>
+                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
+                            </w:rPr>
+                            <w:t>Error code</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcW w:w="4080" w:type="dxa"/>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:rPr>
+                                <w:rFonts w:hint="default" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
+                                <w:b/>
+                                <w:bCs/>
+                                <w:vertAlign w:val="baseline"/>
+                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
+                            </w:rPr>
+                        </w:pPr>
+                        <w:r>
+                            <w:rPr>
+                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
+                                <w:b/>
+                                <w:bCs/>
+                                <w:vertAlign w:val="baseline"/>
+                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
+                            </w:rPr>
+                            <w:t>Description</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
+            </w:tr>
+            <%
+            for(error in errorCodeList){
+            %>
+            <w:tr>
+                <w:tblPrEx>
+                    <w:tblBorders>
+                        <w:top w:val="single" w:color="auto" w:sz="4" w:space="0"/>
+                        <w:left w:val="single" w:color="auto" w:sz="4" w:space="0"/>
+                        <w:bottom w:val="single" w:color="auto" w:sz="4" w:space="0"/>
+                        <w:right w:val="single" w:color="auto" w:sz="4" w:space="0"/>
+                        <w:insideH w:val="single" w:color="auto" w:sz="4" w:space="0"/>
+                        <w:insideV w:val="single" w:color="auto" w:sz="4" w:space="0"/>
+                    </w:tblBorders>
+                    <w:tblCellMar>
+                        <w:top w:w="0" w:type="dxa"/>
+                        <w:left w:w="108" w:type="dxa"/>
+                        <w:bottom w:w="0" w:type="dxa"/>
+                        <w:right w:w="108" w:type="dxa"/>
+                    </w:tblCellMar>
+                </w:tblPrEx>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcW w:w="4080" w:type="dxa"/>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:rPr>
+                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
+                                <w:b w:val="0"/>
+                                <w:bCs w:val="0"/>
+                                <w:vertAlign w:val="baseline"/>
+                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
+                            </w:rPr>
+                        </w:pPr>
+                        <w:r>
+                            <w:rPr>
+                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
+                                <w:b w:val="0"/>
+                                <w:bCs w:val="0"/>
+                                <w:vertAlign w:val="baseline"/>
+                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
+                            </w:rPr>
+                            <w:t>${wordXmlEscape(error.value)}</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcW w:w="4080" w:type="dxa"/>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:rPr>
+                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
+                                <w:b w:val="0"/>
+                                <w:bCs w:val="0"/>
+                                <w:vertAlign w:val="baseline"/>
+                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
+                            </w:rPr>
+                        </w:pPr>
+                        <w:r>
+                            <w:rPr>
+                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
+                                <w:b w:val="0"/>
+                                <w:bCs w:val="0"/>
+                                <w:vertAlign w:val="baseline"/>
+                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
+                            </w:rPr>
+                            <w:t>${wordXmlEscape(error.desc)}</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
+            </w:tr>
             <%}%>
+        </w:tbl>
         <%}%>
 
+        <%if(isNotEmpty(dictList)){
+        %>
 
-
-
-
+        <w:p>
+            <w:pPr>
+                <w:pStyle w:val="2"/>
+                <w:numPr>
+                    <w:ilvl w:val="0"/>
+                    <w:numId w:val="2"/>
+                </w:numPr>
+                <w:bidi w:val="0"/>
+                <w:ind w:left="425" w:leftChars="0" w:hanging="425" w:firstLineChars="0"/>
+                <w:rPr>
+                    <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
+                    <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
+                </w:rPr>
+            </w:pPr>
+            <w:r>
+                <w:rPr>
+                    <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
+                    <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
+                </w:rPr>
+                <w:t>${wordXmlEscape(dictListTitle)}</w:t>
+            </w:r>
+        </w:p>
+        <%
+        for(dict in dictList){
+        %>
+        <w:tbl>
+            <w:tblPr>
+                <w:tblStyle w:val="13"/>
+                <w:tblpPr w:leftFromText="180" w:rightFromText="180" w:vertAnchor="text" w:horzAnchor="page" w:tblpX="2057" w:tblpY="94"/>
+                <w:tblOverlap w:val="never"/>
+                <w:tblW w:w="0" w:type="auto"/>
+                <w:tblInd w:w="0" w:type="dxa"/>
+                <w:tblBorders>
+                    <w:top w:val="single" w:color="auto" w:sz="4" w:space="0"/>
+                    <w:left w:val="single" w:color="auto" w:sz="4" w:space="0"/>
+                    <w:bottom w:val="single" w:color="auto" w:sz="4" w:space="0"/>
+                    <w:right w:val="single" w:color="auto" w:sz="4" w:space="0"/>
+                    <w:insideH w:val="single" w:color="auto" w:sz="4" w:space="0"/>
+                    <w:insideV w:val="single" w:color="auto" w:sz="4" w:space="0"/>
+                </w:tblBorders>
+                <w:tblLayout w:type="autofit"/>
+                <w:tblCellMar>
+                    <w:top w:w="0" w:type="dxa"/>
+                    <w:left w:w="108" w:type="dxa"/>
+                    <w:bottom w:w="0" w:type="dxa"/>
+                    <w:right w:w="108" w:type="dxa"/>
+                </w:tblCellMar>
+            </w:tblPr>
+            <w:tblGrid>
+                <w:gridCol w:w="3060"/>
+                <w:gridCol w:w="3060"/>
+                <w:gridCol w:w="3060"/>
+            </w:tblGrid>
+            <w:tr>
+                <w:tblPrEx>
+                    <w:tblBorders>
+                        <w:top w:val="single" w:color="auto" w:sz="4" w:space="0"/>
+                        <w:left w:val="single" w:color="auto" w:sz="4" w:space="0"/>
+                        <w:bottom w:val="single" w:color="auto" w:sz="4" w:space="0"/>
+                        <w:right w:val="single" w:color="auto" w:sz="4" w:space="0"/>
+                        <w:insideH w:val="single" w:color="auto" w:sz="4" w:space="0"/>
+                        <w:insideV w:val="single" w:color="auto" w:sz="4" w:space="0"/>
+                    </w:tblBorders>
+                    <w:tblCellMar>
+                        <w:top w:w="0" w:type="dxa"/>
+                        <w:left w:w="108" w:type="dxa"/>
+                        <w:bottom w:w="0" w:type="dxa"/>
+                        <w:right w:w="108" w:type="dxa"/>
+                    </w:tblCellMar>
+                </w:tblPrEx>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcW w:w="4080" w:type="dxa"/>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:rPr>
+                                <w:rFonts w:hint="default" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
+                                <w:b/>
+                                <w:bCs/>
+                                <w:vertAlign w:val="baseline"/>
+                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
+                            </w:rPr>
+                        </w:pPr>
+                        <w:r>
+                            <w:rPr>
+                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
+                                <w:b/>
+                                <w:bCs/>
+                                <w:vertAlign w:val="baseline"/>
+                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
+                            </w:rPr>
+                            <w:t>Code</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcW w:w="4080" w:type="dxa"/>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:rPr>
+                                <w:rFonts w:hint="default" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
+                                <w:b/>
+                                <w:bCs/>
+                                <w:vertAlign w:val="baseline"/>
+                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
+                            </w:rPr>
+                        </w:pPr>
+                        <w:r>
+                            <w:rPr>
+                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
+                                <w:b/>
+                                <w:bCs/>
+                                <w:vertAlign w:val="baseline"/>
+                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
+                            </w:rPr>
+                            <w:t>Type</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcW w:w="4080" w:type="dxa"/>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:rPr>
+                                <w:rFonts w:hint="default" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
+                                <w:b/>
+                                <w:bCs/>
+                                <w:vertAlign w:val="baseline"/>
+                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
+                            </w:rPr>
+                        </w:pPr>
+                        <w:r>
+                            <w:rPr>
+                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
+                                <w:b/>
+                                <w:bCs/>
+                                <w:vertAlign w:val="baseline"/>
+                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
+                            </w:rPr>
+                            <w:t>Description</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
+            </w:tr>
+            <%
+            for(dataDict in dict.dataDictList){
+            %>
+            <w:tr>
+                <w:tblPrEx>
+                    <w:tblBorders>
+                        <w:top w:val="single" w:color="auto" w:sz="4" w:space="0"/>
+                        <w:left w:val="single" w:color="auto" w:sz="4" w:space="0"/>
+                        <w:bottom w:val="single" w:color="auto" w:sz="4" w:space="0"/>
+                        <w:right w:val="single" w:color="auto" w:sz="4" w:space="0"/>
+                        <w:insideH w:val="single" w:color="auto" w:sz="4" w:space="0"/>
+                        <w:insideV w:val="single" w:color="auto" w:sz="4" w:space="0"/>
+                    </w:tblBorders>
+                    <w:tblCellMar>
+                        <w:top w:w="0" w:type="dxa"/>
+                        <w:left w:w="108" w:type="dxa"/>
+                        <w:bottom w:w="0" w:type="dxa"/>
+                        <w:right w:w="108" w:type="dxa"/>
+                    </w:tblCellMar>
+                </w:tblPrEx>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcW w:w="3060" w:type="dxa"/>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:rPr>
+                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
+                                <w:b w:val="0"/>
+                                <w:bCs w:val="0"/>
+                                <w:vertAlign w:val="baseline"/>
+                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
+                            </w:rPr>
+                        </w:pPr>
+                        <w:r>
+                            <w:rPr>
+                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
+                                <w:b w:val="0"/>
+                                <w:bCs w:val="0"/>
+                                <w:vertAlign w:val="baseline"/>
+                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
+                            </w:rPr>
+                            <w:t>${wordXmlEscape(dataDict.value)}</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcW w:w="3060" w:type="dxa"/>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:rPr>
+                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
+                                <w:b w:val="0"/>
+                                <w:bCs w:val="0"/>
+                                <w:vertAlign w:val="baseline"/>
+                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
+                            </w:rPr>
+                        </w:pPr>
+                        <w:r>
+                            <w:rPr>
+                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
+                                <w:b w:val="0"/>
+                                <w:bCs w:val="0"/>
+                                <w:vertAlign w:val="baseline"/>
+                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
+                            </w:rPr>
+                            <w:t>${dataDict.type}</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcW w:w="3060" w:type="dxa"/>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:rPr>
+                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
+                                <w:b w:val="0"/>
+                                <w:bCs w:val="0"/>
+                                <w:vertAlign w:val="baseline"/>
+                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
+                            </w:rPr>
+                        </w:pPr>
+                        <w:r>
+                            <w:rPr>
+                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
+                                <w:b w:val="0"/>
+                                <w:bCs w:val="0"/>
+                                <w:vertAlign w:val="baseline"/>
+                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
+                            </w:rPr>
+                            <w:t>${wordXmlEscape(dataDict.desc)}</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
+            </w:tr>
+            <%}%>
+        </w:tbl>
         <%}%>
-
-
-        <%}%>
-
-
         <%}%>
 
 

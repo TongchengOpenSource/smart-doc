@@ -61,6 +61,8 @@ public class WordDocBuilder {
             FileUtil.mkdirs(outPath);
             Template tpl = builderTemplate.buildAllRenderDocTemplate(apiDocList, config, javaProjectBuilder, DocGlobalConstants.ALL_IN_ONE_WORD_XML_TPL, null, null);
             replaceDocx(tpl.render(), outPath + DocGlobalConstants.FILE_SEPARATOR + docName);
+            // todo docs模板还有错误码和字典没有弄
+            // todo 单个的文档还未渲染
         } else {
 
         }
@@ -77,9 +79,7 @@ public class WordDocBuilder {
      */
     public static void replaceDocx(String content, String docxOutputPath) throws Exception {
         InputStream resourceAsStream = WordDocBuilder.class.getClassLoader().getResourceAsStream(TEMPLATE_DOCX);
-        if (Objects.isNull(resourceAsStream)) {
-            throw new FileNotFoundException("word template docx is not found");
-        }
+        Objects.requireNonNull(resourceAsStream, "word template docx is not found");
 
         ZipInputStream zipInputStream = new ZipInputStream(resourceAsStream);
         ZipOutputStream zipOutputStream = new ZipOutputStream(Files.newOutputStream(Paths.get(docxOutputPath)));
