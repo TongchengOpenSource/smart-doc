@@ -82,7 +82,9 @@ public class DocBuildHelper {
         DocBuildHelper helper = new DocBuildHelper();
         helper.projectBuilder = configBuilder.getJavaProjectBuilder();
         helper.codePath = codePath;
-        helper.dependencyTree = DependencyTree.detect(baseDir);
+        if (helper.gitHelper.isGitRepo()) {
+            helper.dependencyTree = DependencyTree.detect(baseDir);
+        }
 
         return helper;
     }
@@ -394,6 +396,10 @@ public class DocBuildHelper {
         }
 
         return dependencyTree;
+    }
+
+    public boolean notGitRepo() {
+        return gitHelper.notGitRepo();
     }
 
 }

@@ -142,7 +142,7 @@ public interface IDocBuildTemplate<T extends IDoc> {
             return javaProjectBuilder.getClasses();
         }
 
-        if (StringUtil.isEmpty(docBuildHelper.getDependencyTree().getCommitId())) {
+        if (docBuildHelper.notGitRepo() || StringUtil.isEmpty(docBuildHelper.getDependencyTree().getCommitId())) {
             // There is no commit-id, which means the user haven't built the whole project.
             // We need to build the whole project this time,
             // and record the latest commit-id and the newest api dependency tree.

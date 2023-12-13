@@ -46,7 +46,8 @@ public class GitHelper {
 
     private Repository repository;
 
-    private GitHelper() {}
+    private GitHelper() {
+    }
 
     public static GitHelper create() {
         GitHelper helper = new GitHelper();
@@ -132,11 +133,18 @@ public class GitHelper {
                     .build();
         } catch (IOException e) {
             throw new RuntimeException(e);
+        } catch (Exception e) {
+            System.err.println("WARN: When detecting git repository, got exception:" + e.getMessage() + " Ignore it if this is not a git repository");
+            return null;
         }
     }
 
     public boolean notGitRepo() {
         return repository == null;
+    }
+
+    public boolean isGitRepo() {
+        return !notGitRepo();
     }
 
     public String getWorkDir() {
