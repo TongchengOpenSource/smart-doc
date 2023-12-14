@@ -1,3 +1,23 @@
+/*
+ * Copyright (C) 2018-2023 smart-doc
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package com.ly.doc.builder;
 
 import com.ly.doc.constants.DocGlobalConstants;
@@ -94,20 +114,17 @@ public class WordDocBuilder {
 
         ZipInputStream zipInputStream = new ZipInputStream(resourceAsStream);
         ZipOutputStream zipOutputStream = new ZipOutputStream(Files.newOutputStream(Paths.get(docxOutputPath)));
-        // 遍历压缩包中的文件
+        // Traverse the files in the compressed package
         ZipEntry entry;
         while ((entry = zipInputStream.getNextEntry()) != null) {
             String entryName = entry.getName();
 
-            // 判断是否为要修改的文件
             if (entryName.equals("word/document.xml")) {
-                // 创建新的压缩包文件项
                 zipOutputStream.putNextEntry(new ZipEntry(entryName));
-                // 写入修改后的内容
                 byte[] bytes = content.getBytes(StandardCharsets.UTF_8);
                 zipOutputStream.write(bytes, 0, bytes.length);
             } else {
-                // 复制其他文件项
+                // copy
                 zipOutputStream.putNextEntry(entry);
                 byte[] buffer = new byte[1024];
                 int len;
@@ -116,12 +133,10 @@ public class WordDocBuilder {
                 }
             }
 
-            // 关闭当前文件项
             zipOutputStream.closeEntry();
             zipInputStream.closeEntry();
         }
 
-        // 关闭压缩包
         zipInputStream.close();
         zipOutputStream.close();
     }
