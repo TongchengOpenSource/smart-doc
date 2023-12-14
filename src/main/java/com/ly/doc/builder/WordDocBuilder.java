@@ -6,11 +6,10 @@ import com.ly.doc.helper.JavaProjectBuilderHelper;
 import com.ly.doc.model.ApiConfig;
 import com.ly.doc.model.ApiDoc;
 import com.ly.doc.template.IDocBuildTemplate;
+import com.power.common.util.DateTimeUtil;
 import com.power.common.util.FileUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import org.beetl.core.Template;
-import org.beetl.core.io.IOUtil;
-import org.beetl.core.resource.ClasspathResourceLoader;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -27,8 +26,12 @@ import java.util.zip.ZipOutputStream;
  * @version 1.0
  */
 public class WordDocBuilder {
-    private static final String BUILD_DOCX = "AllInOne.docx";
     private static final String TEMPLATE_DOCX = "template/word/template.docx";
+
+
+    private static final String BUILD_DOCX = "index.docx";
+    private static final String BUILD_ERROR_DOCX = "error.docx";
+    private static final String BUILD_DICT_DOCX = "dict.docx";
 
     /**
      * build controller api
@@ -55,16 +58,24 @@ public class WordDocBuilder {
         List<ApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder);
 
         if (config.isAllInOne()) {
-            String docName = builderTemplate.allInOneDocName(config, BUILD_DOCX, ".docx");
+            String version = config.isCoverOld() ? "" : "-V" + DateTimeUtil.long2Str(System.currentTimeMillis(), DocGlobalConstants.DATE_FORMAT_YYYY_MM_DD_HH_MM);
+            String docName = builderTemplate.allInOneDocName(config, "AllInOne" + version + ".docx", ".docx");
             apiDocList = docBuildTemplate.handleApiGroup(apiDocList, config);
             String outPath = config.getOutPath();
             FileUtil.mkdirs(outPath);
             Template tpl = builderTemplate.buildAllRenderDocTemplate(apiDocList, config, javaProjectBuilder, DocGlobalConstants.ALL_IN_ONE_WORD_XML_TPL, null, null);
-            replaceDocx(tpl.render(), outPath + DocGlobalConstants.FILE_SEPARATOR + docName);
-            // todo docs模板还有错误码和字典没有弄
-            // todo 单个的文档还未渲染
+            copyAndReplaceDocx(tpl.render(), outPath + DocGlobalConstants.FILE_SEPARATOR + docName);
         } else {
+            FileUtil.mkdir(config.getOutPath());
+            for (ApiDoc doc : apiDocList) {
+                Template template = builderTemplate.buildApiDocTemplate(doc, config, DocGlobalConstants.WORD_XML_TPL);
+                copyAndReplaceDocx(template.render(), config.getOutPath() + DocGlobalConstants.FILE_SEPARATOR + doc.getName() + BUILD_DOCX);
+            }
+            Template errorCodeDocTemplate = builderTemplate.buildErrorCodeDocTemplate(config, DocGlobalConstants.WORD_ERROR_XML_TPL, javaProjectBuilder);
+            copyAndReplaceDocx(errorCodeDocTemplate.render(), config.getOutPath() + DocGlobalConstants.FILE_SEPARATOR + BUILD_ERROR_DOCX);
 
+            Template directoryDataDocTemplate = builderTemplate.buildDirectoryDataDocTemplate(config, javaProjectBuilder, DocGlobalConstants.WORD_DICT_XML_TPL);
+            copyAndReplaceDocx(directoryDataDocTemplate.render(), config.getOutPath() + DocGlobalConstants.FILE_SEPARATOR + BUILD_DICT_DOCX);
         }
     }
 
@@ -77,7 +88,7 @@ public class WordDocBuilder {
      * @return
      * @since 1.0.0
      */
-    public static void replaceDocx(String content, String docxOutputPath) throws Exception {
+    public static void copyAndReplaceDocx(String content, String docxOutputPath) throws Exception {
         InputStream resourceAsStream = WordDocBuilder.class.getClassLoader().getResourceAsStream(TEMPLATE_DOCX);
         Objects.requireNonNull(resourceAsStream, "word template docx is not found");
 

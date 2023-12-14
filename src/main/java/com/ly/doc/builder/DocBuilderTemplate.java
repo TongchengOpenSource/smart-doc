@@ -295,13 +295,25 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
      * @param javaProjectBuilder javaProjectBuilder
      */
     public void buildErrorCodeDoc(ApiConfig config, String template, String outPutFileName, JavaProjectBuilder javaProjectBuilder) {
+        Template tpl = buildErrorCodeDocTemplate(config, template, javaProjectBuilder);
+        FileUtil.nioWriteFile(tpl.render(), config.getOutPath() + DocGlobalConstants.FILE_SEPARATOR + outPutFileName);
+    }
+
+    /**
+     * build errorCode adoc template
+     *
+     * @param config             api config
+     * @param template           template
+     * @param javaProjectBuilder javaProjectBuilder
+     */
+    public Template buildErrorCodeDocTemplate(ApiConfig config, String template, JavaProjectBuilder javaProjectBuilder) {
         List<ApiErrorCode> errorCodeList = DocUtil.errorCodeDictToList(config, javaProjectBuilder);
         String strTime = DateTimeUtil.long2Str(now, DateTimeUtil.DATE_FORMAT_SECOND);
         Template tpl = BeetlTemplateUtil.getByName(template);
         setCssCDN(config, tpl);
         tpl.binding(TemplateVariable.CREATE_TIME.getVariable(), strTime);
         tpl.binding(TemplateVariable.LIST.getVariable(), errorCodeList);
-        FileUtil.nioWriteFile(tpl.render(), config.getOutPath() + DocGlobalConstants.FILE_SEPARATOR + outPutFileName);
+        return tpl;
     }
 
     /**
@@ -396,6 +408,18 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
      * @param outPutFileName     output file
      */
     public void buildDirectoryDataDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder, String template, String outPutFileName) {
+        Template mapper = buildDirectoryDataDocTemplate(config, javaProjectBuilder, template);
+        FileUtil.nioWriteFile(mapper.render(), config.getOutPath() + DocGlobalConstants.FILE_SEPARATOR + outPutFileName);
+    }
+
+    /**
+     * build common_data doc Template
+     *
+     * @param config             api config
+     * @param javaProjectBuilder JavaProjectBuilder
+     * @param template           template
+     */
+    public Template buildDirectoryDataDocTemplate(ApiConfig config, JavaProjectBuilder javaProjectBuilder, String template) {
         List<ApiDocDict> directoryList = DocUtil.buildDictionary(config, javaProjectBuilder);
         Template mapper = BeetlTemplateUtil.getByName(template);
         setDirectoryLanguageVariable(config, mapper);
@@ -404,7 +428,7 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
         String strTime = DateTimeUtil.long2Str(now, DateTimeUtil.DATE_FORMAT_SECOND);
         mapper.binding(TemplateVariable.CREATE_TIME.getVariable(), strTime);
         mapper.binding(TemplateVariable.DICT_LIST.getVariable(), directoryList);
-        FileUtil.nioWriteFile(mapper.render(), config.getOutPath() + DocGlobalConstants.FILE_SEPARATOR + outPutFileName);
+        return mapper;
     }
 
     private List<ApiDoc> listOfApiData(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
