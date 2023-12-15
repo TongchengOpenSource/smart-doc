@@ -171,7 +171,7 @@ gradle wrapper
 ### 添加一个远程调试监听
 点击 **Edit Configurations**
 ![输入图片说明](https://github.com/smart-doc-group/smart-doc-group.github.io/raw/master/docs/_images/004033_cd63df34_144669.png "remote1.png")
-点开左边的“+”号，点击“Remote”
+点开左边的"**+**"号，点击"**Remote**"
 ![添加remote](https://github.com/smart-doc-group/smart-doc-group.github.io/raw/master/docs/_images/004113_df83ee8d_144669.png "remote2.png")
 ### 执行调试
 完成上面的操作后即可用`debug`调试进入插件和`smart-doc`了，然后查看`smart-doc`的执行情况。操作如下图

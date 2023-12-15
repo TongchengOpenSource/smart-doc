@@ -59,9 +59,9 @@ smart-doc-example-cn
                         <!--groupId:artifactId-->
                         <!--com.alibaba:.* -->
                         <include>com.power.doc:.*</include>
-<!--                        <include>com.baomidou:mybatis-plus-extension</include>-->
+                        <!--<include>com.baomidou:mybatis-plus-extension</include>-->
                         <include>com.ly.smart-doc:.*</include>
-<!--                        <include>org.springframework:spring-web</include>-->
+                        <!--<include>org.springframework:spring-web</include>-->
                     </includes>
                     <configFile>./src/main/resources/smart-doc.json</configFile>
                     <projectName>测试</projectName>
@@ -193,7 +193,7 @@ The `pom` file under the outermost `spring-boot-maven-multiple-module` defines p
             <plugin>
             <groupId>com.ly.smart-doc</groupId>
             <artifactId>smart-doc-maven-plugin</artifactId>
-            <version>2.7.7</version>
+            <version>3.0.0</version>
             <configuration>
                 <configFile>${basedir}/src/main/resources/smart-doc.json</configFile>
                 <projectName>test</projectName>
