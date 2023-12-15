@@ -52,6 +52,11 @@ public interface DocGlobalConstants {
 
     String ALL_IN_ONE_HTML_TPL = "AllInOne.html";
 
+    String ALL_IN_ONE_WORD_XML_TPL = "word/AllInOneWordTemplate.xml";
+    String WORD_XML_TPL = "word/index.xml";
+    String WORD_ERROR_XML_TPL = "word/error.xml";
+    String WORD_DICT_XML_TPL = "word/dict.xml";
+
     String HTML_API_DOC_TPL = "HtmlApiDoc.html";
 
     String ERROR_CODE_LIST_MD_TPL = "ErrorCodeList.md";
@@ -259,4 +264,6 @@ public interface DocGlobalConstants {
     String JAR_TEMP = "./smart-temp/";
 
     String DEFAULT_PRIMITIVE = "defaultPrimitive";
+
+    String DATE_FORMAT_YYYY_MM_DD_HH_MM = "yyyyMMddHHmm";
 }
