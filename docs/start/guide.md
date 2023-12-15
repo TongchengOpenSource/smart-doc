@@ -18,10 +18,10 @@ The original intention of `smart-doc` is to use `javadoc` document comments to r
 
 ```java
 /**
-      *Test @RequestParam
-      * @param author Author|Haruki Murakami
-      * @param type type
-      */
+ *Test @RequestParam
+ * @param author Author|Haruki Murakami
+ * @param type type
+ */
 @GetMapping("testRequestParam")
 public void testRequestParam(@RequestParam String author, @RequestParam String type) {
 
@@ -36,10 +36,10 @@ For example: when using `Pageable` of `JPA` as an interface parameter to receive
 
 ```java
 /**
-      * Parameter object replacement test
-      * @param pageable com.power.doc.model.PageRequestDto
-      * @return
-      */
+ * Parameter object replacement test
+ * @param pageable com.power.doc.model.PageRequestDto
+ * @return
+ */
 @PostMapping(value = "/enum/resp")
 public SimpleEnum resp(@RequestBody Pageable pageable){
      return null;
@@ -65,11 +65,11 @@ In the above writing method, `smart-doc` will use `com.power.doc.model.PageReque
 
 ```java
 /**
-      * Query user information
-      * @param name username
-      * @apiNote Query the user's detailed information through the user's name
-      * @return
-      */
+ * Query user information
+ * @param name username
+ * @apiNote Query the user's detailed information through the user's name
+ * @return
+ */
 @PostMapping(value = "/query")
 public String resp(@RequestBody String name){
      return null;
@@ -84,12 +84,12 @@ It can be used in comments to mark that the interface has been deprecated. It ha
 
 ```java
 /**
-      * Query user information
-      * @param name username
-      * @apiNote Query the user's detailed information through the user's name
-      * @deprecated
-      * @return
-      */
+ * Query user information
+ * @param name username
+ * @apiNote Query the user's detailed information through the user's name
+ * @deprecated
+ * @return
+ */
 @PostMapping(value = "/query")
 public String resp(@RequestBody String name){
      return null;
@@ -102,12 +102,12 @@ public String resp(@RequestBody String name){
 
 ```java
 /**
-      * Query user information
-      * @param name username
-      * @apiNote Query the user's detailed information through the user's name
-      * @since v2.1.0
-      * @return
-      */
+ * Query user information
+ * @param name username
+ * @apiNote Query the user's detailed information through the user's name
+ * @since v2.1.0
+ * @return
+ */
 @PostMapping(value = "/query")
 public String resp(@RequestBody String name){
      return null;
@@ -141,9 +141,9 @@ public String resp(@RequestBody String name){
 ```java
 
 /**
-      * Invoice management
-      * @ignore
-      */
+ * Invoice management
+ * @ignore
+ */
 @RestController
 @Slf4j
 @RequestMapping("invoice/invoice/v1")
@@ -151,9 +151,9 @@ public String resp(@RequestBody String name){
 public class InvoiceController {
 
      /**
-          * Create invoice
-          * @ignore
-          */
+      * Create invoice
+      * @ignore
+      */
      @PostMapping("/createInvoice")
      public CommonResult<DateEntity> createInvoice(@RequestBody InvoiceCreateRequest request) {
        return null;
@@ -170,17 +170,17 @@ public class InvoiceController {
 ```java
 public class SimpleUser {
      /**
-          * username
-          * @mock Zhang San
-          * @since v1.0
-          */
+      * username
+      * @mock Zhang San
+      * @since v1.0
+      */
      @NotNull
      private String username;
      /**
-          * password
-          * @mock 12356
-          * @since v1.0
-          */
+      * password
+      * @mock 12356
+      * @since v1.0
+      */
      private String password;
 }
 ```
@@ -204,13 +204,13 @@ Used to tell `smart-doc`. A certain method in your `Controller` is a file downlo
 
 ```java
 /**
-      * Download common file files
-      * @apiNote method does not return an object that can be identified and needs to be marked as download
-      * @param response
-      * @return
-      * @throwsIOException
-      * @download
-      */
+ * Download common file files
+ * @apiNote method does not return an object that can be identified and needs to be marked as download
+ * @param response
+ * @return
+ * @throwsIOException
+ * @download
+ */
 @PostMapping("text/")
 public void download(HttpServletResponse response) throws IOException {
      String randomStr = RandomUtil.randomNumbers(50);
@@ -237,11 +237,11 @@ The following is an example of returning `org.springframework.core.io.Resource`
 
 ```java
 /**
-      * download file
-      * @apiNote smart-doc automatically identifies file stream objects and does not need to use @download to mark file downloads.
-      * @param filename filename|me
-      * @return
-      */
+ * download file
+ * @apiNote smart-doc automatically identifies file stream objects and does not need to use @download to mark file downloads.
+ * @param filename filename|me
+ * @return
+ */
 @PostMapping("download1/{filename}")
 public ResponseEntity<Resource> downloadFile(@PathVariable String filename) {
      String fileName = filename+".log";
@@ -263,12 +263,12 @@ In this example, `beetl` is used to write an `html` template, and `arthas-output
 
 ```java
 /**
-      * List of arthas flame graphs
-      *
-      * @return
-      * @page /arthas-output.html
-      * @apiNote returns an arthas-output.html displaying the flame graph file
-      */
+ * List of arthas flame graphs
+ *
+ * @return
+ * @page /arthas-output.html
+ * @apiNote returns an arthas-output.html displaying the flame graph file
+ */
 @GetMapping("arthas-output.html")
 public String render() {
      Template template = BeetlTemplateUtil.getByName("arthas-output.tpl");
@@ -289,11 +289,11 @@ For example, ignore the `id` parameter and do not display it in the document. Th
 
 ```java
 /**
-      * testing time
-      * @ignoreParams id
-      * @param id number
-      * @param dateEntity
-      */
+ * testing time
+ * @ignoreParams id
+ * @param id number
+ * @param dateEntity
+ */
 @PostMapping("data-date")
 public CommonResult<DateEntity> test(int id,@RequestBody DateEntity dateEntity){
      return null;
@@ -308,17 +308,17 @@ For users who use `@response`, we can only think that your code is too unclear. 
 
 ```java
 /**
-      * Test response tag
-      *
-      * @return
-      * @response {
-      * "success": true,
-      * "message": "success",
-      * "data": "hello",
-      * "code": "68783",
-      * "timestamp": "2021-06-15 23:05:16"
-      * }
-      */
+ * Test response tag
+ *
+ * @return
+ * @response {
+ * "success": true,
+ * "message": "success",
+ * "data": "hello",
+ * "code": "68783",
+ * "timestamp": "2021-06-15 23:05:16"
+ * }
+ */
 @GetMapping("/test")
 public CommonResult<String> create() {
      return null;
@@ -348,22 +348,22 @@ For example: For the same entity class, you do not need to pass `id` when adding
 public class User {
 
      /**
-          *id
-          */
+      * id
+      */
      @Null(groups = Save.class)
      @NotNull(groups = Update.class)
      private Long id;
 
      /**
-          * name
-          */
+      * name
+      */
      @Min(value = 4)
      @NotEmpty(message = "Name cannot be empty")
      private String name;
 
      /**
-          * mail
-          */
+      * mail
+      */
      @Length(max = 32)
      private String email;
 
@@ -380,21 +380,21 @@ public class User {
 @RequestMapping("validator")
 public class ValidatorTestController {
 
-/**
-          * Group verification 1
-          * @param collect
-          * @return
-          */
+     /**
+      * Group verification 1
+      * @param collect
+      * @return
+      */
      @PostMapping("/save")
      public CommonResult<Void> save(@Validated({User.Save.class}) @RequestBody User user){
          return CommonResult.ok();
      }
 
      /**
-          * Group verification 2
-          * @param collect
-          * @return
-          */
+      * Group verification 2
+      * @param collect
+      * @return
+      */
      @PostMapping("/update")
      public CommonResult<Void> update(@Validated({User.Update.class}) @RequestBody User user){
          return CommonResult.ok();

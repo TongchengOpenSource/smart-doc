@@ -28,4 +28,4 @@
 - 社区
   * [理念](zh-cn/community/idea.md)
   - [开发者](zh-cn/community/developer.md)
-  - [如何共建](zh-cn/community/contributing.md)
+  - [贡献指南](zh-cn/community/contributing.md)

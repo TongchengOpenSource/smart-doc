@@ -8,8 +8,8 @@ The unified return of most mature teams is similar to the following (due to the 
 public class CommonResult<T> implements Serializable {
 
      /**
-          * whether succeed
-          */
+      * whether succeed
+      */
      private boolean success = false;
      private String message;
      private T data;
@@ -24,20 +24,20 @@ public class CommonResult<T> implements Serializable {
 This definition unifies the return structure and clear return object definition. Smart-doc can help you deduce the field definition of the class based on the interface definition, including nested object definitions.
 ```java
 /**
-      * Add user information
-      * @param user
-      * @return
-      */
+ * Add user information
+ * @param user
+ * @return
+ */
 @PostMapping("/add")
 public CommonResult<User> addUser(@RequestBody User user){
      return CommonResult.ok().setResult(user);
 }
 
 /**
-      * Query user information by page
-      * @param user
-      * @return
-      */
+ * Query user information by page
+ * @param user
+ * @return
+ */
 @PostMapping("/page")
 public CommonResult<Page<User>> addUser(@RequestBody UserQuery query){
      return CommonResult.ok().setResult(user);
@@ -59,9 +59,9 @@ public Map<String, User> testMapUser() {
 
 ```java
 /**
-      * Return user information
-      * @return
-      */
+ * Return user information
+ * @return
+ */
 @GetMapping(value = "/user")
 public JSONObject object() {
      return null;
@@ -73,9 +73,9 @@ The team must criticize if there is such a definition of return data, who knows 
  
 ```java
 /**
-      * Return user information
-      * @return
-      */
+ * Return user information
+ * @return
+ */
 @GetMapping(value = "/user")
 public ModelMap object() {
      return null;

@@ -55,16 +55,16 @@
 指定生成文档的使用的配置文件。相对路径时请用./开头，eg: `./src/main/resources/smart-doc.json`
 
 #### projectName
-指定项目名称，推荐使用动态参数，例如${project.description}。
+指定项目名称，推荐使用动态参数，例如`${project.description}`。
 
-2.3.4开始, 如果smart-doc.json中和此处都未设置projectName，插件自动设置为pom中的projectName
+2.3.4开始, 如果`smart-doc.json`中和此处都未设置`projectName`，插件自动设置为`pom`中的`projectName`
 
 #### excludes & includes
 
 ##### 加载源码机制
-smart-doc会自动分析依赖树加载所有依赖源码，不过这样会存在两个问题：
+`smart-doc`会自动分析依赖树加载所有依赖源码，不过这样会存在两个问题：
 1. 加载不需要的源码，影响文档构建效率
-2. 某些不需要的依赖加载不到时，会报错（smart-doc默认所有的依赖都是必须的）
+2. 某些不需要的依赖加载不到时，会报错（`smart-doc`默认所有的依赖都是必须的）
    
  
 ##### 依赖匹配规则
@@ -73,7 +73,7 @@ smart-doc会自动分析依赖树加载所有依赖源码，不过这样会存�
 
 
 ##### includes
-使用includes，按需加载依赖，减少不必要的依赖解析。
+使用`includes`，按需加载依赖，减少不必要的依赖解析。
 
 通常我们需要的依赖就除了几个常见的三方库，就是公司内部的二方库，和项目中的其他模块。
 
@@ -99,7 +99,7 @@ smart-doc会自动分析依赖树加载所有依赖源码，不过这样会存�
 
 ##### excludes
 
-在运行插件时，遇到某些Class无法加载的情况，将该Class所在的依赖排除。
+在运行插件时，遇到某些`Class`无法加载的情况，将该`Class`所在的依赖排除。
 
 ```xml
 <exclude>
@@ -109,9 +109,9 @@ smart-doc会自动分析依赖树加载所有依赖源码，不过这样会存�
 ```
 
 #####  excludes & includes 最佳实践
-1. 要使用include，加载需要的源码，如果不需要别的依赖，可以写项目自身的 `groupId:artifactId`
+1. 要使用`include`，加载需要的源码，如果不需要别的依赖，可以写项目自身的 `groupId:artifactId`
 
-2. 遇到报错后，使用excludes排除报错依赖
+2. 遇到报错后，使用`excludes`排除报错依赖
  
 
 
