@@ -1,10 +1,18 @@
 ## smart-doc版本
 
 ### 版本号：3.0.1
-- 更新日期: 2023-12.xx
+- 更新日期: 2023-12-17
 - 更新内容：
   1. 优化Dubbo文档设置，[#649](https://github.com/smart-doc-group/smart-doc/issues/649)
   2. 优化Dubbo文档中字段类型展示，[#648](https://github.com/smart-doc-group/smart-doc/issues/648)
+  3. 支持获取接口上RequestMapping[#681](https://github.com/TongchengOpenSource/smart-doc/issues/681)
+  4. 优化html模版页面url策略方便分享[#658](https://github.com/TongchengOpenSource/smart-doc/issues/658)
+  5. 支持jmeter性能测试[#653](https://github.com/TongchengOpenSource/smart-doc/issues/653)
+  6. 支持导入文档到word中[#686](https://github.com/TongchengOpenSource/smart-doc/pull/686)
+  7. 支持多路由场景下的openapi生成[#679](https://github.com/TongchengOpenSource/smart-doc/pull/679)
+  8. 兼容swagger的tag [#674](https://github.com/TongchengOpenSource/smart-doc/pull/674)
+  9. 修复componentType配置为NORMAL失效的问题[#665](https://github.com/TongchengOpenSource/smart-doc/pull/665)
+  10. 支持基于git管理的增量文档构建[#657](https://github.com/TongchengOpenSource/smart-doc/pull/657)
 
 ### 版本号：3.0.0
 - 更新日期: 2023-10-20
