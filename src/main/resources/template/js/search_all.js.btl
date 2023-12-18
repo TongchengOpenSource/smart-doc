@@ -19,6 +19,7 @@ api[${apiGroupLP.dataIndex}].list[${apiLP.dataIndex}].list.push({
     order: '${doc.order}',
     deprecated: '${doc.deprecated}',
     url: '${doc.url}',
+    methodId: '${doc.methodId}',
     desc: '${strUtil.replace(removeLineBreaks(doc.desc), "\'", "\\'")}',
 });
 <%}%>
@@ -46,6 +47,7 @@ function keyDownSearch(e) {
                         order: apiData.order,
                         desc: apiData.desc,
                         link: apiData.link,
+                        alias: apiData.alias,
                         list: apiData.list
                     });
                 } else {
@@ -64,6 +66,7 @@ function keyDownSearch(e) {
                             order: apiData.order,
                             desc: apiData.desc,
                             link: apiData.link,
+                            alias: apiData.alias,
                             list: methodListTemp
                         };
                         searchArr.push(data);
@@ -126,7 +129,7 @@ function buildAccordion(apiGroups, liClass, display) {
             let order = apiGroups[0].order;
             for (let j = 0; j < apiData.length; j++) {
                 html += '<li class="'+liClass+'">';
-                html += '<a class="dd" href="#_'+order+'_'+apiData[j].order+'_' + apiData[j].link + '">' + apiData[j].order + '.&nbsp;' + apiData[j].desc + '</a>';
+                html += '<a class="dd" href="#' + apiData[j].alias + '">' + apiData[j].order + '.&nbsp;' + apiData[j].desc + '</a>';
                 html += '<ul class="sectlevel2" style="'+display+'">';
                 let doc = apiData[j].list;
                 for (let m = 0; m < doc.length; m++) {
@@ -136,7 +139,7 @@ function buildAccordion(apiGroups, liClass, display) {
                     } else {
                         spanString='<span>';
                     }
-                    html += '<li><a href="#_'+order+'_' + apiData[j].order + '_' + doc[m].order + '_' + doc[m].desc + '">' + apiData[j].order + '.' + doc[m].order + '.&nbsp;' + spanString + doc[m].desc + '<span></a> </li>';
+                    html += '<li><a href="#' + doc[m].methodId + '">' + apiData[j].order + '.' + doc[m].order + '.&nbsp;' + spanString + doc[m].desc + '<span></a> </li>';
                 }
                 html += '</ul>';
                 html += '</li>';
@@ -151,7 +154,7 @@ function buildAccordion(apiGroups, liClass, display) {
                 let apiData = apiGroup.list;
                 for (let j = 0; j < apiData.length; j++) {
                     html += '<li class="'+liClass+'">';
-                    html += '<a class="dd" href="#_'+apiGroup.order+'_'+ apiData[j].order + '_'+ apiData[j].link + '">' +apiGroup.order+'.'+ apiData[j].order + '.&nbsp;' + apiData[j].desc + '</a>';
+                    html += '<a class="dd" href="#' + apiData[j].alias + '">' +apiGroup.order+'.'+ apiData[j].order + '.&nbsp;' + apiData[j].desc + '</a>';
                     html += '<ul class="sectlevel2" style="'+display+'">';
                     let doc = apiData[j].list;
                     for (let m = 0; m < doc.length; m++) {
@@ -161,7 +164,7 @@ function buildAccordion(apiGroups, liClass, display) {
                        } else {
                            spanString='<span>';
                        }
-                       html += '<li><a href="#_'+apiGroup.order+'_' + apiData[j].order + '_' + doc[m].order + '_' + doc[m].desc + '">'+apiGroup.order+'.' + apiData[j].order + '.' + doc[m].order + '.&nbsp;' + spanString + doc[m].desc + '<span></a> </li>';
+                       html += '<li><a href="#' + doc[m].methodId + '">'+apiGroup.order+'.' + apiData[j].order + '.' + doc[m].order + '.&nbsp;' + spanString + doc[m].desc + '<span></a> </li>';
                    }
                     html += '</ul>';
                     html += '</li>';

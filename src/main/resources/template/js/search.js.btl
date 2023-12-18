@@ -10,6 +10,7 @@ api.push({
 <%for(doc in api.list) {%>
 api[${apiLP.dataIndex}].list.push({
     order: '${doc.order}',
+    methodId: '${doc.methodId}',
     desc: '${removeLineBreaks(doc.desc)}',
 });
 <%}%>
@@ -92,11 +93,11 @@ function buildAccordion(apiData, liClass, display) {
     if (apiData.length > 0) {
          for (let j = 0; j < apiData.length; j++) {
             html += '<li class="'+liClass+'">';
-            html += '<a class="dd" href="' + apiData[j].alias + '.html#header">' + apiData[j].order + '.&nbsp;' + apiData[j].desc + '</a>';
+            html += '<a class="dd" href="#' + apiData[j].alias + '">' + apiData[j].order + '.&nbsp;' + apiData[j].desc + '</a>';
             html += '<ul class="sectlevel2" style="'+display+'">';
             let doc = apiData[j].list;
             for (let m = 0; m < doc.length; m++) {
-                html += '<li><a href="' + apiData[j].alias + '.html#_' + apiData[j].order + '_' + doc[m].order + '_' + doc[m].desc + '">' + apiData[j].order + '.' + doc[m].order + '.&nbsp;' + doc[m].desc + '</a> </li>';
+                html += '<li><a href="#' + doc[m].methodId + '">' + apiData[j].order + '.' + doc[m].order + '.&nbsp;' + doc[m].desc + '</a> </li>';
             }
             html += '</ul>';
             html += '</li>';
