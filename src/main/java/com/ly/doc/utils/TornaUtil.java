@@ -316,9 +316,10 @@ public class TornaUtil {
     }
 
     /**
-     * 设置请求参数是否为数组
-     *
-     * @param apiMethodDoc 请求参数
+     * Set torna tags
+     * @param method
+     * @param apiMethodDoc
+     * @param apiConfig
      */
     public static void setTornaArrayTags(JavaMethod method, ApiMethodDoc apiMethodDoc, ApiConfig apiConfig) {
         String returnTypeName = method.getReturnType().getCanonicalName();

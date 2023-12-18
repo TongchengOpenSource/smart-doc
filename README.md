@@ -10,10 +10,10 @@
 ![git star](https://img.shields.io/github/stars/smart-doc-group/smart-doc.svg)
 ## Introduce
 
-smart-doc is a tool that supports both JAVA REST API and Apache Dubbo RPC interface document generation. Smart-doc is
+`smart-doc[smɑːt dɒk]`is a tool that supports both `JAVA REST API` and `Apache Dubbo RPC` interface document generation. `Smart-doc` is
 based on interface source code analysis to generate interface documents, and zero annotation intrusion. You only need to
-write Javadoc comments when developing, smart-doc can help you generate Markdown or HTML5 document. smart-doc does not
-need to inject annotations into the code like Swagger.
+write Javadoc comments when developing, `smart-doc` can help you generate `Markdown` or `HTML5` document. `smart-doc` does not
+need to inject annotations into the code like `Swagger`.
 
 [quick start](https://smart-doc-group.github.io/#/)
 
@@ -23,31 +23,32 @@ need to inject annotations into the code like Swagger.
 
 ## Features
 
-- Zero annotation, zero learning cost, only need to write standard JAVA document comments.
+- Zero annotation, zero learning cost, only need to write standard `JAVA` document comments.
 - Automatic derivation based on source code interface definition, powerful return structure derivation support.
-- Support Spring MVC, Spring Boot, Spring Boot Web Flux (Not support endpoint), Feign ,JAX-RS.
-- Supports the derivation of asynchronous interface returns such as Callable, Future, CompletableFuture.
-- Support JSR-303 parameter verification specification.
+- Support `Spring MVC`, `Spring Boot`, `Spring Boot Web Flux` (Not support endpoint), `Feign`,`JAX-RS`.
+- Supports the derivation of asynchronous interface returns such as `Callable`, `Future`, `CompletableFuture`.
+- Support `JSR-303`parameter verification specification.
 - Support for automatic generation of request examples based on request parameters.
-- Support for generating JSON return value examples.
+- Support for generating `JSON` return value examples.
 - Support for loading source code from outside the project to generate field comments (including the sources jar
   package).
-- Support for generating multiple formats of documents: Markdown,HTML5,Asciidoctor,Postman Collection 2.0+,OpenAPI 3.0.
+- Support for generating multiple formats of documents: `Markdown`,`HTML5`,`Word`,`Asciidoctor`,`Postman Collection 2.0+`,`OpenAPI 3.0`.
+- Support the generation of `Jmeter` performance testing scripts
 - Support for exporting error codes and data dictionary codes to API documentation.
 - The debug html5 page fully supports file upload and download testing.
-- Support Apache Dubbo RPC.
+- Support `Apache Dubbo RP`C.
 
 ## Best Practice
 
-smart-doc + [Torna](http://torna.cn) form an industry-leading document generation and management solution, using
-smart-doc to complete Java source code analysis and extract annotations to generate API documents without intrusion, and
-automatically push the documents to the Torna enterprise-level interface document management platform.
+`smart-doc` + [Torna](http://torna.cn) form an industry-leading document generation and management solution, using
+`smart-doc` to complete Java source code analysis and extract annotations to generate API documents without intrusion, and
+automatically push the documents to the `Torna` enterprise-level interface document management platform.
 
 ![smart-doc+torna](https://raw.githubusercontent.com/shalousun/smart-doc/master/images/smart-doc-torna-en.png)
 
 ## Building
 
-You could build with the following commands. (Java 1.8 is required to build the master branch)
+You could build with the following commands. (`JDK 1.8` is required to build the master branch)
 
 ```
 mvn clean install -Dmaven.test.skip=true
@@ -57,13 +58,12 @@ mvn clean install -Dmaven.test.skip=true
 
 - GRPC
 - SOCKET
-- WORD
 
 ## Who is using
 
-These are only part of the companies using smart-doc, for reference only. If you are using smart-doc,
+These are only part of the companies using `smart-doc`, for reference only. If you are using smart-doc,
 please [add your company here](https://github.com/smart-doc-group/smart-doc/issues/12) to tell us your scenario to make
-smart-doc better.
+`smart-doc` better.
 
 ![IFLYTEK](https://raw.githubusercontent.com/smart-doc-group/smart-doc/master/images/known-users/iflytek.png)
 &nbsp;&nbsp;<img src="https://raw.githubusercontent.com/smart-doc-group/smart-doc/master/images/known-users/oneplus.png" title="OnePlus" width="83px" height="83px"/>
@@ -88,7 +88,7 @@ Thanks to [JetBrains SoftWare](https://www.jetbrains.com) for providing free Ope
 
 ## License
 
-Smart-doc is under the Apache 2.0 license. See
+`Smart-doc` is under the Apache 2.0 license. See
 the [LICENSE](https://github.com/smart-doc-group/smart-doc/blob/master/LICENSE)
 file for details.
 

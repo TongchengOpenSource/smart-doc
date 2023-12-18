@@ -10,9 +10,9 @@
 
 ## Introduce
 
-smart-doc是一款同时支持JAVA REST API和Apache Dubbo RPC接口文档生成的工具，smart-doc在业内率先提出基于JAVA泛型定义推导的理念，
-完全基于接口源码来分析生成接口文档，不采用任何注解侵入到业务代码中。你只需要按照java-doc标准编写注释， smart-doc就能帮你生成一个简易明了的Markdown、HTML5、Postman
-Collection2.0+、OpenAPI 3.0+的文档。
+`smart-doc[smɑːt dɒk]`是一款同时支持`JAVA REST API`和`Apache Dubbo RPC`接口文档生成的工具，`smart-doc`在业内率先提出基于`JAVA`泛型定义推导的理念，
+完全基于接口源码来分析生成接口文档，不采用任何注解侵入到业务代码中。你只需要按照`Javadoc`标准编写注释， `smart-doc`就能帮你生成一个简易明了的`Markdown`、`HTML5`、`Postman`
+`Collection2.0+`、`OpenAPI 3.0+`的文档。
 
 $\color{red}{你给我的star，胜过所有读过的诗—smart-doc}$
 
@@ -23,24 +23,27 @@ $\color{red}{你给我的star，胜过所有读过的诗—smart-doc}$
 
 ## Features
 
-- 零注解、零学习成本、只需要写标准JAVA注释。
+- 零注解、零学习成本、只需要写标准`JAVA`注释。
 - 基于源代码接口定义自动推导，强大的返回结构推导。
-- 支持Spring MVC、Spring Boot、Spring Boot Web Flux(controller书写方式)、Feign、JAX-RS。
-- 支持Callable、Future、CompletableFuture等异步接口返回的推导。
-- 支持JavaBean上的JSR303参数校验规范，包括分组验证。
-- 对JSON请求参数的接口能够自动生成模拟JSON参数。
+- 支持`Spring MVC`、`Spring Boot`、`Spring Boot Web Flux`(`Controller`书写方式)、`Feign`。
+- 支持`Callable`、`Future`、`CompletableFuture`等异步接口返回的推导。
+- 支持`JavaBean`上的`JSR303`参数校验规范，包括分组验证。
+- 对`JSON`请求参数的接口能够自动生成模拟`JSON`参数。
 - 对一些常用字段定义能够生成有效的模拟值。
-- 支持生成JSON返回值示例。
+- 支持生成`JSON`返回值示例。
 - 支持从项目外部加载源代码来生成字段注释(包括标准规范发布的jar包)。
-- 支持生成多种格式文档：Markdown、HTML5、Asciidoctor、Postman Collection、OpenAPI 3.0。 Up- 开放文档数据，可自由实现接入文档管理系统。
+- 支持生成多种格式文档：`Markdown`、`HTML5`、`Word`、`Asciidoctor`、`Postman Collection`、`OpenAPI 3.0`。 开放文档数据，可自由实现接入文档管理系统。
 - 支持导出错误码和定义在代码中的各种字典码到接口文档。
-- 支持Maven、Gradle插件式轻松集成。
-- 支持Apache Dubbo RPC接口文档生成。
-- debug接口调试html5页面完全支持文件上传，下载(@download tag标记下载方法)测试。
+- 支持生成`Jmeter`性能测试脚本。
+- 支持`Maven`、`Gradle`插件式轻松集成。
+- 支持`Apache Dubbo RPC`接口文档生成。
+- 支持基于`Git`管理项目的变更增量文档生成。
+- `debug`接口调试`html5`页面完全支持文件上传，下载(`@download tag`标记下载方法)测试。
 
 ## Best Practice
 
-smart-doc + [Torna](http://torna.cn) 组成行业领先的文档生成和管理解决方案，使用smart-doc无侵入完成Java源代码分析和提取注释生成API文档，自动将文档推送到Torna企业级接口文档管理平台。
+`smart-doc` + [Torna](http://torna.cn) 组成行业领先的文档生成和管理解决方案，使用`smart-doc`无侵入完成`Java`源代码分析和提取注释生成`API`文档，
+自动将文档推送到`Torna[ˈtɔːrnə]`企业级接口文档管理平台。
 
 ![smart-doc+torna](https://gitee.com/smart-doc-team/smart-doc/raw/master/images/smart-doc-torna.png)
 
@@ -51,7 +54,7 @@ smart-doc + [Torna](http://torna.cn) 组成行业领先的文档生成和管理�
 
 ## Building
 
-如果你需要自己构建smart-doc，那可以使用下面命令，构建需要依赖Java 1.8。
+如果你需要自己构建`smart-doc`，那可以使用下面命令，构建需要依赖`JDK 1.8+`。
 
 ```
 mvn clean install -Dmaven.test.skip=true
@@ -61,14 +64,13 @@ mvn clean install -Dmaven.test.skip=true
 
 - GRPC
 - SOCKET
-- WORD
 
 ## License
 
-smart-doc is under the Apache 2.0 license. See
+`smart-doc` is under the Apache 2.0 license. See
 the [LICENSE](https://gitee.com/smart-doc-team/smart-doc/blob/master/LICENSE) file for details.
 
-**注意：** smart-doc源代码文件全部带有版权注释，使用关键代码二次开源请保留原始版权，否则后果自负！
+**注意：** `smart-doc`源代码文件全部带有版权注释，使用关键代码二次开源请保留原始版权，否则后果自负！
 
 ## Who is using
 
