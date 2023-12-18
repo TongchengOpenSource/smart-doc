@@ -56,6 +56,7 @@ public class RpcAdocBuilder {
     public static void buildApiDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
         config.setAdoc(true);
         RpcDocBuilderTemplate builderTemplate = new RpcDocBuilderTemplate();
+        builderTemplate.checkAndInit(config,Boolean.TRUE);
         List<RpcApiDoc> apiDocList = builderTemplate.getRpcApiDoc(config, javaProjectBuilder);
         if (config.isAllInOne()) {
             String docName = builderTemplate.allInOneDocName(config, INDEX_DOC, ".adoc");

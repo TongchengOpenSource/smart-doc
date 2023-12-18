@@ -56,11 +56,11 @@ public class RpcDocBuilderTemplate extends BaseDocBuilderTemplate {
     private static final String DEPENDENCY_TITLE = "Add dependency";
     private static final long now = System.currentTimeMillis();
 
-    public void checkAndInit(ApiConfig config) {
+    public void checkAndInit(ApiConfig config,boolean checkOutPath) {
         if (StringUtil.isEmpty(config.getFramework())) {
             config.setFramework(FrameworkEnum.DUBBO.getFramework());
         }
-        super.checkAndInit(config, Boolean.TRUE);
+        super.checkAndInit(config, checkOutPath);
         config.setOutPath(config.getOutPath() + DocGlobalConstants.FILE_SEPARATOR + DocGlobalConstants.RPC_OUT_DIR);
     }
 
@@ -221,8 +221,6 @@ public class RpcDocBuilderTemplate extends BaseDocBuilderTemplate {
 
     public List<RpcApiDoc> getRpcApiDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
         config.setShowJavaType(true);
-        // check
-        checkAndInit(config);
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
         IDocBuildTemplate<RpcApiDoc> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework());
         return docBuildTemplate.getApiData(configBuilder);

@@ -81,11 +81,11 @@ public class RpcTornaBuilder {
             api.setIsFolder(TornaConstants.YES);
             api.setAuthor(a.getAuthor());
             api.setDubboInfo(new DubboInfo().builder()
-                .setAuthor(a.getAuthor())
-                .setProtocol(a.getProtocol())
-                .setVersion(a.getVersion())
-                .setDependency(TornaUtil.buildDependencies(apiConfig.getRpcApiDependencies()))
-                .setInterfaceName(a.getName()));
+                    .setAuthor(a.getAuthor())
+                    .setProtocol(a.getProtocol())
+                    .setVersion(a.getVersion())
+                    .setDependency(TornaUtil.buildDependencies(apiConfig.getRpcApiDependencies()))
+                    .setInterfaceName(a.getName()));
             api.setOrderIndex(a.getOrder());
             apisList.add(api);
         }
