@@ -26,7 +26,7 @@ smart-doc does not need to inject annotations into the code like Swagger.
 - Support for generating JSON return value examples.
 - Support for loading source code from outside the project to generate field comments (including the sources jar
   package).
-- Support for generating multiple formats of documents: Markdown,HTML5,Asciidoctor,Postman Collection 2.0+,OpenAPI 3.0.
+- Support for generating multiple formats of documents: Markdown,HTML5,Word,Asciidoctor,Postman Collection 2.0+,OpenAPI 3.0.
 - Support for exporting error codes and data dictionary codes to API documentation.
 - The debug html5 page fully supports file upload and download testing.
 - Support Apache Dubbo RPC.

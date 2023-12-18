@@ -17,7 +17,7 @@
   - [Torna](zh-cn/integrated/torna.md "torna")
   * [Dubbo](zh-cn/integrated/dubbo.md)
   * [JAX-RS](zh-cn/integrated/jax-rs.md)
-  * [Jmeter](zh-cn/integrated/jmeter.md)
+  * [JMeter](zh-cn/integrated/jmeter.md)
 
 - 插件
   * [maven](zh-cn/plugins/maven.md)

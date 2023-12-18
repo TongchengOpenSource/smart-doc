@@ -33,7 +33,7 @@
 - 支持从项目外部加载源代码来生成字段注释(包括标准规范发布的jar包)。
 - 支持生成多种格式文档：`Markdown`、`HTML5`、`Word`、`Asciidoctor`、`Postman Collection`、`OpenAPI 3.0`。 开放文档数据，可自由实现接入文档管理系统。
 - 支持导出错误码和定义在代码中的各种字典码到接口文档。
-- 支持生成`Jmeter`性能测试脚本。
+- 支持生成`JMeter`性能测试脚本。
 - 支持`Maven`、`Gradle`插件式轻松集成。
 - 支持`Apache Dubbo RPC`接口文档生成。
 - 支持基于`Git`管理项目的变更增量文档生成。
