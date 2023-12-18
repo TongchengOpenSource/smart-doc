@@ -178,6 +178,6 @@ public class UserServiceImpl implements UserService {
 ```
 ## 生成操作
 直接通过`mvc`命令运行插件的文档生成命令或者在`IDEA`中直接单击插件的可视化命令即可。
-![maven-smart-doc](https://img-blog.csdnimg.cn/20200705230512435.png)
+![maven-smart-doc](https://github.com/smart-doc-group/smart-doc-group.github.io/raw/master/docs/_images/20200705230512435.png)
 
 运行`rpc-html`等就能生成`Dubbo RPC`文档
