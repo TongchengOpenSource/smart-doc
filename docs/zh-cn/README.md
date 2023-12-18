@@ -31,10 +31,12 @@
 - 对一些常用字段定义能够生成有效的模拟值。
 - 支持生成`JSON`返回值示例。
 - 支持从项目外部加载源代码来生成字段注释(包括标准规范发布的jar包)。
-- 支持生成多种格式文档：`Markdown`、`HTML5`、`Asciidoctor`、`Postman Collection`、`OpenAPI 3.0`。 开放文档数据，可自由实现接入文档管理系统。
+- 支持生成多种格式文档：`Markdown`、`HTML5`、`Word`、`Asciidoctor`、`Postman Collection`、`OpenAPI 3.0`。 开放文档数据，可自由实现接入文档管理系统。
 - 支持导出错误码和定义在代码中的各种字典码到接口文档。
+- 支持生成`Jmeter`性能测试脚本。
 - 支持`Maven`、`Gradle`插件式轻松集成。
 - 支持`Apache Dubbo RPC`接口文档生成。
+- 支持基于`Git`管理项目的变更增量文档生成。
 - `debug`接口调试`html5`页面完全支持文件上传，下载(`@download tag`标记下载方法)测试。
 
 
@@ -75,6 +77,7 @@ smart-doc + [Torna](http://torna.cn/) 组成行业领先的文档生成和管理
 &nbsp;&nbsp;<img src="../_images/known-users/yuanmengjiankang.png" title="远盟健康" width="260px" height="83px"/>
 &nbsp;&nbsp;<img src="../_images/known-users/ly.jpeg" title="同程旅行" width="200px" height="100px"/>
 &nbsp;&nbsp;<img src="../_images/known-users/tcsklogo.jpeg" title="同程数科" width="200px" height="83px"/>
+  <img src="https://raw.githubusercontent.com/smart-doc-group/smart-doc/master/images/known-users/kuaishou.svg" width="130px" height="83px">
 
 ### 获奖情况
 
