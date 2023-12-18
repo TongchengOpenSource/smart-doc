@@ -115,6 +115,27 @@ public interface UserService {
     User getById(String userId);
 }
 ```
+真对一些特殊的用户，可能需要指定`Dubbo`服务接口的版本`@version`、服务名称`@service`、接口协议`@protocol`。在`smart-doc`中也可能比较方便的指定。
+示例如下：
+```java
+/**
+ * Dubbo Interface
+ * @author yusun
+ * @dubbo
+ * @service test
+ * @protocol dubbo
+ * @version 2.0.0
+ */
+public interface DubboInterface {
+
+  /**
+   * Say Hello
+   * @param word
+   * @return
+   */
+  String sayHello(String word);
+}
+```
 #### 扫描dubbo provider
 如果想通过`dubbo provider`生成`RPC`接口文档的情况，你不需要加任何的其他注释`tag`，`smart-doc`自动扫描`@service`注解完成。
 

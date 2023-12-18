@@ -14,9 +14,10 @@
   - [扩展](zh-cn/advanced/expand.md)
   
 - 集成框架
-  - [torna](zh-cn/integrated/torna.md "torna")
-  * [dubbo](zh-cn/integrated/dubbo.md)
-  * [jax-rs](zh-cn/integrated/jax-rs.md)
+  - [Torna](zh-cn/integrated/torna.md "torna")
+  * [Dubbo](zh-cn/integrated/dubbo.md)
+  * [JAX-RS](zh-cn/integrated/jax-rs.md)
+  * [Jmeter](zh-cn/integrated/jmeter.md)
 
 - 插件
   * [maven](zh-cn/plugins/maven.md)
