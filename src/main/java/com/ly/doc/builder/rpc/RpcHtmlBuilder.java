@@ -57,6 +57,7 @@ public class RpcHtmlBuilder {
      */
     public static void buildApiDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
         RpcDocBuilderTemplate builderTemplate = new RpcDocBuilderTemplate();
+        builderTemplate.checkAndInit(config,Boolean.TRUE);
         List<RpcApiDoc> apiDocList = builderTemplate.getRpcApiDoc(config, javaProjectBuilder);
         Template indexCssTemplate = BeetlTemplateUtil.getByName(DocGlobalConstants.ALL_IN_ONE_CSS);
         FileUtil.nioWriteFile(indexCssTemplate.render(), config.getOutPath() + DocGlobalConstants.FILE_SEPARATOR + DocGlobalConstants.ALL_IN_ONE_CSS_OUT);

@@ -55,6 +55,7 @@ public class RpcMarkdownBuilder {
     public static void buildApiDoc(ApiConfig apiConfig, JavaProjectBuilder javaProjectBuilder) {
         apiConfig.setAdoc(Boolean.FALSE);
         RpcDocBuilderTemplate builderTemplate = new RpcDocBuilderTemplate();
+        builderTemplate.checkAndInit(apiConfig,Boolean.TRUE);
         List<RpcApiDoc> apiDocList = builderTemplate.getRpcApiDoc(apiConfig, javaProjectBuilder);
         if (apiConfig.isAllInOne()) {
             String version = apiConfig.isCoverOld() ? "" : "-V" + DateTimeUtil.long2Str(System.currentTimeMillis(), DATE_FORMAT);
