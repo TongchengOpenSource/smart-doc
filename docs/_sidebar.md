@@ -13,9 +13,10 @@
    - [Extended](advanced/expand.md)
   
 - Integrated framework
-   - [torna](integrated/torna.md "torna")
-   * [dubbo](integrated/dubbo.md)
-   * [jax-rs](integrated/jax-rs.md)
+   - [Torna](integrated/torna.md "torna")
+   * [Dubbo](integrated/dubbo.md)
+   * [JAX-RS](integrated/jax-rs.md)
+   * [JMeter](integrated/jmeter.md)
 
 - Plugins
    * [maven](plugins/maven.md)

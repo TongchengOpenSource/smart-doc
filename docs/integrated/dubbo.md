@@ -115,6 +115,32 @@ public interface UserService {
      User getById(String userId);
 }
 ```
+For some special users, you may need to specify the version of the `For some special users, you may need to specify the version of the `Dubbo` service interface `@version`, the service name `@service`, and the protocol type of the interface `@protocol`. In `smart-doc`, it can also be conveniently specified.
+
+Example:
+```java
+/**
+ * Dubbo Interface
+ * @author yusun
+ * @dubbo
+ * @service test
+ * @protocol dubbo
+ * @version 2.0.0
+ */
+public interface DubboInterface {
+
+  /**
+   * Say Hello
+   * @param word
+   * @return
+   */
+  String sayHello(String word);
+}
+```
+- `@version` specifies the version of the Dubbo service interface
+- `@service` specifies the name of the Dubbo service
+- `@protocol` specifies the protocol type of the Dubbo service
+
 #### Scan dubbo provider
 If you want to generate `RPC` interface documentation through `dubbo provider`, you do not need to add any other annotations `tag`, `smart-doc` will automatically scan the `@service` annotation.
 
