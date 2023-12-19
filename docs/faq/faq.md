@@ -4,7 +4,8 @@
 
 ### How to improve the speed of document generation by smart-doc?
 `smart-doc maven` or `gradle` plug-in will automatically analyze the project's `pom` or `gradle` to extract dependencies by default.
-Then it automatically downloads the dependent source code and loads it into the memory. If more classes are loaded, it will be necessary to scan many unnecessary classes after completing the source code loading and entering the parsing stage.
+Then it automatically downloads the dependent source code and loads it into the memory. If more classes are loaded,
+it will be necessary to scan many unnecessary classes after completing the source code loading and entering the parsing stage.
 filter. Therefore, the most important thing to improve the speed of document generation by `smart-doc` is to make the `smart-doc` plug-in load less code. Usually for a project,
 There are very few directly related to the generated document `api` layer, these are unnecessary loads.
 The most direct way to improve the speed is to configure it in the plug-in: `include` or `exclude`. For example:

@@ -2,7 +2,7 @@
 
 # 使用指南
 
-## javadoc
+## javadoc tags
 `smart-doc`的实现初衷是通过使用`javadoc`文档注释来去除注解式的侵入，因此`smart-doc`每增加一个功能首先都是去考虑`javadoc`原生的`tag`,下面对`smart-doc`使用的一些`javadoc`的注释`tag`做介绍。
 
 | tag                             | 描述                                                                                                          | since   |
@@ -143,8 +143,10 @@ public interface DubboInterface {
 
 
 
-## smart-doc
+## smart-doc tags
 
+针对一些特殊的场景，由于`javadoc`的`tags`比较有限找不到能表达用户使用场景的`tag`，因此官方比较克制的自定义了一些`tag`。
+使用介绍如下：
 
 
 | tag                                 | 描述                                                                                                                     | since   |
@@ -405,16 +407,16 @@ public interface DubboInterface {
 
 ## jsr
 
-| 功能       | 注解        |
-| ---------- | ----------- |
+| 功能     | 注解          |
+|--------|-------------|
 | `字段必填` | `@NotNull`  |
-|            | `@NotEmpty` |
-|            | `@NotBlank` |
+|        | `@NotEmpty` |
+|        | `@NotBlank` |
 | `字段为空` | `@Null`     |
 | `长度限制` | `@Min`      |
-|            | `@Max`      |
-|            | `@Length`   |
-|            | `@Size`     |
+|        | `@Max`      |
+|        | `@Length`   |
+|        | `@Size`     |
 
 
 

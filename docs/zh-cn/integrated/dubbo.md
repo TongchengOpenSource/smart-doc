@@ -47,7 +47,7 @@
 </plugin>
 ```
 ### 添加smart-doc所需配置文件
-在你的`Dubbo API`或者或者是`dubbo provider`模块`reources`中添加`smart-doc.json`配置文件
+在`Dubbo API`或者或者是`dubbo provider`模块`reources`中添加`smart-doc.json`配置文件
 
 ```json
 {
@@ -115,7 +115,7 @@ public interface UserService {
     User getById(String userId);
 }
 ```
-真对一些特殊的用户，可能需要指定`Dubbo`服务接口的版本`@version`、服务名称`@service`、接口协议`@protocol`。在`smart-doc`中也可能比较方便的指定。
+针对一些特殊的用户，可能需要指定`Dubbo`服务接口的版本`@version`、服务名称`@service`、接口协议`@protocol`。在`smart-doc`中也可以比较方便的指定。
 示例如下：
 ```java
 /**
@@ -136,6 +136,9 @@ public interface DubboInterface {
   String sayHello(String word);
 }
 ```
+- `@version`指定`Dubbo`服务的接口版本
+- `@service`指定`Dubbo`服务名称
+- `@protocol`指定`Dubbo`服务协议类型
 #### 扫描dubbo provider
 如果想通过`dubbo provider`生成`RPC`接口文档的情况，你不需要加任何的其他注释`tag`，`smart-doc`自动扫描`@service`注解完成。
 

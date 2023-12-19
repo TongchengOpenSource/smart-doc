@@ -3,22 +3,22 @@
 ## Smart-doc generates document renderings
 
 ### Smart-doc interface document renderings
-![输入图片说明](../../_images/request-header.png "1.png")
-![请求参数示例](../../_images/request-body.png "1.png")
-![响应参数示例](../../_images/request-response.png "1.png")
+![request header](../../_images/request-header.png "1.png")
+![request body](../../_images/request-body.png "1.png")
+![response](../../_images/request-response.png "1.png")
 ### Html global effect
-![html文档](../../_images/example.png "example.png")
+![example](../../_images/example.png "example.png")
 
 
 ## Dubbo document renderings
 
 ### Dubbo interface document renderings
-![输入图片说明](https://gitee.com/smart-doc-team/smart-doc/raw/master/screen/dubbo-api.png "1.png")
-![请求参数示例](https://gitee.com/smart-doc-team/smart-doc/raw/master/screen/dubbo-top.png "1.png")
-![请求参数示例](https://gitee.com/smart-doc-team/smart-doc/raw/master/screen/dubbo-invoke.png "1.png")
-![响应参数示例](https://gitee.com/smart-doc-team/smart-doc/raw/master/screen/dubbo-response.png "1.png")
+![dubbo api](https://gitee.com/smart-doc-team/smart-doc/raw/master/screen/dubbo-api.png "1.png")
+![dubbo top](https://gitee.com/smart-doc-team/smart-doc/raw/master/screen/dubbo-top.png "1.png")
+![dubbo invoke](https://gitee.com/smart-doc-team/smart-doc/raw/master/screen/dubbo-invoke.png "1.png")
+![dubbo response](https://gitee.com/smart-doc-team/smart-doc/raw/master/screen/dubbo-response.png "1.png")
 ### Dubbo interface document renderings
-![html文档](https://gitee.com/smart-doc-team/smart-doc/raw/master/screen/dubbo-all.png "example.png")
+![dubbo example](https://gitee.com/smart-doc-team/smart-doc/raw/master/screen/dubbo-all.png "example.png")
 
 
 ## User case
