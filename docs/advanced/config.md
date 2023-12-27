@@ -59,6 +59,7 @@
 | `framework` | `2.2.5` | ❌ | `String` | `spring` or `dubbo` | `Spring` and `Apache Dubbo` are frameworks that support parsing and generating documents by `smart-doc` by default and are not configured` framework` automatically selects `Spring` or `Dubbo` according to the triggered document construction scenario. `smart-doc` currently also supports the `JAX-RS` standard, so use a framework that supports the `JAX-RS` standard (such as: ` Quarkus`) can be used as an experience, but it is not complete yet. <br />Optional values: `spring`, `dubbo`, `JAX-RS`, `solon` |
 | `randomMock` | `2.6.9` | ❌ | `Boolean` | `false` | `randomMock` is used to control whether `smart-doc` generates random `mock` values, in versions before `2.6.9` `smart-doc` will automatically assign parameters and automatically generate random values. The generated values are different each time. Now you can set it to `false` to control the generation of random values. |
 | `componentType` | `2.7.8` | ❌ | `String` | `RANDOM` | `openapi component key generator`<br />`RANDOM`: supports `@Validated` group verification<br />`NORMAL` : Does not support `@Validated`, used for `openapi` generated code |
+| `apiUploadNums` | `3.0.2` | ❌ | `Integer` | `null` | When uploading Torna, batch uploading of documents is supported, and the size of document batches can be set.|
 
 ```json
 {

@@ -59,7 +59,7 @@
 | `framework` | `2.2.5` | ❌ | `String` | `spring` or `dubbo` | `Spring`和`Apache Dubbo`是`smart-doc`默认支持解析生成文档的框架，不配置`framework`时根据触发的文档构建场景自动选择`Spring`或者 `Dubbo`，`smart-doc`目前也支持`JAX-RS`的标准，因此使用支持`JAX-RS`标准的框架(如：`Quarkus`)可以作为体验使用，但是还不完善。<br />可选值: `spring`,`dubbo`,`JAX-RS`,`solon` |
 | `randomMock` | `2.6.9` | ❌ | `Boolean` | `false` | `randomMock`用于控制是否让`smart-doc`生成随机`mock`值，在`2.6.9`之前的版本中`smart-doc`会自动给参数和自动生成随机值， 每次生成的值都不一样，现在你可以设置为`false`来控制随机值的生成。 |
 | `componentType` | `2.7.8` | ❌ | `String` | `RANDOM` | `openapi component key generator`<br />`RANDOM` : 支持 `@Validated` 分组校验 <br />`NORMAL`: 不支持 `@Validated`, 用于 `openapi` 生成代码 |
-
+| `apiUploadNums` | `3.0.2` | ❌ | `Integer` | `null` | 上传torna时，支持文档分批上传，设置文档批次的大小|
 
 
 ```json
@@ -235,7 +235,8 @@
     ],
     "requestParamsTable": true,
     "responseParamsTable": true,
-    "componentType": 1
+    "componentType": 1,
+    "apiUploadNums": 1
 }
 ```
 

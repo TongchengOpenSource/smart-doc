@@ -884,3 +884,18 @@ openapi component key generator RANDOM :  support @Validated NORMAL: don't suppo
     "componentType": "RANDOM"
 }
 ```
+
+
+
+## apiUploadNums
+* required: `false`
+* type:`Integer`
+* default: `null`
+* @since `3.0.2` :new:
+
+When uploading Torna, batch uploading of documents is supported, and the size of document batches can be set.
+```json
+{
+    "apiUploadNums": 1
+}
+```
