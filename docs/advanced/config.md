@@ -61,6 +61,7 @@
 | `componentType` | `2.7.8` | ❌ | `String` | `RANDOM` | `openapi component key generator`<br />`RANDOM`: supports `@Validated` group verification<br />`NORMAL` : Does not support `@Validated`, used for `openapi` generated code |
 | `apiUploadNums` | `3.0.2` | ❌ | `Integer` | `null` | When uploading Torna, batch uploading of documents is supported, and the size of document batches can be set.|
 
+
 ```json
 {
     "serverUrl": "http://127.0.0.1",

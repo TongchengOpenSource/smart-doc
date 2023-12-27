@@ -61,7 +61,6 @@
 | `componentType` | `2.7.8` | ❌ | `String` | `RANDOM` | `openapi component key generator`<br />`RANDOM` : 支持 `@Validated` 分组校验 <br />`NORMAL`: 不支持 `@Validated`, 用于 `openapi` 生成代码 |
 | `apiUploadNums` | `3.0.2` | ❌ | `Integer` | `null` | 上传torna时，支持文档分批上传，设置文档批次的大小|
 
-
 ```json
 {
     "serverUrl": "http://127.0.0.1",
