@@ -381,6 +381,12 @@ public class ApiConfig {
      */
     private String baseDir;
 
+    /**
+     * upload api split number
+     * @since 3.0.2
+     */
+    private Integer apiUploadNums;
+
     public static ApiConfig getInstance() {
         return instance;
     }
@@ -1021,5 +1027,13 @@ public class ApiConfig {
 
     public void setBaseDir(String baseDir) {
         this.baseDir = baseDir;
+    }
+
+    public Integer getApiUploadNums() {
+        return apiUploadNums;
+    }
+
+    public void setApiUploadNums(Integer apiUploadNums) {
+        this.apiUploadNums = apiUploadNums;
     }
 }
