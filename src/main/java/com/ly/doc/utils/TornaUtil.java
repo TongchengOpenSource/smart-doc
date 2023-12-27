@@ -58,6 +58,18 @@ import static com.ly.doc.constants.TornaConstants.PUSH;
 public class TornaUtil {
 
     public static void pushToTorna(TornaApi tornaApi, ApiConfig apiConfig, JavaProjectBuilder builder) {
+        if(ObjectUtils.isEmpty(apiConfig.getApiUploadNums())){
+            pushToTornaAll(tornaApi, apiConfig, builder);
+            return;
+        }
+
+        ListUtils.partition(tornaApi.getApis(), apiConfig.getApiUploadNums()).stream().forEach(apis -> {
+            tornaApi.setApis(apis);
+            pushToTornaAll(tornaApi, apiConfig, builder);
+        });
+    }
+    
+    private static void pushToTornaAll(TornaApi tornaApi, ApiConfig apiConfig, JavaProjectBuilder builder) {
         //Build push document information
         Map<String, String> requestJson = TornaConstants.buildParams(PUSH, new Gson().toJson(tornaApi), apiConfig);
         //Push dictionary information
@@ -74,7 +86,6 @@ public class TornaUtil {
         //Print the log of pushing documents to Torna
         TornaUtil.printDebugInfo(apiConfig, responseMsg, requestJson, PUSH);
     }
-
     public static boolean setDebugEnv(ApiConfig apiConfig, TornaApi tornaApi) {
         boolean hasDebugEnv = StringUtils.isNotBlank(apiConfig.getDebugEnvName())
                 &&
