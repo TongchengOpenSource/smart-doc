@@ -47,6 +47,8 @@ import com.thoughtworks.qdox.JavaProjectBuilder;
 
 import com.thoughtworks.qdox.model.JavaMethod;
 import com.thoughtworks.qdox.model.JavaParameter;
+import org.apache.commons.collections4.ListUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import static com.ly.doc.constants.TornaConstants.ENUM_PUSH;
@@ -58,6 +60,18 @@ import static com.ly.doc.constants.TornaConstants.PUSH;
 public class TornaUtil {
 
     public static void pushToTorna(TornaApi tornaApi, ApiConfig apiConfig, JavaProjectBuilder builder) {
+        if(ObjectUtils.isEmpty(apiConfig.getApiUploadNums())){
+            pushToTornaAll(tornaApi, apiConfig, builder);
+            return;
+        }
+
+        ListUtils.partition(tornaApi.getApis(), apiConfig.getApiUploadNums()).stream().forEach(apis -> {
+            tornaApi.setApis(apis);
+            pushToTornaAll(tornaApi, apiConfig, builder);
+        });
+    }
+
+    private static void pushToTornaAll(TornaApi tornaApi, ApiConfig apiConfig, JavaProjectBuilder builder) {
         //Build push document information
         Map<String, String> requestJson = TornaConstants.buildParams(PUSH, new Gson().toJson(tornaApi), apiConfig);
         //Push dictionary information
