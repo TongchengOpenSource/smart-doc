@@ -25,6 +25,7 @@ import java.util.Map;
 import com.ly.doc.constants.DocTags;
 import com.ly.doc.utils.DocUtil;
 import com.ly.doc.utils.JavaClassValidateUtil;
+import com.power.common.util.StringEscapeUtil;
 import com.power.common.util.StringUtil;
 import com.ly.doc.utils.ParamUtil;
 
@@ -37,13 +38,15 @@ public abstract class BaseHelper {
         String fieldValue = "";
         if (tagsMap.containsKey(DocTags.MOCK) && StringUtil.isNotEmpty(tagsMap.get(DocTags.MOCK))) {
             fieldValue = tagsMap.get(DocTags.MOCK);
+            fieldValue = StringEscapeUtil.unescapeJava(fieldValue);
             if (!DocUtil.javaPrimaryType(typeSimpleName)
                 && !JavaClassValidateUtil.isCollection(subTypeName)
                 && !JavaClassValidateUtil.isMap(subTypeName)
                 && !JavaClassValidateUtil.isArray(subTypeName)) {
+                fieldValue = StringEscapeUtil.escapeJava(fieldValue, true);
                 fieldValue = DocUtil.handleJsonStr(fieldValue);
             }
         }
-        return ParamUtil.formatMockValue(fieldValue);
+        return fieldValue;
     }
 }

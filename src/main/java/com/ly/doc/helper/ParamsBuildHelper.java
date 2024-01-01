@@ -41,6 +41,7 @@ import com.ly.doc.utils.JavaClassUtil;
 import com.ly.doc.utils.JavaClassValidateUtil;
 import com.power.common.model.EnumDictionary;
 import com.power.common.util.CollectionUtil;
+import com.power.common.util.StringEscapeUtil;
 import com.power.common.util.StringUtil;
 import com.ly.doc.builder.ProjectDocConfigBuilder;
 import com.ly.doc.constants.DocTags;
@@ -65,6 +66,14 @@ import org.apache.commons.lang3.StringUtils;
  * @author yu 2019/12/21.
  */
 public class ParamsBuildHelper extends BaseHelper {
+
+    protected static String getFieldValueFromMock(Map<String, String> tagsMap) {
+        String fieldValue = "";
+        if (tagsMap.containsKey(DocTags.MOCK) && StringUtil.isNotEmpty(tagsMap.get(DocTags.MOCK))) {
+            fieldValue = StringEscapeUtil.unescapeJava(tagsMap.get(DocTags.MOCK));
+        }
+        return fieldValue;
+    }
 
     public static List<ApiParam> buildParams(String className, String pre, int level, String isRequired, boolean isResp
             , Map<String, String> registryClasses, ProjectDocConfigBuilder projectBuilder, Set<String> groupClasses
@@ -248,7 +257,8 @@ public class ParamsBuildHelper extends BaseHelper {
                     }
                 }
                 comment.append(JavaFieldUtil.getJsrComment(javaAnnotations));
-                String fieldValue = getFieldValueFromMock(subTypeName, tagsMap, typeSimpleName);
+                // fixme post form curl example error
+                String fieldValue = getFieldValueFromMock(tagsMap);
 
 
                 // cover response value

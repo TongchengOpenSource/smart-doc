@@ -74,11 +74,11 @@ public class CurlUtil {
 
         sb.append(" -i");
         // append request url
-        sb.append(" ").append(request.getUrl());
-        if (StringUtil.isNotEmpty(request.getBody()) &&
-                !DocGlobalConstants.URL_CONTENT_TYPE.equals(request.getContentType())) {
+        sb.append(" ").append("'").append(request.getUrl()).append("'");
+        if (StringUtil.isNotEmpty(request.getBody())) {
             sb.append(" --data");
-            sb.append(" '").append(request.getBody()).append("'");
+            String data = request.getBody().replaceAll("'", "'\\\\''");
+            sb.append(" '").append(data).append("'");
         }
         return sb.toString();
     }

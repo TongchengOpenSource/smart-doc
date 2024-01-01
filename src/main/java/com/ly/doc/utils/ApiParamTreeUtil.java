@@ -31,7 +31,6 @@ import com.ly.doc.model.ApiMethodReqParam;
 import com.ly.doc.model.ApiParam;
 import com.ly.doc.model.ApiReqParam;
 import com.power.common.util.CollectionUtil;
-import com.power.common.util.StringUtil;
 
 /**
  * @author yu 2020/8/8.
@@ -102,7 +101,6 @@ public class ApiParamTreeUtil {
         List<ApiParam> queryParams = new ArrayList<>();
         List<ApiParam> bodyParams = new ArrayList<>();
         for (ApiParam param : paramList) {
-            param.setValue(StringUtil.removeDoubleQuotes(param.getValue()));
             if (param.isPathParam()) {
                 if (pathReqParamMap.containsKey(param.getField())) {
                     param.setConfigParam(true).setValue(pathReqParamMap.get(param.getField()).getValue());
