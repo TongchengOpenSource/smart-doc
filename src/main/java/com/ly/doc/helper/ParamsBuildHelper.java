@@ -67,14 +67,6 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class ParamsBuildHelper extends BaseHelper {
 
-    protected static String getFieldValueFromMock(Map<String, String> tagsMap) {
-        String fieldValue = "";
-        if (tagsMap.containsKey(DocTags.MOCK) && StringUtil.isNotEmpty(tagsMap.get(DocTags.MOCK))) {
-            fieldValue = StringEscapeUtil.unescapeJava(tagsMap.get(DocTags.MOCK));
-        }
-        return fieldValue;
-    }
-
     public static List<ApiParam> buildParams(String className, String pre, int level, String isRequired, boolean isResp
             , Map<String, String> registryClasses, ProjectDocConfigBuilder projectBuilder, Set<String> groupClasses
             , int pid, boolean jsonRequest, AtomicInteger atomicInteger) {
@@ -201,7 +193,6 @@ public class ParamsBuildHelper extends BaseHelper {
                 }
 
                 boolean strRequired = false;
-                int annotationCounter = 0;
                 CustomField.Key key = CustomField.Key.create(docField.getDeclaringClassName(), fieldName);
 
                 CustomField customResponseField = CustomField.nameEquals(key, projectBuilder.getCustomRespFieldMap());
@@ -240,7 +231,6 @@ public class ParamsBuildHelper extends BaseHelper {
                         }
                     } else if (JavaClassValidateUtil.isJSR303Required(simpleAnnotationName) && !isResp) {
 
-                        annotationCounter++;
                         boolean hasGroup = false;
                         Set<String> groupClassList = JavaClassUtil.getParamGroupJavaClass(annotation);
                         for (String javaClass : groupClassList) {

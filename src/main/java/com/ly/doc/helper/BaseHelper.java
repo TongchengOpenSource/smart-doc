@@ -27,14 +27,13 @@ import com.ly.doc.utils.DocUtil;
 import com.ly.doc.utils.JavaClassValidateUtil;
 import com.power.common.util.StringEscapeUtil;
 import com.power.common.util.StringUtil;
-import com.ly.doc.utils.ParamUtil;
 
 /**
  * @author yu3.sun on 2022/10/14
  */
 public abstract class BaseHelper {
 
-    protected static String getFieldValueFromMock(String subTypeName, Map<String, String> tagsMap, String typeSimpleName) {
+    protected static String getFieldValueFromMockForJson(String subTypeName, Map<String, String> tagsMap, String typeSimpleName) {
         String fieldValue = "";
         if (tagsMap.containsKey(DocTags.MOCK) && StringUtil.isNotEmpty(tagsMap.get(DocTags.MOCK))) {
             fieldValue = tagsMap.get(DocTags.MOCK);
@@ -46,6 +45,14 @@ public abstract class BaseHelper {
                 fieldValue = StringEscapeUtil.escapeJava(fieldValue, true);
                 fieldValue = DocUtil.handleJsonStr(fieldValue);
             }
+        }
+        return fieldValue;
+    }
+
+    protected static String getFieldValueFromMock(Map<String, String> tagsMap) {
+        String fieldValue = "";
+        if (tagsMap.containsKey(DocTags.MOCK) && StringUtil.isNotEmpty(tagsMap.get(DocTags.MOCK))) {
+            fieldValue = StringEscapeUtil.unescapeJava(tagsMap.get(DocTags.MOCK));
         }
         return fieldValue;
     }

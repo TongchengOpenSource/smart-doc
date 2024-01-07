@@ -305,7 +305,7 @@ public class JsonBuildHelper extends BaseHelper {
                 }
                 fieldName = fieldName.trim();
                 data0.append("\"").append(fieldName).append("\":");
-                String fieldValue = getFieldValueFromMock(subTypeName, tagsMap, typeSimpleName);
+                String fieldValue = getFieldValueFromMockForJson(subTypeName, tagsMap, typeSimpleName);
                 if (JavaClassValidateUtil.isPrimitive(subTypeName)) {
                     int data0Length = data0.length();
                     if (StringUtil.isEmpty(fieldValue)) {
