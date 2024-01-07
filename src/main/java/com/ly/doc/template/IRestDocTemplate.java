@@ -1012,7 +1012,6 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
             path = DocUtil.formatAndRemove(path, pathParamsMap);
             body = UrlUtil.urlJoin(DocGlobalConstants.EMPTY, queryParamsMap)
                     .replace("?", DocGlobalConstants.EMPTY);
-            body = StringUtil.removeQuotes(body);
             url = apiMethodDoc.getServerUrl() + "/" + path;
             url = UrlUtil.simplifyUrl(url);
 

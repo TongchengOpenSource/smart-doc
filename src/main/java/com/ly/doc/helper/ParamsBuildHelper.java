@@ -41,6 +41,7 @@ import com.ly.doc.utils.JavaClassUtil;
 import com.ly.doc.utils.JavaClassValidateUtil;
 import com.power.common.model.EnumDictionary;
 import com.power.common.util.CollectionUtil;
+import com.power.common.util.StringEscapeUtil;
 import com.power.common.util.StringUtil;
 import com.ly.doc.builder.ProjectDocConfigBuilder;
 import com.ly.doc.constants.DocTags;
@@ -192,7 +193,6 @@ public class ParamsBuildHelper extends BaseHelper {
                 }
 
                 boolean strRequired = false;
-                int annotationCounter = 0;
                 CustomField.Key key = CustomField.Key.create(docField.getDeclaringClassName(), fieldName);
 
                 CustomField customResponseField = CustomField.nameEquals(key, projectBuilder.getCustomRespFieldMap());
@@ -231,7 +231,6 @@ public class ParamsBuildHelper extends BaseHelper {
                         }
                     } else if (JavaClassValidateUtil.isJSR303Required(simpleAnnotationName) && !isResp) {
 
-                        annotationCounter++;
                         boolean hasGroup = false;
                         Set<String> groupClassList = JavaClassUtil.getParamGroupJavaClass(annotation);
                         for (String javaClass : groupClassList) {
@@ -248,7 +247,8 @@ public class ParamsBuildHelper extends BaseHelper {
                     }
                 }
                 comment.append(JavaFieldUtil.getJsrComment(javaAnnotations));
-                String fieldValue = getFieldValueFromMock(subTypeName, tagsMap, typeSimpleName);
+                // fixme post form curl example error
+                String fieldValue = getFieldValueFromMock(tagsMap);
 
 
                 // cover response value

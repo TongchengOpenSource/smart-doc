@@ -42,7 +42,7 @@ import com.thoughtworks.qdox.model.JavaField;
 /**
  * @author yu 2019/12/25.
  */
-public class FormDataBuildHelper {
+public class FormDataBuildHelper extends BaseHelper {
 
     /**
      * build form data
@@ -132,10 +132,8 @@ public class FormDataBuildHelper {
                 formData.setValue("");
                 formDataList.add(formData);
             } else if (JavaClassValidateUtil.isPrimitive(subTypeName)) {
-                String fieldValue;
-                if (tagsMap.containsKey(DocTags.MOCK) && StringUtil.isNotEmpty(tagsMap.get(DocTags.MOCK))) {
-                    fieldValue = ParamUtil.formatMockValue(tagsMap.get(DocTags.MOCK));
-                } else {
+                String fieldValue = getFieldValueFromMock(tagsMap);
+                if (StringUtil.isEmpty(fieldValue)) {
                     fieldValue = DocUtil.getValByTypeAndFieldName(typeSimpleName, field.getName());
                 }
                 CustomField customRequestField = builder.getCustomReqFieldMap().get(fieldName);
@@ -147,7 +145,7 @@ public class FormDataBuildHelper {
                 FormData formData = new FormData();
                 formData.setKey(pre + fieldName);
                 formData.setType("text");
-                formData.setValue(StringUtil.removeQuotes(fieldValue));
+                formData.setValue(fieldValue);
                 formData.setDescription(comment);
                 formDataList.add(formData);
             } else if (javaClass.isEnum()) {
@@ -169,12 +167,10 @@ public class FormDataBuildHelper {
                 }
                 String gName = DocClassUtil.getSimpleGicName(gNameTemp)[0];
                 if (JavaClassValidateUtil.isPrimitive(gName)) {
-                    String fieldValue;
-                    if (tagsMap.containsKey(DocTags.MOCK) && StringUtil.isNotEmpty(tagsMap.get(DocTags.MOCK))) {
-                        fieldValue = ParamUtil.formatMockValue(tagsMap.get(DocTags.MOCK));
-                    } else {
-                        String val = DocUtil.getValByTypeAndFieldName(gName, field.getName());
-                        fieldValue = val + "," + val;
+                    String fieldValue = getFieldValueFromMock(tagsMap);
+                    if (StringUtil.isEmpty(fieldValue)) {
+                        fieldValue = DocUtil.getValByTypeAndFieldName(typeSimpleName, field.getName());
+                        fieldValue = fieldValue + "," + fieldValue;
                     }
                     FormData formData = new FormData();
                     formData.setKey(pre + fieldName);
