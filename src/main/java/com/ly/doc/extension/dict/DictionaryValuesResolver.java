@@ -45,6 +45,7 @@ public interface DictionaryValuesResolver {
      * resolve the dictionary, for compatibility, do not return null
      *
      * @see #resolve(Class)
+     * @return Collection of EnumDictionary
      */
     default <T extends EnumDictionary> Collection<T> resolve() {
         return Collections.emptyList();

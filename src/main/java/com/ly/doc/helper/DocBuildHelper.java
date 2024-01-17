@@ -191,6 +191,8 @@ public class DocBuildHelper {
      * <br/>
      * If all modified classes are not part of the API dependency tree (e.g., they are services or mappers),
      * this method will return an empty collection, as they do not impact the API documentation.
+     * @param isEntryPoint  EntryPoint
+     * @return Set of Difference File
      */
     public Set<FileDiff> getChangedFilesFromVCS(Predicate<String> isEntryPoint) {
         String commitId = dependencyTree.getCommitId();

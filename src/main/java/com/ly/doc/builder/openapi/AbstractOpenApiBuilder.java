@@ -84,7 +84,9 @@ public abstract class AbstractOpenApiBuilder {
     /**
      * response body
      *
+     * @param apiConfig    ApiConfig
      * @param apiMethodDoc ApiMethodDoc
+     * @return Map of Response Body
      */
     abstract Map<String, Object> buildResponsesBody(ApiConfig apiConfig, ApiMethodDoc apiMethodDoc);
 
@@ -106,8 +108,8 @@ public abstract class AbstractOpenApiBuilder {
         Map<String, Object> pathMap = new HashMap<>(500);
         Set<ApiMethodDoc> methodDocs = DocMapping.METHOD_DOCS;
         for (ApiMethodDoc methodDoc : methodDocs) {
-            String [] paths = methodDoc.getPath().split(";");
-            for(String path : paths) {
+            String[] paths = methodDoc.getPath().split(";");
+            for (String path : paths) {
                 path = path.trim();
                 Map<String, Object> request = buildPathUrls(apiConfig, methodDoc, methodDoc.getClazzDoc());
                 if (!pathMap.containsKey(path)) {
@@ -135,6 +137,7 @@ public abstract class AbstractOpenApiBuilder {
      * @param apiConfig    ApiConfig
      * @param apiMethodDoc Method
      * @param apiDoc       ApiDoc
+     * @return Map of Path Url
      */
     public Map<String, Object> buildPathUrls(ApiConfig apiConfig, ApiMethodDoc apiMethodDoc, ApiDoc apiDoc) {
         Map<String, Object> request = new HashMap<>(4);
@@ -148,6 +151,7 @@ public abstract class AbstractOpenApiBuilder {
      * @param apiConfig    ApiConfig
      * @param apiMethodDoc ApiMethodDoc
      * @param isRep        is response
+     * @return Map of Body content
      */
     public Map<String, Object> buildContent(ApiConfig apiConfig, ApiMethodDoc apiMethodDoc, boolean isRep) {
         Map<String, Object> content = new HashMap<>(8);
@@ -166,6 +170,7 @@ public abstract class AbstractOpenApiBuilder {
      * @param apiConfig    ApiConfig
      * @param apiMethodDoc ApiMethodDoc
      * @param isRep        is response
+     * @return Map of Body content
      */
     public Map<String, Object> buildContentBody(ApiConfig apiConfig, ApiMethodDoc apiMethodDoc, boolean isRep) {
         Map<String, Object> content = new HashMap<>(8);
@@ -193,6 +198,7 @@ public abstract class AbstractOpenApiBuilder {
      *
      * @param apiMethodDoc ApiMethodDoc
      * @param isRep        is response
+     * @return Map of body schema
      */
     public Map<String, Object> buildBodySchema(ApiMethodDoc apiMethodDoc, boolean isRep) {
         Map<String, Object> schema = new HashMap<>(10);
@@ -237,6 +243,7 @@ public abstract class AbstractOpenApiBuilder {
      *
      * @param apiMethodDoc ApiMethodDoc
      * @param isRep        is response
+     * @return Map of Body example
      */
     public static Map<String, Object> buildBodyExample(ApiMethodDoc apiMethodDoc, boolean isRep) {
         Map<String, Object> content = new HashMap<>(8);
@@ -250,6 +257,7 @@ public abstract class AbstractOpenApiBuilder {
      *
      * @param apiMethodDoc ApiMethodDoc
      * @param isRep        is response
+     * @return Map of example data
      */
     public static Map<String, Object> buildExampleData(ApiMethodDoc apiMethodDoc, boolean isRep) {
         Map<String, Object> content = new HashMap<>(8);
@@ -314,6 +322,7 @@ public abstract class AbstractOpenApiBuilder {
      * If the header is included, set the request parameters
      *
      * @param header header
+     * @return Map of header
      */
     public static Map<String, Object> buildParametersSchema(ApiReqParam header) {
         Map<String, Object> schema = new HashMap<>(10);
@@ -454,6 +463,7 @@ public abstract class AbstractOpenApiBuilder {
      *
      * @param config         Configuration of smart-doc
      * @param projectBuilder JavaDocBuilder of QDox
+     * @return List of ApiDoc
      */
     public List<ApiDoc> getOpenApiDocs(ApiConfig config, JavaProjectBuilder projectBuilder) {
         config.setShowJavaType(false);

@@ -1197,7 +1197,7 @@ public class DocUtil {
      * split url by '/'
      * example: ${server.error.path:${error.path:/error}}/test/{name:[a-zA-Z0-9]{3}}/{bb}/add
      *
-     * @param url
+     * @param url url
      * @return List of path
      */
     public static List<String> splitPathBySlash(String url) {

@@ -29,11 +29,13 @@ public interface IDoc {
 
     /**
      * doc class qualified name
+     * @return Class
      */
     String getDocClass();
 
     /**
-     *
+     * Obtain methods
+     * @return list of method
      */
     List<IMethod> getMethods();
 
