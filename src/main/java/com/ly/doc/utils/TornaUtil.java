@@ -60,7 +60,7 @@ import static com.ly.doc.constants.TornaConstants.PUSH;
 public class TornaUtil {
 
     public static void pushToTorna(TornaApi tornaApi, ApiConfig apiConfig, JavaProjectBuilder builder) {
-        if(ObjectUtils.isEmpty(apiConfig.getApiUploadNums())){
+        if(apiConfig.getApiUploadNums() == null){
             pushToTornaAll(tornaApi, apiConfig, builder);
             return;
         }

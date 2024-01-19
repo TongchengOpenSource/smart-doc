@@ -254,7 +254,7 @@ public class ProjectDocConfigBuilder {
                         enumClass = classLoader.loadClass(cls.getFullyQualifiedName());
                     }
                     enumClassMap.put(cls.getFullyQualifiedName(), enumClass);
-                } catch (ClassNotFoundException e) {
+                } catch (ClassNotFoundException | NoClassDefFoundError e) {
                     continue;
                 }
             }
