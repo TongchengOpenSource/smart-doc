@@ -68,16 +68,23 @@ public class DependencyTree {
      * Create or Load dependency tree config.
      *
      * @param baseDir the dependency tree config file base directory
+     * @param isIncrement whether increment build
      * @return DependencyTree
      */
-    public static DependencyTree detect(String baseDir) {
+    public static DependencyTree detect(String baseDir, boolean isIncrement) {
         DependencyTree dependencyTree;
 
         File configFile = new File(baseDir + File.separator + CONFIG_NAME);
-        if (!configFile.exists()) {
+        // the config file no exists
+        boolean fileNoExists = !configFile.exists();
+        if (fileNoExists) {
             dependencyTree = Support.create(configFile);
         } else {
             dependencyTree = Support.load(configFile);
+        }
+        // if file no exists, and not increment build, delete the config file after build
+        if (fileNoExists && !isIncrement) {
+            configFile.delete();
         }
 
         return dependencyTree;

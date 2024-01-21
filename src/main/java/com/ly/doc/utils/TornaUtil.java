@@ -23,33 +23,25 @@
 
 package com.ly.doc.utils;
 
-import java.util.*;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.ly.doc.constants.DocGlobalConstants;
+import com.ly.doc.constants.TornaConstants;
 import com.ly.doc.model.*;
 import com.ly.doc.model.rpc.RpcApiDependency;
+import com.ly.doc.model.torna.*;
 import com.power.common.model.EnumDictionary;
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.OkHttp3Util;
 import com.power.common.util.StringUtil;
-import com.ly.doc.constants.TornaConstants;
-import com.ly.doc.model.torna.Apis;
-import com.ly.doc.model.torna.CommonErrorCode;
-import com.ly.doc.model.torna.DebugEnv;
-import com.ly.doc.model.torna.HttpParam;
-import com.ly.doc.model.torna.TornaApi;
-import com.ly.doc.model.torna.TornaDic;
-import com.ly.doc.model.torna.TornaRequestInfo;
 import com.thoughtworks.qdox.JavaProjectBuilder;
-
 import com.thoughtworks.qdox.model.JavaMethod;
 import com.thoughtworks.qdox.model.JavaParameter;
 import org.apache.commons.collections4.ListUtils;
-import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.*;
 
 import static com.ly.doc.constants.TornaConstants.ENUM_PUSH;
 import static com.ly.doc.constants.TornaConstants.PUSH;
@@ -60,21 +52,30 @@ import static com.ly.doc.constants.TornaConstants.PUSH;
 public class TornaUtil {
 
     public static void pushToTorna(TornaApi tornaApi, ApiConfig apiConfig, JavaProjectBuilder builder) {
-        if(ObjectUtils.isEmpty(apiConfig.getApiUploadNums())){
+        // Check whether the document needs to be pushed
+        if (tornaApi == null || apiConfig == null) {
+            return;
+        }
+        // Push all documents
+        if (null != apiConfig.getApiUploadNums()) {
             pushToTornaAll(tornaApi, apiConfig, builder);
             return;
         }
-
-        ListUtils.partition(tornaApi.getApis(), apiConfig.getApiUploadNums()).stream().forEach(apis -> {
+        // Push part of documents if the upload number is not null
+        List<Apis> tornaApis = tornaApi.getApis();
+        if (tornaApis == null || tornaApis.isEmpty()) {
+            return;
+        }
+        ListUtils.partition(tornaApis, apiConfig.getApiUploadNums()).forEach(apis -> {
             tornaApi.setApis(apis);
             pushToTornaAll(tornaApi, apiConfig, builder);
         });
     }
 
     private static void pushToTornaAll(TornaApi tornaApi, ApiConfig apiConfig, JavaProjectBuilder builder) {
-        //Build push document information
+        // Build push document information
         Map<String, String> requestJson = TornaConstants.buildParams(PUSH, new Gson().toJson(tornaApi), apiConfig);
-        //Push dictionary information
+        // Push dictionary information
         Map<String, Object> dicMap = new HashMap<>(2);
         List<TornaDic> docDicts = TornaUtil.buildTornaDic(DocUtil.buildDictionary(apiConfig, builder));
         if (CollectionUtil.isNotEmpty(docDicts)) {
@@ -83,9 +84,9 @@ public class TornaUtil {
             String dicResponseMsg = OkHttp3Util.syncPostJson(apiConfig.getOpenUrl(), new Gson().toJson(dicRequestJson));
             TornaUtil.printDebugInfo(apiConfig, dicResponseMsg, dicRequestJson, ENUM_PUSH);
         }
-        //Get the response result
+        // Get the response result
         String responseMsg = OkHttp3Util.syncPostJson(apiConfig.getOpenUrl(), new Gson().toJson(requestJson));
-        //Print the log of pushing documents to Torna
+        // Print the log of pushing documents to Torna
         TornaUtil.printDebugInfo(apiConfig, responseMsg, requestJson, PUSH);
     }
 
@@ -93,7 +94,7 @@ public class TornaUtil {
         boolean hasDebugEnv = StringUtils.isNotBlank(apiConfig.getDebugEnvName())
                 &&
                 StringUtils.isNotBlank(apiConfig.getDebugEnvUrl());
-        //Set up the test environment
+        // Set up the test environment
         List<DebugEnv> debugEnvs = new ArrayList<>();
         if (hasDebugEnv) {
             DebugEnv debugEnv = new DebugEnv();
@@ -126,7 +127,7 @@ public class TornaUtil {
                         .setResponseInfo(responseMsg);
                 System.out.println(info.buildInfo());
             } catch (Exception e) {
-                //Ex : Nginx Error,Tomcat Error
+                // Ex : Nginx Error,Tomcat Error
                 System.out.println("Response Error : \n" + responseMsg);
             }
         }
@@ -140,10 +141,10 @@ public class TornaUtil {
      * @return List of Api
      */
     public static List<Apis> buildApis(List<ApiMethodDoc> apiMethodDocs, boolean hasDebugEnv) {
-        //Parameter list
+        // Parameter list
         List<Apis> apis = new ArrayList<>();
         Apis methodApi;
-        //Iterative classification interface
+        // Iterative classification interface
         for (ApiMethodDoc apiMethodDoc : apiMethodDocs) {
             methodApi = new Apis();
             methodApi.setIsFolder(TornaConstants.NO);
@@ -164,7 +165,7 @@ public class TornaUtil {
             methodApi.setRequestArrayType(apiMethodDoc.getRequestArrayType());
             methodApi.setResponseArrayType(apiMethodDoc.getResponseArrayType());
             methodApi.setDeprecated(apiMethodDoc.isDeprecated() ? "Deprecated" : null);
-            //Path
+            // Path
             if (CollectionUtil.isNotEmpty(apiMethodDoc.getPathParams())) {
                 methodApi.setPathParams(buildParams(apiMethodDoc.getPathParams()));
             }
@@ -176,7 +177,7 @@ public class TornaUtil {
             } else if (CollectionUtil.isNotEmpty(apiMethodDoc.getQueryParams())) {
                 methodApi.setQueryParams(buildParams(apiMethodDoc.getQueryParams()));
             }
-            //Json
+            // Json
             if (CollectionUtil.isNotEmpty(apiMethodDoc.getRequestParams())) {
                 methodApi.setRequestParams(buildParams(apiMethodDoc.getRequestParams()));
             }
@@ -192,10 +193,10 @@ public class TornaUtil {
      * @return List of Api
      */
     public static List<Apis> buildDubboApis(List<RpcJavaMethod> apiMethodDocs) {
-        //Parameter list
+        // Parameter list
         List<Apis> apis = new ArrayList<>();
         Apis methodApi;
-        //Iterative classification interface
+        // Iterative classification interface
         for (RpcJavaMethod apiMethodDoc : apiMethodDocs) {
             methodApi = new Apis();
             methodApi.setIsFolder(TornaConstants.NO);
@@ -207,7 +208,7 @@ public class TornaUtil {
             methodApi.setResponseParams(buildParams(apiMethodDoc.getResponseParams()));
             methodApi.setOrderIndex(apiMethodDoc.getOrder());
             methodApi.setDeprecated(apiMethodDoc.isDeprecated() ? "Deprecated" : null);
-            //Json
+            // Json
             if (CollectionUtil.isNotEmpty(apiMethodDoc.getRequestParams())) {
                 methodApi.setRequestParams(buildParams(apiMethodDoc.getRequestParams()));
             }
@@ -331,9 +332,10 @@ public class TornaUtil {
 
     /**
      * Set torna tags
-     * @param method
-     * @param apiMethodDoc
-     * @param apiConfig
+     *
+     * @param method       method
+     * @param apiMethodDoc apiMethodDoc
+     * @param apiConfig    apiConfig
      */
     public static void setTornaArrayTags(JavaMethod method, ApiMethodDoc apiMethodDoc, ApiConfig apiConfig) {
         String returnTypeName = method.getReturnType().getCanonicalName();
@@ -342,14 +344,14 @@ public class TornaUtil {
         String responseBodyAdviceClassName = Optional.ofNullable(apiConfig).map(ApiConfig::getResponseBodyAdvice).map(BodyAdvice::getClassName).orElse(StringUtil.EMPTY);
         String realReturnTypeName = StringUtil.isEmpty(responseBodyAdviceClassName) ? returnTypeName : responseBodyAdviceClassName;
         boolean respArray = JavaClassValidateUtil.isCollection(realReturnTypeName) || JavaClassValidateUtil.isArray(realReturnTypeName);
-        //response
+        // response
         if (respArray) {
             apiMethodDoc.setIsResponseArray(1);
             String className = getType(method.getReturnType().getGenericCanonicalName());
             String arrayType = JavaClassValidateUtil.isPrimitive(className) ? className : DocGlobalConstants.OBJECT;
             apiMethodDoc.setResponseArrayType(arrayType);
         }
-        //request
+        // request
         if (CollectionUtil.isNotEmpty(method.getParameters())) {
             String requestBodyAdviceClassName = Optional.ofNullable(apiConfig).map(ApiConfig::getRequestBodyAdvice).map(BodyAdvice::getClassName).orElse(StringUtil.EMPTY);
             for (JavaParameter param : method.getParameters()) {
@@ -385,7 +387,7 @@ public class TornaUtil {
 
     private static String getType(String typeName) {
         String gicType;
-        //get generic type
+        // get generic type
         if (typeName.contains("<")) {
             gicType = typeName.substring(typeName.indexOf("<") + 1, typeName.lastIndexOf(">"));
         } else {

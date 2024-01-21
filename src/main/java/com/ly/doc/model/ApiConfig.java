@@ -20,16 +20,16 @@
  */
 package com.ly.doc.model;
 
+import com.ly.doc.constants.ComponentTypeEnum;
+import com.ly.doc.constants.DocLanguage;
+import com.ly.doc.handler.ICustomJavaMethodHandler;
+import com.ly.doc.model.rpc.RpcApiDependency;
+import com.power.common.util.CollectionUtil;
+
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import com.ly.doc.constants.ComponentTypeEnum;
-import com.ly.doc.model.rpc.RpcApiDependency;
-import com.power.common.util.CollectionUtil;
-import com.ly.doc.constants.DocLanguage;
-import com.ly.doc.handler.ICustomJavaMethodHandler;
 
 /**
  * Description:
@@ -367,14 +367,17 @@ public class ApiConfig {
 
     /**
      * build random component for openApi
+     *
      * @see ComponentTypeEnum
      */
     private ComponentTypeEnum componentType = ComponentTypeEnum.RANDOM;
 
     /**
      * whether to build the doc incrementally
+     *
+     * @since 3.0.0
      */
-    private boolean increment;
+    private boolean increment = Boolean.FALSE;
 
     /**
      * the doc module absolute path, used for dependency tree file
@@ -383,6 +386,7 @@ public class ApiConfig {
 
     /**
      * upload api split number
+     *
      * @since 3.0.2
      */
     private Integer apiUploadNums;
