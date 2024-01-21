@@ -955,7 +955,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                 if (!JavaClassValidateUtil.isPrimitive(gicName)
                         && !configBuilder.getJavaProjectBuilder().getClassByName(gicName).isEnum()) {
                     throw new RuntimeException("can't support binding Collection on method "
-                            + method.getName() + "Check it in " + method.getDeclaringClass().getCanonicalName());
+                            + method.getName() + " Check it in " + method.getDeclaringClass().getCanonicalName());
                 }
                 String value;
                 JavaClass javaClass1 = configBuilder.getClassByName(gicName);

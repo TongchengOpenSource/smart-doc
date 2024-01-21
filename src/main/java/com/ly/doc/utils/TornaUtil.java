@@ -57,7 +57,7 @@ public class TornaUtil {
             return;
         }
         // Push all documents
-        if (null != apiConfig.getApiUploadNums()) {
+        if(apiConfig.getApiUploadNums() == null){
             pushToTornaAll(tornaApi, apiConfig, builder);
             return;
         }
