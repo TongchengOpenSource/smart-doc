@@ -20,169 +20,103 @@
 
         <w:p>
             <w:pPr>
-                <w:pStyle w:val="3"/>
-                <w:numPr>
-                    <w:ilvl w:val="1"/>
-                    <w:numId w:val="2"/>
-                </w:numPr>
-                <w:bidi w:val="0"/>
-                <w:ind w:left="567" w:leftChars="0" w:hanging="567" w:firstLineChars="0"/>
-                <w:rPr>
-                    <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                    <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                </w:rPr>
+                <w:pStyle w:val="4"/>
             </w:pPr>
+            <w:bookmarkStart w:id="1" w:name="${wordXmlEscape(desc)}"/>
             <w:r>
-                <w:rPr>
-                    <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                    <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                </w:rPr>
                 <w:t>${wordXmlEscape(desc)}</w:t>
             </w:r>
+            <w:bookmarkStart w:id="7" w:name="_GoBack"/>
+            <w:bookmarkEnd w:id="7"/>
         </w:p>
 
         <%
         for(doc in list){
         %>
+
         <!--    接口标题    -->
         <%if(doc.deprecated){%>
         <w:p>
             <w:pPr>
-                <w:pStyle w:val="4"/>
-                <w:numPr>
-                    <w:ilvl w:val="2"/>
-                    <w:numId w:val="2"/>
-                </w:numPr>
-                <w:bidi w:val="0"/>
-                <w:ind w:left="709" w:leftChars="0" w:hanging="709" w:firstLineChars="0"/>
+                <w:pStyle w:val="5"/>
                 <w:rPr>
-                    <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
                     <w:strike/>
                     <w:dstrike w:val="0"/>
-                    <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
+                    <w:u w:val="none"/>
                 </w:rPr>
             </w:pPr>
+            <w:bookmarkStart w:id="2" w:name="${wordXmlEscape(doc.desc)}"/>
             <w:r>
                 <w:rPr>
-                    <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
                     <w:strike/>
                     <w:dstrike w:val="0"/>
-                    <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
+                    <w:u w:val="none"/>
                 </w:rPr>
                 <w:t>${wordXmlEscape(doc.desc)}</w:t>
             </w:r>
         </w:p>
         <%}else{%>
+
         <w:p>
             <w:pPr>
-                <w:pStyle w:val="4"/>
-                <w:numPr>
-                    <w:ilvl w:val="2"/>
-                    <w:numId w:val="2"/>
-                </w:numPr>
-                <w:bidi w:val="0"/>
-                <w:ind w:left="709" w:leftChars="0" w:hanging="709" w:firstLineChars="0"/>
-                <w:rPr>
-                    <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                    <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                </w:rPr>
+                <w:pStyle w:val="5"/>
             </w:pPr>
+            <w:bookmarkStart w:id="2" w:name="${wordXmlEscape(doc.desc)}"/>
             <w:r>
-                <w:rPr>
-                    <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                    <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                </w:rPr>
                 <w:t>${wordXmlEscape(doc.desc)}</w:t>
             </w:r>
         </w:p>
+
         <%}%>
 
         <!--    接口基本参数, url 作者  请求方式 等等    -->
+        <!--        url-->
         <w:p>
             <w:pPr>
-                <w:numPr>
-                    <w:ilvl w:val="0"/>
-                    <w:numId w:val="3"/>
-                </w:numPr>
-                <w:ind w:left="420" w:leftChars="0" w:hanging="420" w:firstLineChars="0"/>
-                <w:rPr>
-                    <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                    <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                </w:rPr>
+                <w:pStyle w:val="23"/>
             </w:pPr>
             <w:r>
                 <w:rPr>
-                    <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
                     <w:b/>
                     <w:bCs/>
-                    <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
                 </w:rPr>
                 <w:t>URL:</w:t>
             </w:r>
             <w:r>
-                <w:rPr>
-                    <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                    <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                </w:rPr>
+                <w:t xml:space="preserve"> </w:t>
+            </w:r>
+            <w:r>
                 <w:fldChar w:fldCharType="begin"/>
             </w:r>
             <w:r>
-                <w:rPr>
-                    <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                    <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                </w:rPr>
-                <w:instrText xml:space="preserve"> HYPERLINK &quot; ${doc.url}&quot; </w:instrText>
+                <w:instrText xml:space="preserve"> HYPERLINK &quot;${doc.url}&quot; \h </w:instrText>
             </w:r>
             <w:r>
-                <w:rPr>
-                    <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                    <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                </w:rPr>
                 <w:fldChar w:fldCharType="separate"/>
             </w:r>
             <w:r>
                 <w:rPr>
-                    <w:rStyle w:val="15"/>
-                    <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                    <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
+                    <w:rStyle w:val="20"/>
                 </w:rPr>
-                <w:t xml:space="preserve"> ${doc.url}</w:t>
+                <w:t> ${doc.url}</w:t>
             </w:r>
             <w:r>
-                <w:rPr>
-                    <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                    <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                </w:rPr>
                 <w:fldChar w:fldCharType="end"/>
             </w:r>
         </w:p>
-
+        <!--type-->
         <w:p>
             <w:pPr>
-                <w:numPr>
-                    <w:ilvl w:val="0"/>
-                    <w:numId w:val="3"/>
-                </w:numPr>
-                <w:ind w:left="420" w:leftChars="0" w:hanging="420" w:firstLineChars="0"/>
-                <w:rPr>
-                    <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                    <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                </w:rPr>
+                <w:pStyle w:val="3"/>
             </w:pPr>
             <w:r>
                 <w:rPr>
-                    <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
                     <w:b/>
                     <w:bCs/>
-                    <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
                 </w:rPr>
                 <w:t>Type:</w:t>
             </w:r>
             <w:r>
-                <w:rPr>
-                    <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                    <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                </w:rPr>
                 <w:t xml:space="preserve"> ${doc.type}</w:t>
             </w:r>
         </w:p>
@@ -190,30 +124,16 @@
         <%if(isNotEmpty(doc.author)){%>
         <w:p>
             <w:pPr>
-                <w:numPr>
-                    <w:ilvl w:val="0"/>
-                    <w:numId w:val="3"/>
-                </w:numPr>
-                <w:ind w:left="420" w:leftChars="0" w:hanging="420" w:firstLineChars="0"/>
-                <w:rPr>
-                    <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                    <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                </w:rPr>
+                <w:pStyle w:val="3"/>
             </w:pPr>
             <w:r>
                 <w:rPr>
-                    <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
                     <w:b/>
                     <w:bCs/>
-                    <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
                 </w:rPr>
                 <w:t>Author:</w:t>
             </w:r>
             <w:r>
-                <w:rPr>
-                    <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                    <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                </w:rPr>
                 <w:t xml:space="preserve"> ${wordXmlEscape(doc.author)}</w:t>
             </w:r>
         </w:p>
@@ -221,60 +141,33 @@
 
         <w:p>
             <w:pPr>
-                <w:numPr>
-                    <w:ilvl w:val="0"/>
-                    <w:numId w:val="3"/>
-                </w:numPr>
-                <w:ind w:left="420" w:leftChars="0" w:hanging="420" w:firstLineChars="0"/>
-                <w:rPr>
-                    <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                    <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                </w:rPr>
+                <w:pStyle w:val="3"/>
             </w:pPr>
             <w:r>
                 <w:rPr>
-                    <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
                     <w:b/>
                     <w:bCs/>
-                    <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
                 </w:rPr>
                 <w:t>Content-Type:</w:t>
             </w:r>
             <w:r>
-                <w:rPr>
-                    <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                    <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                </w:rPr>
                 <w:t xml:space="preserve"> ${doc.contentType}</w:t>
             </w:r>
         </w:p>
 
+        <!--        描述-->
         <w:p>
             <w:pPr>
-                <w:numPr>
-                    <w:ilvl w:val="0"/>
-                    <w:numId w:val="3"/>
-                </w:numPr>
-                <w:ind w:left="420" w:leftChars="0" w:hanging="420" w:firstLineChars="0"/>
-                <w:rPr>
-                    <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                    <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                </w:rPr>
+                <w:pStyle w:val="3"/>
             </w:pPr>
             <w:r>
                 <w:rPr>
-                    <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
                     <w:b/>
                     <w:bCs/>
-                    <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
                 </w:rPr>
                 <w:t>Description:</w:t>
             </w:r>
             <w:r>
-                <w:rPr>
-                    <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                    <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                </w:rPr>
                 <w:t xml:space="preserve"> ${wordXmlEscape(doc.detail)}</w:t>
             </w:r>
         </w:p>
@@ -283,39 +176,21 @@
         <%if(isNotEmpty(doc.headers)){%>
         <w:p>
             <w:pPr>
-                <w:spacing w:line="360" w:lineRule="auto"/>
-                <w:rPr>
-                    <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                    <w:b/>
-                    <w:bCs/>
-                    <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                </w:rPr>
+                <w:pStyle w:val="3"/>
             </w:pPr>
             <w:r>
                 <w:rPr>
-                    <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
                     <w:b/>
                     <w:bCs/>
-                    <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
                 </w:rPr>
                 <w:t>Request-headers:</w:t>
             </w:r>
         </w:p>
         <w:tbl>
             <w:tblPr>
-                <w:tblStyle w:val="14"/>
-                <w:tblpPr w:leftFromText="180" w:rightFromText="180" w:vertAnchor="text" w:horzAnchor="page" w:tblpX="2023" w:tblpY="194"/>
-                <w:tblOverlap w:val="never"/>
+                <w:tblStyle w:val="29"/>
                 <w:tblW w:w="0" w:type="auto"/>
-                <w:tblInd w:w="0" w:type="dxa"/>
-                <w:tblBorders>
-                    <w:top w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                    <w:left w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                    <w:bottom w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                    <w:right w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                    <w:insideH w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                    <w:insideV w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                </w:tblBorders>
+                <w:tblInd w:w="95" w:type="dxa"/>
                 <w:tblLayout w:type="autofit"/>
                 <w:tblCellMar>
                     <w:top w:w="0" w:type="dxa"/>
@@ -325,50 +200,36 @@
                 </w:tblCellMar>
             </w:tblPr>
             <w:tblGrid>
-                <w:gridCol w:w="1631"/>
-                <w:gridCol w:w="1631"/>
-                <w:gridCol w:w="1631"/>
-                <w:gridCol w:w="1631"/>
-                <w:gridCol w:w="1631"/>
+                <w:gridCol w:w="1746"/>
+                <w:gridCol w:w="848"/>
+                <w:gridCol w:w="1212"/>
+                <w:gridCol w:w="1857"/>
+                <w:gridCol w:w="2989"/>
             </w:tblGrid>
             <w:tr>
-                <w:tblPrEx>
-                    <w:tblBorders>
-                        <w:top w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                        <w:left w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                        <w:bottom w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                        <w:right w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                        <w:insideH w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                        <w:insideV w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                    </w:tblBorders>
-                    <w:tblCellMar>
-                        <w:top w:w="0" w:type="dxa"/>
-                        <w:left w:w="108" w:type="dxa"/>
-                        <w:bottom w:w="0" w:type="dxa"/>
-                        <w:right w:w="108" w:type="dxa"/>
-                    </w:tblCellMar>
-                </w:tblPrEx>
+                <w:trPr>
+                    <w:tblHeader/>
+                </w:trPr>
                 <w:tc>
                     <w:tcPr>
-                        <w:tcW w:w="1631" w:type="dxa"/>
+                        <w:tcW w:w="1746" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
                     </w:tcPr>
                     <w:p>
                         <w:pPr>
-                            <w:rPr>
-                                <w:rFonts w:hint="default" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b/>
-                                <w:bCs/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
                         </w:pPr>
                         <w:r>
                             <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
                                 <w:b/>
                                 <w:bCs/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
                             </w:rPr>
                             <w:t>Header</w:t>
                         </w:r>
@@ -376,25 +237,24 @@
                 </w:tc>
                 <w:tc>
                     <w:tcPr>
-                        <w:tcW w:w="1631" w:type="dxa"/>
+                        <w:tcW w:w="848" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
                     </w:tcPr>
                     <w:p>
                         <w:pPr>
-                            <w:rPr>
-                                <w:rFonts w:hint="default" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b/>
-                                <w:bCs/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
                         </w:pPr>
                         <w:r>
                             <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
                                 <w:b/>
                                 <w:bCs/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
                             </w:rPr>
                             <w:t>Type</w:t>
                         </w:r>
@@ -402,51 +262,24 @@
                 </w:tc>
                 <w:tc>
                     <w:tcPr>
-                        <w:tcW w:w="1631" w:type="dxa"/>
+                        <w:tcW w:w="1210" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
                     </w:tcPr>
                     <w:p>
                         <w:pPr>
-                            <w:rPr>
-                                <w:rFonts w:hint="default" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b/>
-                                <w:bCs/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
                         </w:pPr>
                         <w:r>
                             <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
                                 <w:b/>
                                 <w:bCs/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
-                            <w:t>Description</w:t>
-                        </w:r>
-                    </w:p>
-                </w:tc>
-                <w:tc>
-                    <w:tcPr>
-                        <w:tcW w:w="1631" w:type="dxa"/>
-                    </w:tcPr>
-                    <w:p>
-                        <w:pPr>
-                            <w:rPr>
-                                <w:rFonts w:hint="default" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b/>
-                                <w:bCs/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
-                        </w:pPr>
-                        <w:r>
-                            <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b/>
-                                <w:bCs/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
                             </w:rPr>
                             <w:t>Required</w:t>
                         </w:r>
@@ -454,25 +287,49 @@
                 </w:tc>
                 <w:tc>
                     <w:tcPr>
-                        <w:tcW w:w="1631" w:type="dxa"/>
+                        <w:tcW w:w="1857" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
                     </w:tcPr>
                     <w:p>
                         <w:pPr>
-                            <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b/>
-                                <w:bCs/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
                         </w:pPr>
                         <w:r>
                             <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
                                 <w:b/>
                                 <w:bCs/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
+                            </w:rPr>
+                            <w:t>Description</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcW w:w="2989" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
+                        </w:pPr>
+                        <w:r>
+                            <w:rPr>
+                                <w:b/>
+                                <w:bCs/>
                             </w:rPr>
                             <w:t>Since</w:t>
                         </w:r>
@@ -483,148 +340,117 @@
             for(header in doc.requestHeaders){
             %>
             <w:tr>
-                <w:tblPrEx>
-                    <w:tblBorders>
-                        <w:top w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                        <w:left w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                        <w:bottom w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                        <w:right w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                        <w:insideH w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                        <w:insideV w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                    </w:tblBorders>
-                    <w:tblCellMar>
-                        <w:top w:w="0" w:type="dxa"/>
-                        <w:left w:w="108" w:type="dxa"/>
-                        <w:bottom w:w="0" w:type="dxa"/>
-                        <w:right w:w="108" w:type="dxa"/>
-                    </w:tblCellMar>
-                </w:tblPrEx>
                 <w:tc>
                     <w:tcPr>
-                        <w:tcW w:w="1631" w:type="dxa"/>
+                        <w:tcW w:w="1746" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <%if (headerLP.index % 2 == 0) {%>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                        <%}%>
                     </w:tcPr>
                     <w:p>
                         <w:pPr>
-                            <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b w:val="0"/>
-                                <w:bCs w:val="0"/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
                         </w:pPr>
                         <w:r>
-                            <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b w:val="0"/>
-                                <w:bCs w:val="0"/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
                             <w:t>${header.name}</w:t>
                         </w:r>
                     </w:p>
                 </w:tc>
                 <w:tc>
                     <w:tcPr>
-                        <w:tcW w:w="1631" w:type="dxa"/>
+                        <w:tcW w:w="848" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <%if (headerLP.index % 2 == 0) {%>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                        <%}%>
                     </w:tcPr>
                     <w:p>
                         <w:pPr>
-                            <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b w:val="0"/>
-                                <w:bCs w:val="0"/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
                         </w:pPr>
                         <w:r>
-                            <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b w:val="0"/>
-                                <w:bCs w:val="0"/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
                             <w:t>${header.type}</w:t>
                         </w:r>
                     </w:p>
                 </w:tc>
                 <w:tc>
                     <w:tcPr>
-                        <w:tcW w:w="1631" w:type="dxa"/>
+                        <w:tcW w:w="1210" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <%if (headerLP.index % 2 == 0) {%>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                        <%}%>
                     </w:tcPr>
                     <w:p>
                         <w:pPr>
-                            <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b w:val="0"/>
-                                <w:bCs w:val="0"/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
                         </w:pPr>
                         <w:r>
-                            <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b w:val="0"/>
-                                <w:bCs w:val="0"/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
                             <w:t>${wordXmlEscape(header.desc)}</w:t>
                         </w:r>
                     </w:p>
                 </w:tc>
                 <w:tc>
                     <w:tcPr>
-                        <w:tcW w:w="1631" w:type="dxa"/>
+                        <w:tcW w:w="1857" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <%if (headerLP.index % 2 == 0) {%>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                        <%}%>
                     </w:tcPr>
                     <w:p>
                         <w:pPr>
-                            <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b w:val="0"/>
-                                <w:bCs w:val="0"/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
                         </w:pPr>
                         <w:r>
-                            <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b w:val="0"/>
-                                <w:bCs w:val="0"/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
                             <w:t>${header.required}</w:t>
                         </w:r>
                     </w:p>
                 </w:tc>
                 <w:tc>
                     <w:tcPr>
-                        <w:tcW w:w="1631" w:type="dxa"/>
+                        <w:tcW w:w="2989" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <%if (headerLP.index % 2 == 0) {%>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                        <%}%>
                     </w:tcPr>
                     <w:p>
                         <w:pPr>
-                            <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b w:val="0"/>
-                                <w:bCs w:val="0"/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
                         </w:pPr>
                         <w:r>
-                            <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b w:val="0"/>
-                                <w:bCs w:val="0"/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
                             <w:t>${header.since}</w:t>
                         </w:r>
                     </w:p>
@@ -634,44 +460,25 @@
         </w:tbl>
         <%}%>
 
-
         <!--    path参数    -->
         <%if(isNotEmpty(doc.pathParams)){%>
         <w:p>
             <w:pPr>
-                <w:spacing w:line="360" w:lineRule="auto"/>
-                <w:rPr>
-                    <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                    <w:b/>
-                    <w:bCs/>
-                    <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                </w:rPr>
+                <w:pStyle w:val="3"/>
             </w:pPr>
             <w:r>
                 <w:rPr>
-                    <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
                     <w:b/>
                     <w:bCs/>
-                    <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
                 </w:rPr>
                 <w:t>Path-parameters:</w:t>
             </w:r>
         </w:p>
         <w:tbl>
             <w:tblPr>
-                <w:tblStyle w:val="14"/>
-                <w:tblpPr w:leftFromText="180" w:rightFromText="180" w:vertAnchor="text" w:horzAnchor="page" w:tblpX="2023" w:tblpY="194"/>
-                <w:tblOverlap w:val="never"/>
+                <w:tblStyle w:val="29"/>
                 <w:tblW w:w="0" w:type="auto"/>
-                <w:tblInd w:w="0" w:type="dxa"/>
-                <w:tblBorders>
-                    <w:top w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                    <w:left w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                    <w:bottom w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                    <w:right w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                    <w:insideH w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                    <w:insideV w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                </w:tblBorders>
+                <w:tblInd w:w="105" w:type="dxa"/>
                 <w:tblLayout w:type="autofit"/>
                 <w:tblCellMar>
                     <w:top w:w="0" w:type="dxa"/>
@@ -681,50 +488,36 @@
                 </w:tblCellMar>
             </w:tblPr>
             <w:tblGrid>
-                <w:gridCol w:w="1631"/>
-                <w:gridCol w:w="1631"/>
-                <w:gridCol w:w="1631"/>
-                <w:gridCol w:w="1631"/>
-                <w:gridCol w:w="1631"/>
+                <w:gridCol w:w="1458"/>
+                <w:gridCol w:w="848"/>
+                <w:gridCol w:w="1212"/>
+                <w:gridCol w:w="2546"/>
+                <w:gridCol w:w="2687"/>
             </w:tblGrid>
             <w:tr>
-                <w:tblPrEx>
-                    <w:tblBorders>
-                        <w:top w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                        <w:left w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                        <w:bottom w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                        <w:right w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                        <w:insideH w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                        <w:insideV w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                    </w:tblBorders>
-                    <w:tblCellMar>
-                        <w:top w:w="0" w:type="dxa"/>
-                        <w:left w:w="108" w:type="dxa"/>
-                        <w:bottom w:w="0" w:type="dxa"/>
-                        <w:right w:w="108" w:type="dxa"/>
-                    </w:tblCellMar>
-                </w:tblPrEx>
+                <w:trPr>
+                    <w:tblHeader/>
+                </w:trPr>
                 <w:tc>
                     <w:tcPr>
-                        <w:tcW w:w="1631" w:type="dxa"/>
+                        <w:tcW w:w="1353" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
                     </w:tcPr>
                     <w:p>
                         <w:pPr>
-                            <w:rPr>
-                                <w:rFonts w:hint="default" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b/>
-                                <w:bCs/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
                         </w:pPr>
                         <w:r>
                             <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
                                 <w:b/>
                                 <w:bCs/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
                             </w:rPr>
                             <w:t>Parameter</w:t>
                         </w:r>
@@ -732,25 +525,24 @@
                 </w:tc>
                 <w:tc>
                     <w:tcPr>
-                        <w:tcW w:w="1631" w:type="dxa"/>
+                        <w:tcW w:w="848" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
                     </w:tcPr>
                     <w:p>
                         <w:pPr>
-                            <w:rPr>
-                                <w:rFonts w:hint="default" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b/>
-                                <w:bCs/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
                         </w:pPr>
                         <w:r>
                             <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
                                 <w:b/>
                                 <w:bCs/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
                             </w:rPr>
                             <w:t>Type</w:t>
                         </w:r>
@@ -758,51 +550,24 @@
                 </w:tc>
                 <w:tc>
                     <w:tcPr>
-                        <w:tcW w:w="1631" w:type="dxa"/>
+                        <w:tcW w:w="1210" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
                     </w:tcPr>
                     <w:p>
                         <w:pPr>
-                            <w:rPr>
-                                <w:rFonts w:hint="default" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b/>
-                                <w:bCs/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
                         </w:pPr>
                         <w:r>
                             <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
                                 <w:b/>
                                 <w:bCs/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
-                            <w:t>Description</w:t>
-                        </w:r>
-                    </w:p>
-                </w:tc>
-                <w:tc>
-                    <w:tcPr>
-                        <w:tcW w:w="1631" w:type="dxa"/>
-                    </w:tcPr>
-                    <w:p>
-                        <w:pPr>
-                            <w:rPr>
-                                <w:rFonts w:hint="default" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b/>
-                                <w:bCs/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
-                        </w:pPr>
-                        <w:r>
-                            <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b/>
-                                <w:bCs/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
                             </w:rPr>
                             <w:t>Required</w:t>
                         </w:r>
@@ -810,25 +575,49 @@
                 </w:tc>
                 <w:tc>
                     <w:tcPr>
-                        <w:tcW w:w="1631" w:type="dxa"/>
+                        <w:tcW w:w="2548" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
                     </w:tcPr>
                     <w:p>
                         <w:pPr>
-                            <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b/>
-                                <w:bCs/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
                         </w:pPr>
                         <w:r>
                             <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
                                 <w:b/>
                                 <w:bCs/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
+                            </w:rPr>
+                            <w:t>Description</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcW w:w="2691" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
+                        </w:pPr>
+                        <w:r>
+                            <w:rPr>
+                                <w:b/>
+                                <w:bCs/>
                             </w:rPr>
                             <w:t>Since</w:t>
                         </w:r>
@@ -839,148 +628,117 @@
             for(param in doc.pathParams){
             %>
             <w:tr>
-                <w:tblPrEx>
-                    <w:tblBorders>
-                        <w:top w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                        <w:left w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                        <w:bottom w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                        <w:right w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                        <w:insideH w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                        <w:insideV w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                    </w:tblBorders>
-                    <w:tblCellMar>
-                        <w:top w:w="0" w:type="dxa"/>
-                        <w:left w:w="108" w:type="dxa"/>
-                        <w:bottom w:w="0" w:type="dxa"/>
-                        <w:right w:w="108" w:type="dxa"/>
-                    </w:tblCellMar>
-                </w:tblPrEx>
                 <w:tc>
                     <w:tcPr>
-                        <w:tcW w:w="1631" w:type="dxa"/>
+                        <w:tcW w:w="1353" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <%if (paramLP.index % 2 == 0) {%>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                        <%}%>
                     </w:tcPr>
                     <w:p>
                         <w:pPr>
-                            <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b w:val="0"/>
-                                <w:bCs w:val="0"/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
                         </w:pPr>
                         <w:r>
-                            <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b w:val="0"/>
-                                <w:bCs w:val="0"/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
                             <w:t>${wordXmlEscape(param.field)}</w:t>
                         </w:r>
                     </w:p>
                 </w:tc>
                 <w:tc>
                     <w:tcPr>
-                        <w:tcW w:w="1631" w:type="dxa"/>
+                        <w:tcW w:w="848" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <%if (paramLP.index % 2 == 0) {%>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                        <%}%>
                     </w:tcPr>
                     <w:p>
                         <w:pPr>
-                            <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b w:val="0"/>
-                                <w:bCs w:val="0"/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
                         </w:pPr>
                         <w:r>
-                            <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b w:val="0"/>
-                                <w:bCs w:val="0"/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
                             <w:t>${param.type}</w:t>
                         </w:r>
                     </w:p>
                 </w:tc>
                 <w:tc>
                     <w:tcPr>
-                        <w:tcW w:w="1631" w:type="dxa"/>
+                        <w:tcW w:w="1210" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <%if (paramLP.index % 2 == 0) {%>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                        <%}%>
                     </w:tcPr>
                     <w:p>
                         <w:pPr>
-                            <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b w:val="0"/>
-                                <w:bCs w:val="0"/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
                         </w:pPr>
                         <w:r>
-                            <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b w:val="0"/>
-                                <w:bCs w:val="0"/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
-                            <w:t>${wordXmlEscape(param.desc)}</w:t>
-                        </w:r>
-                    </w:p>
-                </w:tc>
-                <w:tc>
-                    <w:tcPr>
-                        <w:tcW w:w="1631" w:type="dxa"/>
-                    </w:tcPr>
-                    <w:p>
-                        <w:pPr>
-                            <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b w:val="0"/>
-                                <w:bCs w:val="0"/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
-                        </w:pPr>
-                        <w:r>
-                            <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b w:val="0"/>
-                                <w:bCs w:val="0"/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
                             <w:t>${param.required}</w:t>
                         </w:r>
                     </w:p>
                 </w:tc>
                 <w:tc>
                     <w:tcPr>
-                        <w:tcW w:w="1631" w:type="dxa"/>
+                        <w:tcW w:w="2548" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <%if (paramLP.index % 2 == 0) {%>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                        <%}%>
                     </w:tcPr>
                     <w:p>
                         <w:pPr>
-                            <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b w:val="0"/>
-                                <w:bCs w:val="0"/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
                         </w:pPr>
                         <w:r>
-                            <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b w:val="0"/>
-                                <w:bCs w:val="0"/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
+                            <w:t>${wordXmlEscape(param.desc)}</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcW w:w="2691" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <%if (paramLP.index % 2 == 0) {%>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                        <%}%>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
+                        </w:pPr>
+                        <w:r>
                             <w:t>${param.version}</w:t>
                         </w:r>
                     </w:p>
@@ -990,44 +748,25 @@
         </w:tbl>
         <%}%>
 
-
         <!--    query参数    -->
         <%if(isNotEmpty(doc.queryParams)){%>
         <w:p>
             <w:pPr>
-                <w:spacing w:line="360" w:lineRule="auto"/>
-                <w:rPr>
-                    <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                    <w:b/>
-                    <w:bCs/>
-                    <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                </w:rPr>
+                <w:pStyle w:val="3"/>
             </w:pPr>
             <w:r>
                 <w:rPr>
-                    <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
                     <w:b/>
                     <w:bCs/>
-                    <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
                 </w:rPr>
                 <w:t>Query-parameters:</w:t>
             </w:r>
         </w:p>
         <w:tbl>
             <w:tblPr>
-                <w:tblStyle w:val="14"/>
-                <w:tblpPr w:leftFromText="180" w:rightFromText="180" w:vertAnchor="text" w:horzAnchor="page" w:tblpX="2023" w:tblpY="194"/>
-                <w:tblOverlap w:val="never"/>
+                <w:tblStyle w:val="29"/>
                 <w:tblW w:w="0" w:type="auto"/>
-                <w:tblInd w:w="0" w:type="dxa"/>
-                <w:tblBorders>
-                    <w:top w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                    <w:left w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                    <w:bottom w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                    <w:right w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                    <w:insideH w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                    <w:insideV w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                </w:tblBorders>
+                <w:tblInd w:w="105" w:type="dxa"/>
                 <w:tblLayout w:type="autofit"/>
                 <w:tblCellMar>
                     <w:top w:w="0" w:type="dxa"/>
@@ -1037,50 +776,36 @@
                 </w:tblCellMar>
             </w:tblPr>
             <w:tblGrid>
-                <w:gridCol w:w="1631"/>
-                <w:gridCol w:w="1631"/>
-                <w:gridCol w:w="1631"/>
-                <w:gridCol w:w="1631"/>
-                <w:gridCol w:w="1631"/>
+                <w:gridCol w:w="1458"/>
+                <w:gridCol w:w="848"/>
+                <w:gridCol w:w="1212"/>
+                <w:gridCol w:w="2546"/>
+                <w:gridCol w:w="2687"/>
             </w:tblGrid>
             <w:tr>
-                <w:tblPrEx>
-                    <w:tblBorders>
-                        <w:top w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                        <w:left w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                        <w:bottom w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                        <w:right w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                        <w:insideH w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                        <w:insideV w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                    </w:tblBorders>
-                    <w:tblCellMar>
-                        <w:top w:w="0" w:type="dxa"/>
-                        <w:left w:w="108" w:type="dxa"/>
-                        <w:bottom w:w="0" w:type="dxa"/>
-                        <w:right w:w="108" w:type="dxa"/>
-                    </w:tblCellMar>
-                </w:tblPrEx>
+                <w:trPr>
+                    <w:tblHeader/>
+                </w:trPr>
                 <w:tc>
                     <w:tcPr>
-                        <w:tcW w:w="1631" w:type="dxa"/>
+                        <w:tcW w:w="1353" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
                     </w:tcPr>
                     <w:p>
                         <w:pPr>
-                            <w:rPr>
-                                <w:rFonts w:hint="default" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b/>
-                                <w:bCs/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
                         </w:pPr>
                         <w:r>
                             <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
                                 <w:b/>
                                 <w:bCs/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
                             </w:rPr>
                             <w:t>Parameter</w:t>
                         </w:r>
@@ -1088,25 +813,24 @@
                 </w:tc>
                 <w:tc>
                     <w:tcPr>
-                        <w:tcW w:w="1631" w:type="dxa"/>
+                        <w:tcW w:w="848" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
                     </w:tcPr>
                     <w:p>
                         <w:pPr>
-                            <w:rPr>
-                                <w:rFonts w:hint="default" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b/>
-                                <w:bCs/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
                         </w:pPr>
                         <w:r>
                             <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
                                 <w:b/>
                                 <w:bCs/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
                             </w:rPr>
                             <w:t>Type</w:t>
                         </w:r>
@@ -1114,51 +838,24 @@
                 </w:tc>
                 <w:tc>
                     <w:tcPr>
-                        <w:tcW w:w="1631" w:type="dxa"/>
+                        <w:tcW w:w="1210" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
                     </w:tcPr>
                     <w:p>
                         <w:pPr>
-                            <w:rPr>
-                                <w:rFonts w:hint="default" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b/>
-                                <w:bCs/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
                         </w:pPr>
                         <w:r>
                             <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
                                 <w:b/>
                                 <w:bCs/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
-                            <w:t>Description</w:t>
-                        </w:r>
-                    </w:p>
-                </w:tc>
-                <w:tc>
-                    <w:tcPr>
-                        <w:tcW w:w="1631" w:type="dxa"/>
-                    </w:tcPr>
-                    <w:p>
-                        <w:pPr>
-                            <w:rPr>
-                                <w:rFonts w:hint="default" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b/>
-                                <w:bCs/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
-                        </w:pPr>
-                        <w:r>
-                            <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b/>
-                                <w:bCs/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
                             </w:rPr>
                             <w:t>Required</w:t>
                         </w:r>
@@ -1166,25 +863,49 @@
                 </w:tc>
                 <w:tc>
                     <w:tcPr>
-                        <w:tcW w:w="1631" w:type="dxa"/>
+                        <w:tcW w:w="2548" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
                     </w:tcPr>
                     <w:p>
                         <w:pPr>
-                            <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b/>
-                                <w:bCs/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
                         </w:pPr>
                         <w:r>
                             <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
                                 <w:b/>
                                 <w:bCs/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
+                            </w:rPr>
+                            <w:t>Description</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcW w:w="2691" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
+                        </w:pPr>
+                        <w:r>
+                            <w:rPr>
+                                <w:b/>
+                                <w:bCs/>
                             </w:rPr>
                             <w:t>Since</w:t>
                         </w:r>
@@ -1195,148 +916,117 @@
             for(param in doc.queryParams){
             %>
             <w:tr>
-                <w:tblPrEx>
-                    <w:tblBorders>
-                        <w:top w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                        <w:left w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                        <w:bottom w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                        <w:right w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                        <w:insideH w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                        <w:insideV w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                    </w:tblBorders>
-                    <w:tblCellMar>
-                        <w:top w:w="0" w:type="dxa"/>
-                        <w:left w:w="108" w:type="dxa"/>
-                        <w:bottom w:w="0" w:type="dxa"/>
-                        <w:right w:w="108" w:type="dxa"/>
-                    </w:tblCellMar>
-                </w:tblPrEx>
                 <w:tc>
                     <w:tcPr>
-                        <w:tcW w:w="1631" w:type="dxa"/>
+                        <w:tcW w:w="1353" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <%if (paramLP.index % 2 == 0) {%>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                        <%}%>
                     </w:tcPr>
                     <w:p>
                         <w:pPr>
-                            <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b w:val="0"/>
-                                <w:bCs w:val="0"/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
                         </w:pPr>
                         <w:r>
-                            <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b w:val="0"/>
-                                <w:bCs w:val="0"/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
                             <w:t>${wordXmlEscape(param.field)}</w:t>
                         </w:r>
                     </w:p>
                 </w:tc>
                 <w:tc>
                     <w:tcPr>
-                        <w:tcW w:w="1631" w:type="dxa"/>
+                        <w:tcW w:w="848" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <%if (paramLP.index % 2 == 0) {%>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                        <%}%>
                     </w:tcPr>
                     <w:p>
                         <w:pPr>
-                            <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b w:val="0"/>
-                                <w:bCs w:val="0"/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
                         </w:pPr>
                         <w:r>
-                            <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b w:val="0"/>
-                                <w:bCs w:val="0"/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
                             <w:t>${param.type}</w:t>
                         </w:r>
                     </w:p>
                 </w:tc>
                 <w:tc>
                     <w:tcPr>
-                        <w:tcW w:w="1631" w:type="dxa"/>
+                        <w:tcW w:w="1210" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <%if (paramLP.index % 2 == 0) {%>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                        <%}%>
                     </w:tcPr>
                     <w:p>
                         <w:pPr>
-                            <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b w:val="0"/>
-                                <w:bCs w:val="0"/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
                         </w:pPr>
                         <w:r>
-                            <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b w:val="0"/>
-                                <w:bCs w:val="0"/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
-                            <w:t>${wordXmlEscape(param.desc)}</w:t>
-                        </w:r>
-                    </w:p>
-                </w:tc>
-                <w:tc>
-                    <w:tcPr>
-                        <w:tcW w:w="1631" w:type="dxa"/>
-                    </w:tcPr>
-                    <w:p>
-                        <w:pPr>
-                            <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b w:val="0"/>
-                                <w:bCs w:val="0"/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
-                        </w:pPr>
-                        <w:r>
-                            <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b w:val="0"/>
-                                <w:bCs w:val="0"/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
                             <w:t>${param.required}</w:t>
                         </w:r>
                     </w:p>
                 </w:tc>
                 <w:tc>
                     <w:tcPr>
-                        <w:tcW w:w="1631" w:type="dxa"/>
+                        <w:tcW w:w="2548" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <%if (paramLP.index % 2 == 0) {%>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                        <%}%>
                     </w:tcPr>
                     <w:p>
                         <w:pPr>
-                            <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b w:val="0"/>
-                                <w:bCs w:val="0"/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
                         </w:pPr>
                         <w:r>
-                            <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b w:val="0"/>
-                                <w:bCs w:val="0"/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
+                            <w:t>${wordXmlEscape(param.desc)}</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcW w:w="2691" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <%if (paramLP.index % 2 == 0) {%>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                        <%}%>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
+                        </w:pPr>
+                        <w:r>
                             <w:t>${param.version}</w:t>
                         </w:r>
                     </w:p>
@@ -1351,39 +1041,21 @@
         <%if(isNotEmpty(doc.requestParams)){%>
         <w:p>
             <w:pPr>
-                <w:spacing w:line="360" w:lineRule="auto"/>
-                <w:rPr>
-                    <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                    <w:b/>
-                    <w:bCs/>
-                    <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                </w:rPr>
+                <w:pStyle w:val="3"/>
             </w:pPr>
             <w:r>
                 <w:rPr>
-                    <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
                     <w:b/>
                     <w:bCs/>
-                    <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
                 </w:rPr>
-                <w:t>Query-parameters:</w:t>
+                <w:t>Body-parameters:</w:t>
             </w:r>
         </w:p>
         <w:tbl>
             <w:tblPr>
-                <w:tblStyle w:val="14"/>
-                <w:tblpPr w:leftFromText="180" w:rightFromText="180" w:vertAnchor="text" w:horzAnchor="page" w:tblpX="2023" w:tblpY="194"/>
-                <w:tblOverlap w:val="never"/>
+                <w:tblStyle w:val="29"/>
                 <w:tblW w:w="0" w:type="auto"/>
-                <w:tblInd w:w="0" w:type="dxa"/>
-                <w:tblBorders>
-                    <w:top w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                    <w:left w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                    <w:bottom w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                    <w:right w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                    <w:insideH w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                    <w:insideV w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                </w:tblBorders>
+                <w:tblInd w:w="105" w:type="dxa"/>
                 <w:tblLayout w:type="autofit"/>
                 <w:tblCellMar>
                     <w:top w:w="0" w:type="dxa"/>
@@ -1393,50 +1065,36 @@
                 </w:tblCellMar>
             </w:tblPr>
             <w:tblGrid>
-                <w:gridCol w:w="1631"/>
-                <w:gridCol w:w="1631"/>
-                <w:gridCol w:w="1631"/>
-                <w:gridCol w:w="1631"/>
-                <w:gridCol w:w="1631"/>
+                <w:gridCol w:w="1458"/>
+                <w:gridCol w:w="848"/>
+                <w:gridCol w:w="1212"/>
+                <w:gridCol w:w="2546"/>
+                <w:gridCol w:w="2687"/>
             </w:tblGrid>
             <w:tr>
-                <w:tblPrEx>
-                    <w:tblBorders>
-                        <w:top w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                        <w:left w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                        <w:bottom w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                        <w:right w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                        <w:insideH w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                        <w:insideV w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                    </w:tblBorders>
-                    <w:tblCellMar>
-                        <w:top w:w="0" w:type="dxa"/>
-                        <w:left w:w="108" w:type="dxa"/>
-                        <w:bottom w:w="0" w:type="dxa"/>
-                        <w:right w:w="108" w:type="dxa"/>
-                    </w:tblCellMar>
-                </w:tblPrEx>
+                <w:trPr>
+                    <w:tblHeader/>
+                </w:trPr>
                 <w:tc>
                     <w:tcPr>
-                        <w:tcW w:w="1631" w:type="dxa"/>
+                        <w:tcW w:w="1353" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
                     </w:tcPr>
                     <w:p>
                         <w:pPr>
-                            <w:rPr>
-                                <w:rFonts w:hint="default" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b/>
-                                <w:bCs/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
                         </w:pPr>
                         <w:r>
                             <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
                                 <w:b/>
                                 <w:bCs/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
                             </w:rPr>
                             <w:t>Parameter</w:t>
                         </w:r>
@@ -1444,25 +1102,24 @@
                 </w:tc>
                 <w:tc>
                     <w:tcPr>
-                        <w:tcW w:w="1631" w:type="dxa"/>
+                        <w:tcW w:w="848" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
                     </w:tcPr>
                     <w:p>
                         <w:pPr>
-                            <w:rPr>
-                                <w:rFonts w:hint="default" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b/>
-                                <w:bCs/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
                         </w:pPr>
                         <w:r>
                             <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
                                 <w:b/>
                                 <w:bCs/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
                             </w:rPr>
                             <w:t>Type</w:t>
                         </w:r>
@@ -1470,51 +1127,24 @@
                 </w:tc>
                 <w:tc>
                     <w:tcPr>
-                        <w:tcW w:w="1631" w:type="dxa"/>
+                        <w:tcW w:w="1210" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
                     </w:tcPr>
                     <w:p>
                         <w:pPr>
-                            <w:rPr>
-                                <w:rFonts w:hint="default" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b/>
-                                <w:bCs/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
                         </w:pPr>
                         <w:r>
                             <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
                                 <w:b/>
                                 <w:bCs/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
-                            <w:t>Description</w:t>
-                        </w:r>
-                    </w:p>
-                </w:tc>
-                <w:tc>
-                    <w:tcPr>
-                        <w:tcW w:w="1631" w:type="dxa"/>
-                    </w:tcPr>
-                    <w:p>
-                        <w:pPr>
-                            <w:rPr>
-                                <w:rFonts w:hint="default" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b/>
-                                <w:bCs/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
-                        </w:pPr>
-                        <w:r>
-                            <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b/>
-                                <w:bCs/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
                             </w:rPr>
                             <w:t>Required</w:t>
                         </w:r>
@@ -1522,25 +1152,49 @@
                 </w:tc>
                 <w:tc>
                     <w:tcPr>
-                        <w:tcW w:w="1631" w:type="dxa"/>
+                        <w:tcW w:w="2548" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
                     </w:tcPr>
                     <w:p>
                         <w:pPr>
-                            <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b/>
-                                <w:bCs/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
                         </w:pPr>
                         <w:r>
                             <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
                                 <w:b/>
                                 <w:bCs/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
+                            </w:rPr>
+                            <w:t>Description</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcW w:w="2691" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
+                        </w:pPr>
+                        <w:r>
+                            <w:rPr>
+                                <w:b/>
+                                <w:bCs/>
                             </w:rPr>
                             <w:t>Since</w:t>
                         </w:r>
@@ -1551,148 +1205,117 @@
             for(param in doc.requestParams){
             %>
             <w:tr>
-                <w:tblPrEx>
-                    <w:tblBorders>
-                        <w:top w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                        <w:left w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                        <w:bottom w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                        <w:right w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                        <w:insideH w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                        <w:insideV w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                    </w:tblBorders>
-                    <w:tblCellMar>
-                        <w:top w:w="0" w:type="dxa"/>
-                        <w:left w:w="108" w:type="dxa"/>
-                        <w:bottom w:w="0" w:type="dxa"/>
-                        <w:right w:w="108" w:type="dxa"/>
-                    </w:tblCellMar>
-                </w:tblPrEx>
                 <w:tc>
                     <w:tcPr>
-                        <w:tcW w:w="1631" w:type="dxa"/>
+                        <w:tcW w:w="1353" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <%if (paramLP.index % 2 == 0) {%>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                        <%}%>
                     </w:tcPr>
                     <w:p>
                         <w:pPr>
-                            <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b w:val="0"/>
-                                <w:bCs w:val="0"/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
                         </w:pPr>
                         <w:r>
-                            <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b w:val="0"/>
-                                <w:bCs w:val="0"/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
                             <w:t>${wordXmlEscape(param.field)}</w:t>
                         </w:r>
                     </w:p>
                 </w:tc>
                 <w:tc>
                     <w:tcPr>
-                        <w:tcW w:w="1631" w:type="dxa"/>
+                        <w:tcW w:w="848" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <%if (paramLP.index % 2 == 0) {%>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                        <%}%>
                     </w:tcPr>
                     <w:p>
                         <w:pPr>
-                            <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b w:val="0"/>
-                                <w:bCs w:val="0"/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
                         </w:pPr>
                         <w:r>
-                            <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b w:val="0"/>
-                                <w:bCs w:val="0"/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
                             <w:t>${param.type}</w:t>
                         </w:r>
                     </w:p>
                 </w:tc>
                 <w:tc>
                     <w:tcPr>
-                        <w:tcW w:w="1631" w:type="dxa"/>
+                        <w:tcW w:w="1210" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <%if (paramLP.index % 2 == 0) {%>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                        <%}%>
                     </w:tcPr>
                     <w:p>
                         <w:pPr>
-                            <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b w:val="0"/>
-                                <w:bCs w:val="0"/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
                         </w:pPr>
                         <w:r>
-                            <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b w:val="0"/>
-                                <w:bCs w:val="0"/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
-                            <w:t>${wordXmlEscape(param.desc)}</w:t>
-                        </w:r>
-                    </w:p>
-                </w:tc>
-                <w:tc>
-                    <w:tcPr>
-                        <w:tcW w:w="1631" w:type="dxa"/>
-                    </w:tcPr>
-                    <w:p>
-                        <w:pPr>
-                            <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b w:val="0"/>
-                                <w:bCs w:val="0"/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
-                        </w:pPr>
-                        <w:r>
-                            <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b w:val="0"/>
-                                <w:bCs w:val="0"/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
                             <w:t>${param.required}</w:t>
                         </w:r>
                     </w:p>
                 </w:tc>
                 <w:tc>
                     <w:tcPr>
-                        <w:tcW w:w="1631" w:type="dxa"/>
+                        <w:tcW w:w="2548" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <%if (paramLP.index % 2 == 0) {%>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                        <%}%>
                     </w:tcPr>
                     <w:p>
                         <w:pPr>
-                            <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b w:val="0"/>
-                                <w:bCs w:val="0"/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
                         </w:pPr>
                         <w:r>
-                            <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b w:val="0"/>
-                                <w:bCs w:val="0"/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
+                            <w:t>${wordXmlEscape(param.desc)}</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcW w:w="2691" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <%if (paramLP.index % 2 == 0) {%>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                        <%}%>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
+                        </w:pPr>
+                        <w:r>
                             <w:t>${param.version}</w:t>
                         </w:r>
                     </w:p>
@@ -1702,110 +1325,63 @@
         </w:tbl>
         <%}%>
 
+
         <!--    curl代码块    -->
         <%if(isNotEmpty(doc.requestUsage)&&isRequestExample){%>
         <w:p>
             <w:pPr>
-                <w:spacing w:line="360" w:lineRule="auto"/>
-                <w:rPr>
-                    <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                    <w:b/>
-                    <w:bCs/>
-                    <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                </w:rPr>
+                <w:pStyle w:val="3"/>
             </w:pPr>
             <w:r>
                 <w:rPr>
-                    <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
                     <w:b/>
                     <w:bCs/>
-                    <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
                 </w:rPr>
                 <w:t>Request-example:</w:t>
             </w:r>
         </w:p>
-        <%
-        for(l in strutil.split(doc.requestUsage, "\n")){
-        %>
         <w:p>
             <w:pPr>
-                <w:keepNext w:val="0"/>
-                <w:keepLines w:val="0"/>
-                <w:widowControl/>
-                <w:suppressLineNumbers w:val="0"/>
-                <w:shd w:val="clear" w:fill="1E1E1E"/>
-                <w:spacing w:line="285" w:lineRule="atLeast"/>
-                <w:jc w:val="left"/>
-                <w:rPr>
-                    <w:rFonts w:hint="default" w:ascii="Consolas" w:hAnsi="Consolas" w:eastAsia="Consolas"
-                              w:cs="Consolas"/>
-                    <w:b w:val="0"/>
-                    <w:bCs w:val="0"/>
-                    <w:color w:val="D4D4D4"/>
-                    <w:kern w:val="0"/>
-                    <w:sz w:val="21"/>
-                    <w:szCs w:val="21"/>
-                    <w:shd w:val="clear" w:fill="1E1E1E"/>
-                    <w:lang w:val="en-US" w:eastAsia="zh-CN" w:bidi="ar"/>
-                </w:rPr>
+                <w:pStyle w:val="37"/>
+                <w:shd w:val="clear" w:fill="F8F8F8"/>
             </w:pPr>
+            <%
+            for(l in strutil.split(doc.requestUsage, "\n")){
+            %>
             <w:r>
                 <w:rPr>
-                    <w:rFonts w:hint="default" w:ascii="Consolas" w:hAnsi="Consolas" w:eastAsia="Consolas"
-                              w:cs="Consolas"/>
-                    <w:b w:val="0"/>
-                    <w:bCs w:val="0"/>
-                    <w:color w:val="D4D4D4"/>
-                    <w:kern w:val="0"/>
-                    <w:sz w:val="21"/>
-                    <w:szCs w:val="21"/>
-                    <w:shd w:val="clear" w:fill="1E1E1E"/>
-                    <w:lang w:val="en-US" w:eastAsia="zh-CN" w:bidi="ar"/>
+                    <w:rStyle w:val="70"/>
                 </w:rPr>
                 <w:t>${wordXmlEscape(l)}</w:t>
             </w:r>
+            <% if (!lLP.last) {%>
+            <w:r>
+                <w:br w:type="textWrapping"/>
+            </w:r>
+            <%}%>
+            <%}%>
         </w:p>
         <%}%>
 
-        <%}%>
-
-        <!--    响应参数    -->
+        <!--    响应参数     -->
         <%if(isNotEmpty(doc.responseParams)){%>
         <w:p>
             <w:pPr>
-                <w:spacing w:line="360" w:lineRule="auto"/>
-                <w:rPr>
-                    <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                    <w:b/>
-                    <w:bCs/>
-                    <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                </w:rPr>
+                <w:pStyle w:val="23"/>
             </w:pPr>
             <w:r>
                 <w:rPr>
-                    <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
                     <w:b/>
                     <w:bCs/>
-                    <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
                 </w:rPr>
                 <w:t>Response-fields:</w:t>
             </w:r>
         </w:p>
         <w:tbl>
             <w:tblPr>
-                <w:tblStyle w:val="13"/>
-                <w:tblpPr w:leftFromText="180" w:rightFromText="180" w:vertAnchor="text" w:horzAnchor="page" w:tblpX="2057" w:tblpY="94"/>
-                <w:tblOverlap w:val="never"/>
+                <w:tblStyle w:val="29"/>
                 <w:tblW w:w="0" w:type="auto"/>
-                <w:tblInd w:w="0" w:type="dxa"/>
-                <w:tblBorders>
-                    <w:top w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                    <w:left w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                    <w:bottom w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                    <w:right w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                    <w:insideH w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                    <w:insideV w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                </w:tblBorders>
+                <w:tblInd w:w="105" w:type="dxa"/>
                 <w:tblLayout w:type="autofit"/>
                 <w:tblCellMar>
                     <w:top w:w="0" w:type="dxa"/>
@@ -1815,49 +1391,34 @@
                 </w:tblCellMar>
             </w:tblPr>
             <w:tblGrid>
-                <w:gridCol w:w="2040"/>
-                <w:gridCol w:w="2040"/>
-                <w:gridCol w:w="2040"/>
-                <w:gridCol w:w="2040"/>
+                <w:gridCol w:w="1163"/>
+                <w:gridCol w:w="785"/>
+                <w:gridCol w:w="1485"/>
+                <w:gridCol w:w="5310"/>
             </w:tblGrid>
             <w:tr>
-                <w:tblPrEx>
-                    <w:tblBorders>
-                        <w:top w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                        <w:left w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                        <w:bottom w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                        <w:right w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                        <w:insideH w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                        <w:insideV w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                    </w:tblBorders>
-                    <w:tblCellMar>
-                        <w:top w:w="0" w:type="dxa"/>
-                        <w:left w:w="108" w:type="dxa"/>
-                        <w:bottom w:w="0" w:type="dxa"/>
-                        <w:right w:w="108" w:type="dxa"/>
-                    </w:tblCellMar>
-                </w:tblPrEx>
+                <w:trPr>
+                    <w:tblHeader/>
+                </w:trPr>
                 <w:tc>
                     <w:tcPr>
-                        <w:tcW w:w="2040" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
                     </w:tcPr>
                     <w:p>
                         <w:pPr>
-                            <w:rPr>
-                                <w:rFonts w:hint="default" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b/>
-                                <w:bCs/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
                         </w:pPr>
                         <w:r>
                             <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
                                 <w:b/>
                                 <w:bCs/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
                             </w:rPr>
                             <w:t>Field</w:t>
                         </w:r>
@@ -1865,25 +1426,23 @@
                 </w:tc>
                 <w:tc>
                     <w:tcPr>
-                        <w:tcW w:w="2040" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
                     </w:tcPr>
                     <w:p>
                         <w:pPr>
-                            <w:rPr>
-                                <w:rFonts w:hint="default" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b/>
-                                <w:bCs/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
                         </w:pPr>
                         <w:r>
                             <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
                                 <w:b/>
                                 <w:bCs/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
                             </w:rPr>
                             <w:t>Type</w:t>
                         </w:r>
@@ -1891,25 +1450,23 @@
                 </w:tc>
                 <w:tc>
                     <w:tcPr>
-                        <w:tcW w:w="2040" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
                     </w:tcPr>
                     <w:p>
                         <w:pPr>
-                            <w:rPr>
-                                <w:rFonts w:hint="default" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b/>
-                                <w:bCs/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
                         </w:pPr>
                         <w:r>
                             <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
                                 <w:b/>
                                 <w:bCs/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
                             </w:rPr>
                             <w:t>Description</w:t>
                         </w:r>
@@ -1917,25 +1474,24 @@
                 </w:tc>
                 <w:tc>
                     <w:tcPr>
-                        <w:tcW w:w="2040" w:type="dxa"/>
+                        <w:tcW w:w="5310" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
                     </w:tcPr>
                     <w:p>
                         <w:pPr>
-                            <w:rPr>
-                                <w:rFonts w:hint="default" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b/>
-                                <w:bCs/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
                         </w:pPr>
                         <w:r>
                             <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
                                 <w:b/>
                                 <w:bCs/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
                             </w:rPr>
                             <w:t>Since</w:t>
                         </w:r>
@@ -1946,122 +1502,91 @@
             for(param in doc.responseParams){
             %>
             <w:tr>
-                <w:tblPrEx>
-                    <w:tblBorders>
-                        <w:top w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                        <w:left w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                        <w:bottom w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                        <w:right w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                        <w:insideH w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                        <w:insideV w:val="single" w:color="auto" w:sz="4" w:space="0"/>
-                    </w:tblBorders>
-                    <w:tblCellMar>
-                        <w:top w:w="0" w:type="dxa"/>
-                        <w:left w:w="108" w:type="dxa"/>
-                        <w:bottom w:w="0" w:type="dxa"/>
-                        <w:right w:w="108" w:type="dxa"/>
-                    </w:tblCellMar>
-                </w:tblPrEx>
                 <w:tc>
                     <w:tcPr>
-                        <w:tcW w:w="1631" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <%if (paramLP.index % 2 == 0) {%>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                        <%}%>
                     </w:tcPr>
                     <w:p>
                         <w:pPr>
-                            <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b w:val="0"/>
-                                <w:bCs w:val="0"/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
                         </w:pPr>
                         <w:r>
-                            <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b w:val="0"/>
-                                <w:bCs w:val="0"/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
                             <w:t>${wordXmlEscape(param.field)}</w:t>
                         </w:r>
                     </w:p>
                 </w:tc>
                 <w:tc>
                     <w:tcPr>
-                        <w:tcW w:w="1631" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <%if (paramLP.index % 2 == 0) {%>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                        <%}%>
                     </w:tcPr>
                     <w:p>
                         <w:pPr>
-                            <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b w:val="0"/>
-                                <w:bCs w:val="0"/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
                         </w:pPr>
                         <w:r>
-                            <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b w:val="0"/>
-                                <w:bCs w:val="0"/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
                             <w:t>${param.type}</w:t>
                         </w:r>
                     </w:p>
                 </w:tc>
                 <w:tc>
                     <w:tcPr>
-                        <w:tcW w:w="1631" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <%if (paramLP.index % 2 == 0) {%>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                        <%}%>
                     </w:tcPr>
                     <w:p>
                         <w:pPr>
-                            <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b w:val="0"/>
-                                <w:bCs w:val="0"/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
                         </w:pPr>
                         <w:r>
-                            <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b w:val="0"/>
-                                <w:bCs w:val="0"/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
                             <w:t>${wordXmlEscape(param.desc)}</w:t>
                         </w:r>
                     </w:p>
                 </w:tc>
                 <w:tc>
                     <w:tcPr>
-                        <w:tcW w:w="1631" w:type="dxa"/>
+                        <w:tcW w:w="5310" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <%if (paramLP.index % 2 == 0) {%>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                        <%}%>
                     </w:tcPr>
                     <w:p>
                         <w:pPr>
-                            <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b w:val="0"/>
-                                <w:bCs w:val="0"/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
                         </w:pPr>
                         <w:r>
-                            <w:rPr>
-                                <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                                <w:b w:val="0"/>
-                                <w:bCs w:val="0"/>
-                                <w:vertAlign w:val="baseline"/>
-                                <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                            </w:rPr>
                             <w:t>${param.version}</w:t>
                         </w:r>
                     </w:p>
@@ -2071,80 +1596,51 @@
         </w:tbl>
         <%}%>
 
+
         <!--   响应参数 curl代码块    -->
-        <%if(isNotEmpty(doc.responseUsage)&&isResponseExample){
-        %>
+        <%if(isNotEmpty(doc.responseUsage)&&isResponseExample){%>
         <w:p>
             <w:pPr>
-                <w:spacing w:line="360" w:lineRule="auto"/>
-                <w:rPr>
-                    <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
-                    <w:b/>
-                    <w:bCs/>
-                    <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
-                </w:rPr>
+                <w:pStyle w:val="23"/>
             </w:pPr>
             <w:r>
                 <w:rPr>
-                    <w:rFonts w:hint="eastAsia" w:ascii="仿宋" w:hAnsi="仿宋" w:eastAsia="仿宋" w:cs="仿宋"/>
                     <w:b/>
                     <w:bCs/>
-                    <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
                 </w:rPr>
                 <w:t>Response-example:</w:t>
             </w:r>
         </w:p>
-        <%
-        for(l in strutil.split(doc.responseUsage, "\n")){
-        %>
         <w:p>
             <w:pPr>
-                <w:keepNext w:val="0"/>
-                <w:keepLines w:val="0"/>
-                <w:widowControl/>
-                <w:suppressLineNumbers w:val="0"/>
-                <w:shd w:val="clear" w:fill="1E1E1E"/>
-                <w:spacing w:line="285" w:lineRule="atLeast"/>
-                <w:jc w:val="left"/>
-                <w:rPr>
-                    <w:rFonts w:hint="default" w:ascii="Consolas" w:hAnsi="Consolas" w:eastAsia="Consolas"
-                              w:cs="Consolas"/>
-                    <w:b w:val="0"/>
-                    <w:bCs w:val="0"/>
-                    <w:color w:val="D4D4D4"/>
-                    <w:kern w:val="0"/>
-                    <w:sz w:val="21"/>
-                    <w:szCs w:val="21"/>
-                    <w:shd w:val="clear" w:fill="1E1E1E"/>
-                    <w:lang w:val="en-US" w:eastAsia="zh-CN" w:bidi="ar"/>
-                </w:rPr>
+                <w:pStyle w:val="37"/>
+                <w:shd w:val="clear" w:fill="F8F8F8"/>
             </w:pPr>
+            <%
+            for(l in strutil.split(doc.responseUsage, "\n")){
+            %>
             <w:r>
                 <w:rPr>
-                    <w:rFonts w:hint="default" w:ascii="Consolas" w:hAnsi="Consolas" w:eastAsia="Consolas"
-                              w:cs="Consolas"/>
-                    <w:b w:val="0"/>
-                    <w:bCs w:val="0"/>
-                    <w:color w:val="D4D4D4"/>
-                    <w:kern w:val="0"/>
-                    <w:sz w:val="21"/>
-                    <w:szCs w:val="21"/>
-                    <w:shd w:val="clear" w:fill="1E1E1E"/>
-                    <w:lang w:val="en-US" w:eastAsia="zh-CN" w:bidi="ar"/>
+                    <w:rStyle w:val="70"/>
                 </w:rPr>
-                <w:t>${wordXmlEscape(l)}</w:t>
+                <w:t xml:space="preserve">${wordXmlEscape(l)}</w:t>
             </w:r>
+            <% if (!lLP.last) {%>
+            <w:r>
+                <w:br w:type="textWrapping"/>
+            </w:r>
+            <%}%>
+            <%}%>
         </w:p>
         <%}%>
-        <%}%>
 
         <%}%>
+
+
+
 
         <w:sectPr>
-            <w:pgSz w:w="11906" w:h="16838"/>
-            <w:pgMar w:top="1440" w:right="1800" w:bottom="1440" w:left="1800" w:header="851" w:footer="992" w:gutter="0"/>
-            <w:cols w:space="425" w:num="1"/>
-            <w:docGrid w:type="lines" w:linePitch="312" w:charSpace="0"/>
+            <w:cols w:space="720" w:num="1"/>
         </w:sectPr>
     </w:body>
 </w:document>
