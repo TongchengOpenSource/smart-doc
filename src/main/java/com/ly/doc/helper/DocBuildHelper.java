@@ -82,8 +82,9 @@ public class DocBuildHelper {
         DocBuildHelper helper = new DocBuildHelper();
         helper.projectBuilder = configBuilder.getJavaProjectBuilder();
         helper.codePath = codePath;
+        // when is git repo
         if (helper.gitHelper.isGitRepo()) {
-            helper.dependencyTree = DependencyTree.detect(baseDir);
+            helper.dependencyTree = DependencyTree.detect(baseDir, apiConfig.isIncrement());
         }
 
         return helper;
@@ -157,7 +158,7 @@ public class DocBuildHelper {
                 deletedClazz.contains(dependency.getClazz())
                         || deprecatedClazz.contains(dependency.getClazz())
                         || deprecatedClazz.stream().anyMatch(deprecate ->
-                            dependency.getDerivedClazz().contains(deprecate))
+                        dependency.getDerivedClazz().contains(deprecate))
         );
 
         // replace the old dependency tree with new dependency
@@ -185,12 +186,15 @@ public class DocBuildHelper {
 
     /**
      * Find and gather classes and their dependencies.
-     * <br/>
+     * <p>
      * When a class is modified within the git tree, and it is part of an endpoint argument or return value,
      * this method will also include the classes containing these endpoints classes.
-     * <br/>
+     * <p>
      * If all modified classes are not part of the API dependency tree (e.g., they are services or mappers),
      * this method will return an empty collection, as they do not impact the API documentation.
+     *
+     * @param isEntryPoint the entry point predicate
+     * @return the set of changed files
      */
     public Set<FileDiff> getChangedFilesFromVCS(Predicate<String> isEntryPoint) {
         String commitId = dependencyTree.getCommitId();

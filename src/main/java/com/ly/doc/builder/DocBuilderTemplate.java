@@ -95,6 +95,7 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
      * @param doc      api doc
      * @param config   api config
      * @param template template
+     * @return Template
      */
     public Template buildApiDocTemplate(ApiDoc doc, ApiConfig config, String template) {
         Template mapper = BeetlTemplateUtil.getByName(template);
@@ -130,6 +131,7 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
      * @param template           template
      * @param apiDoc             apiDoc
      * @param index              index html
+     * @return Template
      */
     public Template buildAllRenderDocTemplate(List<ApiDoc> apiDocList, ApiConfig config, JavaProjectBuilder javaProjectBuilder,
                                               String template, ApiDoc apiDoc, String index) {
@@ -305,6 +307,7 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
      * @param config             api config
      * @param template           template
      * @param javaProjectBuilder javaProjectBuilder
+     * @return template
      */
     public Template buildErrorCodeDocTemplate(ApiConfig config, String template, JavaProjectBuilder javaProjectBuilder) {
         List<ApiErrorCode> errorCodeList = DocUtil.errorCodeDictToList(config, javaProjectBuilder);
@@ -418,6 +421,7 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
      * @param config             api config
      * @param javaProjectBuilder JavaProjectBuilder
      * @param template           template
+     * @return Template
      */
     public Template buildDirectoryDataDocTemplate(ApiConfig config, JavaProjectBuilder javaProjectBuilder, String template) {
         List<ApiDocDict> directoryList = DocUtil.buildDictionary(config, javaProjectBuilder);

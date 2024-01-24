@@ -59,6 +59,7 @@ public class JavaClassUtil {
      * @param cls1        The JavaClass object
      * @param counter     Recursive counter
      * @param addedFields added fields,Field deduplication
+     * @param classLoader classLoader
      * @return list of JavaField
      */
     public static List<DocJavaField> getFields(JavaClass cls1, int counter, Map<String, DocJavaField> addedFields, ClassLoader classLoader) {
@@ -182,6 +183,10 @@ public class JavaClassUtil {
             }
         }
         if (!cls1.isInterface()) {
+            Map<String,String> recordComments = new HashMap<>(0);
+            if (cls1.isRecord()) {
+                recordComments = DocUtil.getRecordCommentsByTag(cls1,DocTags.PARAM);
+            }
             for (JavaField javaField : cls1.getFields()) {
                 String fieldName = javaField.getName();
                 String subTypeName = javaField.getType().getFullyQualifiedName();
@@ -228,6 +233,9 @@ public class JavaClassUtil {
                     docJavaField.setEnum(true);
                 }
                 String comment = javaField.getComment();
+                if (cls1.isRecord()) {
+                    comment = recordComments.get(fieldName);
+                }
                 if (Objects.isNull(comment)) {
                     comment = DocGlobalConstants.NO_COMMENTS_FOUND;
                 }

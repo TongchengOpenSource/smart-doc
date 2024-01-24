@@ -57,6 +57,7 @@ public class WordDocBuilder {
      * build controller api
      *
      * @param config config
+     * @throws Exception exception
      */
     public static void buildApiDoc(ApiConfig config) throws Exception {
         JavaProjectBuilder javaProjectBuilder = JavaProjectBuilderHelper.create();
@@ -67,6 +68,8 @@ public class WordDocBuilder {
      * build controller api
      *
      * @param config config
+     * @param javaProjectBuilder javaProjectBuilder
+     * @throws Exception exception
      */
     public static void buildApiDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder) throws Exception {
         DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
@@ -105,6 +108,7 @@ public class WordDocBuilder {
      *
      * @param content        doc content
      * @param docxOutputPath docx output path
+     * @throws Exception exception
      * @since 1.0.0
      */
     public static void copyAndReplaceDocx(String content, String docxOutputPath) throws Exception {
@@ -118,7 +122,7 @@ public class WordDocBuilder {
         while ((entry = zipInputStream.getNextEntry()) != null) {
             String entryName = entry.getName();
 
-            if (entryName.equals("word/document.xml")) {
+            if ("word/document.xml".equals(entryName)) {
                 zipOutputStream.putNextEntry(new ZipEntry(entryName));
                 byte[] bytes = content.getBytes(StandardCharsets.UTF_8);
                 zipOutputStream.write(bytes, 0, bytes.length);

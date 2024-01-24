@@ -241,7 +241,7 @@ public class DocUtil {
     /**
      * match the controller package
      *
-     * @param packageFilters package filter
+     * @param packageFilters  package filter
      * @param controllerClass controller class
      * @return boolean
      */
@@ -256,7 +256,7 @@ public class DocUtil {
         // if the 'packageFilters' is point to the method, add all candidate methods into this container
         int capacity = Math.max((int) (controllerClass.getMethods().size() / 0.75F) + 1, 16);
         Set<String> filterMethods = new HashSet<>(capacity);
-        
+
         String[] filters = packageFilters.split(",");
 
         for (String filter : filters) {
@@ -300,7 +300,7 @@ public class DocUtil {
             cacheFilterMethods(controllerName, filterMethods);
             return true;
         }
-        
+
         return false;
     }
 
@@ -324,7 +324,7 @@ public class DocUtil {
      * Put the specified method names into a cache.
      *
      * @param controller the controller canonical name
-     * @param methods the methods will be cached
+     * @param methods    the methods will be cached
      */
     private static void cacheFilterMethods(String controller, Set<String> methods) {
         filterMethodCache.put(controller, methods);
@@ -372,7 +372,7 @@ public class DocUtil {
             List<String> finalPaths = new ArrayList<>(pathList.size());
             for (String pathParam : pathList) {
                 if (pathParam.startsWith("http:") || pathParam.startsWith("https:")) {
-                    finalPaths.add(pathParam+"/");
+                    finalPaths.add(pathParam + "/");
                     continue;
                 }
                 if (pathParam.startsWith("${")) {
@@ -548,13 +548,32 @@ public class DocUtil {
      */
     public static Map<String, String> getCommentsByTag(final JavaMethod javaMethod, final String tagName, final String className) {
         List<DocletTag> paramTags = javaMethod.getTagsByName(tagName);
+        String tagValNullMsg = "ERROR: #" + javaMethod.getName()
+                + "() - bad @" + tagName + " javadoc from " + javaMethod.getDeclaringClass()
+                .getCanonicalName() + ", This is an invalid comment.";
+        String tagValErrorMsg = "ERROR: An invalid comment was written [@" + tagName + " |]," +
+                "Please @see " + javaMethod.getDeclaringClass().getCanonicalName() + "." + javaMethod.getName() + "()";
+        return getCommentsByTag(paramTags, tagName, className, tagValNullMsg, tagValErrorMsg);
+    }
+
+    public static Map<String, String> getRecordCommentsByTag(JavaClass javaClass, final String tagName) {
+        List<DocletTag> paramTags = javaClass.getTagsByName(tagName);
+        String className = javaClass.getCanonicalName();
+        String tagValNullMsg = "ERROR: "
+                + "Bad @" + tagName + " javadoc from " + className
+                + ", This is an invalid comment.";
+        String tagValErrorMsg = "ERROR: An invalid comment was written [@" + tagName + " |]," +
+                "Please @see " + className;
+        return getCommentsByTag(paramTags, tagName, className, tagValNullMsg, tagValErrorMsg);
+    }
+
+    private static Map<String, String> getCommentsByTag(List<DocletTag> paramTags, final String tagName, String className,
+                                                        String tagValNullMsg, String tagValErrorMsg) {
         Map<String, String> paramTagMap = new HashMap<>();
         for (DocletTag docletTag : paramTags) {
             String value = docletTag.getValue();
             if (StringUtil.isEmpty(value) && StringUtil.isNotEmpty(className)) {
-                throw new RuntimeException("ERROR: #" + javaMethod.getName()
-                        + "() - bad @" + tagName + " javadoc from " + javaMethod.getDeclaringClass()
-                        .getCanonicalName() + ", This is an invalid comment.");
+                throw new RuntimeException(tagValNullMsg);
             }
             if (DocTags.PARAM.equals(tagName)) {
                 String pName = value;
@@ -566,8 +585,7 @@ public class DocUtil {
                     pValue = value.substring(idx + 1);
                 }
                 if ("|".equals(StringUtil.trim(pValue)) && StringUtil.isNotEmpty(className)) {
-                    throw new RuntimeException("ERROR: An invalid comment was written [@" + tagName + " |]," +
-                            "Please @see " + javaMethod.getDeclaringClass().getCanonicalName() + "." + javaMethod.getName() + "()");
+                    throw new RuntimeException(tagValErrorMsg);
                 }
                 paramTagMap.put(pName, pValue);
             } else {
@@ -1179,7 +1197,7 @@ public class DocUtil {
      * split url by '/'
      * example: ${server.error.path:${error.path:/error}}/test/{name:[a-zA-Z0-9]{3}}/{bb}/add
      *
-     * @param url
+     * @param url url
      * @return List of path
      */
     public static List<String> splitPathBySlash(String url) {
