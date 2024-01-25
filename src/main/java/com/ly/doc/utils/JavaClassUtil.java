@@ -59,7 +59,7 @@ public class JavaClassUtil {
      * @param cls1        The JavaClass object
      * @param counter     Recursive counter
      * @param addedFields added fields,Field deduplication
-     * @param classLoader ClassLoader
+     * @param classLoader classLoader
      * @return list of JavaField
      */
     public static List<DocJavaField> getFields(JavaClass cls1, int counter, Map<String, DocJavaField> addedFields, ClassLoader classLoader) {

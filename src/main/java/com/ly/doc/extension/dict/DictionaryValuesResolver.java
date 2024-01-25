@@ -35,6 +35,7 @@ public interface DictionaryValuesResolver {
      * default behaviour is the same as {@link #resolve()}
      *
      * @param clazz dictionary class
+     * @param <T>   the type parameter
      * @return the dictionary
      */
     default <T extends EnumDictionary> Collection<T> resolve(Class<?> clazz) {
@@ -45,7 +46,8 @@ public interface DictionaryValuesResolver {
      * resolve the dictionary, for compatibility, do not return null
      *
      * @see #resolve(Class)
-     * @return Collection of EnumDictionary
+     * @param <T> the type parameter
+     * @return the dictionary
      */
     default <T extends EnumDictionary> Collection<T> resolve() {
         return Collections.emptyList();

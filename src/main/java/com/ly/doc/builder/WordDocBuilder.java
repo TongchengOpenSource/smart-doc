@@ -57,6 +57,7 @@ public class WordDocBuilder {
      * build controller api
      *
      * @param config config
+     * @throws Exception exception
      */
     public static void buildApiDoc(ApiConfig config) throws Exception {
         JavaProjectBuilder javaProjectBuilder = JavaProjectBuilderHelper.create();
@@ -67,6 +68,8 @@ public class WordDocBuilder {
      * build controller api
      *
      * @param config config
+     * @param javaProjectBuilder javaProjectBuilder
+     * @throws Exception exception
      */
     public static void buildApiDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder) throws Exception {
         DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
@@ -105,6 +108,7 @@ public class WordDocBuilder {
      *
      * @param content        doc content
      * @param docxOutputPath docx output path
+     * @throws Exception exception
      * @since 1.0.0
      */
     public static void copyAndReplaceDocx(String content, String docxOutputPath) throws Exception {
@@ -117,14 +121,13 @@ public class WordDocBuilder {
         ZipEntry entry;
         while ((entry = zipInputStream.getNextEntry()) != null) {
             String entryName = entry.getName();
-
-            if (entryName.equals("word/document.xml")) {
-                zipOutputStream.putNextEntry(new ZipEntry(entryName));
+            // copy   fix the bug:  invalid entry compressed size
+            zipOutputStream.putNextEntry(new ZipEntry(entryName));
+            if ("word/document.xml".equals(entryName)) {
                 byte[] bytes = content.getBytes(StandardCharsets.UTF_8);
                 zipOutputStream.write(bytes, 0, bytes.length);
             } else {
                 // copy
-                zipOutputStream.putNextEntry(entry);
                 byte[] buffer = new byte[1024];
                 int len;
                 while ((len = zipInputStream.read(buffer)) > 0) {
