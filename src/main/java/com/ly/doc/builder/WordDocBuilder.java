@@ -121,14 +121,13 @@ public class WordDocBuilder {
         ZipEntry entry;
         while ((entry = zipInputStream.getNextEntry()) != null) {
             String entryName = entry.getName();
-
+            // copy   fix the bug:  invalid entry compressed size
+            zipOutputStream.putNextEntry(new ZipEntry(entryName));
             if ("word/document.xml".equals(entryName)) {
-                zipOutputStream.putNextEntry(new ZipEntry(entryName));
                 byte[] bytes = content.getBytes(StandardCharsets.UTF_8);
                 zipOutputStream.write(bytes, 0, bytes.length);
             } else {
                 // copy
-                zipOutputStream.putNextEntry(entry);
                 byte[] buffer = new byte[1024];
                 int len;
                 while ((len = zipInputStream.read(buffer)) > 0) {
