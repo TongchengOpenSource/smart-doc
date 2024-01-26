@@ -810,8 +810,11 @@ public class DocUtil {
         if (StringUtil.isEmpty(comment)) {
             return "";
         }
-        return comment.replaceAll("<", "&lt;")
-                .replaceAll(">", "&gt;");
+        return comment.replaceAll("&", "&amp;")
+                .replaceAll("<", "&lt;")
+                .replaceAll(">", "&gt;")
+                .replaceAll("\"", "&quot;")
+                .replaceAll("'", "&apos;");
     }
 
     /**
