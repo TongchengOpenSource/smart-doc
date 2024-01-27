@@ -45,6 +45,16 @@ public interface DocAnnotationConstants {
     String SHORT_JSON_PROPERTY = "JsonProperty";
 
     /**
+     * com.fasterxml.jackson.databind.annotation.JsonSerialize
+     */
+    String SHORT_JSON_SERIALIZE = "JsonSerialize";
+
+    /**
+     * the value of `@JsonSerialize(using = ToStringSerializer.class)`
+     */
+    String TO_STRING_SERIALIZER_USING = "ToStringSerializer.class";
+
+    /**
      * issue #484 gson alias annotation
      */
     String GSON_ALIAS_NAME = "SerializedName";

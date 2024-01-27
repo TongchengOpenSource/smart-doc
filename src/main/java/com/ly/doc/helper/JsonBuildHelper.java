@@ -20,33 +20,18 @@
  */
 package com.ly.doc.helper;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-
+import com.ly.doc.builder.ProjectDocConfigBuilder;
 import com.ly.doc.constants.DocAnnotationConstants;
 import com.ly.doc.constants.DocGlobalConstants;
+import com.ly.doc.constants.DocTags;
+import com.ly.doc.constants.ValidatorAnnotations;
+import com.ly.doc.model.*;
 import com.ly.doc.utils.*;
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.StringUtil;
-import com.ly.doc.builder.ProjectDocConfigBuilder;
-import com.ly.doc.constants.DocTags;
-import com.ly.doc.constants.ValidatorAnnotations;
-import com.ly.doc.model.ApiConfig;
-import com.ly.doc.model.ApiReturn;
-import com.ly.doc.model.CustomField;
-import com.ly.doc.model.DocJavaField;
-import com.ly.doc.model.DocJavaMethod;
-import com.thoughtworks.qdox.model.DocletTag;
-import com.thoughtworks.qdox.model.JavaAnnotation;
-import com.thoughtworks.qdox.model.JavaClass;
-import com.thoughtworks.qdox.model.JavaField;
-import com.thoughtworks.qdox.model.JavaMethod;
-import com.thoughtworks.qdox.model.JavaType;
+import com.thoughtworks.qdox.model.*;
+
+import java.util.*;
 
 import static com.ly.doc.constants.DocTags.IGNORE_RESPONSE_BODY_ADVICE;
 
@@ -281,7 +266,7 @@ public class JsonBuildHelper extends BaseHelper {
                         }
                     }
                 }
-                String typeSimpleName = field.getType().getSimpleName();
+                String typeSimpleName = docField.getTypeSimpleName();
                 String fieldGicName = docField.getGenericCanonicalName();
                 CustomField.Key key = CustomField.Key.create(docField.getDeclaringClassName(), fieldName);
 

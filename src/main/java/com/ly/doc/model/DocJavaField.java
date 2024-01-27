@@ -93,6 +93,9 @@ public class DocJavaField {
     private String declaringClassName;
 
 
+    private String typeSimpleName;
+
+
     public static DocJavaField builder() {
         return new DocJavaField();
     }
@@ -238,6 +241,15 @@ public class DocJavaField {
 
     public DocJavaField setGenericFullyQualifiedName(String genericFullyQualifiedName) {
         this.genericFullyQualifiedName = genericFullyQualifiedName;
+        return this;
+    }
+
+    public String getTypeSimpleName() {
+        return typeSimpleName;
+    }
+
+    public DocJavaField setTypeSimpleName(String typeSimpleName) {
+        this.typeSimpleName = typeSimpleName;
         return this;
     }
 }
