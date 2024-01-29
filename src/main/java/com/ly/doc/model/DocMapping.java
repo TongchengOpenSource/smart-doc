@@ -31,11 +31,11 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class DocMapping {
 
-    public static final Map<String, TagDoc> TAG_DOC = new ConcurrentHashMap<>(64);
+    public static  Map<String, TagDoc> TAG_DOC = new ConcurrentHashMap<>(64);
 
-    public static final Set<ApiDoc> CLAZZ_DOCS = Collections.synchronizedSet(new LinkedHashSet<>(64));
+    public static Set<ApiDoc> CLAZZ_DOCS = Collections.synchronizedSet(new LinkedHashSet<>(64));
 
-    public static final Set<ApiMethodDoc> METHOD_DOCS = Collections.synchronizedSet(new LinkedHashSet<>(1024));
+    public static  Set<ApiMethodDoc> METHOD_DOCS = Collections.synchronizedSet(new LinkedHashSet<>(1024));
 
     public static void tagDocPut(String tag, ApiDoc apiDoc, ApiMethodDoc methodDoc) {
         if (StringUtils.isBlank(tag)) {
@@ -54,4 +54,11 @@ public class DocMapping {
             METHOD_DOCS.add(methodDoc);
         }
     }
+
+    public static void init() {
+        TAG_DOC = new ConcurrentHashMap<>(64);
+        CLAZZ_DOCS = Collections.synchronizedSet(new LinkedHashSet<>(64));
+        METHOD_DOCS = Collections.synchronizedSet(new LinkedHashSet<>(1024));
+    }
+
 }
