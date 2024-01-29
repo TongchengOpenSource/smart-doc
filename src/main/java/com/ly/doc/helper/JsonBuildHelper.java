@@ -233,7 +233,7 @@ public class JsonBuildHelper extends BaseHelper {
                 if (ignoreFields.containsKey(fieldName)) {
                     continue;
                 }
-                String subTypeName = docField.getFullyQualifiedName();
+                String subTypeName = docField.getTypeFullyQualifiedName();
                 if ((responseFieldToUnderline && isResp) || (requestFieldToUnderline && !isResp)) {
                     fieldName = StringUtil.camelToUnderline(fieldName);
                 }
@@ -267,7 +267,7 @@ public class JsonBuildHelper extends BaseHelper {
                     }
                 }
                 String typeSimpleName = docField.getTypeSimpleName();
-                String fieldGicName = docField.getGenericCanonicalName();
+                String fieldGicName = docField.getTypeGenericCanonicalName();
                 CustomField.Key key = CustomField.Key.create(docField.getDeclaringClassName(), fieldName);
 
                 CustomField customResponseField = CustomField.nameEquals(key, builder.getCustomRespFieldMap());
