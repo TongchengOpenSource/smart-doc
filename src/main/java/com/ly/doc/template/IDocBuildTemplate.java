@@ -44,6 +44,8 @@ import java.util.stream.Collectors;
 public interface IDocBuildTemplate<T extends IDoc> {
 
     default List<T> getApiData(ProjectDocConfigBuilder projectBuilder) {
+        //For DocMapping initialization, when building multiple modules together, it is necessary to initialize and clear the cache
+        DocMapping.init();
         DocBuildHelper docBuildHelper = DocBuildHelper.create(projectBuilder);
 
         preRender(docBuildHelper);
