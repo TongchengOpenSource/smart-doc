@@ -67,7 +67,7 @@ public class JavaClassUtil {
         List<DocJavaField> fields = getFields(cls1, counter, addedFields, actualJavaTypes, classLoader);
 
         for (DocJavaField field : fields) {
-            String genericCanonicalName = field.getGenericCanonicalName();
+            String genericCanonicalName = field.getTypeGenericCanonicalName();
             if (Objects.isNull(genericCanonicalName)) {
                 continue;
             }
@@ -75,8 +75,8 @@ public class JavaClassUtil {
             if (Objects.isNull(actualJavaType)) {
                 continue;
             }
-            field.setGenericCanonicalName(genericCanonicalName.replace(genericCanonicalName, actualJavaType.getGenericCanonicalName()));
-            field.setFullyQualifiedName(field.getFullyQualifiedName().replace(genericCanonicalName, actualJavaType.getFullyQualifiedName()));
+            field.setTypeGenericCanonicalName(genericCanonicalName.replace(genericCanonicalName, actualJavaType.getGenericCanonicalName()));
+            field.setTypeFullyQualifiedName(field.getTypeFullyQualifiedName().replace(genericCanonicalName, actualJavaType.getFullyQualifiedName()));
             field.setActualJavaType(actualJavaType.getFullyQualifiedName());
         }
         return fields;
@@ -134,10 +134,10 @@ public class JavaClassUtil {
                         .setComment(comment)
                         .setDocletTags(javaMethod.getTags())
                         .setAnnotations(javaMethod.getAnnotations())
-                        .setFullyQualifiedName(javaField.getType().getFullyQualifiedName())
-                        .setGenericCanonicalName(getReturnGenericType(javaMethod, classLoader))
-                        .setGenericFullyQualifiedName(javaField.getType().getGenericFullyQualifiedName());
-
+                        .setTypeFullyQualifiedName(javaField.getType().getFullyQualifiedName())
+                        .setTypeGenericCanonicalName(getReturnGenericType(javaMethod, classLoader))
+                        .setTypeGenericFullyQualifiedName(javaField.getType().getGenericFullyQualifiedName())
+                        .setTypeSimpleName(javaField.getType().getSimpleName());
                 addedFields.put(methodName, docJavaField);
             }
         }
@@ -253,9 +253,9 @@ public class JavaClassUtil {
                                 && DocAnnotationConstants.TO_STRING_SERIALIZER_USING.equals(annotation.getNamedParameter("using")));
                 docJavaField.setComment(comment)
                         .setJavaField(javaField)
-                        .setFullyQualifiedName(isToString ? DocGlobalConstants.JAVA_STRING_FULLY: subTypeName)
-                        .setGenericCanonicalName(isToString ? DocGlobalConstants.JAVA_STRING_FULLY : gicName)
-                        .setGenericFullyQualifiedName(isToString ? DocGlobalConstants.JAVA_STRING_FULLY: fieldType.getGenericFullyQualifiedName())
+                        .setTypeFullyQualifiedName(isToString ? DocGlobalConstants.JAVA_STRING_FULLY: subTypeName)
+                        .setTypeGenericCanonicalName(isToString ? DocGlobalConstants.JAVA_STRING_FULLY : gicName)
+                        .setTypeGenericFullyQualifiedName(isToString ? DocGlobalConstants.JAVA_STRING_FULLY: fieldType.getGenericFullyQualifiedName())
                         .setActualJavaType(actualType)
                         .setAnnotations(javaField.getAnnotations())
                         .setFieldName(fieldName)
