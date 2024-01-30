@@ -40,7 +40,7 @@ public class DocJavaField {
     /**
      * comment
      */
-    private String Comment;
+    private String comment;
 
     /**
      * tags
@@ -55,17 +55,17 @@ public class DocJavaField {
     /**
      * field fullyQualifiedName
      */
-    private String fullyQualifiedName;
+    private String typeFullyQualifiedName;
 
     /**
      * field genericCanonicalName
      */
-    private String genericCanonicalName;
+    private String typeGenericCanonicalName;
 
     /**
      * genericFullyQualifiedName
      */
-    private String genericFullyQualifiedName;
+    private String typeGenericFullyQualifiedName;
 
     /**
      * field generic actualJavaType;
@@ -93,6 +93,9 @@ public class DocJavaField {
     private String declaringClassName;
 
 
+    private String typeSimpleName;
+
+
     public static DocJavaField builder() {
         return new DocJavaField();
     }
@@ -107,29 +110,29 @@ public class DocJavaField {
     }
 
     public String getComment() {
-        return Comment;
+        return comment;
     }
 
     public DocJavaField setComment(String comment) {
-        Comment = comment;
+        this.comment = comment;
         return this;
     }
 
-    public String getFullyQualifiedName() {
-        return fullyQualifiedName;
+    public String getTypeFullyQualifiedName() {
+        return typeFullyQualifiedName;
     }
 
-    public DocJavaField setFullyQualifiedName(String fullyQualifiedName) {
-        this.fullyQualifiedName = fullyQualifiedName;
+    public DocJavaField setTypeFullyQualifiedName(String typeFullyQualifiedName) {
+        this.typeFullyQualifiedName = typeFullyQualifiedName;
         return this;
     }
 
-    public String getGenericCanonicalName() {
-        return genericCanonicalName;
+    public String getTypeGenericCanonicalName() {
+        return typeGenericCanonicalName;
     }
 
-    public DocJavaField setGenericCanonicalName(String genericCanonicalName) {
-        this.genericCanonicalName = genericCanonicalName;
+    public DocJavaField setTypeGenericCanonicalName(String typeGenericCanonicalName) {
+        this.typeGenericCanonicalName = typeGenericCanonicalName;
         return this;
     }
 
@@ -232,12 +235,21 @@ public class DocJavaField {
         return this;
     }
 
-    public String getGenericFullyQualifiedName() {
-        return genericFullyQualifiedName;
+    public String getTypeGenericFullyQualifiedName() {
+        return typeGenericFullyQualifiedName;
     }
 
-    public DocJavaField setGenericFullyQualifiedName(String genericFullyQualifiedName) {
-        this.genericFullyQualifiedName = genericFullyQualifiedName;
+    public DocJavaField setTypeGenericFullyQualifiedName(String typeGenericFullyQualifiedName) {
+        this.typeGenericFullyQualifiedName = typeGenericFullyQualifiedName;
+        return this;
+    }
+
+    public String getTypeSimpleName() {
+        return typeSimpleName;
+    }
+
+    public DocJavaField setTypeSimpleName(String typeSimpleName) {
+        this.typeSimpleName = typeSimpleName;
         return this;
     }
 }

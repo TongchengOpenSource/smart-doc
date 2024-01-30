@@ -41,7 +41,6 @@ import com.ly.doc.utils.JavaClassUtil;
 import com.ly.doc.utils.JavaClassValidateUtil;
 import com.power.common.model.EnumDictionary;
 import com.power.common.util.CollectionUtil;
-import com.power.common.util.StringEscapeUtil;
 import com.power.common.util.StringUtil;
 import com.ly.doc.builder.ProjectDocConfigBuilder;
 import com.ly.doc.constants.DocTags;
@@ -176,12 +175,12 @@ public class ParamsBuildHelper extends BaseHelper {
                     continue;
                 }
 
-                String subTypeName = docField.getFullyQualifiedName();
+                String subTypeName = docField.getTypeFullyQualifiedName();
                 if ((responseFieldToUnderline && isResp) || (requestFieldToUnderline && !isResp)) {
                     fieldName = StringUtil.camelToUnderline(fieldName);
                 }
                 String typeSimpleName = field.getType().getSimpleName();
-                String fieldGicName = docField.getGenericCanonicalName();
+                String fieldGicName = docField.getTypeGenericCanonicalName();
                 List<JavaAnnotation> javaAnnotations = docField.getAnnotations();
 
                 Map<String, String> tagsMap = DocUtil.getFieldTagsValue(field, docField);
@@ -375,7 +374,7 @@ public class ParamsBuildHelper extends BaseHelper {
                     } else if (JavaClassValidateUtil.isCollection(subTypeName) || JavaClassValidateUtil.isArray(subTypeName)) {
                         if (isShowJavaType) {
                             // rpc
-                            param.setType(JavaFieldUtil.convertToSimpleTypeName(docField.getGenericFullyQualifiedName()));
+                            param.setType(JavaFieldUtil.convertToSimpleTypeName(docField.getTypeGenericFullyQualifiedName()));
                         } else {
                             param.setType("array");
                         }
