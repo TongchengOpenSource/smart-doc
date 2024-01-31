@@ -116,6 +116,10 @@ public class GitHelper {
 
         try {
             ObjectId objectId = repository.resolve("HEAD");
+            // if not exist (the repository is init), return empty string
+            if (null == objectId) {
+                return "";
+            }
             return objectId.getName();
         } catch (IOException e) {
             throw new RuntimeException(e);
