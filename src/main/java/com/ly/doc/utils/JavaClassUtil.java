@@ -817,7 +817,7 @@ public class JavaClassUtil {
             f.setAccessible(true);
             Type t = f.getGenericType();
             return StringUtil.trim(t.getTypeName());
-        } catch (NoSuchFieldException | ClassNotFoundException e) {
+        } catch (NoSuchFieldException | ClassNotFoundException | NoClassDefFoundError e) {
             return null;
         }
     }
