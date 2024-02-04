@@ -1,5 +1,24 @@
 ## smart-doc版本
 
+### 版本号：3.0.2
+- 更新日期: 2024-2-xx
+- 更新内容：
+  1. 优化推送rpc文档到torna时smart-doc设置的框架名错误，[#690](https://github.com/smart-doc-group/smart-doc/issues/690)
+  2. 修复html文档搜索后链接错误的bug，[#693](https://github.com/smart-doc-group/smart-doc/pull/693)
+  3. 支持分批上传文档到torna[#697](https://github.com/TongchengOpenSource/smart-doc/issues/697)
+  4. 修复mock中值双引号被删除的问题[#680](https://github.com/TongchengOpenSource/smart-doc/issues/680)
+  5. 支持提取java record的注释[#703](https://github.com/TongchengOpenSource/smart-doc/pull/703)
+  6. 修复报错信息错误[#706](https://github.com/TongchengOpenSource/smart-doc/pull/706)
+  7. 优化第三方库枚举缺失导致生成文档被中断的问题[#707](https://github.com/TongchengOpenSource/smart-doc/pull/707)
+  8. 重构优化word模版，生成的文档更漂亮 [#710](https://github.com/TongchengOpenSource/smart-doc/pull/710)
+  9. 修复创建word文档错误的问题[#711](https://github.com/TongchengOpenSource/smart-doc/pull/711)
+  10. 修复html特殊元素导致生成的jmeter无法打开的bug [#713](https://github.com/TongchengOpenSource/smart-doc/pull/713)
+  11. 支持@JsonSerialize(using = ToStringSerializer.class)字段类型的处理。 [#715](https://github.com/TongchengOpenSource/smart-doc/pull/715)
+  12. 修复openApi生成的tags与paths未对packageFilters进行过滤。 [#716](https://github.com/TongchengOpenSource/smart-doc/pull/716)
+  13. 修复项目采用git初始化未提交时生成文档报错bug。 [#719](https://github.com/TongchengOpenSource/smart-doc/issue/719)
+  14. 忽略NoClassDefFoundError错误，避免第三方代码存在问题时影响文档生成。 [#724](https://github.com/TongchengOpenSource/smart-doc/issue/724)
+  15. 修改gradle插件codePath未设置导致使用报错的问题。 [gradle #15](https://github.com/TongchengOpenSource/smart-doc-gradle-plugin/pull/15)
+
 ### 版本号：3.0.1
 - 更新日期: 2023-12-17
 - 更新内容：
