@@ -146,7 +146,7 @@ public class DocUtil {
         }
         if (javaPrimaryType(type)) {
             return value;
-        } else if ("Void".equals(type)) {
+        } else if ("Void".equalsIgnoreCase(type)) {
             return "null";
         } else {
             return "\"" + value + "\"";
