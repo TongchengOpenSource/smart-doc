@@ -27,6 +27,8 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
+import java.util.Objects;
+
 /**
  * @author yu 2021/6/26.
  */
@@ -39,6 +41,12 @@ public class JsonUtil {
      * @return Format json string
      */
     public static String toPrettyFormat(String jsonString) {
+        if (Objects.isNull(jsonString)) {
+            return null;
+        }
+        if (!jsonString.startsWith("[") && !jsonString.startsWith("{")) {
+            return jsonString;
+        }
         try {
             JsonElement jsonElement = JsonParser.parseString(jsonString);
             Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
