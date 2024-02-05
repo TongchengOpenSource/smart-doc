@@ -170,22 +170,24 @@ public interface IBaseDocBuildTemplate {
             }
             apiJavaParameter.setTypeValue(javaType.getValue());
             String genericCanonicalName = javaType.getGenericCanonicalName();
-            String fullTypeName = javaType.getGenericFullyQualifiedName();
+            String fullyQualifiedName = javaType.getFullyQualifiedName();
+            apiJavaParameter.setFullyQualifiedName(fullyQualifiedName);
+            String genericFullyQualifiedName = javaType.getGenericFullyQualifiedName();
             String commentClass = paramTagMap.get(paramName);
             //ignore request params
             if (Objects.nonNull(commentClass) && commentClass.contains(IGNORE)) {
                 continue;
             }
-            String rewriteClassName = getRewriteClassName(replacementMap, fullTypeName, commentClass);
+            String rewriteClassName = getRewriteClassName(replacementMap, genericFullyQualifiedName, commentClass);
             // rewrite class
             if (JavaClassValidateUtil.isClassName(rewriteClassName)) {
                 genericCanonicalName = rewriteClassName;
-                fullTypeName = DocClassUtil.getSimpleName(rewriteClassName);
+                genericFullyQualifiedName = DocClassUtil.getSimpleName(rewriteClassName);
             }
             if (JavaClassValidateUtil.isMvcIgnoreParams(genericCanonicalName, builder.getApiConfig().getIgnoreRequestParams())) {
                 continue;
             }
-            fullTypeName = DocClassUtil.rewriteRequestParam(fullTypeName);
+            genericFullyQualifiedName = DocClassUtil.rewriteRequestParam(genericFullyQualifiedName);
             genericCanonicalName = DocClassUtil.rewriteRequestParam(genericCanonicalName);
             List<JavaAnnotation> annotations = parameter.getAnnotations();
             apiJavaParameter.setAnnotations(annotations);
@@ -196,18 +198,18 @@ public interface IBaseDocBuildTemplate {
                     if (Objects.nonNull(builder.getApiConfig().getRequestBodyAdvice())
                         && Objects.isNull(javaMethod.getTagByName(IGNORE_REQUEST_BODY_ADVICE))) {
                         String requestBodyAdvice = builder.getApiConfig().getRequestBodyAdvice().getClassName();
-                        fullTypeName = requestBodyAdvice;
+                        genericFullyQualifiedName = requestBodyAdvice;
                         genericCanonicalName = requestBodyAdvice + "<" + genericCanonicalName + ">";
                     }
                 }
             }
-            if (JavaClassValidateUtil.isCollection(fullTypeName) || JavaClassValidateUtil.isArray(fullTypeName)) {
+            if (JavaClassValidateUtil.isCollection(genericFullyQualifiedName) || JavaClassValidateUtil.isArray(genericFullyQualifiedName)) {
                 if (JavaClassValidateUtil.isCollection(genericCanonicalName)) {
                     genericCanonicalName = genericCanonicalName + "<T>";
                 }
             }
             apiJavaParameter.setGenericCanonicalName(genericCanonicalName);
-            apiJavaParameter.setFullyQualifiedName(fullTypeName);
+            apiJavaParameter.setGenericFullyQualifiedName(genericFullyQualifiedName);
             apiJavaParameterList.add(apiJavaParameter);
         }
         return apiJavaParameterList;

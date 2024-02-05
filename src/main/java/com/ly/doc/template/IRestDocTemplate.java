@@ -275,11 +275,17 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 
     default List<JavaAnnotation> getClassAnnotations(JavaClass cls, FrameworkAnnotations frameworkAnnotations) {
         List<JavaAnnotation> annotationsList = new ArrayList<>(cls.getAnnotations());
-        Map<String, EntryAnnotation> entryAnnotationMap = frameworkAnnotations.getEntryAnnotations();
-        Map<String, MappingAnnotation> mappingAnnotationMap = frameworkAnnotations.getMappingAnnotations();
         boolean flag = annotationsList.stream().anyMatch(item -> {
             String annotationName = item.getType().getValue();
             String fullyName = item.getType().getFullyQualifiedName();
+            Map<String, EntryAnnotation> entryAnnotationMap = frameworkAnnotations.getEntryAnnotations();
+            if (Objects.isNull(entryAnnotationMap)) {
+                entryAnnotationMap = Collections.emptyMap();
+            }
+            Map<String, MappingAnnotation> mappingAnnotationMap = frameworkAnnotations.getMappingAnnotations();
+            if (Objects.isNull(mappingAnnotationMap)) {
+                mappingAnnotationMap = Collections.emptyMap();
+            }
             return (entryAnnotationMap.containsKey(annotationName) || entryAnnotationMap.containsKey(fullyName))&&
                     (mappingAnnotationMap.containsKey(annotationName)||mappingAnnotationMap.containsKey(fullyName));
         });
@@ -548,14 +554,15 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
             String typeName = apiParameter.getGenericCanonicalName();
             String simpleTypeName = apiParameter.getTypeValue();
             String simpleName = simpleTypeName.toLowerCase();
-            String fullTypeName = apiParameter.getFullyQualifiedName();
-            if (!paramTagMap.containsKey(paramName) && JavaClassValidateUtil.isPrimitive(fullTypeName) && isStrict) {
+            String fullyQualifiedName = apiParameter.getFullyQualifiedName();
+            String genericFullyQualifiedName = apiParameter.getGenericFullyQualifiedName();
+            if (!paramTagMap.containsKey(paramName) && JavaClassValidateUtil.isPrimitive(fullyQualifiedName) && isStrict) {
                 throw new RuntimeException("ERROR: Unable to find javadoc @param for actual param \""
                         + paramName + "\" in method " + javaMethod.getName() + " from " + className);
             }
             StringBuilder comment = new StringBuilder(this.paramCommentResolve(paramTagMap.get(paramName)));
 
-            JavaClass javaClass = builder.getJavaProjectBuilder().getClassByName(fullTypeName);
+            JavaClass javaClass = builder.getJavaProjectBuilder().getClassByName(genericFullyQualifiedName);
             String mockValue = JavaFieldUtil.createMockValue(paramsComments, paramName, typeName, simpleTypeName);
             List<JavaAnnotation> annotations = parameter.getAnnotations();
             Set<String> groupClasses = JavaClassUtil.getParamGroupJavaClass(annotations, builder.getJavaProjectBuilder());
@@ -601,7 +608,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 //                        throw new RuntimeException("You have use @RequestBody Passing multiple variables  for method "
 //                                + javaMethod.getName() + " in " + className + ",@RequestBody annotation could only bind one variables.");
 //                    }
-                    mockValue = JsonBuildHelper.buildJson(fullTypeName, typeName, Boolean.FALSE, 0, new HashMap<>(), groupClasses, builder);
+                    mockValue = JsonBuildHelper.buildJson(genericFullyQualifiedName, typeName, Boolean.FALSE, 0, new HashMap<>(), groupClasses, builder);
                     requestBodyCounter++;
                     isRequestBody = true;
                 }
@@ -628,7 +635,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
             }
 
             boolean queryParam = !isRequestBody && !isPathVariable;
-            if (JavaClassValidateUtil.isCollection(fullTypeName) || JavaClassValidateUtil.isArray(fullTypeName)) {
+            if (JavaClassValidateUtil.isCollection(fullyQualifiedName) || JavaClassValidateUtil.isArray(fullyQualifiedName)) {
                 String[] gicNameArr = DocClassUtil.getSimpleGicName(typeName);
                 String gicName = gicNameArr[0];
                 if (JavaClassValidateUtil.isArray(gicName)) {
@@ -691,7 +698,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                                 groupClasses, 0, Boolean.TRUE, null));
                     }
                 }
-            } else if (JavaClassValidateUtil.isPrimitive(fullTypeName)) {
+            } else if (JavaClassValidateUtil.isPrimitive(fullyQualifiedName)) {
                 ApiParam param = ApiParam.of()
                         .setField(paramName)
                         .setType(DocClassUtil.processTypeNameForParams(simpleName))
@@ -707,7 +714,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                     Map<String, Object> map = OpenApiSchemaUtil.primaryTypeSchema(simpleName);
                     docJavaMethod.setRequestSchema(map);
                 }
-            } else if (JavaClassValidateUtil.isMap(fullTypeName)) {
+            } else if (JavaClassValidateUtil.isMap(fullyQualifiedName)) {
                 log.warning("When using smart-doc, it is not recommended to use Map to receive parameters, Check it in "
                         + javaMethod.getDeclaringClass().getCanonicalName() + "#" + javaMethod.getName());
                 // is map without Gic
@@ -831,10 +838,11 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
         for (DocJavaParameter apiParameter : parameterList) {
             JavaParameter parameter = apiParameter.getJavaParameter();
             String paramName = parameter.getName();
-            String typeName = apiParameter.getFullyQualifiedName();
+            String genericFullyQualifiedName = apiParameter.getGenericFullyQualifiedName();
+            String fullyQualifiedName = apiParameter.getFullyQualifiedName();
             String gicTypeName = apiParameter.getGenericCanonicalName();
             String simpleTypeName = apiParameter.getTypeValue();
-            JavaClass javaClass = configBuilder.getJavaProjectBuilder().getClassByName(typeName);
+            JavaClass javaClass = configBuilder.getJavaProjectBuilder().getClassByName(genericFullyQualifiedName);
             String[] globGicName = DocClassUtil.getSimpleGicName(gicTypeName);
             String comment = this.paramCommentResolve(paramsComments.get(paramName));
             String mockValue = JavaFieldUtil.createMockValue(paramsComments, paramName, gicTypeName, simpleTypeName);
@@ -870,7 +878,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                         apiMethodDoc.setContentType(JSON_CONTENT_TYPE);
                     }
                     boolean isArrayOrCollection = false;
-                    if (JavaClassValidateUtil.isArray(typeName) || JavaClassValidateUtil.isCollection(typeName)) {
+                    if (JavaClassValidateUtil.isArray(genericFullyQualifiedName) || JavaClassValidateUtil.isCollection(fullyQualifiedName)) {
                         simpleTypeName = globGicName[0];
                         isArrayOrCollection = true;
                     }
@@ -886,7 +894,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                         }
                         requestExample.setJsonBody(mockValue).setJson(true);
                     } else {
-                        String json = JsonBuildHelper.buildJson(typeName, gicTypeName, Boolean.FALSE, 0, new HashMap<>(), groupClasses,
+                        String json = JsonBuildHelper.buildJson(genericFullyQualifiedName, gicTypeName, Boolean.FALSE, 0, new HashMap<>(), groupClasses,
                                 configBuilder);
                         requestExample.setJsonBody(JsonUtil.toPrettyFormat(json)).setJson(true);
                     }
@@ -913,7 +921,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                     if (JavaClassValidateUtil.isPrimitive(simpleTypeName)) {
                         requestExample.addJsonBody(mockValue);
                     }
-                    if (JavaClassValidateUtil.isFile(typeName)) {
+                    if (JavaClassValidateUtil.isFile(fullyQualifiedName)) {
                         break;
                     }
                     // array and list
@@ -931,7 +939,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                 FormData formData = new FormData();
                 formData.setKey(paramName);
                 formData.setType("file");
-                if (typeName.contains("[]") || typeName.endsWith(">")) {
+                if (genericFullyQualifiedName.contains("[]") || genericFullyQualifiedName.endsWith(">")) {
                     comment = comment + "(array of file)";
                     formData.setType(DocGlobalConstants.PARAM_TYPE_FILE);
                     formData.setHasItems(true);
@@ -940,14 +948,14 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                 formData.setValue(mockValue);
                 formData.setSrc(new ArrayList(0));
                 formDataList.add(formData);
-            } else if (JavaClassValidateUtil.isPrimitive(typeName) && !requestParam) {
+            } else if (JavaClassValidateUtil.isPrimitive(fullyQualifiedName) && !requestParam) {
                 FormData formData = new FormData();
                 formData.setKey(paramName);
                 formData.setDescription(comment);
                 formData.setType("text");
                 formData.setValue(mockValue);
                 formDataList.add(formData);
-            } else if (JavaClassValidateUtil.isArray(typeName) || JavaClassValidateUtil.isCollection(typeName)) {
+            } else if (JavaClassValidateUtil.isArray(fullyQualifiedName) || JavaClassValidateUtil.isCollection(fullyQualifiedName)) {
                 String gicName = globGicName[0];
                 if (JavaClassValidateUtil.isArray(gicName)) {
                     gicName = gicName.substring(0, gicName.indexOf("["));
