@@ -34,6 +34,9 @@ public class DocJavaParameter {
 
     private String genericCanonicalName;
 
+    private String genericFullyQualifiedName;
+
+
     private String fullyQualifiedName;
 
     private String typeValue;
@@ -56,6 +59,14 @@ public class DocJavaParameter {
 
     public void setGenericCanonicalName(String genericCanonicalName) {
         this.genericCanonicalName = genericCanonicalName;
+    }
+
+    public String getGenericFullyQualifiedName() {
+        return genericFullyQualifiedName;
+    }
+
+    public void setGenericFullyQualifiedName(String genericFullyQualifiedName) {
+        this.genericFullyQualifiedName = genericFullyQualifiedName;
     }
 
     public String getFullyQualifiedName() {

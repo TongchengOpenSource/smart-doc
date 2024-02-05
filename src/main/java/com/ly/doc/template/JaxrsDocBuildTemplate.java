@@ -348,9 +348,10 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDo
 
             String typeName = apiParameter.getGenericCanonicalName();
             String simpleName = apiParameter.getTypeValue().toLowerCase();
-            String fullTypeName = apiParameter.getFullyQualifiedName();
+            String fullyQualifiedName = apiParameter.getFullyQualifiedName();
+            String genericFullyQualifiedName = apiParameter.getGenericFullyQualifiedName();
             String simpleTypeName = apiParameter.getTypeValue();
-            if (!paramTagMap.containsKey(paramName) && JavaClassValidateUtil.isPrimitive(fullTypeName) && isStrict) {
+            if (!paramTagMap.containsKey(paramName) && JavaClassValidateUtil.isPrimitive(genericFullyQualifiedName) && isStrict) {
                 throw new RuntimeException("ERROR: Unable to find javadoc @QueryParam for actual param \""
                         + paramName + "\" in method " + javaMethod.getName() + " from " + className);
             }
@@ -359,7 +360,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDo
                 paramName = StringUtil.camelToUnderline(paramName);
             }
             String mockValue = JavaFieldUtil.createMockValue(paramsComments, paramName, typeName, simpleTypeName);
-            JavaClass javaClass = builder.getJavaProjectBuilder().getClassByName(fullTypeName);
+            JavaClass javaClass = builder.getJavaProjectBuilder().getClassByName(genericFullyQualifiedName);
             List<JavaAnnotation> annotations = parameter.getAnnotations();
             Set<String> groupClasses = JavaClassUtil.getParamGroupJavaClass(annotations, builder.getJavaProjectBuilder());
 
@@ -398,7 +399,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDo
 
             boolean required = Boolean.parseBoolean(strRequired);
             boolean queryParam = !isRequestBody && !isPathVariable;
-            if (JavaClassValidateUtil.isCollection(fullTypeName) || JavaClassValidateUtil.isArray(fullTypeName)) {
+            if (JavaClassValidateUtil.isCollection(fullyQualifiedName) || JavaClassValidateUtil.isArray(fullyQualifiedName)) {
                 String[] gicNameArr = DocClassUtil.getSimpleGicName(typeName);
                 String gicName = gicNameArr[0];
                 if (JavaClassValidateUtil.isArray(gicName)) {
@@ -441,7 +442,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDo
                             "true", Boolean.FALSE, new HashMap<>(), builder, groupClasses, id, Boolean.FALSE, null);
                     paramList.addAll(apiParamList);
                 }
-            } else if (JavaClassValidateUtil.isPrimitive(fullTypeName)) {
+            } else if (JavaClassValidateUtil.isPrimitive(fullyQualifiedName)) {
                 ApiParam param = ApiParam.of()
                         .setField(paramName)
                         .setType(DocClassUtil.processTypeNameForParams(simpleName))
@@ -453,7 +454,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDo
                         .setRequired(required)
                         .setVersion(DocGlobalConstants.DEFAULT_VERSION);
                 paramList.add(param);
-            } else if (JavaClassValidateUtil.isMap(fullTypeName)) {
+            } else if (JavaClassValidateUtil.isMap(fullyQualifiedName)) {
                 log.warning("When using smart-doc, it is not recommended to use Map to receive parameters, Check it in "
                         + javaMethod.getDeclaringClass().getCanonicalName() + "#" + javaMethod.getName());
                 if (JavaClassValidateUtil.isMap(typeName)) {
@@ -563,7 +564,8 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDo
         for (DocJavaParameter apiParameter : parameterList) {
             JavaParameter parameter = apiParameter.getJavaParameter();
             String paramName = parameter.getName();
-            String typeName = apiParameter.getFullyQualifiedName();
+            String typeName = apiParameter.getGenericFullyQualifiedName();
+            String fullyQualifiedName = apiParameter.getFullyQualifiedName();
             String gicTypeName = apiParameter.getGenericCanonicalName();
             String simpleTypeName = apiParameter.getTypeValue();
             gicTypeName = DocClassUtil.rewriteRequestParam(gicTypeName);
@@ -609,7 +611,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDo
                         formData.setType("text");
                         formData.setValue(mockValue);
                         formDataList.add(formData);
-                    } else if (JavaClassValidateUtil.isArray(typeName) || JavaClassValidateUtil.isCollection(typeName)) {
+                    } else if (JavaClassValidateUtil.isArray(fullyQualifiedName) || JavaClassValidateUtil.isCollection(fullyQualifiedName)) {
                         String gicName = globGicName[0];
                         if (JavaClassValidateUtil.isArray(gicName)) {
                             gicName = gicName.substring(0, gicName.indexOf("["));

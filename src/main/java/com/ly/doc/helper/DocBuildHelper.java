@@ -117,6 +117,9 @@ public class DocBuildHelper {
     }
 
     private List<ApiDependency> mergeDependencyTree(List<ApiDependency> newDependencyTree) {
+        if (Objects.isNull(this.dependencyTree.getDependencyTree())) {
+            return new ArrayList<>();
+        }
         List<ApiDependency> oldDependencyTree = new ArrayList<>(this.dependencyTree.getDependencyTree());
 
         // remove the deleted or deprecated dependencies

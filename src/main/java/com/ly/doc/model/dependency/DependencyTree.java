@@ -39,6 +39,12 @@ public class DependencyTree {
 
     private static final String CONFIG_NAME = ".smart-doc-dependency.json";
 
+
+    /**
+     * whether increment build
+     */
+    private transient  boolean increment;
+
     /**
      * dependency tree file
      */
@@ -73,6 +79,11 @@ public class DependencyTree {
      */
     public static DependencyTree detect(String baseDir, boolean isIncrement) {
         DependencyTree dependencyTree;
+        if (!isIncrement) {
+            dependencyTree = new DependencyTree();
+            dependencyTree.setIncrement(false);
+            return dependencyTree;
+        }
 
         File configFile = new File(baseDir + File.separator + CONFIG_NAME);
         // the config file no exists
@@ -82,17 +93,14 @@ public class DependencyTree {
         } else {
             dependencyTree = Support.load(configFile);
         }
-        // if file no exists, and not increment build, delete the config file after build
-        if (fileNoExists && !isIncrement) {
-            configFile.delete();
-        }
-
         return dependencyTree;
     }
 
     public static void write(DependencyTree dependencyTree) {
         // do something when the dependency-tree format is changed dependent on the version
-        Support.writeFile(dependencyTree);
+        if (dependencyTree.isIncrement()) {
+            Support.writeFile(dependencyTree);
+        }
     }
 
     public String getSchema() {
@@ -114,6 +122,14 @@ public class DependencyTree {
     public void setConfig(String commitId, List<ApiDependency> dependencyTree) {
         this.commitId = commitId;
         this.dependencyTree = dependencyTree;
+    }
+
+    public boolean isIncrement() {
+        return increment;
+    }
+
+    public void setIncrement(boolean increment) {
+        this.increment = increment;
     }
 
     /**
