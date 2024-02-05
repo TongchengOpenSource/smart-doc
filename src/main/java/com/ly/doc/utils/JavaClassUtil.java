@@ -253,9 +253,9 @@ public class JavaClassUtil {
                                 && DocAnnotationConstants.TO_STRING_SERIALIZER_USING.equals(annotation.getNamedParameter("using")));
                 docJavaField.setComment(comment)
                         .setJavaField(javaField)
-                        .setTypeFullyQualifiedName(isToString ? DocGlobalConstants.JAVA_STRING_FULLY: subTypeName)
+                        .setTypeFullyQualifiedName(isToString ? DocGlobalConstants.JAVA_STRING_FULLY : subTypeName)
                         .setTypeGenericCanonicalName(isToString ? DocGlobalConstants.JAVA_STRING_FULLY : gicName)
-                        .setTypeGenericFullyQualifiedName(isToString ? DocGlobalConstants.JAVA_STRING_FULLY: fieldType.getGenericFullyQualifiedName())
+                        .setTypeGenericFullyQualifiedName(isToString ? DocGlobalConstants.JAVA_STRING_FULLY : fieldType.getGenericFullyQualifiedName())
                         .setActualJavaType(actualType)
                         .setAnnotations(javaField.getAnnotations())
                         .setFieldName(fieldName)
@@ -360,7 +360,9 @@ public class JavaClassUtil {
             // string comment
             String exception = javaField.getInitializationExpression();
             stringBuilder.append(javaField.getName());
-            stringBuilder.append("(").append(exception).append(")").append("<br/>");
+            if (StringUtil.isNotEmpty(exception)) {
+                stringBuilder.append("(").append(exception).append(")").append("<br/>");
+            }
         }
         return stringBuilder.toString();
     }

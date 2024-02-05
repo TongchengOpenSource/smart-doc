@@ -170,7 +170,7 @@ public interface IBaseDocBuildTemplate {
             }
             apiJavaParameter.setTypeValue(javaType.getValue());
             String genericCanonicalName = javaType.getGenericCanonicalName();
-            String fullTypeName = javaType.getFullyQualifiedName();
+            String fullTypeName = javaType.getGenericFullyQualifiedName();
             String commentClass = paramTagMap.get(paramName);
             //ignore request params
             if (Objects.nonNull(commentClass) && commentClass.contains(IGNORE)) {

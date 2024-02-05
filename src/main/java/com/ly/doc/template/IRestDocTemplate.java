@@ -753,14 +753,14 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
             }
             // param is enum
             else if (javaClass.isEnum()) {
-                String o = JavaClassUtil.getEnumParams(javaClass);
+                String enumName = JavaClassUtil.getEnumParams(javaClass);
                 Object value = JavaClassUtil.getEnumValue(javaClass, isPathVariable || queryParam);
                 ApiParam param = ApiParam.of().setField(paramName)
                         .setId(paramList.size() + 1)
                         .setPathParam(isPathVariable)
                         .setQueryParam(queryParam)
-                        .setValue(String.valueOf(value))
-                        .setType("enum").setDesc(StringUtil.removeQuotes(o))
+                        .setValue(StringUtil.removeDoubleQuotes(String.valueOf(value)))
+                        .setType("enum").setDesc(StringUtil.removeQuotes(enumName))
                         .setRequired(required)
                         .setVersion(DocGlobalConstants.DEFAULT_VERSION)
                         .setEnumInfo(JavaClassUtil.getEnumInfo(javaClass, builder))
