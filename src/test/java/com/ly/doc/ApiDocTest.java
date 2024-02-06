@@ -36,6 +36,7 @@ public class ApiDocTest {
 
         config.setDebugEnvName("测试环境");
         config.setInlineEnum(true);
+        config.setRest(true);
         config.setStyle("randomLight");
         config.setCreateDebugPage(false);
         // config.setAuthor("test");

@@ -464,9 +464,10 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
             }
 
             // build request json
-            ApiRequestExample requestExample = buildReqJson(docJavaMethod, apiMethodDoc, requestMapping.getMethodType(),
-                    projectBuilder, frameworkAnnotations);
-            String requestJson = requestExample.getExampleBody();
+            ApiRequestExample requestExample = buildReqJson(docJavaMethod, apiMethodDoc, requestMapping.getMethodType(), projectBuilder, frameworkAnnotations);
+            String requestJson = projectBuilder.getApiConfig().isRest()
+                    ? buildRestJson(docJavaMethod, apiMethodDoc, requestMapping.getMethodType(), projectBuilder, frameworkAnnotations)
+                    : requestExample.getExampleBody();
             // set request example detail
             apiMethodDoc.setRequestExample(requestExample);
             apiMethodDoc.setRequestUsage(requestJson == null ? requestExample.getUrl() : requestJson);
@@ -781,16 +782,62 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
         return ApiParamTreeUtil.buildMethodReqParam(paramList, queryReqParamMap, pathReqParamMap, requestBodyCounter);
     }
 
-    default ApiRequestExample buildReqJson(DocJavaMethod javaMethod, ApiMethodDoc apiMethodDoc, String methodType,
-                                           ProjectDocConfigBuilder configBuilder, FrameworkAnnotations frameworkAnnotations) {
+    default String buildRestJson(DocJavaMethod docJavaMethod, ApiMethodDoc apiMethodDoc, String methodType, ProjectDocConfigBuilder projectBuilder, FrameworkAnnotations frameworkAnnotations) {
+        Boolean isGet = methodType.equals("GET");
+        Boolean isFile = apiMethodDoc.getContentType().equals(FILE_CONTENT_TYPE);
+        String boundary = UUIDUtil.getUuid32();
+        List<ApiParam> queryParams = apiMethodDoc.getQueryParams();
+        List<ApiParam> requestParams = apiMethodDoc.getRequestParams();
+        StringBuilder title = new StringBuilder().append("### ").append(apiMethodDoc.getDesc()).append("\n");
+        StringBuilder request = new StringBuilder().append(methodType).append(" ").append(apiMethodDoc.getUrl()).append(isGet ? " " : " HTTP/1.1").append("\n");
+        if (isGet && queryParams.size() > 0) {
+            StringJoiner params = new StringJoiner("\n&");
+            queryParams.forEach(p -> params.add(p.getField() + "=" + p.getValue()));
+            request.append("?").append(params.toString()).append("\n");
+        }
+        StringBuilder header = new StringBuilder().append("Content-Type:").append(apiMethodDoc.getContentType()).append(isFile ? "; boundary=" + boundary + "\n" : "\n");
+        apiMethodDoc.getRequestHeaders().forEach(h -> header.append(h.getName()).append(":").append(h.getValue()).append("\n"));
+        if (isGet) {
+            return new StringBuilder().append(title).append(request).append(header).toString();
+        }
+        StringBuilder body = new StringBuilder().append("\n");
+        if (apiMethodDoc.getContentType().equals(DocGlobalConstants.URL_CONTENT_TYPE) && queryParams.size() > 0) {
+            StringJoiner params = new StringJoiner("\n&");
+            queryParams.forEach(p -> params.add(p.getField() + "=" + p.getValue()));
+            body.append(params).append("\n");
+        }
+        if (apiMethodDoc.getContentType().equals(JSON_CONTENT_TYPE) && requestParams.size() > 0) {
+            Map<String, Object> params = new HashMap<>(requestParams.size());
+            requestParams.forEach(p -> params.put(p.getField(), p.getValue()));
+            body.append(JsonUtil.toPrettyJson(params)).append("\n");
+        }
+        if (apiMethodDoc.getContentType().equals(FILE_CONTENT_TYPE) && queryParams.size() > 0) {
+            queryParams.forEach(p -> {
+                body.append("--").append(boundary).append("\n");
+                if ("file".equals(p.getType())) {
+                    body.append("Content-Disposition: form-data; name=\"" + p.getField() + "\"; filename=\"xxxxx.pdf\"\n");
+                    body.append("Content-Type: application/pdf\n");
+                    body.append("\n");
+                    body.append("< xxxxx.pdf\n");
+                }
+                if ("string".equals(p.getType())) {
+                    body.append("Content-Disposition: form-data; name=\"" + p.getField() + "\"\n");
+                    body.append("\n");
+                    body.append(p.getValue() + "\n");
+                }
+            });
+            body.append("--").append(boundary).append("--\n");
+        }
+        return new StringBuilder().append(title).append(request).append(header).append(body).toString();
+    }
+
+    default ApiRequestExample buildReqJson(DocJavaMethod javaMethod, ApiMethodDoc apiMethodDoc, String methodType, ProjectDocConfigBuilder configBuilder, FrameworkAnnotations frameworkAnnotations) {
         JavaMethod method = javaMethod.getJavaMethod();
         Map<String, String> pathParamsMap = new LinkedHashMap<>();
         Map<String, String> queryParamsMap = new LinkedHashMap<>();
 
-        apiMethodDoc.getPathParams().stream().filter(Objects::nonNull).filter(p -> StringUtil.isNotEmpty(p.getValue()) || p.isConfigParam())
-                .forEach(param -> pathParamsMap.put(param.getSourceField(), param.getValue()));
-        apiMethodDoc.getQueryParams().stream().filter(Objects::nonNull).filter(p -> StringUtil.isNotEmpty(p.getValue()) || p.isConfigParam())
-                .forEach(param -> queryParamsMap.put(param.getSourceField(), param.getValue()));
+        apiMethodDoc.getPathParams().stream().filter(Objects::nonNull).filter(p -> StringUtil.isNotEmpty(p.getValue()) || p.isConfigParam()).forEach(param -> pathParamsMap.put(param.getSourceField(), param.getValue()));
+        apiMethodDoc.getQueryParams().stream().filter(Objects::nonNull).filter(p -> StringUtil.isNotEmpty(p.getValue()) || p.isConfigParam()).forEach(param -> queryParamsMap.put(param.getSourceField(), param.getValue()));
         List<JavaAnnotation> methodAnnotations = method.getAnnotations();
         Map<String, MappingAnnotation> mappingAnnotationMap = frameworkAnnotations.getMappingAnnotations();
         for (JavaAnnotation annotation : methodAnnotations) {

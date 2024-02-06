@@ -147,6 +147,11 @@ public class ApiConfig {
      * adoc flag
      */
     private boolean adoc;
+
+    /**
+     * rest flag
+     */
+    private boolean rest;
     /**
      * default /src/main/java
      */
@@ -630,6 +635,14 @@ public class ApiConfig {
 
     public void setAdoc(boolean adoc) {
         this.adoc = adoc;
+    }
+
+    public boolean isRest() {
+        return rest;
+    }
+
+    public void setRest(boolean rest) {
+        this.rest = rest;
     }
 
     public List<ApiDataDictionary> getDataDictionaries() {
