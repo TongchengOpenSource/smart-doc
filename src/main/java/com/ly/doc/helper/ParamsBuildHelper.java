@@ -75,6 +75,7 @@ public class ParamsBuildHelper extends BaseHelper {
             throw new RuntimeException("Class name can't be null or empty.");
         }
 
+        ClassLoader classLoader = projectBuilder.getApiConfig().getClassLoader();
         ApiConfig apiConfig = projectBuilder.getApiConfig();
         int nextLevel = level + 1;
 
@@ -109,7 +110,7 @@ public class ParamsBuildHelper extends BaseHelper {
             fieldNameConvert = PropertyNameHelper.translate(clsAnnotation);
         }
         JavaClassUtil.genericParamMap(genericMap, cls, globGicName);
-        List<DocJavaField> fields = JavaClassUtil.getFields(cls, 0, new LinkedHashMap<>(),projectBuilder.getApiConfig().getClassLoader());
+        List<DocJavaField> fields = JavaClassUtil.getFields(cls, 0, new LinkedHashMap<>(),classLoader);
         if (JavaClassValidateUtil.isPrimitive(simpleName)) {
             String processedType = processFieldTypeName(isShowJavaType,simpleName);
             paramList.addAll(primitiveReturnRespComment(processedType, atomicInteger, pid));
@@ -245,7 +246,7 @@ public class ParamsBuildHelper extends BaseHelper {
                         }
                     }
                 }
-                comment.append(JavaFieldUtil.getJsrComment(javaAnnotations));
+                comment.append(JavaFieldUtil.getJsrComment(classLoader,javaAnnotations));
                 // fixme post form curl example error
                 String fieldValue = getFieldValueFromMock(tagsMap);
 

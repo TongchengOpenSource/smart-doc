@@ -197,11 +197,11 @@ public class DocUtil {
     }
 
     /**
-     * 移除字符串的双引号
+     * To obtain a field's value using Java reflection and remove double quotes from a string
      *
-     * @param type0                 类型
-     * @param filedName             字段名称
-     * @param removeDoubleQuotation 移除标志
+     * @param type0                 field type name
+     * @param filedName             field name
+     * @param removeDoubleQuotation removeDoubleQuotation
      * @return String
      */
     public static String getValByTypeAndFieldName(String type0, String filedName, boolean removeDoubleQuotation) {
@@ -488,12 +488,12 @@ public class DocUtil {
 
     /**
      * handle spring mvc mapping value
-     *
+     * @param classLoader ClassLoader
      * @param annotation JavaAnnotation
      * @return String
      */
-    public static String handleMappingValue(JavaAnnotation annotation) {
-        String url = getRequestMappingUrl(annotation);
+    public static String handleMappingValue(ClassLoader classLoader, JavaAnnotation annotation) {
+        String url = getRequestMappingUrl(classLoader, annotation);
         if (StringUtil.isEmpty(url)) {
             return "/";
         } else {
@@ -820,25 +820,27 @@ public class DocUtil {
     /**
      * Get the url from 'value' or 'path' attribute
      *
-     * @param annotation RequestMapping GetMapping PostMapping etc.
+     * @param classLoader classLoader
+     * @param annotation  RequestMapping GetMapping PostMapping etc.
      * @return the url
      */
-    public static String getRequestMappingUrl(JavaAnnotation annotation) {
-        return getPathUrl(annotation, DocAnnotationConstants.VALUE_PROP, DocAnnotationConstants.NAME_PROP, DocAnnotationConstants.PATH_PROP);
+    public static String getRequestMappingUrl(ClassLoader classLoader, JavaAnnotation annotation) {
+        return getPathUrl(classLoader, annotation, DocAnnotationConstants.VALUE_PROP, DocAnnotationConstants.NAME_PROP, DocAnnotationConstants.PATH_PROP);
     }
 
     /**
      * Get mapping url from Annotation
      *
-     * @param annotation JavaAnnotation
-     * @param props      annotation properties
+     * @param classLoader classLoader
+     * @param annotation  JavaAnnotation
+     * @param props       annotation properties
      * @return the path
      */
-    public static String getPathUrl(JavaAnnotation annotation, String... props) {
+    public static String getPathUrl(ClassLoader classLoader, JavaAnnotation annotation, String... props) {
         for (String prop : props) {
             AnnotationValue annotationValue = annotation.getProperty(prop);
             if (Objects.nonNull(annotationValue)) {
-                Object url = resolveAnnotationValue(annotationValue);
+                Object url = resolveAnnotationValue(classLoader, annotationValue);
                 if (Objects.nonNull(url)) {
                     return url.toString();
                 }
@@ -850,21 +852,25 @@ public class DocUtil {
     /**
      * resolve the string of {@link Add} which has {@link FieldRef}(to be exact is {@link FieldRef}) children,
      * the value of {@link FieldRef} will be resolved with the real value of it if it is the static final member of any other class
-     *
+     * @param classLoader     classLoader
      * @param annotationValue annotationValue
      * @return annotation value
      */
-    public static String resolveAnnotationValue(AnnotationValue annotationValue) {
+    public static String resolveAnnotationValue(ClassLoader classLoader, AnnotationValue annotationValue) {
         if (annotationValue instanceof Add) {
             Add add = (Add) annotationValue;
-            String leftValue = resolveAnnotationValue(add.getLeft());
-            String rightValue = resolveAnnotationValue(add.getRight());
+            String leftValue = resolveAnnotationValue(classLoader, add.getLeft());
+            String rightValue = resolveAnnotationValue(classLoader, add.getRight());
             return StringUtil.removeQuotes(leftValue + rightValue);
         } else {
             if (annotationValue instanceof FieldRef) {
                 FieldRef fieldRef = (FieldRef) annotationValue;
                 JavaField javaField = fieldRef.getField();
                 if (javaField != null) {
+                    String fieldValue = JavaFieldUtil.getConstantsFieldValue(classLoader, javaField.getDeclaringClass(), javaField.getName());
+                    if (StringUtil.isNotEmpty(fieldValue)) {
+                        return StringUtil.removeQuotes(fieldValue);
+                    }
                     return StringUtil.removeQuotes(javaField.getInitializationExpression());
                 }
             }
@@ -875,12 +881,12 @@ public class DocUtil {
 
     /**
      * handle spring mvc RequestHeader value
-     *
+     * @param classLoader classLoader
      * @param annotation JavaAnnotation
      * @return String
      */
-    public static String handleRequestHeaderValue(JavaAnnotation annotation) {
-        String header = getRequestHeaderValue(annotation);
+    public static String handleRequestHeaderValue(ClassLoader classLoader, JavaAnnotation annotation) {
+        String header = getRequestHeaderValue(classLoader, annotation);
         if (StringUtil.isEmpty(header)) {
             return header;
         }
@@ -891,12 +897,13 @@ public class DocUtil {
     /**
      * Obtain constant from @RequestHeader annotation
      *
-     * @param annotation RequestMapping GetMapping PostMapping etc.
+     * @param classLoader classLoader
+     * @param annotation  RequestMapping GetMapping PostMapping etc.
      * @return The constant value
      */
-    public static String getRequestHeaderValue(JavaAnnotation annotation) {
+    public static String getRequestHeaderValue(ClassLoader classLoader, JavaAnnotation annotation) {
         AnnotationValue annotationValue = annotation.getProperty(DocAnnotationConstants.VALUE_PROP);
-        return resolveAnnotationValue(annotationValue);
+        return resolveAnnotationValue(classLoader, annotationValue);
     }
 
     public static List<ApiErrorCode> errorCodeDictToList(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
@@ -1074,10 +1081,10 @@ public class DocUtil {
         return value;
     }
 
-    public static String handleContentType(String mediaType, JavaAnnotation annotation, String annotationName) {
+    public static String handleContentType(ClassLoader classLoader, String mediaType, JavaAnnotation annotation, String annotationName) {
         if (JakartaJaxrsAnnotations.JAX_PRODUCES_FULLY.equals(annotationName)
                 || JAXRSAnnotations.JAX_PRODUCES_FULLY.equals(annotationName)) {
-            String annotationValue = StringUtil.removeQuotes(DocUtil.getRequestHeaderValue(annotation));
+            String annotationValue = StringUtil.removeQuotes(DocUtil.getRequestHeaderValue(classLoader, annotation));
             if ("MediaType.APPLICATION_JSON".equals(annotationValue) || "application/json".equals(annotationValue)
                     || "MediaType.TEXT_PLAIN".equals(annotationValue) || "text/plain".equals(annotationValue)) {
                 mediaType = DocGlobalConstants.JSON_CONTENT_TYPE;

@@ -130,7 +130,8 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDo
             String annotationName = annotation.getType().getFullyQualifiedName();
             if (JakartaJaxrsAnnotations.JAX_PATH_FULLY.equals(annotationName)
                     || JAXRSAnnotations.JAX_PATH_FULLY.equals(annotationName)) {
-                baseUrl = StringUtil.removeQuotes(DocUtil.getRequestHeaderValue(annotation));
+                ClassLoader classLoader = projectBuilder.getJavaProjectBuilder().getClass().getClassLoader();
+                baseUrl = StringUtil.removeQuotes(DocUtil.getRequestHeaderValue(classLoader,annotation));
             }
             // use first annotation's value
             if (annotationName.equals(JakartaJaxrsAnnotations.JAX_CONSUMES)
@@ -331,6 +332,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDo
                     .setRequestParams(new ArrayList<>(0));
         }
         boolean isStrict = builder.getApiConfig().isStrict();
+        ClassLoader classLoader = builder.getJavaProjectBuilder().getClass().getClassLoader();
         JavaMethod javaMethod = docJavaMethod.getJavaMethod();
         String className = javaMethod.getDeclaringClass().getCanonicalName();
         Map<String, String> paramTagMap = docJavaMethod.getParamTagMap();
@@ -378,7 +380,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDo
                     //default value
                     if (JakartaJaxrsAnnotations.JAX_DEFAULT_VALUE_FULLY.equals(annotationName)
                             || JAXRSAnnotations.JAX_DEFAULT_VALUE_FULLY.equals(annotationName)) {
-                        mockValue = StringUtil.removeQuotes(DocUtil.getRequestHeaderValue(annotation));
+                        mockValue = StringUtil.removeQuotes(DocUtil.getRequestHeaderValue(classLoader,annotation));
                         mockValue = DocUtil.handleConstants(constantsMap, mockValue);
                     }
                     // path param
@@ -392,7 +394,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDo
                         strRequired = "true";
                     }
                 }
-                comment.append(JavaFieldUtil.getJsrComment(annotations));
+                comment.append(JavaFieldUtil.getJsrComment(classLoader,annotations));
             } else {
                 isRequestBody = true;
             }

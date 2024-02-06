@@ -22,6 +22,7 @@
  */
 package com.ly.doc.utils;
 
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -33,6 +34,7 @@ import com.ly.doc.model.CustomField;
 import com.ly.doc.model.DocJavaField;
 import com.power.common.util.StringUtil;
 import com.thoughtworks.qdox.model.JavaAnnotation;
+import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.expression.AnnotationValue;
 
 /**
@@ -123,29 +125,29 @@ public class JavaFieldUtil {
      * @param annotations annotations
      * @return Jsr comments
      */
-    public static String getJsrComment(List<JavaAnnotation> annotations) {
+    public static String getJsrComment(ClassLoader classLoader,List<JavaAnnotation> annotations) {
         StringBuilder sb = new StringBuilder();
         for (JavaAnnotation annotation : annotations) {
             Map<String, AnnotationValue> values = annotation.getPropertyMap();
             String name = annotation.getType().getValue();
             if (DocValidatorAnnotationEnum.listValidatorAnnotations().contains(name)) {
                 for (Map.Entry<String, AnnotationValue> m : values.entrySet()) {
-                    String value = DocUtil.resolveAnnotationValue(m.getValue());
+                    String value = DocUtil.resolveAnnotationValue(classLoader,m.getValue());
                     if (DocAnnotationConstants.REGEXP.equals(m.getKey())) {
                         sb.append(m.getKey()).append(": ").append(StringUtil.removeDoubleQuotes(value))
-                            .append("; ");
+                                .append("; ");
                     }
                     if (DocAnnotationConstants.MAX.equals(m.getKey())) {
                         sb.append(m.getKey()).append(": ").append(StringUtil.removeDoubleQuotes(value))
-                            .append("; ");
+                                .append("; ");
                     }
                     if (DocAnnotationConstants.LENGTH.equals(m.getKey())) {
                         sb.append(m.getKey()).append(": ").append(StringUtil.removeDoubleQuotes(value))
-                            .append("; ");
+                                .append("; ");
                     }
                     if (DocAnnotationConstants.SIZE.equals(m.getKey())) {
                         sb.append(m.getKey()).append(": ").append(StringUtil.removeDoubleQuotes(value))
-                            .append("; ");
+                                .append("; ");
                     }
                 }
             }
@@ -159,8 +161,41 @@ public class JavaFieldUtil {
     }
 
 
-    public static String convertToSimpleTypeName(String str){
+    public static String convertToSimpleTypeName(String str) {
         String regex = "\\b\\w+\\.(?=\\w+\\b)";
-        return  str.replaceAll(regex, "");
+        return str.replaceAll(regex, "");
+    }
+
+    /**
+     * Obtain value of constants field
+     * @param classLoader classLoader
+     * @param javaClass  class
+     * @param fieldName field name
+     * @return
+     */
+    public static String getConstantsFieldValue(ClassLoader classLoader, JavaClass javaClass, String fieldName) {
+        try {
+            Class<?> c;
+            if (Objects.nonNull(classLoader)) {
+                c = classLoader.loadClass(javaClass.getFullyQualifiedName());
+            } else {
+                c = Class.forName(javaClass.getFullyQualifiedName());
+            }
+            Field[] fields = c.getDeclaredFields();
+            for (Field f : fields) {
+                // 25 is static field
+                if (f.getModifiers() != 25) {
+                    continue;
+                }
+                if (!f.getName().equals(fieldName)) {
+                    continue;
+                }
+                String constantValue = (String) f.get(null);
+                return constantValue;
+            }
+        } catch (ClassNotFoundException | IllegalAccessException e) {
+            return null;
+        }
+        return null;
     }
 }

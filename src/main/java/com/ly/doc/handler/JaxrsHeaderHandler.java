@@ -57,6 +57,7 @@ public class JaxrsHeaderHandler {
     public List<ApiReqParam> handle(JavaMethod method, ProjectDocConfigBuilder projectBuilder) {
         Map<String, String> constantsMap = projectBuilder.getConstantsMap();
 
+        ClassLoader classLoader = projectBuilder.getApiConfig().getClassLoader();
         List<ApiReqParam> apiReqHeaders = new ArrayList<>();
         List<JavaParameter> parameters = method.getParameters();
         for (JavaParameter javaParameter : parameters) {
@@ -72,7 +73,7 @@ public class JaxrsHeaderHandler {
                 //Obtain header default value
                 if (JakartaJaxrsAnnotations.JAX_DEFAULT_VALUE_FULLY.equals(annotationName)
                     || JAXRSAnnotations.JAX_DEFAULT_VALUE_FULLY.equals(annotationName)) {
-                    defaultValue = StringUtil.removeQuotes(DocUtil.getRequestHeaderValue(annotation));
+                    defaultValue = StringUtil.removeQuotes(DocUtil.getRequestHeaderValue(classLoader,annotation));
                     defaultValue = DocUtil.handleConstants(constantsMap, defaultValue);
                 }
                 apiReqHeader.setValue(defaultValue);
@@ -80,7 +81,7 @@ public class JaxrsHeaderHandler {
                 // Obtain header value
                 if (JakartaJaxrsAnnotations.JAX_HEADER_PARAM_FULLY.equals(annotationName)
                     || JAXRSAnnotations.JAX_HEADER_PARAM_FULLY.equals(annotationName)) {
-                    String name = StringUtil.removeQuotes(DocUtil.getRequestHeaderValue(annotation));
+                    String name = StringUtil.removeQuotes(DocUtil.getRequestHeaderValue(classLoader,annotation));
                     name = DocUtil.handleConstants(constantsMap, name);
                     apiReqHeader.setName(name);
 

@@ -84,7 +84,8 @@ public class SpringMVCRequestMappingHandler implements IRequestMappingHandler {
                 mediaType = consumes.toString();
             }
             if (CollectionUtil.isNotEmpty(mappingAnnotation.getPathProps())) {
-                shortUrl = DocUtil.getPathUrl(annotation, mappingAnnotation.getPathProps()
+                ClassLoader classLoader = projectBuilder.getApiConfig().getClassLoader();
+                shortUrl = DocUtil.getPathUrl(classLoader, annotation, mappingAnnotation.getPathProps()
                         .toArray(new String[0]));
             }
             if (StringUtil.isNotEmpty(mappingAnnotation.getMethodType())) {
