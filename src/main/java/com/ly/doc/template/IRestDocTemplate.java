@@ -205,10 +205,10 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
     }
 
 
-    default String getParamName(String paramName, JavaAnnotation annotation) {
-        String resolvedParamName = DocUtil.resolveAnnotationValue(annotation.getProperty(DocAnnotationConstants.VALUE_PROP));
+    default String getParamName(ClassLoader classLoader,String paramName, JavaAnnotation annotation) {
+        String resolvedParamName = DocUtil.resolveAnnotationValue(classLoader,annotation.getProperty(DocAnnotationConstants.VALUE_PROP));
         if (StringUtils.isBlank(resolvedParamName)) {
-            resolvedParamName = DocUtil.resolveAnnotationValue(annotation.getProperty(DocAnnotationConstants.NAME_PROP));
+            resolvedParamName = DocUtil.resolveAnnotationValue(classLoader,annotation.getProperty(DocAnnotationConstants.NAME_PROP));
         }
         if (!StringUtils.isBlank(resolvedParamName)) {
             paramName = StringUtil.removeQuotes(resolvedParamName);
@@ -315,6 +315,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
             IHeaderHandler headerHandler) {
         String clazName = cls.getCanonicalName();
         boolean paramsDataToTree = projectBuilder.getApiConfig().isParamsDataToTree();
+        ClassLoader classLoader = projectBuilder.getJavaProjectBuilder().getClass().getClassLoader();
         String group = JavaClassUtil.getClassTagsValue(cls, DocTags.GROUP, Boolean.TRUE);
         List<JavaAnnotation> classAnnotations = this.getClassAnnotations(cls, frameworkAnnotations);
         String baseUrl = "";
@@ -328,7 +329,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                 continue;
             }
             if (CollectionUtil.isNotEmpty(mappingAnnotation.getPathProps())) {
-                baseUrl = StringUtil.removeQuotes(DocUtil.getPathUrl(annotation, mappingAnnotation.getPathProps()
+                baseUrl = StringUtil.removeQuotes(DocUtil.getPathUrl(classLoader,annotation, mappingAnnotation.getPathProps()
                         .toArray(new String[0])));
             }
             // use first annotation's value
@@ -498,6 +499,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                                             List<ApiReqParam> configApiReqParams, FrameworkAnnotations frameworkAnnotations) {
         JavaMethod javaMethod = docJavaMethod.getJavaMethod();
         boolean isStrict = builder.getApiConfig().isStrict();
+        ClassLoader classLoader = builder.getJavaProjectBuilder().getClass().getClassLoader();
         String className = javaMethod.getDeclaringClass().getCanonicalName();
         Map<String, String> paramTagMap = docJavaMethod.getParamTagMap();
         Map<String, String> paramsComments = docJavaMethod.getParamsComments();
@@ -590,9 +592,9 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                     }
                     AnnotationValue annotationDefaultVal = annotation.getProperty(defaultValueProp);
                     if (Objects.nonNull(annotationDefaultVal)) {
-                        mockValue = DocUtil.resolveAnnotationValue(annotationDefaultVal);
+                        mockValue = DocUtil.resolveAnnotationValue(classLoader,annotationDefaultVal);
                     }
-                    paramName = getParamName(paramName, annotation);
+                    paramName = getParamName(classLoader,paramName, annotation);
                     AnnotationValue annotationRequired = annotation.getProperty(requiredProp);
                     if (Objects.nonNull(annotationRequired)) {
                         strRequired = annotationRequired.toString();
@@ -614,7 +616,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                 }
                 required = Boolean.parseBoolean(strRequired);
             }
-            comment.append(JavaFieldUtil.getJsrComment(annotations));
+            comment.append(JavaFieldUtil.getJsrComment(classLoader,annotations));
             if (requestFieldToUnderline && !isPathVariable) {
                 paramName = StringUtil.camelToUnderline(paramName);
             }
@@ -786,7 +788,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
         JavaMethod method = javaMethod.getJavaMethod();
         Map<String, String> pathParamsMap = new LinkedHashMap<>();
         Map<String, String> queryParamsMap = new LinkedHashMap<>();
-
+        ClassLoader classLoader = configBuilder.getJavaProjectBuilder().getClass().getClassLoader();
         apiMethodDoc.getPathParams().stream().filter(Objects::nonNull).filter(p -> StringUtil.isNotEmpty(p.getValue()) || p.isConfigParam())
                 .forEach(param -> pathParamsMap.put(param.getSourceField(), param.getValue()));
         apiMethodDoc.getQueryParams().stream().filter(Objects::nonNull).filter(p -> StringUtil.isNotEmpty(p.getValue()) || p.isConfigParam())
@@ -869,9 +871,9 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                 AnnotationValue annotationDefaultVal = annotation.getProperty(DocAnnotationConstants.DEFAULT_VALUE_PROP);
 
                 if (Objects.nonNull(annotationDefaultVal)) {
-                    mockValue = DocUtil.resolveAnnotationValue(annotationDefaultVal);
+                    mockValue = DocUtil.resolveAnnotationValue(classLoader,annotationDefaultVal);
                 }
-                paramName = getParamName(paramName, annotation);
+                paramName = getParamName(classLoader,paramName, annotation);
                 if (frameworkAnnotations.getRequestBodyAnnotation().getAnnotationName().equals(annotationName)) {
                     // priority use mapping annotation's consumer value
                     if (apiMethodDoc.getContentType().equals(DocGlobalConstants.URL_CONTENT_TYPE)) {

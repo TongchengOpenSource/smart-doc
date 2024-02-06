@@ -88,7 +88,8 @@ public interface IHeaderHandler {
                     Map<String, Object> requestHeaderMap = annotation.getNamedParameterMap();
                     //  Obtain header value
                     if (requestHeaderMap.get(headerAnnotation.getValueProp()) != null) {
-                        String attrValue = DocUtil.handleRequestHeaderValue(annotation);
+                        ClassLoader classLoader = projectBuilder.getApiConfig().getClassLoader();
+                        String attrValue = DocUtil.handleRequestHeaderValue(classLoader, annotation);
                         String constValue = ((String) requestHeaderMap.get(headerAnnotation.getValueProp())).replaceAll("\"", "");
                         if (StringUtil.isEmpty(attrValue)) {
                             Object value = constantsMap.get(constValue);
@@ -112,13 +113,13 @@ public interface IHeaderHandler {
                     if (requestHeaderMap.get(headerAnnotation.getDefaultValueProp()) != null) {
                         apiReqHeader.setValue(StringUtil.removeQuotes((String) requestHeaderMap.get(headerAnnotation.getDefaultValueProp())));
                         desc.append("(defaultValue: ")
-                            .append(StringUtil.removeQuotes((String) requestHeaderMap.get(headerAnnotation.getDefaultValueProp())))
-                            .append(")");
+                                .append(StringUtil.removeQuotes((String) requestHeaderMap.get(headerAnnotation.getDefaultValueProp())))
+                                .append(")");
                     }
                     apiReqHeader.setDesc(desc.toString());
                     if (requestHeaderMap.get(headerAnnotation.getRequiredProp()) != null) {
                         apiReqHeader.setRequired(!Boolean.FALSE.toString()
-                            .equals(requestHeaderMap.get(headerAnnotation.getRequiredProp())));
+                                .equals(requestHeaderMap.get(headerAnnotation.getRequiredProp())));
                     } else {
                         apiReqHeader.setRequired(true);
                     }
@@ -130,20 +131,20 @@ public interface IHeaderHandler {
             }
         }
         return Stream.of(mappingHeaders, reqHeaders)
-            .flatMap(Collection::stream)
-            .distinct()
-            .collect(Collectors.toList());
+                .flatMap(Collection::stream)
+                .distinct()
+                .collect(Collectors.toList());
     }
 
     default void processMappingHeaders(String header, List<ApiReqParam> mappingHeaders) {
         if (header.contains("!=")) {
             String headerName = header.substring(0, header.indexOf("!"));
             ApiReqParam apiReqHeader = ApiReqParam.builder()
-                .setName(headerName)
-                .setRequired(true)
-                .setValue(null)
-                .setDesc("header condition")
-                .setType("string");
+                    .setName(headerName)
+                    .setRequired(true)
+                    .setValue(null)
+                    .setDesc("header condition")
+                    .setType("string");
             mappingHeaders.add(apiReqHeader);
         } else {
             String headerName;
@@ -156,11 +157,11 @@ public interface IHeaderHandler {
                 headerName = header;
             }
             ApiReqParam apiReqHeader = ApiReqParam.builder()
-                .setName(headerName)
-                .setRequired(true)
-                .setValue(headerValue)
-                .setDesc("header condition")
-                .setType("string");
+                    .setName(headerName)
+                    .setRequired(true)
+                    .setValue(headerValue)
+                    .setDesc("header condition")
+                    .setType("string");
             mappingHeaders.add(apiReqHeader);
         }
     }

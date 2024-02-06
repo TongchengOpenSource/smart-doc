@@ -51,9 +51,9 @@ public class SolonRequestMappingHandler implements IRequestMappingHandler {
      * @return RequestMapping
      */
     public RequestMapping handle(ProjectDocConfigBuilder projectBuilder,
-        String controllerBaseUrl,
-        JavaMethod method, FrameworkAnnotations frameworkAnnotations,
-        RequestMappingFunc requestMappingFunc) {
+                                 String controllerBaseUrl,
+                                 JavaMethod method, FrameworkAnnotations frameworkAnnotations,
+                                 RequestMappingFunc requestMappingFunc) {
         if (Objects.nonNull(method.getTagByName(IGNORE))) {
             return null;
         }
@@ -68,7 +68,8 @@ public class SolonRequestMappingHandler implements IRequestMappingHandler {
                 deprecated = true;
             }
             if (SolonAnnotations.REQUEST_MAPPING.equals(annotationName) || SolonAnnotations.REQUEST_MAPPING_FULLY.equals(annotationName)) {
-                shortUrl = DocUtil.handleMappingValue(annotation);
+                ClassLoader classLoader = projectBuilder.getApiConfig().getClassLoader();
+                shortUrl = DocUtil.handleMappingValue(classLoader, annotation);
                 Object produces = annotation.getNamedParameter("produces");
                 if (Objects.nonNull(produces)) {
                     mediaType = produces.toString();
@@ -90,10 +91,10 @@ public class SolonRequestMappingHandler implements IRequestMappingHandler {
             deprecated = true;
         }
         RequestMapping requestMapping = RequestMapping.builder()
-            .setMediaType(mediaType)
-            .setMethodType(methodType)
-            .setDeprecated(deprecated)
-            .setShortUrl(shortUrl);
+                .setMediaType(mediaType)
+                .setMethodType(methodType)
+                .setDeprecated(deprecated)
+                .setShortUrl(shortUrl);
         requestMapping = formatMappingData(projectBuilder, controllerBaseUrl, requestMapping);
         requestMappingFunc.process(method.getDeclaringClass(), requestMapping);
         return requestMapping;

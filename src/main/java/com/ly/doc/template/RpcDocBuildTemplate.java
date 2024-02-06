@@ -172,6 +172,7 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc>, IRpcDo
         if (parameterList.size() < 1) {
             return null;
         }
+        ClassLoader classLoader  = builder.getJavaProjectBuilder().getClass().getClassLoader();
         List<ApiParam> paramList = new ArrayList<>();
         for (JavaParameter parameter : parameterList) {
             boolean required = false;
@@ -193,7 +194,7 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc>, IRpcDo
                     required = true;
                 }
             }
-            comment.append(JavaFieldUtil.getJsrComment(annotations));
+            comment.append(JavaFieldUtil.getJsrComment(classLoader,annotations));
             Set<String> groupClasses = JavaClassUtil.getParamGroupJavaClass(annotations, builder.getJavaProjectBuilder());
             if (JavaClassValidateUtil.isCollection(fullTypeName) || JavaClassValidateUtil.isArray(fullTypeName)) {
                 if (JavaClassValidateUtil.isCollection(typeName)) {

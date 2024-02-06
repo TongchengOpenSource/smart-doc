@@ -91,7 +91,8 @@ public class JaxrsPathHandler {
                     || JakartaJaxrsAnnotations.JAXB_REST_PATH_FULLY.equals(annotationName)
                     || JAXRSAnnotations.JAX_PATH_FULLY.equals(annotationName)
                     || JAXRSAnnotations.JAX_PATH_PARAM_FULLY.equals(annotationName)) {
-                shortUrl = DocUtil.handleMappingValue(annotation);
+                ClassLoader classLoader = projectBuilder.getApiConfig().getClassLoader();
+                shortUrl = DocUtil.handleMappingValue(classLoader, annotation);
             }
             // annotationName like "Get" "Post", not "jakarta.ws.rs.Get" "jakarta.ws.rs.Post"
             if (ANNOTATION_NAMES.stream().anyMatch(it -> it.contains(annotationName))) {
