@@ -72,16 +72,16 @@ public class JaxrsHeaderHandler {
                 String annotationName = annotation.getType().getFullyQualifiedName();
                 //Obtain header default value
                 if (JakartaJaxrsAnnotations.JAX_DEFAULT_VALUE_FULLY.equals(annotationName)
-                    || JAXRSAnnotations.JAX_DEFAULT_VALUE_FULLY.equals(annotationName)) {
-                    defaultValue = StringUtil.removeQuotes(DocUtil.getRequestHeaderValue(classLoader,annotation));
+                        || JAXRSAnnotations.JAX_DEFAULT_VALUE_FULLY.equals(annotationName)) {
+                    defaultValue = StringUtil.removeQuotes(DocUtil.getRequestHeaderValue(classLoader, annotation));
                     defaultValue = DocUtil.handleConstants(constantsMap, defaultValue);
                 }
                 apiReqHeader.setValue(defaultValue);
 
                 // Obtain header value
                 if (JakartaJaxrsAnnotations.JAX_HEADER_PARAM_FULLY.equals(annotationName)
-                    || JAXRSAnnotations.JAX_HEADER_PARAM_FULLY.equals(annotationName)) {
-                    String name = StringUtil.removeQuotes(DocUtil.getRequestHeaderValue(classLoader,annotation));
+                        || JAXRSAnnotations.JAX_HEADER_PARAM_FULLY.equals(annotationName)) {
+                    String name = StringUtil.removeQuotes(DocUtil.getRequestHeaderValue(classLoader, annotation));
                     name = DocUtil.handleConstants(constantsMap, name);
                     apiReqHeader.setName(name);
 
@@ -106,8 +106,8 @@ public class JaxrsHeaderHandler {
             desc.append(paramComments);
             if (StringUtils.isNotBlank(defaultValue)) {
                 desc.append("(defaultValue: ")
-                    .append(defaultValue)
-                    .append(")");
+                        .append(defaultValue)
+                        .append(")");
             }
             return desc.toString();
         }

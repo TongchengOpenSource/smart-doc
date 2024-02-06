@@ -205,10 +205,10 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
     }
 
 
-    default String getParamName(ClassLoader classLoader,String paramName, JavaAnnotation annotation) {
-        String resolvedParamName = DocUtil.resolveAnnotationValue(classLoader,annotation.getProperty(DocAnnotationConstants.VALUE_PROP));
+    default String getParamName(ClassLoader classLoader, String paramName, JavaAnnotation annotation) {
+        String resolvedParamName = DocUtil.resolveAnnotationValue(classLoader, annotation.getProperty(DocAnnotationConstants.VALUE_PROP));
         if (StringUtils.isBlank(resolvedParamName)) {
-            resolvedParamName = DocUtil.resolveAnnotationValue(classLoader,annotation.getProperty(DocAnnotationConstants.NAME_PROP));
+            resolvedParamName = DocUtil.resolveAnnotationValue(classLoader, annotation.getProperty(DocAnnotationConstants.NAME_PROP));
         }
         if (!StringUtils.isBlank(resolvedParamName)) {
             paramName = StringUtil.removeQuotes(resolvedParamName);
@@ -286,8 +286,8 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
             if (Objects.isNull(mappingAnnotationMap)) {
                 mappingAnnotationMap = Collections.emptyMap();
             }
-            return (entryAnnotationMap.containsKey(annotationName) || entryAnnotationMap.containsKey(fullyName))&&
-                    (mappingAnnotationMap.containsKey(annotationName)||mappingAnnotationMap.containsKey(fullyName));
+            return (entryAnnotationMap.containsKey(annotationName) || entryAnnotationMap.containsKey(fullyName)) &&
+                    (mappingAnnotationMap.containsKey(annotationName) || mappingAnnotationMap.containsKey(fullyName));
         });
         // child override parent set
         if (flag) {
@@ -298,9 +298,9 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
             annotationsList.addAll(getClassAnnotations(superJavaClass, frameworkAnnotations));
         }
         List<JavaClass> interfaseList = cls.getInterfaces();
-        if(CollectionUtil.isNotEmpty(interfaseList)){
+        if (CollectionUtil.isNotEmpty(interfaseList)) {
             for (JavaClass javaInterface : interfaseList) {
-                annotationsList.addAll(getClassAnnotations(javaInterface,frameworkAnnotations));
+                annotationsList.addAll(getClassAnnotations(javaInterface, frameworkAnnotations));
             }
         }
         return annotationsList;
@@ -329,7 +329,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                 continue;
             }
             if (CollectionUtil.isNotEmpty(mappingAnnotation.getPathProps())) {
-                baseUrl = StringUtil.removeQuotes(DocUtil.getPathUrl(classLoader,annotation, mappingAnnotation.getPathProps()
+                baseUrl = StringUtil.removeQuotes(DocUtil.getPathUrl(classLoader, annotation, mappingAnnotation.getPathProps()
                         .toArray(new String[0])));
             }
             // use first annotation's value
@@ -592,9 +592,9 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                     }
                     AnnotationValue annotationDefaultVal = annotation.getProperty(defaultValueProp);
                     if (Objects.nonNull(annotationDefaultVal)) {
-                        mockValue = DocUtil.resolveAnnotationValue(classLoader,annotationDefaultVal);
+                        mockValue = DocUtil.resolveAnnotationValue(classLoader, annotationDefaultVal);
                     }
-                    paramName = getParamName(classLoader,paramName, annotation);
+                    paramName = getParamName(classLoader, paramName, annotation);
                     AnnotationValue annotationRequired = annotation.getProperty(requiredProp);
                     if (Objects.nonNull(annotationRequired)) {
                         strRequired = annotationRequired.toString();
@@ -616,7 +616,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                 }
                 required = Boolean.parseBoolean(strRequired);
             }
-            comment.append(JavaFieldUtil.getJsrComment(classLoader,annotations));
+            comment.append(JavaFieldUtil.getJsrComment(classLoader, annotations));
             if (requestFieldToUnderline && !isPathVariable) {
                 paramName = StringUtil.camelToUnderline(paramName);
             }
@@ -871,9 +871,9 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                 AnnotationValue annotationDefaultVal = annotation.getProperty(DocAnnotationConstants.DEFAULT_VALUE_PROP);
 
                 if (Objects.nonNull(annotationDefaultVal)) {
-                    mockValue = DocUtil.resolveAnnotationValue(classLoader,annotationDefaultVal);
+                    mockValue = DocUtil.resolveAnnotationValue(classLoader, annotationDefaultVal);
                 }
-                paramName = getParamName(classLoader,paramName, annotation);
+                paramName = getParamName(classLoader, paramName, annotation);
                 if (frameworkAnnotations.getRequestBodyAnnotation().getAnnotationName().equals(annotationName)) {
                     // priority use mapping annotation's consumer value
                     if (apiMethodDoc.getContentType().equals(DocGlobalConstants.URL_CONTENT_TYPE)) {
