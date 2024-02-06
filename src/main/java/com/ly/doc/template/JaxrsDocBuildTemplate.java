@@ -131,7 +131,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDo
             if (JakartaJaxrsAnnotations.JAX_PATH_FULLY.equals(annotationName)
                     || JAXRSAnnotations.JAX_PATH_FULLY.equals(annotationName)) {
                 ClassLoader classLoader = projectBuilder.getJavaProjectBuilder().getClass().getClassLoader();
-                baseUrl = StringUtil.removeQuotes(DocUtil.getRequestHeaderValue(classLoader,annotation));
+                baseUrl = StringUtil.removeQuotes(DocUtil.getRequestHeaderValue(classLoader, annotation));
             }
             // use first annotation's value
             if (annotationName.equals(JakartaJaxrsAnnotations.JAX_CONSUMES)
@@ -380,7 +380,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDo
                     //default value
                     if (JakartaJaxrsAnnotations.JAX_DEFAULT_VALUE_FULLY.equals(annotationName)
                             || JAXRSAnnotations.JAX_DEFAULT_VALUE_FULLY.equals(annotationName)) {
-                        mockValue = StringUtil.removeQuotes(DocUtil.getRequestHeaderValue(classLoader,annotation));
+                        mockValue = StringUtil.removeQuotes(DocUtil.getRequestHeaderValue(classLoader, annotation));
                         mockValue = DocUtil.handleConstants(constantsMap, mockValue);
                     }
                     // path param
@@ -394,7 +394,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDo
                         strRequired = "true";
                     }
                 }
-                comment.append(JavaFieldUtil.getJsrComment(classLoader,annotations));
+                comment.append(JavaFieldUtil.getJsrComment(classLoader, annotations));
             } else {
                 isRequestBody = true;
             }

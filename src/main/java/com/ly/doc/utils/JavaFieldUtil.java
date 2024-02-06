@@ -125,14 +125,14 @@ public class JavaFieldUtil {
      * @param annotations annotations
      * @return Jsr comments
      */
-    public static String getJsrComment(ClassLoader classLoader,List<JavaAnnotation> annotations) {
+    public static String getJsrComment(ClassLoader classLoader, List<JavaAnnotation> annotations) {
         StringBuilder sb = new StringBuilder();
         for (JavaAnnotation annotation : annotations) {
             Map<String, AnnotationValue> values = annotation.getPropertyMap();
             String name = annotation.getType().getValue();
             if (DocValidatorAnnotationEnum.listValidatorAnnotations().contains(name)) {
                 for (Map.Entry<String, AnnotationValue> m : values.entrySet()) {
-                    String value = DocUtil.resolveAnnotationValue(classLoader,m.getValue());
+                    String value = DocUtil.resolveAnnotationValue(classLoader, m.getValue());
                     if (DocAnnotationConstants.REGEXP.equals(m.getKey())) {
                         sb.append(m.getKey()).append(": ").append(StringUtil.removeDoubleQuotes(value))
                                 .append("; ");
@@ -168,9 +168,10 @@ public class JavaFieldUtil {
 
     /**
      * Obtain value of constants field
+     *
      * @param classLoader classLoader
-     * @param javaClass  class
-     * @param fieldName field name
+     * @param javaClass   class
+     * @param fieldName   field name
      * @return
      */
     public static String getConstantsFieldValue(ClassLoader classLoader, JavaClass javaClass, String fieldName) {
