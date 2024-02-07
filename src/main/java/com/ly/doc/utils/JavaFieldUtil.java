@@ -22,11 +22,6 @@
  */
 package com.ly.doc.utils;
 
-import java.lang.reflect.Field;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-
 import com.ly.doc.constants.DocAnnotationConstants;
 import com.ly.doc.constants.DocGlobalConstants;
 import com.ly.doc.constants.DocValidatorAnnotationEnum;
@@ -37,10 +32,21 @@ import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.expression.AnnotationValue;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
 /**
  * @author yu 2019/12/21.
  */
 public class JavaFieldUtil {
+
+    /**
+     * public static final
+     */
+    private static final int PUBLIC_STATIC_FINAL = Modifier.PUBLIC | Modifier.STATIC | Modifier.FINAL;
 
     /**
      * @param fields list of fields
@@ -155,9 +161,7 @@ public class JavaFieldUtil {
         if (sb.length() < 1) {
             return DocGlobalConstants.EMPTY;
         }
-        StringBuilder finalSb = new StringBuilder();
-        finalSb.append("\nValidate[").append(sb).append("]");
-        return finalSb.toString();
+        return "\nValidate[" + sb + "]";
     }
 
 
@@ -172,7 +176,7 @@ public class JavaFieldUtil {
      * @param classLoader classLoader
      * @param javaClass   class
      * @param fieldName   field name
-     * @return
+     * @return Obtain value of constants field
      */
     public static String getConstantsFieldValue(ClassLoader classLoader, JavaClass javaClass, String fieldName) {
         try {
@@ -184,15 +188,17 @@ public class JavaFieldUtil {
             }
             Field[] fields = c.getDeclaredFields();
             for (Field f : fields) {
-                // 25 is static field
-                if (f.getModifiers() != 25) {
+                // if not have public static final
+                if ((f.getModifiers() & PUBLIC_STATIC_FINAL) != PUBLIC_STATIC_FINAL) {
                     continue;
                 }
+                // if not match field name
                 if (!f.getName().equals(fieldName)) {
                     continue;
                 }
-                String constantValue = (String) f.get(null);
-                return constantValue;
+                // get value
+                Object constantValue = f.get(null);
+                return null == constantValue ? null : String.valueOf(constantValue);
             }
         } catch (ClassNotFoundException | IllegalAccessException e) {
             return null;
