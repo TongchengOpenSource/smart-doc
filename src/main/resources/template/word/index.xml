@@ -20,7 +20,7 @@
 
         <w:p>
             <w:pPr>
-                <w:pStyle w:val="4"/>
+                <w:pStyle w:val="2"/>
             </w:pPr>
             <w:bookmarkStart w:id="1" w:name="${wordXmlEscape(desc)}"/>
             <w:r>
@@ -38,7 +38,7 @@
         <%if(doc.deprecated){%>
         <w:p>
             <w:pPr>
-                <w:pStyle w:val="5"/>
+                <w:pStyle w:val="3"/>
                 <w:rPr>
                     <w:strike/>
                     <w:dstrike w:val="0"/>
@@ -59,7 +59,7 @@
 
         <w:p>
             <w:pPr>
-                <w:pStyle w:val="5"/>
+                <w:pStyle w:val="3"/>
             </w:pPr>
             <w:bookmarkStart w:id="2" w:name="${wordXmlEscape(doc.desc)}"/>
             <w:r>
@@ -73,7 +73,7 @@
         <!--        url-->
         <w:p>
             <w:pPr>
-                <w:pStyle w:val="23"/>
+                <w:pStyle w:val="29"/>
             </w:pPr>
             <w:r>
                 <w:rPr>
@@ -96,7 +96,7 @@
             </w:r>
             <w:r>
                 <w:rPr>
-                    <w:rStyle w:val="20"/>
+                    <w:rStyle w:val="ab"/>
                 </w:rPr>
                 <w:t> ${doc.url}</w:t>
             </w:r>
@@ -107,7 +107,7 @@
         <!--type-->
         <w:p>
             <w:pPr>
-                <w:pStyle w:val="3"/>
+                <w:pStyle w:val="29"/>
             </w:pPr>
             <w:r>
                 <w:rPr>
@@ -124,7 +124,7 @@
         <%if(isNotEmpty(doc.author)){%>
         <w:p>
             <w:pPr>
-                <w:pStyle w:val="3"/>
+                <w:pStyle w:val="29"/>
             </w:pPr>
             <w:r>
                 <w:rPr>
@@ -141,7 +141,7 @@
 
         <w:p>
             <w:pPr>
-                <w:pStyle w:val="3"/>
+                <w:pStyle w:val="29"/>
             </w:pPr>
             <w:r>
                 <w:rPr>
@@ -158,7 +158,7 @@
         <!--        描述-->
         <w:p>
             <w:pPr>
-                <w:pStyle w:val="3"/>
+                <w:pStyle w:val="29"/>
             </w:pPr>
             <w:r>
                 <w:rPr>
@@ -176,7 +176,7 @@
         <%if(isNotEmpty(doc.headers)){%>
         <w:p>
             <w:pPr>
-                <w:pStyle w:val="3"/>
+                <w:pStyle w:val="29"/>
             </w:pPr>
             <w:r>
                 <w:rPr>
@@ -464,7 +464,7 @@
         <%if(isNotEmpty(doc.pathParams)){%>
         <w:p>
             <w:pPr>
-                <w:pStyle w:val="3"/>
+                <w:pStyle w:val="29"/>
             </w:pPr>
             <w:r>
                 <w:rPr>
@@ -752,7 +752,7 @@
         <%if(isNotEmpty(doc.queryParams)){%>
         <w:p>
             <w:pPr>
-                <w:pStyle w:val="3"/>
+                <w:pStyle w:val="29"/>
             </w:pPr>
             <w:r>
                 <w:rPr>
@@ -1041,7 +1041,7 @@
         <%if(isNotEmpty(doc.requestParams)){%>
         <w:p>
             <w:pPr>
-                <w:pStyle w:val="3"/>
+                <w:pStyle w:val="29"/>
             </w:pPr>
             <w:r>
                 <w:rPr>
@@ -1330,7 +1330,7 @@
         <%if(isNotEmpty(doc.requestUsage)&&isRequestExample){%>
         <w:p>
             <w:pPr>
-                <w:pStyle w:val="3"/>
+                <w:pStyle w:val="29"/>
             </w:pPr>
             <w:r>
                 <w:rPr>
@@ -1367,7 +1367,7 @@
         <%if(isNotEmpty(doc.responseParams)){%>
         <w:p>
             <w:pPr>
-                <w:pStyle w:val="23"/>
+                <w:pStyle w:val="29"/>
             </w:pPr>
             <w:r>
                 <w:rPr>
@@ -1601,7 +1601,7 @@
         <%if(isNotEmpty(doc.responseUsage)&&isResponseExample){%>
         <w:p>
             <w:pPr>
-                <w:pStyle w:val="23"/>
+                <w:pStyle w:val="29"/>
             </w:pPr>
             <w:r>
                 <w:rPr>
