@@ -1,7 +1,5 @@
 package com.ly.doc.utils;
 
-import java.util.*;
-
 import com.ly.doc.builder.ProjectDocConfigBuilder;
 import com.ly.doc.constants.DocGlobalConstants;
 import com.ly.doc.constants.DocTags;
@@ -10,6 +8,8 @@ import com.power.common.util.CollectionUtil;
 import com.power.common.util.StringUtil;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaField;
+
+import java.util.*;
 
 /**
  * @author <a href="mailto:cqmike0315@gmail.com">chenqi</a>
@@ -23,7 +23,11 @@ public class ParamUtil {
         if (Objects.isNull(seeEnum)) {
             return null;
         }
-        param.setType(DocGlobalConstants.ENUM);
+        // when enum is same class, set type to enum
+        if (Objects.equals(seeEnum.getGenericFullyQualifiedName(),
+                javaField.getType().getGenericFullyQualifiedName())) {
+            param.setType(DocGlobalConstants.ENUM);
+        }
         Object value = JavaClassUtil.getEnumValue(seeEnum, !jsonRequest);
         param.setValue(String.valueOf(value));
         param.setEnumValues(JavaClassUtil.getEnumValues(seeEnum));
@@ -39,7 +43,7 @@ public class ParamUtil {
         if (StringUtil.isEmpty(mock)) {
             return mock;
         }
-        return mock.replaceAll("\\\\","");
+        return mock.replaceAll("\\\\", "");
     }
 
     public static List<String> extractQualifiedName(List<ApiParam> paramList) {
