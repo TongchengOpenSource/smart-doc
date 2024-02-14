@@ -75,7 +75,7 @@ public class JaxrsPathHandler {
         for (JavaAnnotation annotation : annotations) {
             String annotationName = annotation.getType().getFullyQualifiedName();
             // method level annotation will override class level annotation
-            if (annotationName.equals(JakartaJaxrsAnnotations.JAX_CONSUMES)
+            if (annotationName.equals(JakartaJaxrsAnnotations.JAX_CONSUMES_FULLY)
                     || annotationName.equals(JAXRSAnnotations.JAX_CONSUMES_FULLY)) {
                 Object value = annotation.getNamedParameter("value");
                 if (Objects.nonNull(value)) {
