@@ -130,11 +130,11 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDo
             String annotationName = annotation.getType().getFullyQualifiedName();
             if (JakartaJaxrsAnnotations.JAX_PATH_FULLY.equals(annotationName)
                     || JAXRSAnnotations.JAX_PATH_FULLY.equals(annotationName)) {
-                ClassLoader classLoader = projectBuilder.getJavaProjectBuilder().getClass().getClassLoader();
+                ClassLoader classLoader = projectBuilder.getApiConfig().getClassLoader();
                 baseUrl = StringUtil.removeQuotes(DocUtil.getRequestHeaderValue(classLoader, annotation));
             }
             // use first annotation's value
-            if (annotationName.equals(JakartaJaxrsAnnotations.JAX_CONSUMES)
+            if (annotationName.equals(JakartaJaxrsAnnotations.JAX_CONSUMES_FULLY)
                     || annotationName.equals(JAXRSAnnotations.JAX_CONSUMES_FULLY)) {
                 Object value = annotation.getNamedParameter("value");
                 if (Objects.nonNull(value)) {
@@ -332,7 +332,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDo
                     .setRequestParams(new ArrayList<>(0));
         }
         boolean isStrict = builder.getApiConfig().isStrict();
-        ClassLoader classLoader = builder.getJavaProjectBuilder().getClass().getClassLoader();
+        ClassLoader classLoader = builder.getApiConfig().getClassLoader();
         JavaMethod javaMethod = docJavaMethod.getJavaMethod();
         String className = javaMethod.getDeclaringClass().getCanonicalName();
         Map<String, String> paramTagMap = docJavaMethod.getParamTagMap();
@@ -606,7 +606,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDo
                         formData.setDescription(comment);
                         formData.setValue(mockValue);
                         formDataList.add(formData);
-                    } else if (JavaClassValidateUtil.isPrimitive(typeName)) {
+                    } else if (JavaClassValidateUtil.isPrimitive(fullyQualifiedName)) {
                         FormData formData = new FormData();
                         formData.setKey(paramName);
                         formData.setDescription(comment);
@@ -651,7 +651,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDo
                 if (JavaClassValidateUtil.isPrimitive(simpleTypeName)) {
                     requestExample.setJsonBody(mockValue).setJson(true);
                 } else {
-                    String json = JsonBuildHelper.buildJson(typeName, gicTypeName, Boolean.FALSE, 0, new HashMap<>(), groupClasses, configBuilder);
+                    String json = JsonBuildHelper.buildJson(fullyQualifiedName, gicTypeName, Boolean.FALSE, 0, new HashMap<>(), groupClasses, configBuilder);
                     requestExample.setJsonBody(JsonUtil.toPrettyFormat(json)).setJson(true);
                 }
             }

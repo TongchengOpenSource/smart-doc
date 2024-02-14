@@ -172,7 +172,7 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc>, IRpcDo
         if (parameterList.size() < 1) {
             return null;
         }
-        ClassLoader classLoader = builder.getJavaProjectBuilder().getClass().getClassLoader();
+        ClassLoader classLoader = builder.getApiConfig().getClassLoader();
         List<ApiParam> paramList = new ArrayList<>();
         for (JavaParameter parameter : parameterList) {
             boolean required = false;
