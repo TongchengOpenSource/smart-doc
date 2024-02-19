@@ -82,7 +82,7 @@ public class FormDataBuildHelper extends BaseHelper {
         if (JavaClassValidateUtil.isPrimitive(simpleName)) {
             FormData formData = new FormData();
             formData.setKey(pre);
-            formData.setType("text");
+            formData.setType(DocGlobalConstants.PARAM_TYPE_TEXT);
             formData.setValue(StringUtil.removeQuotes(RandomUtil.randomValueByType(className)));
             formDataList.add(formData);
             return formDataList;
@@ -123,7 +123,7 @@ public class FormDataBuildHelper extends BaseHelper {
             if (JavaClassValidateUtil.isFile(fieldGicName)) {
                 FormData formData = new FormData();
                 formData.setKey(pre + fieldName);
-                formData.setType("file");
+                formData.setType(DocGlobalConstants.PARAM_TYPE_FILE);
                 if (fieldGicName.contains("[]") || fieldGicName.endsWith(">")) {
                     comment = comment + "(array of file)";
                     formData.setType(DocGlobalConstants.PARAM_TYPE_FILE);
@@ -136,7 +136,8 @@ public class FormDataBuildHelper extends BaseHelper {
                 if (StringUtil.isEmpty(fieldValue)) {
                     fieldValue = DocUtil.getValByTypeAndFieldName(typeSimpleName, field.getName());
                 }
-                CustomField customRequestField = builder.getCustomReqFieldMap().get(fieldName);
+                CustomField.Key key = CustomField.Key.create(docField.getDeclaringClassName(), fieldName);
+                CustomField customRequestField = builder.getCustomReqFieldMap().get(key);
                 // cover request value
                 if (Objects.nonNull(customRequestField) && Objects.nonNull(customRequestField.getValue())
                     && JavaClassUtil.isTargetChildClass(simpleName, customRequestField.getOwnerClassName())) {
@@ -144,7 +145,7 @@ public class FormDataBuildHelper extends BaseHelper {
                 }
                 FormData formData = new FormData();
                 formData.setKey(pre + fieldName);
-                formData.setType("text");
+                formData.setType(DocGlobalConstants.PARAM_TYPE_TEXT);
                 formData.setValue(fieldValue);
                 formData.setDescription(comment);
                 formDataList.add(formData);
@@ -155,7 +156,7 @@ public class FormDataBuildHelper extends BaseHelper {
                 }
                 FormData formData = new FormData();
                 formData.setKey(pre + fieldName);
-                formData.setType("text");
+                formData.setType(DocGlobalConstants.PARAM_TYPE_TEXT);
                 formData.setValue(StringUtil.removeQuotes(String.valueOf(value)));
                 formData.setDescription(comment);
                 formDataList.add(formData);
@@ -174,7 +175,7 @@ public class FormDataBuildHelper extends BaseHelper {
                     }
                     FormData formData = new FormData();
                     formData.setKey(pre + fieldName);
-                    formData.setType("text");
+                    formData.setType(DocGlobalConstants.PARAM_TYPE_TEXT);
                     formData.setValue(fieldValue);
                     formData.setDescription(comment);
                     formDataList.add(formData);
@@ -193,14 +194,16 @@ public class FormDataBuildHelper extends BaseHelper {
                         }
                     }
                 }
-            } else if (subTypeName.length() == 1 || DocGlobalConstants.JAVA_OBJECT_FULLY.equals(subTypeName)) {
+            }
+//             else if (subTypeName.length() == 1 || DocGlobalConstants.JAVA_OBJECT_FULLY.equals(subTypeName)) {
                 //  For Generics,do nothing, spring mvc not support
 //                if (n < globGicName.length) {
 //                    String gicName = globGicName[n];
 //                    formDataList.addAll(getFormData(gicName, registryClasses, counter, builder, pre + fieldName + "."));
 //                }
 //                n++;
-            } else {
+//             }
+            else {
                 formDataList.addAll(getFormData(javaClass.getGenericFullyQualifiedName(), registryClasses, counter, builder, pre + fieldName + "."));
             }
         }
