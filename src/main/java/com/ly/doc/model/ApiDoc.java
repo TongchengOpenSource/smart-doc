@@ -113,6 +113,7 @@ public class ApiDoc implements IDoc, Comparable<ApiDoc> {
         ApiDoc apiDoc = new ApiDoc();
         apiDoc.setFolder(true);
         apiDoc.setGroup(group);
+        apiDoc.setAlias(group);
         apiDoc.setName(group);
         apiDoc.setDesc(group);
         apiDoc.setChildrenApiDocs(new ArrayList<>());
