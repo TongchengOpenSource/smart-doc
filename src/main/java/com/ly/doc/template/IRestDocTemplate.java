@@ -71,6 +71,11 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                     continue;
                 }
             }
+            if (StringUtil.isNotEmpty(apiConfig.getPackageExcludeFilters())) {
+                if (DocUtil.isMatch(apiConfig.getPackageExcludeFilters(), cls)) {
+                    continue;
+                }
+            }
             // from tag
             DocletTag ignoreTag = cls.getTagByName(DocTags.IGNORE);
             if (!isEntryPoint(cls, frameworkAnnotations) || Objects.nonNull(ignoreTag)) {
