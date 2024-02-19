@@ -208,7 +208,7 @@ public abstract class AbstractOpenApiBuilder {
         if (isRep) {
             String responseRef = componentKey + OpenApiSchemaUtil.getClassNameFromParams(apiMethodDoc.getResponseParams());
             if (apiMethodDoc.getIsResponseArray() == 1) {
-                schema.put("type", ARRAY);
+                schema.put("type", PARAM_TYPE_ARRAY);
                 innerScheme.put("$ref", responseRef);
                 schema.put("items", innerScheme);
             } else if (CollectionUtil.isNotEmpty(apiMethodDoc.getResponseParams())) {
@@ -228,7 +228,7 @@ public abstract class AbstractOpenApiBuilder {
         //remove special characters in url
         if (CollectionUtil.isNotEmpty(apiMethodDoc.getRequestParams())) {
             if (apiMethodDoc.getIsRequestArray() == 1) {
-                schema.put("type", ARRAY);
+                schema.put("type", PARAM_TYPE_ARRAY);
                 innerScheme.put("$ref", requestRef);
                 schema.put("items", innerScheme);
             } else {
@@ -301,12 +301,12 @@ public abstract class AbstractOpenApiBuilder {
             if ("enum".equals(apiParam.getType())) {
                 schema.put("enum", apiParam.getEnumValues());
             }
-        } else if (ARRAY.equals(openApiType)) {
+        } else if (PARAM_TYPE_ARRAY.equals(openApiType)) {
             if (CollectionUtil.isNotEmpty(apiParam.getEnumValues())) {
                 schema.put("type", "string");
                 schema.put("items", apiParam.getEnumValues());
             } else {
-                schema.put("type", ARRAY);
+                schema.put("type", PARAM_TYPE_ARRAY);
                 Map<String, String> map = new HashMap<>(4);
                 map.put("type", "string");
                 map.put("format", "string");

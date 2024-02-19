@@ -20,11 +20,11 @@
  */
 package com.ly.doc.model;
 
-import java.util.Objects;
-
 import com.ly.doc.constants.ApiReqParamInTypeEnum;
-
+import com.ly.doc.constants.DocGlobalConstants;
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.Objects;
 
 /**
  * Description:
@@ -94,9 +94,14 @@ public class ApiReqParam {
     }
 
     public static ApiParam convertToApiParam(ApiReqParam param) {
-        return ApiParam.of().setField(param.getName()).setValue(param.getValue())
-            .setRequired(param.isRequired()).setDesc(param.getDesc()).setConfigParam(true)
-            .setVersion("-").setType(param.getType());
+        return ApiParam.of()
+                .setField(param.getName())
+                .setValue(param.getValue())
+                .setRequired(param.isRequired())
+                .setDesc(param.getDesc())
+                .setConfigParam(true)
+                .setVersion(DocGlobalConstants.DEFAULT_VERSION)
+                .setType(param.getType());
     }
 
     public String getName() {
@@ -204,23 +209,23 @@ public class ApiReqParam {
     public String toString() {
         final StringBuilder sb = new StringBuilder("{");
         sb.append("\"name\":\"")
-            .append(name).append('\"');
+                .append(name).append('\"');
         sb.append(",\"type\":\"")
-            .append(type).append('\"');
+                .append(type).append('\"');
         sb.append(",\"value\":\"")
-            .append(value).append('\"');
+                .append(value).append('\"');
         sb.append(",\"desc\":\"")
-            .append(desc).append('\"');
+                .append(desc).append('\"');
         sb.append(",\"paramIn\":")
-            .append(paramIn);
+                .append(paramIn);
         sb.append(",\"required\":")
-            .append(required);
+                .append(required);
         sb.append(",\"since\":\"")
-            .append(since).append('\"');
+                .append(since).append('\"');
         sb.append(",\"pathPatterns\":\"")
-            .append(pathPatterns).append('\"');
+                .append(pathPatterns).append('\"');
         sb.append(",\"excludePathPatterns\":\"")
-            .append(excludePathPatterns).append('\"');
+                .append(excludePathPatterns).append('\"');
         sb.append('}');
         return sb.toString();
     }

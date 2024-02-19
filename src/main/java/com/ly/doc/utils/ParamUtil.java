@@ -26,7 +26,7 @@ public class ParamUtil {
         // when enum is same class, set type to enum
         if (Objects.equals(seeEnum.getGenericFullyQualifiedName(),
                 javaField.getType().getGenericFullyQualifiedName())) {
-            param.setType(DocGlobalConstants.ENUM);
+            param.setType(DocGlobalConstants.PARAM_TYPE_ENUM);
         }
         Object value = JavaClassUtil.getEnumValue(seeEnum, !jsonRequest);
         param.setValue(String.valueOf(value));

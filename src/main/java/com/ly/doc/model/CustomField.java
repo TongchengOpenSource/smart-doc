@@ -134,12 +134,12 @@ public class CustomField {
         /**
          * owner class
          */
-        private String ownerClassName;
+        private final String ownerClassName;
 
         /**
          * field name
          */
-        private String name;
+        private final String name;
 
         private Key(String ownerClassName, String name) {
             this.ownerClassName = ownerClassName;
@@ -152,8 +152,12 @@ public class CustomField {
 
         @Override
         public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
             Key key = (Key) o;
             return Objects.equals(ownerClassName, key.ownerClassName) && Objects.equals(name, key.name);
         }

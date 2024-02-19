@@ -203,7 +203,7 @@ public class OpenApiBuilder extends AbstractOpenApiBuilder {
             if (apiParam.isHasItems()) {
                 parameters = getStringParams(apiParam, false);
                 Map<String, Object> arrayMap = new HashMap<>();
-                arrayMap.put("type", DocGlobalConstants.ARRAY);
+                arrayMap.put("type", DocGlobalConstants.PARAM_TYPE_ARRAY);
                 arrayMap.put("items", getStringParams(apiParam, apiParam.isHasItems()));
                 parameters.put("schema", arrayMap);
                 parametersList.add(parameters);
@@ -242,8 +242,8 @@ public class OpenApiBuilder extends AbstractOpenApiBuilder {
             parameters.put("in", "query");
             parameters.put("schema", buildParametersSchema(apiParam));
         } else {
-            if (DocGlobalConstants.OBJECT.equals(apiParam.getType()) ||
-                    (DocGlobalConstants.ARRAY.equals(apiParam.getType()) && apiParam.isHasItems())) {
+            if (DocGlobalConstants.PARAM_TYPE_OBJECT.equals(apiParam.getType()) ||
+                    (DocGlobalConstants.PARAM_TYPE_ARRAY.equals(apiParam.getType()) && apiParam.isHasItems())) {
                 parameters.put("type", "object");
                 parameters.put("description", "(complex POJO please use @RequestBody)");
             } else {

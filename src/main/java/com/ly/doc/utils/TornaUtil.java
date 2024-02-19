@@ -57,7 +57,7 @@ public class TornaUtil {
             return;
         }
         // Push all documents
-        if(apiConfig.getApiUploadNums() == null){
+        if (apiConfig.getApiUploadNums() == null) {
             pushToTornaAll(tornaApi, apiConfig, builder);
             return;
         }
@@ -348,7 +348,7 @@ public class TornaUtil {
         if (respArray) {
             apiMethodDoc.setIsResponseArray(1);
             String className = getType(method.getReturnType().getGenericCanonicalName());
-            String arrayType = JavaClassValidateUtil.isPrimitive(className) ? className : DocGlobalConstants.OBJECT;
+            String arrayType = JavaClassValidateUtil.isPrimitive(className) ? className : DocGlobalConstants.PARAM_TYPE_OBJECT;
             apiMethodDoc.setResponseArrayType(arrayType);
         }
         // request
@@ -361,7 +361,7 @@ public class TornaUtil {
                 if (reqArray) {
                     apiMethodDoc.setIsRequestArray(1);
                     String className = getType(param.getType().getGenericCanonicalName());
-                    String arrayType = JavaClassValidateUtil.isPrimitive(className) ? className : DocGlobalConstants.OBJECT;
+                    String arrayType = JavaClassValidateUtil.isPrimitive(className) ? className : DocGlobalConstants.PARAM_TYPE_OBJECT;
                     apiMethodDoc.setRequestArrayType(arrayType);
                     break;
                 }
@@ -372,13 +372,14 @@ public class TornaUtil {
 
     private static String getArrayType(Map<String, Object> schemaMap) {
         String arrayType = null;
-        if (Objects.nonNull(schemaMap) && Objects.equals(DocGlobalConstants.ARRAY, schemaMap.get("type"))) {
-            Map<String, Object> innerSchemeMap = (Map<String, Object>) schemaMap.get("items");
-            if (Objects.nonNull(innerSchemeMap)) {
+        if (Objects.nonNull(schemaMap) && Objects.equals(DocGlobalConstants.PARAM_TYPE_ARRAY, schemaMap.get("type"))) {
+            Object innerScheme = schemaMap.get("items");
+            if (Objects.nonNull(innerScheme)) {
+                Map<String, Object> innerSchemeMap = (Map<String, Object>) innerScheme;
                 String type = (String) innerSchemeMap.get("type");
                 if (StringUtil.isNotEmpty(type)) {
                     String className = getType(type);
-                    arrayType = JavaClassValidateUtil.isPrimitive(className) ? className : DocGlobalConstants.OBJECT;
+                    arrayType = JavaClassValidateUtil.isPrimitive(className) ? className : DocGlobalConstants.PARAM_TYPE_OBJECT;
                 }
             }
         }

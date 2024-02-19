@@ -54,7 +54,7 @@ import static com.ly.doc.constants.DocTags.IGNORE;
 public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 
     Logger log = Logger.getLogger(IRestDocTemplate.class.getName());
-    AtomicInteger atomicInteger = new AtomicInteger(1);
+    AtomicInteger ATOMIC_INTEGER = new AtomicInteger(1);
 
     default List<ApiDoc> processApiData(ProjectDocConfigBuilder projectBuilder, FrameworkAnnotations frameworkAnnotations,
                                         List<ApiReqParam> configApiReqParams, IRequestMappingHandler baseMappingHandler, IHeaderHandler headerHandler,
@@ -99,7 +99,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
             // while set custom oder
             return apiDocList.stream()
                     .sorted(Comparator.comparing(ApiDoc::getOrder))
-                    .peek(p -> p.setOrder(atomicInteger.getAndAdd(1))).collect(Collectors.toList());
+                    .peek(p -> p.setOrder(ATOMIC_INTEGER.getAndAdd(1))).collect(Collectors.toList());
         }
         return apiDocList;
     }
@@ -160,7 +160,9 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
         for (ApiMethodDoc methodDoc : apiMethodDocs) {
             String[] docTags = methodDoc.getTags();
             methodDoc.setClazzDoc(apiDoc);
-            if (ArrayUtils.isEmpty(docTags)) continue;
+            if (ArrayUtils.isEmpty(docTags)) {
+                continue;
+            }
             for (String tag : docTags) {
                 DocMapping.tagDocPut(tag, null, methodDoc);
             }
@@ -227,7 +229,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
         }
 
         // all class tag copy
-        Map<String, ApiDoc> copyMap = new HashMap<>();
+        Map<String, ApiDoc> copyMap = new HashMap<>(16);
         apiDocList.forEach(doc -> {
             String[] tags = doc.getTags();
             if (ArrayUtils.isEmpty(tags)) {
@@ -509,7 +511,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
         Map<String, String> paramTagMap = docJavaMethod.getParamTagMap();
         Map<String, String> paramsComments = docJavaMethod.getParamsComments();
         List<ApiParam> paramList = new ArrayList<>();
-        Map<String, String> mappingParams = new HashMap<>();
+        Map<String, String> mappingParams = new HashMap<>(16);
         List<JavaAnnotation> methodAnnotations = javaMethod.getAnnotations();
         Map<String, MappingAnnotation> mappingAnnotationMap = frameworkAnnotations.getMappingAnnotations();
         for (JavaAnnotation annotation : methodAnnotations) {
@@ -617,7 +619,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 //                        throw new RuntimeException("You have use @RequestBody Passing multiple variables  for method "
 //                                + javaMethod.getName() + " in " + className + ",@RequestBody annotation could only bind one variables.");
 //                    }
-                    mockValue = JsonBuildHelper.buildJson(fullyQualifiedName, typeName, Boolean.FALSE, 0, new HashMap<>(), groupClasses, builder);
+                    mockValue = JsonBuildHelper.buildJson(fullyQualifiedName, typeName, Boolean.FALSE, 0, new HashMap<>(16), groupClasses, builder);
                     requestBodyCounter++;
                     isRequestBody = true;
                 }
@@ -671,7 +673,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                             .setId(paramList.size() + 1)
                             .setEnumValues(JavaClassUtil.getEnumValues(gicJavaClass))
                             .setEnumInfo(JavaClassUtil.getEnumInfo(gicJavaClass, builder))
-                            .setType("array")
+                            .setType(DocGlobalConstants.PARAM_TYPE_ARRAY)
                             .setValue(String.valueOf(value));
                     paramList.add(param);
                     if (requestBodyCounter > 0) {
@@ -687,7 +689,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                             .setPathParam(isPathVariable)
                             .setQueryParam(queryParam)
                             .setId(paramList.size() + 1)
-                            .setType("array")
+                            .setType(DocGlobalConstants.PARAM_TYPE_ARRAY)
                             .setVersion(DocGlobalConstants.DEFAULT_VERSION)
                             .setValue(mockValue);
                     paramList.add(param);
@@ -711,7 +713,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                     if (requestBodyCounter > 0) {
                         // for json
                         paramList.addAll(ParamsBuildHelper.buildParams(gicNameArr[0], DocGlobalConstants.EMPTY, 0,
-                                String.valueOf(required), Boolean.FALSE, new HashMap<>(), builder,
+                                String.valueOf(required), Boolean.FALSE, new HashMap<>(16), builder,
                                 groupClasses, 0, Boolean.TRUE, null));
                     }
                 }
@@ -738,7 +740,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                 if (JavaClassValidateUtil.isMap(typeName)) {
                     ApiParam apiParam = ApiParam.of()
                             .setField(paramName)
-                            .setType("map")
+                            .setType(DocGlobalConstants.PARAM_TYPE_MAP)
                             .setId(paramList.size() + 1)
                             .setPathParam(isPathVariable)
                             .setQueryParam(queryParam)
@@ -756,7 +758,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                 if (JavaClassValidateUtil.isPrimitive(gicNameArr[1])) {
                     ApiParam apiParam = ApiParam.of()
                             .setField(paramName)
-                            .setType("map")
+                            .setType(DocGlobalConstants.PARAM_TYPE_MAP)
                             .setId(paramList.size() + 1)
                             .setPathParam(isPathVariable)
                             .setQueryParam(queryParam)
@@ -770,7 +772,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                     }
                 } else {
                     paramList.addAll(ParamsBuildHelper.buildParams(gicNameArr[1], DocGlobalConstants.EMPTY, 0,
-                            String.valueOf(required), Boolean.FALSE, new HashMap<>(),
+                            String.valueOf(required), Boolean.FALSE, new HashMap<>(16),
                             builder, groupClasses, 0, Boolean.FALSE, null));
                 }
 
@@ -784,7 +786,8 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                         .setPathParam(isPathVariable)
                         .setQueryParam(queryParam)
                         .setValue(StringUtil.removeDoubleQuotes(String.valueOf(value)))
-                        .setType("enum").setDesc(StringUtil.removeQuotes(enumName))
+                        .setType(DocGlobalConstants.PARAM_TYPE_ENUM)
+                        .setDesc(StringUtil.removeQuotes(enumName))
                         .setRequired(required)
                         .setVersion(DocGlobalConstants.DEFAULT_VERSION)
                         .setEnumInfo(JavaClassUtil.getEnumInfo(javaClass, builder))
@@ -792,7 +795,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                 paramList.add(param);
             } else {
                 paramList.addAll(ParamsBuildHelper.buildParams(typeName, DocGlobalConstants.EMPTY, 0,
-                        String.valueOf(required), Boolean.FALSE, new HashMap<>(), builder, groupClasses, 0, Boolean.FALSE, null));
+                        String.valueOf(required), Boolean.FALSE, new HashMap<>(16), builder, groupClasses, 0, Boolean.FALSE, null));
             }
         }
         return ApiParamTreeUtil.buildMethodReqParam(paramList, queryReqParamMap, pathReqParamMap, requestBodyCounter);
@@ -831,7 +834,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
         }
         List<DocJavaParameter> parameterList = getJavaParameterList(configBuilder, javaMethod, frameworkAnnotations);
         List<ApiReqParam> reqHeaderList = apiMethodDoc.getRequestHeaders();
-        if (parameterList.size() < 1) {
+        if (parameterList.isEmpty()) {
             String path = apiMethodDoc.getPath().split(";")[0];
             path = DocUtil.formatAndRemove(path, pathParamsMap);
             String url = UrlUtil.urlJoin(path, queryParamsMap);
@@ -955,7 +958,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                 apiMethodDoc.setContentType(FILE_CONTENT_TYPE);
                 FormData formData = new FormData();
                 formData.setKey(paramName);
-                formData.setType("file");
+                formData.setType(DocGlobalConstants.PARAM_TYPE_FILE);
                 if (fullyQualifiedName.contains("[]") || fullyQualifiedName.endsWith(">")) {
                     comment = comment + "(array of file)";
                     formData.setType(DocGlobalConstants.PARAM_TYPE_FILE);
@@ -963,13 +966,13 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                 }
                 formData.setDescription(comment);
                 formData.setValue(mockValue);
-                formData.setSrc(new ArrayList(0));
+                formData.setSrc(new ArrayList<>(0));
                 formDataList.add(formData);
             } else if (JavaClassValidateUtil.isPrimitive(fullyQualifiedName) && !requestParam) {
                 FormData formData = new FormData();
                 formData.setKey(paramName);
                 formData.setDescription(comment);
-                formData.setType("text");
+                formData.setType(DocGlobalConstants.PARAM_TYPE_TEXT);
                 formData.setValue(mockValue);
                 formDataList.add(formData);
             } else if (JavaClassValidateUtil.isArray(fullyQualifiedName) || JavaClassValidateUtil.isCollection(fullyQualifiedName)) {
@@ -995,7 +998,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                     formData.setKey(paramName + "[]");
                 }
                 formData.setDescription(comment);
-                formData.setType("text");
+                formData.setType(DocGlobalConstants.PARAM_TYPE_TEXT);
                 formData.setValue(value);
                 formDataList.add(formData);
             } else if (javaClass.isEnum()) {
@@ -1004,12 +1007,12 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                 String strVal = StringUtil.removeQuotes(String.valueOf(value));
                 FormData formData = new FormData();
                 formData.setKey(paramName);
-                formData.setType("text");
+                formData.setType(DocGlobalConstants.PARAM_TYPE_TEXT);
                 formData.setDescription(comment);
                 formData.setValue(strVal);
                 formDataList.add(formData);
             } else {
-                formDataList.addAll(FormDataBuildHelper.getFormData(gicTypeName, new HashMap<>(), 0, configBuilder, DocGlobalConstants.EMPTY));
+                formDataList.addAll(FormDataBuildHelper.getFormData(gicTypeName, new HashMap<>(16), 0, configBuilder, DocGlobalConstants.EMPTY));
             }
         }
 
