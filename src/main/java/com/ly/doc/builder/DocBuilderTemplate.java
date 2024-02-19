@@ -43,6 +43,7 @@ import com.ly.doc.model.ApiDocDict;
 import com.ly.doc.model.ApiErrorCode;
 import com.ly.doc.model.ApiMethodDoc;
 import com.ly.doc.utils.BeetlTemplateUtil;
+import com.power.common.util.StringUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 
 import org.beetl.core.Template;
@@ -261,14 +262,18 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
             for (ApiDocDict apiDocDict : apiDocDictList) {
                 ApiMethodDoc methodDoc = new ApiMethodDoc();
                 methodDoc.setOrder(apiDocDict.getOrder());
-                methodDoc.setDesc(apiDocDict.getTitle());
+                String title = "";
+                if (StringUtil.isNotEmpty(apiDocDict.getTitle())) {
+                    title = apiDocDict.getTitle();
+                }
+                methodDoc.setDesc(title);
                 methodDocs.add(methodDoc);
 
                 ApiDoc childrenApiDoc = new ApiDoc();
                 childrenApiDoc.setOrder(apiDocDict.getOrder());
-                childrenApiDoc.setAlias(apiDocDict.getTitle());
-                childrenApiDoc.setDesc(apiDocDict.getTitle());
-                childrenApiDoc.setName(apiDocDict.getTitle());
+                childrenApiDoc.setAlias(title);
+                childrenApiDoc.setDesc(title);
+                childrenApiDoc.setName(title);
                 childrenApiDoc.setList(new ArrayList<>(0));
                 childrenApiDocs.add(childrenApiDoc);
 
