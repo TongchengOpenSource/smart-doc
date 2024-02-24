@@ -91,6 +91,7 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc>, IRpcDo
         return apiDocList;
     }
 
+    @Override
     public boolean ignoreReturnObject(String typeName, List<String> ignoreParams) {
         return false;
     }
@@ -169,7 +170,7 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc>, IRpcDo
         String className = javaMethod.getDeclaringClass().getCanonicalName();
         Map<String, String> paramTagMap = DocUtil.getCommentsByTag(javaMethod, DocTags.PARAM, className);
         List<JavaParameter> parameterList = javaMethod.getParameters();
-        if (parameterList.size() < 1) {
+        if (parameterList.isEmpty()) {
             return null;
         }
         ClassLoader classLoader = builder.getApiConfig().getClassLoader();
@@ -215,7 +216,7 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc>, IRpcDo
                     paramList.add(param);
                 } else {
                     paramList.addAll(ParamsBuildHelper.buildParams(gicNameArr[0], paramPre, 0, "true",
-                            Boolean.FALSE, new HashMap<>(), builder, groupClasses, 0, Boolean.FALSE, atomicInteger));
+                            Boolean.FALSE, new HashMap<>(16), builder, groupClasses, 0, Boolean.FALSE, atomicInteger));
                 }
             } else if (JavaClassValidateUtil.isPrimitive(fullTypeName)) {
                 ApiParam param = ApiParam.of().setId(atomicInteger.incrementAndGet()).setField(paramName)
@@ -235,19 +236,25 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc>, IRpcDo
                 }
                 String[] gicNameArr = DocClassUtil.getSimpleGicName(typeName);
                 paramList.addAll(ParamsBuildHelper.buildParams(gicNameArr[1], paramPre, 0, "true",
-                        Boolean.FALSE, new HashMap<>(), builder, groupClasses, 0, Boolean.FALSE, atomicInteger));
+                        Boolean.FALSE, new HashMap<>(16), builder, groupClasses, 0, Boolean.FALSE, atomicInteger));
             } else if (javaClass.isEnum()) {
-                ApiParam param = ApiParam.of().setId(atomicInteger.incrementAndGet()).setField(paramName)
-                        .setType("Enum").setRequired(required).setDesc(comment.toString()).setVersion(DocGlobalConstants.DEFAULT_VERSION);
+                ApiParam param = ApiParam.of()
+                        .setId(atomicInteger.incrementAndGet())
+                        .setField(paramName)
+                        .setType(DocGlobalConstants.PARAM_TYPE_ENUM)
+                        .setRequired(required)
+                        .setDesc(comment.toString())
+                        .setVersion(DocGlobalConstants.DEFAULT_VERSION);
                 paramList.add(param);
             } else {
                 paramList.addAll(ParamsBuildHelper.buildParams(typeName, paramPre, 0, "true",
-                        Boolean.FALSE, new HashMap<>(), builder, groupClasses, 0, Boolean.FALSE, atomicInteger));
+                        Boolean.FALSE, new HashMap<>(16), builder, groupClasses, 0, Boolean.FALSE, atomicInteger));
             }
         }
         return paramList;
     }
 
+    @Override
     public boolean isEntryPoint(JavaClass cls, FrameworkAnnotations frameworkAnnotations) {
         // Exclude DubboSwaggerService from dubbo 2.7.x
         if (DubboAnnotationConstants.DUBBO_SWAGGER.equals(cls.getCanonicalName())) {
@@ -283,7 +290,7 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc>, IRpcDo
         String shortName = cls.getName();
         String comment = cls.getComment();
         List<JavaType> javaTypes = cls.getImplements();
-        if (javaTypes.size() >= 1 && !cls.isInterface()) {
+        if (!javaTypes.isEmpty() && !cls.isInterface()) {
             JavaType javaType = javaTypes.get(0);
             className = javaType.getCanonicalName();
             shortName = className;

@@ -140,7 +140,7 @@ public class SwaggerBuilder extends AbstractOpenApiBuilder {
         request.put("tags", Arrays.asList(apiDoc.getName(),apiDoc.getDesc(), apiMethodDoc.getGroup())
                 .stream().filter(StringUtil::isNotEmpty).toArray(n->new String[n]));
         List<Map<String, Object>> parameters = buildParameters(apiMethodDoc);
-        //requestBody
+        // requestBody
         if (CollectionUtil.isNotEmpty(apiMethodDoc.getRequestParams())) {
             Map<String, Object> parameter = new HashMap<>();
             parameter.put("in", "body");
@@ -207,9 +207,9 @@ public class SwaggerBuilder extends AbstractOpenApiBuilder {
                 parametersList.add(parameters);
             }
             for (ApiParam apiParam : apiMethodDoc.getQueryParams()) {
-                if (apiParam.getType().equals(DocGlobalConstants.ARRAY) || apiParam.isHasItems()) {
+                if (apiParam.getType().equals(DocGlobalConstants.PARAM_TYPE_ARRAY) || apiParam.isHasItems()) {
                     parameters = getStringParams(apiParam, false);
-                    parameters.put("type", DocGlobalConstants.ARRAY);
+                    parameters.put("type", DocGlobalConstants.PARAM_TYPE_ARRAY);
                     parameters.put("items", getStringParams(apiParam, true));
                     parametersList.add(parameters);
                 } else {
@@ -218,7 +218,7 @@ public class SwaggerBuilder extends AbstractOpenApiBuilder {
                     parametersList.add(parameters);
                 }
             }
-            //with headers
+            // with headers
             if (!CollectionUtil.isEmpty(apiMethodDoc.getRequestHeaders())) {
                 for (ApiReqParam header : apiMethodDoc.getRequestHeaders()) {
                     parameters = new HashMap<>(20);
@@ -251,7 +251,7 @@ public class SwaggerBuilder extends AbstractOpenApiBuilder {
             parameters.put("required", apiParam.isRequired());
             parameters.put("type", apiParam.getType());
         } else {
-            if (DocGlobalConstants.OBJECT.equals(apiParam.getType()) || (DocGlobalConstants.ARRAY.equals(apiParam.getType()) && apiParam.isHasItems())) {
+            if (DocGlobalConstants.PARAM_TYPE_OBJECT.equals(apiParam.getType()) || (DocGlobalConstants.PARAM_TYPE_ARRAY.equals(apiParam.getType()) && apiParam.isHasItems())) {
                 parameters.put("type", "object(complex POJO please use @RequestBody)");
             } else {
                 String desc = apiParam.getDesc();
@@ -279,12 +279,12 @@ public class SwaggerBuilder extends AbstractOpenApiBuilder {
                     List<ApiMethodDoc> apiMethodDocs = a.getList();
                     apiMethodDocs.forEach(
                             method -> {
-                                //request components
+                                // request components
                                 String requestSchema = OpenApiSchemaUtil.getClassNameFromParams(method.getRequestParams());
                                 List<ApiParam> requestParams = method.getRequestParams();
                                 Map<String, Object> prop = buildProperties(requestParams, component, false);
                                 component.put(requestSchema, prop);
-                                //response components
+                                // response components
                                 List<ApiParam> responseParams = method.getResponseParams();
                                 String schemaName = OpenApiSchemaUtil.getClassNameFromParams(method.getResponseParams());
                                 component.put(schemaName, buildProperties(responseParams, component, true));

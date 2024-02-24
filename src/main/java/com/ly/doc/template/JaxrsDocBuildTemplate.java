@@ -20,16 +20,14 @@
  */
 package com.ly.doc.template;
 
-import com.ly.doc.constants.*;
-import com.ly.doc.handler.JaxrsPathHandler;
-import com.ly.doc.model.*;
-import com.ly.doc.utils.*;
-import com.power.common.util.*;
 import com.ly.doc.builder.ProjectDocConfigBuilder;
+import com.ly.doc.constants.*;
 import com.ly.doc.handler.JaxrsHeaderHandler;
+import com.ly.doc.handler.JaxrsPathHandler;
 import com.ly.doc.helper.FormDataBuildHelper;
 import com.ly.doc.helper.JsonBuildHelper;
 import com.ly.doc.helper.ParamsBuildHelper;
+import com.ly.doc.model.*;
 import com.ly.doc.model.annotation.EntryAnnotation;
 import com.ly.doc.model.annotation.FrameworkAnnotations;
 import com.ly.doc.model.annotation.HeaderAnnotation;
@@ -37,6 +35,8 @@ import com.ly.doc.model.request.ApiRequestExample;
 import com.ly.doc.model.request.CurlRequest;
 import com.ly.doc.model.request.JaxrsPathMapping;
 import com.ly.doc.model.request.RequestMapping;
+import com.ly.doc.utils.*;
+import com.power.common.util.*;
 import com.thoughtworks.qdox.model.*;
 
 import java.util.*;
@@ -167,7 +167,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDo
                 continue;
             }
             // new api doc
-            //handle request mapping
+            // handle request mapping
             JaxrsPathMapping jaxPathMapping = new JaxrsPathHandler()
                     .handle(projectBuilder, baseUrl, method, mediaType);
             if (Objects.isNull(jaxPathMapping)) {
@@ -189,7 +189,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDo
             apiMethodDoc.setMethodId(methodUid);
             apiMethodDoc.setAuthor(docJavaMethod.getAuthor());
             apiMethodDoc.setDetail(docJavaMethod.getDetail());
-            List<ApiReqParam> ApiReqParams = new JaxrsHeaderHandler().handle(method, projectBuilder);
+            List<ApiReqParam> apiReqParams = new JaxrsHeaderHandler().handle(method, projectBuilder);
             apiMethodDoc.setType(jaxPathMapping.getMethodType());
             apiMethodDoc.setUrl(jaxPathMapping.getUrl());
             apiMethodDoc.setServerUrl(projectBuilder.getServerUrl());
@@ -207,22 +207,22 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDo
                 this.convertParamsDataToTree(apiMethodDoc);
             }
             List<ApiReqParam> allApiReqParams;
-            allApiReqParams = ApiReqParams;
+            allApiReqParams = apiReqParams;
             if (this.headers != null) {
-                allApiReqParams = Stream.of(this.headers, ApiReqParams)
+                allApiReqParams = Stream.of(this.headers, apiReqParams)
                         .flatMap(Collection::stream).distinct().collect(Collectors.toList());
             }
-            allApiReqParams.removeIf(ApiReqParam -> {
-                if (StringUtil.isEmpty(ApiReqParam.getPathPatterns())
-                        && StringUtil.isEmpty(ApiReqParam.getExcludePathPatterns())) {
+            allApiReqParams.removeIf(apiReqParam -> {
+                if (StringUtil.isEmpty(apiReqParam.getPathPatterns())
+                        && StringUtil.isEmpty(apiReqParam.getExcludePathPatterns())) {
                     return false;
                 } else {
-                    boolean flag = DocPathUtil.matches(jaxPathMapping.getShortUrl(), ApiReqParam.getPathPatterns()
-                            , ApiReqParam.getExcludePathPatterns());
+                    boolean flag = DocPathUtil.matches(jaxPathMapping.getShortUrl(), apiReqParam.getPathPatterns()
+                            , apiReqParam.getExcludePathPatterns());
                     return !flag;
                 }
             });
-            //reduce create in template
+            // reduce create in template
             apiMethodDoc.setHeaders(this.createDocRenderHeaders(allApiReqParams, apiConfig.isAdoc()));
             apiMethodDoc.setRequestHeaders(allApiReqParams);
 
@@ -267,7 +267,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDo
         annotations.setHeaderAnnotation(headerAnnotation);
 
         // add entry annotation
-        Map<String, EntryAnnotation> entryAnnotations = new HashMap<>();
+        Map<String, EntryAnnotation> entryAnnotations = new HashMap<>(16);
         EntryAnnotation jakartaPathAnnotation = EntryAnnotation.builder()
                 .setAnnotationName(JakartaJaxrsAnnotations.JAX_PATH_FULLY)
                 .setAnnotationFullyName(JakartaJaxrsAnnotations.JAX_PATH_FULLY);
@@ -377,7 +377,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDo
                             || JAXRSAnnotations.JAX_HEADER_PARAM_FULLY.equals(annotationName)) {
                         continue out;
                     }
-                    //default value
+                    // default value
                     if (JakartaJaxrsAnnotations.JAX_DEFAULT_VALUE_FULLY.equals(annotationName)
                             || JAXRSAnnotations.JAX_DEFAULT_VALUE_FULLY.equals(annotationName)) {
                         mockValue = StringUtil.removeQuotes(DocUtil.getRequestHeaderValue(classLoader, annotation));
@@ -415,7 +415,8 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDo
                             .setPathParam(isPathVariable)
                             .setQueryParam(queryParam)
                             .setId(paramList.size() + 1)
-                            .setType("array").setValue(String.valueOf(value));
+                            .setType(DocGlobalConstants.PARAM_TYPE_ARRAY)
+                            .setValue(String.valueOf(value));
                     paramList.add(param);
                 } else if (JavaClassValidateUtil.isPrimitive(gicName)) {
                     String shortSimple = DocClassUtil.processTypeNameForParams(gicName);
@@ -426,7 +427,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDo
                             .setPathParam(isPathVariable)
                             .setQueryParam(queryParam)
                             .setId(paramList.size() + 1)
-                            .setType("array")
+                            .setType(DocGlobalConstants.PARAM_TYPE_ARRAY)
                             .setValue(DocUtil.getValByTypeAndFieldName(gicName, paramName));
                     paramList.add(param);
                 } else {
@@ -438,10 +439,10 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDo
                             .setPathParam(isPathVariable)
                             .setQueryParam(queryParam)
                             .setId(id)
-                            .setType("array");
+                            .setType(DocGlobalConstants.PARAM_TYPE_ARRAY);
                     paramList.add(param);
                     List<ApiParam> apiParamList = ParamsBuildHelper.buildParams(typeName, "└─", 1,
-                            "true", Boolean.FALSE, new HashMap<>(), builder, groupClasses, id, Boolean.FALSE, null);
+                            "true", Boolean.FALSE, new HashMap<>(16), builder, groupClasses, id, Boolean.FALSE, null);
                     paramList.addAll(apiParamList);
                 }
             } else if (JavaClassValidateUtil.isPrimitive(fullyQualifiedName)) {
@@ -462,7 +463,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDo
                 if (JavaClassValidateUtil.isMap(typeName)) {
                     ApiParam apiParam = ApiParam.of()
                             .setField(paramName)
-                            .setType("map")
+                            .setType(DocGlobalConstants.PARAM_TYPE_MAP)
                             .setId(paramList.size() + 1)
                             .setPathParam(isPathVariable)
                             .setQueryParam(queryParam)
@@ -476,7 +477,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDo
                 if (JavaClassValidateUtil.isPrimitive(gicNameArr[1])) {
                     ApiParam apiParam = ApiParam.of()
                             .setField(paramName)
-                            .setType("map")
+                            .setType(DocGlobalConstants.PARAM_TYPE_MAP)
                             .setId(paramList.size() + 1)
                             .setPathParam(isPathVariable)
                             .setQueryParam(queryParam)
@@ -486,13 +487,15 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDo
                     paramList.add(apiParam);
                 } else {
                     paramList.addAll(ParamsBuildHelper.buildParams(gicNameArr[1], DocGlobalConstants.EMPTY, 0,
-                            "true", Boolean.FALSE, new HashMap<>(),
+                            "true", Boolean.FALSE, new HashMap<>(16),
                             builder, groupClasses, 0, Boolean.FALSE, null));
                 }
 
             } else if (JavaClassValidateUtil.isFile(typeName)) {
-                //file upload
-                ApiParam param = ApiParam.of().setField(paramName).setType("file")
+                // file upload
+                ApiParam param = ApiParam.of()
+                        .setField(paramName)
+                        .setType(DocGlobalConstants.PARAM_TYPE_FILE)
                         .setId(paramList.size() + 1).setQueryParam(true)
                         .setRequired(required).setVersion(DocGlobalConstants.DEFAULT_VERSION)
                         .setDesc(comment.toString());
@@ -512,14 +515,15 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDo
                         .setPathParam(isPathVariable)
                         .setQueryParam(queryParam)
                         .setValue(String.valueOf(value))
-                        .setType("enum").setDesc(StringUtil.removeQuotes(o))
+                        .setType(DocGlobalConstants.PARAM_TYPE_ENUM)
+                        .setDesc(StringUtil.removeQuotes(o))
                         .setRequired(required)
                         .setVersion(DocGlobalConstants.DEFAULT_VERSION)
                         .setEnumValues(JavaClassUtil.getEnumValues(javaClass));
                 paramList.add(param);
             } else {
                 paramList.addAll(ParamsBuildHelper.buildParams(typeName, DocGlobalConstants.EMPTY, 0,
-                        "true", Boolean.FALSE, new HashMap<>(), builder, groupClasses, 0, Boolean.FALSE, null));
+                        "true", Boolean.FALSE, new HashMap<>(16), builder, groupClasses, 0, Boolean.FALSE, null));
             }
         }
         List<ApiParam> pathParams = new ArrayList<>();
@@ -597,12 +601,12 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDo
                     if (paramAdded) {
                         continue;
                     }
-                    //file upload
+                    // file upload
                     if (JavaClassValidateUtil.isFile(gicTypeName)) {
                         apiMethodDoc.setContentType(DocGlobalConstants.FILE_CONTENT_TYPE);
                         FormData formData = new FormData();
                         formData.setKey(paramName);
-                        formData.setType("file");
+                        formData.setType(DocGlobalConstants.PARAM_TYPE_FILE);
                         formData.setDescription(comment);
                         formData.setValue(mockValue);
                         formDataList.add(formData);
@@ -610,7 +614,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDo
                         FormData formData = new FormData();
                         formData.setKey(paramName);
                         formData.setDescription(comment);
-                        formData.setType("text");
+                        formData.setType(DocGlobalConstants.PARAM_TYPE_TEXT);
                         formData.setValue(mockValue);
                         formDataList.add(formData);
                     } else if (JavaClassValidateUtil.isArray(fullyQualifiedName) || JavaClassValidateUtil.isCollection(fullyQualifiedName)) {
@@ -629,7 +633,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDo
                             formData.setKey(paramName + "[]");
                         }
                         formData.setDescription(comment);
-                        formData.setType("text");
+                        formData.setType(DocGlobalConstants.PARAM_TYPE_TEXT);
                         formData.setValue(RandomUtil.randomValueByType(gicName));
                         formDataList.add(formData);
                     } else if (javaClass.isEnum()) {
@@ -639,19 +643,19 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDo
                         FormData formData = new FormData();
                         formData.setDescription(comment);
                         formData.setKey(paramName);
-                        formData.setType("text");
+                        formData.setType(DocGlobalConstants.PARAM_TYPE_TEXT);
                         formData.setValue(strVal);
                         formDataList.add(formData);
                     } else {
                         formDataList.addAll(
-                                FormDataBuildHelper.getFormData(gicTypeName, new HashMap<>(), 0, configBuilder, DocGlobalConstants.EMPTY));
+                                FormDataBuildHelper.getFormData(gicTypeName, new HashMap<>(16), 0, configBuilder, DocGlobalConstants.EMPTY));
                     }
                 }
             } else {
                 if (JavaClassValidateUtil.isPrimitive(simpleTypeName)) {
                     requestExample.setJsonBody(mockValue).setJson(true);
                 } else {
-                    String json = JsonBuildHelper.buildJson(fullyQualifiedName, gicTypeName, Boolean.FALSE, 0, new HashMap<>(), groupClasses, configBuilder);
+                    String json = JsonBuildHelper.buildJson(fullyQualifiedName, gicTypeName, Boolean.FALSE, 0, new HashMap<>(16), groupClasses, configBuilder);
                     requestExample.setJsonBody(JsonUtil.toPrettyFormat(json)).setJson(true);
                 }
             }
@@ -665,7 +669,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDo
         String exampleBody;
         String url;
         if (JakartaJaxrsAnnotations.POST.equals(methodType) || JakartaJaxrsAnnotations.PUT.equals(methodType)) {
-            //for post put
+            // for post put
             path = DocUtil.formatAndRemove(path, pathParamsMap);
             body = UrlUtil.urlJoin(DocGlobalConstants.EMPTY, DocUtil.formDataToMap(formDataList))
                     .replace("?", DocGlobalConstants.EMPTY);

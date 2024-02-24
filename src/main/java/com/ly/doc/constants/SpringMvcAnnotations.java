@@ -41,6 +41,8 @@ public interface SpringMvcAnnotations {
 
     String REQUEST_PARAM = "RequestParam";
 
+    String REQUEST_PART = "RequestPart";
+
     String REQUEST_BODY = "RequestBody";
 
     String CONTROLLER = "Controller";

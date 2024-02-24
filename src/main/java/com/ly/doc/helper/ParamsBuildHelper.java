@@ -145,7 +145,7 @@ public class ParamsBuildHelper extends BaseHelper {
                     .setClassName(className)
                     .setId(atomicOrDefault(atomicInteger, pid + 1))
                     .setField(pre + "any object")
-                    .setType("object")
+                    .setType(DocGlobalConstants.PARAM_TYPE_OBJECT)
                     .setPid(pid)
                     .setDesc(DocGlobalConstants.ANY_OBJECT_MSG)
                     .setVersion(DocGlobalConstants.DEFAULT_VERSION)
@@ -177,7 +177,8 @@ public class ParamsBuildHelper extends BaseHelper {
                 }
 
                 String subTypeName = docField.getTypeFullyQualifiedName();
-                if ((responseFieldToUnderline && isResp) || (requestFieldToUnderline && !isResp)) {
+                boolean needToUnderline = (responseFieldToUnderline && isResp) || (requestFieldToUnderline && !isResp);
+                if (needToUnderline) {
                     fieldName = StringUtil.camelToUnderline(fieldName);
                 }
                 String typeSimpleName = field.getType().getSimpleName();
@@ -287,7 +288,8 @@ public class ParamsBuildHelper extends BaseHelper {
                 fieldName = fieldName.trim();
                 // Analyzing File Type Field
                 if (JavaClassValidateUtil.isFile(fieldGicName)) {
-                    ApiParam param = ApiParam.of().setField(pre + fieldName).setType("file")
+                    ApiParam param = ApiParam.of().setField(pre + fieldName)
+                            .setType(DocGlobalConstants.PARAM_TYPE_FILE)
                             .setClassName(className)
                             .setPid(pid)
                             .setId(atomicOrDefault(atomicInteger, paramList.size() + pid + 1))
@@ -377,7 +379,7 @@ public class ParamsBuildHelper extends BaseHelper {
                             // rpc
                             param.setType(JavaFieldUtil.convertToSimpleTypeName(docField.getTypeGenericFullyQualifiedName()));
                         } else {
-                            param.setType("array");
+                            param.setType(DocGlobalConstants.PARAM_TYPE_ARRAY);
                         }
                         if (tagsMap.containsKey(DocTags.MOCK) && StringUtil.isNotEmpty(tagsMap.get(DocTags.MOCK))) {
                             param.setValue(fieldValue);
@@ -442,7 +444,7 @@ public class ParamsBuildHelper extends BaseHelper {
 
                     } else if (JavaClassValidateUtil.isMap(subTypeName)) {
                         if (tagsMap.containsKey(DocTags.MOCK) && StringUtil.isNotEmpty(tagsMap.get(DocTags.MOCK))) {
-                            param.setType("map");
+                            param.setType(DocGlobalConstants.PARAM_TYPE_MAP);
                             param.setValue(fieldValue);
                         }
                         commonHandleParam(paramList, param, isRequired, comment + appendComment, since, strRequired);
@@ -455,7 +457,7 @@ public class ParamsBuildHelper extends BaseHelper {
                                     .setId(atomicOrDefault(atomicInteger, fieldPid + 1)).setPid(fieldPid)
                                     .setClassName(className)
                                     .setMaxLength(maxLength)
-                                    .setType("object")
+                                    .setType(DocGlobalConstants.PARAM_TYPE_OBJECT)
                                     .setDesc(DocGlobalConstants.ANY_OBJECT_MSG)
                                     .setVersion(DocGlobalConstants.DEFAULT_VERSION);
                             paramList.add(param1);
@@ -488,13 +490,13 @@ public class ParamsBuildHelper extends BaseHelper {
                                 String simple = DocClassUtil.getSimpleName(gicName);
                                 // set type array
                                 if (JavaClassValidateUtil.isArray(gicName)) {
-                                    param.setType(DocGlobalConstants.ARRAY);
+                                    param.setType(DocGlobalConstants.PARAM_TYPE_ARRAY);
                                 }
                                 if (JavaClassValidateUtil.isPrimitive(simple)) {
                                     //do nothing
                                 } else if (gicName.contains("<")) {
                                     if (JavaClassValidateUtil.isCollection(simple)) {
-                                        param.setType(DocGlobalConstants.ARRAY);
+                                        param.setType(DocGlobalConstants.PARAM_TYPE_ARRAY);
                                         String gName = DocClassUtil.getSimpleGicName(gicName)[0];
                                         if (!JavaClassValidateUtil.isPrimitive(gName)) {
                                             paramList.addAll(buildParams(gName, preBuilder.toString(), nextLevel, isRequired
@@ -521,7 +523,7 @@ public class ParamsBuildHelper extends BaseHelper {
                                 .setId(atomicOrDefault(atomicInteger, paramList.size() + pid + 1))
                                 .setClassName(subTypeName)
                                 .setMaxLength(maxLength)
-                                .setType("object")
+                                .setType(DocGlobalConstants.PARAM_TYPE_OBJECT)
                                 .setDesc(comment.append(" $ref... self").toString())
                                 .setVersion(DocGlobalConstants.DEFAULT_VERSION);
                         paramList.add(param1);
@@ -620,7 +622,7 @@ public class ParamsBuildHelper extends BaseHelper {
             if (Objects.isNull(dataDictionary)) {
                 comment = comment + "<br/>[Enum values:<br/>" + JavaClassUtil.getEnumParams(javaClass) + "]";
             } else {
-                Class enumClass = dataDictionary.getEnumClass();
+                Class<?> enumClass = dataDictionary.getEnumClass();
                 if (enumClass.isInterface()) {
                     ClassLoader classLoader = projectBuilder.getApiConfig().getClassLoader();
                     try {

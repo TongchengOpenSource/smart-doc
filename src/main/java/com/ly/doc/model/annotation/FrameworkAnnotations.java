@@ -39,6 +39,8 @@ public class FrameworkAnnotations {
 
     private RequestBodyAnnotation requestBodyAnnotation;
 
+    private RequestPartAnnotation requestPartAnnotation;
+
     public static FrameworkAnnotations builder() {
         return new FrameworkAnnotations();
     }
@@ -94,6 +96,15 @@ public class FrameworkAnnotations {
 
     public FrameworkAnnotations setRequestBodyAnnotation(RequestBodyAnnotation requestBodyAnnotation) {
         this.requestBodyAnnotation = requestBodyAnnotation;
+        return this;
+    }
+
+    public RequestPartAnnotation getRequestPartAnnotation() {
+        return requestPartAnnotation;
+    }
+
+    public FrameworkAnnotations setRequestPartAnnotation(RequestPartAnnotation requestPartAnnotation) {
+        this.requestPartAnnotation = requestPartAnnotation;
         return this;
     }
 }

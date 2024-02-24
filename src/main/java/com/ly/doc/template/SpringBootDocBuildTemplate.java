@@ -101,6 +101,13 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IR
                 .setRequiredProp(DocAnnotationConstants.REQUIRED_PROP);
         annotations.setRequestParamAnnotation(requestAnnotation);
 
+        // request part annotation
+        RequestPartAnnotation requestPartAnnotation = RequestPartAnnotation.builder()
+                .setAnnotationName(SpringMvcAnnotations.REQUEST_PART)
+                .setDefaultValueProp(DocAnnotationConstants.DEFAULT_VALUE_PROP)
+                .setRequiredProp(DocAnnotationConstants.REQUIRED_PROP);
+        annotations.setRequestPartAnnotation(requestPartAnnotation);
+
         // add path variable annotation
         PathVariableAnnotation pathVariableAnnotation = PathVariableAnnotation.builder()
                 .setAnnotationName(SpringMvcAnnotations.PATH_VARIABLE)

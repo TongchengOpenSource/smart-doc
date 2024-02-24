@@ -215,13 +215,30 @@ public interface DocGlobalConstants {
     String CURL_POST_PUT_JSON = "curl -X %s -H 'Content-Type: application/json;charset=UTF-8' %s -i %s --data '%s'";
 
     String EMPTY = "";
-
-    String ENUM = "enum";
-
-    String ARRAY = "array";
+    /**
+     * param type enum
+     */
+    String PARAM_TYPE_ENUM = "enum";
+    /**
+     * param type array
+     */
+    String PARAM_TYPE_ARRAY = "array";
+    /**
+     * param type file
+     */
     String PARAM_TYPE_FILE = "file";
-
-    String OBJECT = "object";
+    /**
+     * param type text
+     */
+    String PARAM_TYPE_TEXT = "text";
+    /**
+     * param type map
+     */
+    String PARAM_TYPE_MAP = "map";
+    /**
+     * param type object
+     */
+    String PARAM_TYPE_OBJECT = "object";
 
     String JSON_PROPERTY_READ_WRITE = "JsonProperty.Access.READ_WRITE";
 
