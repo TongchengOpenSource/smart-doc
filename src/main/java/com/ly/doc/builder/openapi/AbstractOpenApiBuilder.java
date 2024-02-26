@@ -315,6 +315,9 @@ public abstract class AbstractOpenApiBuilder {
         } else {
             // "string", "integer", "number"
             schema.put("format", apiParam.getType());
+            if ("enum".equals(apiParam.getType())) {
+                schema.put("enum", apiParam.getEnumValues());
+            }
         }
         return schema;
     }
@@ -411,6 +414,9 @@ public abstract class AbstractOpenApiBuilder {
         if (!"object".equals(openApiType)) {
             propertiesData.put("type", openApiType);
             propertiesData.put("format", "int16".equals(apiParam.getType()) ? "int32" : apiParam.getType());
+            if ("enum".equals(apiParam.getType())) {
+                propertiesData.put("enum", apiParam.getEnumValues());
+            }
         }
         if ("map".equals(apiParam.getType())) {
             propertiesData.put("type", "object");
