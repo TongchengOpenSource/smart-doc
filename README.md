@@ -36,7 +36,7 @@ need to inject annotations into the code like `Swagger`.
 - Support the generation of `Jmeter` performance testing scripts
 - Support for exporting error codes and data dictionary codes to API documentation.
 - The debug html5 page fully supports file upload and download testing.
-- Support `Apache Dubbo RP`C.
+- Support `Apache Dubbo RPC`.
 
 ## Best Practice
 
