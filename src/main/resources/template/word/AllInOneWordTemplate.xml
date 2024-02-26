@@ -349,7 +349,7 @@
         %>
         <w:p>
             <w:pPr>
-                <w:pStyle w:val="3"/>
+                <w:pStyle w:val="4"/>
             </w:pPr>
             <w:bookmarkStart w:id="1" w:name="${wordXmlEscape(api.desc)}"/>
             <w:r>
@@ -367,7 +367,7 @@
         <%if(doc.deprecated){%>
         <w:p>
             <w:pPr>
-                <w:pStyle w:val="4"/>
+                <w:pStyle w:val="5"/>
                 <w:rPr>
                     <w:strike/>
                     <w:dstrike w:val="0"/>
@@ -388,7 +388,7 @@
 
         <w:p>
             <w:pPr>
-                <w:pStyle w:val="4"/>
+                <w:pStyle w:val="5"/>
             </w:pPr>
             <w:bookmarkStart w:id="2" w:name="${wordXmlEscape(doc.desc)}"/>
             <w:r>
