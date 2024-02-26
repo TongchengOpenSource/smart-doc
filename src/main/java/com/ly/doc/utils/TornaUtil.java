@@ -38,7 +38,6 @@ import com.power.common.util.StringUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import com.thoughtworks.qdox.model.JavaMethod;
 import com.thoughtworks.qdox.model.JavaParameter;
-import org.apache.commons.collections4.ListUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
@@ -66,7 +65,7 @@ public class TornaUtil {
         if (tornaApis == null || tornaApis.isEmpty()) {
             return;
         }
-        ListUtils.partition(tornaApis, apiConfig.getApiUploadNums()).forEach(apis -> {
+        CollectionUtil.partition(tornaApis, apiConfig.getApiUploadNums()).forEach(apis -> {
             tornaApi.setApis(apis);
             pushToTornaAll(tornaApi, apiConfig, builder);
         });

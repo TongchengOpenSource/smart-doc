@@ -1,7 +1,7 @@
 ## smart-doc版本
 
 ### 版本号：3.0.2
-- 更新日期: 2024-2-xx
+- 更新日期: 2024-2-26
 - 更新内容：
   1. 优化推送rpc文档到torna时smart-doc设置的框架名错误，[#690](https://github.com/smart-doc-group/smart-doc/issues/690)
   2. 修复html文档搜索后链接错误的bug，[#693](https://github.com/smart-doc-group/smart-doc/pull/693)
@@ -22,6 +22,9 @@
   17. 修改高版本smart-doc生成JAX-RS规范项目文档报错问题。[#729](https://github.com/TongchengOpenSource/smart-doc-gradle-plugin/pull/729)
   18. 修复内部枚举类作为参数时无法正常解析的问题。[#728](https://github.com/TongchengOpenSource/smart-doc-gradle-plugin/pull/728)
   19. 修复void返回时返回用例生成错误。[#726](https://github.com/TongchengOpenSource/smart-doc-gradle-plugin/pull/726)
+  20. 修改JAX-RS绑定集合入参报错问题。 [#735](https://github.com/TongchengOpenSource/smart-doc-gradle-plugin/pull/735)
+  21. 新增类级别的接口排除过滤。[#736](https://github.com/TongchengOpenSource/smart-doc-gradle-plugin/pull/736)
+  22. openapi枚举类型增加取值范围展示[#741](https://github.com/TongchengOpenSource/smart-doc-gradle-plugin/pull/741)
 
 ### 版本号：3.0.1
 - 更新日期: 2023-12-17
