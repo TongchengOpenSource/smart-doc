@@ -66,12 +66,14 @@
             </h3>
                 <table class="tableblock frame-all grid-all spread">
                     <colgroup>
-                        <col style="width: 33%;">
-                        <col style="width: 33%;">
-                        <col style="width: 33%;">
+                        <col style="width: 25%;">
+                        <col style="width: 25%;">
+                        <col style="width: 25%;">
+                        <col style="width: 25%;">
                     </colgroup>
                     <thead>
                     <tr>
+                        <th class="tableblock halign-left valign-top">Name</th>
                         <th class="tableblock halign-left valign-top">Code</th>
                         <th class="tableblock halign-left valign-top">Type</th>
                         <th class="tableblock halign-left valign-top">Description</th>
@@ -79,6 +81,7 @@
                     </thead>
                     <tbody><%for(dataDict in dict.dataDictList){%>
                     <tr>
+                        <td class="tableblock halign-left valign-top"><p class="tableblock">${dataDict.name}</p></td>
                         <td class="tableblock halign-left valign-top"><p class="tableblock">${dataDict.value}</p></td>
                         <td class="tableblock halign-left valign-top"><p class="tableblock">${dataDict.type}</p></td>
                         <td class="tableblock halign-left valign-top"><p class="tableblock">${htmlEscape(dataDict.desc)}</p></td>
