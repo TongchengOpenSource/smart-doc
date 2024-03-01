@@ -5,12 +5,12 @@ for(dict in dictList){
 %>
 ## ${dict.title}
 
-| Code | Type | Description |
-|------|------|-------------|
+| Name | Code | Type | Description |
+|------|------|------|-------------|
 <%
 for(dataDict in dict.dataDictList){
 %>
-|${dataDict.value}|${dataDict.type}|${htmlEscape(dataDict.desc)}|
+|${dataDict.name}|${dataDict.value}|${dataDict.type}|${htmlEscape(dataDict.desc)}|
 <%}%>
 <%}%>
 <%}%>

@@ -167,11 +167,11 @@ for(dict in dictList){
 [width="100%",options="header"]
 [stripes=even]
 |====================
-|Code |Type|Description
+|Name |Code |Type|Description
 <%
 for(dataDict in dict.dataDictList){
 %>
-|${dataDict.value}|${dataDict.type}|${dataDict.desc}
+|${dataDict.name}|${dataDict.value}|${dataDict.type}|${dataDict.desc}
 <%}%>
 |====================
 <%}%>
