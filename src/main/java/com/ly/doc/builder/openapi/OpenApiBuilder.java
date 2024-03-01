@@ -149,7 +149,10 @@ public class OpenApiBuilder extends AbstractOpenApiBuilder {
         paths.add(apiMethodDoc.getType());
         String operationId = paths.stream().filter(StringUtils::isNotEmpty).collect(Collectors.joining("-"));
         request.put("operationId", operationId);
-
+        //add extension attribution
+        if ( apiMethodDoc.getExtensions() != null ){
+            apiMethodDoc.getExtensions().entrySet().forEach( e-> request.put("x-"+e.getKey(), e.getValue()));
+        }
         return request;
     }
 

@@ -209,6 +209,11 @@ public class ApiMethodDoc implements IMethod, Serializable, Cloneable {
      */
     private String version;
 
+    /**
+     * extension attribution
+     */
+    private Map<String, Object> extensions;
+
     public String getVersion() {
         return version;
     }
@@ -494,6 +499,14 @@ public class ApiMethodDoc implements IMethod, Serializable, Cloneable {
         this.clazzDoc = clazzDoc;
     }
 
+    public Map<String, Object> getExtensions() {
+        return extensions;
+    }
+
+    public void setExtensions(Map<String, Object> extensions) {
+        this.extensions = extensions;
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("{");
@@ -539,6 +552,8 @@ public class ApiMethodDoc implements IMethod, Serializable, Cloneable {
             .append(responseParams);
         sb.append(",\"deprecated\":")
             .append(deprecated);
+        sb.append(",\"extensions\":")
+                .append(extensions);
         sb.append('}');
         return sb.toString();
     }
