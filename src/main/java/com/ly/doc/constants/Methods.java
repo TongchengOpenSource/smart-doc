@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2023 smart-doc
+ * Copyright (C) 2018-2024 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -26,14 +26,41 @@ package com.ly.doc.constants;
  * @author yu 2019/11/21.
  */
 public enum Methods {
+    /**
+     * http methods POST
+     */
     POST("POST"),
-    GET("GET"),
-    PUT("PUT"),
-    PATCH("PATCH"),
-    DELETE("DELETE"),
-    OPTIONS("OPTIONS");
 
-    private String value;
+    /**
+     * http methods GET
+     */
+    GET("GET"),
+
+    /**
+     * http methods PUT
+     */
+    PUT("PUT"),
+
+    /**
+     * http methods PATCH
+     */
+    PATCH("PATCH"),
+
+    /**
+     * http methods DELETE
+     */
+    DELETE("DELETE"),
+
+    /**
+     * http methods OPTIONS
+     */
+    OPTIONS("OPTIONS"),
+    ;
+
+    /**
+     * http methods value
+     */
+    private final String value;
 
     Methods(String value) {
         this.value = value;

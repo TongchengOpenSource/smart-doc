@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2023 smart-doc
+ * Copyright (C) 2018-2024 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -68,7 +68,7 @@ public class BeetlTemplateUtil {
      * @return map
      */
     public static Map<String, String> getTemplatesRendered(String path, Map<String, Object> params) {
-        Map<String, String> templateMap = new HashMap<>();
+        Map<String, String> templateMap = new HashMap<>(16);
         File[] files = FileUtil.getResourceFolderFiles(path);
         GroupTemplate gt = getGroupTemplate(path);
         for (File f : files) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2023 smart-doc
+ * Copyright (C) 2018-2024 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -30,45 +30,104 @@ import java.util.List;
  * @author yu 2019/9/19.
  */
 public enum DocValidatorAnnotationEnum {
-
+    /**
+     * Spring validator annotations `@NotEmpty`
+     */
     NOT_EMPTY("NotEmpty"),
 
+    /**
+     * Spring validator annotations `@NotBlank`
+     */
     NOT_BLANK("NotBlank"),
 
+    /**
+     * Spring validator annotations `@NotNull`
+     */
     NOT_NULL("NotNull"),
 
+    /**
+     * Spring validator annotations `@Null`
+     */
     NULL("Null"),
 
+    /**
+     * Spring validator annotations `@AssertTrue`
+     */
     ASSERT_TRUE("AssertTrue"),
 
+    /**
+     * Spring validator annotations `@AssertFalse`
+     */
     ASSERT_FALSE("AssertFalse"),
 
+    /**
+     * Spring validator annotations `@Min`
+     */
     MIN("Min"),
 
+    /**
+     * Spring validator annotations `@Max`
+     */
     MAX("Max"),
 
+    /**
+     * Spring validator annotations `@DecimalMin`
+     */
     DECIMAL_MIN("DecimalMin"),
 
+    /**
+     * Spring validator annotations `@DecimalMax`
+     */
     DECIMAL_MAX("DecimalMax"),
 
+    /**
+     * Spring validator annotations `@Size`
+     */
     SIZE("Size"),
 
+    /**
+     * Spring validator annotations `@Digits`
+     */
     DIGITS("Digits"),
 
+    /**
+     * Spring validator annotations `@Past`
+     */
     PAST("Past"),
 
+    /**
+     * Spring validator annotations `@Future`
+     */
     FUTURE("Future"),
 
+    /**
+     * Spring validator annotations `@Pattern`
+     */
     PATTERN("Pattern"),
 
+    /**
+     * Spring validator annotations `@Email`
+     */
     EMAIL("Email"),
 
+    /**
+     * Spring validator annotations `@Length`
+     */
     LENGTH("Length"),
 
+    /**
+     * Spring validator annotations `@Range`
+     */
     RANGE("Range"),
 
+    /**
+     * Spring validator annotations `@Validated`
+     */
     VALIDATED("Validated");
 
+    /**
+     * annotation value
+     */
     private final String value;
 
     DocValidatorAnnotationEnum(String value) {

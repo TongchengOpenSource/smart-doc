@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2023 smart-doc
+ * Copyright (C) 2018-2024 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -28,15 +28,50 @@ import java.util.List;
  */
 public enum SpringMvcRequestAnnotationsEnum {
 
+    /**
+     * SpringMvc RequestAnnotation PathVariable
+     */
     PATH_VARIABLE("PathVariable"),
+
+    /**
+     * SpringMvc RequestAnnotation PathVariable fully
+     */
     PATH_VARIABLE_FULLY("org.springframework.web.bind.annotation.PathVariable"),
+
+    /**
+     * SpringMvc RequestAnnotation RequestParam
+     */
     REQ_PARAM("RequestParam"),
+
+    /**
+     * SpringMvc RequestAnnotation RequestParam fully
+     */
     REQ_PARAM_FULLY("org.springframework.web.bind.annotation.RequestParam"),
+
+    /**
+     * SpringMvc RequestAnnotation RequestBody
+     */
     REQUEST_BODY("RequestBody"),
+
+    /**
+     * SpringMvc RequestAnnotation RequestBody fully
+     */
     REQUEST_BODY_FULLY("org.springframework.web.bind.annotation.RequestBody"),
+
+    /**
+     * SpringMvc RequestAnnotation RequestHeader
+     */
     REQUEST_HERDER("RequestHeader"),
+
+    /**
+     * SpringMvc RequestAnnotation RequestHeader fully
+     */
     REQUEST_HERDER_FULLY("org.springframework.web.bind.annotation.RequestHeader"),
     ;
+
+    /**
+     * SpringMvc RequestAnnotation value
+     */
     private final String value;
 
     SpringMvcRequestAnnotationsEnum(String value) {

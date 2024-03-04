@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2023 smart-doc
+ * Copyright (C) 2018-2024 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -20,14 +20,14 @@
  */
 package com.ly.doc.handler;
 
+import com.ly.doc.builder.ProjectDocConfigBuilder;
 import com.ly.doc.constants.DocAnnotationConstants;
+import com.ly.doc.constants.Methods;
 import com.ly.doc.constants.SolonAnnotations;
 import com.ly.doc.function.RequestMappingFunc;
-import com.ly.doc.utils.DocUtil;
-import com.ly.doc.builder.ProjectDocConfigBuilder;
-import com.ly.doc.constants.Methods;
 import com.ly.doc.model.annotation.FrameworkAnnotations;
 import com.ly.doc.model.request.RequestMapping;
+import com.ly.doc.utils.DocUtil;
 import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaMethod;
 
@@ -40,7 +40,7 @@ import static com.ly.doc.constants.DocTags.IGNORE;
 /**
  * @author noear 2022/2/19 created
  */
-public class SolonRequestMappingHandler implements IRequestMappingHandler {
+public class SolonRequestMappingHandler implements IRequestMappingHandler, IWebSocketRequestHandler {
 
     /**
      * handle solon request mapping
@@ -50,6 +50,7 @@ public class SolonRequestMappingHandler implements IRequestMappingHandler {
      * @param method            JavaMethod
      * @return RequestMapping
      */
+    @Override
     public RequestMapping handle(ProjectDocConfigBuilder projectBuilder,
                                  String controllerBaseUrl,
                                  JavaMethod method, FrameworkAnnotations frameworkAnnotations,
@@ -58,7 +59,7 @@ public class SolonRequestMappingHandler implements IRequestMappingHandler {
             return null;
         }
         List<JavaAnnotation> annotations = getAnnotations(method);
-        String methodType = "GET";//default is get
+        String methodType = "GET";// default is get
         String shortUrl = null;
         String mediaType = null;
         boolean deprecated = false;

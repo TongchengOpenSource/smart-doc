@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2023 smart-doc
+ * Copyright (C) 2018-2024 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -20,20 +20,20 @@
  */
 package com.ly.doc.builder;
 
-import java.util.List;
-
 import com.ly.doc.constants.DocGlobalConstants;
 import com.ly.doc.factory.BuildTemplateFactory;
+import com.ly.doc.helper.JavaProjectBuilderHelper;
 import com.ly.doc.model.ApiConfig;
 import com.ly.doc.model.ApiDoc;
 import com.ly.doc.template.IDocBuildTemplate;
-import com.power.common.util.FileUtil;
-import com.ly.doc.helper.JavaProjectBuilderHelper;
 import com.ly.doc.utils.BeetlTemplateUtil;
+import com.power.common.util.FileUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
-
 import org.apache.commons.lang3.StringUtils;
 import org.beetl.core.Template;
+
+import java.util.List;
+import java.util.Objects;
 
 /**
  * @author yu 2019/9/20.
@@ -67,6 +67,7 @@ public class HtmlApiDocBuilder {
         config.setParamsDataToTree(false);
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
         IDocBuildTemplate<ApiDoc> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework());
+        Objects.requireNonNull(docBuildTemplate, "doc build template is null");
         List<ApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder);
         Template indexCssTemplate = BeetlTemplateUtil.getByName(DocGlobalConstants.ALL_IN_ONE_CSS);
         FileUtil.nioWriteFile(indexCssTemplate.render(), config.getOutPath() + DocGlobalConstants.FILE_SEPARATOR + DocGlobalConstants.ALL_IN_ONE_CSS_OUT);
@@ -103,9 +104,9 @@ public class HtmlApiDocBuilder {
                 buildDoc(builderTemplate, apiDocList, config, javaProjectBuilder, DocGlobalConstants.SINGLE_INDEX_HTML_TPL, indexAlias);
             }
             builderTemplate.buildErrorCodeDoc(config, javaProjectBuilder, apiDocList, DocGlobalConstants.SINGLE_ERROR_HTML_TPL,
-                ERROR_CODE_HTML, indexAlias);
+                    ERROR_CODE_HTML, indexAlias);
             builderTemplate.buildDirectoryDataDoc(config, javaProjectBuilder, apiDocList,
-                DocGlobalConstants.SINGLE_DICT_HTML_TPL, DICT_HTML, indexAlias);
+                    DocGlobalConstants.SINGLE_DICT_HTML_TPL, DICT_HTML, indexAlias);
             builderTemplate.buildSearchJs(config, javaProjectBuilder, apiDocList, DocGlobalConstants.SEARCH_JS_TPL);
         }
 
@@ -122,7 +123,7 @@ public class HtmlApiDocBuilder {
      * @param indexHtml          indexHtml
      */
     private static void buildDoc(DocBuilderTemplate builderTemplate, List<ApiDoc> apiDocList, ApiConfig config
-        , JavaProjectBuilder javaProjectBuilder, String template, String indexHtml) {
+            , JavaProjectBuilder javaProjectBuilder, String template, String indexHtml) {
         FileUtil.mkdirs(config.getOutPath());
         int index = 0;
         for (ApiDoc doc : apiDocList) {
@@ -130,7 +131,7 @@ public class HtmlApiDocBuilder {
                 doc.setAlias(indexHtml);
             }
             builderTemplate.buildDoc(apiDocList, config, javaProjectBuilder, template,
-                doc.getAlias() + ".html", doc, indexHtml);
+                    doc.getAlias() + ".html", doc, indexHtml);
             index++;
         }
     }

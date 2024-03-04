@@ -10,7 +10,7 @@
 ![git star](https://img.shields.io/github/stars/smart-doc-group/smart-doc.svg)
 ## Introduce
 
-`smart-doc[smɑːt dɒk]`is a tool that supports both `JAVA REST API` and `Apache Dubbo RPC` interface document generation. `Smart-doc` is
+`smart-doc[smɑːt dɒk]`is a tool that supports both `JAVA REST API` and `JAVA WebSocket` and `Apache Dubbo RPC` interface document generation. `Smart-doc` is
 based on interface source code analysis to generate interface documents, and zero annotation intrusion. You only need to
 write Javadoc comments when developing, `smart-doc` can help you generate `Markdown` or `HTML5` document. `smart-doc` does not
 need to inject annotations into the code like `Swagger`.

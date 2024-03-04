@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2023 smart-doc
+ * Copyright (C) 2018-2024 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -20,14 +20,6 @@
  */
 package com.ly.doc.builder;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Reader;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-
 import com.ly.doc.constants.DocGlobalConstants;
 import com.ly.doc.constants.DocLanguage;
 import com.ly.doc.constants.FrameworkEnum;
@@ -36,11 +28,18 @@ import com.ly.doc.model.ApiConfig;
 import com.ly.doc.model.RevisionLog;
 import com.power.common.util.DateTimeUtil;
 import com.power.common.util.StringUtil;
-
 import org.apache.commons.lang3.StringUtils;
 import org.beetl.core.Resource;
 import org.beetl.core.Template;
 import org.beetl.core.resource.ClasspathResourceLoader;
+
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Reader;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author yu 2020/5/16.
@@ -51,7 +50,7 @@ public class BaseDocBuilderTemplate {
 
     public static void copyJarFile(String source, String target) {
         ClasspathResourceLoader resourceLoader = new ClasspathResourceLoader("/template/");
-        Resource resource = resourceLoader.getResource(source);
+        Resource<?> resource = resourceLoader.getResource(source);
         try (FileWriter fileWriter = new FileWriter(target, false);
              Reader reader = resource.openReader()) {
             char[] c = new char[1024 * 1024];
@@ -97,7 +96,7 @@ public class BaseDocBuilderTemplate {
         if (Objects.nonNull(config.getLanguage())) {
             System.setProperty(DocGlobalConstants.DOC_LANGUAGE, config.getLanguage().getCode());
         } else {
-            //default is chinese
+            // default is chinese
             config.setLanguage(DocLanguage.CHINESE);
             System.setProperty(DocGlobalConstants.DOC_LANGUAGE, DocLanguage.CHINESE.getCode());
         }
@@ -124,7 +123,7 @@ public class BaseDocBuilderTemplate {
     }
 
     public Map<String, String> setDirectoryLanguageVariable(ApiConfig config, Template mapper) {
-        Map<String, String> titleMap = new HashMap<>();
+        Map<String, String> titleMap = new HashMap<>(16);
         if (Objects.nonNull(config.getLanguage())) {
             if (DocLanguage.CHINESE.code.equals(config.getLanguage().getCode())) {
                 mapper.binding(TemplateVariable.ERROR_LIST_TITLE.getVariable(), DocGlobalConstants.ERROR_CODE_LIST_CN_TITLE);

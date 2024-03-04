@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2023 smart-doc
+ * Copyright (C) 2018-2024 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -20,27 +20,26 @@
  */
 package com.ly.doc.builder;
 
-import java.util.List;
-
 import com.ly.doc.constants.DocGlobalConstants;
 import com.ly.doc.factory.BuildTemplateFactory;
+import com.ly.doc.helper.JavaProjectBuilderHelper;
 import com.ly.doc.model.ApiConfig;
 import com.ly.doc.model.ApiDoc;
 import com.ly.doc.template.IDocBuildTemplate;
 import com.power.common.util.DateTimeUtil;
-import com.ly.doc.helper.JavaProjectBuilderHelper;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 
+import java.util.List;
+import java.util.Objects;
+
 /**
- * use to create markdown doc
+ * use to create Markdown doc
  *
  * @author yu 2019/09/20
  */
 public class ApiDocBuilder {
 
     private static final String API_EXTENSION = "Api.md";
-
-    private static final String DATE_FORMAT = "yyyyMMddHHmm";
 
     /**
      * @param config ApiConfig
@@ -63,10 +62,11 @@ public class ApiDocBuilder {
         config.setParamsDataToTree(false);
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
         IDocBuildTemplate<ApiDoc> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework());
+        Objects.requireNonNull(docBuildTemplate, "doc build template is null");
         List<ApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder);
         if (config.isAllInOne()) {
-            String version = config.isCoverOld() ? "" : "-V" + DateTimeUtil.long2Str(System.currentTimeMillis(), DATE_FORMAT);
-            String docName = builderTemplate.allInOneDocName(config, "AllInOne" + version + ".md", ".md");
+            String version = config.isCoverOld() ? "" : "-V" + DateTimeUtil.long2Str(System.currentTimeMillis(), DocGlobalConstants.DATE_FORMAT_YYYY_MM_DD_HH_MM);
+            String docName = builderTemplate.allInOneDocName(config, "AllInOne" + version + DocGlobalConstants.MARKDOWN_EXTENSION, DocGlobalConstants.MARKDOWN_EXTENSION);
             apiDocList = docBuildTemplate.handleApiGroup(apiDocList, config);
             builderTemplate.buildAllInOne(apiDocList, config, javaProjectBuilder, DocGlobalConstants.ALL_IN_ONE_MD_TPL, docName);
         } else {

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2023 smart-doc
+ * Copyright (C) 2018-2024 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -22,6 +22,7 @@ package com.ly.doc.template;
 
 import com.ly.doc.builder.ProjectDocConfigBuilder;
 import com.ly.doc.constants.*;
+import com.ly.doc.handler.DefaultWebSocketRequestHandler;
 import com.ly.doc.handler.JaxrsHeaderHandler;
 import com.ly.doc.handler.JaxrsPathHandler;
 import com.ly.doc.helper.FormDataBuildHelper;
@@ -53,7 +54,7 @@ import static com.ly.doc.constants.DocTags.IGNORE;
  * @author Zxq
  * @since 2021/7/15
  */
-public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDocTemplate {
+public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IWebSocketDocBuildTemplate<WebSocketDoc>, IRestDocTemplate, IWebSocketTemplate {
 
     private static final Logger log = Logger.getLogger(JaxrsDocBuildTemplate.class.getName());
 
@@ -107,6 +108,12 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDo
                     .peek(p -> p.setOrder(atomicInteger.getAndAdd(1))).collect(Collectors.toList());
         }
         return apiDocList;
+    }
+
+    @Override
+    public List<WebSocketDoc> renderWebSocketApi(ProjectDocConfigBuilder projectBuilder, Collection<JavaClass> candidateClasses) {
+        FrameworkAnnotations frameworkAnnotations = registeredAnnotations();
+        return processWebSocketData(projectBuilder, frameworkAnnotations, DefaultWebSocketRequestHandler.getInstance(), candidateClasses);
     }
 
     /**

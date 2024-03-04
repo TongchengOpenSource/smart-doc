@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2023 smart-doc
+ * Copyright (C) 2018-2024 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -108,7 +108,7 @@ public interface IBaseDocBuildTemplate {
                     return new ArrayList<>(0);
                 }
                  return ParamsBuildHelper.buildParams(gicName, "", 0, null, Boolean.TRUE,
-                    new HashMap<>(), projectBuilder, null, 0, Boolean.FALSE, null);
+                    new HashMap<>(16), projectBuilder, null, 0, Boolean.FALSE, null);
             } else {
                 return new ArrayList<>(0);
             }
@@ -119,11 +119,11 @@ public interface IBaseDocBuildTemplate {
                 return new ArrayList<>(0);
             }
             return ParamsBuildHelper.buildParams(returnType, "", 0, null, Boolean.TRUE,
-                new HashMap<>(), projectBuilder, null, 0, Boolean.FALSE, null);
+                new HashMap<>(16), projectBuilder, null, 0, Boolean.FALSE, null);
         }
         if (StringUtil.isNotEmpty(returnType)) {
             return ParamsBuildHelper.buildParams(returnType, "", 0, null, Boolean.TRUE,
-                new HashMap<>(), projectBuilder, null, 0, Boolean.FALSE, null);
+                new HashMap<>(16), projectBuilder, null, 0, Boolean.FALSE, null);
         }
         return new ArrayList<>(0);
     }

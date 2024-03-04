@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2023 smart-doc
+ * Copyright (C) 2018-2024 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -20,25 +20,11 @@
  */
 package com.ly.doc.builder;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-
 import com.ly.doc.constants.DocGlobalConstants;
 import com.ly.doc.constants.Methods;
 import com.ly.doc.factory.BuildTemplateFactory;
-import com.ly.doc.template.IDocBuildTemplate;
-import com.power.common.util.CollectionUtil;
-import com.power.common.util.FileUtil;
-import com.power.common.util.StringUtil;
 import com.ly.doc.helper.JavaProjectBuilderHelper;
-import com.ly.doc.model.ApiConfig;
-import com.ly.doc.model.ApiDoc;
-import com.ly.doc.model.ApiMethodDoc;
-import com.ly.doc.model.ApiParam;
-import com.ly.doc.model.ApiReqParam;
-import com.ly.doc.model.FormData;
+import com.ly.doc.model.*;
 import com.ly.doc.model.postman.InfoBean;
 import com.ly.doc.model.postman.ItemBean;
 import com.ly.doc.model.postman.RequestItem;
@@ -47,9 +33,15 @@ import com.ly.doc.model.postman.request.ParamBean;
 import com.ly.doc.model.postman.request.RequestBean;
 import com.ly.doc.model.postman.request.body.BodyBean;
 import com.ly.doc.model.postman.request.header.HeaderBean;
+import com.ly.doc.template.IDocBuildTemplate;
 import com.ly.doc.utils.DocPathUtil;
 import com.ly.doc.utils.JsonUtil;
+import com.power.common.util.CollectionUtil;
+import com.power.common.util.FileUtil;
+import com.power.common.util.StringUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
+
+import java.util.*;
 
 
 /**
@@ -206,7 +198,7 @@ public class PostmanJsonBuilder {
             }
         } else {
             if (apiMethodDoc.getType().equals(Methods.POST.getValue())) {
-                bodyBean = new BodyBean(Boolean.TRUE); //Formdata
+                bodyBean = new BodyBean(Boolean.TRUE); // Formdata
                 bodyBean.setMode(DocGlobalConstants.POSTMAN_MODE_FORMDATA);
                 if (CollectionUtil.isNotEmpty(apiMethodDoc.getRequestExample().getFormDataList())) {
                     bodyBean.setFormdata(apiMethodDoc.getRequestExample().getFormDataList());
@@ -256,6 +248,7 @@ public class PostmanJsonBuilder {
 
     private static void postManCreate(ApiConfig config, ProjectDocConfigBuilder configBuilder) {
         IDocBuildTemplate<ApiDoc> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework());
+        Objects.requireNonNull(docBuildTemplate, "doc build template is null");
         config.setShowJavaType(true);
         List<ApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder);
         RequestItem requestItem = new RequestItem();

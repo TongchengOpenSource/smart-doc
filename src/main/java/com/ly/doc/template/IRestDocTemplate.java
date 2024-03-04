@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2023 smart-doc
+ * Copyright (C) 2018-2024 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -20,22 +20,22 @@
  */
 package com.ly.doc.template;
 
-import com.ly.doc.constants.*;
-import com.ly.doc.model.*;
-import com.ly.doc.utils.*;
-import com.power.common.util.*;
 import com.ly.doc.builder.ProjectDocConfigBuilder;
+import com.ly.doc.constants.*;
 import com.ly.doc.handler.IHeaderHandler;
 import com.ly.doc.handler.IRequestMappingHandler;
 import com.ly.doc.helper.FormDataBuildHelper;
 import com.ly.doc.helper.JsonBuildHelper;
 import com.ly.doc.helper.ParamsBuildHelper;
+import com.ly.doc.model.*;
 import com.ly.doc.model.annotation.EntryAnnotation;
 import com.ly.doc.model.annotation.FrameworkAnnotations;
 import com.ly.doc.model.annotation.MappingAnnotation;
 import com.ly.doc.model.request.ApiRequestExample;
 import com.ly.doc.model.request.CurlRequest;
 import com.ly.doc.model.request.RequestMapping;
+import com.ly.doc.utils.*;
+import com.power.common.util.*;
 import com.thoughtworks.qdox.model.*;
 import com.thoughtworks.qdox.model.expression.AnnotationValue;
 import org.apache.commons.lang3.ArrayUtils;
@@ -51,6 +51,11 @@ import static com.ly.doc.constants.DocGlobalConstants.FILE_CONTENT_TYPE;
 import static com.ly.doc.constants.DocGlobalConstants.JSON_CONTENT_TYPE;
 import static com.ly.doc.constants.DocTags.IGNORE;
 
+/**
+ * Rest api doc template
+ *
+ * @author shalousun
+ */
 public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 
     Logger log = Logger.getLogger(IRestDocTemplate.class.getName());
@@ -914,7 +919,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                         }
                         requestExample.setJsonBody(mockValue).setJson(true);
                     } else {
-                        String json = JsonBuildHelper.buildJson(fullyQualifiedName, gicTypeName, Boolean.FALSE, 0, new HashMap<>(), groupClasses,
+                        String json = JsonBuildHelper.buildJson(fullyQualifiedName, gicTypeName, Boolean.FALSE, 0, new HashMap<>(16), groupClasses,
                                 configBuilder);
                         requestExample.setJsonBody(JsonUtil.toPrettyFormat(json)).setJson(true);
                     }

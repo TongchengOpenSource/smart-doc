@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2023 smart-doc
+ * Copyright (C) 2018-2024 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -20,9 +20,9 @@
  */
 package com.ly.doc.builder;
 
+import com.ly.doc.helper.JavaProjectBuilderHelper;
 import com.ly.doc.model.ApiAllData;
 import com.ly.doc.model.ApiConfig;
-import com.ly.doc.helper.JavaProjectBuilderHelper;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 
 /**
@@ -56,7 +56,6 @@ public class ApiDataBuilder {
         DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
         builderTemplate.checkAndInitForGetApiData(config);
         JavaProjectBuilder javaProjectBuilder = JavaProjectBuilderHelper.create();
-        ApiAllData apiAllData = builderTemplate.getApiData(config, javaProjectBuilder);
-        return apiAllData;
+        return builderTemplate.getApiData(config, javaProjectBuilder);
     }
 }
