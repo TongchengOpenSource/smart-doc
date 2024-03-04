@@ -575,7 +575,7 @@ public class DocUtil {
             if (StringUtil.isEmpty(value) && StringUtil.isNotEmpty(className)) {
                 throw new RuntimeException(tagValNullMsg);
             }
-            if (DocTags.PARAM.equals(tagName)) {
+            if (DocTags.PARAM.equals(tagName) || DocTags.EXTENSION.equals(tagName)) {
                 String pName = value;
                 String pValue = DocGlobalConstants.NO_COMMENTS_FOUND;
                 int idx = value.indexOf(" ");
@@ -1234,5 +1234,22 @@ public class DocUtil {
             }
         }
         return path;
+    }
+
+    /**
+     * parse tag value, detect the value type, should be one type of String, Map, List
+     * @param value tag value
+     * @return one of String, Map, List
+     */
+    public static Object detectTagValue(String value){
+        String v = value.trim();
+        //if the value is a List
+        if (v.startsWith("[") && v.endsWith("]")){
+            return JsonUtil.toObject(v, List.class);
+        }
+        if (v.startsWith("{") && v.endsWith("}")){
+            return JsonUtil.toObject(v, Map.class);
+        }
+        return v;
     }
 }
