@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2023 smart-doc
+ * Copyright (C) 2018-2024 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -21,11 +21,14 @@
 package com.ly.doc.model;
 
 
-import java.util.*;
-
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.StringUtil;
 
+import java.util.*;
+
+/**
+ * @author oppnfind
+ */
 public class ApiDoc implements IDoc, Comparable<ApiDoc> {
 
     /**

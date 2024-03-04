@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2023 smart-doc
+ * Copyright (C) 2018-2024 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -111,4 +111,13 @@ public interface DocAnnotationConstants {
      * Jsr303 param regexp
      */
     String REGEXP = "regexp";
+
+    /**
+     * `@javax.websocket.OnOpen` or `@jakarta.websocket.OnOpen` annotation name
+     */
+    String ON_OPEN = "OnOpen";
+    /**
+     * `@javax.websocket.server.PathParam` or `@jakarta.websocket.PathParam` annotation name
+     */
+    String PATH_PARAM = "PathParam";
 }

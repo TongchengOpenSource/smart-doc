@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2023 smart-doc
+ * Copyright (C) 2018-2024 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -40,6 +40,11 @@ public class FrameworkAnnotations {
     private RequestBodyAnnotation requestBodyAnnotation;
 
     private RequestPartAnnotation requestPartAnnotation;
+
+    /**
+     * `javax.websocket.server.ServerEndpoint` info
+     */
+    private ServerEndpointAnnotation serverEndpointAnnotation;
 
     public static FrameworkAnnotations builder() {
         return new FrameworkAnnotations();
@@ -105,6 +110,15 @@ public class FrameworkAnnotations {
 
     public FrameworkAnnotations setRequestPartAnnotation(RequestPartAnnotation requestPartAnnotation) {
         this.requestPartAnnotation = requestPartAnnotation;
+        return this;
+    }
+
+    public ServerEndpointAnnotation getServerEndpointAnnotation() {
+        return serverEndpointAnnotation;
+    }
+
+    public FrameworkAnnotations setServerEndpointAnnotation(ServerEndpointAnnotation serverEndpointAnnotation) {
+        this.serverEndpointAnnotation = serverEndpointAnnotation;
         return this;
     }
 }

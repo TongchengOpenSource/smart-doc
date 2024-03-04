@@ -101,10 +101,10 @@ public class MediaType implements Serializable {
 
     private static final long serialVersionUID = 2069937152339670231L;
 
-    private static final Map<String, String> fieldMap;
+    private static final Map<String, String> FIELD_MAP;
 
     static {
-        fieldMap = Arrays.stream(MediaType.class.getDeclaredFields())
+        FIELD_MAP = Arrays.stream(MediaType.class.getDeclaredFields())
                 .filter(it -> it.getType().equals(String.class))
                 .map(it -> {
                     try {
@@ -117,12 +117,14 @@ public class MediaType implements Serializable {
 
     public static String valueOf(String name) {
         // if not springframework MediaType constant, return original value
-        if (!name.contains("MediaType.")) return name.replace("\"", "");
+        if (!name.contains("MediaType.")) {
+            return name.replace("\"", "");
+        }
         String[] split = name.replace("[", "").replace("]", "").split(",");
         return Arrays.stream(split)
                 .map(it -> it.replace("MediaType.", "").trim())
                 .distinct()
-                .map(fieldMap::get)
+                .map(FIELD_MAP::get)
                 .collect(Collectors.joining(";"));
     }
 

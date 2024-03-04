@@ -10,7 +10,7 @@
 
 ## Introduce
 
-`smart-doc[smɑːt dɒk]`是一款同时支持`JAVA REST API`和`Apache Dubbo RPC`接口文档生成的工具，`smart-doc`在业内率先提出基于`JAVA`泛型定义推导的理念，
+`smart-doc[smɑːt dɒk]`是一款同时支持`JAVA REST API`和`JAVA WebSocket`和`Apache Dubbo RPC`接口文档生成的工具，`smart-doc`在业内率先提出基于`JAVA`泛型定义推导的理念，
 完全基于接口源码来分析生成接口文档，不采用任何注解侵入到业务代码中。你只需要按照`Javadoc`标准编写注释， `smart-doc`就能帮你生成一个简易明了的`Markdown`、`HTML5`、`Postman`
 `Collection2.0+`、`OpenAPI 3.0+`的文档。
 

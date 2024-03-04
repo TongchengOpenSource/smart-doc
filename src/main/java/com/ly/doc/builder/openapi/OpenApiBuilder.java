@@ -1,7 +1,7 @@
 /*
  * smart-doc
  *
- * Copyright (C) 2018-2023 smart-doc
+ * Copyright (C) 2018-2024 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -127,6 +127,7 @@ public class OpenApiBuilder extends AbstractOpenApiBuilder {
      * @param apiMethodDoc ApiMethodDoc
      * @param apiDoc       apiDoc
      */
+    @Override
     public Map<String, Object> buildPathUrlsRequest(ApiConfig apiConfig, ApiMethodDoc apiMethodDoc, ApiDoc apiDoc) {
         Map<String, Object> request = new HashMap<>(20);
         request.put("summary", apiMethodDoc.getDesc());
@@ -205,7 +206,7 @@ public class OpenApiBuilder extends AbstractOpenApiBuilder {
         for (ApiParam apiParam : apiMethodDoc.getQueryParams()) {
             if (apiParam.isHasItems()) {
                 parameters = getStringParams(apiParam, false);
-                Map<String, Object> arrayMap = new HashMap<>();
+                Map<String, Object> arrayMap = new HashMap<>(16);
                 arrayMap.put("type", DocGlobalConstants.PARAM_TYPE_ARRAY);
                 arrayMap.put("items", getStringParams(apiParam, apiParam.isHasItems()));
                 parameters.put("schema", arrayMap);
@@ -268,7 +269,7 @@ public class OpenApiBuilder extends AbstractOpenApiBuilder {
     @Override
     public Map<String, Object> buildComponentsSchema(List<ApiDoc> apiDocs) {
         Map<String, Object> schemas = new HashMap<>(4);
-        Map<String, Object> component = new HashMap<>();
+        Map<String, Object> component = new HashMap<>(16);
         component.put(DocGlobalConstants.DEFAULT_PRIMITIVE, STRING_COMPONENT);
         apiDocs.forEach(
                 a -> {

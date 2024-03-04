@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2023 smart-doc
+ * Copyright (C) 2018-2024 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -21,11 +21,11 @@
 package com.ly.doc.utils;
 
 import com.ly.doc.constants.*;
+import com.ly.doc.extension.dict.DictionaryValuesResolver;
 import com.ly.doc.model.*;
+import com.ly.doc.model.request.RequestMapping;
 import com.mifmif.common.regex.Generex;
 import com.power.common.util.*;
-import com.ly.doc.extension.dict.DictionaryValuesResolver;
-import com.ly.doc.model.request.RequestMapping;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import com.thoughtworks.qdox.model.*;
 import com.thoughtworks.qdox.model.expression.Add;
@@ -50,83 +50,83 @@ import java.util.stream.Collectors;
  */
 public class DocUtil {
 
-    private static final Faker faker = new Faker(new Locale("en-US"));
-    private static final Faker enFaker = new Faker(new Locale("en-US"));
+    private static final Faker FAKER = new Faker(new Locale("en-US"));
+    private static final Faker EN_FAKER = new Faker(new Locale("en-US"));
 
-    private static final Map<String, String> fieldValue = new LinkedHashMap<>();
+    private static final Map<String, String> FIELD_VALUE = new LinkedHashMap<>();
 
     static {
-        fieldValue.put("uuid-string", UUID.randomUUID().toString());
-        fieldValue.put("traceid-string", UUID.randomUUID().toString());
-        fieldValue.put("id-string", String.valueOf(RandomUtil.randomInt(1, 200)));
-        fieldValue.put("ids-string", String.valueOf(RandomUtil.randomInt(1, 200)));
-        fieldValue.put("nickname-string", enFaker.name().username());
-        fieldValue.put("hostname-string", faker.internet().ipV4Address());
-        fieldValue.put("name-string", faker.name().username());
-        fieldValue.put("author-string", faker.book().author());
-        fieldValue.put("url-string", faker.internet().url());
-        fieldValue.put("username-string", faker.name().username());
-        fieldValue.put("code-int", "0");
-        fieldValue.put("index-int", "1");
-        fieldValue.put("index-integer", "1");
-        fieldValue.put("page-int", "1");
-        fieldValue.put("page-integer", "1");
-        fieldValue.put("age-int", String.valueOf(RandomUtil.randomInt(0, 70)));
-        fieldValue.put("age-integer", String.valueOf(RandomUtil.randomInt(0, 70)));
-        fieldValue.put("email-string", faker.internet().emailAddress());
-        fieldValue.put("domain-string", faker.internet().domainName());
-        fieldValue.put("phone-string", faker.phoneNumber().cellPhone());
-        fieldValue.put("mobile-string", faker.phoneNumber().cellPhone());
-        fieldValue.put("telephone-string", faker.phoneNumber().phoneNumber());
-        fieldValue.put("address-string", faker.address().fullAddress().replace(",", "，"));
-        fieldValue.put("ip-string", faker.internet().ipV4Address());
-        fieldValue.put("ipv4-string", faker.internet().ipV4Address());
-        fieldValue.put("ipv6-string", faker.internet().ipV6Address());
-        fieldValue.put("company-string", faker.company().name());
-        fieldValue.put("timestamp-long", String.valueOf(System.currentTimeMillis()));
-        fieldValue.put("timestamp-string", DateTimeUtil.dateToStr(new Date(), DateTimeUtil.DATE_FORMAT_SECOND));
-        fieldValue.put("time-long", String.valueOf(System.currentTimeMillis()));
-        fieldValue.put("time-string", DateTimeUtil.dateToStr(new Date(), DateTimeUtil.DATE_FORMAT_SECOND));
-        fieldValue.put("birthday-string", DateTimeUtil.dateToStr(new Date(), DateTimeUtil.DATE_FORMAT_DAY));
-        fieldValue.put("birthday-long", String.valueOf(System.currentTimeMillis()));
-        fieldValue.put("code-string", String.valueOf(RandomUtil.randomInt(100, 99999)));
-        fieldValue.put("message-string", "success,fail".split(",")[RandomUtil.randomInt(0, 1)]);
-        fieldValue.put("date-string", DateTimeUtil.dateToStr(new Date(), DateTimeUtil.DATE_FORMAT_DAY));
-        fieldValue.put("date-date", DateTimeUtil.dateToStr(new Date(), DateTimeUtil.DATE_FORMAT_DAY));
-        fieldValue.put("begintime-date", DateTimeUtil.dateToStr(new Date(), DateTimeUtil.DATE_FORMAT_DAY));
-        fieldValue.put("endtime-date", DateTimeUtil.dateToStr(new Date(), DateTimeUtil.DATE_FORMAT_DAY));
-        fieldValue.put("time-localtime", LocalDateTime.now().toLocalTime().format(DateTimeFormatter.ofPattern("HH:mm:ss")));
-        fieldValue.put("state-int", String.valueOf(RandomUtil.randomInt(0, 10)));
-        fieldValue.put("state-integer", String.valueOf(RandomUtil.randomInt(0, 10)));
-        fieldValue.put("flag-int", String.valueOf(RandomUtil.randomInt(0, 10)));
-        fieldValue.put("flag-integer", String.valueOf(RandomUtil.randomInt(0, 10)));
-        fieldValue.put("flag-boolean", "true");
-        fieldValue.put("flag-Boolean", "false");
-        fieldValue.put("idcard-string", IDCardUtil.getIdCard());
-        fieldValue.put("sex-int", String.valueOf(RandomUtil.randomInt(0, 2)));
-        fieldValue.put("sex-integer", String.valueOf(RandomUtil.randomInt(0, 2)));
-        fieldValue.put("gender-int", String.valueOf(RandomUtil.randomInt(0, 2)));
-        fieldValue.put("gender-integer", String.valueOf(RandomUtil.randomInt(0, 2)));
-        fieldValue.put("limit-int", "10");
-        fieldValue.put("limit-integer", "10");
-        fieldValue.put("size-int", "10");
-        fieldValue.put("size-integer", "10");
+        FIELD_VALUE.put("uuid-string", UUID.randomUUID().toString());
+        FIELD_VALUE.put("traceid-string", UUID.randomUUID().toString());
+        FIELD_VALUE.put("id-string", String.valueOf(RandomUtil.randomInt(1, 200)));
+        FIELD_VALUE.put("ids-string", String.valueOf(RandomUtil.randomInt(1, 200)));
+        FIELD_VALUE.put("nickname-string", EN_FAKER.name().username());
+        FIELD_VALUE.put("hostname-string", FAKER.internet().ipV4Address());
+        FIELD_VALUE.put("name-string", FAKER.name().username());
+        FIELD_VALUE.put("author-string", FAKER.book().author());
+        FIELD_VALUE.put("url-string", FAKER.internet().url());
+        FIELD_VALUE.put("username-string", FAKER.name().username());
+        FIELD_VALUE.put("code-int", "0");
+        FIELD_VALUE.put("index-int", "1");
+        FIELD_VALUE.put("index-integer", "1");
+        FIELD_VALUE.put("page-int", "1");
+        FIELD_VALUE.put("page-integer", "1");
+        FIELD_VALUE.put("age-int", String.valueOf(RandomUtil.randomInt(0, 70)));
+        FIELD_VALUE.put("age-integer", String.valueOf(RandomUtil.randomInt(0, 70)));
+        FIELD_VALUE.put("email-string", FAKER.internet().emailAddress());
+        FIELD_VALUE.put("domain-string", FAKER.internet().domainName());
+        FIELD_VALUE.put("phone-string", FAKER.phoneNumber().cellPhone());
+        FIELD_VALUE.put("mobile-string", FAKER.phoneNumber().cellPhone());
+        FIELD_VALUE.put("telephone-string", FAKER.phoneNumber().phoneNumber());
+        FIELD_VALUE.put("address-string", FAKER.address().fullAddress().replace(",", "，"));
+        FIELD_VALUE.put("ip-string", FAKER.internet().ipV4Address());
+        FIELD_VALUE.put("ipv4-string", FAKER.internet().ipV4Address());
+        FIELD_VALUE.put("ipv6-string", FAKER.internet().ipV6Address());
+        FIELD_VALUE.put("company-string", FAKER.company().name());
+        FIELD_VALUE.put("timestamp-long", String.valueOf(System.currentTimeMillis()));
+        FIELD_VALUE.put("timestamp-string", DateTimeUtil.dateToStr(new Date(), DateTimeUtil.DATE_FORMAT_SECOND));
+        FIELD_VALUE.put("time-long", String.valueOf(System.currentTimeMillis()));
+        FIELD_VALUE.put("time-string", DateTimeUtil.dateToStr(new Date(), DateTimeUtil.DATE_FORMAT_SECOND));
+        FIELD_VALUE.put("birthday-string", DateTimeUtil.dateToStr(new Date(), DateTimeUtil.DATE_FORMAT_DAY));
+        FIELD_VALUE.put("birthday-long", String.valueOf(System.currentTimeMillis()));
+        FIELD_VALUE.put("code-string", String.valueOf(RandomUtil.randomInt(100, 99999)));
+        FIELD_VALUE.put("message-string", "success,fail".split(",")[RandomUtil.randomInt(0, 1)]);
+        FIELD_VALUE.put("date-string", DateTimeUtil.dateToStr(new Date(), DateTimeUtil.DATE_FORMAT_DAY));
+        FIELD_VALUE.put("date-date", DateTimeUtil.dateToStr(new Date(), DateTimeUtil.DATE_FORMAT_DAY));
+        FIELD_VALUE.put("begintime-date", DateTimeUtil.dateToStr(new Date(), DateTimeUtil.DATE_FORMAT_DAY));
+        FIELD_VALUE.put("endtime-date", DateTimeUtil.dateToStr(new Date(), DateTimeUtil.DATE_FORMAT_DAY));
+        FIELD_VALUE.put("time-localtime", LocalDateTime.now().toLocalTime().format(DateTimeFormatter.ofPattern("HH:mm:ss")));
+        FIELD_VALUE.put("state-int", String.valueOf(RandomUtil.randomInt(0, 10)));
+        FIELD_VALUE.put("state-integer", String.valueOf(RandomUtil.randomInt(0, 10)));
+        FIELD_VALUE.put("flag-int", String.valueOf(RandomUtil.randomInt(0, 10)));
+        FIELD_VALUE.put("flag-integer", String.valueOf(RandomUtil.randomInt(0, 10)));
+        FIELD_VALUE.put("flag-boolean", "true");
+        FIELD_VALUE.put("flag-Boolean", "false");
+        FIELD_VALUE.put("idcard-string", IDCardUtil.getIdCard());
+        FIELD_VALUE.put("sex-int", String.valueOf(RandomUtil.randomInt(0, 2)));
+        FIELD_VALUE.put("sex-integer", String.valueOf(RandomUtil.randomInt(0, 2)));
+        FIELD_VALUE.put("gender-int", String.valueOf(RandomUtil.randomInt(0, 2)));
+        FIELD_VALUE.put("gender-integer", String.valueOf(RandomUtil.randomInt(0, 2)));
+        FIELD_VALUE.put("limit-int", "10");
+        FIELD_VALUE.put("limit-integer", "10");
+        FIELD_VALUE.put("size-int", "10");
+        FIELD_VALUE.put("size-integer", "10");
 
-        fieldValue.put("offset-int", "1");
-        fieldValue.put("offset-integer", "1");
-        fieldValue.put("offset-long", "1");
-        fieldValue.put("version-string", enFaker.app().version());
+        FIELD_VALUE.put("offset-int", "1");
+        FIELD_VALUE.put("offset-integer", "1");
+        FIELD_VALUE.put("offset-long", "1");
+        FIELD_VALUE.put("version-string", EN_FAKER.app().version());
     }
 
     /**
      * Cache the regex and its pattern object
      */
-    private static final Map<String, Pattern> patternCache = new HashMap<>();
+    private static final Map<String, Pattern> PATTERN_CACHE = new HashMap<>();
 
     /**
      * "packageFilters" cache
      */
-    private static final Map<String, Set<String>> filterMethodCache = new HashMap<>();
+    private static final Map<String, Set<String>> FILTER_METHOD_CACHE = new HashMap<>();
 
     /**
      * Generate a random value based on java type name.
@@ -137,7 +137,7 @@ public class DocUtil {
     public static String jsonValueByType(String typeName) {
         String type = typeName.contains(".") ? typeName.substring(typeName.lastIndexOf(".") + 1) : typeName;
         String randomMock = System.getProperty(DocGlobalConstants.RANDOM_MOCK);
-        Boolean randomMockFlag = Boolean.parseBoolean(randomMock);
+        boolean randomMockFlag = Boolean.parseBoolean(randomMock);
         String value = "";
         if (randomMockFlag) {
             value = RandomUtil.randomValueByType(type);
@@ -163,7 +163,7 @@ public class DocUtil {
      */
     public static String getValByTypeAndFieldName(String typeName, String filedName) {
         String randomMock = System.getProperty(DocGlobalConstants.RANDOM_MOCK);
-        Boolean randomMockFlag = Boolean.parseBoolean(randomMock);
+        boolean randomMockFlag = Boolean.parseBoolean(randomMock);
         boolean isArray = true;
         String type = typeName.contains("java.lang") ? typeName.substring(typeName.lastIndexOf(".") + 1) : typeName;
         String key = filedName.toLowerCase() + "-" + type.toLowerCase();
@@ -174,7 +174,7 @@ public class DocUtil {
         if (!randomMockFlag) {
             return jsonValueByType(typeName);
         }
-        for (Map.Entry<String, String> entry : fieldValue.entrySet()) {
+        for (Map.Entry<String, String> entry : FIELD_VALUE.entrySet()) {
             if (key.contains(entry.getKey())) {
                 value = new StringBuilder(entry.getValue());
                 if (isArray) {
@@ -312,10 +312,10 @@ public class DocUtil {
      * @return a usable pattern object
      */
     private static Pattern getPattern(String regex) {
-        Pattern pattern = patternCache.get(regex);
+        Pattern pattern = PATTERN_CACHE.get(regex);
         if (pattern == null) {
             pattern = Pattern.compile(regex);
-            patternCache.put(regex, pattern);
+            PATTERN_CACHE.put(regex, pattern);
         }
         return pattern;
     }
@@ -327,7 +327,7 @@ public class DocUtil {
      * @param methods    the methods will be cached
      */
     private static void cacheFilterMethods(String controller, Set<String> methods) {
-        filterMethodCache.put(controller, methods);
+        FILTER_METHOD_CACHE.put(controller, methods);
     }
 
     /**
@@ -337,7 +337,7 @@ public class DocUtil {
      * @return the cached methods or "*"
      */
     private static Set<String> getFilterMethodsCache(String controller) {
-        return filterMethodCache.getOrDefault(controller, Collections.singleton(DocGlobalConstants.DEFAULT_FILTER_METHOD));
+        return FILTER_METHOD_CACHE.getOrDefault(controller, Collections.singleton(DocGlobalConstants.DEFAULT_FILTER_METHOD));
     }
 
     /**
@@ -466,8 +466,10 @@ public class DocUtil {
      */
     public static String handleHttpMethod(String method) {
         switch (method) {
-            case "RequestMethod.GET": //for spring
-            case "MethodType.GET": //for solon
+            // for spring
+            case "RequestMethod.GET":
+                // for solon
+            case "MethodType.GET":
                 return "GET";
             case "RequestMethod.POST":
             case "MethodType.POST":
@@ -488,8 +490,9 @@ public class DocUtil {
 
     /**
      * handle spring mvc mapping value
+     *
      * @param classLoader ClassLoader
-     * @param annotation JavaAnnotation
+     * @param annotation  JavaAnnotation
      * @return String
      */
     public static String handleMappingValue(ClassLoader classLoader, JavaAnnotation annotation) {
@@ -569,7 +572,7 @@ public class DocUtil {
 
     private static Map<String, String> getCommentsByTag(List<DocletTag> paramTags, final String tagName, String className,
                                                         String tagValNullMsg, String tagValErrorMsg) {
-        Map<String, String> paramTagMap = new HashMap<>();
+        Map<String, String> paramTagMap = new HashMap<>(16);
         for (DocletTag docletTag : paramTags) {
             String value = docletTag.getValue();
             if (StringUtil.isEmpty(value) && StringUtil.isNotEmpty(className)) {
@@ -579,7 +582,7 @@ public class DocUtil {
                 String pName = value;
                 String pValue = DocGlobalConstants.NO_COMMENTS_FOUND;
                 int idx = value.indexOf(" ");
-                //existed \n
+                // existed \n
                 if (idx > -1) {
                     pName = value.substring(0, idx);
                     pValue = value.substring(idx + 1);
@@ -852,6 +855,7 @@ public class DocUtil {
     /**
      * resolve the string of {@link Add} which has {@link FieldRef}(to be exact is {@link FieldRef}) children,
      * the value of {@link FieldRef} will be resolved with the real value of it if it is the static final member of any other class
+     *
      * @param classLoader     classLoader
      * @param annotationValue annotationValue
      * @return annotation value
@@ -881,8 +885,9 @@ public class DocUtil {
 
     /**
      * handle spring mvc RequestHeader value
+     *
      * @param classLoader classLoader
-     * @param annotation JavaAnnotation
+     * @param annotation  JavaAnnotation
      * @return String
      */
     public static String handleRequestHeaderValue(ClassLoader classLoader, JavaAnnotation annotation) {
@@ -1177,7 +1182,7 @@ public class DocUtil {
             if (substringMatch(buf, index, SystemPlaceholders.PLACEHOLDER_SUFFIX)) {
                 if (withinNestedPlaceholder > 0) {
                     withinNestedPlaceholder--;
-                    index = index + "}".length();
+                    index = index + ("}".length());
                 } else {
                     return index;
                 }

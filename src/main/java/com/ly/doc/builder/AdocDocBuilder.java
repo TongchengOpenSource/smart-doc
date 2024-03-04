@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2023 smart-doc
+ * Copyright (C) 2018-2024 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -20,15 +20,16 @@
  */
 package com.ly.doc.builder;
 
-import java.util.List;
-
 import com.ly.doc.constants.DocGlobalConstants;
 import com.ly.doc.factory.BuildTemplateFactory;
+import com.ly.doc.helper.JavaProjectBuilderHelper;
 import com.ly.doc.model.ApiConfig;
 import com.ly.doc.model.ApiDoc;
 import com.ly.doc.template.IDocBuildTemplate;
-import com.ly.doc.helper.JavaProjectBuilderHelper;
 import com.thoughtworks.qdox.JavaProjectBuilder;
+
+import java.util.List;
+import java.util.Objects;
 
 /**
  * Use to create Asciidoc
@@ -64,6 +65,7 @@ public class AdocDocBuilder {
         config.setAdoc(true);
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
         IDocBuildTemplate<ApiDoc> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework());
+        Objects.requireNonNull(docBuildTemplate, "doc build template is null");
         List<ApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder);
         if (config.isAllInOne()) {
             String docName = builderTemplate.allInOneDocName(config, INDEX_DOC, ".adoc");

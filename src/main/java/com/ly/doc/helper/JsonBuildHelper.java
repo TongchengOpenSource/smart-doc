@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2023 smart-doc
+ * Copyright (C) 2018-2024 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -105,7 +105,7 @@ public class JsonBuildHelper extends BaseHelper {
         }
 
         return JsonUtil.toPrettyFormat(buildJson(typeName, returnType, Boolean.TRUE, 0,
-                new HashMap<>(), new HashSet<>(0), builder));
+                new HashMap<>(16), new HashSet<>(0), builder));
     }
 
     /**

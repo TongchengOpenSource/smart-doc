@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2023 smart-doc
+ * Copyright (C) 2018-2024 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -27,16 +27,50 @@ import java.util.List;
  * @author yu 2019/12/20.
  */
 public enum SolonRequestAnnotationsEnum {
-
+    /**
+     * Solon Request Annotation PathVar
+     */
     PATH_VAR("PathVar"),
+
+    /**
+     * Solon Request Annotation PathVar full
+     */
     PATH_VAR_FULLY("org.noear.solon.annotation.PathVar"),
+
+    /**
+     * Solon Request Annotation Param
+     */
     REQ_PARAM("Param"),
+
+    /**
+     * Solon Request Annotation Param full
+     */
     REQ_PARAM_FULLY("org.noear.solon.annotation.Param"),
+
+    /**
+     * Solon Request Annotation Body
+     */
     REQUEST_BODY("Body"),
+
+    /**
+     * Solon Request Annotation Body full
+     */
     REQUEST_BODY_FULLY("org.noear.solon.annotation.Body"),
+
+    /**
+     * Solon Request Annotation Header
+     */
     REQUEST_HERDER("Header"),
+
+    /**
+     * Solon Request Annotation Header full
+     */
     REQUEST_HERDER_FULLY("org.noear.solon.annotation.Header"),
     ;
+
+    /**
+     * Solon Request Annotation value
+     */
     private final String value;
 
     SolonRequestAnnotationsEnum(String value) {

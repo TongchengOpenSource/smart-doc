@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2023 smart-doc
+ * Copyright (C) 2018-2024 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -56,4 +56,6 @@ public interface SpringMvcAnnotations {
     String REQUEST_ATTRIBUTE = "RequestAttribute";
 
     String REQUEST_BODY_FULLY = "org.springframework.web.bind.annotation.RequestBody";
+
+    String SERVER_ENDPOINT = "ServerEndpoint";
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2023 smart-doc
+ * Copyright (C) 2018-2024 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -20,59 +20,49 @@
  */
 package com.ly.doc.template;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import com.ly.doc.constants.DocGlobalConstants;
+import com.ly.doc.builder.ProjectDocConfigBuilder;
+import com.ly.doc.constants.*;
+import com.ly.doc.handler.SolonRequestHeaderHandler;
+import com.ly.doc.handler.SolonRequestMappingHandler;
 import com.ly.doc.model.ApiConfig;
 import com.ly.doc.model.ApiDoc;
 import com.ly.doc.model.ApiReqParam;
-import com.ly.doc.model.annotation.RequestParamAnnotation;
-import com.ly.doc.utils.JavaClassValidateUtil;
-import com.ly.doc.builder.ProjectDocConfigBuilder;
-import com.ly.doc.constants.DocAnnotationConstants;
-import com.ly.doc.constants.DocTags;
-import com.ly.doc.constants.Methods;
-import com.ly.doc.constants.SolonAnnotations;
-import com.ly.doc.constants.SolonRequestAnnotationsEnum;
-import com.ly.doc.handler.SolonRequestHeaderHandler;
-import com.ly.doc.handler.SolonRequestMappingHandler;
-import com.ly.doc.model.annotation.EntryAnnotation;
-import com.ly.doc.model.annotation.FrameworkAnnotations;
-import com.ly.doc.model.annotation.HeaderAnnotation;
-import com.ly.doc.model.annotation.MappingAnnotation;
-import com.ly.doc.model.annotation.PathVariableAnnotation;
-import com.ly.doc.model.annotation.RequestBodyAnnotation;
+import com.ly.doc.model.WebSocketDoc;
+import com.ly.doc.model.annotation.*;
 import com.ly.doc.model.request.RequestMapping;
+import com.ly.doc.utils.JavaClassValidateUtil;
 import com.thoughtworks.qdox.model.DocletTag;
 import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaMethod;
 
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 /**
  * @author noear 2022/2/19 created
  */
-public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDocTemplate {
+public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IWebSocketDocBuildTemplate<WebSocketDoc>, IRestDocTemplate, IWebSocketTemplate {
 
     @Override
     public List<ApiDoc> renderApi(ProjectDocConfigBuilder projectBuilder, Collection<JavaClass> candidateClasses) {
         ApiConfig apiConfig = projectBuilder.getApiConfig();
         List<ApiReqParam> configApiReqParams = Stream.of(apiConfig.getRequestHeaders(), apiConfig.getRequestParams()).filter(Objects::nonNull)
-            .flatMap(Collection::stream).collect(Collectors.toList());
+                .flatMap(Collection::stream).collect(Collectors.toList());
         FrameworkAnnotations frameworkAnnotations = registeredAnnotations();
         List<ApiDoc> apiDocList = processApiData(projectBuilder, frameworkAnnotations, configApiReqParams,
-            new SolonRequestMappingHandler(), new SolonRequestHeaderHandler(), candidateClasses);
+                new SolonRequestMappingHandler(), new SolonRequestHeaderHandler(), candidateClasses);
         // sort
         if (apiConfig.isSortByTitle()) {
             Collections.sort(apiDocList);
         }
         return apiDocList;
+    }
+
+    @Override
+    public List<WebSocketDoc> renderWebSocketApi(ProjectDocConfigBuilder projectBuilder, Collection<JavaClass> candidateClasses) {
+        return null;
     }
 
 
@@ -148,110 +138,110 @@ public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDo
     public FrameworkAnnotations registeredAnnotations() {
         FrameworkAnnotations annotations = FrameworkAnnotations.builder();
         HeaderAnnotation headerAnnotation = HeaderAnnotation.builder()
-            .setAnnotationName(SolonAnnotations.REQUEST_HERDER)
-            .setValueProp(DocAnnotationConstants.VALUE_PROP)
-            .setDefaultValueProp(DocAnnotationConstants.DEFAULT_VALUE_PROP)
-            .setRequiredProp(DocAnnotationConstants.REQUIRED_PROP);
+                .setAnnotationName(SolonAnnotations.REQUEST_HERDER)
+                .setValueProp(DocAnnotationConstants.VALUE_PROP)
+                .setDefaultValueProp(DocAnnotationConstants.DEFAULT_VALUE_PROP)
+                .setRequiredProp(DocAnnotationConstants.REQUIRED_PROP);
         // add header annotation
         annotations.setHeaderAnnotation(headerAnnotation);
 
         // add entry annotation
-        Map<String, EntryAnnotation> entryAnnotations = new HashMap<>();
+        Map<String, EntryAnnotation> entryAnnotations = new HashMap<>(16);
         EntryAnnotation controllerAnnotation = EntryAnnotation.builder()
-            .setAnnotationName(SolonAnnotations.CONTROLLER)
-            .setAnnotationFullyName(SolonAnnotations.CONTROLLER);
+                .setAnnotationName(SolonAnnotations.CONTROLLER)
+                .setAnnotationFullyName(SolonAnnotations.CONTROLLER);
         entryAnnotations.put(controllerAnnotation.getAnnotationName(), controllerAnnotation);
 
         EntryAnnotation remoteController = EntryAnnotation.builder()
-            .setAnnotationName(SolonAnnotations.REMOTING);
+                .setAnnotationName(SolonAnnotations.REMOTING);
         entryAnnotations.put(remoteController.getAnnotationName(), remoteController);
 
         EntryAnnotation componentController = EntryAnnotation.builder()
-            .setAnnotationName(SolonAnnotations.COMPONENT);
+                .setAnnotationName(SolonAnnotations.COMPONENT);
         entryAnnotations.put(componentController.getAnnotationName(), componentController);
 
         annotations.setEntryAnnotations(entryAnnotations);
 
         // add request body annotation
         RequestBodyAnnotation bodyAnnotation = RequestBodyAnnotation.builder()
-            .setAnnotationName(SolonAnnotations.REQUEST_BODY)
-            .setAnnotationFullyName(SolonAnnotations.REQUEST_BODY_FULLY);
+                .setAnnotationName(SolonAnnotations.REQUEST_BODY)
+                .setAnnotationFullyName(SolonAnnotations.REQUEST_BODY_FULLY);
         annotations.setRequestBodyAnnotation(bodyAnnotation);
 
         // request param annotation
         RequestParamAnnotation requestAnnotation = RequestParamAnnotation.builder()
-            .setAnnotationName(SolonAnnotations.REQUEST_PARAM)
-            .setDefaultValueProp(DocAnnotationConstants.DEFAULT_VALUE_PROP)
-            .setRequiredProp(DocAnnotationConstants.REQUIRED_PROP);
+                .setAnnotationName(SolonAnnotations.REQUEST_PARAM)
+                .setDefaultValueProp(DocAnnotationConstants.DEFAULT_VALUE_PROP)
+                .setRequiredProp(DocAnnotationConstants.REQUIRED_PROP);
         annotations.setRequestParamAnnotation(requestAnnotation);
 
         // add path variable annotation
         PathVariableAnnotation pathVariableAnnotation = PathVariableAnnotation.builder()
-            .setAnnotationName(SolonAnnotations.PATH_VAR)
-            .setDefaultValueProp(DocAnnotationConstants.DEFAULT_VALUE_PROP)
-            .setRequiredProp(DocAnnotationConstants.REQUIRED_PROP);
+                .setAnnotationName(SolonAnnotations.PATH_VAR)
+                .setDefaultValueProp(DocAnnotationConstants.DEFAULT_VALUE_PROP)
+                .setRequiredProp(DocAnnotationConstants.REQUIRED_PROP);
         annotations.setPathVariableAnnotation(pathVariableAnnotation);
 
         // add mapping annotations
-        Map<String, MappingAnnotation> mappingAnnotations = new HashMap<>();
+        Map<String, MappingAnnotation> mappingAnnotations = new HashMap<>(16);
 
         MappingAnnotation requestMappingAnnotation = MappingAnnotation.builder()
-            .setAnnotationName(SolonAnnotations.REQUEST_MAPPING)
-            .setProducesProp("produces")
-            .setMethodProp("method")
-            .setParamsProp("params")
-            .setScope("class", "method")
-            .setPathProps(DocAnnotationConstants.VALUE_PROP, DocAnnotationConstants.NAME_PROP, DocAnnotationConstants.PATH_PROP);
+                .setAnnotationName(SolonAnnotations.REQUEST_MAPPING)
+                .setProducesProp("produces")
+                .setMethodProp("method")
+                .setParamsProp("params")
+                .setScope("class", "method")
+                .setPathProps(DocAnnotationConstants.VALUE_PROP, DocAnnotationConstants.NAME_PROP, DocAnnotationConstants.PATH_PROP);
         mappingAnnotations.put(requestMappingAnnotation.getAnnotationName(), requestMappingAnnotation);
 
         MappingAnnotation postMappingAnnotation = MappingAnnotation.builder()
-            .setAnnotationName(SolonAnnotations.POST_MAPPING)
-            .setProducesProp("produces")
-            .setMethodProp("method")
-            .setParamsProp("params")
-            .setMethodType(Methods.POST.getValue())
-            .setPathProps(DocAnnotationConstants.VALUE_PROP, DocAnnotationConstants.NAME_PROP, DocAnnotationConstants.PATH_PROP);
+                .setAnnotationName(SolonAnnotations.POST_MAPPING)
+                .setProducesProp("produces")
+                .setMethodProp("method")
+                .setParamsProp("params")
+                .setMethodType(Methods.POST.getValue())
+                .setPathProps(DocAnnotationConstants.VALUE_PROP, DocAnnotationConstants.NAME_PROP, DocAnnotationConstants.PATH_PROP);
         mappingAnnotations.put(postMappingAnnotation.getAnnotationName(), postMappingAnnotation);
 
         MappingAnnotation getMappingAnnotation = MappingAnnotation.builder()
-            .setAnnotationName(SolonAnnotations.GET_MAPPING)
-            .setProducesProp("produces")
-            .setMethodProp("method")
-            .setParamsProp("params")
-            .setMethodType(Methods.GET.getValue())
-            .setPathProps(DocAnnotationConstants.VALUE_PROP, DocAnnotationConstants.NAME_PROP, DocAnnotationConstants.PATH_PROP);
+                .setAnnotationName(SolonAnnotations.GET_MAPPING)
+                .setProducesProp("produces")
+                .setMethodProp("method")
+                .setParamsProp("params")
+                .setMethodType(Methods.GET.getValue())
+                .setPathProps(DocAnnotationConstants.VALUE_PROP, DocAnnotationConstants.NAME_PROP, DocAnnotationConstants.PATH_PROP);
         mappingAnnotations.put(getMappingAnnotation.getAnnotationName(), getMappingAnnotation);
 
         MappingAnnotation putMappingAnnotation = MappingAnnotation.builder()
-            .setAnnotationName(SolonAnnotations.PUT_MAPPING)
-            .setProducesProp("produces")
-            .setParamsProp("params")
-            .setMethodProp("method")
-            .setMethodType(Methods.PUT.getValue())
-            .setPathProps(DocAnnotationConstants.VALUE_PROP, DocAnnotationConstants.NAME_PROP, DocAnnotationConstants.PATH_PROP);
+                .setAnnotationName(SolonAnnotations.PUT_MAPPING)
+                .setProducesProp("produces")
+                .setParamsProp("params")
+                .setMethodProp("method")
+                .setMethodType(Methods.PUT.getValue())
+                .setPathProps(DocAnnotationConstants.VALUE_PROP, DocAnnotationConstants.NAME_PROP, DocAnnotationConstants.PATH_PROP);
         mappingAnnotations.put(putMappingAnnotation.getAnnotationName(), putMappingAnnotation);
 
         MappingAnnotation patchMappingAnnotation = MappingAnnotation.builder()
-            .setAnnotationName(SolonAnnotations.PATCH_MAPPING)
-            .setProducesProp("produces")
-            .setMethodProp("method")
-            .setParamsProp("params")
-            .setMethodType(Methods.PATCH.getValue())
-            .setPathProps(DocAnnotationConstants.VALUE_PROP, DocAnnotationConstants.NAME_PROP, DocAnnotationConstants.PATH_PROP);
+                .setAnnotationName(SolonAnnotations.PATCH_MAPPING)
+                .setProducesProp("produces")
+                .setMethodProp("method")
+                .setParamsProp("params")
+                .setMethodType(Methods.PATCH.getValue())
+                .setPathProps(DocAnnotationConstants.VALUE_PROP, DocAnnotationConstants.NAME_PROP, DocAnnotationConstants.PATH_PROP);
         mappingAnnotations.put(patchMappingAnnotation.getAnnotationName(), patchMappingAnnotation);
 
         MappingAnnotation deleteMappingAnnotation = MappingAnnotation.builder()
-            .setAnnotationName(SolonAnnotations.DELETE_MAPPING)
-            .setProducesProp("produces")
-            .setMethodProp("method")
-            .setParamsProp("params")
-            .setMethodType(Methods.DELETE.getValue())
-            .setPathProps(DocAnnotationConstants.VALUE_PROP, DocAnnotationConstants.NAME_PROP, DocAnnotationConstants.PATH_PROP);
+                .setAnnotationName(SolonAnnotations.DELETE_MAPPING)
+                .setProducesProp("produces")
+                .setMethodProp("method")
+                .setParamsProp("params")
+                .setMethodType(Methods.DELETE.getValue())
+                .setPathProps(DocAnnotationConstants.VALUE_PROP, DocAnnotationConstants.NAME_PROP, DocAnnotationConstants.PATH_PROP);
         mappingAnnotations.put(deleteMappingAnnotation.getAnnotationName(), deleteMappingAnnotation);
 
         MappingAnnotation feignClientAnnotation = MappingAnnotation.builder()
-            .setAnnotationName(DocGlobalConstants.FEIGN_CLIENT)
-            .setAnnotationFullyName(DocGlobalConstants.FEIGN_CLIENT_FULLY);
+                .setAnnotationName(DocGlobalConstants.FEIGN_CLIENT)
+                .setAnnotationFullyName(DocGlobalConstants.FEIGN_CLIENT_FULLY);
         mappingAnnotations.put(feignClientAnnotation.getAnnotationName(), feignClientAnnotation);
 
         annotations.setMappingAnnotations(mappingAnnotations);

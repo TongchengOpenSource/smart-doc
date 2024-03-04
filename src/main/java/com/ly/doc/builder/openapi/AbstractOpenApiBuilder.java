@@ -1,7 +1,7 @@
 /*
  * smart-doc
  *
- * Copyright (C) 2018-2023 smart-doc
+ * Copyright (C) 2018-2024 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -125,7 +125,7 @@ public abstract class AbstractOpenApiBuilder {
             String tag = docEntry.getKey();
             tags.addAll(docEntry.getValue().getClazzDocs()
                     .stream()
-                    //optimize tag content for compatible to swagger
+                    // optimize tag content for compatible to swagger
                     .map(doc -> OpenApiTag.of(doc.getName(), doc.getDesc()))
                     .collect(Collectors.toSet()));
         }
@@ -225,7 +225,7 @@ public abstract class AbstractOpenApiBuilder {
         } else {
             requestRef = componentKey + OpenApiSchemaUtil.getClassNameFromParams(apiMethodDoc.getRequestParams());
         }
-        //remove special characters in url
+        // remove special characters in url
         if (CollectionUtil.isNotEmpty(apiMethodDoc.getRequestParams())) {
             if (apiMethodDoc.getIsRequestArray() == 1) {
                 schema.put("type", PARAM_TYPE_ARRAY);
@@ -405,7 +405,7 @@ public abstract class AbstractOpenApiBuilder {
     private Map<String, Object> buildPropertiesData(ApiParam apiParam, Map<String, Object> component, boolean isResp) {
         Map<String, Object> propertiesData = new HashMap<>();
         String openApiType = DocUtil.javaTypeToOpenApiTypeConvert(apiParam.getType());
-        //array object file map
+        // array object file map
         propertiesData.put("description", apiParam.getDesc());
         if (StringUtil.isNotEmpty(apiParam.getValue())) {
             propertiesData.put("example", StringUtil.removeDoubleQuotes(apiParam.getValue()));
@@ -484,6 +484,7 @@ public abstract class AbstractOpenApiBuilder {
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, projectBuilder);
         config.setParamsDataToTree(true);
         IDocBuildTemplate docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework());
+        Objects.requireNonNull(docBuildTemplate, "doc build template is null");
         return docBuildTemplate.getApiData(configBuilder);
     }
 }

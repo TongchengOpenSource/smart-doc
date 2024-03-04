@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2023 smart-doc
+ * Copyright (C) 2018-2024 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -24,44 +24,160 @@ package com.ly.doc.constants;
  * @author yu 2019/9/21.
  */
 public enum TemplateVariable {
+    /**
+     * desc
+     */
     DESC("desc"),
+    /**
+     * name
+     */
     NAME("name"),
+    /**
+     * list
+     */
     LIST("list"),
+    /**
+     * apiDocList
+     */
     API_DOC_LIST("apiDocList"),
+    /**
+     * apiDocListOnlyHasDefaultGroup
+     */
     API_DOC_LIST_ONLY_HAS_DEFAULT_GROUP("apiDocListOnlyHasDefaultGroup"),
+    /**
+     * errorCodeList
+     */
     ERROR_CODE_LIST("errorCodeList"),
+    /**
+     * errorCodeListOrder
+     */
     ERROR_CODE_ORDER("errorCodeListOrder"),
+    /**
+     * versionList
+     */
     VERSION_LIST("revisionLogList"),
+    /**
+     * dependencyList
+     */
     DEPENDENCY_LIST("dependencyList"),
+    /**
+     * homePage
+     */
     HOME_PAGE("homePage"),
+    /**
+     * html
+     */
     HTML("html"),
+    /**
+     * title
+     */
     TITLE("title"),
+    /**
+     * style
+     */
     STYLE("style"),
+    /**
+     * background
+     */
     BACKGROUND("background"),
+    /**
+     * errorListTitle
+     */
     ERROR_LIST_TITLE("errorListTitle"),
+    /**
+     * createTime
+     */
     CREATE_TIME("createTime"),
+    /**
+     * projectName
+     */
     PROJECT_NAME("projectName"),
+    /**
+     * language
+     */
     LANGUAGE("language"),
+    /**
+     * dictList
+     */
     DICT_LIST("dictList"),
+    /**
+     * dictListTitle
+     */
     DICT_LIST_TITLE("dictListTitle"),
+    /**
+     * dictListOrder
+     */
     DICT_ORDER("dictListOrder"),
+    /**
+     * version
+     */
     VERSION("version"),
+    /**
+     * protocol
+     */
     PROTOCOL("protocol"),
+    /**
+     * author
+     */
     AUTHOR("author"),
+    /**
+     * uri
+     */
     URI("uri"),
+    /**
+     * consumerConfigExample
+     */
     RPC_CONSUMER_CONFIG("consumerConfigExample"),
+    /**
+     * requestExample
+     */
     REQUEST_EXAMPLE("isRequestExample"),
+    /**
+     * responseExample
+     */
     RESPONSE_EXAMPLE("isResponseExample"),
+    /**
+     * displayRequestParams
+     */
     DISPLAY_REQUEST_PARAMS("displayRequestParams"),
+    /**
+     * displayResponseParams
+     */
     DISPLAY_RESPONSE_PARAMS("displayResponseParams"),
+    /**
+     * respList
+     */
     RESPONSE_LIST("respList"),
+    /**
+     * order
+     */
     ORDER("order"),
+    /**
+     * indexAlias
+     */
     INDEX_ALIAS("alias"),
+    /**
+     * directoryTree
+     */
     DIRECTORY_TREE("directoryTree"),
+    /**
+     * highlightCssLink
+     */
     HIGH_LIGHT_CSS_LINK("highlightCssLink"),
-    CSS_CND("css_cdn");
+    /**
+     * css_cdn
+     */
+    CSS_CND("css_cdn"),
+    /**
+     * webSocketDocList
+     */
+    WEBSOCKET_DOC_LIST("webSocketDocList"),
+    ;
 
-    private String variable;
+    /**
+     * variable
+     */
+    private final String variable;
 
     TemplateVariable(String variable) {
         this.variable = variable;

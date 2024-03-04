@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2023 smart-doc
+ * Copyright (C) 2018-2024 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -28,13 +28,32 @@ import java.util.List;
  * @author Fio
  */
 public interface IMethod {
-
+    /**
+     * get method declaring class
+     *
+     * @return method declaring class
+     */
     JavaClass getDeclaringClass();
 
+    /**
+     * get method name
+     *
+     * @return method name
+     */
     String getMethodName();
 
+    /**
+     * get method args classes
+     *
+     * @return method args classes
+     */
     List<String> getArgsClasses();
 
+    /**
+     * get method return classes
+     *
+     * @return method return classes
+     */
     List<String> getReturnClasses();
 
 }

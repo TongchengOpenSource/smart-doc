@@ -1,13 +1,26 @@
 package com.ly.doc.model.annotation;
 
+/**
+ * request part annotation info
+ *
+ * @author shalousun
+ */
 public class RequestPartAnnotation {
-
+    /**
+     * annotation name
+     */
     private String annotationName;
-
+    /**
+     * annotation fully name
+     */
     private String annotationFullyName;
-
+    /**
+     * annotation defaultValueProp
+     */
     private String defaultValueProp;
-
+    /**
+     * annotation requiredProp
+     */
     private String requiredProp;
 
     public static RequestPartAnnotation builder() {
