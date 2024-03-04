@@ -500,6 +500,14 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
             apiMethodDoc.setRequestSchema(docJavaMethod.getRequestSchema());
             apiMethodDoc.setResponseParams(responseParams);
 
+            //handle extension
+            Map<String, String> extensions = DocUtil.getCommentsByTag(method, DocTags.EXTENSION, null);
+            if (extensions != null){
+                Map extensionParams = apiMethodDoc.getExtensions() != null ? apiMethodDoc.getExtensions() : new HashMap();
+                extensions.entrySet().stream().forEach( e -> extensionParams.put(e.getKey(), DocUtil.detectTagValue(e.getValue())));
+                apiMethodDoc.setExtensions( extensionParams );
+            }
+
             TornaUtil.setTornaArrayTags(docJavaMethod.getJavaMethod(), apiMethodDoc, apiConfig);
             methodDocList.add(apiMethodDoc);
         }

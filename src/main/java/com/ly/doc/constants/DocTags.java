@@ -137,4 +137,8 @@ public interface DocTags {
      * dubbo service name
      */
     String SERVICE = "service";
+    /**
+     * extension for openapi
+     */
+    String EXTENSION = "extension";
 }
