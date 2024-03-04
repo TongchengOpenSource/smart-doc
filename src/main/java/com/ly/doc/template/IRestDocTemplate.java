@@ -496,13 +496,10 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
             apiMethodDoc.setResponseParams(responseParams);
 
             //handle extension
-            List<DocletTag> extensions = method.getTagsByName(DocTags.EXTENSION);
+            Map<String, String> extensions = DocUtil.getCommentsByTag(method, DocTags.EXTENSION, null);
             if (extensions != null){
                 Map extensionParams = apiMethodDoc.getExtensions() != null ? apiMethodDoc.getExtensions() : new HashMap();
-                extensions.forEach(e -> {
-                    Map<String, Object> map = JsonUtil.toObject(e.getValue(), Map.class);
-                    map.entrySet().stream().forEach( item -> extensionParams.put(item.getKey(), item.getValue()));
-                });
+                extensions.entrySet().stream().forEach( e -> extensionParams.put(e.getKey(), DocUtil.detectTagValue(e.getValue())));
                 apiMethodDoc.setExtensions( extensionParams );
             }
 
