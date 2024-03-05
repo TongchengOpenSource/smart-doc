@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2023 smart-doc
+ * Copyright (C) 2018-2024 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -283,4 +283,14 @@ public interface DocGlobalConstants {
     String DEFAULT_PRIMITIVE = "defaultPrimitive";
 
     String DATE_FORMAT_YYYY_MM_DD_HH_MM = "yyyyMMddHHmm";
+
+    /**
+     * markdown extension
+     */
+    String MARKDOWN_EXTENSION = ".md";
+
+    /**
+     * websocket all in one md tpl
+     */
+    String WEBSOCKET_ALL_IN_ONE_MD_TPL = "WebSocket.md";
 }

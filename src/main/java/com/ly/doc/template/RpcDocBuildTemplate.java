@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2023 smart-doc
+ * Copyright (C) 2018-2024 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -20,20 +20,17 @@
  */
 package com.ly.doc.template;
 
+import com.ly.doc.builder.ProjectDocConfigBuilder;
 import com.ly.doc.constants.DocGlobalConstants;
-import com.ly.doc.model.ApiConfig;
-import com.ly.doc.model.ApiParam;
-import com.ly.doc.model.DocJavaMethod;
-import com.ly.doc.model.RpcJavaMethod;
+import com.ly.doc.constants.DocTags;
+import com.ly.doc.constants.DubboAnnotationConstants;
+import com.ly.doc.helper.ParamsBuildHelper;
+import com.ly.doc.model.*;
+import com.ly.doc.model.annotation.FrameworkAnnotations;
 import com.ly.doc.model.rpc.RpcApiDoc;
 import com.ly.doc.utils.*;
 import com.power.common.util.StringUtil;
 import com.power.common.util.ValidateUtil;
-import com.ly.doc.builder.ProjectDocConfigBuilder;
-import com.ly.doc.constants.DocTags;
-import com.ly.doc.constants.DubboAnnotationConstants;
-import com.ly.doc.helper.ParamsBuildHelper;
-import com.ly.doc.model.annotation.FrameworkAnnotations;
 import com.thoughtworks.qdox.model.*;
 import com.thoughtworks.qdox.model.expression.AnnotationValue;
 
@@ -46,7 +43,7 @@ import static com.ly.doc.constants.DocTags.IGNORE;
 /**
  * @author yu 2020/1/29.
  */
-public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc>, IRpcDocTemplate {
+public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc>, IWebSocketDocBuildTemplate<WebSocketDoc>, IRpcDocTemplate {
 
     /**
      * api index
@@ -89,6 +86,11 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc>, IRpcDo
                     .peek(p -> p.setOrder(atomicInteger.getAndAdd(1))).collect(Collectors.toList());
         }
         return apiDocList;
+    }
+
+    @Override
+    public List<WebSocketDoc> renderWebSocketApi(ProjectDocConfigBuilder projectBuilder, Collection<JavaClass> candidateClasses) {
+        return null;
     }
 
     @Override

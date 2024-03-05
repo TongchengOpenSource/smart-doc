@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2023 smart-doc
+ * Copyright (C) 2018-2024 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -20,15 +20,19 @@
  */
 package com.ly.doc.utils;
 
+import com.power.common.util.PathUtil;
+import com.power.common.util.StringUtil;
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
-import com.power.common.util.PathUtil;
-import com.power.common.util.StringUtil;
-
-import org.apache.commons.lang3.StringUtils;
-
+/**
+ * Doc path util
+ *
+ * @author oppofind
+ */
 public class DocPathUtil {
 
     /**

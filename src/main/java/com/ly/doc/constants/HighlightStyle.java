@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2023 smart-doc
+ * Copyright (C) 2018-2024 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -42,7 +42,7 @@ public class HighlightStyle {
     /**
      * key is style,value is color
      */
-    private static final Map<String, String> background = new HashMap<>();
+    private static final Map<String, String> BACKGROUND = new HashMap<>();
 
     static {
         LIGHT_STYLE = Arrays.asList(
@@ -149,83 +149,83 @@ public class HighlightStyle {
     }
 
     static {
-        background.put("a11y-dark", "#2b2b2b");
-        background.put("agate", "#333");
-        background.put("androidstudio", "#282b2e");
-        background.put("atom-one-light", "#fafafa");
-        background.put("an-old-hope", "#1c1d21");
-        background.put("arta", "#222");
-        background.put("atelier-cave-dark", "#19171c");
-        background.put("atelier-cave-light", "#efecf4");
-        background.put("atelier-dune-dark", "#20201d");
-        background.put("atelier-dune-light", "#fefbec");
-        background.put("atelier-estuary-dark", "#22221b");
-        background.put("atelier-estuary-light", "#f4f3ec");
-        background.put("atelier-forest-dark", "#1b1918");
-        background.put("atelier-forest-light", "#f1efee");
-        background.put("atelier-heath-dark", "#1b181b");
-        background.put("atelier-heath-light", "#f7f3f7");
-        background.put("atelier-lakeside-dark", "#161b1d");
-        background.put("atelier-lakeside-light", "#ebf8ff");
-        background.put("atelier-plateau-dark", "#1b1818");
-        background.put("atelier-plateau-light", "#f4ecec");
-        background.put("atelier-savanna-dark", "#171c19");
-        background.put("atelier-savanna-light", "#ecf4ee");
-        background.put("atelier-seaside-dark", "#131513");
-        background.put("atelier-seaside-light", "#f4fbf4");
-        background.put("atelier-sulphurpool-dark", "#202746");
-        background.put("atelier-sulphurpool-light", "#f5f7ff");
-        background.put("atom-one-dark", "#282c34");
-        background.put("atom-one-dark-reasonable", "#282c34");
-        background.put("codepen-embed", "#222");
-        background.put("darcula", "#2b2b2b");
-        background.put("dark", "#444");
-        background.put("default", "#F0F0F0");
-        background.put("docco", "#f8f8ff");
-        background.put("dracula", "#282a36");
-        background.put("far", "#000080");
-        background.put("foundation", "#eee");
-        background.put("github", "#f8f8f8");
-        background.put("gml", "#222222");
-        background.put("gradient-dark", "linear-gradient(166deg, rgba(80,31,122,1) 0%, rgba(40,32,179,1) 80%)");
-        background.put("gruvbox-dark", "#282828");
-        background.put("gruvbox-light", "#fbf1c7");
-        background.put("hopscotch", "#322931");
-        background.put("hybrid", "#1d1f21");
-        background.put("ir-black", "#000");
-        background.put("isbl-editor-dark", "#404040");
-        background.put("kimbie.dark", "#221a0f");
-        background.put("kimbie.light", "#fbebd4");
-        background.put("lioshi", "#303030");
-        background.put("magula", "#f4f4f4");
-        background.put("mono-blue", "#eaeef3");
-        background.put("monokai", "#272822");
-        background.put("monokai-sublime", "#23241f");
-        background.put("night-owl", "#011627");
-        background.put("nnfx-dark", "#333");
-        background.put("nord", "#2E3440");
-        background.put("obsidian", "#282b2e");
-        background.put("ocean", "#2b303b");
-        background.put("paraiso-dark", "#2f1e2e");
-        background.put("paraiso-light", "#e7e9db");
-        background.put("purebasic", "#FFFFDF");
-        background.put("qtcreator_dark", "#000000");
-        background.put("railscasts", "#232323");
-        background.put("rainbow", "#474949");
-        background.put("routeros", "#f0f0f0");
+        BACKGROUND.put("a11y-dark", "#2b2b2b");
+        BACKGROUND.put("agate", "#333");
+        BACKGROUND.put("androidstudio", "#282b2e");
+        BACKGROUND.put("atom-one-light", "#fafafa");
+        BACKGROUND.put("an-old-hope", "#1c1d21");
+        BACKGROUND.put("arta", "#222");
+        BACKGROUND.put("atelier-cave-dark", "#19171c");
+        BACKGROUND.put("atelier-cave-light", "#efecf4");
+        BACKGROUND.put("atelier-dune-dark", "#20201d");
+        BACKGROUND.put("atelier-dune-light", "#fefbec");
+        BACKGROUND.put("atelier-estuary-dark", "#22221b");
+        BACKGROUND.put("atelier-estuary-light", "#f4f3ec");
+        BACKGROUND.put("atelier-forest-dark", "#1b1918");
+        BACKGROUND.put("atelier-forest-light", "#f1efee");
+        BACKGROUND.put("atelier-heath-dark", "#1b181b");
+        BACKGROUND.put("atelier-heath-light", "#f7f3f7");
+        BACKGROUND.put("atelier-lakeside-dark", "#161b1d");
+        BACKGROUND.put("atelier-lakeside-light", "#ebf8ff");
+        BACKGROUND.put("atelier-plateau-dark", "#1b1818");
+        BACKGROUND.put("atelier-plateau-light", "#f4ecec");
+        BACKGROUND.put("atelier-savanna-dark", "#171c19");
+        BACKGROUND.put("atelier-savanna-light", "#ecf4ee");
+        BACKGROUND.put("atelier-seaside-dark", "#131513");
+        BACKGROUND.put("atelier-seaside-light", "#f4fbf4");
+        BACKGROUND.put("atelier-sulphurpool-dark", "#202746");
+        BACKGROUND.put("atelier-sulphurpool-light", "#f5f7ff");
+        BACKGROUND.put("atom-one-dark", "#282c34");
+        BACKGROUND.put("atom-one-dark-reasonable", "#282c34");
+        BACKGROUND.put("codepen-embed", "#222");
+        BACKGROUND.put("darcula", "#2b2b2b");
+        BACKGROUND.put("dark", "#444");
+        BACKGROUND.put("default", "#F0F0F0");
+        BACKGROUND.put("docco", "#f8f8ff");
+        BACKGROUND.put("dracula", "#282a36");
+        BACKGROUND.put("far", "#000080");
+        BACKGROUND.put("foundation", "#eee");
+        BACKGROUND.put("github", "#f8f8f8");
+        BACKGROUND.put("gml", "#222222");
+        BACKGROUND.put("gradient-dark", "linear-gradient(166deg, rgba(80,31,122,1) 0%, rgba(40,32,179,1) 80%)");
+        BACKGROUND.put("gruvbox-dark", "#282828");
+        BACKGROUND.put("gruvbox-light", "#fbf1c7");
+        BACKGROUND.put("hopscotch", "#322931");
+        BACKGROUND.put("hybrid", "#1d1f21");
+        BACKGROUND.put("ir-black", "#000");
+        BACKGROUND.put("isbl-editor-dark", "#404040");
+        BACKGROUND.put("kimbie.dark", "#221a0f");
+        BACKGROUND.put("kimbie.light", "#fbebd4");
+        BACKGROUND.put("lioshi", "#303030");
+        BACKGROUND.put("magula", "#f4f4f4");
+        BACKGROUND.put("mono-blue", "#eaeef3");
+        BACKGROUND.put("monokai", "#272822");
+        BACKGROUND.put("monokai-sublime", "#23241f");
+        BACKGROUND.put("night-owl", "#011627");
+        BACKGROUND.put("nnfx-dark", "#333");
+        BACKGROUND.put("nord", "#2E3440");
+        BACKGROUND.put("obsidian", "#282b2e");
+        BACKGROUND.put("ocean", "#2b303b");
+        BACKGROUND.put("paraiso-dark", "#2f1e2e");
+        BACKGROUND.put("paraiso-light", "#e7e9db");
+        BACKGROUND.put("purebasic", "#FFFFDF");
+        BACKGROUND.put("qtcreator_dark", "#000000");
+        BACKGROUND.put("railscasts", "#232323");
+        BACKGROUND.put("rainbow", "#474949");
+        BACKGROUND.put("routeros", "#f0f0f0");
 
-        background.put("shades-of-purple", "#2d2b57");
-        background.put("solarized-dark", "#002b36");
-        background.put("solarized-light", "#fdf6e3");
-        background.put("srcery", "#1C1B19");
-        background.put("sunburst", "#000");
-        background.put("tomorrow-night", "#1d1f21");
-        background.put("tomorrow-night-blue", "#002451");
-        background.put("tomorrow-night-bright", "black");
-        background.put("tomorrow-night-eighties", "#2d2d2d");
-        background.put("xt256", "#000");
-        background.put("vs2015", "#1E1E1E");
-        background.put("zenburn", "#3f3f3f");
+        BACKGROUND.put("shades-of-purple", "#2d2b57");
+        BACKGROUND.put("solarized-dark", "#002b36");
+        BACKGROUND.put("solarized-light", "#fdf6e3");
+        BACKGROUND.put("srcery", "#1C1B19");
+        BACKGROUND.put("sunburst", "#000");
+        BACKGROUND.put("tomorrow-night", "#1d1f21");
+        BACKGROUND.put("tomorrow-night-blue", "#002451");
+        BACKGROUND.put("tomorrow-night-bright", "black");
+        BACKGROUND.put("tomorrow-night-eighties", "#2d2d2d");
+        BACKGROUND.put("xt256", "#000");
+        BACKGROUND.put("vs2015", "#1E1E1E");
+        BACKGROUND.put("zenburn", "#3f3f3f");
     }
 
 
@@ -264,7 +264,7 @@ public class HighlightStyle {
     }
 
     public static String getBackgroundColor(String style) {
-        String color = background.get(style);
+        String color = BACKGROUND.get(style);
         if (StringUtil.isNotEmpty(color)) {
             return color;
         }
@@ -278,6 +278,6 @@ public class HighlightStyle {
      * @return boolean
      */
     public static boolean containsStyle(String style) {
-        return background.containsKey(style);
+        return BACKGROUND.containsKey(style);
     }
 }

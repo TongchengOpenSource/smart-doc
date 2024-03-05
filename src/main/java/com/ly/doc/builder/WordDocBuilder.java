@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2023 smart-doc
+ * Copyright (C) 2018-2024 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -31,7 +31,7 @@ import com.power.common.util.FileUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import org.beetl.core.Template;
 
-import java.io.*;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -67,7 +67,7 @@ public class WordDocBuilder {
     /**
      * build controller api
      *
-     * @param config config
+     * @param config             config
      * @param javaProjectBuilder javaProjectBuilder
      * @throws Exception exception
      */

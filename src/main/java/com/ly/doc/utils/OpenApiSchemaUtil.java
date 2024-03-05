@@ -1,7 +1,7 @@
 /*
  * smart-doc
  *
- * Copyright (C) 2018-2023 smart-doc
+ * Copyright (C) 2018-2024 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -49,7 +49,7 @@ public class OpenApiSchemaUtil {
     static final Pattern PATTRRN = Pattern.compile("[A-Z]\\w+.*?|[A-Z]");
 
     public static Map<String, Object> primaryTypeSchema(String primaryType) {
-        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>(16);
         map.put("type", DocUtil.javaTypeToOpenApiTypeConvert(primaryType));
         return map;
     }
@@ -57,16 +57,16 @@ public class OpenApiSchemaUtil {
     public static Map<String, Object> mapTypeSchema(String primaryType) {
         Map<String, Object> map = new LinkedHashMap<>();
         map.put("type", "object");
-        Map<String, Object> items = new HashMap<>();
+        Map<String, Object> items = new HashMap<>(16);
         items.put("type", DocUtil.javaTypeToOpenApiTypeConvert(primaryType));
         map.put("additionalProperties", items);
         return map;
     }
 
     public static Map<String, Object> arrayTypeSchema(String primaryType) {
-        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>(16);
         map.put("type", "array");
-        Map<String, Object> items = new HashMap<>();
+        Map<String, Object> items = new HashMap<>(16);
         items.put("type", DocUtil.javaTypeToOpenApiTypeConvert(primaryType));
         map.put("items", items);
         return map;
@@ -82,7 +82,7 @@ public class OpenApiSchemaUtil {
         for (String str : types) {
             builder.append(DocClassUtil.getSimpleName(str).replace(",", ""));
         }
-        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>(16);
         map.put("$ref", builder.toString());
         return map;
     }

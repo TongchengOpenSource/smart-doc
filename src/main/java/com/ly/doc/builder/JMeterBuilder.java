@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2023 smart-doc
+ * Copyright (C) 2018-2024 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -31,16 +31,16 @@ import com.power.common.util.DateTimeUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * used to generate jmx file for Jmeter
+ *
  * @author Lansg
  */
 public class JMeterBuilder {
 
-    private static final String API_EXTENSION = ".jmx";
-
-    private static final String DATE_FORMAT = "yyyyMMddHHmm";
+    private static final String JMETER_SCRIPT_EXTENSION = ".jmx";
 
     /**
      * @param config ApiConfig
@@ -64,9 +64,10 @@ public class JMeterBuilder {
         config.setParamsDataToTree(false);
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
         IDocBuildTemplate<ApiDoc> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework());
+        Objects.requireNonNull(docBuildTemplate, "doc build template is null");
         List<ApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder);
-        String version = config.isCoverOld() ? "" : "-V" + DateTimeUtil.long2Str(System.currentTimeMillis(), DATE_FORMAT);
-        String docName = builderTemplate.allInOneDocName(config, "JmeterApiDoc" + version + ".jmx", ".jmx");
+        String version = config.isCoverOld() ? "" : "-V" + DateTimeUtil.long2Str(System.currentTimeMillis(), DocGlobalConstants.DATE_FORMAT_YYYY_MM_DD_HH_MM);
+        String docName = builderTemplate.allInOneDocName(config, "JmeterApiDoc" + version + JMETER_SCRIPT_EXTENSION, JMETER_SCRIPT_EXTENSION);
         builderTemplate.buildAllInOne(apiDocList, config, javaProjectBuilder, DocGlobalConstants.JMETER_TPL, docName);
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2023 smart-doc
+ * Copyright (C) 2018-2024 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -26,9 +26,18 @@ package com.ly.doc.constants;
  * @author yu 2019/9/21.
  */
 public enum DocLanguage {
+    /**
+     * English
+     */
     ENGLISH("en-US"),
+    /**
+     * Chinese
+     */
     CHINESE("zh-CN");
 
+    /**
+     * language code
+     */
     public final String code;
 
     DocLanguage(String code) {

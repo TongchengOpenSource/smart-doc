@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2023 smart-doc
+ * Copyright (C) 2018-2024 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -36,8 +36,6 @@ public class RpcMarkdownBuilder {
 
     private static final String API_EXTENSION = "Api.md";
 
-    private static final String DATE_FORMAT = "yyyyMMddHHmm";
-
     /**
      * @param config ApiConfig
      */
@@ -58,8 +56,8 @@ public class RpcMarkdownBuilder {
         builderTemplate.checkAndInit(apiConfig,Boolean.TRUE);
         List<RpcApiDoc> apiDocList = builderTemplate.getRpcApiDoc(apiConfig, javaProjectBuilder);
         if (apiConfig.isAllInOne()) {
-            String version = apiConfig.isCoverOld() ? "" : "-V" + DateTimeUtil.long2Str(System.currentTimeMillis(), DATE_FORMAT);
-            String docName = builderTemplate.allInOneDocName(apiConfig, "rpc-all" + version, ".md");
+            String version = apiConfig.isCoverOld() ? "" : "-V" + DateTimeUtil.long2Str(System.currentTimeMillis(), DocGlobalConstants.DATE_FORMAT_YYYY_MM_DD_HH_MM);
+            String docName = builderTemplate.allInOneDocName(apiConfig, "rpc-all" + version, DocGlobalConstants.MARKDOWN_EXTENSION);
             builderTemplate.buildAllInOne(apiDocList, apiConfig, javaProjectBuilder, DocGlobalConstants.RPC_ALL_IN_ONE_MD_TPL, docName);
         } else {
             builderTemplate.buildApiDoc(apiDocList, apiConfig, DocGlobalConstants.RPC_API_DOC_MD_TPL, API_EXTENSION);

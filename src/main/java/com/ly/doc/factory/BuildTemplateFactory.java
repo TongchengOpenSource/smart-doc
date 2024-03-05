@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2023 smart-doc
+ * Copyright (C) 2018-2024 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -22,7 +22,9 @@ package com.ly.doc.factory;
 
 import com.ly.doc.constants.FrameworkEnum;
 import com.ly.doc.model.IDoc;
+import com.ly.doc.model.WebSocketDoc;
 import com.ly.doc.template.IDocBuildTemplate;
+import com.ly.doc.template.IWebSocketDocBuildTemplate;
 
 /**
  * @author yu 2021/6/27.
@@ -40,13 +42,34 @@ public class BuildTemplateFactory {
         String className = FrameworkEnum.getClassNameByFramework(framework);
         try {
             return (IDocBuildTemplate<T>) Class.forName(className).newInstance();
+        } catch (InstantiationException | IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(
+                    "The class=>" + className + " is not found , smart-doc currently supported framework name can only be set in [dubbo, spring,solon,JAX-RS].");
+        }
+        return null;
+    }
+
+
+    /**
+     * Get Doc build template
+     *
+     * @param framework framework name
+     * @param <T>       API doc type
+     * @return Implements of IDocBuildTemplate
+     */
+    public static <T extends WebSocketDoc> IWebSocketDocBuildTemplate<T> getWebSocketDocBuildTemplate(String framework) {
+        String className = FrameworkEnum.getClassNameByFramework(framework);
+        try {
+            return (IWebSocketDocBuildTemplate<T>) Class.forName(className).newInstance();
         } catch (InstantiationException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(
-                "The class=>" + className + " is not found , smart-doc currently supported framework name can only be set in [dubbo, spring,solon,JAX-RS].");
+                    "The class=>" + className + " is not found , smart-doc currently supported framework name can only be set in [dubbo, spring,solon,JAX-RS].");
         }
         return null;
     }

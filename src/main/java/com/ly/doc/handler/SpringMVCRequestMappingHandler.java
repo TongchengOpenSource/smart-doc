@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2023 smart-doc
+ * Copyright (C) 2018-2024 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -20,17 +20,17 @@
  */
 package com.ly.doc.handler;
 
-import com.ly.doc.constants.DocAnnotationConstants;
-import com.ly.doc.utils.DocUtil;
-import com.ly.doc.utils.JavaClassUtil;
-import com.power.common.util.CollectionUtil;
-import com.power.common.util.StringUtil;
 import com.ly.doc.builder.ProjectDocConfigBuilder;
+import com.ly.doc.constants.DocAnnotationConstants;
 import com.ly.doc.constants.Methods;
 import com.ly.doc.function.RequestMappingFunc;
 import com.ly.doc.model.annotation.FrameworkAnnotations;
 import com.ly.doc.model.annotation.MappingAnnotation;
 import com.ly.doc.model.request.RequestMapping;
+import com.ly.doc.utils.DocUtil;
+import com.ly.doc.utils.JavaClassUtil;
+import com.power.common.util.CollectionUtil;
+import com.power.common.util.StringUtil;
 import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaMethod;
 
@@ -44,7 +44,7 @@ import static com.ly.doc.constants.DocTags.IGNORE;
 /**
  * @author yu 2019/12/22.
  */
-public class SpringMVCRequestMappingHandler implements IRequestMappingHandler {
+public class SpringMVCRequestMappingHandler implements IRequestMappingHandler, IWebSocketRequestHandler {
 
     /**
      * handle spring request mapping

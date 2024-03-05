@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2023 smart-doc
+ * Copyright (C) 2018-2024 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -20,17 +20,19 @@
  */
 package com.ly.doc.model;
 
+import com.ly.doc.constants.DocGlobalConstants;
+import com.ly.doc.model.request.ApiRequestExample;
+import com.ly.doc.utils.ParamUtil;
+import com.power.common.util.StringUtil;
+import com.thoughtworks.qdox.model.JavaClass;
+
 import java.io.Serializable;
 import java.util.*;
 
-import com.ly.doc.utils.ParamUtil;
-import com.power.common.util.StringUtil;
-import com.ly.doc.constants.DocGlobalConstants;
-import com.ly.doc.model.request.ApiRequestExample;
-import com.thoughtworks.qdox.model.JavaClass;
-
 /**
  * java api method info model.
+ *
+ * @author oppofind
  */
 public class ApiMethodDoc implements IMethod, Serializable, Cloneable {
 
@@ -511,47 +513,47 @@ public class ApiMethodDoc implements IMethod, Serializable, Cloneable {
     public String toString() {
         final StringBuilder sb = new StringBuilder("{");
         sb.append("\"methodId\":\"")
-            .append(methodId).append('\"');
+                .append(methodId).append('\"');
         sb.append(",\"name\":\"")
-            .append(name).append('\"');
+                .append(name).append('\"');
         sb.append(",\"order\":")
-            .append(order);
+                .append(order);
         sb.append(",\"desc\":\"")
-            .append(desc).append('\"');
+                .append(desc).append('\"');
         sb.append(",\"detail\":\"")
-            .append(detail).append('\"');
+                .append(detail).append('\"');
         sb.append(",\"serverUrl\":\"")
-            .append(serverUrl).append('\"');
+                .append(serverUrl).append('\"');
         sb.append(",\"url\":\"")
-            .append(url).append('\"');
+                .append(url).append('\"');
         sb.append(",\"path\":\"")
-            .append(path).append('\"');
+                .append(path).append('\"');
         sb.append(",\"type\":\"")
-            .append(type).append('\"');
+                .append(type).append('\"');
         sb.append(",\"author\":\"")
-            .append(author).append('\"');
+                .append(author).append('\"');
         sb.append(",\"headers\":\"")
-            .append(headers).append('\"');
+                .append(headers).append('\"');
         sb.append(",\"contentType\":\"")
-            .append(contentType).append('\"');
+                .append(contentType).append('\"');
         sb.append(",\"requestHeaders\":")
-            .append(requestHeaders);
+                .append(requestHeaders);
         sb.append(",\"pathParams\":")
-            .append(pathParams);
+                .append(pathParams);
         sb.append(",\"queryParams\":")
-            .append(queryParams);
+                .append(queryParams);
         sb.append(",\"requestParams\":")
-            .append(requestParams);
+                .append(requestParams);
         sb.append(",\"requestUsage\":\"")
-            .append(requestUsage).append('\"');
+                .append(requestUsage).append('\"');
         sb.append(",\"requestExample\":")
-            .append(requestExample);
+                .append(requestExample);
         sb.append(",\"responseUsage\":\"")
-            .append(responseUsage).append('\"');
+                .append(responseUsage).append('\"');
         sb.append(",\"responseParams\":")
-            .append(responseParams);
+                .append(responseParams);
         sb.append(",\"deprecated\":")
-            .append(deprecated);
+                .append(deprecated);
         sb.append(",\"extensions\":")
                 .append(extensions);
         sb.append('}');

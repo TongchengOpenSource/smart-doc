@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2023 smart-doc
+ * Copyright (C) 2018-2024 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -108,8 +108,12 @@ public class ApiDependency {
 
         @Override
         public boolean equals(Object o) {
-            if (this == o) return true;
-            if (!(o instanceof ApiInfo)) return false;
+            if (this == o) {
+                return true;
+            }
+            if (!(o instanceof ApiInfo)) {
+                return false;
+            }
             ApiInfo apiInfo = (ApiInfo) o;
             return Objects.equals(method, apiInfo.method) && Objects.equals(args, apiInfo.args) && Objects.equals(returns, apiInfo.returns);
         }
@@ -146,8 +150,12 @@ public class ApiDependency {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof ApiDependency)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof ApiDependency)) {
+            return false;
+        }
         ApiDependency that = (ApiDependency) o;
         return Objects.equals(clazz, that.clazz) && Objects.equals(derivedClazz, that.derivedClazz) && Objects.equals(apis, that.apis);
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2023 smart-doc
+ * Copyright (C) 2018-2024 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -20,40 +20,30 @@
  */
 package com.ly.doc.builder;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-
 import com.ly.doc.constants.*;
 import com.ly.doc.factory.BuildTemplateFactory;
+import com.ly.doc.model.*;
 import com.ly.doc.template.IDocBuildTemplate;
+import com.ly.doc.utils.BeetlTemplateUtil;
 import com.ly.doc.utils.DocUtil;
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.DateTimeUtil;
 import com.power.common.util.FileUtil;
-import com.ly.doc.constants.DocLanguage;
-import com.ly.doc.constants.HighlightStyle;
-import com.ly.doc.constants.TemplateVariable;
-import com.ly.doc.constants.TornaConstants;
-import com.ly.doc.model.ApiAllData;
-import com.ly.doc.model.ApiConfig;
-import com.ly.doc.model.ApiDoc;
-import com.ly.doc.model.ApiDocDict;
-import com.ly.doc.model.ApiErrorCode;
-import com.ly.doc.model.ApiMethodDoc;
-import com.ly.doc.utils.BeetlTemplateUtil;
 import com.power.common.util.StringUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
-
 import org.beetl.core.Template;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author yu 2019/9/26.
  */
 public class DocBuilderTemplate extends BaseDocBuilderTemplate {
 
-    private static final long now = System.currentTimeMillis();
+    private static final long NOW = System.currentTimeMillis();
 
     /**
      * get all api data
@@ -123,6 +113,12 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
     }
 
 
+    public void buildWebSocket(List<WebSocketDoc> webSocketDocList, ApiConfig config, JavaProjectBuilder javaProjectBuilder,
+                               String template, String outPutFileName) {
+        buildWebSocketDoc(webSocketDocList, config, javaProjectBuilder, template, outPutFileName, null);
+    }
+
+
     /**
      * get render doc template
      *
@@ -136,7 +132,7 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
      */
     public Template buildAllRenderDocTemplate(List<ApiDoc> apiDocList, ApiConfig config, JavaProjectBuilder javaProjectBuilder,
                                               String template, ApiDoc apiDoc, String index) {
-        String strTime = DateTimeUtil.long2Str(now, DateTimeUtil.DATE_FORMAT_SECOND);
+        String strTime = DateTimeUtil.long2Str(NOW, DateTimeUtil.DATE_FORMAT_SECOND);
         List<ApiErrorCode> errorCodeList = DocUtil.errorCodeDictToList(config, javaProjectBuilder);
         Template tpl = BeetlTemplateUtil.getByName(template);
         String style = config.getStyle();
@@ -147,7 +143,7 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
         tpl.binding(TemplateVariable.ERROR_CODE_LIST.getVariable(), errorCodeList);
         tpl.binding(TemplateVariable.VERSION_LIST.getVariable(), config.getRevisionLogs());
         tpl.binding(TemplateVariable.LANGUAGE.getVariable(), config.getLanguage());
-        tpl.binding(TemplateVariable.VERSION.getVariable(), now);
+        tpl.binding(TemplateVariable.VERSION.getVariable(), NOW);
         tpl.binding(TemplateVariable.INDEX_ALIAS.getVariable(), index);
         tpl.binding(TemplateVariable.CREATE_TIME.getVariable(), strTime);
         tpl.binding(TemplateVariable.PROJECT_NAME.getVariable(), config.getProjectName());
@@ -182,11 +178,41 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
 
         if (Objects.nonNull(apiDoc)) {
             tpl.binding(TemplateVariable.DESC.getVariable(), apiDoc.getDesc());
-            tpl.binding(TemplateVariable.ORDER.getVariable(), apiDoc.order);
-            tpl.binding(TemplateVariable.LIST.getVariable(), apiDoc.getList());//类名
+            tpl.binding(TemplateVariable.ORDER.getVariable(), apiDoc.getOrder());
+            // 类名
+            tpl.binding(TemplateVariable.LIST.getVariable(), apiDoc.getList());
         }
         return tpl;
     }
+
+    /**
+     * get render doc template
+     *
+     * @param webSocketDocList   list  data of webSocket  doc
+     * @param config             api config
+     * @param javaProjectBuilder JavaProjectBuilder
+     * @param template           template
+     * @param index              index html
+     * @return Template
+     */
+    public Template buildAllWebSocketDocTemplate(List<WebSocketDoc> webSocketDocList, ApiConfig config, JavaProjectBuilder javaProjectBuilder,
+                                                 String template, String index) {
+        String strTime = DateTimeUtil.long2Str(NOW, DateTimeUtil.DATE_FORMAT_SECOND);
+        Template tpl = BeetlTemplateUtil.getByName(template);
+        String style = config.getStyle();
+        tpl.binding(TemplateVariable.VERSION_LIST.getVariable(), config.getRevisionLogs());
+        tpl.binding(TemplateVariable.STYLE.getVariable(), style);
+        tpl.binding(TemplateVariable.HIGH_LIGHT_CSS_LINK.getVariable(), config.getHighlightStyleLink());
+        tpl.binding(TemplateVariable.BACKGROUND.getVariable(), HighlightStyle.getBackgroundColor(style));
+        tpl.binding(TemplateVariable.WEBSOCKET_DOC_LIST.getVariable(), webSocketDocList);
+        tpl.binding(TemplateVariable.LANGUAGE.getVariable(), config.getLanguage());
+        tpl.binding(TemplateVariable.VERSION.getVariable(), NOW);
+        tpl.binding(TemplateVariable.CREATE_TIME.getVariable(), strTime);
+        tpl.binding(TemplateVariable.PROJECT_NAME.getVariable(), config.getProjectName());
+        setCssCDN(config, tpl);
+        return tpl;
+    }
+
 
     /**
      * Merge all api doc into one document
@@ -204,6 +230,14 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
         String outPath = config.getOutPath();
         FileUtil.mkdirs(outPath);
         Template tpl = buildAllRenderDocTemplate(apiDocList, config, javaProjectBuilder, template, apiDoc, index);
+        FileUtil.nioWriteFile(tpl.render(), outPath + DocGlobalConstants.FILE_SEPARATOR + outPutFileName);
+    }
+
+    public void buildWebSocketDoc(List<WebSocketDoc> webSocketDocList, ApiConfig config, JavaProjectBuilder javaProjectBuilder,
+                                  String template, String outPutFileName, String index) {
+        String outPath = config.getOutPath();
+        FileUtil.mkdirs(outPath);
+        Template tpl = buildAllWebSocketDocTemplate(webSocketDocList, config, javaProjectBuilder, template, index);
         FileUtil.nioWriteFile(tpl.render(), outPath + DocGlobalConstants.FILE_SEPARATOR + outPutFileName);
     }
 
@@ -316,7 +350,7 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
      */
     public Template buildErrorCodeDocTemplate(ApiConfig config, String template, JavaProjectBuilder javaProjectBuilder) {
         List<ApiErrorCode> errorCodeList = DocUtil.errorCodeDictToList(config, javaProjectBuilder);
-        String strTime = DateTimeUtil.long2Str(now, DateTimeUtil.DATE_FORMAT_SECOND);
+        String strTime = DateTimeUtil.long2Str(NOW, DateTimeUtil.DATE_FORMAT_SECOND);
         Template tpl = BeetlTemplateUtil.getByName(template);
         setCssCDN(config, tpl);
         tpl.binding(TemplateVariable.CREATE_TIME.getVariable(), strTime);
@@ -337,7 +371,7 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
     public void buildErrorCodeDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder,
                                   List<ApiDoc> apiDocList, String template, String outPutFileName, String indexAlias) {
         List<ApiErrorCode> errorCodeList = DocUtil.errorCodeDictToList(config, javaProjectBuilder);
-        String strTime = DateTimeUtil.long2Str(now, DateTimeUtil.DATE_FORMAT_SECOND);
+        String strTime = DateTimeUtil.long2Str(NOW, DateTimeUtil.DATE_FORMAT_SECOND);
         Template errorTemplate = BeetlTemplateUtil.getByName(template);
         errorTemplate.binding(TemplateVariable.PROJECT_NAME.getVariable(), config.getProjectName());
         String style = config.getStyle();
@@ -352,7 +386,7 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
         setCssCDN(config, errorTemplate);
         List<ApiDocDict> apiDocDictList = DocUtil.buildDictionary(config, javaProjectBuilder);
         errorTemplate.binding(TemplateVariable.CREATE_TIME.getVariable(), strTime);
-        errorTemplate.binding(TemplateVariable.VERSION.getVariable(), now);
+        errorTemplate.binding(TemplateVariable.VERSION.getVariable(), NOW);
         errorTemplate.binding(TemplateVariable.DICT_LIST.getVariable(), apiDocDictList);
         errorTemplate.binding(TemplateVariable.INDEX_ALIAS.getVariable(), indexAlias);
         errorTemplate.binding(TemplateVariable.API_DOC_LIST.getVariable(), apiDocList);
@@ -377,7 +411,7 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
                                       String template, String outPutFileName, String indexAlias) {
         List<ApiDocDict> directoryList = DocUtil.buildDictionary(config, javaProjectBuilder);
         Template mapper = BeetlTemplateUtil.getByName(template);
-        String strTime = DateTimeUtil.long2Str(now, DateTimeUtil.DATE_FORMAT_SECOND);
+        String strTime = DateTimeUtil.long2Str(NOW, DateTimeUtil.DATE_FORMAT_SECOND);
         mapper.binding(TemplateVariable.PROJECT_NAME.getVariable(), config.getProjectName());
         String style = config.getStyle();
         mapper.binding(TemplateVariable.HIGH_LIGHT_CSS_LINK.getVariable(), config.getHighlightStyleLink());
@@ -397,7 +431,7 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
         }
 
         mapper.binding(TemplateVariable.CREATE_TIME.getVariable(), strTime);
-        mapper.binding(TemplateVariable.VERSION.getVariable(), now);
+        mapper.binding(TemplateVariable.VERSION.getVariable(), NOW);
         mapper.binding(TemplateVariable.API_DOC_LIST.getVariable(), apiDocList);
         mapper.binding(TemplateVariable.INDEX_ALIAS.getVariable(), indexAlias);
         mapper.binding(TemplateVariable.BACKGROUND.getVariable(), HighlightStyle.getBackgroundColor(style));
@@ -434,7 +468,7 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
         setDirectoryLanguageVariable(config, mapper);
         // set css cdn
         setCssCDN(config, mapper);
-        String strTime = DateTimeUtil.long2Str(now, DateTimeUtil.DATE_FORMAT_SECOND);
+        String strTime = DateTimeUtil.long2Str(NOW, DateTimeUtil.DATE_FORMAT_SECOND);
         mapper.binding(TemplateVariable.CREATE_TIME.getVariable(), strTime);
         mapper.binding(TemplateVariable.DICT_LIST.getVariable(), directoryList);
         return mapper;
@@ -444,7 +478,8 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
         this.checkAndInitForGetApiData(config);
         config.setMd5EncryptedHtmlName(true);
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
-        IDocBuildTemplate docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework());
+        IDocBuildTemplate<ApiDoc> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework());
+        Objects.requireNonNull(docBuildTemplate, "doc build template is null");
         return docBuildTemplate.getApiData(configBuilder);
     }
 

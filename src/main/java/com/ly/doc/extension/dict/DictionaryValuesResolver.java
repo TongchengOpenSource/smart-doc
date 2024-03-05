@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2023 smart-doc
+ * Copyright (C) 2018-2024 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -26,6 +26,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 /**
+ * @author 吴垚
  * @see <a href="https://github.com/smart-doc-group/smart-doc/issues/338">issues-338</a>
  */
 public interface DictionaryValuesResolver {
@@ -45,9 +46,9 @@ public interface DictionaryValuesResolver {
     /**
      * resolve the dictionary, for compatibility, do not return null
      *
-     * @see #resolve(Class)
      * @param <T> the type parameter
      * @return the dictionary
+     * @see #resolve(Class)
      */
     default <T extends EnumDictionary> Collection<T> resolve() {
         return Collections.emptyList();

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2023 smart-doc
+ * Copyright (C) 2018-2024 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -52,46 +52,56 @@ public class JaxrsPathMapping extends RequestMapping {
         return new JaxrsPathMapping();
     }
 
+    @Override
     public String getUrl() {
         return url;
     }
 
+    @Override
     public JaxrsPathMapping setUrl(String url) {
         this.url = url;
         return this;
     }
 
+    @Override
     public String getShortUrl() {
         return shortUrl;
     }
 
+    @Override
     public JaxrsPathMapping setShortUrl(String shortUrl) {
         this.shortUrl = shortUrl;
         return this;
     }
 
+    @Override
     public String getMethodType() {
         return methodType;
     }
 
+    @Override
     public JaxrsPathMapping setMethodType(String methodType) {
         this.methodType = methodType;
         return this;
     }
 
+    @Override
     public String getMediaType() {
         return mediaType;
     }
 
+    @Override
     public JaxrsPathMapping setMediaType(String mediaType) {
         this.mediaType = mediaType;
         return this;
     }
 
+    @Override
     public boolean isDeprecated() {
         return deprecated;
     }
 
+    @Override
     public JaxrsPathMapping setDeprecated(boolean deprecated) {
         this.deprecated = deprecated;
         return this;

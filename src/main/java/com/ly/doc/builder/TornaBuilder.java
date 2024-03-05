@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2023 smart-doc
+ * Copyright (C) 2018-2024 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -20,22 +20,22 @@
  */
 package com.ly.doc.builder;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.ly.doc.model.ApiConfig;
-import com.ly.doc.model.ApiDoc;
-import com.ly.doc.template.IDocBuildTemplate;
-import com.ly.doc.utils.TornaUtil;
 import com.ly.doc.constants.TornaConstants;
 import com.ly.doc.factory.BuildTemplateFactory;
 import com.ly.doc.helper.JavaProjectBuilderHelper;
+import com.ly.doc.model.ApiConfig;
+import com.ly.doc.model.ApiDoc;
 import com.ly.doc.model.torna.Apis;
 import com.ly.doc.model.torna.TornaApi;
+import com.ly.doc.template.IDocBuildTemplate;
+import com.ly.doc.utils.TornaUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
-
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 import static com.ly.doc.constants.TornaConstants.DEFAULT_GROUP_CODE;
 
@@ -68,6 +68,7 @@ public class TornaBuilder {
         builderTemplate.checkAndInit(config, Boolean.FALSE);
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
         IDocBuildTemplate<ApiDoc> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework());
+        Objects.requireNonNull(docBuildTemplate, "doc build template is null");
         List<ApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder);
         apiDocList = docBuildTemplate.handleApiGroup(apiDocList, config);
         buildTorna(apiDocList, config, javaProjectBuilder);
@@ -86,7 +87,7 @@ public class TornaBuilder {
         tornaApi.setIsReplace(BooleanUtils.toInteger(apiConfig.getReplace()));
         Apis api;
         List<Apis> groupApiList = new ArrayList<>();
-        //Convert ApiDoc to Apis
+        // Convert ApiDoc to Apis
         for (ApiDoc groupApi : apiDocs) {
             List<Apis> apisList = new ArrayList<>();
             List<ApiDoc> childrenApiDocs = groupApi.getChildrenApiDocs();

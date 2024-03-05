@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2023 smart-doc
+ * Copyright (C) 2018-2024 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -20,6 +20,20 @@
  */
 package com.ly.doc.builder;
 
+import com.ly.doc.constants.DocGlobalConstants;
+import com.ly.doc.constants.HighlightStyle;
+import com.ly.doc.helper.JavaProjectBuilderHelper;
+import com.ly.doc.model.*;
+import com.ly.doc.utils.JavaClassUtil;
+import com.power.common.constants.Charset;
+import com.power.common.util.CollectionUtil;
+import com.power.common.util.StringUtil;
+import com.thoughtworks.qdox.JavaProjectBuilder;
+import com.thoughtworks.qdox.directorywalker.DirectoryScanner;
+import com.thoughtworks.qdox.directorywalker.SuffixFilter;
+import com.thoughtworks.qdox.model.JavaClass;
+import com.thoughtworks.qdox.parser.ParseException;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,28 +44,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Logger;
-
-import com.ly.doc.constants.DocGlobalConstants;
-import com.ly.doc.constants.HighlightStyle;
-import com.ly.doc.utils.JavaClassUtil;
-import com.power.common.constants.Charset;
-import com.power.common.util.CollectionUtil;
-import com.power.common.util.StringUtil;
-import com.ly.doc.helper.JavaProjectBuilderHelper;
-import com.ly.doc.model.ApiConfig;
-import com.ly.doc.model.ApiConstant;
-import com.ly.doc.model.ApiDataDictionary;
-import com.ly.doc.model.ApiErrorCodeDictionary;
-import com.ly.doc.model.ApiObjectReplacement;
-import com.ly.doc.model.BodyAdvice;
-import com.ly.doc.model.CustomField;
-import com.ly.doc.model.DocJavaField;
-import com.ly.doc.model.SourceCodePath;
-import com.thoughtworks.qdox.JavaProjectBuilder;
-import com.thoughtworks.qdox.directorywalker.DirectoryScanner;
-import com.thoughtworks.qdox.directorywalker.SuffixFilter;
-import com.thoughtworks.qdox.model.JavaClass;
-import com.thoughtworks.qdox.parser.ParseException;
 
 /**
  * @author yu 2019/12/21.
@@ -149,7 +141,7 @@ public class ProjectDocConfigBuilder {
 
     public JavaClass getClassByName(String simpleName) {
         JavaClass cls = javaProjectBuilder.getClassByName(simpleName);
-        List<DocJavaField> fieldList = JavaClassUtil.getFields(cls, 0, new LinkedHashMap<>(),null);
+        List<DocJavaField> fieldList = JavaClassUtil.getFields(cls, 0, new LinkedHashMap<>(), null);
         // handle inner class
         if (Objects.isNull(cls.getFields()) || fieldList.isEmpty()) {
             cls = classFilesMap.get(simpleName);

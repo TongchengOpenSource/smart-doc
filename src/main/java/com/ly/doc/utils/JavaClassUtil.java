@@ -1,7 +1,7 @@
 /*
  * smart-doc
  *
- * Copyright (C) 2018-2023 smart-doc
+ * Copyright (C) 2018-2024 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -633,7 +633,7 @@ public class JavaClassUtil {
     public static Map<String, String> getFinalFieldValue(Class<?> clazz) throws IllegalAccessException {
         String className = getClassSimpleName(clazz.getName());
         Field[] fields = clazz.getDeclaredFields();
-        Map<String, String> constants = new HashMap<>();
+        Map<String, String> constants = new HashMap<>(16);
         for (Field field : fields) {
             if (Modifier.isPrivate(field.getModifiers())) {
                 continue;
@@ -766,10 +766,10 @@ public class JavaClassUtil {
 
     public static Map<String, String> getClassJsonIgnoreFields(JavaClass cls) {
         if (Objects.isNull(cls)) {
-            return Collections.EMPTY_MAP;
+            return Collections.emptyMap();
         }
         List<JavaAnnotation> classAnnotation = cls.getAnnotations();
-        Map<String, String> ignoreFields = new HashMap<>();
+        Map<String, String> ignoreFields = new HashMap<>(16);
         for (JavaAnnotation annotation : classAnnotation) {
             String simpleAnnotationName = annotation.getType().getValue();
             if (DocAnnotationConstants.SHORT_JSON_IGNORE_PROPERTIES.equalsIgnoreCase(simpleAnnotationName)) {
@@ -783,7 +783,7 @@ public class JavaClassUtil {
     }
 
     public static Map<String, String> getJsonIgnoresProp(JavaAnnotation annotation, String propName) {
-        Map<String, String> ignoreFields = new HashMap<>();
+        Map<String, String> ignoreFields = new HashMap<>(16);
         Object ignoresObject = annotation.getNamedParameter(propName);
         if (Objects.isNull(ignoresObject)) {
             return ignoreFields;

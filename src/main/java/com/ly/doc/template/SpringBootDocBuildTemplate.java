@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2023 smart-doc
+ * Copyright (C) 2018-2024 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -20,14 +20,15 @@
  */
 package com.ly.doc.template;
 
+import com.ly.doc.builder.ProjectDocConfigBuilder;
 import com.ly.doc.constants.*;
+import com.ly.doc.handler.SpringMVCRequestHeaderHandler;
+import com.ly.doc.handler.SpringMVCRequestMappingHandler;
 import com.ly.doc.model.ApiConfig;
 import com.ly.doc.model.ApiDoc;
 import com.ly.doc.model.ApiReqParam;
-import com.ly.doc.builder.ProjectDocConfigBuilder;
+import com.ly.doc.model.WebSocketDoc;
 import com.ly.doc.model.annotation.*;
-import com.ly.doc.handler.SpringMVCRequestHeaderHandler;
-import com.ly.doc.handler.SpringMVCRequestMappingHandler;
 import com.ly.doc.model.request.RequestMapping;
 import com.ly.doc.utils.JavaClassValidateUtil;
 import com.thoughtworks.qdox.model.DocletTag;
@@ -41,7 +42,7 @@ import java.util.stream.Stream;
 /**
  * @author yu 2019/12/21.
  */
-public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IRestDocTemplate {
+public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IWebSocketDocBuildTemplate<WebSocketDoc> ,IRestDocTemplate,IWebSocketTemplate {
 
     @Override
     public List<ApiDoc> renderApi(ProjectDocConfigBuilder projectBuilder, Collection<JavaClass> candidateClasses) {
@@ -56,6 +57,12 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IR
             Collections.sort(apiDocList);
         }
         return apiDocList;
+    }
+
+    @Override
+    public List<WebSocketDoc> renderWebSocketApi(ProjectDocConfigBuilder projectBuilder, Collection<JavaClass> candidateClasses) {
+        FrameworkAnnotations frameworkAnnotations = registeredAnnotations();
+        return processWebSocketData(projectBuilder, frameworkAnnotations, new SpringMVCRequestMappingHandler(), candidateClasses);
     }
 
 
@@ -77,7 +84,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IR
         annotations.setHeaderAnnotation(headerAnnotation);
 
         // add entry annotation
-        Map<String, EntryAnnotation> entryAnnotations = new HashMap<>();
+        Map<String, EntryAnnotation> entryAnnotations = new HashMap<>(16);
         EntryAnnotation controllerAnnotation = EntryAnnotation.builder()
                 .setAnnotationName(SpringMvcAnnotations.CONTROLLER)
                 .setAnnotationFullyName(SpringMvcAnnotations.CONTROLLER);
@@ -115,8 +122,13 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IR
                 .setRequiredProp(DocAnnotationConstants.REQUIRED_PROP);
         annotations.setPathVariableAnnotation(pathVariableAnnotation);
 
+        // add websocket server endpoint annotation
+        ServerEndpointAnnotation serverEndpointAnnotation = ServerEndpointAnnotation.builder()
+                .setAnnotationName(SpringMvcAnnotations.SERVER_ENDPOINT);
+        annotations.setServerEndpointAnnotation(serverEndpointAnnotation);
+
         // add mapping annotations
-        Map<String, MappingAnnotation> mappingAnnotations = new HashMap<>();
+        Map<String, MappingAnnotation> mappingAnnotations = new HashMap<>(16);
 
         MappingAnnotation requestMappingAnnotation = MappingAnnotation.builder()
                 .setAnnotationName(SpringMvcAnnotations.REQUEST_MAPPING)

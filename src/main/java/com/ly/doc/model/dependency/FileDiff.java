@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2023 smart-doc
+ * Copyright (C) 2018-2024 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -116,8 +116,12 @@ public class FileDiff {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof FileDiff)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof FileDiff)) {
+            return false;
+        }
         FileDiff fileDiff = (FileDiff) o;
         return isEntryPoint == fileDiff.isEntryPoint && changeType == fileDiff.changeType && Objects.equals(oldQualifiedName, fileDiff.oldQualifiedName) && Objects.equals(newQualifiedName, fileDiff.newQualifiedName);
     }
