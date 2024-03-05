@@ -620,7 +620,8 @@ public class ParamsBuildHelper extends BaseHelper {
         if (Boolean.TRUE.equals(projectBuilder.getApiConfig().getInlineEnum())) {
             ApiDataDictionary dataDictionary = projectBuilder.getApiConfig().getDataDictionary(javaClass.getCanonicalName());
             if (Objects.isNull(dataDictionary)) {
-                comment = comment + "<br/>[Enum values:<br/>" + JavaClassUtil.getEnumParams(javaClass) + "]";
+                //the output format should be unified ( as same as the "else" output)
+                comment = comment + "<br/>[Enum: " + JavaClassUtil.getEnumParams(javaClass) + "]";
             } else {
                 Class<?> enumClass = dataDictionary.getEnumClass();
                 if (enumClass.isInterface()) {
@@ -631,7 +632,7 @@ public class ParamsBuildHelper extends BaseHelper {
                         return comment;
                     }
                 }
-                comment = comment + "<br/>[Enum:" + dictionaryListComment(dataDictionary.getEnumDataDict(enumClass)) + "]";
+                comment = comment + "<br/>[Enum: " + dictionaryListComment(dataDictionary.getEnumDataDict(enumClass)) + "]";
             }
         } else {
             if (StringUtil.isNotEmpty(enumComments)) {
