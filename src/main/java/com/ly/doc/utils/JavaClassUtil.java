@@ -359,6 +359,10 @@ public class JavaClassUtil {
         for (JavaField javaField : javaFields) {
             // string comment
             String exception = javaField.getInitializationExpression();
+            // add a separator to Enum values for display better.
+            if (stringBuilder.length() > 0){
+                stringBuilder.append(", ");
+            }
             stringBuilder.append(javaField.getName());
             if (StringUtil.isNotEmpty(exception)) {
                 stringBuilder.append("(").append(exception).append(")").append("<br/>");
