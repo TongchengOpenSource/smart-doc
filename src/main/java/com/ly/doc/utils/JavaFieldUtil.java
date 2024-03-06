@@ -25,6 +25,7 @@ package com.ly.doc.utils;
 import com.ly.doc.constants.DocAnnotationConstants;
 import com.ly.doc.constants.DocGlobalConstants;
 import com.ly.doc.constants.DocValidatorAnnotationEnum;
+import com.ly.doc.constants.ValidatorAnnotations;
 import com.ly.doc.model.CustomField;
 import com.ly.doc.model.DocJavaField;
 import com.power.common.util.StringUtil;
@@ -128,40 +129,47 @@ public class JavaFieldUtil {
     /**
      * getJsr303Comment
      *
-     * @param annotations annotations
+     * @param showValidation Show JSR validation information
+     * @param classLoader    ClassLoader
+     * @param annotations    annotations
      * @return Jsr comments
      */
-    public static String getJsrComment(ClassLoader classLoader, List<JavaAnnotation> annotations) {
+    public static String getJsrComment(boolean showValidation, ClassLoader classLoader, List<JavaAnnotation> annotations) {
+        if (!showValidation) {
+            return DocGlobalConstants.EMPTY;
+        }
         StringBuilder sb = new StringBuilder();
         for (JavaAnnotation annotation : annotations) {
             Map<String, AnnotationValue> values = annotation.getPropertyMap();
             String name = annotation.getType().getValue();
+            if (ValidatorAnnotations.NOT_BLANK.equals(name) ||
+                    ValidatorAnnotations.NOT_EMPTY.equals(name) ||
+                    ValidatorAnnotations.NOT_NULL.equals(name) ||
+                    ValidatorAnnotations.NULL.equals(name) ||
+                    ValidatorAnnotations.VALIDATED.equals(name)) {
+                continue;
+            }
             if (DocValidatorAnnotationEnum.listValidatorAnnotations().contains(name)) {
+                sb.append(name).append("(");
+                int j = 0;
                 for (Map.Entry<String, AnnotationValue> m : values.entrySet()) {
+                    j++;
                     String value = DocUtil.resolveAnnotationValue(classLoader, m.getValue());
-                    if (DocAnnotationConstants.REGEXP.equals(m.getKey())) {
-                        sb.append(m.getKey()).append(": ").append(StringUtil.removeDoubleQuotes(value))
-                                .append("; ");
-                    }
-                    if (DocAnnotationConstants.MAX.equals(m.getKey())) {
-                        sb.append(m.getKey()).append(": ").append(StringUtil.removeDoubleQuotes(value))
-                                .append("; ");
-                    }
-                    if (DocAnnotationConstants.LENGTH.equals(m.getKey())) {
-                        sb.append(m.getKey()).append(": ").append(StringUtil.removeDoubleQuotes(value))
-                                .append("; ");
-                    }
-                    if (DocAnnotationConstants.SIZE.equals(m.getKey())) {
-                        sb.append(m.getKey()).append(": ").append(StringUtil.removeDoubleQuotes(value))
-                                .append("; ");
+                    sb.append(m.getKey()).append("=").append(StringUtil.removeDoubleQuotes(value));
+                    if (j < values.size()) {
+                        sb.append(", ");
                     }
                 }
+                sb.append("); ");
             }
         }
         if (sb.length() < 1) {
             return DocGlobalConstants.EMPTY;
         }
-        return "\nValidate[" + sb + "]";
+        if (sb.toString().contains(";")) {
+            sb.deleteCharAt(sb.lastIndexOf(";"));
+        }
+        return "\nValidation[" + sb + "]";
     }
 
 

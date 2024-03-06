@@ -247,7 +247,7 @@ public class ParamsBuildHelper extends BaseHelper {
                         }
                     }
                 }
-                comment.append(JavaFieldUtil.getJsrComment(classLoader, javaAnnotations));
+                comment.append(JavaFieldUtil.getJsrComment(apiConfig.isShowValidation(), classLoader, javaAnnotations));
                 // fixme post form curl example error
                 String fieldValue = getFieldValueFromMock(tagsMap);
 

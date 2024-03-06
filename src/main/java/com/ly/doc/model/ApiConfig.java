@@ -391,6 +391,12 @@ public class ApiConfig {
      */
     private Integer apiUploadNums;
 
+    /**
+     * Show JSR validation information
+     * @since 3.0.3
+     */
+    private boolean showValidation = Boolean.TRUE;
+
     public static ApiConfig getInstance() {
         return instance;
     }
@@ -1039,5 +1045,13 @@ public class ApiConfig {
 
     public void setApiUploadNums(Integer apiUploadNums) {
         this.apiUploadNums = apiUploadNums;
+    }
+
+    public boolean isShowValidation() {
+        return showValidation;
+    }
+
+    public void setShowValidation(boolean showValidation) {
+        this.showValidation = showValidation;
     }
 }
