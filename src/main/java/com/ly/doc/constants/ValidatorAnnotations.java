@@ -27,7 +27,25 @@ public interface ValidatorAnnotations {
 
     String VALID = "Valid";
 
-    String NULL = "Null";
+    /**
+     * Spring validator annotations `@NotEmpty`
+     */
+    String NOT_EMPTY = "NotEmpty";
+
+    /**
+     * Spring validator annotations `@NotBlank`
+     */
+    String NOT_BLANK = "NotBlank";
+
+    /**
+     * Spring validator annotations `@NotNull`
+     */
+    String NOT_NULL = "NotNull";
+
+    /**
+     * Spring validator annotations `@Null`
+     */
+    String NULL= "Null";
 
     String VALIDATED = "Validated";
 }

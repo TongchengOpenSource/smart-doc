@@ -502,10 +502,10 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 
             //handle extension
             Map<String, String> extensions = DocUtil.getCommentsByTag(method, DocTags.EXTENSION, null);
-            if (extensions != null){
+            if (extensions != null) {
                 Map extensionParams = apiMethodDoc.getExtensions() != null ? apiMethodDoc.getExtensions() : new HashMap();
-                extensions.entrySet().stream().forEach( e -> extensionParams.put(e.getKey(), DocUtil.detectTagValue(e.getValue())));
-                apiMethodDoc.setExtensions( extensionParams );
+                extensions.entrySet().stream().forEach(e -> extensionParams.put(e.getKey(), DocUtil.detectTagValue(e.getValue())));
+                apiMethodDoc.setExtensions(extensionParams);
             }
 
             TornaUtil.setTornaArrayTags(docJavaMethod.getJavaMethod(), apiMethodDoc, apiConfig);
@@ -519,6 +519,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                                             List<ApiReqParam> configApiReqParams, FrameworkAnnotations frameworkAnnotations) {
         JavaMethod javaMethod = docJavaMethod.getJavaMethod();
         boolean isStrict = builder.getApiConfig().isStrict();
+        boolean isShowValidation = builder.getApiConfig().isShowValidation();
         ClassLoader classLoader = builder.getApiConfig().getClassLoader();
         String className = javaMethod.getDeclaringClass().getCanonicalName();
         Map<String, String> paramTagMap = docJavaMethod.getParamTagMap();
@@ -638,7 +639,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                 }
                 required = Boolean.parseBoolean(strRequired);
             }
-            comment.append(JavaFieldUtil.getJsrComment(classLoader, annotations));
+            comment.append(JavaFieldUtil.getJsrComment(isShowValidation, classLoader, annotations));
             if (requestFieldToUnderline && !isPathVariable) {
                 paramName = StringUtil.camelToUnderline(paramName);
             }

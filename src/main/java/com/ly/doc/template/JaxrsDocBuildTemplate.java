@@ -339,6 +339,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IWebSoc
                     .setRequestParams(new ArrayList<>(0));
         }
         boolean isStrict = builder.getApiConfig().isStrict();
+        boolean isShowValidation = builder.getApiConfig().isShowValidation();
         ClassLoader classLoader = builder.getApiConfig().getClassLoader();
         JavaMethod javaMethod = docJavaMethod.getJavaMethod();
         String className = javaMethod.getDeclaringClass().getCanonicalName();
@@ -401,7 +402,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IWebSoc
                         strRequired = "true";
                     }
                 }
-                comment.append(JavaFieldUtil.getJsrComment(classLoader, annotations));
+                comment.append(JavaFieldUtil.getJsrComment(isShowValidation, classLoader, annotations));
             } else {
                 isRequestBody = true;
             }

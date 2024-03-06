@@ -169,6 +169,7 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc>, IWebSo
                                          Map<String, JavaType> actualTypesMap) {
         boolean isStrict = builder.getApiConfig().isStrict();
         boolean isShowJavaType = builder.getApiConfig().getShowJavaType();
+        boolean isShowValidation = builder.getApiConfig().isShowValidation();
         String className = javaMethod.getDeclaringClass().getCanonicalName();
         Map<String, String> paramTagMap = DocUtil.getCommentsByTag(javaMethod, DocTags.PARAM, className);
         List<JavaParameter> parameterList = javaMethod.getParameters();
@@ -197,7 +198,7 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc>, IWebSo
                     required = true;
                 }
             }
-            comment.append(JavaFieldUtil.getJsrComment(classLoader, annotations));
+            comment.append(JavaFieldUtil.getJsrComment(isShowValidation, classLoader, annotations));
             Set<String> groupClasses = JavaClassUtil.getParamGroupJavaClass(annotations, builder.getJavaProjectBuilder());
             if (JavaClassValidateUtil.isCollection(fullTypeName) || JavaClassValidateUtil.isArray(fullTypeName)) {
                 if (JavaClassValidateUtil.isCollection(typeName)) {
