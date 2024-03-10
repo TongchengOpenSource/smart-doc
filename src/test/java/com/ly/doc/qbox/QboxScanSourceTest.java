@@ -28,7 +28,7 @@ public class QboxScanSourceTest {
         ApiConfig config = new ApiConfig();
         config.setServerUrl("HSF://127.0.0.1:8088");
         config.setOpenUrl("http://demo.torna.cn/api");
-        config.setDebugEnvName("测试环境");
+        config.setDebugEnvName("Test environment");
         config.setStyle("randomLight");
         config.setCreateDebugPage(true);
         config.setAuthor("test");

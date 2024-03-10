@@ -30,7 +30,7 @@ public class TornaApi {
     /**
      * "debugEnvs": [
      * {
-     * "name": "测试环境",
+     * "name": "Test environment",
      * "url": "http://10.1.30.165:2222"
      * }
      * ],
@@ -40,8 +40,9 @@ public class TornaApi {
     List<Apis> apis;
     String author;
     List<CommonErrorCode> commonErrorCodes;
+
     /**
-     * 是否替换文档，1：替换，0：不替换（追加）。缺省：1
+     * Whether to replace the document. 1: Replace, 0: Do not replace (append). Default: 1
      */
     Integer isReplace;
 

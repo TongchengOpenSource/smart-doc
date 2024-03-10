@@ -163,7 +163,7 @@ public class SwaggerBuilder extends AbstractOpenApiBuilder {
     }
 
     /**
-     * 是否有文件
+     * Check if the parameter contains a file
      *
      * @param parameters
      * @return
