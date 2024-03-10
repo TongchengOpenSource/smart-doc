@@ -31,22 +31,22 @@ public class Main {
 
     public static void main(String[] args) {
         Long start = System.currentTimeMillis();
-        //结果集
+        // Result list
         List<String> list = new ArrayList<>();
         List<String> list2 = new ArrayList<>();
-        //定长10线程池
+        // Fixed size 10 thread pool
         ExecutorService exs = Executors.newFixedThreadPool(10);
         final List<Integer> taskList = Arrays.asList(2, 1, 3, 4, 5, 6, 7, 8, 9, 10);
         try {
             CompletableFuture[] cfs = taskList.stream().map(object -> CompletableFuture.supplyAsync(() -> calc(object), exs)
-                .thenApply(h -> Integer.toString(h))
-                //如需获取任务完成先后顺序，此处代码即可
-                .whenComplete((v, e) -> {
-                    System.out.println("任务" + v + "完成!result=" + v + "，异常 e=" + e + "," + new Date());
-                    list2.add(v);
-                })).toArray(CompletableFuture[]::new);
+                    .thenApply(h -> Integer.toString(h))
+                    // If you need to get the order of task completion, this code is available
+                    .whenComplete((v, e) -> {
+                        System.out.println("Task " + v + " completed! result=" + v + "，exception e=" + e + "," + new Date());
+                        list2.add(v);
+                    })).toArray(CompletableFuture[]::new);
             CompletableFuture.allOf(cfs).join();
-            System.out.println("任务完成先后顺序，结果list2=" + list2 + "；任务提交顺序，结果list=" + list + ",耗时=" + (System.currentTimeMillis() - start));
+            System.out.println("The order of task completion, result list2=" + list2 + "；The order of task submission, result list=" + list + ", time taken=" + (System.currentTimeMillis() - start));
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -57,21 +57,22 @@ public class Main {
     public static Integer calc(Integer i) {
         try {
             if (i == 1) {
-                //任务1耗时3秒
+                // Task 1 takes 3 seconds
                 Thread.sleep(3000);
             } else if (i == 5) {
-                //任务5耗时5秒
+                // Task 5 takes 5 seconds
                 Thread.sleep(5000);
             } else {
-                //其它任务耗时1秒
+                // Other tasks take 1 second
                 Thread.sleep(1000);
             }
-            System.out.println("task线程：" + Thread.currentThread().getName() + "任务i=" + i + ",完成！+" + new Date());
+            System.out.println("task thread：" + Thread.currentThread().getName() + " task i=" + i + ", completed！+" + new Date());
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         return i;
     }
+
 
     public static boolean ignoreArtifactById(String artifactId) {
         if (PREFIX_LIST.stream().anyMatch(artifactId::startsWith)) {

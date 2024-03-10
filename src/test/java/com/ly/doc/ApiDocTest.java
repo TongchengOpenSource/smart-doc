@@ -12,14 +12,14 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Description:
- * ApiDoc测试
+ * ApiDoc Test
  *
  * @author yu 2018/06/11.
  */
 public class ApiDocTest {
 
     /**
-     * 包括设置请求头，缺失注释的字段批量在文档生成期使用定义好的注释
+     *
      * test html
      */
     @Deprecated
@@ -34,7 +34,7 @@ public class ApiDocTest {
         config.setAppToken("be4211613a734b45888c075741680e49");
         // config.setAppToken("7b0935531d1144e58a86d7b4f2ad23c6");
 
-        config.setDebugEnvName("测试环境");
+        config.setDebugEnvName("Test environment");
         config.setInlineEnum(true);
         config.setStyle("randomLight");
         config.setCreateDebugPage(false);
@@ -46,9 +46,8 @@ public class ApiDocTest {
         config.setOutPath("D:\\smart-doc\\docs\\html");
         // config.setMd5EncryptedHtmlName(true);
         config.setFramework(FrameworkEnum.SPRING.getFramework());
-        // 不指定SourcePaths默认加载代码为项目src/main/java下的
         config.setSourceCodePaths(
-                SourceCodePath.builder().setDesc("本项目代码")
+                SourceCodePath.builder().setDesc("current project code")
                         .setPath("D:\\smart-doc\\test-project")
         );
         config.setPackageFilters("com.power.doc.controller.*");
@@ -83,7 +82,7 @@ public class ApiDocTest {
         config.setOpenUrl("http://localhost:7700/api");
         config.setAppToken("be4211613a734b45888c075741680e49");
 
-        config.setDebugEnvName("测试环境");
+        config.setDebugEnvName("Test environment");
         config.setLanguage(DocLanguage.CHINESE);
 //        config.setLanguage(DocLanguage.ENGLISH);
         config.setInlineEnum(true);
@@ -93,9 +92,8 @@ public class ApiDocTest {
         config.setCoverOld(false);
         config.setOutPath("D:\\smart-doc\\docs\\jmx1");
         config.setFramework(FrameworkEnum.SPRING.getFramework());
-        // 不指定SourcePaths默认加载代码为项目src/main/java下的
         config.setSourceCodePaths(
-                SourceCodePath.builder().setDesc("本项目代码")
+                SourceCodePath.builder().setDesc("current project code")
                         .setPath("D:\\smart-doc\\test-project")
         );
         config.setPackageFilters("com.power.doc.controller.*");
