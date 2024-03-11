@@ -569,7 +569,9 @@ public class DocUtil {
                 "Please @see " + className;
         return getCommentsByTag(paramTags, tagName, className, tagValNullMsg, tagValErrorMsg);
     }
-
+    public static Map<String, String> getCommentsByTag(List<DocletTag> paramTags, final String tagName){
+        return getCommentsByTag(paramTags, tagName, null, null,null);
+    }
     private static Map<String, String> getCommentsByTag(List<DocletTag> paramTags, final String tagName, String className,
                                                         String tagValNullMsg, String tagValErrorMsg) {
         Map<String, String> paramTagMap = new HashMap<>(16);
