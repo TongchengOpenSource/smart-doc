@@ -194,9 +194,9 @@ public class ParamsBuildHelper extends BaseHelper {
                 }
                 //handle extension
                 Map<String, String> extensions = DocUtil.getCommentsByTag(field.getTagsByName(DocTags.EXTENSION), DocTags.EXTENSION);
-                Map extensionParams = new HashMap();
+                Map<String, Object> extensionParams = new HashMap<>();
                 if (extensions != null && !extensions.isEmpty()){
-                    extensions.entrySet().stream().forEach( e -> extensionParams.put(e.getKey(), DocUtil.detectTagValue(e.getValue())));
+                    extensions.forEach( (k, v) -> extensionParams.put(k, DocUtil.detectTagValue(v)));
                 }
 
                 boolean strRequired = false;
