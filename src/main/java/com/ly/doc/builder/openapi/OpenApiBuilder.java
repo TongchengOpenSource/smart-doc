@@ -31,6 +31,7 @@ import com.power.common.util.FileUtil;
 import com.ly.doc.helper.JavaProjectBuilderHelper;
 import com.ly.doc.model.openapi.OpenApiTag;
 import com.ly.doc.utils.JsonUtil;
+import com.power.common.util.StringUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import org.apache.commons.lang3.StringUtils;
 
@@ -239,6 +240,10 @@ public class OpenApiBuilder extends AbstractOpenApiBuilder {
     Map<String, Object> getStringParams(ApiParam apiParam, boolean hasItems) {
         Map<String, Object> parameters;
         parameters = new HashMap<>(20);
+        //add mock value for parameters
+        if (StringUtils.isNotEmpty(apiParam.getValue())) {
+            parameters.put("example", StringUtil.removeDoubleQuotes(apiParam.getValue()));
+        }
         if (!hasItems) {
             parameters.put("name", apiParam.getField());
             parameters.put("description", apiParam.getDesc());
@@ -261,6 +266,9 @@ public class OpenApiBuilder extends AbstractOpenApiBuilder {
                 }
             }
             parameters.putAll(buildParametersSchema(apiParam));
+        }
+        if (apiParam.getExtensions() != null && !apiParam.getExtensions().isEmpty()){
+            apiParam.getExtensions().entrySet().forEach( e-> parameters.put("x-"+e.getKey(), e.getValue()));
         }
 
         return parameters;

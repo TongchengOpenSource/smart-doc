@@ -466,6 +466,9 @@ public abstract class AbstractOpenApiBuilder {
                 propertiesData.put("description", apiParam.getDesc() + "(object)");
             }
         }
+        if (apiParam.getExtensions() != null && !apiParam.getExtensions().isEmpty()){
+            apiParam.getExtensions().entrySet().forEach( e-> propertiesData.put("x-"+e.getKey(), e.getValue()));
+        }
 
         return propertiesData;
     }

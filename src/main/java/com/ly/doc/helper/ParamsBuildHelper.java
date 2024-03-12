@@ -192,6 +192,12 @@ public class ParamsBuildHelper extends BaseHelper {
                 if (tagsMap.containsKey(DocTags.SINCE)) {
                     since = tagsMap.get(DocTags.SINCE);
                 }
+                //handle extension
+                Map<String, String> extensions = DocUtil.getCommentsByTag(field.getTagsByName(DocTags.EXTENSION), DocTags.EXTENSION);
+                Map<String, Object> extensionParams = new HashMap<>();
+                if (extensions != null && !extensions.isEmpty()){
+                    extensions.forEach( (k, v) -> extensionParams.put(k, DocUtil.detectTagValue(v)));
+                }
 
                 boolean strRequired = false;
                 CustomField.Key key = CustomField.Key.create(docField.getDeclaringClassName(), fieldName);
@@ -296,7 +302,8 @@ public class ParamsBuildHelper extends BaseHelper {
                             .setMaxLength(maxLength)
                             .setDesc(comment.toString())
                             .setRequired(strRequired)
-                            .setVersion(since);
+                            .setVersion(since)
+                            .setExtensions(extensionParams);
                     if (fieldGicName.contains("[]") || fieldGicName.endsWith(">")) {
                         param.setType(DocGlobalConstants.PARAM_TYPE_FILE);
                         param.setDesc(comment.append("(array of file)").toString());
@@ -314,6 +321,7 @@ public class ParamsBuildHelper extends BaseHelper {
                     param.setId(atomicOrDefault(atomicInteger, paramList.size() + param.getPid() + 1));
                     String processedType = processFieldTypeName(isShowJavaType, subTypeName);
                     param.setType(processedType);
+                    param.setExtensions(extensionParams);
                     // handle param
                     commonHandleParam(paramList, param, isRequired, comment.toString(), since, strRequired);
 
@@ -349,6 +357,7 @@ public class ParamsBuildHelper extends BaseHelper {
                     int fieldPid;
                     ApiParam param = ApiParam.of().setField(pre + fieldName).setClassName(className).setPid(pid).setMaxLength(maxLength);
                     param.setId(atomicOrDefault(atomicInteger, paramList.size() + param.getPid() + 1));
+                    param.setExtensions(extensionParams);
                     String processedType;
                     if (fieldGicName.length() == 1) {
                         String gicName = DocGlobalConstants.JAVA_OBJECT_FULLY;
@@ -459,7 +468,8 @@ public class ParamsBuildHelper extends BaseHelper {
                                     .setMaxLength(maxLength)
                                     .setType(DocGlobalConstants.PARAM_TYPE_OBJECT)
                                     .setDesc(DocGlobalConstants.ANY_OBJECT_MSG)
-                                    .setVersion(DocGlobalConstants.DEFAULT_VERSION);
+                                    .setVersion(DocGlobalConstants.DEFAULT_VERSION)
+                                    .setExtensions(extensionParams);
                             paramList.add(param1);
                             continue;
                         }
@@ -525,7 +535,8 @@ public class ParamsBuildHelper extends BaseHelper {
                                 .setMaxLength(maxLength)
                                 .setType(DocGlobalConstants.PARAM_TYPE_OBJECT)
                                 .setDesc(comment.append(" $ref... self").toString())
-                                .setVersion(DocGlobalConstants.DEFAULT_VERSION);
+                                .setVersion(DocGlobalConstants.DEFAULT_VERSION)
+                                .setExtensions(extensionParams);
                         paramList.add(param1);
                     } else {
                         commonHandleParam(paramList, param, isRequired, comment + appendComment, since, strRequired);

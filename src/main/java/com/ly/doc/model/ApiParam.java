@@ -21,6 +21,7 @@
 package com.ly.doc.model;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import com.ly.doc.model.torna.EnumInfo;
@@ -125,6 +126,7 @@ public class ApiParam {
      * Self  Reference loop
      */
     private boolean selfReferenceLoop;
+    private Map<String, Object> extensions;
 
     public static ApiParam of() {
         return new ApiParam();
@@ -311,6 +313,15 @@ public class ApiParam {
         return this;
     }
 
+    public Map<String, Object> getExtensions() {
+        return extensions;
+    }
+
+    public ApiParam setExtensions(Map<String, Object> extensions) {
+        this.extensions = extensions;
+        return this;
+    }
+
     @Override
     public String toString() {
         return "ApiParam{" +
@@ -333,6 +344,7 @@ public class ApiParam {
                 ", maxLength='" + maxLength + '\'' +
                 ", configParam=" + configParam +
                 ", selfReferenceLoop=" + selfReferenceLoop +
+                ", extensions=" + extensions +
                 '}';
     }
 }
