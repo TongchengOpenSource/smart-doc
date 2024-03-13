@@ -92,10 +92,8 @@ public class JsonBuildHelper extends BaseHelper {
         Map<String, JavaType> actualTypesMap = docJavaMethod.getActualTypesMap();
         String returnType = apiReturn.getGenericCanonicalName();
         if (Objects.nonNull(actualTypesMap)) {
-            for (Map.Entry<String, JavaType> entry : actualTypesMap.entrySet()) {
-                typeName = typeName.replace(entry.getKey(), entry.getValue().getCanonicalName());
-                returnType = returnType.replace(entry.getKey(), entry.getValue().getCanonicalName());
-            }
+            typeName = JavaClassUtil.getGenericsNameByActualTypesMap(typeName, actualTypesMap);
+            returnType = JavaClassUtil.getGenericsNameByActualTypesMap(returnType, actualTypesMap);
         }
         if (JavaClassValidateUtil.isPrimitive(typeName)) {
             if (DocGlobalConstants.JAVA_STRING_FULLY.equals(typeName)) {

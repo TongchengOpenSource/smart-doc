@@ -157,7 +157,7 @@ public class JavaClassUtil {
         List<JavaMethod> javaMethods = cls1.getMethods();
         for (JavaMethod method : javaMethods) {
             String methodName = method.getName();
-            if (method.getAnnotations().size() < 1) {
+            if (method.getAnnotations().isEmpty()) {
                 continue;
             }
             int paramSize = method.getParameters().size();
@@ -335,7 +335,7 @@ public class JavaClassUtil {
         for (JavaField javaField : javaFields) {
             String simpleName = javaField.getType().getSimpleName();
             StringBuilder valueBuilder = new StringBuilder();
-            valueBuilder.append("\"").append(javaField.getName()).append("\"").toString();
+            valueBuilder.append("\"").append(javaField.getName()).append("\"");
             if (formDataEnum) {
                 value = valueBuilder.toString();
                 return value;
@@ -360,7 +360,7 @@ public class JavaClassUtil {
             // string comment
             String exception = javaField.getInitializationExpression();
             // add a separator to Enum values for display better.
-            if (stringBuilder.length() > 0){
+            if (stringBuilder.length() > 0) {
                 stringBuilder.append(", ");
             }
             stringBuilder.append(javaField.getName());
@@ -544,12 +544,12 @@ public class JavaClassUtil {
     public static Map<String, JavaType> getActualTypesMap(JavaClass javaClass) {
         Map<String, JavaType> genericMap = new HashMap<>(10);
         List<JavaTypeVariable<JavaGenericDeclaration>> variables = javaClass.getTypeParameters();
-        if (variables.size() < 1) {
+        if (variables.isEmpty()) {
             return genericMap;
         }
         List<JavaType> javaTypes = getActualTypes(javaClass);
         for (int i = 0; i < variables.size(); i++) {
-            if (javaTypes.size() > 0) {
+            if (!javaTypes.isEmpty()) {
                 genericMap.put(variables.get(i).getName(), javaTypes.get(i));
             }
         }
@@ -592,7 +592,7 @@ public class JavaClassUtil {
         addGroupClass(annotationValueList, javaClassList);
         String simpleAnnotationName = javaAnnotation.getType().getValue();
         // add default group
-        if (javaClassList.size() == 0 && JavaClassValidateUtil.isJSR303Required(simpleAnnotationName)) {
+        if (javaClassList.isEmpty() && JavaClassValidateUtil.isJSR303Required(simpleAnnotationName)) {
             javaClassList.add("javax.validation.groups.Default");
         }
         return javaClassList;
@@ -602,16 +602,16 @@ public class JavaClassUtil {
         if (StringUtil.isNotEmpty(tagName)) {
             StringBuilder result = new StringBuilder();
             List<DocletTag> tags = cls.getTags();
-            for (int i = 0; i < tags.size(); i++) {
-                if (!tagName.equals(tags.get(i).getName())) {
+            for (DocletTag tag : tags) {
+                if (!tagName.equals(tag.getName())) {
                     continue;
                 }
-                String value = tags.get(i).getValue();
+                String value = tag.getValue();
                 if (StringUtil.isEmpty(value) && checkComments) {
                     throw new RuntimeException("ERROR: #" + cls.getName()
                             + "() - bad @" + tagName + " javadoc from " + cls.getName() + ", must be add comment if you use it.");
                 }
-                if (tagName.equals(tags.get(i).getName())) {
+                if (tagName.equals(tag.getName())) {
                     if (result.length() > 0) {
                         result.append(",");
                     }
@@ -721,15 +721,15 @@ public class JavaClassUtil {
             return;
         }
         List<JavaTypeVariable<JavaGenericDeclaration>> variables = cls.getTypeParameters();
-        if (variables.size() > 0) {
+        if (!variables.isEmpty()) {
             for (int i = 0; i < cls.getTypeParameters().size() && i < globGicName.length; i++) {
                 genericMap.put(variables.get(i).getName(), globGicName[i]);
             }
             return;
         }
         try {
-            Class c = Class.forName(cls.getCanonicalName());
-            TypeVariable[] tValue = c.getTypeParameters();
+            Class<?> c = Class.forName(cls.getCanonicalName());
+            TypeVariable<?>[] tValue = c.getTypeParameters();
             for (int i = 0; i < tValue.length && i < globGicName.length; i++) {
                 genericMap.put(tValue[i].getName(), globGicName[i]);
             }
@@ -803,8 +803,11 @@ public class JavaClassUtil {
 
 
     /**
-     * @param javaField
-     * @return
+     * getFieldGenericType by  ClassLoader
+     *
+     * @param javaField   JavaField
+     * @param classLoader ClassLoader
+     * @return fieldGenericType
      */
     private static String getFieldGenericType(JavaField javaField, ClassLoader classLoader) {
         if (JavaClassValidateUtil.isPrimitive(javaField.getType().getGenericCanonicalName())
@@ -813,7 +816,7 @@ public class JavaClassUtil {
         }
         String name = javaField.getName();
         try {
-            Class c;
+            Class<?> c;
             if (Objects.nonNull(classLoader)) {
                 c = classLoader.loadClass(javaField.getDeclaringClass().getCanonicalName());
             } else {
@@ -846,4 +849,52 @@ public class JavaClassUtil {
             return null;
         }
     }
+
+
+    /**
+     * Replaces generic type parameters in a given type name with their corresponding actual types,
+     * based on the provided mapping.
+     *
+     * @param originalName   the original type name containing generic type parameters
+     * @param actualTypesMap a mapping of generic type parameter names to their corresponding actual types
+     * @return the type name with generic type parameters replaced by their actual types
+     */
+    public static String getGenericsNameByActualTypesMap(String originalName, Map<String, JavaType> actualTypesMap) {
+        // Find the index of the last left angle bracket '<' and the first right angle bracket '>'
+        int typeNameLastLeftIndex = originalName.lastIndexOf('<');
+        int typeNameFirstRightIndex = originalName.indexOf('>', typeNameLastLeftIndex);
+
+        // If both angle brackets are found
+        if (typeNameLastLeftIndex > 0 && typeNameFirstRightIndex > 0) {
+            // Extract the substring containing the generics
+            String genericsString = originalName.substring(typeNameLastLeftIndex + 1, typeNameFirstRightIndex);
+            String[] generics = genericsString.split(",");
+
+            // StringBuilder to build the replaced string
+            StringBuilder resultString = new StringBuilder();
+            // Append the portion of originalName before the generics, including the '<'
+            resultString.append(originalName, 0, typeNameLastLeftIndex + 1);
+
+            // Replace each generic type
+            for (String generic : generics) {
+                // Trim the generic type to remove leading/trailing whitespaces
+                String trimmedGeneric = generic.trim();
+                // Look up the mapped type in the actualTypesMap
+                JavaType mappedType = actualTypesMap.get(trimmedGeneric);
+                // If a mapping is found, append the mapped type; otherwise, keep the original generic type
+                resultString.append(mappedType != null ? mappedType.getCanonicalName() : trimmedGeneric);
+                // Append a comma after each replaced generic type
+                resultString.append(",");
+            }
+            // Remove the trailing comma
+            resultString.setLength(resultString.length() - 1);
+            // Append the portion of originalName after the generics, including the '>'
+            resultString.append(originalName, typeNameFirstRightIndex, originalName.length());
+
+            return resultString.toString();
+        }
+        // Return originalName unchanged if no generics are found
+        return originalName;
+    }
+
 }
