@@ -30,12 +30,12 @@ public enum SolonRequestAnnotationsEnum {
     /**
      * Solon Request Annotation PathVar
      */
-    PATH_VAR("PathVar"),
+    PATH_VAR("Path"),
 
     /**
      * Solon Request Annotation PathVar full
      */
-    PATH_VAR_FULLY("org.noear.solon.annotation.PathVar"),
+    PATH_VAR_FULLY("org.noear.solon.annotation.Path"),
 
     /**
      * Solon Request Annotation Param
