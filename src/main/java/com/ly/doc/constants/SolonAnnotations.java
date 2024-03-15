@@ -41,8 +41,8 @@ public interface SolonAnnotations {
     String DELETE_MAPPING = "Delete";
     String DELETE_MAPPING_FULLY = "org.noear.solon.annotation.Delete";
 
-    String REQUEST_PARAM = "Param";
-    String REQUEST_PARAM_FULL = "org.noear.solon.annotation.Param";
+    String REQUEST_PARAM = "Path";
+    String REQUEST_PARAM_FULL = "org.noear.solon.annotation.Path";
 
     String PATH_VAR = "PathVar";
     String PATH_VAR_FULL = "org.noear.solon.annotation.PathVar";
