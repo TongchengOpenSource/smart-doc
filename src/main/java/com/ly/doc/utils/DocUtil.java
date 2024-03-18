@@ -552,7 +552,7 @@ public class DocUtil {
     public static Map<String, String> getCommentsByTag(final JavaMethod javaMethod, final String tagName, final String className) {
         List<DocletTag> paramTags = javaMethod.getTagsByName(tagName);
         String tagValNullMsg = "ERROR: #" + javaMethod.getName()
-                + "() - bad @" + tagName + " javadoc from " + javaMethod.getDeclaringClass()
+                + "() - bad @" + tagName + " Javadoc tag usage from " + javaMethod.getDeclaringClass()
                 .getCanonicalName() + ", This is an invalid comment.";
         String tagValErrorMsg = "ERROR: An invalid comment was written [@" + tagName + " |]," +
                 "Please @see " + javaMethod.getDeclaringClass().getCanonicalName() + "." + javaMethod.getName() + "()";
@@ -563,7 +563,7 @@ public class DocUtil {
         List<DocletTag> paramTags = javaClass.getTagsByName(tagName);
         String className = javaClass.getCanonicalName();
         String tagValNullMsg = "ERROR: "
-                + "Bad @" + tagName + " javadoc from " + className
+                + "Bad @" + tagName + " Javadoc  tag usage from " + className
                 + ", This is an invalid comment.";
         String tagValErrorMsg = "ERROR: An invalid comment was written [@" + tagName + " |]," +
                 "Please @see " + className;
