@@ -609,7 +609,7 @@ public class JavaClassUtil {
                 String value = tag.getValue();
                 if (StringUtil.isEmpty(value) && checkComments) {
                     throw new RuntimeException("ERROR: #" + cls.getName()
-                            + "() - bad @" + tagName + " javadoc from " + cls.getName() + ", must be add comment if you use it.");
+                            + "() - bad @" + tagName + " Javadoc tag usage from " + cls.getName() + ", must be add comment if you use it.");
                 }
                 if (tagName.equals(tag.getName())) {
                     if (result.length() > 0) {
