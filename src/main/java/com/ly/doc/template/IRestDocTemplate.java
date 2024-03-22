@@ -95,6 +95,9 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 
             List<ApiMethodDoc> apiMethodDocs = buildEntryPointMethod(cls, apiConfig, projectBuilder,
                     frameworkAnnotations, configApiReqParams, baseMappingHandler, headerHandler);
+            if (CollectionUtil.isEmpty(apiMethodDocs)) {
+                continue;
+            }
             this.handleApiDoc(cls, apiDocList, apiMethodDocs, order, apiConfig.isMd5EncryptedHtmlName());
         }
         apiDocList = handleTagsApiDoc(apiDocList);
