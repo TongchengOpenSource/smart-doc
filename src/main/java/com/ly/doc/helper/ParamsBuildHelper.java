@@ -314,7 +314,7 @@ public class ParamsBuildHelper extends BaseHelper {
                 }
                 if (JavaClassValidateUtil.isPrimitive(subTypeName)) {
                     if (StringUtil.isEmpty(fieldValue)) {
-                        fieldValue = DocUtil.getValByTypeAndFieldName(subTypeName, field.getName());
+                        fieldValue = StringUtil.removeQuotes(DocUtil.getValByTypeAndFieldName(subTypeName, field.getName()));
                     }
                     ApiParam param = ApiParam.of().setClassName(className).setField(pre + fieldName);
                     param.setPid(pid).setMaxLength(maxLength).setValue(fieldValue);
