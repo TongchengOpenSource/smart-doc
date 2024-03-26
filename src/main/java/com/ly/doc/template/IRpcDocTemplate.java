@@ -132,6 +132,19 @@ public interface IRpcDocTemplate extends IBaseDocBuildTemplate {
         return docJavaMethods;
     }
 
+    default List<RpcJavaMethod> getInterfaceMethods(ApiConfig apiConfig, JavaClass cls) {
+        List<RpcJavaMethod> docJavaMethods = new ArrayList<>();
+        for (JavaClass javaInterface : cls.getInterfaces()) {
+            Map<String, JavaType> actualTypesMap = JavaClassUtil.getActualTypesMap(javaInterface);
+            List<JavaMethod> interfaceMethodList = javaInterface.getMethods();
+            for (JavaMethod method : interfaceMethodList) {
+                docJavaMethods.add(convertToRpcJavaMethod(apiConfig, method, actualTypesMap));
+            }
+            docJavaMethods.addAll(getInterfaceMethods(apiConfig, javaInterface));
+        }
+        return docJavaMethods;
+    }
+
     default String replaceTypeName(String type, Map<String, JavaType> actualTypesMap, boolean simple) {
         if (Objects.isNull(actualTypesMap)) {
             return type;
