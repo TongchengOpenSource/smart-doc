@@ -126,16 +126,7 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc>, IWebSo
         // add parent class methods
         methodDocList.addAll(getParentsClassMethods(apiConfig, cls));
         if (cls.isInterface() || cls.isAbstract()) {
-            List<JavaType> implClasses = cls.getImplements();
-            for (JavaType type : implClasses) {
-                JavaClass javaClass = (JavaClass) type;
-                Map<String, JavaType> actualTypesMap = JavaClassUtil.getActualTypesMap(javaClass);
-                for (JavaMethod method : javaClass.getMethods()) {
-                    if (!method.isDefault()) {
-                        methodDocList.add(convertToRpcJavaMethod(apiConfig, method, actualTypesMap));
-                    }
-                }
-            }
+            methodDocList.addAll(getInterfaceMethods(apiConfig,cls));
         }
 
         int methodOrder = 0;
