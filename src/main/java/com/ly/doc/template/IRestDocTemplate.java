@@ -893,6 +893,9 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
             Set<String> groupClasses = JavaClassUtil.getParamGroupJavaClass(annotations, configBuilder.getJavaProjectBuilder());
             boolean paramAdded = false;
             boolean requestParam = false;
+            if (annotations.isEmpty()) {
+                requestParam = true;
+            }
             for (JavaAnnotation annotation : annotations) {
                 String annotationName = annotation.getType().getValue();
                 String fullName = annotation.getType().getSimpleName();
@@ -998,7 +1001,8 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                     gicName = gicName.substring(0, gicName.indexOf("["));
                 }
                 if (!JavaClassValidateUtil.isPrimitive(gicName)
-                        && !configBuilder.getJavaProjectBuilder().getClassByName(gicName).isEnum()) {
+                        && !configBuilder.getJavaProjectBuilder().getClassByName(gicName).isEnum()
+                        && requestParam) {
                     throw new RuntimeException("can't support binding Collection on method "
                             + method.getName() + " Check it in " + method.getDeclaringClass().getCanonicalName());
                 }
