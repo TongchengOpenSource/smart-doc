@@ -598,6 +598,10 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
             boolean isPathVariable = false;
             boolean isRequestBody = false;
             boolean required = false;
+            boolean isRequestParam = false;
+            if (annotations.isEmpty()) {
+                isRequestParam = true;
+            }
             for (JavaAnnotation annotation : annotations) {
                 String annotationName = annotation.getType().getValue();
                 if (ignoreMvcParamWithAnnotation(annotationName)) {
@@ -610,6 +614,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                     if (frameworkAnnotations.getRequestParamAnnotation().getAnnotationName().equals(annotationName)) {
                         defaultValueProp = frameworkAnnotations.getRequestParamAnnotation().getDefaultValueProp();
                         requiredProp = frameworkAnnotations.getRequestParamAnnotation().getRequiredProp();
+                        isRequestParam = true;
                     }
                     if (frameworkAnnotations.getPathVariableAnnotation().getAnnotationName().equals(annotationName)) {
                         defaultValueProp = frameworkAnnotations.getPathVariableAnnotation().getDefaultValueProp();
@@ -727,7 +732,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                             .setDesc(comment + "(array of file)");
                     paramList.add(param);
                 } else {
-                    if (requestBodyCounter > 0) {
+                    if (requestBodyCounter > 0 || !isRequestParam) {
                         // for json
                         paramList.addAll(ParamsBuildHelper.buildParams(gicNameArr[0], DocGlobalConstants.EMPTY, 0,
                                 String.valueOf(required), Boolean.FALSE, new HashMap<>(16), builder,
