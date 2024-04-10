@@ -172,6 +172,11 @@ public enum TemplateVariable {
      * webSocketDocList
      */
     WEBSOCKET_DOC_LIST("webSocketDocList"),
+
+    /**
+     * jmeterPrometheusListener
+     */
+    JMETER_PROMETHEUS_LISTENER("jmeterPrometheusListener"),
     ;
 
     /**
