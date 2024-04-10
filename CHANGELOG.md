@@ -1,5 +1,24 @@
 ## smart-doc版本
 
+### 版本号：3.0.3
+
+- 更新日期: 2024-3-30
+- 更新内容：
+  1. 新功能：：sparkles: 添加 WebSocket 支持并更新许可证有效期。[#752](https://github.com/TongchengOpenSource/smart-doc/pull/752)
+  2. 修复 #746：为枚举值添加分隔符。[#754](https://github.com/TongchengOpenSource/smart-doc/pull/754)
+  3. 新功能：优化 JSR 验证信息的提取。[#755](https://github.com/TongchengOpenSource/smart-doc/pull/755)
+  4. 在参数中添加扩展以支持 openapi..[#759](https://github.com/TongchengOpenSource/smart-doc/pull/759)
+  5. 修复泛型 typeName 或 returnType 的错误。[#761](https://github.com/TongchengOpenSource/smart-doc/pull/761)
+  6. 修复 Solon 框架中的非接口文档问题。[#765](https://github.com/TongchengOpenSource/smart-doc/pull/765)
+  7. 修复 Javadoc 标签使用错误的提示。[#767](https://github.com/TongchengOpenSource/smart-doc/pull/767)
+  8. Solon 已弃用 PathVar 并替换为 Path。[#765](https://github.com/TongchengOpenSource/smart-doc/pull/765)
+  9. 优化 Javadoc 标签使用错误的提示。[#767](https://github.com/TongchengOpenSource/smart-doc/pull/767)
+  10. 修复 Solon 框架中非接口文档的问题。[#771](https://github.com/TongchengOpenSource/smart-doc/pull/771)
+  11. 更新：修复 null 参数值中多余的双引号问题。[#772](https://github.com/TongchengOpenSource/smart-doc/pull/772)
+  12. 新功能：支持 RPC 中多级接口继承。[#773](https://github.com/TongchengOpenSource/smart-doc/pull/773)
+  13. 新功能：在添加自定义注解到参数后，忽略集合参数检查。[#774](https://github.com/TongchengOpenSource/smart-doc/pull/774)
+  14. 新功能：忽略集合参数检查。[#775](https://github.com/TongchengOpenSource/smart-doc/pull/775)
+
 ### 版本号：3.0.2
 - 更新日期: 2024-2-26
 - 更新内容：

@@ -23,6 +23,7 @@ package com.ly.doc.model;
 import com.ly.doc.constants.ComponentTypeEnum;
 import com.ly.doc.constants.DocLanguage;
 import com.ly.doc.handler.ICustomJavaMethodHandler;
+import com.ly.doc.model.jmeter.JMeter;
 import com.ly.doc.model.rpc.RpcApiDependency;
 import com.power.common.util.CollectionUtil;
 
@@ -393,9 +394,17 @@ public class ApiConfig {
 
     /**
      * Show JSR validation information
+     *
      * @since 3.0.3
      */
     private boolean showValidation = Boolean.TRUE;
+
+    /**
+     * JMeter
+     *
+     * @since 3.0.4
+     */
+    private JMeter jmeter;
 
     public static ApiConfig getInstance() {
         return instance;
@@ -1053,5 +1062,13 @@ public class ApiConfig {
 
     public void setShowValidation(boolean showValidation) {
         this.showValidation = showValidation;
+    }
+
+    public JMeter getJmeter() {
+        return jmeter;
+    }
+
+    public void setJmeter(JMeter jmeter) {
+        this.jmeter = jmeter;
     }
 }

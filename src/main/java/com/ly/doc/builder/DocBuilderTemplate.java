@@ -179,8 +179,13 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
         if (Objects.nonNull(apiDoc)) {
             tpl.binding(TemplateVariable.DESC.getVariable(), apiDoc.getDesc());
             tpl.binding(TemplateVariable.ORDER.getVariable(), apiDoc.getOrder());
-            // 类名
             tpl.binding(TemplateVariable.LIST.getVariable(), apiDoc.getList());
+        }
+        // add jmeter prometheus listener
+        if (Objects.nonNull(config.getJmeter())){
+            tpl.binding(TemplateVariable.JMETER_PROMETHEUS_LISTENER.getVariable(), config.getJmeter().isAddPrometheusListener());
+        } else {
+            tpl.binding(TemplateVariable.JMETER_PROMETHEUS_LISTENER.getVariable(), Boolean.FALSE);
         }
         return tpl;
     }
