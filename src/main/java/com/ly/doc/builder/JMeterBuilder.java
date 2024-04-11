@@ -28,6 +28,7 @@ import com.ly.doc.model.ApiConfig;
 import com.ly.doc.model.ApiDoc;
 import com.ly.doc.template.IDocBuildTemplate;
 import com.power.common.util.DateTimeUtil;
+import com.power.common.util.StringUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 
 import java.util.List;
@@ -61,13 +62,18 @@ public class JMeterBuilder {
         builderTemplate.checkAndInit(config, Boolean.TRUE);
         config.setAdoc(false);
         config.setShowJavaType(true);
-        config.setParamsDataToTree(false);
+        config.setParamsDataToTree(Boolean.FALSE);
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
         IDocBuildTemplate<ApiDoc> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework());
         Objects.requireNonNull(docBuildTemplate, "doc build template is null");
         List<ApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder);
         String version = config.isCoverOld() ? "" : "-V" + DateTimeUtil.long2Str(System.currentTimeMillis(), DocGlobalConstants.DATE_FORMAT_YYYY_MM_DD_HH_MM);
-        String docName = builderTemplate.allInOneDocName(config, "JmeterApiDoc" + version + JMETER_SCRIPT_EXTENSION, JMETER_SCRIPT_EXTENSION);
+        String docName;
+        if (StringUtil.isNotEmpty(config.getProjectName())) {
+            docName = config.getProjectName() + version + JMETER_SCRIPT_EXTENSION;
+        } else {
+            docName = "jmeter-script"+ version + JMETER_SCRIPT_EXTENSION;
+        }
         builderTemplate.buildAllInOne(apiDocList, config, javaProjectBuilder, DocGlobalConstants.JMETER_TPL, docName);
     }
 }
