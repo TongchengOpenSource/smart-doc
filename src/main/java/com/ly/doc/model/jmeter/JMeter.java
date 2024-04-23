@@ -21,13 +21,15 @@
 package com.ly.doc.model.jmeter;
 
 public class JMeter {
-    private boolean AddPrometheusListener;
+    private Boolean addPrometheusListener;
 
-    public boolean isAddPrometheusListener() {
-        return AddPrometheusListener;
+    public Boolean getAddPrometheusListener() {
+        return addPrometheusListener;
     }
 
-    public void setAddPrometheusListener(boolean addPrometheusListener) {
-        AddPrometheusListener = addPrometheusListener;
+    public void setAddPrometheusListener(Boolean addPrometheusListener) {
+        this.addPrometheusListener = addPrometheusListener;
     }
 }
+
+
