@@ -20,15 +20,22 @@
  */
 package com.ly.doc.utils;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import com.ly.doc.constants.DocGlobalConstants;
+import com.ly.doc.constants.Methods;
+import com.ly.doc.model.ApiMethodDoc;
 import com.ly.doc.model.ApiReqParam;
 import com.ly.doc.model.FormData;
+import com.ly.doc.model.request.ApiRequestExample;
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.StringUtil;
 import com.ly.doc.model.request.CurlRequest;
+import com.power.common.util.UrlUtil;
 
 /**
  * @author yu 2020/12/21.
@@ -81,5 +88,81 @@ public class CurlUtil {
             sb.append(" '").append(data).append("'");
         }
         return sb.toString();
+    }
+
+    public void setExampleBody(ApiMethodDoc apiMethodDoc, ApiRequestExample requestExample,
+                           List<FormData> formDataList,
+                           Map<String, String> pathParamsMap, Map<String, String> queryParamsMap) {
+        String methodType = apiMethodDoc.getType();
+        String[] paths = apiMethodDoc.getPath().split(";");
+        String path = paths[0];
+        String body;
+        String exampleBody;
+        String url;
+        List<ApiReqParam> reqHeaderList = apiMethodDoc.getRequestHeaders();
+        Map<Boolean, List<FormData>> formDataGroupMap = formDataList.stream()
+                .collect(Collectors.groupingBy(e -> Objects.equals(e.getType(), DocGlobalConstants.PARAM_TYPE_FILE)));
+        List<FormData> fileFormDataList = formDataGroupMap.getOrDefault(Boolean.TRUE, new ArrayList<>());
+        // curl send file to convert
+        final Map<String, String> formDataToMap = DocUtil.formDataToMap(formDataList);
+        // formData add to params '--data'
+        queryParamsMap.putAll(formDataToMap);
+        if (Methods.POST.getValue().equals(methodType) || Methods.PUT.getValue().equals(methodType)) {
+            // for post put
+            path = DocUtil.formatAndRemove(path, pathParamsMap);
+            body = UrlUtil.urlJoin(DocGlobalConstants.EMPTY, queryParamsMap)
+                    .replace("?", DocGlobalConstants.EMPTY);
+            url = apiMethodDoc.getServerUrl() + "/" + path;
+            url = UrlUtil.simplifyUrl(url);
+
+            if (requestExample.isJson()) {
+                if (StringUtil.isNotEmpty(body)) {
+                    url = url + "?" + body;
+                }
+                CurlRequest curlRequest = CurlRequest.builder()
+                        .setBody(requestExample.getJsonBody())
+                        .setContentType(apiMethodDoc.getContentType())
+                        .setType(methodType)
+                        .setReqHeaders(reqHeaderList)
+                        .setUrl(url);
+                exampleBody = CurlUtil.toCurl(curlRequest);
+            } else {
+                CurlRequest curlRequest;
+                if (StringUtil.isNotEmpty(body)) {
+                    curlRequest = CurlRequest.builder()
+                            .setBody(body)
+                            .setContentType(apiMethodDoc.getContentType())
+                            .setFileFormDataList(fileFormDataList)
+                            .setType(methodType)
+                            .setReqHeaders(reqHeaderList)
+                            .setUrl(url);
+                } else {
+                    curlRequest = CurlRequest.builder()
+                            .setBody(requestExample.getJsonBody())
+                            .setContentType(apiMethodDoc.getContentType())
+                            .setFileFormDataList(fileFormDataList)
+                            .setType(methodType)
+                            .setReqHeaders(reqHeaderList)
+                            .setUrl(url);
+                }
+                exampleBody = CurlUtil.toCurl(curlRequest);
+            }
+            requestExample.setExampleBody(exampleBody).setUrl(url);
+        } else {
+            // for get delete
+            url = "";
+                    //formatRequestUrl(pathParamsMap, queryParamsMap, apiMethodDoc.getServerUrl(), path);
+            CurlRequest curlRequest = CurlRequest.builder()
+                    .setBody(requestExample.getJsonBody())
+                    .setContentType(apiMethodDoc.getContentType())
+                    .setType(methodType)
+                    .setReqHeaders(reqHeaderList)
+                    .setUrl(url);
+            exampleBody = CurlUtil.toCurl(curlRequest);
+
+            requestExample.setExampleBody(exampleBody)
+                    .setJsonBody(requestExample.isJson() ? requestExample.getJsonBody() : DocGlobalConstants.EMPTY)
+                    .setUrl(url);
+        }
     }
 }

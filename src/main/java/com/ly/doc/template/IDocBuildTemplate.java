@@ -46,7 +46,7 @@ public interface IDocBuildTemplate<T extends IDoc> extends IDocBuildBaseTemplate
         DocBuildHelper docBuildHelper = DocBuildHelper.create(projectBuilder);
 
         preRender(docBuildHelper);
-
+        // get candidate classes
         Collection<JavaClass> candidateClasses = getCandidateClasses(projectBuilder, docBuildHelper);
         List<T> apiList = renderApi(projectBuilder, candidateClasses);
 

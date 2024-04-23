@@ -22,9 +22,7 @@ package com.ly.doc.template;
 
 import com.ly.doc.builder.ProjectDocConfigBuilder;
 import com.ly.doc.constants.*;
-import com.ly.doc.handler.DefaultWebSocketRequestHandler;
-import com.ly.doc.handler.JaxrsHeaderHandler;
-import com.ly.doc.handler.JaxrsPathHandler;
+import com.ly.doc.handler.*;
 import com.ly.doc.helper.FormDataBuildHelper;
 import com.ly.doc.helper.JsonBuildHelper;
 import com.ly.doc.helper.ParamsBuildHelper;
@@ -41,7 +39,6 @@ import com.power.common.util.*;
 import com.thoughtworks.qdox.model.*;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -54,14 +51,10 @@ import static com.ly.doc.constants.DocTags.IGNORE;
  * @author Zxq
  * @since 2021/7/15
  */
-public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IWebSocketDocBuildTemplate<WebSocketDoc>, IRestDocTemplate, IWebSocketTemplate {
+public class JAXRSDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IWebSocketDocBuildTemplate<WebSocketDoc>, IRestDocTemplate, IWebSocketTemplate {
 
-    private static final Logger log = Logger.getLogger(JaxrsDocBuildTemplate.class.getName());
+    private static final Logger log = Logger.getLogger(JAXRSDocBuildTemplate.class.getName());
 
-    /**
-     * api index
-     */
-    private final AtomicInteger atomicInteger = new AtomicInteger(1);
     /**
      * headers
      */
@@ -71,43 +64,23 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IWebSoc
     @Override
     public List<ApiDoc> renderApi(ProjectDocConfigBuilder projectBuilder, Collection<JavaClass> candidateClasses) {
         ApiConfig apiConfig = projectBuilder.getApiConfig();
-        FrameworkAnnotations frameworkAnnotations = registeredAnnotations();
         this.headers = apiConfig.getRequestHeaders();
-        List<ApiDoc> apiDocList = new ArrayList<>();
-        int order = 0;
-        boolean setCustomOrder = false;
-        // exclude  class is ignore
-        for (JavaClass cls : candidateClasses) {
-            if (StringUtil.isNotEmpty(apiConfig.getPackageFilters())) {
-                // from smart config
-                if (!DocUtil.isMatch(apiConfig.getPackageFilters(), cls)) {
-                    continue;
-                }
-            }
-            // from tag
-            DocletTag ignoreTag = cls.getTagByName(DocTags.IGNORE);
-            if (!isEntryPoint(cls, frameworkAnnotations) || Objects.nonNull(ignoreTag)) {
-                continue;
-            }
-            String strOrder = JavaClassUtil.getClassTagsValue(cls, DocTags.ORDER, Boolean.TRUE);
-            order++;
-            if (ValidateUtil.isNonNegativeInteger(strOrder)) {
-                setCustomOrder = true;
-                order = Integer.parseInt(strOrder);
-            }
-            List<ApiMethodDoc> apiMethodDocs = buildControllerMethod(cls, apiConfig, projectBuilder, frameworkAnnotations);
-            this.handleApiDoc(cls, apiDocList, apiMethodDocs, order, apiConfig.isMd5EncryptedHtmlName());
-        }
+        List<ApiReqParam> configApiReqParams = Stream.of(apiConfig.getRequestHeaders(), apiConfig.getRequestParams()).filter(Objects::nonNull)
+                .flatMap(Collection::stream).collect(Collectors.toList());
+        FrameworkAnnotations frameworkAnnotations = this.registeredAnnotations();
+        List<ApiDoc> apiDocList = this.processApiData(projectBuilder, frameworkAnnotations,
+                configApiReqParams, new SpringMVCRequestMappingHandler(), new SpringMVCRequestHeaderHandler(), candidateClasses);
         // sort
         if (apiConfig.isSortByTitle()) {
             Collections.sort(apiDocList);
-        } else if (setCustomOrder) {
-            // while set custom oder
-            return apiDocList.stream()
-                    .sorted(Comparator.comparing(ApiDoc::getOrder))
-                    .peek(p -> p.setOrder(atomicInteger.getAndAdd(1))).collect(Collectors.toList());
         }
         return apiDocList;
+    }
+
+    @Override
+    public List<ApiMethodDoc> buildEntryPointMethod(JavaClass cls, ApiConfig apiConfig, ProjectDocConfigBuilder projectBuilder,
+                                                    FrameworkAnnotations frameworkAnnotations, List<ApiReqParam> configApiReqParams, IRequestMappingHandler baseMappingHandler, IHeaderHandler headerHandler) {
+        return buildControllerMethod(cls, apiConfig, projectBuilder, frameworkAnnotations);
     }
 
     @Override
@@ -215,7 +188,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IWebSoc
             }
             List<ApiReqParam> allApiReqParams;
             allApiReqParams = apiReqParams;
-            if (this.headers != null) {
+            if (Objects.nonNull(this.headers)) {
                 allApiReqParams = Stream.of(this.headers, apiReqParams)
                         .flatMap(Collection::stream).distinct().collect(Collectors.toList());
             }
@@ -234,8 +207,7 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IWebSoc
             apiMethodDoc.setRequestHeaders(allApiReqParams);
 
             // build request json
-            ApiRequestExample requestExample = buildReqJson(docJavaMethod, apiMethodDoc, jaxPathMapping.getMethodType(),
-                    projectBuilder);
+            ApiRequestExample requestExample = buildReqJson(docJavaMethod, apiMethodDoc, projectBuilder);
             String requestJson = requestExample.getExampleBody();
             // set request example detail
             apiMethodDoc.setRequestExample(requestExample);
@@ -406,7 +378,6 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IWebSoc
             } else {
                 isRequestBody = true;
             }
-
             boolean required = Boolean.parseBoolean(strRequired);
             boolean queryParam = !isRequestBody && !isPathVariable;
             if (JavaClassValidateUtil.isCollection(fullyQualifiedName) || JavaClassValidateUtil.isArray(fullyQualifiedName)) {
@@ -556,8 +527,8 @@ public class JaxrsDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IWebSoc
                 .setQueryParams(queryParams);
     }
 
-    private ApiRequestExample buildReqJson(DocJavaMethod javaMethod, ApiMethodDoc apiMethodDoc, String methodType,
-                                           ProjectDocConfigBuilder configBuilder) {
+    private ApiRequestExample buildReqJson(DocJavaMethod javaMethod, ApiMethodDoc apiMethodDoc, ProjectDocConfigBuilder configBuilder) {
+        String methodType = apiMethodDoc.getType();
         JavaMethod method = javaMethod.getJavaMethod();
         Map<String, String> pathParamsMap = new LinkedHashMap<>();
         List<DocJavaParameter> parameterList = getJavaParameterList(configBuilder, javaMethod, null);

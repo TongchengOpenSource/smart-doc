@@ -93,14 +93,14 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                 order = Integer.parseInt(strOrder);
             }
 
-            List<ApiMethodDoc> apiMethodDocs = buildEntryPointMethod(cls, apiConfig, projectBuilder,
+            List<ApiMethodDoc> apiMethodDocs = this.buildEntryPointMethod(cls, apiConfig, projectBuilder,
                     frameworkAnnotations, configApiReqParams, baseMappingHandler, headerHandler);
             if (CollectionUtil.isEmpty(apiMethodDocs)) {
                 continue;
             }
             this.handleApiDoc(cls, apiDocList, apiMethodDocs, order, apiConfig.isMd5EncryptedHtmlName());
         }
-        apiDocList = handleTagsApiDoc(apiDocList);
+        apiDocList = this.handleTagsApiDoc(apiDocList);
         if (apiConfig.isSortByTitle()) {
             Collections.sort(apiDocList);
         } else if (setCustomOrder) {
@@ -480,8 +480,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
             }
 
             // build request json
-            ApiRequestExample requestExample = buildReqJson(docJavaMethod, apiMethodDoc, requestMapping.getMethodType(),
-                    projectBuilder, frameworkAnnotations);
+            ApiRequestExample requestExample = buildReqJson(docJavaMethod, apiMethodDoc, projectBuilder, frameworkAnnotations);
             String requestJson = requestExample.getExampleBody();
             // set request example detail
             apiMethodDoc.setRequestExample(requestExample);
@@ -823,8 +822,9 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
         return ApiParamTreeUtil.buildMethodReqParam(paramList, queryReqParamMap, pathReqParamMap, requestBodyCounter);
     }
 
-    default ApiRequestExample buildReqJson(DocJavaMethod javaMethod, ApiMethodDoc apiMethodDoc, String methodType,
+    default ApiRequestExample buildReqJson(DocJavaMethod javaMethod, ApiMethodDoc apiMethodDoc,
                                            ProjectDocConfigBuilder configBuilder, FrameworkAnnotations frameworkAnnotations) {
+        String methodType = apiMethodDoc.getType();
         JavaMethod method = javaMethod.getJavaMethod();
         Map<String, String> pathParamsMap = new LinkedHashMap<>();
         Map<String, String> queryParamsMap = new LinkedHashMap<>();
@@ -1044,12 +1044,13 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 
         // set content-type to fromData
         boolean hasFormDataUploadFile = formDataList.stream().anyMatch(form -> Objects.equals(form.getType(), DocGlobalConstants.PARAM_TYPE_FILE));
-        Map<Boolean, List<FormData>> formDataGroupMap = formDataList.stream()
-                .collect(Collectors.groupingBy(e -> Objects.equals(e.getType(), DocGlobalConstants.PARAM_TYPE_FILE)));
-        List<FormData> fileFormDataList = formDataGroupMap.getOrDefault(Boolean.TRUE, new ArrayList<>());
         if (hasFormDataUploadFile) {
             apiMethodDoc.setContentType(FILE_CONTENT_TYPE);
         }
+
+        Map<Boolean, List<FormData>> formDataGroupMap = formDataList.stream()
+                .collect(Collectors.groupingBy(e -> Objects.equals(e.getType(), DocGlobalConstants.PARAM_TYPE_FILE)));
+        List<FormData> fileFormDataList = formDataGroupMap.getOrDefault(Boolean.TRUE, new ArrayList<>());
 
         requestExample.setFormDataList(formDataList);
         String[] paths = apiMethodDoc.getPath().split(";");
