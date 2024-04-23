@@ -47,7 +47,7 @@ public enum FrameworkEnum {
     /**
      * JAX-RS
      */
-    JAX_RS("JAX-RS", "com.ly.doc.template.JaxrsDocBuildTemplate");
+    JAX_RS("JAX-RS", "com.ly.doc.template.JAXRSDocBuildTemplate");
 
     /**
      * Framework name
