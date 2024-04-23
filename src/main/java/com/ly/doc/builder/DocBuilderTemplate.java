@@ -183,7 +183,7 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
         }
         // add jmeter prometheus listener
         if (Objects.nonNull(config.getJmeter())){
-            tpl.binding(TemplateVariable.JMETER_PROMETHEUS_LISTENER.getVariable(), config.getJmeter().isAddPrometheusListener());
+            tpl.binding(TemplateVariable.JMETER_PROMETHEUS_LISTENER.getVariable(), config.getJmeter().getAddPrometheusListener());
         } else {
             tpl.binding(TemplateVariable.JMETER_PROMETHEUS_LISTENER.getVariable(), Boolean.FALSE);
         }
