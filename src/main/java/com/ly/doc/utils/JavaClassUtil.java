@@ -394,14 +394,16 @@ public class JavaClassUtil {
             return null;
         }
         String value = see.getValue();
-        if (!JavaClassValidateUtil.isClassName(value)) {
-            return null;
-        }
+       
         // not FullyQualifiedName
         if (!StringUtils.contains(value, ".")) {
             List<String> imports = javaField.getDeclaringClass().getSource().getImports();
             String finalValue = value;
             value = imports.stream().filter(i -> StringUtils.endsWith(i, finalValue)).findFirst().orElse(StringUtils.EMPTY);
+        }
+
+         if (!JavaClassValidateUtil.isClassName(value)) {
+            return null;
         }
 
         JavaClass enumClass = builder.getJavaProjectBuilder().getClassByName(value);
