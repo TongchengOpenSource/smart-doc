@@ -466,7 +466,7 @@ public class ApiMethodDoc implements IMethod, Serializable, Cloneable {
             return link;
         }
         if(StringUtil.isEmpty(desc)) {
-        	return "undefined";
+            return "undefined";
         }
         return desc.replace(" ", "_").toLowerCase();
     }
