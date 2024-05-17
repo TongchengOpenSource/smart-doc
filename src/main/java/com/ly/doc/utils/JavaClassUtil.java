@@ -835,13 +835,15 @@ public class JavaClassUtil {
 
     private static String getReturnGenericType(JavaMethod javaMethod, ClassLoader classLoader) {
         String methodName = javaMethod.getName();
-        String canonicalClassName = javaMethod.getDeclaringClass().getCanonicalName();
+        // `BinaryName` is the correct name for inner classes required by `ClassLoader.loadClass`
+        // and `Class.forName`, as inner class paths use `$` instead of `.`.
+        String binaryName = javaMethod.getDeclaringClass().getBinaryName();
         try {
             Class<?> c;
             if (Objects.nonNull(classLoader)) {
-                c = classLoader.loadClass(canonicalClassName);
+                c = classLoader.loadClass(binaryName);
             } else {
-                c = Class.forName(canonicalClassName);
+                c = Class.forName(binaryName);
             }
 
             Method m = c.getDeclaredMethod(methodName);
