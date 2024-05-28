@@ -638,69 +638,9 @@ public class JAXRSDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IWebSoc
                     requestExample.setJsonBody(JsonUtil.toPrettyFormat(json)).setJson(true);
                 }
             }
-
-
         }
         requestExample.setFormDataList(formDataList);
-        String[] paths = apiMethodDoc.getPath().split(";");
-        String path = paths[0];
-        String body;
-        String exampleBody;
-        String url;
-        if (JakartaJaxrsAnnotations.POST.equals(methodType) || JakartaJaxrsAnnotations.PUT.equals(methodType)) {
-            // for post put
-            path = DocUtil.formatAndRemove(path, pathParamsMap);
-            body = UrlUtil.urlJoin(DocGlobalConstants.EMPTY, DocUtil.formDataToMap(formDataList))
-                    .replace("?", DocGlobalConstants.EMPTY);
-            body = StringUtil.removeQuotes(body);
-            url = apiMethodDoc.getServerUrl() + "/" + path;
-            url = UrlUtil.simplifyUrl(url);
-
-            if (requestExample.isJson()) {
-                if (StringUtil.isNotEmpty(body)) {
-                    url = url + "?" + body;
-                }
-                CurlRequest curlRequest = CurlRequest.builder()
-                        .setBody(requestExample.getJsonBody())
-                        .setContentType(apiMethodDoc.getContentType())
-                        .setType(methodType)
-                        .setReqHeaders(reqHeaderList)
-                        .setUrl(url);
-                exampleBody = CurlUtil.toCurl(curlRequest);
-            } else {
-                CurlRequest curlRequest;
-                if (StringUtil.isNotEmpty(body)) {
-                    curlRequest = CurlRequest.builder()
-                            .setBody(body)
-                            .setContentType(apiMethodDoc.getContentType())
-                            .setType(methodType)
-                            .setReqHeaders(reqHeaderList)
-                            .setUrl(url);
-                } else {
-                    curlRequest = CurlRequest.builder()
-                            .setBody(requestExample.getJsonBody())
-                            .setContentType(apiMethodDoc.getContentType())
-                            .setType(methodType)
-                            .setReqHeaders(reqHeaderList)
-                            .setUrl(url);
-                }
-                exampleBody = CurlUtil.toCurl(curlRequest);
-            }
-            requestExample.setExampleBody(exampleBody).setUrl(url);
-        } else {
-            // for get delete
-            url = formatRequestUrl(pathParamsMap, pathParamsMap, apiMethodDoc.getServerUrl(), path);
-            CurlRequest curlRequest = CurlRequest.builder()
-                    .setBody(requestExample.getJsonBody())
-                    .setContentType(apiMethodDoc.getContentType())
-                    .setType(methodType)
-                    .setReqHeaders(reqHeaderList)
-                    .setUrl(url);
-            exampleBody = CurlUtil.toCurl(curlRequest);
-            requestExample.setExampleBody(exampleBody)
-                    .setJsonBody(DocGlobalConstants.EMPTY)
-                    .setUrl(url);
-        }
+        RequestExampleUtil.setExampleBody(apiMethodDoc,requestExample,formDataList,pathParamsMap,pathParamsMap);
         return requestExample;
     }
 

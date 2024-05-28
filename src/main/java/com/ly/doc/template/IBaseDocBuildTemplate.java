@@ -134,17 +134,6 @@ public interface IBaseDocBuildTemplate {
         apiMethodDoc.setRequestParams(ApiParamTreeUtil.apiParamToTree(apiMethodDoc.getRequestParams()));
     }
 
-
-    default String formatRequestUrl(Map<String, String> pathParamsMap, Map<String, String> queryParamsMap,
-        String serverUrl, String path) {
-        path = DocUtil.formatAndRemove(path, pathParamsMap);
-        String url = UrlUtil.urlJoin(path, queryParamsMap);
-        url = StringUtil.removeQuotes(url);
-        url = serverUrl + "/" + url;
-        url = UrlUtil.simplifyUrl(url);
-        return url;
-    }
-
     default List<DocJavaParameter> getJavaParameterList(ProjectDocConfigBuilder builder, final DocJavaMethod docJavaMethod,
                                                         FrameworkAnnotations frameworkAnnotations) {
         JavaMethod javaMethod = docJavaMethod.getJavaMethod();

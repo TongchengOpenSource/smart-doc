@@ -1047,77 +1047,13 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
         if (hasFormDataUploadFile) {
             apiMethodDoc.setContentType(FILE_CONTENT_TYPE);
         }
-
-        Map<Boolean, List<FormData>> formDataGroupMap = formDataList.stream()
-                .collect(Collectors.groupingBy(e -> Objects.equals(e.getType(), DocGlobalConstants.PARAM_TYPE_FILE)));
-        List<FormData> fileFormDataList = formDataGroupMap.getOrDefault(Boolean.TRUE, new ArrayList<>());
-
         requestExample.setFormDataList(formDataList);
-        String[] paths = apiMethodDoc.getPath().split(";");
-        String path = paths[0];
-        String body;
-        String exampleBody;
-        String url;
         // curl send file to convert
         final Map<String, String> formDataToMap = DocUtil.formDataToMap(formDataList);
         // formData add to params '--data'
         queryParamsMap.putAll(formDataToMap);
-        if (Methods.POST.getValue().equals(methodType) || Methods.PUT.getValue().equals(methodType)) {
-            // for post put
-            path = DocUtil.formatAndRemove(path, pathParamsMap);
-            body = UrlUtil.urlJoin(DocGlobalConstants.EMPTY, queryParamsMap)
-                    .replace("?", DocGlobalConstants.EMPTY);
-            url = apiMethodDoc.getServerUrl() + "/" + path;
-            url = UrlUtil.simplifyUrl(url);
-
-            if (requestExample.isJson()) {
-                if (StringUtil.isNotEmpty(body)) {
-                    url = url + "?" + body;
-                }
-                CurlRequest curlRequest = CurlRequest.builder()
-                        .setBody(requestExample.getJsonBody())
-                        .setContentType(apiMethodDoc.getContentType())
-                        .setType(methodType)
-                        .setReqHeaders(reqHeaderList)
-                        .setUrl(url);
-                exampleBody = CurlUtil.toCurl(curlRequest);
-            } else {
-                CurlRequest curlRequest;
-                if (StringUtil.isNotEmpty(body)) {
-                    curlRequest = CurlRequest.builder()
-                            .setBody(body)
-                            .setContentType(apiMethodDoc.getContentType())
-                            .setFileFormDataList(fileFormDataList)
-                            .setType(methodType)
-                            .setReqHeaders(reqHeaderList)
-                            .setUrl(url);
-                } else {
-                    curlRequest = CurlRequest.builder()
-                            .setBody(requestExample.getJsonBody())
-                            .setContentType(apiMethodDoc.getContentType())
-                            .setFileFormDataList(fileFormDataList)
-                            .setType(methodType)
-                            .setReqHeaders(reqHeaderList)
-                            .setUrl(url);
-                }
-                exampleBody = CurlUtil.toCurl(curlRequest);
-            }
-            requestExample.setExampleBody(exampleBody).setUrl(url);
-        } else {
-            // for get delete
-            url = formatRequestUrl(pathParamsMap, queryParamsMap, apiMethodDoc.getServerUrl(), path);
-            CurlRequest curlRequest = CurlRequest.builder()
-                    .setBody(requestExample.getJsonBody())
-                    .setContentType(apiMethodDoc.getContentType())
-                    .setType(methodType)
-                    .setReqHeaders(reqHeaderList)
-                    .setUrl(url);
-            exampleBody = CurlUtil.toCurl(curlRequest);
-
-            requestExample.setExampleBody(exampleBody)
-                    .setJsonBody(requestExample.isJson() ? requestExample.getJsonBody() : DocGlobalConstants.EMPTY)
-                    .setUrl(url);
-        }
+        // set example body
+        RequestExampleUtil.setExampleBody(apiMethodDoc,requestExample,formDataList,pathParamsMap,queryParamsMap);
         return requestExample;
     }
 
