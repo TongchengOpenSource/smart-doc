@@ -21,6 +21,7 @@
 package com.ly.doc.utils;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import com.ly.doc.constants.DocGlobalConstants;
@@ -66,5 +67,15 @@ public class DocUrlUtil {
     public static String getMvcUrls(String baseServer, String baseUrl, String shortUrl) {
         List<String> urls = DocUtil.split(shortUrl);
         return getMvcUrls(baseServer, baseUrl, urls);
+    }
+
+    public static String formatRequestUrl(Map<String, String> pathParamsMap, Map<String, String> queryParamsMap,
+                                    String serverUrl, String path) {
+        path = DocUtil.formatAndRemove(path, pathParamsMap);
+        String url = UrlUtil.urlJoin(path, queryParamsMap);
+        url = StringUtil.removeQuotes(url);
+        url = serverUrl + "/" + url;
+        url = UrlUtil.simplifyUrl(url);
+        return url;
     }
 }
