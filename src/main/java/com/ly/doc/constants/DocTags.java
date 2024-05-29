@@ -71,6 +71,11 @@ public interface DocTags {
     String DUBBO = "dubbo";
 
     /**
+     * custom @javadoc tag
+     */
+    String JAVA_DOC = "javadoc";
+
+    /**
      * custom @api tag
      */
     String REST_API = "restApi";
