@@ -35,6 +35,11 @@ public enum FrameworkEnum {
     DUBBO("dubbo", "com.ly.doc.template.RpcDocBuildTemplate"),
 
     /**
+     * Javadoc
+     */
+    JAVADOC("javadoc", "com.ly.doc.template.JavadocDocBuildTemplate"),
+
+    /**
      * Spring Framework
      */
     SPRING("spring", "com.ly.doc.template.SpringBootDocBuildTemplate"),
