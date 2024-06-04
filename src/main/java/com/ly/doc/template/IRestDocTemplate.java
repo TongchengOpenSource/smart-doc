@@ -86,6 +86,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
             if (!isEntryPoint(cls, frameworkAnnotations) || Objects.nonNull(ignoreTag)) {
                 continue;
             }
+
             String strOrder = JavaClassUtil.getClassTagsValue(cls, DocTags.ORDER, Boolean.TRUE);
             order++;
             if (ValidateUtil.isNonNegativeInteger(strOrder)) {

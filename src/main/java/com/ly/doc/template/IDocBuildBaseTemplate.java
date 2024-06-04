@@ -21,6 +21,7 @@
 package com.ly.doc.template;
 
 import com.ly.doc.builder.ProjectDocConfigBuilder;
+import com.ly.doc.constants.DocTags;
 import com.ly.doc.constants.TornaConstants;
 import com.ly.doc.helper.DocBuildHelper;
 import com.ly.doc.model.ApiConfig;
@@ -34,6 +35,7 @@ import com.ly.doc.utils.DocUtil;
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.StringUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
+import com.thoughtworks.qdox.model.DocletTag;
 import com.thoughtworks.qdox.model.JavaClass;
 
 import java.util.*;
@@ -194,6 +196,26 @@ public interface IDocBuildBaseTemplate {
         }
 
         return isEntryPoint(javaClass, registeredAnnotations());
+    }
+
+    default boolean skipClass( ApiConfig apiConfig ,JavaClass javaClass, FrameworkAnnotations frameworkAnnotations) {
+        if (StringUtil.isNotEmpty(apiConfig.getPackageFilters())) {
+            // from smart config
+            if (!DocUtil.isMatch(apiConfig.getPackageFilters(), javaClass)) {
+                return true;
+            }
+        }
+        if (StringUtil.isNotEmpty(apiConfig.getPackageExcludeFilters())) {
+            if (DocUtil.isMatch(apiConfig.getPackageExcludeFilters(), javaClass)) {
+                return true;
+            }
+        }
+        // from tag
+        DocletTag ignoreTag = javaClass.getTagByName(DocTags.IGNORE);
+        if (!isEntryPoint(javaClass, frameworkAnnotations) || Objects.nonNull(ignoreTag)) {
+            return true;
+        }
+        return false;
     }
 
     /**
