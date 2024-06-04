@@ -82,6 +82,8 @@ public interface IJavadocDocTemplate extends IBaseDocBuildTemplate {
 
     default String methodDefinition(JavaMethod method, Map<String, JavaType> actualTypesMap) {
         StringBuilder methodBuilder = new StringBuilder();
+        // append method modifiers
+        method.getModifiers().forEach(item -> methodBuilder.append(item).append(" "));
         JavaType returnType = method.getReturnType();
         String simpleReturn = replaceTypeName(returnType.getCanonicalName(), actualTypesMap, Boolean.TRUE);
         String returnClass = replaceTypeName(returnType.getGenericCanonicalName(), actualTypesMap, Boolean.TRUE);
@@ -103,6 +105,8 @@ public interface IJavadocDocTemplate extends IBaseDocBuildTemplate {
 
             }
         }
+
+        // append method return type
         methodBuilder.append(returnClass).append(" ");
         List<String> params = new ArrayList<>();
         List<JavaParameter> parameters = method.getParameters();
@@ -146,7 +150,6 @@ public interface IJavadocDocTemplate extends IBaseDocBuildTemplate {
         if (Objects.isNull(actualTypesMap)) {
             return type;
         }
-
         for (Map.Entry<String, JavaType> entry : actualTypesMap.entrySet()) {
             if (type.contains(entry.getKey())) {
                 if (simple) {
