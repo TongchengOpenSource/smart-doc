@@ -506,7 +506,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
             //handle extension
             Map<String, String> extensions = DocUtil.getCommentsByTag(method, DocTags.EXTENSION, null);
             if (extensions != null) {
-                Map extensionParams = apiMethodDoc.getExtensions() != null ? apiMethodDoc.getExtensions() : new HashMap();
+                Map<String, Object> extensionParams = apiMethodDoc.getExtensions() != null ? apiMethodDoc.getExtensions() : new HashMap();
                 extensions.entrySet().stream().forEach(e -> extensionParams.put(e.getKey(), DocUtil.detectTagValue(e.getValue())));
                 apiMethodDoc.setExtensions(extensionParams);
             }
@@ -803,13 +803,16 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
             else if (javaClass.isEnum()) {
                 String enumName = JavaClassUtil.getEnumParams(javaClass);
                 Object value = JavaClassUtil.getEnumValue(javaClass, isPathVariable || queryParam);
+                if (Boolean.TRUE.equals(builder.getApiConfig().getInlineEnum())) {
+                    comment.append("<br/>[Enum: "+StringUtil.removeQuotes(enumName)+"]");
+                }
                 ApiParam param = ApiParam.of().setField(paramName)
                         .setId(paramList.size() + 1)
                         .setPathParam(isPathVariable)
                         .setQueryParam(queryParam)
                         .setValue(StringUtil.removeDoubleQuotes(String.valueOf(value)))
                         .setType(DocGlobalConstants.PARAM_TYPE_ENUM)
-                        .setDesc(StringUtil.removeQuotes(enumName))
+                        .setDesc(comment.toString())
                         .setRequired(required)
                         .setVersion(DocGlobalConstants.DEFAULT_VERSION)
                         .setEnumInfo(JavaClassUtil.getEnumInfo(javaClass, builder))
@@ -1039,7 +1042,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                 formData.setValue(strVal);
                 formDataList.add(formData);
             } else {
-                formDataList.addAll(FormDataBuildHelper.getFormData(gicTypeName, new HashMap<>(16), 0, configBuilder, DocGlobalConstants.EMPTY));
+                formDataList.addAll(FormDataBuildHelper.getFormData(gicTypeName, new HashMap<>(16), 0, configBuilder, DocGlobalConstants.EMPTY, groupClasses));
             }
         }
 
@@ -1054,7 +1057,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
         // formData add to params '--data'
         queryParamsMap.putAll(formDataToMap);
         // set example body
-        RequestExampleUtil.setExampleBody(apiMethodDoc,requestExample,formDataList,pathParamsMap,queryParamsMap);
+        RequestExampleUtil.setExampleBody(apiMethodDoc, requestExample, formDataList, pathParamsMap, queryParamsMap);
         return requestExample;
     }
 
