@@ -627,7 +627,7 @@ public class JAXRSDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IWebSoc
                         formDataList.add(formData);
                     } else {
                         formDataList.addAll(
-                                FormDataBuildHelper.getFormData(gicTypeName, new HashMap<>(16), 0, configBuilder, DocGlobalConstants.EMPTY));
+                                FormDataBuildHelper.getFormData(gicTypeName, new HashMap<>(16), 0, configBuilder, DocGlobalConstants.EMPTY, groupClasses));
                     }
                 }
             } else {
@@ -640,7 +640,7 @@ public class JAXRSDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IWebSoc
             }
         }
         requestExample.setFormDataList(formDataList);
-        RequestExampleUtil.setExampleBody(apiMethodDoc,requestExample,formDataList,pathParamsMap,pathParamsMap);
+        RequestExampleUtil.setExampleBody(apiMethodDoc, requestExample, formDataList, pathParamsMap, pathParamsMap);
         return requestExample;
     }
 
