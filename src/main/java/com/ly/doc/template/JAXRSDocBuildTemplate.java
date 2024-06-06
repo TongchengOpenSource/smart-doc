@@ -70,10 +70,6 @@ public class JAXRSDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IWebSoc
         FrameworkAnnotations frameworkAnnotations = this.registeredAnnotations();
         List<ApiDoc> apiDocList = this.processApiData(projectBuilder, frameworkAnnotations,
                 configApiReqParams, new SpringMVCRequestMappingHandler(), new SpringMVCRequestHeaderHandler(), candidateClasses);
-        // sort
-        if (apiConfig.isSortByTitle()) {
-            Collections.sort(apiDocList);
-        }
         return apiDocList;
     }
 

@@ -52,10 +52,6 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IW
         FrameworkAnnotations frameworkAnnotations = registeredAnnotations();
         List<ApiDoc> apiDocList = this.processApiData(projectBuilder, frameworkAnnotations,
                 configApiReqParams, new SpringMVCRequestMappingHandler(), new SpringMVCRequestHeaderHandler(), candidateClasses);
-        // sort
-        if (apiConfig.isSortByTitle()) {
-            Collections.sort(apiDocList);
-        }
         return apiDocList;
     }
 
