@@ -53,10 +53,6 @@ public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IWebSoc
         FrameworkAnnotations frameworkAnnotations = registeredAnnotations();
         List<ApiDoc> apiDocList = processApiData(projectBuilder, frameworkAnnotations, configApiReqParams,
                 new SolonRequestMappingHandler(), new SolonRequestHeaderHandler(), candidateClasses);
-        // sort
-        if (apiConfig.isSortByTitle()) {
-            Collections.sort(apiDocList);
-        }
         return apiDocList;
     }
 

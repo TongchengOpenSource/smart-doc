@@ -27,6 +27,7 @@ import com.ly.doc.constants.DocTags;
 import com.ly.doc.handler.DefaultWebSocketRequestHandler;
 import com.ly.doc.handler.IWebSocketRequestHandler;
 import com.ly.doc.model.ApiConfig;
+import com.ly.doc.model.ApiDoc;
 import com.ly.doc.model.ApiParam;
 import com.ly.doc.model.WebSocketDoc;
 import com.ly.doc.model.annotation.FrameworkAnnotations;
@@ -67,7 +68,7 @@ public interface IWebSocketTemplate {
                                                     Collection<JavaClass> candidateClasses) {
         ApiConfig apiConfig = projectBuilder.getApiConfig();
         List<WebSocketDoc> apiDocList = new ArrayList<>();
-        int order = 0;
+        int maxOrder = 0;
         boolean setCustomOrder = false;
         // exclude  class is ignore
         for (JavaClass javaClass : candidateClasses) {
@@ -88,26 +89,31 @@ public interface IWebSocketTemplate {
                 continue;
             }
             String strOrder = JavaClassUtil.getClassTagsValue(javaClass, DocTags.ORDER, Boolean.TRUE);
-            order++;
+            int order = 0;
             if (ValidateUtil.isNonNegativeInteger(strOrder)) {
                 setCustomOrder = true;
                 order = Integer.parseInt(strOrder);
+                maxOrder = Math.max(maxOrder, order);
             }
             WebSocketDoc webSocketDoc = this.buildEntryPointWebSocketDoc(javaClass, apiConfig,
                     webSocketRequestHandler, frameworkAnnotations, order);
-            if (null != webSocketDoc) {
+            if (Objects.nonNull(webSocketDoc)) {
                 apiDocList.add(webSocketDoc);
             }
         }
-        // if config sort by title
         if (apiConfig.isSortByTitle()) {
+            // sort by title
             Collections.sort(apiDocList);
         } else if (setCustomOrder) {
+            ATOMIC_INTEGER.getAndAdd(maxOrder);
             // while set custom oder
-            return apiDocList.stream()
-                    .sorted(Comparator.comparing(WebSocketDoc::getOrder))
-                    .peek(p -> p.setOrder(ATOMIC_INTEGER.getAndAdd(1)))
-                    .collect(Collectors.toList());
+            final List<WebSocketDoc> tempList = new ArrayList<>(apiDocList);
+            tempList.forEach(p -> {
+                if (p.getOrder() == 0) {
+                    p.setOrder(ATOMIC_INTEGER.getAndAdd(1));
+                }
+            });
+            return tempList.stream().sorted(Comparator.comparing(WebSocketDoc::getOrder)).collect(Collectors.toList());
         }
         return apiDocList;
     }

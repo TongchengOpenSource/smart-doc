@@ -66,8 +66,8 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                                         Collection<JavaClass> javaClasses) {
         ApiConfig apiConfig = projectBuilder.getApiConfig();
         List<ApiDoc> apiDocList = new ArrayList<>();
-        int order = 0;
         boolean setCustomOrder = false;
+        int maxOrder = 0;
         // exclude  class is ignore
         for (JavaClass cls : javaClasses) {
             if (StringUtil.isNotEmpty(apiConfig.getPackageFilters())) {
@@ -86,12 +86,12 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
             if (!isEntryPoint(cls, frameworkAnnotations) || Objects.nonNull(ignoreTag)) {
                 continue;
             }
-
+            int order = 0;
             String strOrder = JavaClassUtil.getClassTagsValue(cls, DocTags.ORDER, Boolean.TRUE);
-            order++;
             if (ValidateUtil.isNonNegativeInteger(strOrder)) {
                 setCustomOrder = true;
                 order = Integer.parseInt(strOrder);
+                maxOrder = Math.max(maxOrder, order);
             }
 
             List<ApiMethodDoc> apiMethodDocs = this.buildEntryPointMethod(cls, apiConfig, projectBuilder,
@@ -102,13 +102,20 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
             this.handleApiDoc(cls, apiDocList, apiMethodDocs, order, apiConfig.isMd5EncryptedHtmlName());
         }
         apiDocList = this.handleTagsApiDoc(apiDocList);
+
         if (apiConfig.isSortByTitle()) {
+            // sort by title
             Collections.sort(apiDocList);
         } else if (setCustomOrder) {
+            ATOMIC_INTEGER.getAndAdd(maxOrder);
             // while set custom oder
-            return apiDocList.stream()
-                    .sorted(Comparator.comparing(ApiDoc::getOrder))
-                    .peek(p -> p.setOrder(ATOMIC_INTEGER.getAndAdd(1))).collect(Collectors.toList());
+            final List<ApiDoc> tempList = new ArrayList<>(apiDocList);
+            tempList.forEach(p -> {
+                if (p.getOrder() == 0) {
+                    p.setOrder(ATOMIC_INTEGER.getAndAdd(1));
+                }
+            });
+            return tempList.stream().sorted(Comparator.comparing(ApiDoc::getOrder)).collect(Collectors.toList());
         }
         return apiDocList;
     }
@@ -804,7 +811,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                 String enumName = JavaClassUtil.getEnumParams(javaClass);
                 Object value = JavaClassUtil.getEnumValue(javaClass, isPathVariable || queryParam);
                 if (Boolean.TRUE.equals(builder.getApiConfig().getInlineEnum())) {
-                    comment.append("<br/>[Enum: "+StringUtil.removeQuotes(enumName)+"]");
+                    comment.append("<br/>[Enum: " + StringUtil.removeQuotes(enumName) + "]");
                 }
                 ApiParam param = ApiParam.of().setField(paramName)
                         .setId(paramList.size() + 1)

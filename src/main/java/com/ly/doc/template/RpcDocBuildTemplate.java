@@ -51,35 +51,42 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc>, IWebSo
     /**
      * api index
      */
-    private final AtomicInteger atomicInteger = new AtomicInteger(1);
+    private final AtomicInteger ATOMIC_INTEGER = new AtomicInteger(1);
 
     @Override
     public List<RpcApiDoc> renderApi(ProjectDocConfigBuilder projectBuilder, Collection<JavaClass> candidateClasses) {
         ApiConfig apiConfig = projectBuilder.getApiConfig();
         List<RpcApiDoc> apiDocList = new ArrayList<>();
-        int order = 0;
+
         boolean setCustomOrder = false;
+        int maxOrder = 0;
         for (JavaClass cls : candidateClasses) {
             if (skipClass(apiConfig, cls, null)) {
                 continue;
             }
             String strOrder = JavaClassUtil.getClassTagsValue(cls, DocTags.ORDER, Boolean.TRUE);
-            order++;
+            int order = 0;
             if (ValidateUtil.isNonNegativeInteger(strOrder)) {
                 order = Integer.parseInt(strOrder);
                 setCustomOrder = true;
+                maxOrder = Math.max(maxOrder, order);
             }
             List<RpcJavaMethod> apiMethodDocs = (List<RpcJavaMethod>) buildServiceMethod(cls, apiConfig, projectBuilder);
             this.handleJavaApiDoc(cls, apiDocList, apiMethodDocs, order, projectBuilder);
         }
-        // sort
         if (apiConfig.isSortByTitle()) {
+            // sort by title
             Collections.sort(apiDocList);
         } else if (setCustomOrder) {
+            ATOMIC_INTEGER.getAndAdd(maxOrder);
             // while set custom oder
-            return apiDocList.stream()
-                    .sorted(Comparator.comparing(RpcApiDoc::getOrder))
-                    .peek(p -> p.setOrder(atomicInteger.getAndAdd(1))).collect(Collectors.toList());
+            final List<RpcApiDoc> tempList = new ArrayList<>(apiDocList);
+            tempList.forEach(p -> {
+                if (p.getOrder() == 0) {
+                    p.setOrder(ATOMIC_INTEGER.getAndAdd(1));
+                }
+            });
+            return tempList.stream().sorted(Comparator.comparing(RpcApiDoc::getOrder)).collect(Collectors.toList());
         }
         return apiDocList;
     }
