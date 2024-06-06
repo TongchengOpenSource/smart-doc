@@ -71,4 +71,13 @@ public class DocUtilTest {
             }
         }
     }
+
+    @Test
+    public void testReplaceGenericParameter(){
+        String base = "com.Test<List<T>>";
+        String originalGeneric = "T";
+        String replacement = "User";
+        String result = DocUtil.replaceGenericParameter(base, originalGeneric, replacement);
+        System.out.println(result);  // Output: com.Test<List<Use
+    }
 }
