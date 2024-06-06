@@ -1066,6 +1066,7 @@ public class DocUtil {
      */
     public static String formatFieldTypeGicName(Map<String, String> genericMap, String[] globGicName, String fieldGicName) {
         String gicName = "";
+        String fieldGicNameCopy =  fieldGicName;
         String[] gNameArr = DocClassUtil.getSimpleGicName(fieldGicName);
         for (String g : gNameArr) {
             if (g.length() == 1) {
@@ -1073,11 +1074,33 @@ public class DocUtil {
                     gicName = genericMap.get(g);
                 }
                 if (StringUtil.isNotEmpty(gicName)) {
-                    fieldGicName = fieldGicName.replace(g, gicName);
+                    fieldGicNameCopy = replaceGenericParameter(fieldGicName, g, gicName);
                 }
             }
         }
-        return fieldGicName;
+        return fieldGicNameCopy;
+    }
+
+    /**
+     * Replaces the specified generic parameter in a string with a given type,
+     * supporting multi-level generics.
+     *
+     * @param baseString The base string
+     * @param originalGenericParameter The generic parameter to be replaced, like "T"
+     * @param replacementType The type to replace the original parameter with, like "User"
+     * @return The modified string
+     */
+    public static String replaceGenericParameter(String baseString, String originalGenericParameter, String replacementType) {
+        StringBuilder result = new StringBuilder(baseString);
+        String searchPattern = "<" + originalGenericParameter + ">";
+        int index = 0;
+        while ((index = result.indexOf(searchPattern, index)) != -1) {
+            // Replace the specified generic parameter with the replacement type
+            result.replace(index, index + searchPattern.length(), "<" + replacementType + ">");
+            // Update the index to continue searching for the next occurrence
+            index += replacementType.length() + 2; // +2 for '<' and '>' characters
+        }
+        return result.toString();
     }
 
     public static String handleConstants(Map<String, String> constantsMap, String value) {
