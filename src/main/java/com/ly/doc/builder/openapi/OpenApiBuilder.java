@@ -24,6 +24,7 @@ package com.ly.doc.builder.openapi;
 
 import com.ly.doc.constants.DocGlobalConstants;
 import com.ly.doc.constants.Methods;
+import com.ly.doc.constants.ParamTypeConstants;
 import com.ly.doc.model.*;
 import com.ly.doc.utils.OpenApiSchemaUtil;
 import com.power.common.util.CollectionUtil;
@@ -208,7 +209,7 @@ public class OpenApiBuilder extends AbstractOpenApiBuilder {
             if (apiParam.isHasItems()) {
                 parameters = getStringParams(apiParam, false);
                 Map<String, Object> arrayMap = new HashMap<>(16);
-                arrayMap.put("type", DocGlobalConstants.PARAM_TYPE_ARRAY);
+                arrayMap.put("type", ParamTypeConstants.PARAM_TYPE_ARRAY);
                 arrayMap.put("items", getStringParams(apiParam, apiParam.isHasItems()));
                 parameters.put("schema", arrayMap);
                 parametersList.add(parameters);
@@ -251,14 +252,14 @@ public class OpenApiBuilder extends AbstractOpenApiBuilder {
             parameters.put("in", "query");
             parameters.put("schema", buildParametersSchema(apiParam));
         } else {
-            if (DocGlobalConstants.PARAM_TYPE_OBJECT.equals(apiParam.getType()) ||
-                    (DocGlobalConstants.PARAM_TYPE_ARRAY.equals(apiParam.getType()) && apiParam.isHasItems())) {
+            if (ParamTypeConstants.PARAM_TYPE_OBJECT.equals(apiParam.getType()) ||
+                    (ParamTypeConstants.PARAM_TYPE_ARRAY.equals(apiParam.getType()) && apiParam.isHasItems())) {
                 parameters.put("type", "object");
                 parameters.put("description", "(complex POJO please use @RequestBody)");
             } else {
                 String desc = apiParam.getDesc();
-                if (desc.contains(DocGlobalConstants.PARAM_TYPE_FILE)) {
-                    parameters.put("type", DocGlobalConstants.PARAM_TYPE_FILE);
+                if (desc.contains(ParamTypeConstants.PARAM_TYPE_FILE)) {
+                    parameters.put("type", ParamTypeConstants.PARAM_TYPE_FILE);
                 } else if (desc.contains("string")) {
                     parameters.put("type", "string");
                 } else {

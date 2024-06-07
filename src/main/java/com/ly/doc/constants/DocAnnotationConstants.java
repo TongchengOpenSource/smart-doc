@@ -27,13 +27,6 @@ package com.ly.doc.constants;
  */
 public interface DocAnnotationConstants {
 
-    String SHORT_CONTROLLER = "Controller";
-
-    String SHORT_REST_CONTROLLER = "RestController";
-
-    String SHORT_PATH_VARIABLE = "PathVariable";
-
-    String SHORT_REQ_PARAM = "RequestParam";
 
     String SHORT_JSON_IGNORE = "JsonIgnore";
 
@@ -76,19 +69,12 @@ public interface DocAnnotationConstants {
 
     String DEFAULT_VALUE_PROP = "defaultValue";
 
-    String REQUEST_MAPPING = "RequestMapping";
-
     String DEPRECATED = "Deprecated";
 
     String JSON_VALUE = "JsonValue";
 
     String JSON_CREATOR = "JsonCreator";
 
-    String MAX = "max";
-
-    String SIZE = "size";
-
-    String LENGTH = "length";
 
     String JSON_PROPERTY = "JsonProperty";
 
@@ -103,14 +89,6 @@ public interface DocAnnotationConstants {
      * Fastjson JSONType annotation  ignores prop
      */
     String IGNORE_PROP = "ignores";
-    /**
-     * Jsr303 param message
-     */
-    String MESSAGE = "message";
-    /**
-     * Jsr303 param regexp
-     */
-    String REGEXP = "regexp";
 
     /**
      * `@javax.websocket.OnOpen` or `@jakarta.websocket.OnOpen` annotation name

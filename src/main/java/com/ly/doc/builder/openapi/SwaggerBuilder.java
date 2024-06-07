@@ -22,6 +22,8 @@
 package com.ly.doc.builder.openapi;
 
 import com.ly.doc.constants.DocGlobalConstants;
+import com.ly.doc.constants.MediaType;
+import com.ly.doc.constants.ParamTypeConstants;
 import com.ly.doc.model.*;
 import com.ly.doc.utils.DocUtil;
 import com.ly.doc.utils.OpenApiSchemaUtil;
@@ -149,7 +151,7 @@ public class SwaggerBuilder extends AbstractOpenApiBuilder {
         }
         if (hasFile(parameters)) {
             List<String> formData = new ArrayList<>();
-            formData.add(DocGlobalConstants.FILE_CONTENT_TYPE);
+            formData.add(MediaType.MULTIPART_FORM_DATA);
             request.put("consumes", formData);
         }
         request.put("parameters", parameters);
@@ -207,9 +209,9 @@ public class SwaggerBuilder extends AbstractOpenApiBuilder {
                 parametersList.add(parameters);
             }
             for (ApiParam apiParam : apiMethodDoc.getQueryParams()) {
-                if (apiParam.getType().equals(DocGlobalConstants.PARAM_TYPE_ARRAY) || apiParam.isHasItems()) {
+                if (apiParam.getType().equals(ParamTypeConstants.PARAM_TYPE_ARRAY) || apiParam.isHasItems()) {
                     parameters = getStringParams(apiParam, false);
-                    parameters.put("type", DocGlobalConstants.PARAM_TYPE_ARRAY);
+                    parameters.put("type", ParamTypeConstants.PARAM_TYPE_ARRAY);
                     parameters.put("items", getStringParams(apiParam, true));
                     parametersList.add(parameters);
                 } else {
@@ -251,12 +253,12 @@ public class SwaggerBuilder extends AbstractOpenApiBuilder {
             parameters.put("required", apiParam.isRequired());
             parameters.put("type", apiParam.getType());
         } else {
-            if (DocGlobalConstants.PARAM_TYPE_OBJECT.equals(apiParam.getType()) || (DocGlobalConstants.PARAM_TYPE_ARRAY.equals(apiParam.getType()) && apiParam.isHasItems())) {
+            if (ParamTypeConstants.PARAM_TYPE_OBJECT.equals(apiParam.getType()) || (ParamTypeConstants.PARAM_TYPE_ARRAY.equals(apiParam.getType()) && apiParam.isHasItems())) {
                 parameters.put("type", "object(complex POJO please use @RequestBody)");
             } else {
                 String desc = apiParam.getDesc();
-                if (desc.contains(DocGlobalConstants.PARAM_TYPE_FILE)) {
-                    parameters.put("type", DocGlobalConstants.PARAM_TYPE_FILE);
+                if (desc.contains(ParamTypeConstants.PARAM_TYPE_FILE)) {
+                    parameters.put("type", ParamTypeConstants.PARAM_TYPE_FILE);
                 } else if (desc.contains("string")) {
                     parameters.put("type", "string");
                 } else {

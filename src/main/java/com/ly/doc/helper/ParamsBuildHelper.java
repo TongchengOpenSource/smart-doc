@@ -34,8 +34,7 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
-import com.ly.doc.constants.DocAnnotationConstants;
-import com.ly.doc.constants.DocGlobalConstants;
+import com.ly.doc.constants.*;
 import com.ly.doc.utils.DocUtil;
 import com.ly.doc.utils.JavaClassUtil;
 import com.ly.doc.utils.JavaClassValidateUtil;
@@ -43,8 +42,6 @@ import com.power.common.model.EnumDictionary;
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.StringUtil;
 import com.ly.doc.builder.ProjectDocConfigBuilder;
-import com.ly.doc.constants.DocTags;
-import com.ly.doc.constants.ValidatorAnnotations;
 import com.ly.doc.extension.json.PropertyNameHelper;
 import com.ly.doc.extension.json.PropertyNamingStrategies;
 import com.ly.doc.model.ApiConfig;
@@ -140,12 +137,12 @@ public class ParamsBuildHelper extends BaseHelper {
         } else if (JavaClassValidateUtil.isMap(simpleName)) {
             paramList.addAll(buildMapParam(globGicName, pre, level, isRequired, isResp,
                     registryClasses, projectBuilder, groupClasses, pid, jsonRequest, nextLevel, atomicInteger));
-        } else if (DocGlobalConstants.JAVA_OBJECT_FULLY.equals(className)) {
+        } else if (JavaTypeConstants.JAVA_OBJECT_FULLY.equals(className)) {
             ApiParam param = ApiParam.of()
                     .setClassName(className)
                     .setId(atomicOrDefault(atomicInteger, pid + 1))
                     .setField(pre + "any object")
-                    .setType(DocGlobalConstants.PARAM_TYPE_OBJECT)
+                    .setType(ParamTypeConstants.PARAM_TYPE_OBJECT)
                     .setPid(pid)
                     .setDesc(DocGlobalConstants.ANY_OBJECT_MSG)
                     .setVersion(DocGlobalConstants.DEFAULT_VERSION)
@@ -295,7 +292,7 @@ public class ParamsBuildHelper extends BaseHelper {
                 // Analyzing File Type Field
                 if (JavaClassValidateUtil.isFile(fieldGicName)) {
                     ApiParam param = ApiParam.of().setField(pre + fieldName)
-                            .setType(DocGlobalConstants.PARAM_TYPE_FILE)
+                            .setType(ParamTypeConstants.PARAM_TYPE_FILE)
                             .setClassName(className)
                             .setPid(pid)
                             .setId(atomicOrDefault(atomicInteger, paramList.size() + pid + 1))
@@ -305,7 +302,7 @@ public class ParamsBuildHelper extends BaseHelper {
                             .setVersion(since)
                             .setExtensions(extensionParams);
                     if (fieldGicName.contains("[]") || fieldGicName.endsWith(">")) {
-                        param.setType(DocGlobalConstants.PARAM_TYPE_FILE);
+                        param.setType(ParamTypeConstants.PARAM_TYPE_FILE);
                         param.setDesc(comment.append("(array of file)").toString());
                         param.setHasItems(true);
                     }
@@ -360,7 +357,7 @@ public class ParamsBuildHelper extends BaseHelper {
                     param.setExtensions(extensionParams);
                     String processedType;
                     if (fieldGicName.length() == 1) {
-                        String gicName = DocGlobalConstants.JAVA_OBJECT_FULLY;
+                        String gicName = JavaTypeConstants.JAVA_OBJECT_FULLY;
                         if (Objects.nonNull(genericMap.get(typeSimpleName))) {
                             gicName = genericMap.get(subTypeName);
                         } else {
@@ -388,7 +385,7 @@ public class ParamsBuildHelper extends BaseHelper {
                             // rpc
                             param.setType(JavaFieldUtil.convertToSimpleTypeName(docField.getTypeGenericFullyQualifiedName()));
                         } else {
-                            param.setType(DocGlobalConstants.PARAM_TYPE_ARRAY);
+                            param.setType(ParamTypeConstants.PARAM_TYPE_ARRAY);
                         }
                         if (tagsMap.containsKey(DocTags.MOCK) && StringUtil.isNotEmpty(tagsMap.get(DocTags.MOCK))) {
                             param.setValue(fieldValue);
@@ -453,20 +450,20 @@ public class ParamsBuildHelper extends BaseHelper {
 
                     } else if (JavaClassValidateUtil.isMap(subTypeName)) {
                         if (tagsMap.containsKey(DocTags.MOCK) && StringUtil.isNotEmpty(tagsMap.get(DocTags.MOCK))) {
-                            param.setType(DocGlobalConstants.PARAM_TYPE_MAP);
+                            param.setType(ParamTypeConstants.PARAM_TYPE_MAP);
                             param.setValue(fieldValue);
                         }
                         commonHandleParam(paramList, param, isRequired, comment + appendComment, since, strRequired);
                         fieldPid = Optional.ofNullable(atomicInteger).isPresent() ? param.getId() : paramList.size() + pid;
                         String valType = DocClassUtil.getMapKeyValueType(fieldGicName).length == 0 ? fieldGicName
                                 : DocClassUtil.getMapKeyValueType(fieldGicName)[1];
-                        if (JavaClassValidateUtil.isMap(fieldGicName) || DocGlobalConstants.JAVA_OBJECT_FULLY.equals(valType)) {
+                        if (JavaClassValidateUtil.isMap(fieldGicName) || JavaTypeConstants.JAVA_OBJECT_FULLY.equals(valType)) {
                             ApiParam param1 = ApiParam.of()
                                     .setField(preBuilder.toString() + "any object")
                                     .setId(atomicOrDefault(atomicInteger, fieldPid + 1)).setPid(fieldPid)
                                     .setClassName(className)
                                     .setMaxLength(maxLength)
-                                    .setType(DocGlobalConstants.PARAM_TYPE_OBJECT)
+                                    .setType(ParamTypeConstants.PARAM_TYPE_OBJECT)
                                     .setDesc(DocGlobalConstants.ANY_OBJECT_MSG)
                                     .setVersion(DocGlobalConstants.DEFAULT_VERSION)
                                     .setExtensions(extensionParams);
@@ -485,7 +482,7 @@ public class ParamsBuildHelper extends BaseHelper {
                                         , isResp, registryClasses, projectBuilder, groupClasses, fieldPid, jsonRequest, atomicInteger));
                             }
                         }
-                    } else if (DocGlobalConstants.JAVA_OBJECT_FULLY.equals(fieldGicName)) {
+                    } else if (JavaTypeConstants.JAVA_OBJECT_FULLY.equals(fieldGicName)) {
                         if (StringUtil.isEmpty(param.getDesc())) {
                             param.setDesc(DocGlobalConstants.ANY_OBJECT_MSG);
                         }
@@ -500,13 +497,13 @@ public class ParamsBuildHelper extends BaseHelper {
                                 String simple = DocClassUtil.getSimpleName(gicName);
                                 // set type array
                                 if (JavaClassValidateUtil.isArray(gicName)) {
-                                    param.setType(DocGlobalConstants.PARAM_TYPE_ARRAY);
+                                    param.setType(ParamTypeConstants.PARAM_TYPE_ARRAY);
                                 }
                                 if (JavaClassValidateUtil.isPrimitive(simple)) {
                                     //do nothing
                                 } else if (gicName.contains("<")) {
                                     if (JavaClassValidateUtil.isCollection(simple)) {
-                                        param.setType(DocGlobalConstants.PARAM_TYPE_ARRAY);
+                                        param.setType(ParamTypeConstants.PARAM_TYPE_ARRAY);
                                         String gName = DocClassUtil.getSimpleGicName(gicName)[0];
                                         if (!JavaClassValidateUtil.isPrimitive(gName)) {
                                             paramList.addAll(buildParams(gName, preBuilder.toString(), nextLevel, isRequired
@@ -533,7 +530,7 @@ public class ParamsBuildHelper extends BaseHelper {
                                 .setId(atomicOrDefault(atomicInteger, paramList.size() + pid + 1))
                                 .setClassName(subTypeName)
                                 .setMaxLength(maxLength)
-                                .setType(DocGlobalConstants.PARAM_TYPE_OBJECT)
+                                .setType(ParamTypeConstants.PARAM_TYPE_OBJECT)
                                 .setDesc(comment.append(" $ref... self").toString())
                                 .setVersion(DocGlobalConstants.DEFAULT_VERSION)
                                 .setExtensions(extensionParams);

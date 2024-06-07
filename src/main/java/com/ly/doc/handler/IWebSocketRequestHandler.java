@@ -21,6 +21,7 @@
 package com.ly.doc.handler;
 
 import com.ly.doc.constants.DocAnnotationConstants;
+import com.ly.doc.constants.DocTags;
 import com.ly.doc.model.request.ServerEndpoint;
 import com.power.common.util.StringUtil;
 import com.thoughtworks.qdox.model.JavaAnnotation;
@@ -32,7 +33,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static com.ly.doc.constants.DocTags.IGNORE;
 
 /**
  * websocket handler
@@ -50,7 +50,7 @@ public interface IWebSocketRequestHandler {
      * @return ServerEndpoint
      */
     default ServerEndpoint handleServerEndpoint(JavaClass cls, JavaAnnotation javaAnnotation) {
-        if (Objects.nonNull(cls.getTagByName(IGNORE))) {
+        if (Objects.nonNull(cls.getTagByName(DocTags.IGNORE))) {
             return null;
         }
         ServerEndpoint builder = ServerEndpoint.builder();

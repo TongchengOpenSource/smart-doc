@@ -27,6 +27,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.ly.doc.constants.DocGlobalConstants;
+import com.ly.doc.constants.MediaType;
+import com.ly.doc.constants.ParamTypeConstants;
 import com.ly.doc.constants.TornaConstants;
 import com.ly.doc.model.*;
 import com.ly.doc.model.rpc.RpcApiDependency;
@@ -170,7 +172,7 @@ public class TornaUtil {
             }
 
             if (CollectionUtil.isNotEmpty(apiMethodDoc.getQueryParams())
-                    && DocGlobalConstants.FILE_CONTENT_TYPE.equals(apiMethodDoc.getContentType())) {
+                    && MediaType.MULTIPART_FORM_DATA.equals(apiMethodDoc.getContentType())) {
                 // file upload
                 methodApi.setRequestParams(buildParams(apiMethodDoc.getQueryParams()));
             } else if (CollectionUtil.isNotEmpty(apiMethodDoc.getQueryParams())) {
@@ -255,7 +257,7 @@ public class TornaUtil {
             httpParam.setOrderIndex(apiParam.getId());
             httpParam.setMaxLength(apiParam.getMaxLength());
             String type = apiParam.getType();
-            if (Objects.equals(type, DocGlobalConstants.PARAM_TYPE_FILE) && apiParam.isHasItems()) {
+            if (Objects.equals(type, ParamTypeConstants.PARAM_TYPE_FILE) && apiParam.isHasItems()) {
                 type = TornaConstants.PARAM_TYPE_FILE_ARRAY;
             }
             httpParam.setType(type);
@@ -347,7 +349,7 @@ public class TornaUtil {
         if (respArray) {
             apiMethodDoc.setIsResponseArray(1);
             String className = getType(method.getReturnType().getGenericCanonicalName());
-            String arrayType = JavaClassValidateUtil.isPrimitive(className) ? className : DocGlobalConstants.PARAM_TYPE_OBJECT;
+            String arrayType = JavaClassValidateUtil.isPrimitive(className) ? className : ParamTypeConstants.PARAM_TYPE_OBJECT;
             apiMethodDoc.setResponseArrayType(arrayType);
         }
         // request
@@ -360,7 +362,7 @@ public class TornaUtil {
                 if (reqArray) {
                     apiMethodDoc.setIsRequestArray(1);
                     String className = getType(param.getType().getGenericCanonicalName());
-                    String arrayType = JavaClassValidateUtil.isPrimitive(className) ? className : DocGlobalConstants.PARAM_TYPE_OBJECT;
+                    String arrayType = JavaClassValidateUtil.isPrimitive(className) ? className : ParamTypeConstants.PARAM_TYPE_OBJECT;
                     apiMethodDoc.setRequestArrayType(arrayType);
                     break;
                 }
@@ -371,14 +373,14 @@ public class TornaUtil {
 
     private static String getArrayType(Map<String, Object> schemaMap) {
         String arrayType = null;
-        if (Objects.nonNull(schemaMap) && Objects.equals(DocGlobalConstants.PARAM_TYPE_ARRAY, schemaMap.get("type"))) {
+        if (Objects.nonNull(schemaMap) && Objects.equals(ParamTypeConstants.PARAM_TYPE_ARRAY, schemaMap.get("type"))) {
             Object innerScheme = schemaMap.get("items");
             if (Objects.nonNull(innerScheme)) {
                 Map<String, Object> innerSchemeMap = (Map<String, Object>) innerScheme;
                 String type = (String) innerSchemeMap.get("type");
                 if (StringUtil.isNotEmpty(type)) {
                     String className = getType(type);
-                    arrayType = JavaClassValidateUtil.isPrimitive(className) ? className : DocGlobalConstants.PARAM_TYPE_OBJECT;
+                    arrayType = JavaClassValidateUtil.isPrimitive(className) ? className : ParamTypeConstants.PARAM_TYPE_OBJECT;
                 }
             }
         }

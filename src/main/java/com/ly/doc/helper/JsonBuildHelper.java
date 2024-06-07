@@ -21,10 +21,7 @@
 package com.ly.doc.helper;
 
 import com.ly.doc.builder.ProjectDocConfigBuilder;
-import com.ly.doc.constants.DocAnnotationConstants;
-import com.ly.doc.constants.DocGlobalConstants;
-import com.ly.doc.constants.DocTags;
-import com.ly.doc.constants.ValidatorAnnotations;
+import com.ly.doc.constants.*;
 import com.ly.doc.model.*;
 import com.ly.doc.utils.*;
 import com.power.common.util.CollectionUtil;
@@ -68,7 +65,7 @@ public class JsonBuildHelper extends BaseHelper {
             String typeName = method.getReturnType().getCanonicalName();
             return StringUtil.removeQuotes(DocUtil.jsonValueByType(typeName));
         }
-        if (DocGlobalConstants.JAVA_STRING_FULLY.equals(method.getReturnType().getGenericCanonicalName())
+        if (JavaTypeConstants.JAVA_STRING_FULLY.equals(method.getReturnType().getGenericCanonicalName())
                 && Objects.isNull(responseBodyAdvice)) {
             return "string";
         }
@@ -96,7 +93,7 @@ public class JsonBuildHelper extends BaseHelper {
             returnType = JavaClassUtil.getGenericsNameByActualTypesMap(returnType, actualTypesMap);
         }
         if (JavaClassValidateUtil.isPrimitive(typeName)) {
-            if (DocGlobalConstants.JAVA_STRING_FULLY.equals(typeName)) {
+            if (JavaTypeConstants.JAVA_STRING_FULLY.equals(typeName)) {
                 return "string";
             }
             return StringUtil.removeQuotes(DocUtil.jsonValueByType(typeName));
@@ -167,7 +164,7 @@ public class JsonBuildHelper extends BaseHelper {
             }
             String gNameTemp = globGicName[0];
             String gName = JavaClassValidateUtil.isArray(gNameTemp) ? gNameTemp.substring(0, gNameTemp.indexOf("[")) : globGicName[0];
-            if (DocGlobalConstants.JAVA_OBJECT_FULLY.equals(gName)) {
+            if (JavaTypeConstants.JAVA_OBJECT_FULLY.equals(gName)) {
                 data.append("{\"waring\":\"You may use java.util.Object instead of display generics in the List\"}");
             } else if (JavaClassValidateUtil.isPrimitive(gName)) {
                 data.append(DocUtil.jsonValueByType(gName)).append(",");
@@ -190,11 +187,11 @@ public class JsonBuildHelper extends BaseHelper {
                 data.append("{\"mapKey\":{}}");
                 return data.toString();
             }
-            if ((!DocGlobalConstants.JAVA_STRING_FULLY.equals(getKeyValType[0])) && apiConfig.isStrict()) {
+            if ((!JavaTypeConstants.JAVA_STRING_FULLY.equals(getKeyValType[0])) && apiConfig.isStrict()) {
                 throw new RuntimeException("Map's key can only use String for json,but you use " + getKeyValType[0]);
             }
             String gicName = genericCanonicalName.substring(genericCanonicalName.indexOf(",") + 1, genericCanonicalName.lastIndexOf(">"));
-            if (DocGlobalConstants.JAVA_OBJECT_FULLY.equals(gicName)) {
+            if (JavaTypeConstants.JAVA_OBJECT_FULLY.equals(gicName)) {
                 data.append("{").append("\"mapKey\":")
                         .append("{\"waring\":\"You may use java.util.Object for Map value; smart-doc can't be handle.\"}")
                         .append("}");
@@ -210,7 +207,7 @@ public class JsonBuildHelper extends BaseHelper {
                         .append(buildJson(gicName, genericCanonicalName, isResp, counter + 1, registryClasses, groupClasses, builder)).append("}");
             }
             return data.toString();
-        } else if (DocGlobalConstants.JAVA_OBJECT_FULLY.equals(typeName)) {
+        } else if (JavaTypeConstants.JAVA_OBJECT_FULLY.equals(typeName)) {
             data.append("{\"object\":\" any object\"},");
             // throw new RuntimeException("Please do not return java.lang.Object directly in api interface.");
         } else if (JavaClassValidateUtil.isReactor(typeName)) {
@@ -317,9 +314,9 @@ public class JsonBuildHelper extends BaseHelper {
                             fieldGicName = "java.util.List<" + fieldGicName + ">";
                         }
                         String gicName = DocClassUtil.getSimpleGicName(fieldGicName)[0];
-                        if (DocGlobalConstants.JAVA_STRING_FULLY.equals(gicName)) {
+                        if (JavaTypeConstants.JAVA_STRING_FULLY.equals(gicName)) {
                             data0.append("[").append(DocUtil.jsonValueByType(gicName)).append("]").append(",");
-                        } else if (DocGlobalConstants.JAVA_LIST_FULLY.equals(gicName)) {
+                        } else if (JavaTypeConstants.JAVA_LIST_FULLY.equals(gicName)) {
                             data0.append("[{\"object\":\"any object\"}],");
                         } else if (gicName.length() == 1) {
                             if (globGicName.length == 0) {
@@ -327,7 +324,7 @@ public class JsonBuildHelper extends BaseHelper {
                                 continue;
                             }
                             String gicName1 = genericMap.get(gicName) == null ? globGicName[0] : genericMap.get(gicName);
-                            if (DocGlobalConstants.JAVA_STRING_FULLY.equals(gicName1)) {
+                            if (JavaTypeConstants.JAVA_STRING_FULLY.equals(gicName1)) {
                                 data0.append("[").append(DocUtil.jsonValueByType(gicName1)).append("]").append(",");
                             } else {
                                 if (!typeName.equals(gicName1)) {
@@ -376,7 +373,7 @@ public class JsonBuildHelper extends BaseHelper {
                                     gicName1 = globGicName[0];
                                 }
                             }
-                            if (DocGlobalConstants.JAVA_STRING_FULLY.equals(gicName1)) {
+                            if (JavaTypeConstants.JAVA_STRING_FULLY.equals(gicName1)) {
                                 data0.append("{").append("\"mapKey\":").append(DocUtil.jsonValueByType(gicName1)).append("},");
                             } else {
                                 if (!typeName.equals(gicName1)) {
@@ -404,7 +401,7 @@ public class JsonBuildHelper extends BaseHelper {
                         } else {
                             data0.append("{},");
                         }
-                    } else if (DocGlobalConstants.JAVA_OBJECT_FULLY.equals(fieldGicName)) {
+                    } else if (JavaTypeConstants.JAVA_OBJECT_FULLY.equals(fieldGicName)) {
                         if (StringUtil.isNotEmpty(field.getComment())) {
                             // from source code
                             data0.append("{\"object\":\"any object\"},");

@@ -18,31 +18,37 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.ly.doc.filter;
 
-import com.ly.doc.constants.DocGlobalConstants;
-import com.ly.doc.constants.JavaTypeConstants;
-import com.ly.doc.model.ApiReturn;
+package com.ly.doc.constants;
 
 /**
- * @author yu 2020/4/17.
+ * param type constants
+ * @author yu 2024/6/7
  */
-public class WebFluxReturnFilter implements ReturnTypeFilter {
+public interface ParamTypeConstants {
 
-    private static final String FLUX = "reactor.core.publisher.Flux";
-
-    @Override
-    public ApiReturn doFilter(String fullyName) {
-        //support web flux
-        if (fullyName.startsWith(FLUX)) {
-            ApiReturn apiReturn = new ApiReturn();
-            // rewrite type name
-            fullyName = fullyName.replace(FLUX, JavaTypeConstants.JAVA_LIST_FULLY);
-            apiReturn.setGenericCanonicalName(fullyName);
-            apiReturn.setSimpleName(JavaTypeConstants.JAVA_LIST_FULLY);
-            return apiReturn;
-        }
-        return null;
-    }
-
+    /**
+     * param type enum
+     */
+    String PARAM_TYPE_ENUM = "enum";
+    /**
+     * param type array
+     */
+    String PARAM_TYPE_ARRAY = "array";
+    /**
+     * param type file
+     */
+    String PARAM_TYPE_FILE = "file";
+    /**
+     * param type text
+     */
+    String PARAM_TYPE_TEXT = "text";
+    /**
+     * param type map
+     */
+    String PARAM_TYPE_MAP = "map";
+    /**
+     * param type object
+     */
+    String PARAM_TYPE_OBJECT = "object";
 }

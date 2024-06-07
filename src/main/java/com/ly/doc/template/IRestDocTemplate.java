@@ -47,8 +47,6 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.ly.doc.constants.DocGlobalConstants.FILE_CONTENT_TYPE;
-import static com.ly.doc.constants.DocGlobalConstants.JSON_CONTENT_TYPE;
 import static com.ly.doc.constants.DocTags.IGNORE;
 
 /**
@@ -662,7 +660,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
             if (JavaClassValidateUtil.isFile(typeName)) {
                 ApiParam param = ApiParam.of()
                         .setField(paramName)
-                        .setType(DocGlobalConstants.PARAM_TYPE_FILE)
+                        .setType(ParamTypeConstants.PARAM_TYPE_FILE)
                         .setId(paramList.size() + 1)
                         .setQueryParam(true)
                         .setRequired(required)
@@ -670,7 +668,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                         .setDesc(comment.toString());
                 if (typeName.contains("[]") || typeName.endsWith(">")) {
                     comment.append("(array of file)");
-                    param.setType(DocGlobalConstants.PARAM_TYPE_FILE);
+                    param.setType(ParamTypeConstants.PARAM_TYPE_FILE);
                     param.setDesc(comment.toString());
                     param.setHasItems(true);
                 }
@@ -702,7 +700,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                             .setId(paramList.size() + 1)
                             .setEnumValues(JavaClassUtil.getEnumValues(gicJavaClass))
                             .setEnumInfo(JavaClassUtil.getEnumInfo(gicJavaClass, builder))
-                            .setType(DocGlobalConstants.PARAM_TYPE_ARRAY)
+                            .setType(ParamTypeConstants.PARAM_TYPE_ARRAY)
                             .setValue(String.valueOf(value));
                     paramList.add(param);
                     if (requestBodyCounter > 0) {
@@ -718,7 +716,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                             .setPathParam(isPathVariable)
                             .setQueryParam(queryParam)
                             .setId(paramList.size() + 1)
-                            .setType(DocGlobalConstants.PARAM_TYPE_ARRAY)
+                            .setType(ParamTypeConstants.PARAM_TYPE_ARRAY)
                             .setVersion(DocGlobalConstants.DEFAULT_VERSION)
                             .setValue(mockValue);
                     paramList.add(param);
@@ -730,7 +728,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                     // file upload
                     ApiParam param = ApiParam.of()
                             .setField(paramName)
-                            .setType(DocGlobalConstants.PARAM_TYPE_FILE)
+                            .setType(ParamTypeConstants.PARAM_TYPE_FILE)
                             .setId(paramList.size() + 1)
                             .setQueryParam(true)
                             .setRequired(required)
@@ -769,7 +767,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                 if (JavaClassValidateUtil.isMap(typeName)) {
                     ApiParam apiParam = ApiParam.of()
                             .setField(paramName)
-                            .setType(DocGlobalConstants.PARAM_TYPE_MAP)
+                            .setType(ParamTypeConstants.PARAM_TYPE_MAP)
                             .setId(paramList.size() + 1)
                             .setPathParam(isPathVariable)
                             .setQueryParam(queryParam)
@@ -787,7 +785,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                 if (JavaClassValidateUtil.isPrimitive(gicNameArr[1])) {
                     ApiParam apiParam = ApiParam.of()
                             .setField(paramName)
-                            .setType(DocGlobalConstants.PARAM_TYPE_MAP)
+                            .setType(ParamTypeConstants.PARAM_TYPE_MAP)
                             .setId(paramList.size() + 1)
                             .setPathParam(isPathVariable)
                             .setQueryParam(queryParam)
@@ -818,7 +816,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                         .setPathParam(isPathVariable)
                         .setQueryParam(queryParam)
                         .setValue(StringUtil.removeDoubleQuotes(String.valueOf(value)))
-                        .setType(DocGlobalConstants.PARAM_TYPE_ENUM)
+                        .setType(ParamTypeConstants.PARAM_TYPE_ENUM)
                         .setDesc(comment.toString())
                         .setRequired(required)
                         .setVersion(DocGlobalConstants.DEFAULT_VERSION)
@@ -930,8 +928,8 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                 paramName = getParamName(classLoader, paramName, annotation);
                 if (frameworkAnnotations.getRequestBodyAnnotation().getAnnotationName().equals(annotationName)) {
                     // priority use mapping annotation's consumer value
-                    if (apiMethodDoc.getContentType().equals(DocGlobalConstants.URL_CONTENT_TYPE)) {
-                        apiMethodDoc.setContentType(JSON_CONTENT_TYPE);
+                    if (apiMethodDoc.getContentType().equals(MediaType.APPLICATION_FORM_URLENCODED_VALUE)) {
+                        apiMethodDoc.setContentType(MediaType.APPLICATION_JSON);
                     }
                     boolean isArrayOrCollection = false;
                     if (JavaClassValidateUtil.isArray(fullyQualifiedName) || JavaClassValidateUtil.isCollection(fullyQualifiedName)) {
@@ -991,13 +989,13 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
             }
             // file upload
             if (JavaClassValidateUtil.isFile(gicTypeName)) {
-                apiMethodDoc.setContentType(FILE_CONTENT_TYPE);
+                apiMethodDoc.setContentType(MediaType.MULTIPART_FORM_DATA);
                 FormData formData = new FormData();
                 formData.setKey(paramName);
-                formData.setType(DocGlobalConstants.PARAM_TYPE_FILE);
+                formData.setType(ParamTypeConstants.PARAM_TYPE_FILE);
                 if (fullyQualifiedName.contains("[]") || fullyQualifiedName.endsWith(">")) {
                     comment = comment + "(array of file)";
-                    formData.setType(DocGlobalConstants.PARAM_TYPE_FILE);
+                    formData.setType(ParamTypeConstants.PARAM_TYPE_FILE);
                     formData.setHasItems(true);
                 }
                 formData.setDescription(comment);
@@ -1008,7 +1006,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                 FormData formData = new FormData();
                 formData.setKey(paramName);
                 formData.setDescription(comment);
-                formData.setType(DocGlobalConstants.PARAM_TYPE_TEXT);
+                formData.setType(ParamTypeConstants.PARAM_TYPE_TEXT);
                 formData.setValue(mockValue);
                 formDataList.add(formData);
             } else if (JavaClassValidateUtil.isArray(fullyQualifiedName) || JavaClassValidateUtil.isCollection(fullyQualifiedName)) {
@@ -1035,7 +1033,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                     formData.setKey(paramName + "[]");
                 }
                 formData.setDescription(comment);
-                formData.setType(DocGlobalConstants.PARAM_TYPE_TEXT);
+                formData.setType(ParamTypeConstants.PARAM_TYPE_TEXT);
                 formData.setValue(value);
                 formDataList.add(formData);
             } else if (javaClass.isEnum()) {
@@ -1044,7 +1042,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                 String strVal = StringUtil.removeQuotes(String.valueOf(value));
                 FormData formData = new FormData();
                 formData.setKey(paramName);
-                formData.setType(DocGlobalConstants.PARAM_TYPE_TEXT);
+                formData.setType(ParamTypeConstants.PARAM_TYPE_TEXT);
                 formData.setDescription(comment);
                 formData.setValue(strVal);
                 formDataList.add(formData);
@@ -1054,9 +1052,9 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
         }
 
         // set content-type to fromData
-        boolean hasFormDataUploadFile = formDataList.stream().anyMatch(form -> Objects.equals(form.getType(), DocGlobalConstants.PARAM_TYPE_FILE));
+        boolean hasFormDataUploadFile = formDataList.stream().anyMatch(form -> Objects.equals(form.getType(), ParamTypeConstants.PARAM_TYPE_FILE));
         if (hasFormDataUploadFile) {
-            apiMethodDoc.setContentType(FILE_CONTENT_TYPE);
+            apiMethodDoc.setContentType(MediaType.MULTIPART_FORM_DATA_VALUE);
         }
         requestExample.setFormDataList(formDataList);
         // curl send file to convert

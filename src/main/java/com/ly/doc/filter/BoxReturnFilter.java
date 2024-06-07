@@ -24,6 +24,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.ly.doc.constants.DocGlobalConstants;
+import com.ly.doc.constants.JavaTypeConstants;
 import com.ly.doc.model.ApiReturn;
 import com.ly.doc.utils.DocClassUtil;
 
@@ -60,8 +61,8 @@ public class BoxReturnFilter implements ReturnTypeFilter {
                 }
             } else {
                 //directly return Java Object
-                apiReturn.setGenericCanonicalName(DocGlobalConstants.JAVA_OBJECT_FULLY);
-                apiReturn.setSimpleName(DocGlobalConstants.JAVA_OBJECT_FULLY);
+                apiReturn.setGenericCanonicalName(JavaTypeConstants.JAVA_OBJECT_FULLY);
+                apiReturn.setSimpleName(JavaTypeConstants.JAVA_OBJECT_FULLY);
             }
             return apiReturn;
         }

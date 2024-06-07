@@ -22,10 +22,7 @@
  */
 package com.ly.doc.utils;
 
-import com.ly.doc.constants.DocAnnotationConstants;
-import com.ly.doc.constants.DocGlobalConstants;
-import com.ly.doc.constants.DocValidatorAnnotationEnum;
-import com.ly.doc.constants.ValidatorAnnotations;
+import com.ly.doc.constants.*;
 import com.ly.doc.model.CustomField;
 import com.ly.doc.model.DocJavaField;
 import com.power.common.util.StringUtil;
@@ -110,14 +107,11 @@ public class JavaFieldUtil {
         for (JavaAnnotation annotation : annotations) {
             String simpleAnnotationName = annotation.getType().getValue();
             AnnotationValue annotationValue = null;
-            if (DocAnnotationConstants.MAX.equalsIgnoreCase(simpleAnnotationName)) {
-                annotationValue = annotation.getProperty(DocAnnotationConstants.VALUE_PROP);
+            if (JSRAnnotationConstants.SIZE.equalsIgnoreCase(simpleAnnotationName)) {
+                annotationValue = annotation.getProperty(JSRAnnotationPropConstants.MAX_PROP);
             }
-            if (DocAnnotationConstants.SIZE.equalsIgnoreCase(simpleAnnotationName)) {
-                annotationValue = annotation.getProperty(DocAnnotationConstants.MAX);
-            }
-            if (DocAnnotationConstants.LENGTH.equalsIgnoreCase(simpleAnnotationName)) {
-                annotationValue = annotation.getProperty(DocAnnotationConstants.MAX);
+            if (JSRAnnotationConstants.LENGTH.equalsIgnoreCase(simpleAnnotationName)) {
+                annotationValue = annotation.getProperty(JSRAnnotationPropConstants.MAX_PROP);
             }
             if (Objects.nonNull(annotationValue)) {
                 maxLength = annotationValue.toString();

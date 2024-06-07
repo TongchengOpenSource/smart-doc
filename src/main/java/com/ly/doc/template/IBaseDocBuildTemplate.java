@@ -74,7 +74,7 @@ public interface IBaseDocBuildTemplate {
         }
         String returnTypeGenericCanonicalName = method.getReturnType().getGenericCanonicalName();
         if (Objects.nonNull(projectBuilder.getApiConfig().getResponseBodyAdvice())
-            && Objects.isNull(method.getTagByName(IGNORE_RESPONSE_BODY_ADVICE))) {
+            && Objects.isNull(method.getTagByName(DocTags.IGNORE_RESPONSE_BODY_ADVICE))) {
             String responseBodyAdvice = projectBuilder.getApiConfig().getResponseBodyAdvice().getClassName();
             if (!returnTypeGenericCanonicalName.startsWith(responseBodyAdvice)) {
                 returnTypeGenericCanonicalName = new StringBuffer()
@@ -164,7 +164,7 @@ public interface IBaseDocBuildTemplate {
             String genericFullyQualifiedName = javaType.getGenericFullyQualifiedName();
             String commentClass = paramTagMap.get(paramName);
             //ignore request params
-            if (Objects.nonNull(commentClass) && commentClass.contains(IGNORE)) {
+            if (Objects.nonNull(commentClass) && commentClass.contains(DocTags.IGNORE)) {
                 continue;
             }
             String rewriteClassName = getRewriteClassName(replacementMap, genericFullyQualifiedName, commentClass);
@@ -185,7 +185,7 @@ public interface IBaseDocBuildTemplate {
                 if (Objects.nonNull(frameworkAnnotations) && frameworkAnnotations.getRequestBodyAnnotation().getAnnotationName()
                     .equals(annotationName)) {
                     if (Objects.nonNull(builder.getApiConfig().getRequestBodyAdvice())
-                        && Objects.isNull(javaMethod.getTagByName(IGNORE_REQUEST_BODY_ADVICE))) {
+                        && Objects.isNull(javaMethod.getTagByName(DocTags.IGNORE_REQUEST_BODY_ADVICE))) {
                         String requestBodyAdvice = builder.getApiConfig().getRequestBodyAdvice().getClassName();
                         genericFullyQualifiedName = requestBodyAdvice;
                         genericCanonicalName = requestBodyAdvice + "<" + genericCanonicalName + ">";

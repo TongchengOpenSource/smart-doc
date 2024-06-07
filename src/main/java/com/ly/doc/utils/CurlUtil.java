@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Objects;
 
 import com.ly.doc.constants.DocGlobalConstants;
+import com.ly.doc.constants.MediaType;
 import com.ly.doc.model.ApiReqParam;
 import com.ly.doc.model.FormData;
 import com.power.common.util.CollectionUtil;
@@ -51,7 +52,7 @@ public class CurlUtil {
             sb.append(" -k");
         }
         if (StringUtil.isNotEmpty(request.getContentType()) &&
-                !DocGlobalConstants.URL_CONTENT_TYPE.equals(request.getContentType())) {
+                !MediaType.APPLICATION_FORM_URLENCODED_VALUE.equals(request.getContentType())) {
             sb.append(" -H");
             sb.append(" 'Content-Type: ").append(request.getContentType()).append("'");
         }

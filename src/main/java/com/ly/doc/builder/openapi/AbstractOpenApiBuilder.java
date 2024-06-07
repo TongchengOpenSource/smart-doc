@@ -27,7 +27,8 @@ package com.ly.doc.builder.openapi;
 import com.ly.doc.builder.DocBuilderTemplate;
 import com.ly.doc.builder.ProjectDocConfigBuilder;
 import com.ly.doc.constants.ComponentTypeEnum;
-import com.ly.doc.constants.DocGlobalConstants;
+import com.ly.doc.constants.MediaType;
+import com.ly.doc.constants.ParamTypeConstants;
 import com.ly.doc.factory.BuildTemplateFactory;
 import com.ly.doc.model.*;
 import com.ly.doc.model.openapi.OpenApiTag;
@@ -208,7 +209,7 @@ public abstract class AbstractOpenApiBuilder {
         if (isRep) {
             String responseRef = componentKey + OpenApiSchemaUtil.getClassNameFromParams(apiMethodDoc.getResponseParams());
             if (apiMethodDoc.getIsResponseArray() == 1) {
-                schema.put("type", PARAM_TYPE_ARRAY);
+                schema.put("type", ParamTypeConstants.PARAM_TYPE_ARRAY);
                 innerScheme.put("$ref", responseRef);
                 schema.put("items", innerScheme);
             } else if (CollectionUtil.isNotEmpty(apiMethodDoc.getResponseParams())) {
@@ -220,7 +221,7 @@ public abstract class AbstractOpenApiBuilder {
         // for request
         String requestRef;
         String randomName = ComponentTypeEnum.getRandomName(ApiConfig.getInstance().getComponentType(), apiMethodDoc);
-        if (apiMethodDoc.getContentType().equals(DocGlobalConstants.URL_CONTENT_TYPE)) {
+        if (apiMethodDoc.getContentType().equals(MediaType.APPLICATION_FORM_URLENCODED_VALUE)) {
             requestRef = componentKey + OpenApiSchemaUtil.getClassNameFromParams(apiMethodDoc.getQueryParams());
         } else {
             requestRef = componentKey + OpenApiSchemaUtil.getClassNameFromParams(apiMethodDoc.getRequestParams());
@@ -228,7 +229,7 @@ public abstract class AbstractOpenApiBuilder {
         // remove special characters in url
         if (CollectionUtil.isNotEmpty(apiMethodDoc.getRequestParams())) {
             if (apiMethodDoc.getIsRequestArray() == 1) {
-                schema.put("type", PARAM_TYPE_ARRAY);
+                schema.put("type", ParamTypeConstants.PARAM_TYPE_ARRAY);
                 innerScheme.put("$ref", requestRef);
                 schema.put("items", innerScheme);
             } else {
@@ -301,12 +302,12 @@ public abstract class AbstractOpenApiBuilder {
             if ("enum".equals(apiParam.getType())) {
                 schema.put("enum", apiParam.getEnumValues());
             }
-        } else if (PARAM_TYPE_ARRAY.equals(openApiType)) {
+        } else if (ParamTypeConstants.PARAM_TYPE_ARRAY.equals(openApiType)) {
             if (CollectionUtil.isNotEmpty(apiParam.getEnumValues())) {
                 schema.put("type", "string");
                 schema.put("items", apiParam.getEnumValues());
             } else {
-                schema.put("type", PARAM_TYPE_ARRAY);
+                schema.put("type", ParamTypeConstants.PARAM_TYPE_ARRAY);
                 Map<String, String> map = new HashMap<>(4);
                 map.put("type", "string");
                 map.put("format", "string");

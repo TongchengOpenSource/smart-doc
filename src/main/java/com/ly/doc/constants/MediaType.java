@@ -99,6 +99,8 @@ public class MediaType implements Serializable {
 
     public static final String TEXT_XML_VALUE = "text/xml";
 
+    public static final String POSTMAN_MODE_FORMDATA = "formdata";
+
     private static final long serialVersionUID = 2069937152339670231L;
 
     private static final Map<String, String> FIELD_MAP;
