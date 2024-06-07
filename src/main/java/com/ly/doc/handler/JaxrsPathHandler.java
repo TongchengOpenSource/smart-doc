@@ -20,13 +20,10 @@
  */
 package com.ly.doc.handler;
 
-import com.ly.doc.constants.MediaType;
+import com.ly.doc.constants.*;
 import com.power.common.util.StringUtil;
 import com.power.common.util.UrlUtil;
 import com.ly.doc.builder.ProjectDocConfigBuilder;
-import com.ly.doc.constants.DocGlobalConstants;
-import com.ly.doc.constants.JAXRSAnnotations;
-import com.ly.doc.constants.JakartaJaxrsAnnotations;
 import com.ly.doc.model.request.JaxrsPathMapping;
 import com.ly.doc.utils.DocUrlUtil;
 import com.ly.doc.utils.DocUtil;
@@ -83,7 +80,7 @@ public class JaxrsPathHandler {
                 }
             }
             // Deprecated annotation on method
-            if (DocGlobalConstants.JAVA_DEPRECATED_FULLY.equals(annotationName)) {
+            if (JavaTypeConstants.JAVA_DEPRECATED_FULLY.equals(annotationName)) {
                 deprecated = true;
             }
             if (JakartaJaxrsAnnotations.JAX_PATH_FULLY.equals(annotationName)

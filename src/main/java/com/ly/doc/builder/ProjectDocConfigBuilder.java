@@ -21,6 +21,7 @@
 package com.ly.doc.builder;
 
 import com.ly.doc.constants.DocGlobalConstants;
+import com.ly.doc.constants.HighLightJsConstants;
 import com.ly.doc.constants.HighlightStyle;
 import com.ly.doc.helper.JavaProjectBuilderHelper;
 import com.ly.doc.model.*;
@@ -318,31 +319,31 @@ public class ProjectDocConfigBuilder {
 
     private void setHighlightStyle() {
         String style = apiConfig.getStyle();
-        if (DocGlobalConstants.HIGH_LIGHT_DEFAULT_STYLE.equals(style)) {
+        if (HighLightJsConstants.HIGH_LIGHT_DEFAULT_STYLE.equals(style)) {
             // use local css file
-            apiConfig.setHighlightStyleLink(DocGlobalConstants.HIGH_LIGHT_CSS_DEFAULT);
+            apiConfig.setHighlightStyleLink(HighLightJsConstants.HIGH_LIGHT_CSS_DEFAULT);
             return;
         }
         if (HighlightStyle.containsStyle(style)) {
-            apiConfig.setHighlightStyleLink(String.format(DocGlobalConstants.HIGH_LIGHT_CSS_URL_FORMAT, style));
+            apiConfig.setHighlightStyleLink(String.format(HighLightJsConstants.HIGH_LIGHT_CSS_URL_FORMAT, style));
             return;
         }
         Random random = new Random();
-        if (DocGlobalConstants.HIGH_LIGHT_CSS_RANDOM_LIGHT.equals(style)) {
+        if (HighLightJsConstants.HIGH_LIGHT_CSS_RANDOM_LIGHT.equals(style)) {
             // Eliminate styles that do not match the template
             style = HighlightStyle.randomLight(random);
             if (HighlightStyle.containsStyle(style)) {
                 apiConfig.setStyle(style);
-                apiConfig.setHighlightStyleLink(String.format(DocGlobalConstants.HIGH_LIGHT_CSS_URL_FORMAT, style));
+                apiConfig.setHighlightStyleLink(String.format(HighLightJsConstants.HIGH_LIGHT_CSS_URL_FORMAT, style));
             } else {
                 apiConfig.setStyle(null);
             }
-        } else if (DocGlobalConstants.HIGH_LIGHT_CSS_RANDOM_DARK.equals(style)) {
+        } else if (HighLightJsConstants.HIGH_LIGHT_CSS_RANDOM_DARK.equals(style)) {
             style = HighlightStyle.randomDark(random);
-            if (DocGlobalConstants.HIGH_LIGHT_DEFAULT_STYLE.equals(style)) {
-                apiConfig.setHighlightStyleLink(DocGlobalConstants.HIGH_LIGHT_CSS_DEFAULT);
+            if (HighLightJsConstants.HIGH_LIGHT_DEFAULT_STYLE.equals(style)) {
+                apiConfig.setHighlightStyleLink(HighLightJsConstants.HIGH_LIGHT_CSS_DEFAULT);
             } else {
-                apiConfig.setHighlightStyleLink(String.format(DocGlobalConstants.HIGH_LIGHT_CSS_URL_FORMAT, style));
+                apiConfig.setHighlightStyleLink(String.format(HighLightJsConstants.HIGH_LIGHT_CSS_URL_FORMAT, style));
             }
             apiConfig.setStyle(style);
         } else {

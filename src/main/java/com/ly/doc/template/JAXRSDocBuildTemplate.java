@@ -100,7 +100,7 @@ public class JAXRSDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IWebSoc
         boolean paramsDataToTree = projectBuilder.getApiConfig().isParamsDataToTree();
         String group = JavaClassUtil.getClassTagsValue(cls, DocTags.GROUP, Boolean.TRUE);
         String baseUrl = "";
-        String mediaType = DocGlobalConstants.URL_CONTENT_TYPE;
+        String mediaType = MediaType.APPLICATION_FORM_URLENCODED_VALUE;
         List<JavaAnnotation> classAnnotations = this.getClassAnnotations(cls, frameworkAnnotations);
         for (JavaAnnotation annotation : classAnnotations) {
             String annotationName = annotation.getType().getFullyQualifiedName();
@@ -390,7 +390,7 @@ public class JAXRSDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IWebSoc
                             .setPathParam(isPathVariable)
                             .setQueryParam(queryParam)
                             .setId(paramList.size() + 1)
-                            .setType(DocGlobalConstants.PARAM_TYPE_ARRAY)
+                            .setType(ParamTypeConstants.PARAM_TYPE_ARRAY)
                             .setValue(String.valueOf(value));
                     paramList.add(param);
                 } else if (JavaClassValidateUtil.isPrimitive(gicName)) {
@@ -402,7 +402,7 @@ public class JAXRSDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IWebSoc
                             .setPathParam(isPathVariable)
                             .setQueryParam(queryParam)
                             .setId(paramList.size() + 1)
-                            .setType(DocGlobalConstants.PARAM_TYPE_ARRAY)
+                            .setType(ParamTypeConstants.PARAM_TYPE_ARRAY)
                             .setValue(DocUtil.getValByTypeAndFieldName(gicName, paramName));
                     paramList.add(param);
                 } else {
@@ -414,7 +414,7 @@ public class JAXRSDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IWebSoc
                             .setPathParam(isPathVariable)
                             .setQueryParam(queryParam)
                             .setId(id)
-                            .setType(DocGlobalConstants.PARAM_TYPE_ARRAY);
+                            .setType(ParamTypeConstants.PARAM_TYPE_ARRAY);
                     paramList.add(param);
                     List<ApiParam> apiParamList = ParamsBuildHelper.buildParams(typeName, "└─", 1,
                             "true", Boolean.FALSE, new HashMap<>(16), builder, groupClasses, id, Boolean.FALSE, null);
@@ -438,7 +438,7 @@ public class JAXRSDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IWebSoc
                 if (JavaClassValidateUtil.isMap(typeName)) {
                     ApiParam apiParam = ApiParam.of()
                             .setField(paramName)
-                            .setType(DocGlobalConstants.PARAM_TYPE_MAP)
+                            .setType(ParamTypeConstants.PARAM_TYPE_MAP)
                             .setId(paramList.size() + 1)
                             .setPathParam(isPathVariable)
                             .setQueryParam(queryParam)
@@ -452,7 +452,7 @@ public class JAXRSDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IWebSoc
                 if (JavaClassValidateUtil.isPrimitive(gicNameArr[1])) {
                     ApiParam apiParam = ApiParam.of()
                             .setField(paramName)
-                            .setType(DocGlobalConstants.PARAM_TYPE_MAP)
+                            .setType(ParamTypeConstants.PARAM_TYPE_MAP)
                             .setId(paramList.size() + 1)
                             .setPathParam(isPathVariable)
                             .setQueryParam(queryParam)
@@ -470,7 +470,7 @@ public class JAXRSDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IWebSoc
                 // file upload
                 ApiParam param = ApiParam.of()
                         .setField(paramName)
-                        .setType(DocGlobalConstants.PARAM_TYPE_FILE)
+                        .setType(ParamTypeConstants.PARAM_TYPE_FILE)
                         .setId(paramList.size() + 1).setQueryParam(true)
                         .setRequired(required).setVersion(DocGlobalConstants.DEFAULT_VERSION)
                         .setDesc(comment.toString());
@@ -490,7 +490,7 @@ public class JAXRSDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IWebSoc
                         .setPathParam(isPathVariable)
                         .setQueryParam(queryParam)
                         .setValue(String.valueOf(value))
-                        .setType(DocGlobalConstants.PARAM_TYPE_ENUM)
+                        .setType(ParamTypeConstants.PARAM_TYPE_ENUM)
                         .setDesc(StringUtil.removeQuotes(o))
                         .setRequired(required)
                         .setVersion(DocGlobalConstants.DEFAULT_VERSION)
@@ -578,10 +578,10 @@ public class JAXRSDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IWebSoc
                     }
                     // file upload
                     if (JavaClassValidateUtil.isFile(gicTypeName)) {
-                        apiMethodDoc.setContentType(DocGlobalConstants.FILE_CONTENT_TYPE);
+                        apiMethodDoc.setContentType(MediaType.MULTIPART_FORM_DATA);
                         FormData formData = new FormData();
                         formData.setKey(paramName);
-                        formData.setType(DocGlobalConstants.PARAM_TYPE_FILE);
+                        formData.setType(ParamTypeConstants.PARAM_TYPE_FILE);
                         formData.setDescription(comment);
                         formData.setValue(mockValue);
                         formDataList.add(formData);
@@ -589,7 +589,7 @@ public class JAXRSDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IWebSoc
                         FormData formData = new FormData();
                         formData.setKey(paramName);
                         formData.setDescription(comment);
-                        formData.setType(DocGlobalConstants.PARAM_TYPE_TEXT);
+                        formData.setType(ParamTypeConstants.PARAM_TYPE_TEXT);
                         formData.setValue(mockValue);
                         formDataList.add(formData);
                     } else if (JavaClassValidateUtil.isArray(fullyQualifiedName) || JavaClassValidateUtil.isCollection(fullyQualifiedName)) {
@@ -608,7 +608,7 @@ public class JAXRSDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IWebSoc
                             formData.setKey(paramName + "[]");
                         }
                         formData.setDescription(comment);
-                        formData.setType(DocGlobalConstants.PARAM_TYPE_TEXT);
+                        formData.setType(ParamTypeConstants.PARAM_TYPE_TEXT);
                         formData.setValue(RandomUtil.randomValueByType(gicName));
                         formDataList.add(formData);
                     } else if (javaClass.isEnum()) {
@@ -618,7 +618,7 @@ public class JAXRSDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IWebSoc
                         FormData formData = new FormData();
                         formData.setDescription(comment);
                         formData.setKey(paramName);
-                        formData.setType(DocGlobalConstants.PARAM_TYPE_TEXT);
+                        formData.setType(ParamTypeConstants.PARAM_TYPE_TEXT);
                         formData.setValue(strVal);
                         formDataList.add(formData);
                     } else {
@@ -645,7 +645,7 @@ public class JAXRSDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IWebSoc
      * @return boolean
      */
     private boolean checkCondition(JavaMethod method) {
-        return method.isPrivate() || Objects.nonNull(method.getTagByName(IGNORE));
+        return method.isPrivate() || Objects.nonNull(method.getTagByName(DocTags.IGNORE));
     }
 
 

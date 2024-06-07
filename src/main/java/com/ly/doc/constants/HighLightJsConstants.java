@@ -18,31 +18,21 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.ly.doc.filter;
-
-import com.ly.doc.constants.DocGlobalConstants;
-import com.ly.doc.constants.JavaTypeConstants;
-import com.ly.doc.model.ApiReturn;
+package com.ly.doc.constants;
 
 /**
- * @author yu 2020/4/17.
+ *
+ * @author yu 2024/6/7
  */
-public class WebFluxReturnFilter implements ReturnTypeFilter {
+public interface HighLightJsConstants {
 
-    private static final String FLUX = "reactor.core.publisher.Flux";
+    String HIGH_LIGHT_CSS_URL_FORMAT = "https://cdn.bootcdn.net/ajax/libs/highlight.js/10.3.2/styles/%s.min.css";
 
-    @Override
-    public ApiReturn doFilter(String fullyName) {
-        //support web flux
-        if (fullyName.startsWith(FLUX)) {
-            ApiReturn apiReturn = new ApiReturn();
-            // rewrite type name
-            fullyName = fullyName.replace(FLUX, JavaTypeConstants.JAVA_LIST_FULLY);
-            apiReturn.setGenericCanonicalName(fullyName);
-            apiReturn.setSimpleName(JavaTypeConstants.JAVA_LIST_FULLY);
-            return apiReturn;
-        }
-        return null;
-    }
+    String HIGH_LIGHT_DEFAULT_STYLE = "xt256";
 
+    String HIGH_LIGHT_CSS_DEFAULT = "xt256.min.css";
+
+    String HIGH_LIGHT_CSS_RANDOM_LIGHT = "randomLight";
+
+    String HIGH_LIGHT_CSS_RANDOM_DARK = "randomDark";
 }

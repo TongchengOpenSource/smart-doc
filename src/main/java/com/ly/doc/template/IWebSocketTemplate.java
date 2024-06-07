@@ -24,6 +24,7 @@ import com.ly.doc.builder.ProjectDocConfigBuilder;
 import com.ly.doc.constants.DocAnnotationConstants;
 import com.ly.doc.constants.DocGlobalConstants;
 import com.ly.doc.constants.DocTags;
+import com.ly.doc.constants.JavaTypeConstants;
 import com.ly.doc.handler.DefaultWebSocketRequestHandler;
 import com.ly.doc.handler.IWebSocketRequestHandler;
 import com.ly.doc.model.ApiConfig;
@@ -161,7 +162,7 @@ public interface IWebSocketTemplate {
         webSocketDoc.setOrder(order);
         boolean isDeprecated = Objects.nonNull(javaClass.getTagByName(DocTags.DEPRECATED)) ||
                 javaClass.getAnnotations().stream().anyMatch(i ->
-                        DocGlobalConstants.JAVA_DEPRECATED_FULLY.equals(i.getType().getGenericFullyQualifiedName()));
+                        JavaTypeConstants.JAVA_DEPRECATED_FULLY.equals(i.getType().getGenericFullyQualifiedName()));
         webSocketDoc.setDeprecated(isDeprecated);
         return webSocketDoc;
     }

@@ -1117,7 +1117,7 @@ public class DocUtil {
             String annotationValue = StringUtil.removeQuotes(DocUtil.getRequestHeaderValue(classLoader, annotation));
             if ("MediaType.APPLICATION_JSON".equals(annotationValue) || "application/json".equals(annotationValue)
                     || "MediaType.TEXT_PLAIN".equals(annotationValue) || "text/plain".equals(annotationValue)) {
-                mediaType = DocGlobalConstants.JSON_CONTENT_TYPE;
+                mediaType = MediaType.APPLICATION_JSON;
             }
         }
         return mediaType;

@@ -23,6 +23,7 @@ package com.ly.doc.helper;
 import java.util.*;
 
 import com.ly.doc.constants.DocGlobalConstants;
+import com.ly.doc.constants.ParamTypeConstants;
 import com.ly.doc.constants.ValidatorAnnotations;
 import com.ly.doc.model.ApiConfig;
 import com.ly.doc.model.CustomField;
@@ -85,7 +86,7 @@ public class FormDataBuildHelper extends BaseHelper {
         if (JavaClassValidateUtil.isPrimitive(simpleName)) {
             FormData formData = new FormData();
             formData.setKey(pre);
-            formData.setType(DocGlobalConstants.PARAM_TYPE_TEXT);
+            formData.setType(ParamTypeConstants.PARAM_TYPE_TEXT);
             formData.setValue(StringUtil.removeQuotes(RandomUtil.randomValueByType(className)));
             formDataList.add(formData);
             return formDataList;
@@ -143,10 +144,10 @@ public class FormDataBuildHelper extends BaseHelper {
             if (JavaClassValidateUtil.isFile(fieldGicName)) {
                 FormData formData = new FormData();
                 formData.setKey(pre + fieldName);
-                formData.setType(DocGlobalConstants.PARAM_TYPE_FILE);
+                formData.setType(ParamTypeConstants.PARAM_TYPE_FILE);
                 if (fieldGicName.contains("[]") || fieldGicName.endsWith(">")) {
                     comment = comment + "(array of file)";
-                    formData.setType(DocGlobalConstants.PARAM_TYPE_FILE);
+                    formData.setType(ParamTypeConstants.PARAM_TYPE_FILE);
                 }
                 formData.setDescription(comment);
                 formData.setValue("");
@@ -165,7 +166,7 @@ public class FormDataBuildHelper extends BaseHelper {
                 }
                 FormData formData = new FormData();
                 formData.setKey(pre + fieldName);
-                formData.setType(DocGlobalConstants.PARAM_TYPE_TEXT);
+                formData.setType(ParamTypeConstants.PARAM_TYPE_TEXT);
                 formData.setValue(fieldValue);
                 formData.setDescription(comment);
                 formDataList.add(formData);
@@ -176,7 +177,7 @@ public class FormDataBuildHelper extends BaseHelper {
                 }
                 FormData formData = new FormData();
                 formData.setKey(pre + fieldName);
-                formData.setType(DocGlobalConstants.PARAM_TYPE_TEXT);
+                formData.setType(ParamTypeConstants.PARAM_TYPE_TEXT);
                 formData.setValue(StringUtil.removeQuotes(String.valueOf(value)));
                 formData.setDescription(comment);
                 formDataList.add(formData);
@@ -195,7 +196,7 @@ public class FormDataBuildHelper extends BaseHelper {
                     }
                     FormData formData = new FormData();
                     formData.setKey(pre + fieldName);
-                    formData.setType(DocGlobalConstants.PARAM_TYPE_TEXT);
+                    formData.setType(ParamTypeConstants.PARAM_TYPE_TEXT);
                     formData.setValue(fieldValue);
                     formData.setDescription(comment);
                     formDataList.add(formData);

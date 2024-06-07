@@ -2,6 +2,7 @@ package com.ly.doc.utils;
 
 import com.ly.doc.constants.DocGlobalConstants;
 import com.ly.doc.constants.Methods;
+import com.ly.doc.constants.ParamTypeConstants;
 import com.ly.doc.model.ApiMethodDoc;
 import com.ly.doc.model.ApiReqParam;
 import com.ly.doc.model.FormData;
@@ -42,7 +43,7 @@ public class RequestExampleUtil {
         String url;
         List<ApiReqParam> reqHeaderList = apiMethodDoc.getRequestHeaders();
         Map<Boolean, List<FormData>> formDataGroupMap = formDataList.stream()
-                .collect(Collectors.groupingBy(e -> Objects.equals(e.getType(), DocGlobalConstants.PARAM_TYPE_FILE)));
+                .collect(Collectors.groupingBy(e -> Objects.equals(e.getType(), ParamTypeConstants.PARAM_TYPE_FILE)));
         List<FormData> fileFormDataList = formDataGroupMap.getOrDefault(Boolean.TRUE, new ArrayList<>());
         // curl send file to convert
         final Map<String, String> formDataToMap = DocUtil.formDataToMap(formDataList);

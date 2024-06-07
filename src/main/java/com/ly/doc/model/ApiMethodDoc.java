@@ -21,6 +21,7 @@
 package com.ly.doc.model;
 
 import com.ly.doc.constants.DocGlobalConstants;
+import com.ly.doc.constants.MediaType;
 import com.ly.doc.model.request.ApiRequestExample;
 import com.ly.doc.utils.ParamUtil;
 import com.power.common.util.StringUtil;
@@ -107,7 +108,7 @@ public class ApiMethodDoc implements IMethod, Serializable, Cloneable {
     /**
      * http contentType
      */
-    private String contentType = DocGlobalConstants.URL_CONTENT_TYPE;
+    private String contentType = MediaType.APPLICATION_FORM_URLENCODED_VALUE;
 
     /**
      * http request headers

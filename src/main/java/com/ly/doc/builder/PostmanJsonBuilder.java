@@ -21,6 +21,7 @@
 package com.ly.doc.builder;
 
 import com.ly.doc.constants.DocGlobalConstants;
+import com.ly.doc.constants.MediaType;
 import com.ly.doc.constants.Methods;
 import com.ly.doc.factory.BuildTemplateFactory;
 import com.ly.doc.helper.JavaProjectBuilderHelper;
@@ -160,7 +161,7 @@ public class PostmanJsonBuilder {
 
         List<ParamBean> queryParams = new ArrayList<>();
         if (!apiMethodDoc.getType().equals(Methods.POST.getValue()) ||
-                apiMethodDoc.getContentType().contains(DocGlobalConstants.JSON_CONTENT_TYPE)) {
+                apiMethodDoc.getContentType().contains(MediaType.APPLICATION_JSON)) {
             for (ApiParam apiParam : apiMethodDoc.getQueryParams()) {
                 ParamBean queryParam = new ParamBean();
                 queryParam.setDescription(apiParam.getDesc());
@@ -190,7 +191,7 @@ public class PostmanJsonBuilder {
      */
     private static BodyBean buildBodyBean(ApiMethodDoc apiMethodDoc) {
         BodyBean bodyBean;
-        if (apiMethodDoc.getContentType().contains(DocGlobalConstants.JSON_CONTENT_TYPE)) {
+        if (apiMethodDoc.getContentType().contains(MediaType.APPLICATION_JSON)) {
             bodyBean = new BodyBean(Boolean.FALSE);// Json request
             bodyBean.setMode(DocGlobalConstants.POSTMAN_MODE_RAW);
             if (apiMethodDoc.getRequestExample() != null) {

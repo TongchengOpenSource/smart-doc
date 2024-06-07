@@ -18,31 +18,22 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.ly.doc.filter;
-
-import com.ly.doc.constants.DocGlobalConstants;
-import com.ly.doc.constants.JavaTypeConstants;
-import com.ly.doc.model.ApiReturn;
+package com.ly.doc.constants;
 
 /**
- * @author yu 2020/4/17.
+ * @author yu 2024/6/7
  */
-public class WebFluxReturnFilter implements ReturnTypeFilter {
+public interface JavaTypeConstants {
 
-    private static final String FLUX = "reactor.core.publisher.Flux";
+    String JAVA_OBJECT_FULLY = "java.lang.Object";
 
-    @Override
-    public ApiReturn doFilter(String fullyName) {
-        //support web flux
-        if (fullyName.startsWith(FLUX)) {
-            ApiReturn apiReturn = new ApiReturn();
-            // rewrite type name
-            fullyName = fullyName.replace(FLUX, JavaTypeConstants.JAVA_LIST_FULLY);
-            apiReturn.setGenericCanonicalName(fullyName);
-            apiReturn.setSimpleName(JavaTypeConstants.JAVA_LIST_FULLY);
-            return apiReturn;
-        }
-        return null;
-    }
+    String JAVA_BOOLEAN = "java.lang.Boolean";
 
+    String JAVA_STRING_FULLY = "java.lang.String";
+
+    String JAVA_MAP_FULLY = "java.util.Map";
+
+    String JAVA_LIST_FULLY = "java.util.List";
+
+    String JAVA_DEPRECATED_FULLY = "java.lang.Deprecated";
 }

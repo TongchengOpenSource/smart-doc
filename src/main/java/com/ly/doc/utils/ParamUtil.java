@@ -3,6 +3,7 @@ package com.ly.doc.utils;
 import com.ly.doc.builder.ProjectDocConfigBuilder;
 import com.ly.doc.constants.DocGlobalConstants;
 import com.ly.doc.constants.DocTags;
+import com.ly.doc.constants.ParamTypeConstants;
 import com.ly.doc.model.ApiParam;
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.StringUtil;
@@ -26,7 +27,7 @@ public class ParamUtil {
         // when enum is same class, set type to enum
         if (Objects.equals(seeEnum.getGenericFullyQualifiedName(),
                 javaField.getType().getGenericFullyQualifiedName())) {
-            param.setType(DocGlobalConstants.PARAM_TYPE_ENUM);
+            param.setType(ParamTypeConstants.PARAM_TYPE_ENUM);
         }
         Object value = JavaClassUtil.getEnumValue(seeEnum, !jsonRequest);
         param.setValue(StringUtil.removeDoubleQuotes(String.valueOf(value)));

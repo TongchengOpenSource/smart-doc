@@ -24,6 +24,7 @@ import com.ly.doc.builder.ProjectDocConfigBuilder;
 import com.ly.doc.constants.DocAnnotationConstants;
 import com.ly.doc.constants.DocGlobalConstants;
 import com.ly.doc.constants.DocTags;
+import com.ly.doc.constants.ParamTypeConstants;
 import com.ly.doc.helper.ParamsBuildHelper;
 import com.ly.doc.model.ApiConfig;
 import com.ly.doc.model.ApiParam;
@@ -250,7 +251,7 @@ public interface IJavadocDocTemplate extends IBaseDocBuildTemplate {
                 ApiParam param = ApiParam.of()
                         .setId(atomicInteger.incrementAndGet())
                         .setField(paramName)
-                        .setType(DocGlobalConstants.PARAM_TYPE_ENUM)
+                        .setType(ParamTypeConstants.PARAM_TYPE_ENUM)
                         .setRequired(required)
                         .setDesc(comment.toString())
                         .setVersion(DocGlobalConstants.DEFAULT_VERSION);

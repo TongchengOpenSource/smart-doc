@@ -253,14 +253,14 @@ public class JavaClassUtil {
                                 && DocAnnotationConstants.TO_STRING_SERIALIZER_USING.equals(annotation.getNamedParameter("using")));
                 docJavaField.setComment(comment)
                         .setJavaField(javaField)
-                        .setTypeFullyQualifiedName(isToString ? DocGlobalConstants.JAVA_STRING_FULLY : subTypeName)
-                        .setTypeGenericCanonicalName(isToString ? DocGlobalConstants.JAVA_STRING_FULLY : gicName)
-                        .setTypeGenericFullyQualifiedName(isToString ? DocGlobalConstants.JAVA_STRING_FULLY : fieldType.getGenericFullyQualifiedName())
+                        .setTypeFullyQualifiedName(isToString ? JavaTypeConstants.JAVA_STRING_FULLY : subTypeName)
+                        .setTypeGenericCanonicalName(isToString ? JavaTypeConstants.JAVA_STRING_FULLY : gicName)
+                        .setTypeGenericFullyQualifiedName(isToString ? JavaTypeConstants.JAVA_STRING_FULLY : fieldType.getGenericFullyQualifiedName())
                         .setActualJavaType(actualType)
                         .setAnnotations(javaField.getAnnotations())
                         .setFieldName(fieldName)
                         .setDeclaringClassName(className)
-                        .setTypeSimpleName(isToString ? DocGlobalConstants.JAVA_STRING_FULLY : javaField.getType().getSimpleName());
+                        .setTypeSimpleName(isToString ? JavaTypeConstants.JAVA_STRING_FULLY : javaField.getType().getSimpleName());
                 if (addedFields.containsKey(fieldName)) {
                     addedFields.remove(fieldName);
                     addedFields.put(fieldName, docJavaField);

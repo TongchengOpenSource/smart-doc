@@ -147,23 +147,8 @@ public interface DocGlobalConstants {
 
     String OPEN_API_JSON = "/openapi.json";
 
-    String CONTROLLER_FULLY = "org.springframework.stereotype.Controller";
 
-    String REST_CONTROLLER_FULLY = "org.springframework.web.bind.annotation.RestController";
 
-    String GET_MAPPING_FULLY = "org.springframework.web.bind.annotation.GetMapping";
-
-    String POST_MAPPING_FULLY = "org.springframework.web.bind.annotation.PostMapping";
-
-    String PUT_MAPPING_FULLY = "org.springframework.web.bind.annotation.PutMapping";
-
-    String PATCH_MAPPING_FULLY = "org.springframework.web.bind.annotation.PatchMapping";
-
-    String DELETE_MAPPING_FULLY = "org.springframework.web.bind.annotation.DeleteMapping";
-
-    String REQUEST_MAPPING_FULLY = "org.springframework.web.bind.annotation.RequestMapping";
-
-    String REQUEST_BODY_FULLY = "org.springframework.web.bind.annotation.RequestBody";
 
     String MODE_AND_VIEW_FULLY = "org.springframework.web.servlet.ModelAndView";
 
@@ -171,19 +156,8 @@ public interface DocGlobalConstants {
 
     String FEIGN_CLIENT = "FeignClient";
 
-    String MULTIPART_FILE_FULLY = "org.springframework.web.multipart.MultipartFile";
 
-    String JAVA_OBJECT_FULLY = "java.lang.Object";
 
-    String JAVA_BOOLEAN = "java.lang.Boolean";
-
-    String JAVA_STRING_FULLY = "java.lang.String";
-
-    String JAVA_MAP_FULLY = "java.util.Map";
-
-    String JAVA_LIST_FULLY = "java.util.List";
-
-    String JAVA_DEPRECATED_FULLY = "java.lang.Deprecated";
 
     String DEFAULT_VERSION = "-";
 
@@ -203,14 +177,6 @@ public interface DocGlobalConstants {
 
     String SPRING_WEB_ANNOTATION_PACKAGE = "org.springframework.web.bind.annotation";
 
-    String FILE_CONTENT_TYPE = "multipart/form-data";
-
-
-    String APPLICATION_JSON = "application/json";
-
-    String JSON_CONTENT_TYPE = "application/json";
-
-    String URL_CONTENT_TYPE = "application/x-www-form-urlencoded;charset=UTF-8";
 
     String POSTMAN_MODE_FORMDATA = "formdata";
 
@@ -229,53 +195,15 @@ public interface DocGlobalConstants {
     String CURL_POST_PUT_JSON = "curl -X %s -H 'Content-Type: application/json;charset=UTF-8' %s -i %s --data '%s'";
 
     String EMPTY = "";
-    /**
-     * param type enum
-     */
-    String PARAM_TYPE_ENUM = "enum";
-    /**
-     * param type array
-     */
-    String PARAM_TYPE_ARRAY = "array";
-    /**
-     * param type file
-     */
-    String PARAM_TYPE_FILE = "file";
-    /**
-     * param type text
-     */
-    String PARAM_TYPE_TEXT = "text";
-    /**
-     * param type map
-     */
-    String PARAM_TYPE_MAP = "map";
-    /**
-     * param type object
-     */
-    String PARAM_TYPE_OBJECT = "object";
 
-    String JSON_PROPERTY_READ_WRITE = "JsonProperty.Access.READ_WRITE";
 
-    String JSON_PROPERTY_READ_ONLY = "JsonProperty.Access.READ_ONLY";
 
-    String JSON_PROPERTY_WRITE_ONLY = "JsonProperty.Access.WRITE_ONLY";
 
     String CSS_CDN_CH = "https://fonts.googleapis.cnpmjs.org";
 
     String CSS_CDN = "https://fonts.googleapis.com";
 
     String PATH_DELIMITER = "/";
-
-
-    String HIGH_LIGHT_CSS_URL_FORMAT = "https://cdn.bootcdn.net/ajax/libs/highlight.js/10.3.2/styles/%s.min.css";
-
-    String HIGH_LIGHT_DEFAULT_STYLE = "xt256";
-
-    String HIGH_LIGHT_CSS_DEFAULT = "xt256.min.css";
-
-    String HIGH_LIGHT_CSS_RANDOM_LIGHT = "randomLight";
-
-    String HIGH_LIGHT_CSS_RANDOM_DARK = "randomDark";
 
     String MULTI_URL_SEPARATOR = ";\t";
 

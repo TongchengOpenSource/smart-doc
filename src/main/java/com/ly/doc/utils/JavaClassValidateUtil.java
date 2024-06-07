@@ -34,8 +34,8 @@ import com.ly.doc.constants.SpringMvcAnnotations;
 import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.expression.AnnotationValue;
 
-import static com.ly.doc.constants.DocGlobalConstants.JSON_PROPERTY_READ_ONLY;
-import static com.ly.doc.constants.DocGlobalConstants.JSON_PROPERTY_WRITE_ONLY;
+import static com.ly.doc.constants.JsonPropertyAnnotationAccessConstants.JSON_PROPERTY_READ_ONLY;
+import static com.ly.doc.constants.JsonPropertyAnnotationAccessConstants.JSON_PROPERTY_WRITE_ONLY;
 
 /**
  * @author yu 2019/12/25.
