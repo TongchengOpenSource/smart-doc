@@ -28,6 +28,7 @@ import com.ly.doc.builder.DocBuilderTemplate;
 import com.ly.doc.builder.ProjectDocConfigBuilder;
 import com.ly.doc.constants.ComponentTypeEnum;
 import com.ly.doc.constants.MediaType;
+import com.ly.doc.constants.Methods;
 import com.ly.doc.constants.ParamTypeConstants;
 import com.ly.doc.factory.BuildTemplateFactory;
 import com.ly.doc.model.*;
@@ -221,7 +222,14 @@ public abstract class AbstractOpenApiBuilder {
         // for request
         String requestRef;
         String randomName = ComponentTypeEnum.getRandomName(ApiConfig.getInstance().getComponentType(), apiMethodDoc);
-        if (apiMethodDoc.getContentType().equals(MediaType.APPLICATION_FORM_URLENCODED_VALUE)) {
+        if (Methods.POST.getValue().equals(apiMethodDoc.getType()) &&
+                (apiMethodDoc.getContentType().equals(MediaType.APPLICATION_FORM_URLENCODED_VALUE) || apiMethodDoc.getContentType().equals(MediaType.MULTIPART_FORM_DATA_VALUE))) {
+            schema.put("type", ParamTypeConstants.PARAM_TYPE_OBJECT);
+            Map<String, Object> propertiesAndRequirments = buildProperties(apiMethodDoc.getRequestParams(), new HashMap<>(), Boolean.FALSE);
+            schema.put("properties", propertiesAndRequirments.get("properties"));
+            schema.put("required", propertiesAndRequirments.get("required"));
+            return schema;
+        } else if (apiMethodDoc.getContentType().equals(MediaType.APPLICATION_FORM_URLENCODED_VALUE)) {
             requestRef = componentKey + OpenApiSchemaUtil.getClassNameFromParams(apiMethodDoc.getQueryParams());
         } else {
             requestRef = componentKey + OpenApiSchemaUtil.getClassNameFromParams(apiMethodDoc.getRequestParams());
@@ -409,7 +417,7 @@ public abstract class AbstractOpenApiBuilder {
         // array object file map
         propertiesData.put("description", apiParam.getDesc());
         if (StringUtil.isNotEmpty(apiParam.getValue())) {
-            propertiesData.put("example", StringUtil.removeDoubleQuotes(apiParam.getValue()));
+            propertiesData.put("example", apiParam.getValue());
         }
 
         if (!"object".equals(openApiType)) {
@@ -467,8 +475,8 @@ public abstract class AbstractOpenApiBuilder {
                 propertiesData.put("description", apiParam.getDesc() + "(object)");
             }
         }
-        if (apiParam.getExtensions() != null && !apiParam.getExtensions().isEmpty()){
-            apiParam.getExtensions().entrySet().forEach( e-> propertiesData.put("x-"+e.getKey(), e.getValue()));
+        if (apiParam.getExtensions() != null && !apiParam.getExtensions().isEmpty()) {
+            apiParam.getExtensions().entrySet().forEach(e -> propertiesData.put("x-" + e.getKey(), e.getValue()));
         }
 
         return propertiesData;

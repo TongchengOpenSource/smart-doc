@@ -27,6 +27,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.ly.doc.constants.DocGlobalConstants;
+import com.ly.doc.constants.Methods;
 import com.ly.doc.model.ApiMethodReqParam;
 import com.ly.doc.model.ApiParam;
 import com.ly.doc.model.ApiReqParam;
@@ -87,16 +88,18 @@ public class ApiParamTreeUtil {
     }
 
     /**
-     * buildMethodReqParam handle configParam
+     * Constructs method request parameters based on the parameter list, query parameter map, and path parameter map.
+     * This method categorizes parameters into path, query, and body parameters, and treats all as query parameters
+     * if the request method type is GET or DELETE.
      *
-     * @param paramList          unConfigParam
-     * @param queryReqParamMap   configQueryParam
-     * @param pathReqParamMap    configPathParam
-     * @param requestBodyCounter hasRequestBody
-     * @return ApiMethodReqParam
+     * @param paramList        List of parameters containing all unconfigured parameter information.
+     * @param queryReqParamMap Mapping of configured query parameters.
+     * @param pathReqParamMap  Mapping of configured path parameters.
+     * @param methodType      The request method type, determining whether to treat all parameters as query parameters.
+     * @return An instance of ApiMethodReqParam built with categorized parameter information.
      */
     public static ApiMethodReqParam buildMethodReqParam(List<ApiParam> paramList, final Map<String, ApiReqParam> queryReqParamMap,
-                                                        final Map<String, ApiReqParam> pathReqParamMap, int requestBodyCounter) {
+                                                        final Map<String, ApiReqParam> pathReqParamMap,String methodType) {
         List<ApiParam> pathParams = new ArrayList<>();
         List<ApiParam> queryParams = new ArrayList<>();
         List<ApiParam> bodyParams = new ArrayList<>();
@@ -107,7 +110,7 @@ public class ApiParamTreeUtil {
                 }
                 param.setId(pathParams.size() + 1);
                 pathParams.add(param);
-            } else if (param.isQueryParam() || requestBodyCounter < 1) {
+            } else if (param.isQueryParam() || Methods.GET.getValue().equals(methodType)|| Methods.DELETE.getValue().equals(methodType)) {
                 if (queryReqParamMap.containsKey(param.getField())) {
                     param.setConfigParam(true).setValue(queryReqParamMap.get(param.getField()).getValue());
                 }

@@ -82,7 +82,7 @@ public class OpenApiBuilder extends AbstractOpenApiBuilder {
     public void openApiCreate(ApiConfig config, List<ApiDoc> apiDocList) {
         this.setComponentKey(getModuleName());
         Map<String, Object> json = new HashMap<>(8);
-        json.put("openapi", "3.0.3");
+        json.put("openapi", "3.1.0");
         json.put("info", buildInfo(config));
         json.put("servers", buildServers(config));
         Set<OpenApiTag> tags = new HashSet<>();
@@ -104,7 +104,7 @@ public class OpenApiBuilder extends AbstractOpenApiBuilder {
     private static Map<String, Object> buildInfo(ApiConfig apiConfig) {
         Map<String, Object> infoMap = new HashMap<>(8);
         infoMap.put("title", apiConfig.getProjectName() == null ? "Project Name is Null." : apiConfig.getProjectName());
-        infoMap.put("version", "1.0.0");
+        infoMap.put("version", "v1.0.0");
         return infoMap;
     }
 
@@ -243,7 +243,7 @@ public class OpenApiBuilder extends AbstractOpenApiBuilder {
         parameters = new HashMap<>(20);
         //add mock value for parameters
         if (StringUtils.isNotEmpty(apiParam.getValue())) {
-            parameters.put("example", StringUtil.removeDoubleQuotes(apiParam.getValue()));
+            parameters.put("example", apiParam.getValue());
         }
         if (!hasItems) {
             parameters.put("name", apiParam.getField());

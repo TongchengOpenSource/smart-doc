@@ -39,6 +39,8 @@ public class DocJavaMethod {
 
     private Map<String, JavaType> actualTypesMap;
 
+    private String methodType;
+
     private boolean download;
 
     /**
@@ -187,6 +189,15 @@ public class DocJavaMethod {
 
     public DocJavaMethod setDetail(String detail) {
         this.detail = detail;
+        return this;
+    }
+
+    public String getMethodType() {
+        return methodType;
+    }
+
+    public DocJavaMethod setMethodType(String methodType) {
+        this.methodType = methodType;
         return this;
     }
 }
