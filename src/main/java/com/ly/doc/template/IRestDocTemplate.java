@@ -104,6 +104,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
         if (apiConfig.isSortByTitle()) {
             // sort by title
             Collections.sort(apiDocList);
+            return apiDocList;
         } else if (setCustomOrder) {
             ATOMIC_INTEGER.getAndAdd(maxOrder);
             // while set custom oder
@@ -114,6 +115,8 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                 }
             });
             return tempList.stream().sorted(Comparator.comparing(ApiDoc::getOrder)).collect(Collectors.toList());
+        } else {
+            apiDocList.stream().peek(p -> p.setOrder(ATOMIC_INTEGER.getAndAdd(1))).collect(Collectors.toList());
         }
         return apiDocList;
     }
@@ -398,6 +401,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
         int methodOrder = 0;
         for (DocJavaMethod docJavaMethod : docJavaMethods) {
             JavaMethod method = docJavaMethod.getJavaMethod();
+
             // handle request mapping
             RequestMapping requestMapping = baseMappingHandler.handle(projectBuilder, baseUrl,
                     method, frameworkAnnotations,
@@ -408,6 +412,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
             if (Objects.isNull(requestMapping.getShortUrl())) {
                 continue;
             }
+            docJavaMethod.setMethodType(requestMapping.getMethodType());
             ApiMethodDoc apiMethodDoc = new ApiMethodDoc();
             // fill contentType by annotation's consumes parameter
             String mediaType = requestMapping.getMediaType();
@@ -604,7 +609,9 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
             boolean isRequestBody = false;
             boolean required = false;
             boolean isRequestParam = false;
-            if (annotations.isEmpty()) {
+            if (annotations.isEmpty()
+                    && (Methods.GET.getValue().equals(docJavaMethod.getMethodType())
+                    || Methods.DELETE.getValue().equals(docJavaMethod.getMethodType()))) {
                 isRequestParam = true;
             }
             for (JavaAnnotation annotation : annotations) {
@@ -662,7 +669,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                         .setField(paramName)
                         .setType(ParamTypeConstants.PARAM_TYPE_FILE)
                         .setId(paramList.size() + 1)
-                        .setQueryParam(true)
+                        .setQueryParam(false)
                         .setRequired(required)
                         .setVersion(DocGlobalConstants.DEFAULT_VERSION)
                         .setDesc(comment.toString());
@@ -676,7 +683,10 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                 continue;
             }
 
-            boolean queryParam = !isRequestBody && !isPathVariable;
+            boolean queryParam = Methods.GET.getValue().equals(docJavaMethod.getMethodType()) &&
+                    Methods.DELETE.getValue().equals(docJavaMethod.getMethodType()) &&
+                    !isRequestBody &&
+                    !isPathVariable;
             if (JavaClassValidateUtil.isCollection(fullyQualifiedName) || JavaClassValidateUtil.isArray(fullyQualifiedName)) {
                 String[] gicNameArr = DocClassUtil.getSimpleGicName(typeName);
                 String gicName = gicNameArr[0];
@@ -730,7 +740,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                             .setField(paramName)
                             .setType(ParamTypeConstants.PARAM_TYPE_FILE)
                             .setId(paramList.size() + 1)
-                            .setQueryParam(true)
+                            .setQueryParam(false)
                             .setRequired(required)
                             .setVersion(DocGlobalConstants.DEFAULT_VERSION)
                             .setHasItems(true)
@@ -828,7 +838,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                         String.valueOf(required), Boolean.FALSE, new HashMap<>(16), builder, groupClasses, 0, Boolean.FALSE, null));
             }
         }
-        return ApiParamTreeUtil.buildMethodReqParam(paramList, queryReqParamMap, pathReqParamMap, requestBodyCounter);
+        return ApiParamTreeUtil.buildMethodReqParam(paramList, queryReqParamMap, pathReqParamMap, docJavaMethod.getMethodType());
     }
 
     default ApiRequestExample buildReqJson(DocJavaMethod javaMethod, ApiMethodDoc apiMethodDoc,

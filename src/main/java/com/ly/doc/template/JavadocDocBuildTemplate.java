@@ -75,6 +75,7 @@ public class JavadocDocBuildTemplate implements IDocBuildTemplate<JavadocApiDoc>
         if (apiConfig.isSortByTitle()) {
             // sort by title
             Collections.sort(apiDocList);
+            return apiDocList;
         } else if (setCustomOrder) {
             ATOMIC_INTEGER.getAndAdd(maxOrder);
             // while set custom oder
@@ -85,6 +86,8 @@ public class JavadocDocBuildTemplate implements IDocBuildTemplate<JavadocApiDoc>
                 }
             });
             return tempList.stream().sorted(Comparator.comparing(JavadocApiDoc::getOrder)).collect(Collectors.toList());
+        } else {
+            apiDocList.stream().peek(p -> p.setOrder(ATOMIC_INTEGER.getAndAdd(1))).collect(Collectors.toList());
         }
         return apiDocList;
     }

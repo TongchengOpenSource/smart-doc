@@ -193,14 +193,14 @@ public class PostmanJsonBuilder {
         BodyBean bodyBean;
         if (apiMethodDoc.getContentType().contains(MediaType.APPLICATION_JSON)) {
             bodyBean = new BodyBean(Boolean.FALSE);// Json request
-            bodyBean.setMode(DocGlobalConstants.POSTMAN_MODE_RAW);
+            bodyBean.setMode(convertContentTypeToPostmanType(apiMethodDoc.getContentType()));
             if (apiMethodDoc.getRequestExample() != null) {
                 bodyBean.setRaw(apiMethodDoc.getRequestExample().getJsonBody());
             }
         } else {
             if (apiMethodDoc.getType().equals(Methods.POST.getValue())) {
                 bodyBean = new BodyBean(Boolean.TRUE); // Formdata
-                bodyBean.setMode(DocGlobalConstants.POSTMAN_MODE_FORMDATA);
+                bodyBean.setMode(convertContentTypeToPostmanType(apiMethodDoc.getContentType()));
                 if (CollectionUtil.isNotEmpty(apiMethodDoc.getRequestExample().getFormDataList())) {
                     bodyBean.setFormdata(apiMethodDoc.getRequestExample().getFormDataList());
                 } else {
@@ -266,6 +266,31 @@ public class PostmanJsonBuilder {
         filePath = filePath + DocGlobalConstants.POSTMAN_JSON;
         String data = JsonUtil.toPrettyJson(requestItem);
         FileUtil.nioWriteFile(data, filePath);
+    }
+
+    /**
+     * Converts the request Content-Type to its corresponding Postman request type.
+     *
+     * Postman is a popular API testing tool that supports various request types. This method aims to map common
+     * Content-Types to the formats recognized by Postman, facilitating more accurate HTTP request simulations.
+     *
+     * @param contentType The MIME type of the data in the request, indicating how it should be processed.
+     * @return The Postman request type corresponding to the given Content-Type.
+     *
+     * Note: This mapping covers typical use cases and Postman's supported range; it may not include all possible Content-Types.
+     */
+    private static String convertContentTypeToPostmanType(String contentType) {
+        switch (contentType) {
+            case "application/json":
+            case "application/xml":
+                return "raw";
+            case "multipart/form-data":
+                return "formdata";
+            case "application/x-www-form-urlencoded":
+                return "x-www-form-urlencoded";
+            default:
+                return "none";
+        }
     }
 
 }
