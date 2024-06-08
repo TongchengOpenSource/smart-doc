@@ -26,10 +26,7 @@ package com.ly.doc.builder.openapi;
 
 import com.ly.doc.builder.DocBuilderTemplate;
 import com.ly.doc.builder.ProjectDocConfigBuilder;
-import com.ly.doc.constants.ComponentTypeEnum;
-import com.ly.doc.constants.MediaType;
-import com.ly.doc.constants.Methods;
-import com.ly.doc.constants.ParamTypeConstants;
+import com.ly.doc.constants.*;
 import com.ly.doc.factory.BuildTemplateFactory;
 import com.ly.doc.model.*;
 import com.ly.doc.model.openapi.OpenApiTag;
@@ -68,20 +65,21 @@ public abstract class AbstractOpenApiBuilder {
     /**
      * Create OpenAPI definition
      *
-     * @param apiConfig  Configuration of smart-doc
-     * @param apiDocList List of API DOC
+     * @param apiConfig Configuration of smart-doc
+     * @param apiSchema Project API schema
      */
-    abstract void openApiCreate(ApiConfig apiConfig, List<ApiDoc> apiDocList);
+    abstract void openApiCreate(ApiConfig apiConfig, ApiSchema<ApiDoc> apiSchema);
 
     /**
      * Build request
      *
-     * @param apiConfig    Configuration of smart-doc
-     * @param apiMethodDoc Data of method
-     * @param apiDoc       singe api doc
+     * @param apiConfig            Configuration of smart-doc
+     * @param apiMethodDoc         Data of method
+     * @param apiDoc               singe api doc
+     * @param apiExceptionStatuses Exception status list
      * @return Map of request urls
      */
-    abstract Map<String, Object> buildPathUrlsRequest(ApiConfig apiConfig, ApiMethodDoc apiMethodDoc, ApiDoc apiDoc);
+    abstract Map<String, Object> buildPathUrlsRequest(ApiConfig apiConfig, ApiMethodDoc apiMethodDoc, ApiDoc apiDoc, List<ApiExceptionStatus> apiExceptionStatuses);
 
     /**
      * response body
@@ -102,19 +100,19 @@ public abstract class AbstractOpenApiBuilder {
     /**
      * Build openapi paths
      *
-     * @param apiConfig  Configuration of smart-doc
-     * @param apiDocList List of API DOC
-     * @param tags       tags
+     * @param apiConfig Configuration of smart-doc
+     * @param apiSchema Project API schema
+     * @param tags      tags
      * @return Map of paths
      */
-    public Map<String, Object> buildPaths(ApiConfig apiConfig, List<ApiDoc> apiDocList, Set<OpenApiTag> tags) {
+    public Map<String, Object> buildPaths(ApiConfig apiConfig, ApiSchema<ApiDoc> apiSchema, Set<OpenApiTag> tags) {
         Map<String, Object> pathMap = new HashMap<>(500);
         Set<ApiMethodDoc> methodDocs = DocMapping.METHOD_DOCS;
         for (ApiMethodDoc methodDoc : methodDocs) {
             String[] paths = methodDoc.getPath().split(";");
             for (String path : paths) {
                 path = path.trim();
-                Map<String, Object> request = buildPathUrls(apiConfig, methodDoc, methodDoc.getClazzDoc());
+                Map<String, Object> request = buildPathUrls(apiConfig, methodDoc, methodDoc.getClazzDoc(), apiSchema.getApiExceptionStatuses());
                 if (!pathMap.containsKey(path)) {
                     pathMap.put(path, request);
                 } else {
@@ -142,9 +140,9 @@ public abstract class AbstractOpenApiBuilder {
      * @param apiDoc       ApiDoc
      * @return Map of path urls
      */
-    public Map<String, Object> buildPathUrls(ApiConfig apiConfig, ApiMethodDoc apiMethodDoc, ApiDoc apiDoc) {
+    public Map<String, Object> buildPathUrls(ApiConfig apiConfig, ApiMethodDoc apiMethodDoc, ApiDoc apiDoc, List<ApiExceptionStatus> apiExceptionStatuses) {
         Map<String, Object> request = new HashMap<>(4);
-        request.put(apiMethodDoc.getType().toLowerCase(), buildPathUrlsRequest(apiConfig, apiMethodDoc, apiDoc));
+        request.put(apiMethodDoc.getType().toLowerCase(), buildPathUrlsRequest(apiConfig, apiMethodDoc, apiDoc, apiExceptionStatuses));
         return request;
     }
 
@@ -348,11 +346,12 @@ public abstract class AbstractOpenApiBuilder {
     /**
      * build response
      *
-     * @param apiMethodDoc ApiMethodDoc
-     * @param apiConfig    ApiConfig
+     * @param apiMethodDoc         ApiMethodDoc
+     * @param apiConfig            ApiConfig
+     * @param apiExceptionStatuses apiExceptionStatuses
      * @return response info
      */
-    public Map<String, Object> buildResponses(ApiConfig apiConfig, ApiMethodDoc apiMethodDoc) {
+    public Map<String, Object> buildResponses(ApiConfig apiConfig, ApiMethodDoc apiMethodDoc, List<ApiExceptionStatus> apiExceptionStatuses) {
         Map<String, Object> response = new HashMap<>(10);
         response.put("200", buildResponsesBody(apiConfig, apiMethodDoc));
         return response;
@@ -457,14 +456,12 @@ public abstract class AbstractOpenApiBuilder {
             propertiesData.put("format", "binary");
         }
         if ("object".equals(apiParam.getType())) {
+            propertiesData.put("description", apiParam.getDesc() + "(object)");
             if (CollectionUtil.isNotEmpty(apiParam.getChildren())) {
-                propertiesData.put("type", "object");
-                propertiesData.put("description", apiParam.getDesc() + "(object)");
                 if (!apiParam.isSelfReferenceLoop()) {
                     String childSchemaName = OpenApiSchemaUtil.getClassNameFromParams(apiParam.getChildren());
                     if (childSchemaName.contains(OpenApiSchemaUtil.NO_BODY_PARAM)) {
                         propertiesData.put("type", "object");
-                        propertiesData.put("description", apiParam.getDesc() + "(object)");
                     } else {
                         component.put(childSchemaName, buildProperties(apiParam.getChildren(), component, isResp));
                         propertiesData.put("$ref", componentKey + childSchemaName);
@@ -472,7 +469,6 @@ public abstract class AbstractOpenApiBuilder {
                 }
             } else {
                 propertiesData.put("type", "object");
-                propertiesData.put("description", apiParam.getDesc() + "(object)");
             }
         }
         if (apiParam.getExtensions() != null && !apiParam.getExtensions().isEmpty()) {
@@ -483,13 +479,46 @@ public abstract class AbstractOpenApiBuilder {
     }
 
     /**
+     * Builds component data for API documentation.
+     * This method iterates through all API documentation entries to extract request and response parameter information,
+     * and organizes them into OpenAPI component schemas.
+     *
+     * @param apiDocs List of API documentation, containing multiple API method descriptions.
+     * @return Returns a map containing all component schemas.
+     */
+    public Map<String, Object> buildComponentData(List<ApiDoc> apiDocs) {
+        Map<String, Object> component = new HashMap<>(16);
+        component.put(DocGlobalConstants.DEFAULT_PRIMITIVE, STRING_COMPONENT);
+        apiDocs.forEach(
+                a -> {
+                    List<ApiMethodDoc> apiMethodDocs = a.getList();
+                    apiMethodDocs.forEach(
+                            method -> {
+                                //request components
+                                String requestSchema = OpenApiSchemaUtil.getClassNameFromParams(method.getRequestParams());
+                                List<ApiParam> requestParams = method.getRequestParams();
+                                Map<String, Object> prop = buildProperties(requestParams, component, false);
+                                component.put(requestSchema, prop);
+                                //response components
+                                List<ApiParam> responseParams = method.getResponseParams();
+                                String responseSchemaName = OpenApiSchemaUtil.getClassNameFromParams(method.getResponseParams());
+                                component.put(responseSchemaName, buildProperties(responseParams, component, true));
+                            }
+                    );
+                }
+        );
+        component.remove(OpenApiSchemaUtil.NO_BODY_PARAM);
+        return component;
+    }
+
+    /**
      * Get a list of OpenAPI's document data
      *
      * @param config         Configuration of smart-doc
      * @param projectBuilder JavaDocBuilder of QDox
      * @return List of OpenAPI's document data
      */
-    public List<ApiDoc> getOpenApiDocs(ApiConfig config, JavaProjectBuilder projectBuilder) {
+    public ApiSchema<ApiDoc> getOpenApiDocs(ApiConfig config, JavaProjectBuilder projectBuilder) {
         config.setShowJavaType(false);
         DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
         builderTemplate.checkAndInit(config, Boolean.TRUE);
@@ -498,5 +527,10 @@ public abstract class AbstractOpenApiBuilder {
         IDocBuildTemplate docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework());
         Objects.requireNonNull(docBuildTemplate, "doc build template is null");
         return docBuildTemplate.getApiData(configBuilder);
+    }
+
+    public static Map<String, Object> buildErrorStatusResponse(ApiConfig apiConfig, List<ApiExceptionStatus> apiExceptionStatuses) {
+        // TODO
+        return null;
     }
 }

@@ -251,7 +251,7 @@ public class PostmanJsonBuilder {
         IDocBuildTemplate<ApiDoc> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework());
         Objects.requireNonNull(docBuildTemplate, "doc build template is null");
         config.setShowJavaType(true);
-        List<ApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder);
+        List<ApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder).getApiDatas();
         RequestItem requestItem = new RequestItem();
         requestItem.setInfo(new InfoBean(config.getProjectName()));
         List<ItemBean> itemBeans = new ArrayList<>();

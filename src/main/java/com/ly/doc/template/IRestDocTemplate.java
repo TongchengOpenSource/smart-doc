@@ -29,6 +29,7 @@ import com.ly.doc.helper.JsonBuildHelper;
 import com.ly.doc.helper.ParamsBuildHelper;
 import com.ly.doc.model.*;
 import com.ly.doc.model.annotation.EntryAnnotation;
+import com.ly.doc.model.annotation.ExceptionAdviceAnnotation;
 import com.ly.doc.model.annotation.FrameworkAnnotations;
 import com.ly.doc.model.annotation.MappingAnnotation;
 import com.ly.doc.model.request.ApiRequestExample;
@@ -59,13 +60,14 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
     Logger log = Logger.getLogger(IRestDocTemplate.class.getName());
     AtomicInteger ATOMIC_INTEGER = new AtomicInteger(1);
 
-    default List<ApiDoc> processApiData(ProjectDocConfigBuilder projectBuilder, FrameworkAnnotations frameworkAnnotations,
+    default ApiSchema<ApiDoc> processApiData(ProjectDocConfigBuilder projectBuilder, FrameworkAnnotations frameworkAnnotations,
                                         List<ApiReqParam> configApiReqParams, IRequestMappingHandler baseMappingHandler, IHeaderHandler headerHandler,
                                         Collection<JavaClass> javaClasses) {
         ApiConfig apiConfig = projectBuilder.getApiConfig();
         List<ApiDoc> apiDocList = new ArrayList<>();
         boolean setCustomOrder = false;
         int maxOrder = 0;
+        ApiSchema<ApiDoc> apiSchema = new ApiSchema<>();
         // exclude  class is ignore
         for (JavaClass cls : javaClasses) {
             if (StringUtil.isNotEmpty(apiConfig.getPackageFilters())) {
@@ -98,13 +100,18 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                 continue;
             }
             this.handleApiDoc(cls, apiDocList, apiMethodDocs, order, apiConfig.isMd5EncryptedHtmlName());
+
+            // todo exception status
+            // apiSchema.setApiExceptionStatuses();
         }
         apiDocList = this.handleTagsApiDoc(apiDocList);
+
 
         if (apiConfig.isSortByTitle()) {
             // sort by title
             Collections.sort(apiDocList);
-            return apiDocList;
+            apiSchema.setApiDatas(apiDocList);
+            return apiSchema;
         } else if (setCustomOrder) {
             ATOMIC_INTEGER.getAndAdd(maxOrder);
             // while set custom oder
@@ -114,11 +121,12 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                     p.setOrder(ATOMIC_INTEGER.getAndAdd(1));
                 }
             });
-            return tempList.stream().sorted(Comparator.comparing(ApiDoc::getOrder)).collect(Collectors.toList());
+            apiSchema.setApiDatas(tempList.stream().sorted(Comparator.comparing(ApiDoc::getOrder)).collect(Collectors.toList()));
         } else {
             apiDocList.stream().peek(p -> p.setOrder(ATOMIC_INTEGER.getAndAdd(1))).collect(Collectors.toList());
         }
-        return apiDocList;
+        apiSchema.setApiDatas(apiDocList);
+        return apiSchema;
     }
 
     default String createDocRenderHeaders(List<ApiReqParam> headers, boolean isAdoc) {
@@ -1092,6 +1100,24 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
         });
     }
 
+    default boolean defaultExceptionAdviceEntryPoint(JavaClass cls, FrameworkAnnotations frameworkAnnotations) {
+        if (cls.isAnnotation() || cls.isEnum()) {
+            return false;
+        }
+        if (Objects.isNull(frameworkAnnotations)) {
+            return false;
+        }
+        List<JavaAnnotation> classAnnotations = DocClassUtil.getAnnotations(cls);
+        if (Objects.isNull(frameworkAnnotations.getExceptionAdviceAnnotations())) {
+            return false;
+        }
+        Map<String, ExceptionAdviceAnnotation> exceptionAdviceAnnotationMap = frameworkAnnotations.getExceptionAdviceAnnotations();
+        return classAnnotations.stream().anyMatch(annotation -> {
+            String name = annotation.getType().getValue();
+            return exceptionAdviceAnnotationMap.containsKey(name);
+        });
+    }
+
     default List<DocJavaMethod> getParentsClassMethods(ApiConfig apiConfig, ProjectDocConfigBuilder projectBuilder, JavaClass cls) {
         List<DocJavaMethod> docJavaMethods = new ArrayList<>();
         JavaClass parentClass = cls.getSuperJavaClass();
@@ -1154,6 +1180,15 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
     }
 
     boolean isEntryPoint(JavaClass javaClass, FrameworkAnnotations frameworkAnnotations);
+
+    /**
+     * Unified exception handling entry for RESTful APIs.
+     *
+     * @param javaClass          The Java class associated with the API endpoint.
+     * @param frameworkAnnotations Annotations provided by the framework, which may include information about exception handling or other metadata.
+     * @return The processed result, typically a response tailored for the RESTful API context.
+     */
+    boolean isExceptionAdviceEntryPoint(JavaClass javaClass, FrameworkAnnotations frameworkAnnotations);
 
     List<String> listMvcRequestAnnotations();
 

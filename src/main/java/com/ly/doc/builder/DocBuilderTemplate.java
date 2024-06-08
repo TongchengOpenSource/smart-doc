@@ -182,7 +182,7 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
             tpl.binding(TemplateVariable.LIST.getVariable(), apiDoc.getList());
         }
         // add jmeter prometheus listener
-        if (Objects.nonNull(config.getJmeter())){
+        if (Objects.nonNull(config.getJmeter())) {
             tpl.binding(TemplateVariable.JMETER_PROMETHEUS_LISTENER.getVariable(), config.getJmeter().getAddPrometheusListener());
         } else {
             tpl.binding(TemplateVariable.JMETER_PROMETHEUS_LISTENER.getVariable(), Boolean.FALSE);
@@ -485,7 +485,7 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
         IDocBuildTemplate<ApiDoc> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework());
         Objects.requireNonNull(docBuildTemplate, "doc build template is null");
-        return docBuildTemplate.getApiData(configBuilder);
+        return docBuildTemplate.getApiData(configBuilder).getApiDatas();
     }
 
 }

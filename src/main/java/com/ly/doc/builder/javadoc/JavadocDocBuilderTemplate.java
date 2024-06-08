@@ -27,9 +27,7 @@ import com.ly.doc.constants.DocGlobalConstants;
 import com.ly.doc.constants.FrameworkEnum;
 import com.ly.doc.constants.TemplateVariable;
 import com.ly.doc.factory.BuildTemplateFactory;
-import com.ly.doc.model.ApiConfig;
-import com.ly.doc.model.ApiDocDict;
-import com.ly.doc.model.ApiErrorCode;
+import com.ly.doc.model.*;
 import com.ly.doc.model.javadoc.JavadocApiAllData;
 import com.ly.doc.model.javadoc.JavadocApiDoc;
 import com.ly.doc.template.IDocBuildTemplate;
@@ -201,7 +199,8 @@ public class JavadocDocBuilderTemplate extends BaseDocBuilderTemplate {
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
         IDocBuildTemplate<JavadocApiDoc> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework());
         Objects.requireNonNull(docBuildTemplate, "doc build template is null");
-        return docBuildTemplate.getApiData(configBuilder);
+        ApiSchema<JavadocApiDoc> apiSchema = docBuildTemplate.getApiData(configBuilder);
+        return apiSchema.getApiDatas();
     }
 
     public List<JavadocApiDoc> getJavadocApiDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
@@ -209,7 +208,7 @@ public class JavadocDocBuilderTemplate extends BaseDocBuilderTemplate {
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
         IDocBuildTemplate<JavadocApiDoc> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework());
         Objects.requireNonNull(docBuildTemplate, "doc build template is null");
-        return docBuildTemplate.getApiData(configBuilder);
+        return docBuildTemplate.getApiData(configBuilder).getApiDatas();
     }
 
 }

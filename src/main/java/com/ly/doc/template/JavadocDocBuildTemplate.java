@@ -53,7 +53,7 @@ public class JavadocDocBuildTemplate implements IDocBuildTemplate<JavadocApiDoc>
     }
 
     @Override
-    public List<JavadocApiDoc> renderApi(ProjectDocConfigBuilder projectBuilder, Collection<JavaClass> candidateClasses) {
+    public ApiSchema<JavadocApiDoc> renderApi(ProjectDocConfigBuilder projectBuilder, Collection<JavaClass> candidateClasses) {
         ApiConfig apiConfig = projectBuilder.getApiConfig();
         List<JavadocApiDoc> apiDocList = new ArrayList<>();
         int maxOrder = 0;
@@ -72,10 +72,12 @@ public class JavadocDocBuildTemplate implements IDocBuildTemplate<JavadocApiDoc>
             List<JavadocJavaMethod> apiMethodDocs = (List<JavadocJavaMethod>) buildServiceMethod(cls, apiConfig, projectBuilder);
             this.handleJavaApiDoc(cls, apiDocList, apiMethodDocs, order, projectBuilder);
         }
+        ApiSchema<JavadocApiDoc> apiSchema = new ApiSchema<>();
         if (apiConfig.isSortByTitle()) {
             // sort by title
             Collections.sort(apiDocList);
-            return apiDocList;
+            apiSchema.setApiDatas(apiDocList);
+            return apiSchema;
         } else if (setCustomOrder) {
             ATOMIC_INTEGER.getAndAdd(maxOrder);
             // while set custom oder
@@ -85,11 +87,14 @@ public class JavadocDocBuildTemplate implements IDocBuildTemplate<JavadocApiDoc>
                     p.setOrder(ATOMIC_INTEGER.getAndAdd(1));
                 }
             });
-            return tempList.stream().sorted(Comparator.comparing(JavadocApiDoc::getOrder)).collect(Collectors.toList());
+            apiSchema.setApiDatas(tempList.stream()
+                    .sorted(Comparator.comparing(JavadocApiDoc::getOrder))
+                    .collect(Collectors.toList()));
         } else {
             apiDocList.stream().peek(p -> p.setOrder(ATOMIC_INTEGER.getAndAdd(1))).collect(Collectors.toList());
+            apiSchema.setApiDatas(apiDocList);
         }
-        return apiDocList;
+        return apiSchema;
     }
 
     @Override

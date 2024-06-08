@@ -25,6 +25,7 @@ import com.ly.doc.factory.BuildTemplateFactory;
 import com.ly.doc.helper.JavaProjectBuilderHelper;
 import com.ly.doc.model.ApiConfig;
 import com.ly.doc.model.ApiDoc;
+import com.ly.doc.model.ApiSchema;
 import com.ly.doc.model.torna.Apis;
 import com.ly.doc.model.torna.TornaApi;
 import com.ly.doc.template.IDocBuildTemplate;
@@ -69,8 +70,8 @@ public class TornaBuilder {
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
         IDocBuildTemplate<ApiDoc> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework());
         Objects.requireNonNull(docBuildTemplate, "doc build template is null");
-        List<ApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder);
-        apiDocList = docBuildTemplate.handleApiGroup(apiDocList, config);
+        ApiSchema<ApiDoc> apiSchema = docBuildTemplate.getApiData(configBuilder);
+        List<ApiDoc> apiDocList = docBuildTemplate.handleApiGroup(apiSchema.getApiDatas(), config);
         buildTorna(apiDocList, config, javaProjectBuilder);
     }
 

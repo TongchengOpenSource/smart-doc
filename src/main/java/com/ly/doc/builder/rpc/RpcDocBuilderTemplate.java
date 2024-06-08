@@ -217,7 +217,7 @@ public class RpcDocBuilderTemplate extends BaseDocBuilderTemplate {
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
         IDocBuildTemplate<RpcApiDoc> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework());
         Objects.requireNonNull(docBuildTemplate, "doc build template is null");
-        return docBuildTemplate.getApiData(configBuilder);
+        return docBuildTemplate.getApiData(configBuilder).getApiDatas();
     }
 
     public List<RpcApiDoc> getRpcApiDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
@@ -225,7 +225,7 @@ public class RpcDocBuilderTemplate extends BaseDocBuilderTemplate {
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
         IDocBuildTemplate<RpcApiDoc> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework());
         Objects.requireNonNull(docBuildTemplate, "doc build template is null");
-        return docBuildTemplate.getApiData(configBuilder);
+        return docBuildTemplate.getApiData(configBuilder).getApiDatas();
     }
 
 }

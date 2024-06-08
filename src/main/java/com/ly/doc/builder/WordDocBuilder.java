@@ -25,6 +25,7 @@ import com.ly.doc.factory.BuildTemplateFactory;
 import com.ly.doc.helper.JavaProjectBuilderHelper;
 import com.ly.doc.model.ApiConfig;
 import com.ly.doc.model.ApiDoc;
+import com.ly.doc.model.ApiSchema;
 import com.ly.doc.template.IDocBuildTemplate;
 import com.power.common.util.DateTimeUtil;
 import com.power.common.util.FileUtil;
@@ -78,7 +79,8 @@ public class WordDocBuilder {
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
         IDocBuildTemplate<ApiDoc> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework());
         Objects.requireNonNull(docBuildTemplate, "doc build template is null");
-        List<ApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder);
+        ApiSchema<ApiDoc> apiSchema = docBuildTemplate.getApiData(configBuilder);
+        List<ApiDoc> apiDocList = apiSchema.getApiDatas();
 
         if (config.isAllInOne()) {
             String version = config.isCoverOld() ? "" : "-V" + DateTimeUtil.long2Str(System.currentTimeMillis(), DocGlobalConstants.DATE_FORMAT_YYYY_MM_DD_HH_MM);

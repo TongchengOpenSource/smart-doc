@@ -65,8 +65,8 @@ public class SwaggerBuilder extends AbstractOpenApiBuilder {
      * @param projectBuilder JavaDocBuilder of QDox
      */
     public static void buildOpenApi(ApiConfig config, JavaProjectBuilder projectBuilder) {
-        List<ApiDoc> apiDocList = INSTANCE.getOpenApiDocs(config, projectBuilder);
-        INSTANCE.openApiCreate(config, apiDocList);
+        ApiSchema<ApiDoc> apiSchema = INSTANCE.getOpenApiDocs(config, projectBuilder);
+        INSTANCE.openApiCreate(config, apiSchema);
     }
 
     @Override
@@ -79,7 +79,8 @@ public class SwaggerBuilder extends AbstractOpenApiBuilder {
      *
      * @param config Configuration of smart-doc
      */
-    public void openApiCreate(ApiConfig config, List<ApiDoc> apiDocList) {
+    @Override
+    public void openApiCreate(ApiConfig config, ApiSchema<ApiDoc> apiSchema) {
         this.setComponentKey(getModuleName());
         Map<String, Object> json = new HashMap<>(8);
         json.put("swagger", "2.0");
@@ -88,8 +89,8 @@ public class SwaggerBuilder extends AbstractOpenApiBuilder {
         json.put("basePath", StringUtils.isNotBlank(config.getPathPrefix()) ? config.getPathPrefix() : "/");
         Set<OpenApiTag> tags = new HashSet<>();
         json.put("tags", tags);
-        json.put("paths", buildPaths(config, apiDocList, tags));
-        json.put("definitions", buildComponentsSchema(apiDocList));
+        json.put("paths", buildPaths(config, apiSchema, tags));
+        json.put("definitions", buildComponentsSchema(apiSchema.getApiDatas()));
 
         String filePath = config.getOutPath();
         filePath = filePath + DocGlobalConstants.OPEN_API_JSON;
@@ -135,12 +136,12 @@ public class SwaggerBuilder extends AbstractOpenApiBuilder {
      * @param apiMethodDoc ApiMethodDoc
      * @param apiDoc       apiDoc
      */
-    public Map<String, Object> buildPathUrlsRequest(ApiConfig apiConfig, ApiMethodDoc apiMethodDoc, ApiDoc apiDoc) {
+    public Map<String, Object> buildPathUrlsRequest(ApiConfig apiConfig, ApiMethodDoc apiMethodDoc, ApiDoc apiDoc, List<ApiExceptionStatus> apiExceptionStatuses) {
         Map<String, Object> request = new HashMap<>(20);
         request.put("summary", apiMethodDoc.getDesc());
         request.put("description", apiMethodDoc.getDetail());
-        request.put("tags", Arrays.asList(apiDoc.getName(),apiDoc.getDesc(), apiMethodDoc.getGroup())
-                .stream().filter(StringUtil::isNotEmpty).toArray(n->new String[n]));
+        request.put("tags", Arrays.asList(apiDoc.getName(), apiDoc.getDesc(), apiMethodDoc.getGroup())
+                .stream().filter(StringUtil::isNotEmpty).toArray(n -> new String[n]));
         List<Map<String, Object>> parameters = buildParameters(apiMethodDoc);
         // requestBody
         if (CollectionUtil.isNotEmpty(apiMethodDoc.getRequestParams())) {
@@ -155,11 +156,11 @@ public class SwaggerBuilder extends AbstractOpenApiBuilder {
             request.put("consumes", formData);
         }
         request.put("parameters", parameters);
-        request.put("responses", buildResponses(apiConfig, apiMethodDoc));
+        request.put("responses", buildResponses(apiConfig, apiMethodDoc, apiExceptionStatuses));
         request.put("deprecated", apiMethodDoc.isDeprecated());
         String operationId = apiMethodDoc.getUrl().replace(apiMethodDoc.getServerUrl(), "");
         //make sure operationId is unique and can be used as a method name
-        request.put("operationId",apiMethodDoc.getName()+"_"+apiMethodDoc.getMethodId()+"UsingOn"+apiMethodDoc.getType());
+        request.put("operationId", apiMethodDoc.getName() + "_" + apiMethodDoc.getMethodId() + "UsingOn" + apiMethodDoc.getType());
 
         return request;
     }
@@ -265,37 +266,13 @@ public class SwaggerBuilder extends AbstractOpenApiBuilder {
                     parameters.put("type", "integer");
                 }
             }
-
         }
-
-
         return parameters;
     }
 
     @Override
     public Map<String, Object> buildComponentsSchema(List<ApiDoc> apiDocs) {
-        Map<String, Object> component = new HashMap<>();
-        component.put(DocGlobalConstants.DEFAULT_PRIMITIVE, STRING_COMPONENT);
-        apiDocs.forEach(
-                a -> {
-                    List<ApiMethodDoc> apiMethodDocs = a.getList();
-                    apiMethodDocs.forEach(
-                            method -> {
-                                // request components
-                                String requestSchema = OpenApiSchemaUtil.getClassNameFromParams(method.getRequestParams());
-                                List<ApiParam> requestParams = method.getRequestParams();
-                                Map<String, Object> prop = buildProperties(requestParams, component, false);
-                                component.put(requestSchema, prop);
-                                // response components
-                                List<ApiParam> responseParams = method.getResponseParams();
-                                String schemaName = OpenApiSchemaUtil.getClassNameFromParams(method.getResponseParams());
-                                component.put(schemaName, buildProperties(responseParams, component, true));
-                            }
-                    );
-                }
-        );
-        component.remove(OpenApiSchemaUtil.NO_BODY_PARAM);
-        return component;
+        return buildComponentData(apiDocs);
     }
 
 }

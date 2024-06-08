@@ -41,6 +41,8 @@ public class FrameworkAnnotations {
 
     private RequestPartAnnotation requestPartAnnotation;
 
+    private Map<String, ExceptionAdviceAnnotation> exceptionAdviceAnnotations;
+
     /**
      * `javax.websocket.server.ServerEndpoint` info
      */
@@ -119,6 +121,15 @@ public class FrameworkAnnotations {
 
     public FrameworkAnnotations setServerEndpointAnnotation(ServerEndpointAnnotation serverEndpointAnnotation) {
         this.serverEndpointAnnotation = serverEndpointAnnotation;
+        return this;
+    }
+
+    public Map<String, ExceptionAdviceAnnotation> getExceptionAdviceAnnotations() {
+        return exceptionAdviceAnnotations;
+    }
+
+    public FrameworkAnnotations setExceptionAdviceAnnotations(Map<String, ExceptionAdviceAnnotation> exceptionAdviceAnnotations) {
+        this.exceptionAdviceAnnotations = exceptionAdviceAnnotations;
         return this;
     }
 }
