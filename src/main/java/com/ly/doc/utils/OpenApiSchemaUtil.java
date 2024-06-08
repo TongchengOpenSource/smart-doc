@@ -46,7 +46,7 @@ import static com.ly.doc.constants.TornaConstants.GSON;
 public class OpenApiSchemaUtil {
 
     public static final String NO_BODY_PARAM = "NO_BODY_PARAM";
-    static final Pattern PATTRRN = Pattern.compile("[A-Z]\\w+.*?|[A-Z]");
+    static final Pattern PATTERN = Pattern.compile("[A-Z]\\w+.*?|[A-Z]");
 
     public static Map<String, Object> primaryTypeSchema(String primaryType) {
         Map<String, Object> map = new HashMap<>(16);
@@ -72,32 +72,17 @@ public class OpenApiSchemaUtil {
         return map;
     }
 
-    public static Map<String, Object> returnSchema(String returnGicName) {
-        if (StringUtil.isEmpty(returnGicName)) {
-            return null;
-        }
-        returnGicName = returnGicName.replace(">", "");
-        String[] types = returnGicName.split("<");
-        StringBuilder builder = new StringBuilder();
-        for (String str : types) {
-            builder.append(DocClassUtil.getSimpleName(str).replace(",", ""));
-        }
-        Map<String, Object> map = new HashMap<>(16);
-        map.put("$ref", builder.toString());
-        return map;
-    }
-
     public static String getClassNameFromParams(List<ApiParam> apiParams) {
         ComponentTypeEnum componentTypeEnum = ApiConfig.getInstance().getComponentType();
+        //random name
+        if (componentTypeEnum.equals(ComponentTypeEnum.RANDOM)) {
+            return DigestUtils.md5Hex(GSON.toJson(apiParams));
+        }
         // if array[Primitive] or Primitive
         if (CollectionUtil.isNotEmpty(apiParams) && apiParams.size() == 1
                 && StringUtil.isEmpty(apiParams.get(0).getClassName())
                 && CollectionUtil.isEmpty(apiParams.get(0).getChildren())) {
             return DocGlobalConstants.DEFAULT_PRIMITIVE;
-        }
-        //random name
-        if (componentTypeEnum.equals(ComponentTypeEnum.RANDOM)) {
-            return DigestUtils.md5Hex(GSON.toJson(apiParams));
         }
         //className
         for (ApiParam a : apiParams) {
@@ -109,7 +94,7 @@ public class OpenApiSchemaUtil {
     }
 
     public static String delClassName(String className) {
-        return String.join("", getPatternResult(PATTRRN, className));
+        return String.join("", getPatternResult(PATTERN, className));
     }
 
     public static List<String> getPatternResult(Pattern p, String content) {

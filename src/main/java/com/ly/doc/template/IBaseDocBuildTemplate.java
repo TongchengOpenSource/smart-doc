@@ -229,5 +229,46 @@ public interface IBaseDocBuildTemplate {
         return ignoreSets;
     }
 
+    default String getMethodReturnType(JavaMethod javaMethod,Map<String, JavaType> actualTypesMap) {
+        JavaType returnType = javaMethod.getReturnType();
+        String simpleReturn = replaceTypeName(returnType.getCanonicalName(), actualTypesMap, Boolean.TRUE);
+        String returnClass = replaceTypeName(returnType.getGenericCanonicalName(), actualTypesMap, Boolean.TRUE);
+        returnClass = returnClass.replace(simpleReturn, JavaClassUtil.getClassSimpleName(simpleReturn));
+        String[] arrays = DocClassUtil.getSimpleGicName(returnClass);
+        for (String str : arrays) {
+            if (str.contains("[")) {
+                str = str.substring(0, str.indexOf("["));
+            }
+            String[] generics = str.split("[<,]");
+            for (String generic : generics) {
+                if (generic.contains("extends")) {
+                    String className = generic.substring(generic.lastIndexOf(" ") + 1);
+                    returnClass = returnClass.replace(className, JavaClassUtil.getClassSimpleName(className));
+                }
+                if (generic.length() != 1 && !generic.contains("extends")) {
+                    returnClass = returnClass.replaceAll(generic, JavaClassUtil.getClassSimpleName(generic));
+                }
+
+            }
+        }
+        return returnClass;
+    }
+
+    default String replaceTypeName(String type, Map<String, JavaType> actualTypesMap, boolean simple) {
+        if (Objects.isNull(actualTypesMap)) {
+            return type;
+        }
+        for (Map.Entry<String, JavaType> entry : actualTypesMap.entrySet()) {
+            if (type.contains(entry.getKey())) {
+                if (simple) {
+                    return type.replace(entry.getKey(), entry.getValue().getGenericValue());
+                } else {
+                    return type.replace(entry.getKey(), entry.getValue().getGenericFullyQualifiedName());
+                }
+            }
+        }
+        return type;
+    }
+
     boolean ignoreReturnObject(String typeName, List<String> ignoreParams);
 }

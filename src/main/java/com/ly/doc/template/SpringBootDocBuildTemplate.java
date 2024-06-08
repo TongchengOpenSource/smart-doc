@@ -24,10 +24,7 @@ import com.ly.doc.builder.ProjectDocConfigBuilder;
 import com.ly.doc.constants.*;
 import com.ly.doc.handler.SpringMVCRequestHeaderHandler;
 import com.ly.doc.handler.SpringMVCRequestMappingHandler;
-import com.ly.doc.model.ApiConfig;
-import com.ly.doc.model.ApiDoc;
-import com.ly.doc.model.ApiReqParam;
-import com.ly.doc.model.WebSocketDoc;
+import com.ly.doc.model.*;
 import com.ly.doc.model.annotation.*;
 import com.ly.doc.model.request.RequestMapping;
 import com.ly.doc.utils.JavaClassValidateUtil;
@@ -45,14 +42,14 @@ import java.util.stream.Stream;
 public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IWebSocketDocBuildTemplate<WebSocketDoc> ,IRestDocTemplate,IWebSocketTemplate {
 
     @Override
-    public List<ApiDoc> renderApi(ProjectDocConfigBuilder projectBuilder, Collection<JavaClass> candidateClasses) {
+    public ApiSchema<ApiDoc> renderApi(ProjectDocConfigBuilder projectBuilder, Collection<JavaClass> candidateClasses) {
         ApiConfig apiConfig = projectBuilder.getApiConfig();
         List<ApiReqParam> configApiReqParams = Stream.of(apiConfig.getRequestHeaders(), apiConfig.getRequestParams()).filter(Objects::nonNull)
                 .flatMap(Collection::stream).collect(Collectors.toList());
         FrameworkAnnotations frameworkAnnotations = registeredAnnotations();
-        List<ApiDoc> apiDocList = this.processApiData(projectBuilder, frameworkAnnotations,
+        ApiSchema<ApiDoc> apiSchema = this.processApiData(projectBuilder, frameworkAnnotations,
                 configApiReqParams, new SpringMVCRequestMappingHandler(), new SpringMVCRequestHeaderHandler(), candidateClasses);
-        return apiDocList;
+        return apiSchema;
     }
 
     @Override
@@ -190,8 +187,16 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IW
                 .setAnnotationName(DocGlobalConstants.FEIGN_CLIENT)
                 .setAnnotationFullyName(DocGlobalConstants.FEIGN_CLIENT_FULLY);
         mappingAnnotations.put(feignClientAnnotation.getAnnotationName(), feignClientAnnotation);
-
         annotations.setMappingAnnotations(mappingAnnotations);
+
+        // Add Exception advice
+        Map<String, ExceptionAdviceAnnotation> exceptionAdviceAnnotations = new HashMap<>(16);
+
+        ExceptionAdviceAnnotation exceptionAdviceAnnotation = ExceptionAdviceAnnotation.builder()
+                .setAnnotationName(SpringMvcAnnotations.REST_CONTROLLER_ADVICE);
+        exceptionAdviceAnnotations.put(exceptionAdviceAnnotation.getAnnotationName(), exceptionAdviceAnnotation);
+        annotations.setExceptionAdviceAnnotations(exceptionAdviceAnnotations);
+
         return annotations;
     }
 
@@ -231,4 +236,8 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IW
         return JavaClassValidateUtil.ignoreSpringMvcParamWithAnnotation(annotation);
     }
 
+    @Override
+    public boolean isExceptionAdviceEntryPoint(JavaClass javaClass, FrameworkAnnotations frameworkAnnotations) {
+        return defaultExceptionAdviceEntryPoint(javaClass, frameworkAnnotations);
+    }
 }

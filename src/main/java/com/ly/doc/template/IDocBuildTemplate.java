@@ -22,6 +22,7 @@ package com.ly.doc.template;
 
 import com.ly.doc.builder.ProjectDocConfigBuilder;
 import com.ly.doc.helper.DocBuildHelper;
+import com.ly.doc.model.ApiSchema;
 import com.ly.doc.model.DocMapping;
 import com.ly.doc.model.IDoc;
 import com.thoughtworks.qdox.model.JavaClass;
@@ -40,7 +41,7 @@ public interface IDocBuildTemplate<T extends IDoc> extends IDocBuildBaseTemplate
      * @param projectBuilder ProjectDocConfigBuilder
      * @return api data
      */
-    default List<T> getApiData(ProjectDocConfigBuilder projectBuilder) {
+    default ApiSchema<T> getApiData(ProjectDocConfigBuilder projectBuilder) {
         // For DocMapping initialization, when building multiple modules together, it is necessary to initialize and clear the cache
         DocMapping.init();
         DocBuildHelper docBuildHelper = DocBuildHelper.create(projectBuilder);
@@ -48,11 +49,11 @@ public interface IDocBuildTemplate<T extends IDoc> extends IDocBuildBaseTemplate
         preRender(docBuildHelper);
         // get candidate classes
         Collection<JavaClass> candidateClasses = getCandidateClasses(projectBuilder, docBuildHelper);
-        List<T> apiList = renderApi(projectBuilder, candidateClasses);
+        ApiSchema<T> apiSchema = renderApi(projectBuilder, candidateClasses);
 
-        postRender(docBuildHelper, apiList);
+        postRender(docBuildHelper, apiSchema.getApiDatas());
 
-        return apiList;
+        return apiSchema;
     }
 
 
@@ -61,9 +62,9 @@ public interface IDocBuildTemplate<T extends IDoc> extends IDocBuildBaseTemplate
      *
      * @param projectBuilder   ProjectDocConfigBuilder
      * @param candidateClasses candidate classes
-     * @return api list
+     * @return api ApiSchema
      */
-    List<T> renderApi(ProjectDocConfigBuilder projectBuilder, Collection<JavaClass> candidateClasses);
+    ApiSchema<T> renderApi(ProjectDocConfigBuilder projectBuilder, Collection<JavaClass> candidateClasses);
 
 
 

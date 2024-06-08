@@ -68,27 +68,27 @@ public class OpenApiBuilder extends AbstractOpenApiBuilder {
      * @param projectBuilder JavaDocBuilder of QDox
      */
     public static void buildOpenApi(ApiConfig config, JavaProjectBuilder projectBuilder) {
-        List<ApiDoc> apiDocList = INSTANCE.getOpenApiDocs(config, projectBuilder);
-        INSTANCE.openApiCreate(config, apiDocList);
+        ApiSchema<ApiDoc> apiSchema = INSTANCE.getOpenApiDocs(config, projectBuilder);
+        INSTANCE.openApiCreate(config, apiSchema);
     }
 
     /**
      * Build OpenApi
      *
      * @param config     Configuration of smart-doc
-     * @param apiDocList List of API DOC
+     * @param apiSchema List of API DOC
      */
     @Override
-    public void openApiCreate(ApiConfig config, List<ApiDoc> apiDocList) {
+    public void openApiCreate(ApiConfig config, ApiSchema<ApiDoc> apiSchema) {
         this.setComponentKey(getModuleName());
-        Map<String, Object> json = new HashMap<>(8);
+        Map<String, Object> json = new LinkedHashMap<>(8);
         json.put("openapi", "3.1.0");
         json.put("info", buildInfo(config));
         json.put("servers", buildServers(config));
         Set<OpenApiTag> tags = new HashSet<>();
         json.put("tags", tags);
-        json.put("paths", buildPaths(config, apiDocList, tags));
-        json.put("components", buildComponentsSchema(apiDocList));
+        json.put("paths", buildPaths(config, apiSchema, tags));
+        json.put("components", buildComponentsSchema(apiSchema.getApiDatas()));
 
         String filePath = config.getOutPath();
         filePath = filePath + DocGlobalConstants.OPEN_API_JSON;
@@ -130,7 +130,10 @@ public class OpenApiBuilder extends AbstractOpenApiBuilder {
      * @param apiDoc       apiDoc
      */
     @Override
-    public Map<String, Object> buildPathUrlsRequest(ApiConfig apiConfig, ApiMethodDoc apiMethodDoc, ApiDoc apiDoc) {
+    public Map<String, Object> buildPathUrlsRequest(ApiConfig apiConfig,
+                                                    ApiMethodDoc apiMethodDoc,
+                                                    ApiDoc apiDoc,
+                                                    List<ApiExceptionStatus> apiExceptionStatuses) {
         Map<String, Object> request = new HashMap<>(20);
         request.put("summary", apiMethodDoc.getDesc());
         if (!Objects.equals(apiMethodDoc.getDesc(), apiMethodDoc.getDetail())) {
@@ -146,15 +149,15 @@ public class OpenApiBuilder extends AbstractOpenApiBuilder {
         request.put("tags", apiMethodDoc.getTagRefs().stream().map(TagDoc::getTag).toArray());
         request.put("requestBody", buildRequestBody(apiConfig, apiMethodDoc));
         request.put("parameters", buildParameters(apiMethodDoc));
-        request.put("responses", buildResponses(apiConfig, apiMethodDoc));
+        request.put("responses", buildResponses(apiConfig, apiMethodDoc,apiExceptionStatuses));
         request.put("deprecated", apiMethodDoc.isDeprecated());
         List<String> paths = OpenApiSchemaUtil.getPatternResult("[A-Za-z0-9_{}]*", apiMethodDoc.getPath());
         paths.add(apiMethodDoc.getType());
         String operationId = paths.stream().filter(StringUtils::isNotEmpty).collect(Collectors.joining("-"));
         request.put("operationId", operationId);
         //add extension attribution
-        if ( apiMethodDoc.getExtensions() != null ){
-            apiMethodDoc.getExtensions().entrySet().forEach( e-> request.put("x-"+e.getKey(), e.getValue()));
+        if (apiMethodDoc.getExtensions() != null) {
+            apiMethodDoc.getExtensions().entrySet().forEach(e -> request.put("x-" + e.getKey(), e.getValue()));
         }
         return request;
     }
@@ -226,8 +229,8 @@ public class OpenApiBuilder extends AbstractOpenApiBuilder {
             for (ApiReqParam header : apiMethodDoc.getRequestHeaders()) {
                 parameters = new HashMap<>(20);
                 parameters.put("name", header.getName());
-                parameters.put("description", header.getDesc());
                 parameters.put("required", header.isRequired());
+                parameters.put("description", header.getDesc());
                 parameters.put("example", header.getValue());
                 parameters.put("schema", buildParametersSchema(header));
                 parameters.put("in", "header");
@@ -268,8 +271,8 @@ public class OpenApiBuilder extends AbstractOpenApiBuilder {
             }
             parameters.putAll(buildParametersSchema(apiParam));
         }
-        if (apiParam.getExtensions() != null && !apiParam.getExtensions().isEmpty()){
-            apiParam.getExtensions().entrySet().forEach( e-> parameters.put("x-"+e.getKey(), e.getValue()));
+        if (apiParam.getExtensions() != null && !apiParam.getExtensions().isEmpty()) {
+            apiParam.getExtensions().entrySet().forEach(e -> parameters.put("x-" + e.getKey(), e.getValue()));
         }
 
         return parameters;
@@ -278,28 +281,7 @@ public class OpenApiBuilder extends AbstractOpenApiBuilder {
     @Override
     public Map<String, Object> buildComponentsSchema(List<ApiDoc> apiDocs) {
         Map<String, Object> schemas = new HashMap<>(4);
-        Map<String, Object> component = new HashMap<>(16);
-        component.put(DocGlobalConstants.DEFAULT_PRIMITIVE, STRING_COMPONENT);
-        apiDocs.forEach(
-                a -> {
-                    List<ApiMethodDoc> apiMethodDocs = a.getList();
-                    apiMethodDocs.forEach(
-                            method -> {
-                                //request components
-                                String requestSchema = OpenApiSchemaUtil.getClassNameFromParams(method.getRequestParams());
-                                List<ApiParam> requestParams = method.getRequestParams();
-                                Map<String, Object> prop = buildProperties(requestParams, component, false);
-                                component.put(requestSchema, prop);
-                                //response components
-                                List<ApiParam> responseParams = method.getResponseParams();
-                                String schemaName = OpenApiSchemaUtil.getClassNameFromParams(method.getResponseParams());
-                                component.put(schemaName, buildProperties(responseParams, component, true));
-                            }
-                    );
-                }
-        );
-        component.remove(OpenApiSchemaUtil.NO_BODY_PARAM);
-        schemas.put("schemas", component);
+        schemas.put("schemas", buildComponentData(apiDocs));
         return schemas;
     }
 }

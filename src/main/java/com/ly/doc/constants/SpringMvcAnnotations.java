@@ -58,4 +58,6 @@ public interface SpringMvcAnnotations {
     String REQUEST_BODY_FULLY = "org.springframework.web.bind.annotation.RequestBody";
 
     String SERVER_ENDPOINT = "ServerEndpoint";
+
+    String REST_CONTROLLER_ADVICE = "RestControllerAdvice";
 }

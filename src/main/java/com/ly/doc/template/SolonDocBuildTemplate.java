@@ -24,10 +24,7 @@ import com.ly.doc.builder.ProjectDocConfigBuilder;
 import com.ly.doc.constants.*;
 import com.ly.doc.handler.SolonRequestHeaderHandler;
 import com.ly.doc.handler.SolonRequestMappingHandler;
-import com.ly.doc.model.ApiConfig;
-import com.ly.doc.model.ApiDoc;
-import com.ly.doc.model.ApiReqParam;
-import com.ly.doc.model.WebSocketDoc;
+import com.ly.doc.model.*;
 import com.ly.doc.model.annotation.*;
 import com.ly.doc.model.request.RequestMapping;
 import com.ly.doc.utils.JavaClassValidateUtil;
@@ -46,12 +43,12 @@ import java.util.stream.Stream;
 public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IWebSocketDocBuildTemplate<WebSocketDoc>, IRestDocTemplate, IWebSocketTemplate {
 
     @Override
-    public List<ApiDoc> renderApi(ProjectDocConfigBuilder projectBuilder, Collection<JavaClass> candidateClasses) {
+    public ApiSchema<ApiDoc> renderApi(ProjectDocConfigBuilder projectBuilder, Collection<JavaClass> candidateClasses) {
         ApiConfig apiConfig = projectBuilder.getApiConfig();
         List<ApiReqParam> configApiReqParams = Stream.of(apiConfig.getRequestHeaders(), apiConfig.getRequestParams()).filter(Objects::nonNull)
                 .flatMap(Collection::stream).collect(Collectors.toList());
         FrameworkAnnotations frameworkAnnotations = registeredAnnotations();
-        List<ApiDoc> apiDocList = processApiData(projectBuilder, frameworkAnnotations, configApiReqParams,
+        ApiSchema<ApiDoc> apiDocList = processApiData(projectBuilder, frameworkAnnotations, configApiReqParams,
                 new SolonRequestMappingHandler(), new SolonRequestHeaderHandler(), candidateClasses);
         return apiDocList;
     }
@@ -242,5 +239,10 @@ public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IWebSoc
 
         annotations.setMappingAnnotations(mappingAnnotations);
         return annotations;
+    }
+
+    @Override
+    public boolean isExceptionAdviceEntryPoint(JavaClass javaClass, FrameworkAnnotations frameworkAnnotations) {
+        return false;
     }
 }

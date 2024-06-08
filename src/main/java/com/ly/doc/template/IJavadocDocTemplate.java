@@ -92,30 +92,9 @@ public interface IJavadocDocTemplate extends IBaseDocBuildTemplate {
             // append method modifiers
             method.getModifiers().forEach(item -> methodBuilder.append(item).append(" "));
         }
-        JavaType returnType = method.getReturnType();
-        String simpleReturn = replaceTypeName(returnType.getCanonicalName(), actualTypesMap, Boolean.TRUE);
-        String returnClass = replaceTypeName(returnType.getGenericCanonicalName(), actualTypesMap, Boolean.TRUE);
-        returnClass = returnClass.replace(simpleReturn, JavaClassUtil.getClassSimpleName(simpleReturn));
-        String[] arrays = DocClassUtil.getSimpleGicName(returnClass);
-        for (String str : arrays) {
-            if (str.contains("[")) {
-                str = str.substring(0, str.indexOf("["));
-            }
-            String[] generics = str.split("[<,]");
-            for (String generic : generics) {
-                if (generic.contains("extends")) {
-                    String className = generic.substring(generic.lastIndexOf(" ") + 1);
-                    returnClass = returnClass.replace(className, JavaClassUtil.getClassSimpleName(className));
-                }
-                if (generic.length() != 1 && !generic.contains("extends")) {
-                    returnClass = returnClass.replaceAll(generic, JavaClassUtil.getClassSimpleName(generic));
-                }
-
-            }
-        }
-
+        String returnType = getMethodReturnType(method, actualTypesMap);
         // append method return type
-        methodBuilder.append(returnClass).append(" ");
+        methodBuilder.append(returnType).append(" ");
         List<String> params = new ArrayList<>();
         List<JavaParameter> parameters = method.getParameters();
         for (JavaParameter parameter : parameters) {
@@ -154,21 +133,6 @@ public interface IJavadocDocTemplate extends IBaseDocBuildTemplate {
         return docJavaMethods;
     }
 
-    default String replaceTypeName(String type, Map<String, JavaType> actualTypesMap, boolean simple) {
-        if (Objects.isNull(actualTypesMap)) {
-            return type;
-        }
-        for (Map.Entry<String, JavaType> entry : actualTypesMap.entrySet()) {
-            if (type.contains(entry.getKey())) {
-                if (simple) {
-                    return type.replace(entry.getKey(), entry.getValue().getGenericValue());
-                } else {
-                    return type.replace(entry.getKey(), entry.getValue().getGenericFullyQualifiedName());
-                }
-            }
-        }
-        return type;
-    }
 
     default List<ApiParam> requestParams(final JavaMethod javaMethod,
                                          ProjectDocConfigBuilder builder,
@@ -292,7 +256,7 @@ public interface IJavadocDocTemplate extends IBaseDocBuildTemplate {
         // add parent class methods
         methodDocList.addAll(getParentsClassMethods(apiConfig, cls));
         if (cls.isInterface() || cls.isAbstract()) {
-            methodDocList.addAll(getInterfaceMethods(apiConfig,cls));
+            methodDocList.addAll(getInterfaceMethods(apiConfig, cls));
         }
 
         int methodOrder = 0;

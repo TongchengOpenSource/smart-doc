@@ -66,7 +66,7 @@ public class AdocDocBuilder {
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
         IDocBuildTemplate<ApiDoc> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework());
         Objects.requireNonNull(docBuildTemplate, "doc build template is null");
-        List<ApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder);
+        List<ApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder).getApiDatas();
         if (config.isAllInOne()) {
             String docName = builderTemplate.allInOneDocName(config, INDEX_DOC, ".adoc");
             apiDocList = docBuildTemplate.handleApiGroup(apiDocList, config);

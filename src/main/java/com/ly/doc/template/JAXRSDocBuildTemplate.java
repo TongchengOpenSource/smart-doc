@@ -62,15 +62,15 @@ public class JAXRSDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IWebSoc
 
 
     @Override
-    public List<ApiDoc> renderApi(ProjectDocConfigBuilder projectBuilder, Collection<JavaClass> candidateClasses) {
+    public ApiSchema<ApiDoc> renderApi(ProjectDocConfigBuilder projectBuilder, Collection<JavaClass> candidateClasses) {
         ApiConfig apiConfig = projectBuilder.getApiConfig();
         this.headers = apiConfig.getRequestHeaders();
         List<ApiReqParam> configApiReqParams = Stream.of(apiConfig.getRequestHeaders(), apiConfig.getRequestParams()).filter(Objects::nonNull)
                 .flatMap(Collection::stream).collect(Collectors.toList());
         FrameworkAnnotations frameworkAnnotations = this.registeredAnnotations();
-        List<ApiDoc> apiDocList = this.processApiData(projectBuilder, frameworkAnnotations,
+        ApiSchema<ApiDoc> apiSchema = this.processApiData(projectBuilder, frameworkAnnotations,
                 configApiReqParams, new SpringMVCRequestMappingHandler(), new SpringMVCRequestHeaderHandler(), candidateClasses);
-        return apiDocList;
+        return apiSchema;
     }
 
     @Override
@@ -662,6 +662,12 @@ public class JAXRSDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IWebSoc
 
     @Override
     public boolean ignoreReturnObject(String typeName, List<String> ignoreParams) {
+        return false;
+    }
+
+
+    @Override
+    public boolean isExceptionAdviceEntryPoint(JavaClass javaClass, FrameworkAnnotations frameworkAnnotations) {
         return false;
     }
 }
