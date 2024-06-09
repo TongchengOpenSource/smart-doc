@@ -61,8 +61,8 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
     AtomicInteger ATOMIC_INTEGER = new AtomicInteger(1);
 
     default ApiSchema<ApiDoc> processApiData(ProjectDocConfigBuilder projectBuilder, FrameworkAnnotations frameworkAnnotations,
-                                        List<ApiReqParam> configApiReqParams, IRequestMappingHandler baseMappingHandler, IHeaderHandler headerHandler,
-                                        Collection<JavaClass> javaClasses) {
+                                             List<ApiReqParam> configApiReqParams, IRequestMappingHandler baseMappingHandler, IHeaderHandler headerHandler,
+                                             Collection<JavaClass> javaClasses) {
         ApiConfig apiConfig = projectBuilder.getApiConfig();
         List<ApiDoc> apiDocList = new ArrayList<>();
         boolean setCustomOrder = false;
@@ -100,12 +100,10 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
                 continue;
             }
             this.handleApiDoc(cls, apiDocList, apiMethodDocs, order, apiConfig.isMd5EncryptedHtmlName());
-
-            // todo exception status
-            // apiSchema.setApiExceptionStatuses();
         }
         apiDocList = this.handleTagsApiDoc(apiDocList);
 
+        apiSchema.setApiExceptionStatuses(this.buildExceptionStatus(projectBuilder, javaClasses, frameworkAnnotations));
 
         if (apiConfig.isSortByTitle()) {
             // sort by title
@@ -336,6 +334,77 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
             }
         }
         return annotationsList;
+    }
+
+    default List<ApiExceptionStatus> buildExceptionStatus(ProjectDocConfigBuilder projectBuilder,
+                                                          Collection<JavaClass> javaClasses,
+                                                          FrameworkAnnotations frameworkAnnotations) {
+        ApiConfig apiConfig = projectBuilder.getApiConfig();
+        Set<String> statusSet = new HashSet<>(8);
+        List<ApiExceptionStatus> exceptionStatusList = new ArrayList<>(8);
+        for (JavaClass cls : javaClasses) {
+            // from tag
+            DocletTag ignoreTag = cls.getTagByName(DocTags.IGNORE);
+            if (!isExceptionAdviceEntryPoint(cls, frameworkAnnotations) || Objects.nonNull(ignoreTag)) {
+                continue;
+            }
+            boolean paramsDataToTree = projectBuilder.getApiConfig().isParamsDataToTree();
+
+            List<JavaMethod> methods = cls.getMethods();
+            List<DocJavaMethod> docJavaMethods = new ArrayList<>(methods.size());
+            for (JavaMethod method : methods) {
+                if (method.isPrivate()) {
+                    continue;
+                }
+                if (Objects.nonNull(method.getTagByName(IGNORE))) {
+                    continue;
+                }
+                docJavaMethods.add(convertToDocJavaMethod(apiConfig, projectBuilder, method, null));
+            }
+            // add parent class methods
+            docJavaMethods.addAll(getParentsClassMethods(apiConfig, projectBuilder, cls));
+
+            for (DocJavaMethod docJavaMethod : docJavaMethods) {
+                JavaMethod method = docJavaMethod.getJavaMethod();
+                ExceptionAdviceMethod adviceMethod = processExceptionAdviceMethod(method);
+                if (Objects.isNull(adviceMethod) || !adviceMethod.isExceptionHandlerMethod()
+                        || Objects.isNull(adviceMethod.getStatus())) {
+                    continue;
+                }
+                String statusCode = HttpStatusUtil.getStatusCode(adviceMethod.getStatus());
+                if (statusSet.contains(statusCode)) {
+                    continue;
+                }
+                statusSet.add(statusCode);
+                ApiExceptionStatus apiExceptionStatus = new ApiExceptionStatus();
+                apiExceptionStatus.setStatus(statusCode);
+                apiExceptionStatus.setDesc(HttpStatusUtil.getStatusDescription(statusCode));
+                apiExceptionStatus.setAuthor(docJavaMethod.getAuthor());
+                apiExceptionStatus.setDetail(docJavaMethod.getDetail());
+
+                // build response params
+                List<ApiParam> responseParams = buildReturnApiParams(docJavaMethod, projectBuilder);
+                if (paramsDataToTree) {
+                    responseParams = ApiParamTreeUtil.apiParamToTree(responseParams);
+                }
+                apiExceptionStatus.setExceptionResponseParams(responseParams);
+
+                // build response usage
+                String responseValue = DocUtil.getNormalTagComments(method, DocTags.API_RESPONSE, cls.getName());
+                if (StringUtil.isNotEmpty(responseValue)) {
+                    responseValue = responseValue.replaceAll("<br>", "");
+                    apiExceptionStatus.setResponseUsage(JsonUtil.toPrettyFormat(responseValue));
+                } else {
+                    apiExceptionStatus.setResponseUsage(JsonBuildHelper.buildReturnJson(docJavaMethod, projectBuilder));
+                }
+                exceptionStatusList.add(apiExceptionStatus);
+            }
+        }
+        if (apiConfig.isAddDefaultHttpStatuses() && exceptionStatusList.isEmpty()) {
+            exceptionStatusList.addAll(defaultHttpErrorStatuses());
+        }
+        Collections.sort(exceptionStatusList);
+        return exceptionStatusList;
     }
 
     default List<ApiMethodDoc> buildEntryPointMethod(
@@ -1184,7 +1253,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
     /**
      * Unified exception handling entry for RESTful APIs.
      *
-     * @param javaClass          The Java class associated with the API endpoint.
+     * @param javaClass            The Java class associated with the API endpoint.
      * @param frameworkAnnotations Annotations provided by the framework, which may include information about exception handling or other metadata.
      * @return The processed result, typically a response tailored for the RESTful API context.
      */
@@ -1196,4 +1265,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 
     boolean ignoreMvcParamWithAnnotation(String annotation);
 
+    ExceptionAdviceMethod processExceptionAdviceMethod(JavaMethod method);
+
+    List<ApiExceptionStatus> defaultHttpErrorStatuses();
 }

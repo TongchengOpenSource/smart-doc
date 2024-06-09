@@ -60,4 +60,9 @@ public interface SpringMvcAnnotations {
     String SERVER_ENDPOINT = "ServerEndpoint";
 
     String REST_CONTROLLER_ADVICE = "RestControllerAdvice";
+
+    String EXCEPTION_HANDLER = "ExceptionHandler";
+
+    String RESPONSE_STATUS = "ResponseStatus";
+
 }

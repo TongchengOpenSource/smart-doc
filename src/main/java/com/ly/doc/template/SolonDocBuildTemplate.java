@@ -245,4 +245,14 @@ public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IWebSoc
     public boolean isExceptionAdviceEntryPoint(JavaClass javaClass, FrameworkAnnotations frameworkAnnotations) {
         return false;
     }
+
+    @Override
+    public ExceptionAdviceMethod processExceptionAdviceMethod(JavaMethod method) {
+        return null;
+    }
+
+    @Override
+    public List<ApiExceptionStatus> defaultHttpErrorStatuses() {
+        return null;
+    }
 }

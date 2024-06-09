@@ -406,6 +406,17 @@ public class ApiConfig {
      */
     private JMeter jmeter;
 
+    /**
+     * Flag to include default HTTP status codes
+     * This field controls whether a default set of HTTP status codes should be included in HTTP responses.
+     * If set to true, a standard set of HTTP status codes (e.g., 200 OK, 404 Not Found) will be automatically
+     * added when handling HTTP responses. If set to false, these status codes will not be automatically added,
+     * requiring manual specification of desired status codes.
+     * The default value is false to avoid unnecessary resource usage where not required.
+     * @since 3.0.5
+     */
+    private boolean addDefaultHttpStatuses;
+
     public static ApiConfig getInstance() {
         return instance;
     }
@@ -1070,5 +1081,13 @@ public class ApiConfig {
 
     public void setJmeter(JMeter jmeter) {
         this.jmeter = jmeter;
+    }
+
+    public boolean isAddDefaultHttpStatuses() {
+        return addDefaultHttpStatuses;
+    }
+
+    public void setAddDefaultHttpStatuses(boolean addDefaultHttpStatuses) {
+        this.addDefaultHttpStatuses = addDefaultHttpStatuses;
     }
 }

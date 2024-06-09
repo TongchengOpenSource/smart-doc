@@ -90,6 +90,24 @@ public abstract class AbstractOpenApiBuilder {
      */
     abstract Map<String, Object> buildResponsesBody(ApiConfig apiConfig, ApiMethodDoc apiMethodDoc);
 
+    /**
+     * Build request parameters
+     *
+     * @param apiMethodDoc API data for the method
+     */
+    abstract List<Map<String, Object>> buildParameters(ApiMethodDoc apiMethodDoc);
+
+    abstract Map<String, Object> getStringParams(ApiParam apiParam, boolean hasItems);
+
+
+    /**
+     * component schema
+     *
+     * @param apiSchema API schema
+     * @return component schema Map
+     */
+    abstract public Map<String, Object> buildComponentsSchema(ApiSchema<ApiDoc> apiSchema);
+
     protected static final Map<String, String> STRING_COMPONENT = new HashMap<>();
 
     static {
@@ -281,14 +299,6 @@ public abstract class AbstractOpenApiBuilder {
 
     }
 
-    /**
-     * Build request parameters
-     *
-     * @param apiMethodDoc API data for the method
-     */
-    abstract List<Map<String, Object>> buildParameters(ApiMethodDoc apiMethodDoc);
-
-    abstract Map<String, Object> getStringParams(ApiParam apiParam, boolean hasItems);
 
     /**
      * If it is a get request or @PathVariable set the request parameters
@@ -352,18 +362,40 @@ public abstract class AbstractOpenApiBuilder {
      * @return response info
      */
     public Map<String, Object> buildResponses(ApiConfig apiConfig, ApiMethodDoc apiMethodDoc, List<ApiExceptionStatus> apiExceptionStatuses) {
-        Map<String, Object> response = new HashMap<>(10);
+        Map<String, Object> response = new LinkedHashMap<>(8);
         response.put("200", buildResponsesBody(apiConfig, apiMethodDoc));
+        if (CollectionUtil.isNotEmpty(apiExceptionStatuses)) {
+            for (ApiExceptionStatus apiExceptionStatus : apiExceptionStatuses) {
+                response.put(apiExceptionStatus.getStatus(), buildEexcetionResponsesBody(apiConfig, apiExceptionStatus));
+            }
+        }
         return response;
     }
 
-    /**
-     * component schema
-     *
-     * @param apiDocs List of ApiDoc
-     * @return component schema Map
-     */
-    abstract public Map<String, Object> buildComponentsSchema(List<ApiDoc> apiDocs);
+    public Map<String, Object> buildEexcetionResponsesBody(ApiConfig apiConfig, ApiExceptionStatus apiExceptionStatus) {
+        Map<String, Object> responseBody = new HashMap<>(8);
+        responseBody.put("description", apiExceptionStatus.getDesc());
+        Map<String, Object> content = new HashMap<>(8);
+        Map<String, Object> mediaTypeContent = new HashMap<>(8);
+        Map<String, Object> schema = new HashMap<>(8);
+        String responseRef = componentKey + OpenApiSchemaUtil.getClassNameFromParams(apiExceptionStatus.getExceptionResponseParams());
+        if (CollectionUtil.isNotEmpty(apiExceptionStatus.getExceptionResponseParams())) {
+            schema.put("$ref", responseRef);
+        }
+        mediaTypeContent.put("schema", schema);
+        if (OPENAPI_3_COMPONENT_KRY.equals(componentKey) && apiConfig.isResponseExample()) {
+            Map<String, Object> json = new HashMap<>(8);
+            Map<String, Object> jsonData = new HashMap<>(8);
+            jsonData.put("summary", "response example");
+            jsonData.put("value", apiExceptionStatus.getResponseUsage());
+            json.put("json", jsonData);
+            mediaTypeContent.put("examples", json);
+        }
+        content.put("*/*", mediaTypeContent);
+        responseBody.put("content", content);
+        return responseBody;
+    }
+
 
     /**
      * component schema properties
@@ -483,13 +515,13 @@ public abstract class AbstractOpenApiBuilder {
      * This method iterates through all API documentation entries to extract request and response parameter information,
      * and organizes them into OpenAPI component schemas.
      *
-     * @param apiDocs List of API documentation, containing multiple API method descriptions.
+     * @param apiSchema The API documentation schema.
      * @return Returns a map containing all component schemas.
      */
-    public Map<String, Object> buildComponentData(List<ApiDoc> apiDocs) {
+    public Map<String, Object> buildComponentData(ApiSchema<ApiDoc> apiSchema) {
         Map<String, Object> component = new HashMap<>(16);
         component.put(DocGlobalConstants.DEFAULT_PRIMITIVE, STRING_COMPONENT);
-        apiDocs.forEach(
+        apiSchema.getApiDatas().forEach(
                 a -> {
                     List<ApiMethodDoc> apiMethodDocs = a.getList();
                     apiMethodDocs.forEach(
@@ -507,6 +539,14 @@ public abstract class AbstractOpenApiBuilder {
                     );
                 }
         );
+        // excption response components
+        if (Objects.nonNull(apiSchema.getApiExceptionStatuses())) {
+            apiSchema.getApiExceptionStatuses().forEach(e -> {
+                List<ApiParam> responseParams = e.getExceptionResponseParams();
+                String responseSchemaName = OpenApiSchemaUtil.getClassNameFromParams(e.getExceptionResponseParams());
+                component.put(responseSchemaName, buildProperties(responseParams, component, true));
+            });
+        }
         component.remove(OpenApiSchemaUtil.NO_BODY_PARAM);
         return component;
     }
@@ -527,10 +567,5 @@ public abstract class AbstractOpenApiBuilder {
         IDocBuildTemplate docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework());
         Objects.requireNonNull(docBuildTemplate, "doc build template is null");
         return docBuildTemplate.getApiData(configBuilder);
-    }
-
-    public static Map<String, Object> buildErrorStatusResponse(ApiConfig apiConfig, List<ApiExceptionStatus> apiExceptionStatuses) {
-        // TODO
-        return null;
     }
 }

@@ -88,7 +88,7 @@ public class OpenApiBuilder extends AbstractOpenApiBuilder {
         Set<OpenApiTag> tags = new HashSet<>();
         json.put("tags", tags);
         json.put("paths", buildPaths(config, apiSchema, tags));
-        json.put("components", buildComponentsSchema(apiSchema.getApiDatas()));
+        json.put("components", buildComponentsSchema(apiSchema));
 
         String filePath = config.getOutPath();
         filePath = filePath + DocGlobalConstants.OPEN_API_JSON;
@@ -195,6 +195,7 @@ public class OpenApiBuilder extends AbstractOpenApiBuilder {
         return responseBody;
     }
 
+
     @Override
     List<Map<String, Object>> buildParameters(ApiMethodDoc apiMethodDoc) {
         Map<String, Object> parameters;
@@ -279,9 +280,9 @@ public class OpenApiBuilder extends AbstractOpenApiBuilder {
     }
 
     @Override
-    public Map<String, Object> buildComponentsSchema(List<ApiDoc> apiDocs) {
+    public Map<String, Object> buildComponentsSchema(ApiSchema<ApiDoc> apiSchema) {
         Map<String, Object> schemas = new HashMap<>(4);
-        schemas.put("schemas", buildComponentData(apiDocs));
+        schemas.put("schemas", buildComponentData(apiSchema));
         return schemas;
     }
 }
