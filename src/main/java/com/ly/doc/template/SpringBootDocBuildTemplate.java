@@ -195,9 +195,14 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IW
         // Add Exception advice
         Map<String, ExceptionAdviceAnnotation> exceptionAdviceAnnotations = new HashMap<>(16);
 
-        ExceptionAdviceAnnotation exceptionAdviceAnnotation = ExceptionAdviceAnnotation.builder()
+        ExceptionAdviceAnnotation controllerAdviceAnnotation = ExceptionAdviceAnnotation.builder()
+                .setAnnotationName(SpringMvcAnnotations.CONTROLLER_ADVICE);
+        exceptionAdviceAnnotations.put(controllerAdviceAnnotation.getAnnotationName(), controllerAdviceAnnotation);
+
+        ExceptionAdviceAnnotation restControllerAdviceAnnotation = ExceptionAdviceAnnotation.builder()
                 .setAnnotationName(SpringMvcAnnotations.REST_CONTROLLER_ADVICE);
-        exceptionAdviceAnnotations.put(exceptionAdviceAnnotation.getAnnotationName(), exceptionAdviceAnnotation);
+        exceptionAdviceAnnotations.put(restControllerAdviceAnnotation.getAnnotationName(), restControllerAdviceAnnotation);
+
         annotations.setExceptionAdviceAnnotations(exceptionAdviceAnnotations);
 
         return annotations;
