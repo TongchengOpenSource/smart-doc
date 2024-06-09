@@ -61,6 +61,8 @@ public interface SpringMvcAnnotations {
 
     String REST_CONTROLLER_ADVICE = "RestControllerAdvice";
 
+    String CONTROLLER_ADVICE = "ControllerAdvice";
+
     String EXCEPTION_HANDLER = "ExceptionHandler";
 
     String RESPONSE_STATUS = "ResponseStatus";
