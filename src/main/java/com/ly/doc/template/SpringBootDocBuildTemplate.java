@@ -28,10 +28,13 @@ import com.ly.doc.model.*;
 import com.ly.doc.model.annotation.*;
 import com.ly.doc.model.request.RequestMapping;
 import com.ly.doc.utils.JavaClassValidateUtil;
+import com.power.common.util.DateTimeUtil;
 import com.thoughtworks.qdox.model.DocletTag;
+import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaMethod;
 
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -39,7 +42,7 @@ import java.util.stream.Stream;
 /**
  * @author yu 2019/12/21.
  */
-public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IWebSocketDocBuildTemplate<WebSocketDoc> ,IRestDocTemplate,IWebSocketTemplate {
+public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IWebSocketDocBuildTemplate<WebSocketDoc>, IRestDocTemplate, IWebSocketTemplate {
 
     @Override
     public ApiSchema<ApiDoc> renderApi(ProjectDocConfigBuilder projectBuilder, Collection<JavaClass> candidateClasses) {
@@ -239,5 +242,185 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IW
     @Override
     public boolean isExceptionAdviceEntryPoint(JavaClass javaClass, FrameworkAnnotations frameworkAnnotations) {
         return defaultExceptionAdviceEntryPoint(javaClass, frameworkAnnotations);
+    }
+
+    @Override
+    public ExceptionAdviceMethod processExceptionAdviceMethod(JavaMethod method) {
+        List<JavaAnnotation> annotations = method.getAnnotations();
+        boolean isExceptionHandlerMethod = false;
+        String status = null; //
+        for (JavaAnnotation annotation : annotations) {
+            String annotationName = annotation.getType().getValue();
+            if (SpringMvcAnnotations.EXCEPTION_HANDLER.equals(annotationName)) {
+                isExceptionHandlerMethod = true;
+            }
+            if (SpringMvcAnnotations.RESPONSE_STATUS.equals(annotationName)) {
+                Object consumes = annotation.getNamedParameter("value");
+                if (Objects.nonNull(consumes)) {
+                    status = consumes.toString();
+                }
+            }
+        }
+        return ExceptionAdviceMethod.builder()
+                .setExceptionHandlerMethod(isExceptionHandlerMethod)
+                .setStatus(status);
+    }
+
+    /**
+     * Spring default http error statuses
+     * @return
+     */
+    @Override
+    public List<ApiExceptionStatus> defaultHttpErrorStatuses() {
+        ZonedDateTime now = ZonedDateTime.now();
+        String strDateTime = DateTimeUtil.zonedDateTimeToStr(now, DateTimeUtil.DATE_FORMAT_ZONED_DATE_TIME);
+
+        ApiParam errorParam = ApiParam.of()
+                .setClassName("HttpErrorStatusResponse")
+                .setField("error")
+                .setType("string")
+                .setValue("error")
+                .setDesc("error message");
+        ApiParam pathParam = ApiParam.of()
+                .setClassName("HttpErrorStatusResponse")
+                .setField("path")
+                .setType("string")
+                .setValue("")
+                .setDesc("request path");
+
+        ApiParam timestampParam = ApiParam.of()
+                .setClassName("HttpErrorStatusResponse")
+                .setField("timestamp")
+                .setType("string")
+                .setValue("")
+                .setDesc("timestamp");
+
+
+        ApiParam status500Param = ApiParam.of()
+                .setClassName("HttpErrorStatusResponse")
+                .setField("status")
+                .setType("int")
+                .setValue("500")
+                .setDesc("Internal Server Error")
+                .setRequired(true);
+        ApiParam status400Param = ApiParam.of()
+                .setClassName("HttpErrorStatusResponse")
+                .setField("status")
+                .setType("int")
+                .setValue("400")
+                .setDesc("Bad Request")
+                .setRequired(true);
+
+        ApiParam status404Param = ApiParam.of()
+                .setClassName("HttpErrorStatusResponse")
+                .setField("status")
+                .setType("int")
+                .setValue("404")
+                .setDesc("Not Found")
+                .setRequired(true);
+        ApiParam status401Param = ApiParam.of()
+                .setClassName("HttpErrorStatusResponse")
+                .setField("status")
+                .setType("int")
+                .setValue("401")
+                .setDesc("Unauthorized")
+                .setRequired(true);
+        ApiParam status403Param = ApiParam.of()
+                .setClassName("HttpErrorStatusResponse")
+                .setField("status")
+                .setType("int")
+                .setValue("403")
+                .setDesc("Forbidden")
+                .setRequired(true);
+        ApiParam status405Param = ApiParam.of()
+                .setClassName("HttpErrorStatusResponse")
+                .setField("status")
+                .setType("int")
+                .setValue("405")
+                .setDesc("Method Not Allowed")
+                .setRequired(true);
+        ApiParam status415Param = ApiParam.of()
+                .setClassName("HttpErrorStatusResponse")
+                .setField("status")
+                .setType("int")
+                .setValue("415")
+                .setDesc("Unsupported Media Type")
+                .setRequired(true);
+
+        List<ApiExceptionStatus> exceptionStatusList = new ArrayList<>();
+        exceptionStatusList.add(ApiExceptionStatus.of()
+                .setStatus("500")
+                .setDesc("Internal Server Error")
+                .setResponseUsage("{\n" +
+                        "  \"timestamp\": \"" + strDateTime + "\",\n" +
+                        "  \"status\": 500,\n" +
+                        "  \"error\": \"Internal Server Error\",\n" +
+                        "  \"path\": \"/api/v1/xx\"\n" +
+                        "}")
+                .setExceptionResponseParams(Arrays.asList(errorParam, pathParam, timestampParam, status500Param)));
+        exceptionStatusList.add(ApiExceptionStatus.of()
+                .setStatus("400")
+                .setDesc("Bad Request")
+                .setResponseUsage("{\n" +
+                        "  \"timestamp\": \"" + strDateTime + "\",\n" +
+                        "  \"status\": 400,\n" +
+                        "  \"error\": \"Bad Request\",\n" +
+                        "  \"path\": \"/api/v1/xx\"\n" +
+                        "}")
+                .setExceptionResponseParams(Arrays.asList(errorParam, pathParam, timestampParam, status400Param)));
+
+        exceptionStatusList.add(ApiExceptionStatus.of()
+                .setStatus("404")
+                .setDesc("Not Found")
+                .setResponseUsage("{\n" +
+                        "  \"timestamp\": \"" + strDateTime + "\",\n" +
+                        "  \"status\": 404,\n" +
+                        "  \"error\": \"Not Found\",\n" +
+                        "  \"path\": \"/api/v1/xx\"\n" +
+                        "}")
+                .setExceptionResponseParams(Arrays.asList(errorParam, pathParam, timestampParam, status404Param)));
+
+        exceptionStatusList.add(ApiExceptionStatus.of()
+                .setStatus("401")
+                .setDesc("Unauthorized")
+                .setResponseUsage("{\n" +
+                        "  \"timestamp\": \"" + strDateTime + "\",\n" +
+                        "  \"status\": 401,\n" +
+                        "  \"error\": \"Unauthorized\",\n" +
+                        "  \"path\": \"/api/v1/xx\"\n" +
+                        "} ")
+                .setExceptionResponseParams(Arrays.asList(errorParam, pathParam, timestampParam, status401Param)));
+        exceptionStatusList.add(ApiExceptionStatus.of()
+                .setStatus("403")
+                .setDesc("Forbidden")
+                .setResponseUsage("{\n" +
+                        "  \"timestamp\": \"" + strDateTime + "\",\n" +
+                        "  \"status\": 403,\n" +
+                        "  \"error\": \"Forbidden\",\n" +
+                        "  \"path\": \"/api/v1/xx\"\n" +
+                        "} ")
+                .setExceptionResponseParams(Arrays.asList(errorParam, pathParam, timestampParam, status403Param)));
+
+        exceptionStatusList.add(ApiExceptionStatus.of()
+                .setStatus("405")
+                .setDesc("Method Not Allowed")
+                .setResponseUsage("{\n" +
+                        "  \"timestamp\": \"" + strDateTime + "\",\n" +
+                        "  \"status\": 405,\n" +
+                        "  \"error\": \"Method Not Allowed\",\n" +
+                        "  \"path\": \"/api/v1/xx\"\n" +
+                        "} ")
+                .setExceptionResponseParams(Arrays.asList(errorParam, pathParam, timestampParam, status405Param)));
+        exceptionStatusList.add(ApiExceptionStatus.of()
+                .setStatus("415")
+                .setDesc("Unsupported Media Type")
+                .setResponseUsage("{\n" +
+                        "  \"timestamp\": \"" + strDateTime + "\",\n" +
+                        "  \"status\": 415,\n" +
+                        "  \"error\": \"Unsupported Media Type\",\n" +
+                        "  \"path\": \"/api/v1/xx\"\n" +
+                        "} ")
+                .setExceptionResponseParams(Arrays.asList(errorParam, pathParam, timestampParam, status415Param)));
+        return exceptionStatusList;
     }
 }

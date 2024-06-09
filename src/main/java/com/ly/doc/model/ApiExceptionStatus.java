@@ -21,32 +21,93 @@
 
 package com.ly.doc.model;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author yu.sun on 2024/6/9
  * @since 3.0.5
  */
-public class ApiExceptionStatus {
+public class ApiExceptionStatus implements Comparable<ApiExceptionStatus> {
     private String status;
+
+    private String author;
+
+    private String desc;
+
+    private String detail;
+
+    private String responseUsage;
     /**
      * http exception response params
      */
     private List<ApiParam> exceptionResponseParams;
 
+    public static ApiExceptionStatus of() {
+        return new ApiExceptionStatus();
+    }
+
     public String getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public ApiExceptionStatus setStatus(String status) {
         this.status = status;
+        return this;
     }
 
     public List<ApiParam> getExceptionResponseParams() {
         return exceptionResponseParams;
     }
 
-    public void setExceptionResponseParams(List<ApiParam> exceptionResponseParams) {
+    public ApiExceptionStatus setExceptionResponseParams(List<ApiParam> exceptionResponseParams) {
         this.exceptionResponseParams = exceptionResponseParams;
+        return this;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public ApiExceptionStatus setAuthor(String author) {
+        this.author = author;
+        return this;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public ApiExceptionStatus setDesc(String desc) {
+        this.desc = desc;
+        return this;
+    }
+
+    public String getDetail() {
+        return detail;
+    }
+
+    public ApiExceptionStatus setDetail(String detail) {
+        this.detail = detail;
+        return this;
+    }
+
+    public String getResponseUsage() {
+        return responseUsage;
+    }
+
+    public ApiExceptionStatus setResponseUsage(String responseUsage) {
+        this.responseUsage = responseUsage;
+        return this;
+    }
+
+    @Override
+    public int compareTo(@NotNull ApiExceptionStatus o) {
+        if (Objects.nonNull(o.getDesc())) {
+            return status.compareTo(o.status);
+        }
+        return 0;
     }
 }

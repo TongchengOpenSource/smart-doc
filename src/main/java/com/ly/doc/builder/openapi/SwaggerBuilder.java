@@ -90,7 +90,7 @@ public class SwaggerBuilder extends AbstractOpenApiBuilder {
         Set<OpenApiTag> tags = new HashSet<>();
         json.put("tags", tags);
         json.put("paths", buildPaths(config, apiSchema, tags));
-        json.put("definitions", buildComponentsSchema(apiSchema.getApiDatas()));
+        json.put("definitions", buildComponentsSchema(apiSchema));
 
         String filePath = config.getOutPath();
         filePath = filePath + DocGlobalConstants.OPEN_API_JSON;
@@ -271,8 +271,8 @@ public class SwaggerBuilder extends AbstractOpenApiBuilder {
     }
 
     @Override
-    public Map<String, Object> buildComponentsSchema(List<ApiDoc> apiDocs) {
-        return buildComponentData(apiDocs);
+    public Map<String, Object> buildComponentsSchema(ApiSchema<ApiDoc> apiSchema) {
+        return buildComponentData(apiSchema);
     }
 
 }
