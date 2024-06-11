@@ -1060,23 +1060,13 @@ public class DocUtil {
      * Format  field Type
      *
      * @param genericMap   genericMap
-     * @param globGicName  globGicName array
      * @param fieldGicName fieldGicName
      * @return string
      */
-    public static String formatFieldTypeGicName(Map<String, String> genericMap, String[] globGicName, String fieldGicName) {
-        String gicName = "";
+    public static String formatFieldTypeGicName(Map<String, String> genericMap, String fieldGicName) {
         String fieldGicNameCopy =  fieldGicName;
-        String[] gNameArr = DocClassUtil.getSimpleGicName(fieldGicName);
-        for (String g : gNameArr) {
-            if (g.length() == 1) {
-                if (Objects.nonNull(genericMap.get(g))) {
-                    gicName = genericMap.get(g);
-                }
-                if (StringUtil.isNotEmpty(gicName)) {
-                    fieldGicNameCopy = replaceGenericParameter(fieldGicName, g, gicName);
-                }
-            }
+        for(Map.Entry<String,String> entry:genericMap.entrySet()) {
+            fieldGicNameCopy  = replaceGenericParameter(fieldGicName,entry.getKey(), entry.getValue());
         }
         return fieldGicNameCopy;
     }

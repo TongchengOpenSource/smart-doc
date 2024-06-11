@@ -313,7 +313,8 @@ public class JsonBuildHelper extends BaseHelper {
                             fieldGicName = fieldGicName.substring(0, fieldGicName.lastIndexOf("["));
                             fieldGicName = "java.util.List<" + fieldGicName + ">";
                         }
-                        String gicName = DocClassUtil.getSimpleGicName(fieldGicName)[0];
+                        String gicNameArray[] = DocClassUtil.getSimpleGicName(fieldGicName);
+                        String gicName = gicNameArray[0];
                         if (JavaTypeConstants.JAVA_STRING_FULLY.equals(gicName)) {
                             data0.append("[").append(DocUtil.jsonValueByType(gicName)).append("]").append(",");
                         } else if (JavaTypeConstants.JAVA_LIST_FULLY.equals(gicName)) {
@@ -348,6 +349,8 @@ public class JsonBuildHelper extends BaseHelper {
                                     data0.append("[").append(value).append("],");
                                     continue;
                                 }
+                                gicName = DocClassUtil.getSimpleName(gicName);
+                                fieldGicName = DocUtil.formatFieldTypeGicName(genericMap, fieldGicName);
                                 data0.append("[").append(buildJson(gicName, fieldGicName, isResp, nextLevel, registryClasses, groupClasses, builder))
                                         .append("]").append(",");
                             } else {
@@ -421,7 +424,7 @@ public class JsonBuildHelper extends BaseHelper {
                                 data0.append(value).append(",");
                             }
                         } else {
-                            fieldGicName = DocUtil.formatFieldTypeGicName(genericMap, globGicName, fieldGicName);
+                            fieldGicName = DocUtil.formatFieldTypeGicName(genericMap, fieldGicName);
                             data0.append(buildJson(subTypeName, fieldGicName, isResp, nextLevel, registryClasses, groupClasses, builder)).append(",");
                         }
                     }

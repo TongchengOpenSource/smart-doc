@@ -537,7 +537,7 @@ public class ParamsBuildHelper extends BaseHelper {
                         paramList.add(param1);
                     } else {
                         commonHandleParam(paramList, param, isRequired, comment + appendComment, since, strRequired);
-                        fieldGicName = DocUtil.formatFieldTypeGicName(genericMap, globGicName, fieldGicName);
+                        fieldGicName = DocUtil.formatFieldTypeGicName(genericMap, fieldGicName);
                         fieldPid = Optional.ofNullable(atomicInteger).isPresent() ? param.getId() : paramList.size() + pid;
                         paramList.addAll(buildParams(fieldGicName, preBuilder.toString(), nextLevel, isRequired
                                 , isResp, registryClasses, projectBuilder, groupClasses, fieldPid, jsonRequest, atomicInteger));
