@@ -122,8 +122,8 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
             apiSchema.setApiDatas(tempList.stream().sorted(Comparator.comparing(ApiDoc::getOrder)).collect(Collectors.toList()));
         } else {
             apiDocList.stream().peek(p -> p.setOrder(ATOMIC_INTEGER.getAndAdd(1))).collect(Collectors.toList());
+            apiSchema.setApiDatas(apiDocList);
         }
-        apiSchema.setApiDatas(apiDocList);
         return apiSchema;
     }
 
