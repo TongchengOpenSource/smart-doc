@@ -74,7 +74,7 @@ public class DocUtilTest {
 
     @Test
     public void testReplaceGenericParameter(){
-        String base = "com.Test<List<T>>";
+        String base = "java.util.List<com.smartdoc.example.model.TreeNode<T>>";
         String originalGeneric = "T";
         String replacement = "User";
         String result = DocUtil.replaceGenericParameter(base, originalGeneric, replacement);
