@@ -35,17 +35,12 @@ import com.ly.doc.model.rpc.RpcApiDoc;
 import com.ly.doc.template.IDocBuildTemplate;
 import com.ly.doc.utils.BeetlTemplateUtil;
 import com.ly.doc.utils.DocUtil;
-import com.power.common.util.CollectionUtil;
-import com.power.common.util.DateTimeUtil;
-import com.power.common.util.FileUtil;
-import com.power.common.util.StringUtil;
+import com.power.common.util.*;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import org.beetl.core.Template;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.nio.file.Path;
+import java.util.*;
 
 /**
  * @author yu 2020/5/16.
@@ -53,7 +48,6 @@ import java.util.Objects;
 public class RpcDocBuilderTemplate extends BaseDocBuilderTemplate {
 
     private static final String DEPENDENCY_TITLE = "Add dependency";
-    private static final long NOW = System.currentTimeMillis();
 
     @Override
     public void checkAndInit(ApiConfig config, boolean checkOutPath) {
@@ -99,39 +93,18 @@ public class RpcDocBuilderTemplate extends BaseDocBuilderTemplate {
     public void buildAllInOne(List<RpcApiDoc> apiDocList, ApiConfig config, JavaProjectBuilder javaProjectBuilder, String template,
                               String outPutFileName) {
         String outPath = config.getOutPath();
-        String strTime = DateTimeUtil.long2Str(NOW, DateTimeUtil.DATE_FORMAT_SECOND);
         String rpcConfig = config.getRpcConsumerConfig();
         String rpcConfigConfigContent = null;
         if (Objects.nonNull(rpcConfig)) {
             rpcConfigConfigContent = FileUtil.getFileContent(rpcConfig);
         }
         FileUtil.mkdirs(outPath);
-        List<ApiErrorCode> errorCodeList = DocUtil.errorCodeDictToList(config, javaProjectBuilder);
         Template tpl = BeetlTemplateUtil.getByName(template);
         tpl.binding(TemplateVariable.API_DOC_LIST.getVariable(), apiDocList);
-        tpl.binding(TemplateVariable.ERROR_CODE_LIST.getVariable(), errorCodeList);
-        tpl.binding(TemplateVariable.VERSION_LIST.getVariable(), config.getRevisionLogs());
         tpl.binding(TemplateVariable.DEPENDENCY_LIST.getVariable(), config.getRpcApiDependencies());
-        tpl.binding(TemplateVariable.VERSION.getVariable(), NOW);
-        tpl.binding(TemplateVariable.CREATE_TIME.getVariable(), strTime);
-        tpl.binding(TemplateVariable.PROJECT_NAME.getVariable(), config.getProjectName());
         tpl.binding(TemplateVariable.RPC_CONSUMER_CONFIG.getVariable(), rpcConfigConfigContent);
-        setDirectoryLanguageVariable(config, tpl);
-
-        List<ApiDocDict> apiDocDictList = DocUtil.buildDictionary(config, javaProjectBuilder);
-        tpl.binding(TemplateVariable.DICT_LIST.getVariable(), apiDocDictList);
-
-        int codeIndex = apiDocList.isEmpty() ? 1 : apiDocDictList.size();
-
-        if (CollectionUtil.isNotEmpty(errorCodeList)) {
-            tpl.binding(TemplateVariable.ERROR_CODE_ORDER.getVariable(), ++codeIndex);
-        }
-
-        if (CollectionUtil.isNotEmpty(apiDocDictList)) {
-            tpl.binding(TemplateVariable.DICT_ORDER.getVariable(), ++codeIndex);
-        }
-
-        setCssCDN(config, tpl);
+        // binding common variable
+        super.bindingCommonVariable(config,javaProjectBuilder,tpl, apiDocList.isEmpty());
         FileUtil.nioWriteFile(tpl.render(), outPath + DocGlobalConstants.FILE_SEPARATOR + outPutFileName);
     }
 
@@ -200,9 +173,9 @@ public class RpcDocBuilderTemplate extends BaseDocBuilderTemplate {
      */
     public RpcApiAllData getApiData(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
         RpcApiAllData apiAllData = new RpcApiAllData();
+        apiAllData.setProjectId(DocUtil.generateId(config.getProjectName()));
         apiAllData.setLanguage(config.getLanguage().getCode());
         apiAllData.setProjectName(config.getProjectName());
-        apiAllData.setProjectId(DocUtil.generateId(config.getProjectName()));
         apiAllData.setApiDocList(listOfApiData(config, javaProjectBuilder));
         apiAllData.setErrorCodeList(DocUtil.errorCodeDictToList(config, javaProjectBuilder));
         apiAllData.setRevisionLogs(config.getRevisionLogs());

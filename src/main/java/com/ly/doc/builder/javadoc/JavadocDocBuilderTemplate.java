@@ -47,7 +47,6 @@ import java.util.Objects;
 public class JavadocDocBuilderTemplate extends BaseDocBuilderTemplate {
 
     private static final String DEPENDENCY_TITLE = "Add dependency";
-    private static final long NOW = System.currentTimeMillis();
 
     @Override
     public void checkAndInit(ApiConfig config, boolean checkOutPath) {
@@ -68,8 +67,8 @@ public class JavadocDocBuilderTemplate extends BaseDocBuilderTemplate {
         FileUtil.mkdirs(config.getOutPath());
         for (JavadocApiDoc apiDoc : apiDocList) {
             Template mapper = BeetlTemplateUtil.getByName(template);
-            mapper.binding(TemplateVariable.DESC.getVariable(), apiDoc.getDesc());
             mapper.binding(TemplateVariable.NAME.getVariable(), apiDoc.getName());
+            mapper.binding(TemplateVariable.DESC.getVariable(), apiDoc.getDesc());
             mapper.binding(TemplateVariable.LIST.getVariable(), apiDoc.getList());
             mapper.binding(TemplateVariable.AUTHOR.getVariable(), apiDoc.getAuthor());
             mapper.binding(TemplateVariable.VERSION.getVariable(), apiDoc.getVersion());
@@ -89,32 +88,12 @@ public class JavadocDocBuilderTemplate extends BaseDocBuilderTemplate {
     public void buildAllInOne(List<JavadocApiDoc> apiDocList, ApiConfig config, JavaProjectBuilder javaProjectBuilder, String template,
                               String outPutFileName) {
         String outPath = config.getOutPath();
-        String strTime = DateTimeUtil.long2Str(NOW, DateTimeUtil.DATE_FORMAT_SECOND);
         FileUtil.mkdirs(outPath);
-        List<ApiErrorCode> errorCodeList = DocUtil.errorCodeDictToList(config, javaProjectBuilder);
         Template tpl = BeetlTemplateUtil.getByName(template);
         tpl.binding(TemplateVariable.API_DOC_LIST.getVariable(), apiDocList);
-        tpl.binding(TemplateVariable.ERROR_CODE_LIST.getVariable(), errorCodeList);
-        tpl.binding(TemplateVariable.VERSION_LIST.getVariable(), config.getRevisionLogs());
-        tpl.binding(TemplateVariable.VERSION.getVariable(), NOW);
-        tpl.binding(TemplateVariable.CREATE_TIME.getVariable(), strTime);
-        tpl.binding(TemplateVariable.PROJECT_NAME.getVariable(), config.getProjectName());
-        setDirectoryLanguageVariable(config, tpl);
+        // binding common variable
+        super.bindingCommonVariable(config,javaProjectBuilder,tpl, apiDocList.isEmpty());
 
-        List<ApiDocDict> apiDocDictList = DocUtil.buildDictionary(config, javaProjectBuilder);
-        tpl.binding(TemplateVariable.DICT_LIST.getVariable(), apiDocDictList);
-
-        int codeIndex = apiDocList.isEmpty() ? 1 : apiDocDictList.size();
-
-        if (CollectionUtil.isNotEmpty(errorCodeList)) {
-            tpl.binding(TemplateVariable.ERROR_CODE_ORDER.getVariable(), ++codeIndex);
-        }
-
-        if (CollectionUtil.isNotEmpty(apiDocDictList)) {
-            tpl.binding(TemplateVariable.DICT_ORDER.getVariable(), ++codeIndex);
-        }
-
-        setCssCDN(config, tpl);
         FileUtil.nioWriteFile(tpl.render(), outPath + DocGlobalConstants.FILE_SEPARATOR + outPutFileName);
     }
 
