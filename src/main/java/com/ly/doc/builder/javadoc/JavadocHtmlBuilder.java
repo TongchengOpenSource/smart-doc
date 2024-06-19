@@ -55,10 +55,7 @@ public class JavadocHtmlBuilder {
         JavadocDocBuilderTemplate builderTemplate = new JavadocDocBuilderTemplate();
         builderTemplate.checkAndInit(config,Boolean.TRUE);
         List<JavadocApiDoc> apiDocList = builderTemplate.getJavadocApiDoc(config, javaProjectBuilder);
-        Template indexCssTemplate = BeetlTemplateUtil.getByName(DocGlobalConstants.ALL_IN_ONE_CSS);
-        FileUtil.nioWriteFile(indexCssTemplate.render(), config.getOutPath() + DocGlobalConstants.FILE_SEPARATOR + DocGlobalConstants.ALL_IN_ONE_CSS_OUT);
-        BaseDocBuilderTemplate.copyJarFile("css/" + DocGlobalConstants.FONT_STYLE, config.getOutPath() + DocGlobalConstants.FILE_SEPARATOR + DocGlobalConstants.FONT_STYLE);
-        BaseDocBuilderTemplate.copyJarFile("js/" + DocGlobalConstants.JQUERY, config.getOutPath() + DocGlobalConstants.FILE_SEPARATOR + DocGlobalConstants.JQUERY);
+        builderTemplate.copyJQueryAndCss(config);
         String INDEX_HTML = "javadoc-index.html";
         builderTemplate.buildAllInOne(apiDocList, config, javaProjectBuilder, DocGlobalConstants.JAVADOC_ALL_IN_ONE_HTML_TPL, INDEX_HTML);
         String SEARCH_JS = "search.js";

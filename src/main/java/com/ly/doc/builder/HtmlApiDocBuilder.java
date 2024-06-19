@@ -69,12 +69,7 @@ public class HtmlApiDocBuilder {
         IDocBuildTemplate<ApiDoc> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework());
         Objects.requireNonNull(docBuildTemplate, "doc build template is null");
         List<ApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder).getApiDatas();
-        Template indexCssTemplate = BeetlTemplateUtil.getByName(DocGlobalConstants.ALL_IN_ONE_CSS);
-        FileUtil.nioWriteFile(indexCssTemplate.render(), config.getOutPath() + DocGlobalConstants.FILE_SEPARATOR + DocGlobalConstants.ALL_IN_ONE_CSS_OUT);
-        BaseDocBuilderTemplate.copyJarFile("js/" + DocGlobalConstants.HIGH_LIGHT_JS, config.getOutPath() + DocGlobalConstants.FILE_SEPARATOR + DocGlobalConstants.HIGH_LIGHT_JS);
-        BaseDocBuilderTemplate.copyJarFile("css/" + DocGlobalConstants.FONT_STYLE, config.getOutPath() + DocGlobalConstants.FILE_SEPARATOR + DocGlobalConstants.FONT_STYLE);
-        BaseDocBuilderTemplate.copyJarFile("js/" + DocGlobalConstants.JQUERY, config.getOutPath() + DocGlobalConstants.FILE_SEPARATOR + DocGlobalConstants.JQUERY);
-        BaseDocBuilderTemplate.copyJarFile("css/" + DocGlobalConstants.HIGH_LIGHT_STYLE, config.getOutPath() + DocGlobalConstants.FILE_SEPARATOR + DocGlobalConstants.HIGH_LIGHT_STYLE);
+        builderTemplate.copyJQueryAndCss(config);
         if (config.isAllInOne()) {
             apiDocList = docBuildTemplate.handleApiGroup(apiDocList, config);
             if (config.isCreateDebugPage()) {
