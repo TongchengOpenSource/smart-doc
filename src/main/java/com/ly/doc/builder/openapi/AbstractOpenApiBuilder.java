@@ -124,18 +124,24 @@ public abstract class AbstractOpenApiBuilder {
      * @return Map of paths
      */
     public Map<String, Object> buildPaths(ApiConfig apiConfig, ApiSchema<ApiDoc> apiSchema, Set<OpenApiTag> tags) {
-        Map<String, Object> pathMap = new HashMap<>(500);
-        Set<ApiMethodDoc> methodDocs = DocMapping.METHOD_DOCS;
-        for (ApiMethodDoc methodDoc : methodDocs) {
-            String[] paths = methodDoc.getPath().split(";");
-            for (String path : paths) {
-                path = path.trim();
-                Map<String, Object> request = buildPathUrls(apiConfig, methodDoc, methodDoc.getClazzDoc(), apiSchema.getApiExceptionStatuses());
-                if (!pathMap.containsKey(path)) {
-                    pathMap.put(path, request);
-                } else {
-                    Map<String, Object> oldRequest = (Map<String, Object>) pathMap.get(path);
-                    oldRequest.putAll(request);
+        Map<String, Object> pathMap = new LinkedHashMap<>(500);
+
+        List<ApiDoc> apiDocs = apiSchema.getApiDatas();
+        for (ApiDoc apiDoc : apiDocs) {
+            if (CollectionUtil.isEmpty(apiDoc.getList())) {
+                continue;
+            }
+            for (ApiMethodDoc methodDoc : apiDoc.getList()) {
+                String[] paths = methodDoc.getPath().split(";");
+                for (String path : paths) {
+                    path = path.trim();
+                    Map<String, Object> request = buildPathUrls(apiConfig, methodDoc, methodDoc.getClazzDoc(), apiSchema.getApiExceptionStatuses());
+                    if (!pathMap.containsKey(path)) {
+                        pathMap.put(path, request);
+                    } else {
+                        Map<String, Object> oldRequest = (Map<String, Object>) pathMap.get(path);
+                        oldRequest.putAll(request);
+                    }
                 }
             }
         }
@@ -522,8 +528,8 @@ public abstract class AbstractOpenApiBuilder {
         Map<String, Object> component = new HashMap<>(16);
         component.put(DocGlobalConstants.DEFAULT_PRIMITIVE, STRING_COMPONENT);
         apiSchema.getApiDatas().forEach(
-                a -> {
-                    List<ApiMethodDoc> apiMethodDocs = a.getList();
+                entrypoint -> {
+                    List<ApiMethodDoc> apiMethodDocs = entrypoint.getList();
                     apiMethodDocs.forEach(
                             method -> {
                                 //request components
