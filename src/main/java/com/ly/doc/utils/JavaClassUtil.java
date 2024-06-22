@@ -595,6 +595,8 @@ public class JavaClassUtil {
         String simpleAnnotationName = javaAnnotation.getType().getValue();
         // add default group
         if (javaClassList.isEmpty() && JavaClassValidateUtil.isJSR303Required(simpleAnnotationName)) {
+            // fix bug #819 https://github.com/TongchengOpenSource/smart-doc/issues/819
+            javaClassList.add("jakarta.validation.groups.Default");
             javaClassList.add("javax.validation.groups.Default");
         }
         return javaClassList;
