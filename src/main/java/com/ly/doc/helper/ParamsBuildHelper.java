@@ -192,8 +192,8 @@ public class ParamsBuildHelper extends BaseHelper {
                 //handle extension
                 Map<String, String> extensions = DocUtil.getCommentsByTag(field.getTagsByName(DocTags.EXTENSION), DocTags.EXTENSION);
                 Map<String, Object> extensionParams = new HashMap<>();
-                if (extensions != null && !extensions.isEmpty()){
-                    extensions.forEach( (k, v) -> extensionParams.put(k, DocUtil.detectTagValue(v)));
+                if (extensions != null && !extensions.isEmpty()) {
+                    extensions.forEach((k, v) -> extensionParams.put(k, DocUtil.detectTagValue(v)));
                 }
 
                 boolean strRequired = false;
@@ -234,19 +234,16 @@ public class ParamsBuildHelper extends BaseHelper {
                             }
                         }
                     } else if (JavaClassValidateUtil.isJSR303Required(simpleAnnotationName) && !isResp) {
-
-                        boolean hasGroup = false;
                         Set<String> groupClassList = JavaClassUtil.getParamGroupJavaClass(annotation);
-                        for (String javaClass : groupClassList) {
-                            if (groupClasses.contains(javaClass)) {
-                                hasGroup = true;
-                                break;
-                            }
-                        }
+                        // Check if groupClasses contains any element from groupClassList
+                        boolean hasGroup = groupClassList.stream().anyMatch(groupClasses::contains);
+
                         if (hasGroup) {
                             strRequired = true;
-                        } else if (CollectionUtil.isEmpty(groupClasses)) {
-                            strRequired = true;
+                        } else {
+                            // If the annotation is @Valid or @Validated, the Default group is added by default and groupClasses will not be empty;
+                            // In other cases, if groupClasses is still empty, then strRequired is false.
+                            strRequired = CollectionUtil.isEmpty(groupClasses);
                         }
                     }
                 }

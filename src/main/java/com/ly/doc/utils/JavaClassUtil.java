@@ -202,9 +202,7 @@ public class JavaClassUtil {
                         .filter(annotation -> DocAnnotationConstants.SHORT_JSON_IGNORE.equals(annotation.getType().getSimpleName()))
                         .count();
                 if (count > 0) {
-                    if (addedFields.containsKey(fieldName)) {
-                        addedFields.remove(fieldName);
-                    }
+                    addedFields.remove(fieldName);
                     continue;
                 }
 
@@ -394,7 +392,7 @@ public class JavaClassUtil {
             return null;
         }
         String value = see.getValue();
-       
+
         // not FullyQualifiedName
         if (!StringUtils.contains(value, ".")) {
             List<String> imports = javaField.getDeclaringClass().getSource().getImports();
@@ -402,7 +400,7 @@ public class JavaClassUtil {
             value = imports.stream().filter(i -> StringUtils.endsWith(i, finalValue)).findFirst().orElse(StringUtils.EMPTY);
         }
 
-         if (!JavaClassValidateUtil.isClassName(value)) {
+        if (!JavaClassValidateUtil.isClassName(value)) {
             return null;
         }
 
@@ -559,11 +557,17 @@ public class JavaClassUtil {
     }
 
     /**
-     * Obtain Validate Group classes
+     * Obtain the validation group classes from controller method parameter annotations.
+     * <p>
+     * This method processes a list of annotations associated with a controller method parameter to
+     * identify validation groups. It checks if any of the annotations are validation-related and
+     * retrieves their group classes. If the @Validated annotation is present and no group classes
+     * are specified, the default group class is added. The @Valid annotation is treated as equivalent
+     * to the default group since it does not have group parameters.
      *
-     * @param annotations the annotations of controller method param
-     * @param builder     builder
-     * @return the group annotation value
+     * @param annotations the list of annotations on the controller method parameter.
+     * @param builder     the JavaProjectBuilder instance used to resolve annotation values.
+     * @return a set of group class names identified from the annotations, or an empty set if none are found.
      */
     public static Set<String> getParamGroupJavaClass(List<JavaAnnotation> annotations, JavaProjectBuilder builder) {
         if (CollectionUtil.isEmpty(annotations)) {
@@ -574,6 +578,13 @@ public class JavaClassUtil {
         for (JavaAnnotation javaAnnotation : annotations) {
             List<AnnotationValue> annotationValueList = getAnnotationValues(validates, javaAnnotation);
             addGroupClass(annotationValueList, javaClassList, builder);
+            // When using @Validated and group class is empty, add the Default group class;
+            // Note: @Valid does not have group parameters and is equivalent to the default group.
+            String simpleAnnotationName = javaAnnotation.getType().getValue();
+            if (javaClassList.isEmpty() && (ValidatorAnnotations.VALIDATED.equals(simpleAnnotationName)
+                    || ValidatorAnnotations.VALID.equals(simpleAnnotationName))) {
+                javaClassList.addAll(DefaultClassConstants.DEFAULT_CLASSES);
+            }
         }
         return javaClassList;
     }
@@ -596,8 +607,7 @@ public class JavaClassUtil {
         // add default group
         if (javaClassList.isEmpty() && JavaClassValidateUtil.isJSR303Required(simpleAnnotationName)) {
             // fix bug #819 https://github.com/TongchengOpenSource/smart-doc/issues/819
-            javaClassList.add("jakarta.validation.groups.Default");
-            javaClassList.add("javax.validation.groups.Default");
+            javaClassList.addAll(DefaultClassConstants.DEFAULT_CLASSES);
         }
         return javaClassList;
     }
@@ -684,8 +694,8 @@ public class JavaClassUtil {
         for (JavaType javaType : anImplements) {
             String genericFullyQualifiedName = javaType.getGenericFullyQualifiedName();
             javaClassSet.add(genericFullyQualifiedName);
-            if (Objects.equals("javax.validation.groups.Default", genericFullyQualifiedName)
-                    || Objects.equals("jakarta.validation.groups.Default", genericFullyQualifiedName)) {
+            // skip default group
+            if (DefaultClassConstants.DEFAULT_CLASSES.contains(genericFullyQualifiedName)) {
                 continue;
             }
             JavaClass implementJavaClass = builder.getClassByName(genericFullyQualifiedName);
@@ -754,7 +764,7 @@ public class JavaClassUtil {
             if (sourceClass.equals(targetClass)) {
                 return true;
             }
-            Class c = Class.forName(sourceClass);
+            Class<?> c = Class.forName(sourceClass);
             while (c != null) {
                 if (c.getName().equals(targetClass)) {
                     return true;
@@ -786,6 +796,7 @@ public class JavaClassUtil {
         return ignoreFields;
     }
 
+    @SuppressWarnings({"unchecked"})
     public static Map<String, String> getJsonIgnoresProp(JavaAnnotation annotation, String propName) {
         Map<String, String> ignoreFields = new HashMap<>(16);
         Object ignoresObject = annotation.getNamedParameter(propName);
@@ -797,7 +808,7 @@ public class JavaClassUtil {
             ignoreFields.put(prop, null);
             return ignoreFields;
         }
-        LinkedList<String> ignorePropList = (LinkedList) ignoresObject;
+        LinkedList<String> ignorePropList = (LinkedList<String>) ignoresObject;
         for (String str : ignorePropList) {
             String prop = StringUtil.removeQuotes(str);
             ignoreFields.put(prop, null);

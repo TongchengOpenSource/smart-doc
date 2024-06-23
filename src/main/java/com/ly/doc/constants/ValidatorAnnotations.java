@@ -25,6 +25,11 @@ package com.ly.doc.constants;
  */
 public interface ValidatorAnnotations {
 
+    /**
+     * java annotations `@Valid`
+     * jakarta.validation.Valid
+     * javax.validation.Valid
+     */
     String VALID = "Valid";
 
     /**
@@ -47,5 +52,8 @@ public interface ValidatorAnnotations {
      */
     String NULL= "Null";
 
+    /**
+     * Spring validator annotations `@Validated`
+     */
     String VALIDATED = "Validated";
 }
