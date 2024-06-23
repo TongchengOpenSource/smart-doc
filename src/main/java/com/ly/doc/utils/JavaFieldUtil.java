@@ -136,11 +136,11 @@ public class JavaFieldUtil {
         for (JavaAnnotation annotation : annotations) {
             Map<String, AnnotationValue> values = annotation.getPropertyMap();
             String name = annotation.getType().getValue();
-            if (ValidatorAnnotations.NOT_BLANK.equals(name) ||
-                    ValidatorAnnotations.NOT_EMPTY.equals(name) ||
-                    ValidatorAnnotations.NOT_NULL.equals(name) ||
-                    ValidatorAnnotations.NULL.equals(name) ||
-                    ValidatorAnnotations.VALIDATED.equals(name)) {
+            if (JSRAnnotationConstants.NOT_BLANK.equals(name) ||
+                    JSRAnnotationConstants.NOT_EMPTY.equals(name) ||
+                    JSRAnnotationConstants.NOT_NULL.equals(name) ||
+                    JSRAnnotationConstants.NULL.equals(name) ||
+                    JSRAnnotationConstants.VALIDATED.equals(name)) {
                 continue;
             }
             if (DocValidatorAnnotationEnum.listValidatorAnnotations().contains(name)) {

@@ -581,8 +581,8 @@ public class JavaClassUtil {
             // When using @Validated and group class is empty, add the Default group class;
             // Note: @Valid does not have group parameters and is equivalent to the default group.
             String simpleAnnotationName = javaAnnotation.getType().getValue();
-            if (javaClassList.isEmpty() && (ValidatorAnnotations.VALIDATED.equals(simpleAnnotationName)
-                    || ValidatorAnnotations.VALID.equals(simpleAnnotationName))) {
+            if (javaClassList.isEmpty() && (JSRAnnotationConstants.VALIDATED.equals(simpleAnnotationName)
+                    || JSRAnnotationConstants.VALID.equals(simpleAnnotationName))) {
                 javaClassList.addAll(DefaultClassConstants.DEFAULT_CLASSES);
             }
         }
@@ -706,7 +706,7 @@ public class JavaClassUtil {
     private static List<AnnotationValue> getAnnotationValues(List<String> validates, JavaAnnotation javaAnnotation) {
         List<AnnotationValue> annotationValueList = new ArrayList<>();
         String simpleName = javaAnnotation.getType().getValue();
-        if (simpleName.equalsIgnoreCase(ValidatorAnnotations.VALIDATED)) {
+        if (simpleName.equalsIgnoreCase(JSRAnnotationConstants.VALIDATED)) {
             if (Objects.nonNull(javaAnnotation.getProperty(DocAnnotationConstants.VALUE_PROP))) {
                 AnnotationValue v = javaAnnotation.getProperty(DocAnnotationConstants.VALUE_PROP);
                 if (v instanceof AnnotationValueList) {

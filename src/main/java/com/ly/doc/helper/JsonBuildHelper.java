@@ -236,7 +236,7 @@ public class JsonBuildHelper extends BaseHelper {
                 List<JavaAnnotation> annotations = docField.getAnnotations();
                 for (JavaAnnotation annotation : annotations) {
                     String annotationName = annotation.getType().getValue();
-                    if (ValidatorAnnotations.NULL.equals(annotationName) && !isResp) {
+                    if (JSRAnnotationConstants.NULL.equals(annotationName) && !isResp) {
                         if (CollectionUtil.isEmpty(groupClasses)) {
                             continue out;
                         }
