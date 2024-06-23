@@ -22,7 +22,10 @@ package com.ly.doc.constants;
 
 /**
  * @author yu 2019/12/22.
+ *
+ * @see JSRAnnotationConstants
  */
+@Deprecated
 public interface ValidatorAnnotations {
 
     /**
@@ -30,30 +33,30 @@ public interface ValidatorAnnotations {
      * jakarta.validation.Valid
      * javax.validation.Valid
      */
-    String VALID = "Valid";
+    String VALID = JSRAnnotationConstants.VALID;
 
     /**
      * Spring validator annotations `@NotEmpty`
      */
-    String NOT_EMPTY = "NotEmpty";
+    String NOT_EMPTY = JSRAnnotationConstants.NOT_EMPTY;
 
     /**
      * Spring validator annotations `@NotBlank`
      */
-    String NOT_BLANK = "NotBlank";
+    String NOT_BLANK = JSRAnnotationConstants.NOT_BLANK;
 
     /**
      * Spring validator annotations `@NotNull`
      */
-    String NOT_NULL = "NotNull";
+    String NOT_NULL = JSRAnnotationConstants.NOT_NULL;
 
     /**
      * Spring validator annotations `@Null`
      */
-    String NULL= "Null";
+    String NULL = JSRAnnotationConstants.NULL;
 
     /**
      * Spring validator annotations `@Validated`
      */
-    String VALIDATED = "Validated";
+    String VALIDATED = JSRAnnotationConstants.VALIDATED;
 }

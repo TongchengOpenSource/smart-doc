@@ -1,7 +1,6 @@
 package com.ly.doc.utils;
 
 import com.ly.doc.builder.ProjectDocConfigBuilder;
-import com.ly.doc.constants.DocGlobalConstants;
 import com.ly.doc.constants.DocTags;
 import com.ly.doc.constants.ParamTypeConstants;
 import com.ly.doc.model.ApiParam;

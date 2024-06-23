@@ -25,12 +25,10 @@ package com.ly.doc.utils;
 import java.util.List;
 import java.util.Objects;
 
+import com.ly.doc.constants.*;
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.StringUtil;
 import com.power.common.util.ValidateUtil;
-import com.ly.doc.constants.DocAnnotationConstants;
-import com.ly.doc.constants.SolonAnnotations;
-import com.ly.doc.constants.SpringMvcAnnotations;
 import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.expression.AnnotationValue;
 
@@ -42,7 +40,7 @@ import static com.ly.doc.constants.JsonPropertyAnnotationAccessConstants.JSON_PR
  */
 public class JavaClassValidateUtil {
 
-    private static String CLASS_PATTERN = "^([A-Za-z]{1}[A-Za-z\\d_]*\\.)+[A-Za-z][A-Za-z\\d_]*$";
+    private static final String CLASS_PATTERN = "^([A-Za-z]{1}[A-Za-z\\d_]*\\.)+[A-Za-z][A-Za-z\\d_]*$";
 
     /**
      * Check if it is the basic data array type of json data
@@ -203,9 +201,9 @@ public class JavaClassValidateUtil {
      */
     public static boolean isJSR303Required(String annotationSimpleName) {
         switch (annotationSimpleName) {
-            case "NotNull":
-            case "NotEmpty":
-            case "NotBlank":
+            case JSRAnnotationConstants.NOT_NULL:
+            case JSRAnnotationConstants.NOT_EMPTY:
+            case JSRAnnotationConstants.NOT_BLANK:
             case "Required":
                 return true;
             default:

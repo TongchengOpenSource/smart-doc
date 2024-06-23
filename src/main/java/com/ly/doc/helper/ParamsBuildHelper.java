@@ -223,7 +223,7 @@ public class ParamsBuildHelper extends BaseHelper {
                         if (null != annotation.getProperty(DocAnnotationConstants.VALUE_PROP)) {
                             fieldName = StringUtil.removeQuotes(annotation.getProperty(DocAnnotationConstants.VALUE_PROP).toString());
                         }
-                    } else if (ValidatorAnnotations.NULL.equals(simpleAnnotationName) && !isResp) {
+                    } else if (JSRAnnotationConstants.NULL.equals(simpleAnnotationName) && !isResp) {
                         if (CollectionUtil.isEmpty(groupClasses)) {
                             continue out;
                         }
@@ -243,7 +243,7 @@ public class ParamsBuildHelper extends BaseHelper {
                         } else {
                             // If the annotation is @Valid or @Validated, the Default group is added by default and groupClasses will not be empty;
                             // In other cases, if groupClasses is still empty, then strRequired is false.
-                            strRequired = CollectionUtil.isEmpty(groupClasses);
+                            strRequired = CollectionUtil.isNotEmpty(groupClasses);
                         }
                     }
                 }
