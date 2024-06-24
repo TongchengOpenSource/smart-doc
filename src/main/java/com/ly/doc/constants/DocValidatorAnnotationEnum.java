@@ -33,97 +33,127 @@ public enum DocValidatorAnnotationEnum {
     /**
      * Spring validator annotations `@NotEmpty`
      */
-    NOT_EMPTY("NotEmpty"),
+    NOT_EMPTY(JSRAnnotationConstants.NOT_EMPTY),
 
     /**
      * Spring validator annotations `@NotBlank`
      */
-    NOT_BLANK("NotBlank"),
+    NOT_BLANK(JSRAnnotationConstants.NOT_BLANK),
 
     /**
      * Spring validator annotations `@NotNull`
      */
-    NOT_NULL("NotNull"),
+    NOT_NULL(JSRAnnotationConstants.NOT_NULL),
 
     /**
      * Spring validator annotations `@Null`
      */
-    NULL("Null"),
+    NULL(JSRAnnotationConstants.NULL),
 
     /**
      * Spring validator annotations `@AssertTrue`
      */
-    ASSERT_TRUE("AssertTrue"),
+    ASSERT_TRUE(JSRAnnotationConstants.ASSERT_TRUE),
 
     /**
      * Spring validator annotations `@AssertFalse`
      */
-    ASSERT_FALSE("AssertFalse"),
+    ASSERT_FALSE(JSRAnnotationConstants.ASSERT_FALSE),
 
     /**
      * Spring validator annotations `@Min`
      */
-    MIN("Min"),
+    MIN(JSRAnnotationConstants.MIN),
 
     /**
      * Spring validator annotations `@Max`
      */
-    MAX("Max"),
+    MAX(JSRAnnotationConstants.MAX),
 
     /**
      * Spring validator annotations `@DecimalMin`
      */
-    DECIMAL_MIN("DecimalMin"),
+    DECIMAL_MIN(JSRAnnotationConstants.DECIMAL_MIN),
 
     /**
      * Spring validator annotations `@DecimalMax`
      */
-    DECIMAL_MAX("DecimalMax"),
+    DECIMAL_MAX(JSRAnnotationConstants.DECIMAL_MAX),
 
     /**
      * Spring validator annotations `@Size`
      */
-    SIZE("Size"),
+    SIZE(JSRAnnotationConstants.SIZE),
 
     /**
      * Spring validator annotations `@Digits`
      */
-    DIGITS("Digits"),
+    DIGITS(JSRAnnotationConstants.DIGITS),
 
     /**
      * Spring validator annotations `@Past`
      */
-    PAST("Past"),
+    PAST(JSRAnnotationConstants.PAST),
+
+    /**
+     * Spring validator annotations `@PastOrPresent`
+     */
+    PAST_OR_PRESENT(JSRAnnotationConstants.PAST_OR_PRESENT),
 
     /**
      * Spring validator annotations `@Future`
      */
-    FUTURE("Future"),
+    FUTURE(JSRAnnotationConstants.FUTURE),
+
+    /**
+     * Spring validator annotations `@FutureOrPresent`
+     */
+    FUTURE_OR_PRESENT(JSRAnnotationConstants.FUTURE_OR_PRESENT),
 
     /**
      * Spring validator annotations `@Pattern`
      */
-    PATTERN("Pattern"),
+    PATTERN(JSRAnnotationConstants.PATTERN),
+
+    /**
+     * Spring validator annotations `@Positive`
+     */
+    POSITIVE(JSRAnnotationConstants.POSITIVE),
+
+    /**
+     * Spring validator annotations `@PositiveOrZero`
+     */
+    POSITIVE_OR_ZERO(JSRAnnotationConstants.POSITIVE_OR_ZERO),
+
+    /**
+     * Spring validator annotations `@Negative`
+     */
+    NEGATIVE(JSRAnnotationConstants.NEGATIVE),
+
+    /**
+     * Spring validator annotations `@NegativeOrZero`
+     */
+    NEGATIVE_OR_ZERO(JSRAnnotationConstants.NEGATIVE_OR_ZERO),
 
     /**
      * Spring validator annotations `@Email`
      */
-    EMAIL("Email"),
+    EMAIL(JSRAnnotationConstants.EMAIL),
 
     /**
      * Spring validator annotations `@Length`
      */
-    LENGTH("Length"),
+    LENGTH(JSRAnnotationConstants.LENGTH),
 
     /**
      * Spring validator annotations `@Range`
      */
-    RANGE("Range"),
+    RANGE(JSRAnnotationConstants.RANGE),
 
     /**
      * Spring validator annotations `@Validated`
      */
-    VALIDATED("Validated");
+    VALIDATED(JSRAnnotationConstants.VALIDATED);
 
     /**
      * annotation value

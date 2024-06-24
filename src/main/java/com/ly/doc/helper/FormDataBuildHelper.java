@@ -22,9 +22,7 @@ package com.ly.doc.helper;
 
 import java.util.*;
 
-import com.ly.doc.constants.DocGlobalConstants;
-import com.ly.doc.constants.ParamTypeConstants;
-import com.ly.doc.constants.ValidatorAnnotations;
+import com.ly.doc.constants.*;
 import com.ly.doc.model.ApiConfig;
 import com.ly.doc.model.CustomField;
 import com.ly.doc.model.DocJavaField;
@@ -34,7 +32,6 @@ import com.power.common.util.CollectionUtil;
 import com.power.common.util.RandomUtil;
 import com.power.common.util.StringUtil;
 import com.ly.doc.builder.ProjectDocConfigBuilder;
-import com.ly.doc.constants.DocTags;
 import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaField;
@@ -119,7 +116,7 @@ public class FormDataBuildHelper extends BaseHelper {
             List<JavaAnnotation> javaAnnotations = docField.getAnnotations();
             for (JavaAnnotation annotation : javaAnnotations) {
                 String simpleAnnotationName = annotation.getType().getValue();
-                if (ValidatorAnnotations.NULL.equals(simpleAnnotationName)) {
+                if (JSRAnnotationConstants.NULL.equals(simpleAnnotationName)) {
                     if (CollectionUtil.isEmpty(groupClasses)) {
                         continue out;
                     }
