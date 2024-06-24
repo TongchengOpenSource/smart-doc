@@ -23,28 +23,63 @@ package com.ly.doc.model.annotation;
 import java.util.Map;
 
 /**
+ * A model class representing various framework annotations.
+ * Provides getter and setter methods to access and modify the annotations.
+ * <p>
+ * This class includes annotations for entry points, headers, mappings, path variables,
+ * request parameters, request bodies, request parts, exception advice, and server endpoints.
+ * </p>
+ *
  * @author yu3.sun on 2022/10/1
  */
 public class FrameworkAnnotations {
 
+    /**
+     * Map of entry annotations.
+     */
     private Map<String, EntryAnnotation> entryAnnotations;
 
+    /**
+     * Header annotation.
+     */
     private HeaderAnnotation headerAnnotation;
 
+    /**
+     * Map of mapping annotations.
+     */
     private Map<String, MappingAnnotation> mappingAnnotations;
 
+    /**
+     * Path variable annotation.
+     */
     private PathVariableAnnotation pathVariableAnnotation;
 
+    /**
+     * Request parameter annotation.
+     */
     private RequestParamAnnotation requestParamAnnotation;
 
+    /**
+     * Request body annotation.
+     */
     private RequestBodyAnnotation requestBodyAnnotation;
 
+    /**
+     * Request part annotation.
+     */
     private RequestPartAnnotation requestPartAnnotation;
 
+    /**
+     * Map of exception advice annotations.
+     */
     private Map<String, ExceptionAdviceAnnotation> exceptionAdviceAnnotations;
 
     /**
-     * `javax.websocket.server.ServerEndpoint` info
+     * WebSocket server endpoint annotation.
+     * <p>
+     * javax.websocket.server.ServerEndpoint
+     * jakarta.websocket.server.ServerEndpoint
+     * </p>
      */
     private ServerEndpointAnnotation serverEndpointAnnotation;
 
