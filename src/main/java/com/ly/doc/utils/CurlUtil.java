@@ -54,16 +54,16 @@ public class CurlUtil {
         if (StringUtil.isNotEmpty(request.getContentType()) &&
                 !MediaType.APPLICATION_FORM_URLENCODED_VALUE.equals(request.getContentType())) {
             sb.append(" -H");
-            sb.append(" 'Content-Type: ").append(request.getContentType()).append("'");
+            sb.append(" \"Content-Type: ").append(request.getContentType()).append("\"");
         }
         if (CollectionUtil.isNotEmpty(request.getReqHeaders())) {
             for (ApiReqParam reqHeader : request.getReqHeaders()) {
                 sb.append(" -H");
                 if (StringUtil.isEmpty(reqHeader.getValue())) {
-                    sb.append(" '").append(reqHeader.getName()).append("'");
+                    sb.append(" \"").append(reqHeader.getName()).append("\"");
                 } else {
-                    sb.append(" '").append(reqHeader.getName()).append(':')
-                            .append(reqHeader.getValue()).append("'");
+                    sb.append(" \"").append(reqHeader.getName()).append(':')
+                            .append(reqHeader.getValue()).append("\"");
                 }
             }
         }
