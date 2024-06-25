@@ -303,38 +303,115 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
         return apiDocs;
     }
 
+    /**
+     * Retrieves the annotations of the specified class, including those inherited from its superclasses
+     * and interfaces, but only considering mapping annotations for inheritance.
+     *
+     * <p>This method first checks if the specified class has both entry and mapping annotations. If it does,
+     * it returns the annotations of the class directly. If not, it recursively retrieves the mapping annotations
+     * from its superclasses and interfaces.</p>
+     *
+     * @param cls                  the class whose annotations are to be retrieved
+     * @param frameworkAnnotations the framework annotations to be used for filtering
+     * @return a list of annotations for the specified class, including inherited mapping annotations
+     */
     default List<JavaAnnotation> getClassAnnotations(JavaClass cls, FrameworkAnnotations frameworkAnnotations) {
+        // Retrieve the annotations of the specified class
         List<JavaAnnotation> annotationsList = new ArrayList<>(cls.getAnnotations());
-        boolean flag = annotationsList.stream().anyMatch(item -> {
+
+        // Get entry annotations from framework annotations
+        Map<String, EntryAnnotation> entryAnnotationMap = Objects.isNull(frameworkAnnotations.getEntryAnnotations())
+                ? Collections.emptyMap()
+                : frameworkAnnotations.getEntryAnnotations();
+
+        // Get mapping annotations from framework annotations
+        Map<String, MappingAnnotation> mappingAnnotationMap = Objects.isNull(frameworkAnnotations.getMappingAnnotations())
+                ? Collections.emptyMap()
+                : frameworkAnnotations.getMappingAnnotations();
+
+        // Check if the class has both entry and mapping annotations
+        boolean hasEntryAndMappingAnnotation = annotationsList.stream().anyMatch(item -> {
             String annotationName = item.getType().getValue();
             String fullyName = item.getType().getFullyQualifiedName();
-            Map<String, EntryAnnotation> entryAnnotationMap = frameworkAnnotations.getEntryAnnotations();
-            if (Objects.isNull(entryAnnotationMap)) {
-                entryAnnotationMap = Collections.emptyMap();
-            }
-            Map<String, MappingAnnotation> mappingAnnotationMap = frameworkAnnotations.getMappingAnnotations();
-            if (Objects.isNull(mappingAnnotationMap)) {
-                mappingAnnotationMap = Collections.emptyMap();
-            }
             return (entryAnnotationMap.containsKey(annotationName) || entryAnnotationMap.containsKey(fullyName)) &&
                     (mappingAnnotationMap.containsKey(annotationName) || mappingAnnotationMap.containsKey(fullyName));
         });
-        // child override parent set
-        if (flag) {
+
+        // If the class has both entry and mapping annotations, return its annotations directly
+        if (hasEntryAndMappingAnnotation) {
             return annotationsList;
         }
+
+        // Inherit mapping annotations from superclass, if any
         JavaClass superJavaClass = cls.getSuperJavaClass();
         if (Objects.nonNull(superJavaClass) && !"Object".equals(superJavaClass.getSimpleName())) {
-            annotationsList.addAll(getClassAnnotations(superJavaClass, frameworkAnnotations));
+            List<JavaAnnotation> superAnnotations = this.getClassAnnotations(superJavaClass, frameworkAnnotations);
+            annotationsList.addAll(superAnnotations);
         }
-        List<JavaClass> interfaseList = cls.getInterfaces();
-        if (CollectionUtil.isNotEmpty(interfaseList)) {
-            for (JavaClass javaInterface : interfaseList) {
-                annotationsList.addAll(getClassAnnotations(javaInterface, frameworkAnnotations));
+
+        // Inherit mapping annotations from interfaces, if any
+        List<JavaClass> interfaceList = cls.getInterfaces();
+        if (CollectionUtil.isNotEmpty(interfaceList)) {
+            for (JavaClass javaInterface : interfaceList) {
+                List<JavaAnnotation> interfaceAnnotations = this.getClassAnnotations(javaInterface, frameworkAnnotations);
+                annotationsList.addAll(interfaceAnnotations);
             }
         }
         return annotationsList;
     }
+
+
+    /**
+     * Retrieves the annotations of the specified class, including those inherited from its superclasses
+     * and interfaces, but only considering mapping annotations for inheritance.
+     *
+     * <p>This method retrieves the annotations of the specified class and recursively collects
+     * mapping annotations from its superclasses and interfaces.</p>
+     *
+     * @param cls                  the class whose annotations are to be retrieved
+     * @param mappingAnnotationMap the map of mapping annotations used to filter and inherit annotations
+     * @return a list of annotations for the specified class, including inherited mapping annotations
+     */
+    default List<JavaAnnotation> getClassAnnotations(JavaClass cls, Map<String, MappingAnnotation> mappingAnnotationMap) {
+        // Retrieve the annotations of the specified class
+        List<JavaAnnotation> annotationsList = new ArrayList<>(cls.getAnnotations());
+
+
+        // Check if the class has both mapping annotations
+        boolean hasMappingAnnotation = annotationsList.stream().anyMatch(item -> {
+            String annotationName = item.getType().getValue();
+            String fullyName = item.getType().getFullyQualifiedName();
+            return (mappingAnnotationMap.containsKey(annotationName) || mappingAnnotationMap.containsKey(fullyName));
+        });
+
+        // If the class has both mapping annotations, return its annotations directly
+        if (hasMappingAnnotation) {
+            return annotationsList;
+        }
+
+        // Inherit mapping annotations from superclass, if any
+        JavaClass superJavaClass = cls.getSuperJavaClass();
+        if (Objects.nonNull(superJavaClass) && !"Object".equals(superJavaClass.getSimpleName())) {
+            annotationsList.addAll(this.getClassAnnotations(superJavaClass, mappingAnnotationMap).stream()
+                    .filter(annotation -> mappingAnnotationMap.containsKey(annotation.getType().getValue()) ||
+                            mappingAnnotationMap.containsKey(annotation.getType().getFullyQualifiedName()))
+                    .collect(Collectors.toList()));
+        }
+
+        // Inherit mapping annotations from interfaces, if any
+        List<JavaClass> interfaceList = cls.getInterfaces();
+        if (CollectionUtil.isNotEmpty(interfaceList)) {
+            for (JavaClass javaInterface : interfaceList) {
+                annotationsList.addAll(this.getClassAnnotations(javaInterface, mappingAnnotationMap).stream()
+                        .filter(annotation -> mappingAnnotationMap.containsKey(annotation.getType().getValue()) ||
+                                mappingAnnotationMap.containsKey(annotation.getType().getFullyQualifiedName()))
+                        .collect(Collectors.toList()));
+            }
+        }
+
+        return annotationsList;
+    }
+
 
     default List<ApiExceptionStatus> buildExceptionStatus(ProjectDocConfigBuilder projectBuilder,
                                                           Collection<JavaClass> javaClasses,
@@ -418,9 +495,14 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
         boolean paramsDataToTree = projectBuilder.getApiConfig().isParamsDataToTree();
         ClassLoader classLoader = projectBuilder.getApiConfig().getClassLoader();
         String group = JavaClassUtil.getClassTagsValue(cls, DocTags.GROUP, Boolean.TRUE);
-        List<JavaAnnotation> classAnnotations = this.getClassAnnotations(cls, frameworkAnnotations);
+        // Get mapping annotations
+        Map<String, MappingAnnotation> mappingAnnotations = Objects.isNull(frameworkAnnotations.getMappingAnnotations())
+                ? Collections.emptyMap() : frameworkAnnotations.getMappingAnnotations();
+        // Get class mappingAnnotations from class and its parent class or interface
+        List<JavaAnnotation> classAnnotations = this.getClassAnnotations(cls, mappingAnnotations);
+
         String baseUrl = "";
-        // the requestMapping annotation's consumes value on class
+        // The requestMapping annotation's consumes value on class
         String classMediaType = null;
         Map<String, MappingAnnotation> mappingAnnotationMap = frameworkAnnotations.getMappingAnnotations();
         for (JavaAnnotation annotation : classAnnotations) {
@@ -1153,16 +1235,36 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
         return requestExample;
     }
 
+    /**
+     * Determines if the given Java class is a default entry point based on its annotations and the provided framework annotations.
+     *
+     * @param cls the Java class to check
+     * @param frameworkAnnotations the framework annotations to use for the check
+     * @return {@code true} if the class is a default entry point, {@code false} otherwise
+     */
     default boolean defaultEntryPoint(JavaClass cls, FrameworkAnnotations frameworkAnnotations) {
+        // Check if the class is an annotation or an enum, return false if it is
         if (cls.isAnnotation() || cls.isEnum()) {
             return false;
         }
+
+        // Check if frameworkAnnotations is null, return false if it is
         if (Objects.isNull(frameworkAnnotations)) {
             return false;
         }
-        List<JavaAnnotation> classAnnotations = DocClassUtil.getAnnotations(cls);
+
+        // Get framework entry annotations
         Map<String, EntryAnnotation> entryAnnotationMap = frameworkAnnotations.getEntryAnnotations();
 
+        // Check if entry annotations are null, return false if they are
+        if (Objects.isNull(frameworkAnnotations.getEntryAnnotations())) {
+            return false;
+        }
+
+        // Get class annotations; Note: Spring Entry Annotation is not supported for superclass inheritance
+        List<JavaAnnotation> classAnnotations = cls.getAnnotations();
+
+        // Check if any of the class annotations match the entry annotations
         return classAnnotations.stream().anyMatch(annotation -> {
             String name = annotation.getType().getValue();
             return entryAnnotationMap.containsKey(name);
