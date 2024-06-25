@@ -10,7 +10,7 @@ import java.util.Arrays;
 
 public class CurlUtilTest {
     /**
-     * test token
+     * test header name
      */
     @Test
     public void testHeaderName() {
