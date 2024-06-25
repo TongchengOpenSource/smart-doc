@@ -227,6 +227,7 @@ public class DocClassUtil {
             case "java.util.uuid":
             case "uuid":
             case "localdatetime":
+            case "java.time.instant":
             case "java.time.localdatetime":
             case "java.time.localdate":
             case "java.time.localtime":
@@ -257,6 +258,7 @@ public class DocClassUtil {
             case "arraylist":
             case "java.util.treeset":
             case "treeset":
+            case "enumset":
                 return "array";
             case "java.lang.byte":
             case "byte":

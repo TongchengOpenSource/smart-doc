@@ -136,6 +136,10 @@ public class DocUtil {
      */
     public static String jsonValueByType(String typeName) {
         String type = typeName.contains(".") ? typeName.substring(typeName.lastIndexOf(".") + 1) : typeName;
+        // if the type is Instant, transform to LocalDateTime
+        if ("Instant".equalsIgnoreCase(type)) {
+            type = "LocalDateTime";
+        }
         String randomMock = System.getProperty(DocGlobalConstants.RANDOM_MOCK);
         boolean randomMockFlag = Boolean.parseBoolean(randomMock);
         String value = "";
@@ -569,9 +573,11 @@ public class DocUtil {
                 "Please @see " + className;
         return getCommentsByTag(paramTags, tagName, className, tagValNullMsg, tagValErrorMsg);
     }
-    public static Map<String, String> getCommentsByTag(List<DocletTag> paramTags, final String tagName){
-        return getCommentsByTag(paramTags, tagName, null, null,null);
+
+    public static Map<String, String> getCommentsByTag(List<DocletTag> paramTags, final String tagName) {
+        return getCommentsByTag(paramTags, tagName, null, null, null);
     }
+
     private static Map<String, String> getCommentsByTag(List<DocletTag> paramTags, final String tagName, String className,
                                                         String tagValNullMsg, String tagValErrorMsg) {
         Map<String, String> paramTagMap = new HashMap<>(16);
@@ -745,6 +751,7 @@ public class DocUtil {
             case "enum":
             case "java.util.date":
             case "localdatetime":
+            case "java.time.instant":
             case "java.time.localdatetime":
             case "java.time.year":
             case "java.time.localtime":
@@ -775,6 +782,7 @@ public class DocUtil {
             case "arraylist":
             case "java.util.treeset":
             case "treeset":
+            case "enumset":
                 return "array";
             case "java.util.byte":
             case "byte":
@@ -1064,9 +1072,9 @@ public class DocUtil {
      * @return string
      */
     public static String formatFieldTypeGicName(Map<String, String> genericMap, String fieldGicName) {
-        String fieldGicNameCopy =  fieldGicName;
-        for(Map.Entry<String,String> entry:genericMap.entrySet()) {
-            fieldGicNameCopy  = replaceGenericParameter(fieldGicName,entry.getKey(), entry.getValue());
+        String fieldGicNameCopy = fieldGicName;
+        for (Map.Entry<String, String> entry : genericMap.entrySet()) {
+            fieldGicNameCopy = replaceGenericParameter(fieldGicName, entry.getKey(), entry.getValue());
         }
         return fieldGicNameCopy;
     }
@@ -1075,9 +1083,9 @@ public class DocUtil {
      * Replaces the specified generic parameter in a string with a given type,
      * supporting multi-level generics.
      *
-     * @param baseString The base string
+     * @param baseString               The base string
      * @param originalGenericParameter The generic parameter to be replaced, like "T"
-     * @param replacementType The type to replace the original parameter with, like "User"
+     * @param replacementType          The type to replace the original parameter with, like "User"
      * @return The modified string
      */
     public static String replaceGenericParameter(String baseString, String originalGenericParameter, String replacementType) {
@@ -1258,16 +1266,17 @@ public class DocUtil {
 
     /**
      * parse tag value, detect the value type, should be one type of String, Map, List
+     *
      * @param value tag value
      * @return one of String, Map, List
      */
-    public static Object detectTagValue(String value){
+    public static Object detectTagValue(String value) {
         String v = value.trim();
         //if the value is a List
-        if (v.startsWith("[") && v.endsWith("]")){
+        if (v.startsWith("[") && v.endsWith("]")) {
             return JsonUtil.toObject(v, List.class);
         }
-        if (v.startsWith("{") && v.endsWith("}")){
+        if (v.startsWith("{") && v.endsWith("}")) {
             return JsonUtil.toObject(v, Map.class);
         }
         return v;
