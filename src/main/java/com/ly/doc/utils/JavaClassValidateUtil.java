@@ -100,6 +100,7 @@ public class JavaClassValidateUtil {
             case "character":
             case "java.sql.timestamp":
             case "java.util.date":
+            case "java.time.instant":
             case "java.time.localdatetime":
             case "java.time.localtime":
             case "java.time.year":
@@ -154,6 +155,7 @@ public class JavaClassValidateUtil {
             case "java.util.Collection":
             case "java.util.ArrayDeque":
             case "java.util.PriorityQueue":
+            case "java.util.EnumSet":
                 return true;
             default:
                 return false;
