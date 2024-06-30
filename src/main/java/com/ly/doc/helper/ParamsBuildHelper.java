@@ -192,7 +192,14 @@ public class ParamsBuildHelper extends BaseHelper {
                     continue;
                 }
                 String fieldJsonFormatType = null;
+                // has Annotation @JsonSerialize And using ToStringSerializer
+                boolean toStringSerializer = false;
                 for (JavaAnnotation annotation : javaAnnotations) {
+                    if (DocAnnotationConstants.SHORT_JSON_SERIALIZE.equals(annotation.getType().getSimpleName()) &&
+                            DocAnnotationConstants.TO_STRING_SERIALIZER_USING.equals(annotation.getNamedParameter("using"))) {
+                        toStringSerializer = true;
+                        continue;
+                    }
                     if (JavaClassValidateUtil.isIgnoreFieldJson(annotation, isResp)) {
                         continue out;
                     }
@@ -298,7 +305,7 @@ public class ParamsBuildHelper extends BaseHelper {
                     ApiParam param = ApiParam.of().setClassName(className).setField(pre + fieldName);
                     param.setPid(pid).setMaxLength(maxLength).setValue(fieldValue);
                     param.setId(atomicOrDefault(atomicInteger, paramList.size() + param.getPid() + 1));
-                    String processedType = StringUtil.isNotEmpty(fieldJsonFormatType)
+                    String processedType = (isResp && toStringSerializer) ? "string" : StringUtil.isNotEmpty(fieldJsonFormatType)
                             ? fieldJsonFormatType
                             : processFieldTypeName(isShowJavaType, subTypeName);
                     param.setType(processedType);

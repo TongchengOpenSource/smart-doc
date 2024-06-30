@@ -271,9 +271,18 @@ public class JsonBuildHelper extends BaseHelper {
                 List<JavaAnnotation> annotations = docField.getAnnotations();
 
                 String jsonFormatString = null;
+                // has Annotation @JsonSerialize And using ToStringSerializer
+                boolean toStringSerializer = false;
                 // Handle annotations on the field
                 for (JavaAnnotation annotation : annotations) {
                     String annotationName = annotation.getType().getValue();
+                    // if the field is annotated with @JsonSerialize
+                    if (DocAnnotationConstants.SHORT_JSON_SERIALIZE.equals(annotationName) &&
+                            DocAnnotationConstants.TO_STRING_SERIALIZER_USING.equals(annotation.getNamedParameter("using"))) {
+                        toStringSerializer = true;
+                        continue;
+                    }
+
                     if (JSRAnnotationConstants.NULL.equals(annotationName) && !isResp) {
                         if (CollectionUtil.isEmpty(groupClasses)) {
                             continue out;
@@ -340,9 +349,13 @@ public class JsonBuildHelper extends BaseHelper {
                 if (JavaClassValidateUtil.isPrimitive(subTypeName)) {
                     int data0Length = data0.length();
                     if (StringUtil.isEmpty(fieldValue)) {
-                        fieldValue = StringUtil.isNotEmpty(jsonFormatString)
-                                ? jsonFormatString
-                                : DocUtil.getValByTypeAndFieldName(typeSimpleName, field.getName());
+                        String valueByTypeAndFieldName = DocUtil.getValByTypeAndFieldName(typeSimpleName, field.getName());
+                        if (toStringSerializer && isResp) {
+                            fieldValue = valueByTypeAndFieldName.startsWith("\"") && valueByTypeAndFieldName.endsWith("\"")
+                                    ? valueByTypeAndFieldName : DocUtil.handleJsonStr(valueByTypeAndFieldName);
+                        } else {
+                            fieldValue = StringUtil.isNotEmpty(jsonFormatString) ? jsonFormatString : valueByTypeAndFieldName;
+                        }
                     }
                     if (Objects.nonNull(customRequestField) && !isResp && typeName.equals(customRequestField.getOwnerClassName())) {
                         JavaFieldUtil.buildCustomField(data0, typeSimpleName, customRequestField);
@@ -479,6 +492,11 @@ public class JsonBuildHelper extends BaseHelper {
                             if (tagsMap.containsKey(DocTags.MOCK) && StringUtil.isNotEmpty(tagsMap.get(DocTags.MOCK))) {
                                 data0.append(tagsMap.get(DocTags.MOCK)).append(",");
                             }
+                            // if has Annotation @JsonSerialize And using ToStringSerializer  && isResp
+                            else if (toStringSerializer && isResp) {
+                                Object value = JavaClassUtil.getEnumValue(javaClass, Boolean.FALSE);
+                                data0.append(value).append(",");
+                            }
                             // if has @JsonFormat
                             else if (StringUtil.isNotEmpty(jsonFormatString)) {
                                 data0.append(jsonFormatString).append(",");
@@ -487,7 +505,10 @@ public class JsonBuildHelper extends BaseHelper {
                                 data0.append(value).append(",");
                             }
                         } else {
-                            if (StringUtil.isNotEmpty(jsonFormatString)) {
+                            // if has Annotation @JsonSerialize And using ToStringSerializer  && isResp
+                            if (toStringSerializer && isResp) {
+                                data0.append(" ").append(",");
+                            } else if (StringUtil.isNotEmpty(jsonFormatString)) {
                                 data0.append(jsonFormatString).append(",");
                             } else {
                                 fieldGicName = DocUtil.formatFieldTypeGicName(genericMap, fieldGicName);

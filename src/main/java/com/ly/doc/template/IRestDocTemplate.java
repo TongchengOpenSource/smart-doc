@@ -57,9 +57,27 @@ import static com.ly.doc.constants.DocTags.IGNORE;
  */
 public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 
+    /**
+     * Logger for the class.
+     */
     Logger log = Logger.getLogger(IRestDocTemplate.class.getName());
+
+    /**
+     * Atomic integer.
+     */
     AtomicInteger ATOMIC_INTEGER = new AtomicInteger(1);
 
+    /**
+     * Processes API data to generate documentation schemas.
+     *
+     * @param projectBuilder       Configuration builder for the project, used to obtain project configuration information.
+     * @param frameworkAnnotations Framework annotation processor, used to handle framework-specific annotations.
+     * @param configApiReqParams   Configuration list of request parameters, used to process request parameters.
+     * @param baseMappingHandler   Request mapping handler, used to process request mapping information.
+     * @param headerHandler        Header handler, used to process header information.
+     * @param javaClasses          Collection of Java classes, used to scan and process classes that need to generate documentation.
+     * @return Returns the generated API documentation schema.
+     */
     default ApiSchema<ApiDoc> processApiData(ProjectDocConfigBuilder projectBuilder, FrameworkAnnotations frameworkAnnotations,
                                              List<ApiReqParam> configApiReqParams, IRequestMappingHandler baseMappingHandler, IHeaderHandler headerHandler,
                                              Collection<JavaClass> javaClasses) {
@@ -127,6 +145,19 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
         return apiSchema;
     }
 
+    /**
+     * Generates a string for document header rendering based on the list of request parameters.
+     * If the header list is empty, it initializes it to an empty list to avoid null pointer issues.
+     * This method is primarily used for creating API documentation table headers,
+     * with columns including parameter name, type, whether it's required, description, and since version.
+     *
+     * @param headers A list of {@link ApiReqParam} objects representing the request headers.
+     *                Each object contains details like name, type, requirements, etc.
+     * @param isAdoc  A flag indicating whether the output is formatted for AsciiDoc (.adoc) format.
+     *                Currently, this parameter does not affect the output and is reserved for future use.
+     * @return A string representing the formatted header information for documentation.
+     * If the input list is empty, an empty string is returned.
+     */
     default String createDocRenderHeaders(List<ApiReqParam> headers, boolean isAdoc) {
         StringBuilder builder = new StringBuilder();
         if (CollectionUtil.isEmpty(headers)) {
@@ -143,7 +174,18 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
         return builder.toString();
     }
 
-
+    /**
+     * Handles the generation of API documentation.
+     * This default method creates API documentation for the provided Java class,
+     * including both class-level and method-level details. It constructs API documentation objects
+     * and populates them based on the comments associated with the class and its methods.
+     *
+     * @param cls           The Java class to process documentation for.
+     * @param apiDocList    A list accumulating all API documentation instances.
+     * @param apiMethodDocs A list of method documentation objects corresponding to the methods within the class.
+     * @param order         The sorting order for the generated API documentation entry.
+     * @param isUseMD5      Flag indicating whether to use MD5 hashing to generate a unique alias for the documented class.
+     */
     default void handleApiDoc(JavaClass cls, List<ApiDoc> apiDocList, List<ApiMethodDoc> apiMethodDocs, int order, boolean isUseMD5) {
         String controllerName = cls.getName();
         ApiDoc apiDoc = new ApiDoc();
@@ -192,7 +234,19 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
         }
     }
 
-
+    /**
+     * Maps the given parameter to an API parameter object.
+     * This method processes a string parameter, converting it into an entry in the API parameter list,
+     * and simultaneously updates the parameter mapping. It detects if the parameter includes a value assignment
+     * (e.g., "name=value"), extracts the name and value accordingly, or treats the entire string as the parameter name
+     * if no assignment is found. The parameter's type is determined (either "int32" for positive integers or "string"),
+     * and a new `ApiParam` instance is created with details extracted or inferred from the input. The newly created
+     * `ApiParam` is then added to the provided list, and its name is recorded in the mappingParams map with a null value.
+     *
+     * @param str           The raw string containing the parameter information.
+     * @param paramList     The list of ApiParam objects to which the processed parameter will be added.
+     * @param mappingParams A map holding parameter names as keys, used for tracking mapped parameters.
+     */
     default void mappingParamToApiParam(String str, List<ApiParam> paramList, Map<String, String> mappingParams) {
         String param = StringUtil.removeQuotes(str);
         String paramName;
@@ -219,10 +273,21 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
         mappingParams.put(paramName, null);
     }
 
+    /**
+     * Processes a parameter string, extracting or inferring its name and value, then adds it to a path parameters map.
+     * This method handles a raw string that represents a parameter. If the string includes an equals sign,
+     * indicating a value assignment, it separates the parameter name and value accordingly. Otherwise, it assumes
+     * the entire string is the parameter name and infers a default value based on the type "string".
+     * The resulting parameter name-value pair is then stored in the provided pathParamsMap.
+     *
+     * @param str           The raw string containing the parameter information potentially with a value assignment.
+     * @param pathParamsMap A map to store path parameter names paired with their respective values.
+     */
     default void mappingParamProcess(String str, Map<String, String> pathParamsMap) {
         String param = StringUtil.removeQuotes(str);
         String paramName;
         String paramValue;
+        // If the parameter contains an equals sign, split into name and value; otherwise, treat the whole string as the name.
         if (param.contains("=")) {
             int index = param.indexOf("=");
             paramName = param.substring(0, index);
@@ -230,22 +295,44 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
             pathParamsMap.put(paramName, paramValue);
         } else {
             paramName = param;
+            // Infer a default value for the parameter based on its type and add it to the map.
             pathParamsMap.put(paramName, DocUtil.getValByTypeAndFieldName("string", paramName, Boolean.TRUE));
         }
     }
 
-
+    /**
+     * Retrieves the parameter name from an annotation, considering both 'value' and 'name' properties,
+     * and removes any surrounding quotes from the resolved name.
+     *
+     * @param classLoader The ClassLoader used to load classes for annotation resolution.
+     * @param paramName   The default parameter name.
+     * @param annotation  The annotation instance containing the parameter name information.
+     * @return The resolved and cleaned parameter name, or the default if not specified in the annotation.
+     */
     default String getParamName(ClassLoader classLoader, String paramName, JavaAnnotation annotation) {
+        // First, attempt to resolve the parameter name using the 'value' property of the annotation
         String resolvedParamName = DocUtil.resolveAnnotationValue(classLoader, annotation.getProperty(DocAnnotationConstants.VALUE_PROP));
+
+        // If the 'value' property did not yield a usable name, try resolving it with the 'name' property
         if (StringUtils.isBlank(resolvedParamName)) {
             resolvedParamName = DocUtil.resolveAnnotationValue(classLoader, annotation.getProperty(DocAnnotationConstants.NAME_PROP));
         }
+
+        // If a name was successfully resolved from the annotation, replace the default paramName with it,
+        // after removing any surrounding quotes
         if (!StringUtils.isBlank(resolvedParamName)) {
             paramName = StringUtil.removeQuotes(resolvedParamName);
         }
+        // Ensure the final parameter name has no surrounding quotes and return it
         return StringUtil.removeQuotes(paramName);
     }
 
+    /**
+     * Processes the API documentation tags, consolidating API documents with identical tags.
+     *
+     * @param apiDocList The original list of API documentation.
+     * @return A processed list of API documentation, sorted and merged by tags.
+     */
     default List<ApiDoc> handleTagsApiDoc(List<ApiDoc> apiDocList) {
         if (CollectionUtil.isEmpty(apiDocList)) {
             return Collections.emptyList();
@@ -412,7 +499,15 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
         return annotationsList;
     }
 
-
+    /**
+     * Constructs a list of exception statuses based on the provided project configuration builder, collection of Java classes, and framework annotations.
+     * This method primarily parses exception handling methods within Java classes and generates corresponding exception status configurations from these method details.
+     *
+     * @param projectBuilder       The project configuration builder to retrieve project-related configuration information.
+     * @param javaClasses          A collection of Java classes from which exception handling methods are parsed.
+     * @param frameworkAnnotations A collection of framework annotations used to determine if certain classes or methods should be ignored.
+     * @return A list of ApiExceptionStatus objects representing all parsed exception handling methods and their associated status information.
+     */
     default List<ApiExceptionStatus> buildExceptionStatus(ProjectDocConfigBuilder projectBuilder,
                                                           Collection<JavaClass> javaClasses,
                                                           FrameworkAnnotations frameworkAnnotations) {
@@ -484,6 +579,19 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
         return exceptionStatusList;
     }
 
+    /**
+     * Builds entry point method documentation.
+     * Generates API method documentation for the specified class, including all its methods and inherited methods that meet the documentation generation criteria.
+     *
+     * @param cls                  The class to generate documentation for.
+     * @param apiConfig            The API configuration information.
+     * @param projectBuilder       Configuration builder for the project, used to obtain project-related configuration.
+     * @param frameworkAnnotations Framework annotation information, used to handle mapping annotations.
+     * @param configApiReqParams   Configured request parameters, used to generate API request parameter documentation.
+     * @param baseMappingHandler   Handles request mapping annotations, used to process URL and HTTP method information.
+     * @param headerHandler        Handles request headers, used to generate request header documentation.
+     * @return A list of API method documentation.
+     */
     default List<ApiMethodDoc> buildEntryPointMethod(
             final JavaClass cls, ApiConfig apiConfig,
             ProjectDocConfigBuilder projectBuilder,
@@ -687,6 +795,15 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
         return methodDocList;
     }
 
+    /**
+     * build request params
+     *
+     * @param docJavaMethod        docJavaMethod
+     * @param builder              projectBuilder
+     * @param configApiReqParams   configApiReqParams
+     * @param frameworkAnnotations frameworkAnnotations
+     * @return ApiMethodReqParam
+     */
     default ApiMethodReqParam requestParams(final DocJavaMethod docJavaMethod, ProjectDocConfigBuilder builder,
                                             List<ApiReqParam> configApiReqParams, FrameworkAnnotations frameworkAnnotations) {
         JavaMethod javaMethod = docJavaMethod.getJavaMethod();
@@ -1000,6 +1117,15 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
         return ApiParamTreeUtil.buildMethodReqParam(paramList, queryReqParamMap, pathReqParamMap, docJavaMethod.getMethodType());
     }
 
+    /**
+     * build request json
+     *
+     * @param javaMethod           JavaMethod
+     * @param apiMethodDoc         ApiMethodDoc
+     * @param configBuilder        ProjectDocConfigBuilder
+     * @param frameworkAnnotations FrameworkAnnotations
+     * @return ApiRequestExample
+     */
     default ApiRequestExample buildReqJson(DocJavaMethod javaMethod, ApiMethodDoc apiMethodDoc,
                                            ProjectDocConfigBuilder configBuilder, FrameworkAnnotations frameworkAnnotations) {
         String methodType = apiMethodDoc.getType();
@@ -1238,7 +1364,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
     /**
      * Determines if the given Java class is a default entry point based on its annotations and the provided framework annotations.
      *
-     * @param cls the Java class to check
+     * @param cls                  the Java class to check
      * @param frameworkAnnotations the framework annotations to use for the check
      * @return {@code true} if the class is a default entry point, {@code false} otherwise
      */
@@ -1271,6 +1397,13 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
         });
     }
 
+    /**
+     * Determines if the given Java class is an exception advice entry point based on its annotations and the provided framework annotations.
+     *
+     * @param cls                  the Java class to check
+     * @param frameworkAnnotations the framework annotations to use for the check
+     * @return {@code true} if the class is an exception advice entry point, {@code false} otherwise
+     */
     default boolean defaultExceptionAdviceEntryPoint(JavaClass cls, FrameworkAnnotations frameworkAnnotations) {
         if (cls.isAnnotation() || cls.isEnum()) {
             return false;
@@ -1289,6 +1422,14 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
         });
     }
 
+    /**
+     * Get the list of parent class methods for a given Java class.
+     *
+     * @param apiConfig      the API configuration
+     * @param projectBuilder the project builder
+     * @param cls            the Java class
+     * @return the list of parent class methods
+     */
     default List<DocJavaMethod> getParentsClassMethods(ApiConfig apiConfig, ProjectDocConfigBuilder projectBuilder, JavaClass cls) {
         List<DocJavaMethod> docJavaMethods = new ArrayList<>();
         JavaClass parentClass = cls.getSuperJavaClass();
@@ -1303,6 +1444,15 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
         return docJavaMethods;
     }
 
+    /**
+     * Convert a Java method to a DocJavaMethod object.
+     *
+     * @param apiConfig      the API configuration
+     * @param projectBuilder the project builder
+     * @param method         the Java method to convert
+     * @param actualTypesMap the actual types map
+     * @return the converted DocJavaMethod object
+     */
     default DocJavaMethod convertToDocJavaMethod(ApiConfig apiConfig, ProjectDocConfigBuilder projectBuilder,
                                                  JavaMethod method, Map<String, JavaType> actualTypesMap) {
         JavaClass cls = method.getDeclaringClass();
@@ -1350,6 +1500,13 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
         return docJavaMethod;
     }
 
+    /**
+     * Determines whether the provided Java class is an entry point for RESTful APIs.
+     *
+     * @param javaClass            The Java class to be evaluated.
+     * @param frameworkAnnotations Annotations provided by the framework, which may include information about the entry point or other metadata.
+     * @return True if the Java class is an entry point for RESTful APIs, false otherwise.
+     */
     boolean isEntryPoint(JavaClass javaClass, FrameworkAnnotations frameworkAnnotations);
 
     /**
@@ -1361,13 +1518,42 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
      */
     boolean isExceptionAdviceEntryPoint(JavaClass javaClass, FrameworkAnnotations frameworkAnnotations);
 
+    /**
+     * List of annotations that indicate the entry point of a RESTful API.
+     *
+     * @return A list of annotations that indicate the entry point of a RESTful API.
+     */
     List<String> listMvcRequestAnnotations();
 
+    /**
+     * Post-process the Java method associated with a RESTful API endpoint.
+     *
+     * @param javaClass      The Java class associated with the API endpoint.
+     * @param method         The Java method associated with the API endpoint.
+     * @param requestMapping The RequestMapping annotation associated with the API endpoint.
+     */
     void requestMappingPostProcess(JavaClass javaClass, JavaMethod method, RequestMapping requestMapping);
 
+    /**
+     * Determine whether a parameter should be ignored in a RESTful API endpoint.
+     *
+     * @param annotation The annotation associated with the parameter.
+     * @return True if the parameter should be ignored, false otherwise.
+     */
     boolean ignoreMvcParamWithAnnotation(String annotation);
 
+    /**
+     * Process the Java method associated with an exception handler in a RESTful API.
+     *
+     * @param method The Java method associated with the exception handler.
+     * @return The processed result, typically a response tailored for the exception handler.
+     */
     ExceptionAdviceMethod processExceptionAdviceMethod(JavaMethod method);
 
+    /**
+     * Default HTTP error statuses for RESTful APIs.
+     *
+     * @return A list of default HTTP error statuses.
+     */
     List<ApiExceptionStatus> defaultHttpErrorStatuses();
 }
