@@ -173,7 +173,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
         apiDoc.setList(apiMethodDocs);
         apiDocList.add(apiDoc);
 
-        tagSet.add(StringUtils.trim(desc));
+        tagSet.add(StringUtils.trim(apiDoc.getName()));
         for (String tag : tagSet) {
             DocMapping.tagDocPut(tag, apiDoc, null);
             for (ApiMethodDoc methodDoc : apiMethodDocs) {
