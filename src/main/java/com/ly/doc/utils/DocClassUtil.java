@@ -20,14 +20,14 @@
  */
 package com.ly.doc.utils;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.*;
-
+import com.ly.doc.filter.ReturnTypeProcessor;
 import com.ly.doc.model.ApiReturn;
 import com.power.common.util.StringUtil;
-import com.ly.doc.filter.ReturnTypeProcessor;
 import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaClass;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.*;
 
 /**
  * Description:
@@ -223,6 +223,9 @@ public class DocClassUtil {
             case "string":
             case "char":
             case "java.util.date":
+            case "java.util.calendar":
+            case "java.time.zoneoffset":
+            case "java.time.offsettime":
             case "date":
             case "java.util.uuid":
             case "uuid":

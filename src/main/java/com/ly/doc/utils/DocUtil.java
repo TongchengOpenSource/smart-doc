@@ -36,7 +36,8 @@ import net.datafaker.Faker;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import java.time.LocalDateTime;
+import java.text.DecimalFormat;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -117,6 +118,85 @@ public class DocUtil {
         FIELD_VALUE.put("offset-long", "1");
         FIELD_VALUE.put("version-string", EN_FAKER.app().version());
     }
+
+    /**
+     * This map contains the default JSON format patterns for various date and time types.
+     * These patterns are used when the @JsonFormat annotation is applied to fields of these types
+     * without specifying a pattern. If no pattern is configured, these default patterns will be used.
+     * <pre>
+     * {@code
+     * public class JsonFormatExample  {
+     *
+     *     // "calendarStringNoPattern": "2024-06-29T04:55:13.479+00:00"
+     *     @JsonFormat(shape = JsonFormat.Shape.STRING)
+     *     private Calendar calendarStringNoPattern;
+     *
+     *     // "dateStringNoPattern": "2024-06-29T04:55:13.479+00:00"
+     *     @JsonFormat(shape = JsonFormat.Shape.STRING)
+     *     private Date dateStringNoPattern;
+     *
+     *     // "localDateTimeStringNoPattern": "2024-06-29T12:55:13.4799336"
+     *     @JsonFormat(shape = JsonFormat.Shape.STRING)
+     *     private LocalDateTime localDateTimeStringNoPattern;
+     *
+     *     // "localDateStringNoPattern": "2024-06-29"
+     *     @JsonFormat(shape = JsonFormat.Shape.STRING)
+     *     private LocalDate localDateStringNoPattern;
+     *
+     *     // "localTimeStringNoPattern": "12:55:13.4799336"
+     *     @JsonFormat(shape = JsonFormat.Shape.STRING)
+     *     private LocalTime localTimeStringNoPattern;
+     *
+     *     // "zonedDateTimeStringNoPattern": "2024-06-29T12:55:13.4799336+08:00"
+     *     @JsonFormat(shape = JsonFormat.Shape.STRING)
+     *     private ZonedDateTime zonedDateTimeStringNoPattern;
+     *
+     *     // "offsetDateTimeStringNoPattern": "2024-06-30T14:28:55.7346858+08:00"
+     *     @JsonFormat(shape = JsonFormat.Shape.STRING)
+     *     private OffsetDateTime offsetDateTimeStringNoPattern;
+     *
+     *     // "yearStringNoPattern": "2024"
+     *     @JsonFormat(shape = JsonFormat.Shape.STRING)
+     *     private Year yearStringNoPattern;
+     *
+     *     // "yearMonthStringNoPattern": "2024-06"
+     *     @JsonFormat(shape = JsonFormat.Shape.STRING)
+     *     private YearMonth yearMonthStringNoPattern;
+     *
+     *     // "monthDayStringNoPattern": "--06-29",
+     *     @JsonFormat(shape = JsonFormat.Shape.STRING)
+     *     private MonthDay monthDayStringNoPattern;
+     *
+     *     // "instantStringNoPattern": "2024-06-29T04:55:13.479933600Z"
+     *     @JsonFormat(shape = JsonFormat.Shape.STRING)
+     *     private Instant instantStringNoPattern;
+     *
+     *     // "offsetTimeStringNoPattern": "20:10:37.334190400+08:00"
+     *     @JsonFormat(shape = JsonFormat.Shape.STRING)
+     *     private OffsetTime offsetTimeStringNoPattern;
+     * }
+     * }
+     * </pre>
+     */
+    private static final Map<String, String> DEFAULT_JSON_FORMAT_PATTERNS = new LinkedHashMap<>();
+
+    static {
+
+        DEFAULT_JSON_FORMAT_PATTERNS.put("java.util.Calendar", "yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+        DEFAULT_JSON_FORMAT_PATTERNS.put("java.util.Date", "yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+        DEFAULT_JSON_FORMAT_PATTERNS.put("java.time.LocalDateTime", "yyyy-MM-dd'T'HH:mm:ss.SSSSSS");
+        DEFAULT_JSON_FORMAT_PATTERNS.put("java.time.LocalDate", "yyyy-MM-dd");
+        DEFAULT_JSON_FORMAT_PATTERNS.put("java.time.LocalTime", "HH:mm:ss.SSSSSS");
+        DEFAULT_JSON_FORMAT_PATTERNS.put("java.time.ZonedDateTime", "yyyy-MM-dd'T'HH:mm:ss.SSSSSSXXX");
+        DEFAULT_JSON_FORMAT_PATTERNS.put("java.time.OffsetDateTime", "yyyy-MM-dd'T'HH:mm:ss.SSSSSSXXX");
+        DEFAULT_JSON_FORMAT_PATTERNS.put("java.time.Year", "yyyy");
+        DEFAULT_JSON_FORMAT_PATTERNS.put("java.time.YearMonth", "yyyy-MM");
+        DEFAULT_JSON_FORMAT_PATTERNS.put("java.time.MonthDay", "--MM-dd");
+        DEFAULT_JSON_FORMAT_PATTERNS.put("java.time.Instant", "yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSSXXX");
+        DEFAULT_JSON_FORMAT_PATTERNS.put("java.time.OffsetTime", "HH:mm:ss.SSSSSSXXX");
+
+    }
+
 
     /**
      * Cache the regex and its pattern object
@@ -643,7 +723,7 @@ public class DocUtil {
      */
     public static String getFirstKeyAndValue(Map<String, String> map) {
         String value = null;
-        if (map != null && map.size() > 0) {
+        if (map != null && !map.isEmpty()) {
             Map.Entry<String, String> entry = map.entrySet().iterator().next();
             if (entry != null) {
                 if (DocGlobalConstants.NO_COMMENTS_FOUND.equals(entry.getValue())) {
@@ -750,6 +830,7 @@ public class DocUtil {
             case "uuid":
             case "enum":
             case "java.util.date":
+            case "java.util.calendar":
             case "localdatetime":
             case "java.time.instant":
             case "java.time.localdatetime":
@@ -1281,4 +1362,318 @@ public class DocUtil {
         }
         return v;
     }
+
+    /**
+     * Generates a JSON formatted string based on the provided Java field and JSON format annotation.
+     *
+     * @param javaField            The Java field to generate JSON format string for.
+     * @param jsonFormatAnnotation The JSON format annotation containing pattern and shape properties.
+     * @return JSON formatted string based on the annotation properties or null if annotation is null.
+     */
+    public static String getJsonFormatString(JavaField javaField, JavaAnnotation jsonFormatAnnotation) {
+        // If the JSON format annotation is null, directly return null.
+        if (Objects.isNull(jsonFormatAnnotation)) {
+            return null;
+        }
+
+        // Get the type of the Java field.
+        JavaClass javaClass = javaField.getType();
+
+        // If the field type is java.time.ZoneOffset, directly return the current time zone offset string.
+        if (javaClass.isA("java.time.ZoneOffset")) {
+            return handleJsonStr(String.valueOf(OffsetDateTime.now().getOffset()));
+        }
+
+        // Get the pattern, shape, timezone, and locale properties from the JSON format annotation.
+        AnnotationValue pattern = jsonFormatAnnotation.getProperty(DocAnnotationConstants.JSON_FORMAT_PATTERN_PROP);
+        AnnotationValue shape = jsonFormatAnnotation.getProperty(DocAnnotationConstants.JSON_FORMAT_SHAPE_PROP);
+        AnnotationValue timezone = jsonFormatAnnotation.getProperty(DocAnnotationConstants.JSON_FORMAT_TIMEZONE_PROP);
+        AnnotationValue locale = jsonFormatAnnotation.getProperty(DocAnnotationConstants.JSON_FORMAT_LOCALE_PROP);
+
+        // Determine the pattern value, if the pattern is not specified, use the default pattern based on the field type.
+        String patternValue = (pattern != null) ? StringUtil.removeDoubleQuotes(pattern.toString())
+                : DEFAULT_JSON_FORMAT_PATTERNS.getOrDefault(javaClass.getFullyQualifiedName(), "");
+
+
+        // If the field is a time type, generate the JSON string based on the time type, shape, pattern, timezone, and locale.
+        if (isTimeType(javaClass)) {
+            return generateTimeBasedValue(javaClass, shape, patternValue, timezone, locale);
+        }
+
+        // If the field is a numeric type, generate a random number JSON string based on the numeric type, pattern, and shape.
+        if (isNumericType(javaClass)) {
+            return generateRandomNumber(javaClass, patternValue, shape);
+        }
+
+        // if enum to number
+        if (javaClass.isEnum()) {
+            if (Objects.nonNull(shape) && shape instanceof FieldRef) {
+                if (Objects.equals(DocAnnotationConstants.JSON_FORMAT_SHAPE_NUMBER, ((FieldRef) shape).getName())) {
+                    return "0";
+                }
+            }
+        }
+
+        return null;
+    }
+
+
+    /**
+     * Determines whether the specified Java class is a time type.
+     *
+     * @param javaClass The Java class to check.
+     * @return True if the class is a time type, otherwise false.
+     */
+    public static boolean isTimeType(JavaClass javaClass) {
+        return isTimeType(javaClass.getFullyQualifiedName());
+    }
+
+    /**
+     * Determines whether the specified Java class is a time type.
+     *
+     * @param fullyQualifiedName The Java class fullyQualifiedName to check.
+     * @return True if the class is a time type, otherwise false.
+     */
+    public static boolean isTimeType(String fullyQualifiedName) {
+        return fullyQualifiedName.startsWith("java.time") ||
+                fullyQualifiedName.equals("java.util.Date") ||
+                fullyQualifiedName.equals("java.util.Calendar");
+    }
+
+    /**
+     * Determines whether the specified Java class is a numeric type.
+     *
+     * @param javaClass The Java class to check.
+     * @return True if the class is a numeric type, otherwise false.
+     */
+    public static boolean isNumericType(JavaClass javaClass) {
+        return isNumericType(javaClass.getFullyQualifiedName());
+    }
+
+
+    /**
+     * Determines whether the specified Java class is a numeric type.
+     *
+     * @param fullyQualifiedName The Java class fullyQualifiedName to check.
+     * @return True if the class is a numeric type, otherwise false.
+     */
+    public static boolean isNumericType(String fullyQualifiedName) {
+        return fullyQualifiedName.equals("java.lang.Integer") ||
+                fullyQualifiedName.equals("java.lang.Long") ||
+                fullyQualifiedName.equals("java.lang.Float") ||
+                fullyQualifiedName.equals("java.lang.Double") ||
+                fullyQualifiedName.equals("java.math.BigDecimal") ||
+                fullyQualifiedName.equals("java.math.BigInteger") ||
+                fullyQualifiedName.equals("java.lang.Short") ||
+                fullyQualifiedName.equals("java.lang.Byte");
+    }
+
+    /**
+     * Generates a time-based value string based on the specified Java class and JsonFormat annotation values.
+     * This method primarily handles the serialization format of date-time properties based on the shape, pattern, timezone, and locale values specified in the JsonFormat annotation.
+     *
+     * @param javaClass    The Java class object containing the annotated field, used to determine the serialization method.
+     * @param shape        The shape value of the JsonFormat annotation, used to determine the serialization format.
+     * @param patternValue The pattern value of the JsonFormat annotation, used when the serialization format is a string.
+     * @param timezone     The timezone value of the JsonFormat annotation, used to adjust the time zone during serialization.
+     * @param locale       The locale value of the JsonFormat annotation, used to adjust the locale during serialization.
+     * @return Returns the serialized time-based value string, or null if the shape does not match the handled conditions.
+     */
+    private static String generateTimeBasedValue(JavaClass javaClass, AnnotationValue shape, String patternValue,
+                                                 AnnotationValue timezone, AnnotationValue locale) {
+        // Check if the shape value is not null and is an instance of FieldRef, then extract the shape's name.
+        // If JsonFormat has shape property
+        if (Objects.nonNull(shape) && shape instanceof FieldRef) {
+            String name = ((FieldRef) shape).getName();
+
+            // When the shape is JsonFormat.Shape.NUMBER, call the method to generate a numeric time value.
+            // if the shape is JsonFormat.Shape.NUMBER
+            if (Objects.equals(DocAnnotationConstants.JSON_FORMAT_SHAPE_NUMBER, name)) {
+                return generateTimeToNumberValue(javaClass);
+            }
+
+            // When the shape is JsonFormat.Shape.STRING, call the method to generate a string time value, and further process the return value.
+            // if the shape is JsonFormat.Shape.STRING
+            if (Objects.equals(DocAnnotationConstants.JSON_FORMAT_SHAPE_STRING, name)) {
+                String timeValue = generateTimeStringValue(javaClass, patternValue, timezone, locale);
+                // If the generated time string is empty, use the pattern value as the return value.
+                if (StringUtil.isEmpty(timeValue)) {
+                    return patternValue;
+                }
+                // Further handle the generated time string before returning.
+                return handleJsonStr(timeValue);
+            }
+        }
+        // If the shape does not match any handled conditions, return null.
+        return null;
+    }
+
+
+    /**
+     * Generates a random number based on the specified Java class type, pattern, and shape.
+     *
+     * @param javaClass    The Java class representing the number type.
+     * @param patternValue The pattern value to use for formatting.
+     * @param shape        The shape of the JSON format.
+     * @return A random number formatted based on the pattern and shape.
+     */
+    private static String generateRandomNumber(JavaClass javaClass, String patternValue, AnnotationValue shape) {
+        String fullyQualifiedName = javaClass.getFullyQualifiedName();
+        boolean isIntegerType = fullyQualifiedName.equals("java.lang.Integer") ||
+                fullyQualifiedName.equals("java.math.BigInteger") ||
+                fullyQualifiedName.equals("java.lang.Long") ||
+                fullyQualifiedName.equals("java.lang.Short") ||
+                fullyQualifiedName.equals("java.lang.Byte");
+
+        String randomNumber = isIntegerType ?
+                String.valueOf(RandomUtil.randomInt()) :
+                new DecimalFormat(patternValue).format(RandomUtil.randomDouble());
+
+
+        if (Objects.nonNull(shape) && shape instanceof FieldRef
+                && Objects.equals(DocAnnotationConstants.JSON_FORMAT_SHAPE_STRING, ((FieldRef) shape).getName())) {
+            return handleJsonStr(randomNumber);
+        }
+
+        return StringUtil.removeQuotes(randomNumber);
+    }
+
+
+    /**
+     * Generates a time-related value based on the specified Java class type and pattern.
+     *
+     * @param javaClass    The Java class representing the time type.
+     * @param patternValue The pattern value to use for formatting.
+     * @return A formatted time-related value based on the pattern.
+     */
+    private static String generateTimeStringValue(JavaClass javaClass, String patternValue, AnnotationValue timezone, AnnotationValue locale) {
+        ZoneId zoneId = Objects.isNull(timezone) ? ZoneId.systemDefault() : TimeZone.getTimeZone(timezone.toString()).toZoneId();
+        Locale formatLocale = Objects.isNull(locale) ? Locale.getDefault() : Locale.forLanguageTag(locale.toString());
+        try {
+            if (javaClass.isEnum()) {
+                return javaClass.getEnumConstants().stream().findFirst()
+                        .map(JavaMember::getName)
+                        .orElse(null);
+            }
+
+            return Instant.now().atZone(zoneId).format(DateTimeFormatter.ofPattern(patternValue, formatLocale));
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+
+    /**
+     * Generates a number value for the given Java class type.
+     *
+     * @param javaClass The Java class representing the number type.
+     * @return A number value as a string.
+     */
+    private static String generateTimeToNumberValue(JavaClass javaClass) {
+        if (javaClass.isA("java.util.Calendar") || javaClass.isA("java.util.Date")) {
+            return String.valueOf(System.currentTimeMillis());
+        }
+        if (javaClass.isA("java.time.Year")) {
+            return Year.now().toString();
+        }
+        if (javaClass.isA("java.time.DayOfWeek")) {
+            return String.valueOf(LocalDate.now().getDayOfWeek().getValue());
+        }
+        if (javaClass.isA("java.time.LocalDateTime")) {
+            LocalDateTime now = LocalDateTime.now();
+            return "[" + now.getYear() + "," + now.getMonthValue() + "," + now.getDayOfMonth() + "," +
+                    now.getHour() + "," + now.getMinute() + "," + now.getSecond() + "," + now.getNano() + "]";
+        }
+        if (javaClass.isA("java.time.LocalDate")) {
+            LocalDate now = LocalDate.now();
+            return "[" + now.getYear() + "," + now.getMonthValue() + "," + now.getDayOfMonth() + "]";
+        }
+        if (javaClass.isA("java.time.LocalTime")) {
+            LocalTime now = LocalTime.now();
+            return "[" + now.getHour() + "," + now.getMinute() + "," + now.getSecond() + "," + now.getNano() + "]";
+        }
+        if (javaClass.isA("java.time.ZonedDateTime")
+                || javaClass.isA("java.time.OffsetDateTime")
+                || javaClass.isA("java.time.Instant")) {
+            Instant now = Instant.now();
+            long seconds = now.getEpochSecond();
+            int nanos = now.getNano();
+            return seconds + "." + nanos;
+        }
+        if (javaClass.isA("java.time.YearMonth")) {
+            YearMonth now = YearMonth.now();
+            return "[" + now.getYear() + "," + now.getMonthValue() + "]";
+        }
+        if (javaClass.isA("java.time.MonthDay")) {
+            MonthDay now = MonthDay.now();
+            return "[" + now.getMonthValue() + "," + now.getDayOfMonth() + "]";
+        }
+        if (javaClass.isA("java.time.OffsetTime")) {
+            LocalTime now = LocalTime.now();
+            return "[" + now.getHour() + "," + now.getMinute() + "," + now.getSecond() + "," + now.getNano()
+                    + "," + "\"" + ZoneId.systemDefault().getRules().getOffset(Instant.now()) + "\"" + "]";
+        }
+        if (javaClass.isA("java.time.Month")) {
+            return String.valueOf(LocalDate.now().getMonth().getValue());
+        }
+        return null;
+    }
+
+
+    /**
+     * Processes the field type name based on JSON format.
+     * <p>
+     * This method is used to determine the corresponding JSON type representation based on the Java type and its annotations.
+     * It primarily handles the conversion of Java types to JSON types based on the @JsonFormat annotation's properties.
+     *
+     * @param isShowJavaType       Whether to show Java types, not directly related to the processing logic here but may be used in future extensions.
+     * @param fullyQualifiedName   The fully qualified name of the Java field type.
+     * @param jsonFormatAnnotation The @JsonFormat annotation instance of the field, used to extract shape information.
+     * @return The string representation of the JSON type, or null if the conversion cannot be determined.
+     */
+    public static String processFieldTypeNameByJsonFormat(boolean isShowJavaType, String fullyQualifiedName, JavaAnnotation jsonFormatAnnotation) {
+        if (isShowJavaType) {
+            return JavaFieldUtil.convertToSimpleTypeName(fullyQualifiedName);
+        }
+        // Get the pattern, shape, timezone, and locale properties from the JSON format annotation.
+        AnnotationValue shape = jsonFormatAnnotation.getProperty(DocAnnotationConstants.JSON_FORMAT_SHAPE_PROP);
+        if (Objects.nonNull(shape) && shape instanceof FieldRef) {
+            String name = ((FieldRef) shape).getName();
+            // if the shape is string, then the type is string
+            if (Objects.equals(DocAnnotationConstants.JSON_FORMAT_SHAPE_STRING, name)) {
+                return "string";
+            }
+            // if the shape is number
+            if (Objects.equals(DocAnnotationConstants.JSON_FORMAT_SHAPE_NUMBER, name)) {
+                if (DocUtil.isTimeType(fullyQualifiedName)) {
+                    switch (fullyQualifiedName) {
+                        case "java.util.Calendar":
+                        case "java.util.Date":
+                            return "int64";
+                        case "java.time.Year":
+                            return "int32";
+                        case "java.time.DayOfWeek":
+                        case "java.time.Month":
+                            return "int8";
+                        case "java.time.LocalDateTime":
+                        case "java.time.LocalDate":
+                        case "java.time.LocalTime":
+                        case "java.time.YearMonth":
+                        case "java.time.MonthDay":
+                        case "java.time.OffsetTime":
+                            return "array";
+                        case "java.time.ZonedDateTime":
+                        case "java.time.OffsetDateTime":
+                        case "java.time.Instant":
+                            return "double";
+                        default:
+                            return null;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+
 }

@@ -22,15 +22,18 @@
  */
 package com.ly.doc.utils;
 
-import java.util.List;
-import java.util.Objects;
-
-import com.ly.doc.constants.*;
+import com.ly.doc.constants.DocAnnotationConstants;
+import com.ly.doc.constants.JSRAnnotationConstants;
+import com.ly.doc.constants.SolonAnnotations;
+import com.ly.doc.constants.SpringMvcAnnotations;
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.StringUtil;
 import com.power.common.util.ValidateUtil;
 import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.expression.AnnotationValue;
+
+import java.util.List;
+import java.util.Objects;
 
 import static com.ly.doc.constants.JsonPropertyAnnotationAccessConstants.JSON_PROPERTY_READ_ONLY;
 import static com.ly.doc.constants.JsonPropertyAnnotationAccessConstants.JSON_PROPERTY_WRITE_ONLY;
@@ -100,6 +103,9 @@ public class JavaClassValidateUtil {
             case "character":
             case "java.sql.timestamp":
             case "java.util.date":
+            case "java.util.calendar":
+            case "java.time.zoneoffset":
+            case "java.time.offsettime":
             case "java.time.instant":
             case "java.time.localdatetime":
             case "java.time.localtime":
