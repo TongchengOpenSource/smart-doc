@@ -49,9 +49,17 @@ import java.util.stream.Collectors;
  */
 public interface IDocBuildBaseTemplate {
 
+    /**
+     * support framework.
+     *
+     * @param framework framework
+     * @return boolean
+     */
+    boolean supportsFramework(String framework);
+
 
     /**
-     * pre render
+     * pre render.
      *
      * @param docBuildHelper docBuildHelper
      */
@@ -60,7 +68,7 @@ public interface IDocBuildBaseTemplate {
     }
 
     /**
-     * handle group api docs
+     * handle group api docs.
      *
      * @param apiDocList list of apiDocList
      * @param apiConfig  ApiConfig apiConfig
@@ -167,14 +175,14 @@ public interface IDocBuildBaseTemplate {
     }
 
     /**
-     * registered annotations
+     * registered annotations.
      *
      * @return registered annotations
      */
     FrameworkAnnotations registeredAnnotations();
 
     /**
-     * is entry point
+     * is entry point.
      *
      * @param javaProjectBuilder javaProjectBuilder
      * @param javaClassName      javaClassName
@@ -198,6 +206,16 @@ public interface IDocBuildBaseTemplate {
         return isEntryPoint(javaClass, registeredAnnotations());
     }
 
+    /**
+     * Determines if a class should be skipped based on configuration and class annotations.
+     * This method is used to decide whether a class should be documented or ignored during the documentation generation process.
+     * It primarily checks the class against the configured package filters and exclusion filters, as well as checks for the presence of an ignore annotation.
+     *
+     * @param apiConfig The API configuration object, containing package filter and exclusion filter settings.
+     * @param javaClass The class object to be checked.
+     * @param frameworkAnnotations The framework annotation object, used to check if the class is an entry point.
+     * @return true if the class should be skipped, otherwise false.
+     */
     default boolean skipClass( ApiConfig apiConfig ,JavaClass javaClass, FrameworkAnnotations frameworkAnnotations) {
         if (StringUtil.isNotEmpty(apiConfig.getPackageFilters())) {
             // from smart config
@@ -212,14 +230,11 @@ public interface IDocBuildBaseTemplate {
         }
         // from tag
         DocletTag ignoreTag = javaClass.getTagByName(DocTags.IGNORE);
-        if (!isEntryPoint(javaClass, frameworkAnnotations) || Objects.nonNull(ignoreTag)) {
-            return true;
-        }
-        return false;
+        return !isEntryPoint(javaClass, frameworkAnnotations) || Objects.nonNull(ignoreTag);
     }
 
     /**
-     * is entry point
+     * is entry point.
      *
      * @param javaClass            javaClass
      * @param frameworkAnnotations frameworkAnnotations

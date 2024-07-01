@@ -26,51 +26,55 @@ import com.ly.doc.model.WebSocketDoc;
 import com.ly.doc.template.IDocBuildTemplate;
 import com.ly.doc.template.IWebSocketDocBuildTemplate;
 
+import java.util.ServiceLoader;
+
 /**
+ * build template factory.
+ *
  * @author yu 2021/6/27.
  */
+@SuppressWarnings({"rawtypes", "unchecked"})
 public class BuildTemplateFactory {
 
     /**
-     * Get Doc build template
+     * Get Doc build template.
      *
      * @param framework framework name
      * @param <T>       API doc type
      * @return Implements of IDocBuildTemplate
      */
     public static <T extends IDoc> IDocBuildTemplate<T> getDocBuildTemplate(String framework) {
-        String className = FrameworkEnum.getClassNameByFramework(framework);
-        try {
-            return (IDocBuildTemplate<T>) Class.forName(className).newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(
-                    "The class=>" + className + " is not found , smart-doc currently supported framework name can only be set in [dubbo, spring,solon,JAX-RS].");
+        ServiceLoader<IDocBuildTemplate> loader = ServiceLoader.load(IDocBuildTemplate.class);
+        for (IDocBuildTemplate<T> template : loader) {
+            // if framework name is equal
+            if (template.supportsFramework(framework)) {
+                return template;
+            }
         }
-        return null;
+        throw new RuntimeException(
+                "The framework=>" + framework + " is not found , smart-doc currently supported framework name can only be set in [" + FrameworkEnum.allFramework() + "].");
+
+
     }
 
 
     /**
-     * Get Doc build template
+     * Get WebSocket Doc build template.
      *
      * @param framework framework name
      * @param <T>       API doc type
      * @return Implements of IDocBuildTemplate
      */
     public static <T extends WebSocketDoc> IWebSocketDocBuildTemplate<T> getWebSocketDocBuildTemplate(String framework) {
-        String className = FrameworkEnum.getClassNameByFramework(framework);
-        try {
-            return (IWebSocketDocBuildTemplate<T>) Class.forName(className).newInstance();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(
-                    "The class=>" + className + " is not found , smart-doc currently supported framework name can only be set in [dubbo, spring,solon,JAX-RS].");
+        ServiceLoader<IWebSocketDocBuildTemplate> loader = ServiceLoader.load(IWebSocketDocBuildTemplate.class);
+        for (IWebSocketDocBuildTemplate<T> template : loader) {
+            // if framework name is equal
+            if (template.supportsFramework(framework)) {
+                return template;
+            }
         }
-        return null;
+        throw new RuntimeException(
+                "The framework=>" + framework + " is not found , smart-doc currently supported framework name can only be set in [" + FrameworkEnum.allFramework() + "].");
+
     }
 }
