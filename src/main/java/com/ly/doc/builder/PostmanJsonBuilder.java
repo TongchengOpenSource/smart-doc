@@ -192,14 +192,16 @@ public class PostmanJsonBuilder {
     private static BodyBean buildBodyBean(ApiMethodDoc apiMethodDoc) {
         BodyBean bodyBean;
         if (apiMethodDoc.getContentType().contains(MediaType.APPLICATION_JSON)) {
-            bodyBean = new BodyBean(Boolean.FALSE);// Json request
+            // Json request
+            bodyBean = new BodyBean(Boolean.FALSE);
             bodyBean.setMode(convertContentTypeToPostmanType(apiMethodDoc.getContentType()));
             if (apiMethodDoc.getRequestExample() != null) {
                 bodyBean.setRaw(apiMethodDoc.getRequestExample().getJsonBody());
             }
         } else {
             if (apiMethodDoc.getType().equals(Methods.POST.getValue())) {
-                bodyBean = new BodyBean(Boolean.TRUE); // Formdata
+                // Formdata
+                bodyBean = new BodyBean(Boolean.TRUE);
                 bodyBean.setMode(convertContentTypeToPostmanType(apiMethodDoc.getContentType()));
                 if (CollectionUtil.isNotEmpty(apiMethodDoc.getRequestExample().getFormDataList())) {
                     bodyBean.setFormdata(apiMethodDoc.getRequestExample().getFormDataList());
@@ -248,7 +250,8 @@ public class PostmanJsonBuilder {
     }
 
     private static void postManCreate(ApiConfig config, ProjectDocConfigBuilder configBuilder) {
-        IDocBuildTemplate<ApiDoc> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework());
+        IDocBuildTemplate<ApiDoc> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(
+                config.getFramework(), config.getClassLoader());
         Objects.requireNonNull(docBuildTemplate, "doc build template is null");
         config.setShowJavaType(true);
         List<ApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder).getApiDatas();
@@ -270,13 +273,13 @@ public class PostmanJsonBuilder {
 
     /**
      * Converts the request Content-Type to its corresponding Postman request type.
-     *
+     * <p>
      * Postman is a popular API testing tool that supports various request types. This method aims to map common
      * Content-Types to the formats recognized by Postman, facilitating more accurate HTTP request simulations.
      *
      * @param contentType The MIME type of the data in the request, indicating how it should be processed.
      * @return The Postman request type corresponding to the given Content-Type.
-     *
+     * <p>
      * Note: This mapping covers typical use cases and Postman's supported range; it may not include all possible Content-Types.
      */
     private static String convertContentTypeToPostmanType(String contentType) {

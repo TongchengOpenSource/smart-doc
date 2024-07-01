@@ -23,14 +23,21 @@ package com.ly.doc.template;
 import com.ly.doc.builder.ProjectDocConfigBuilder;
 import com.ly.doc.constants.DocTags;
 import com.ly.doc.constants.DubboAnnotationConstants;
-import com.ly.doc.model.*;
+import com.ly.doc.constants.FrameworkEnum;
+import com.ly.doc.model.ApiConfig;
+import com.ly.doc.model.ApiSchema;
+import com.ly.doc.model.RpcJavaMethod;
+import com.ly.doc.model.WebSocketDoc;
 import com.ly.doc.model.annotation.FrameworkAnnotations;
-import com.ly.doc.model.javadoc.JavadocApiDoc;
 import com.ly.doc.model.rpc.RpcApiDoc;
-import com.ly.doc.utils.*;
+import com.ly.doc.utils.DocUtil;
+import com.ly.doc.utils.JavaClassUtil;
 import com.power.common.util.StringUtil;
 import com.power.common.util.ValidateUtil;
-import com.thoughtworks.qdox.model.*;
+import com.thoughtworks.qdox.model.DocletTag;
+import com.thoughtworks.qdox.model.JavaAnnotation;
+import com.thoughtworks.qdox.model.JavaClass;
+import com.thoughtworks.qdox.model.JavaType;
 import com.thoughtworks.qdox.model.expression.AnnotationValue;
 
 import java.util.*;
@@ -39,10 +46,16 @@ import java.util.stream.Collectors;
 
 
 /**
+ * (Apache Dubbo) rpc doc build template.
+ *
  * @author yu 2020/1/29.
  */
 public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc>, IWebSocketDocBuildTemplate<WebSocketDoc>, IRpcDocTemplate {
 
+    @Override
+    public boolean supportsFramework(String framework) {
+        return FrameworkEnum.DUBBO.getFramework().equalsIgnoreCase(framework);
+    }
 
     @Override
     public boolean addMethodModifiers() {
@@ -55,6 +68,7 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc>, IWebSo
     private final AtomicInteger ATOMIC_INTEGER = new AtomicInteger(1);
 
     @Override
+    @SuppressWarnings("unchecked")
     public ApiSchema<RpcApiDoc> renderApi(ProjectDocConfigBuilder projectBuilder, Collection<JavaClass> candidateClasses) {
         ApiConfig apiConfig = projectBuilder.getApiConfig();
         List<RpcApiDoc> apiDocList = new ArrayList<>();

@@ -66,7 +66,8 @@ public class HtmlApiDocBuilder {
         builderTemplate.checkAndInit(config, Boolean.TRUE);
         config.setParamsDataToTree(false);
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
-        IDocBuildTemplate<ApiDoc> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework());
+        IDocBuildTemplate<ApiDoc> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(
+                config.getFramework(), config.getClassLoader());
         Objects.requireNonNull(docBuildTemplate, "doc build template is null");
         List<ApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder).getApiDatas();
         builderTemplate.copyJQueryAndCss(config);
