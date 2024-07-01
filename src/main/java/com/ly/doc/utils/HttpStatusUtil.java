@@ -20,6 +20,8 @@
  */
 package com.ly.doc.utils;
 
+import com.ly.doc.constants.HttpStatusEnum;
+
 /**
  * @author yu.sun on 2024/6/9
  * @since 3.0.5
@@ -35,21 +37,11 @@ public class HttpStatusUtil {
      * @return The HTTP status code as a string
      */
     public static String getStatusCode(String status) {
-        switch (status) {
-            case "HttpStatus.BAD_REQUEST":
-                return "400";
-            case "HttpStatus.NOT_FOUND":
-                return "404";
-            case "HttpStatus.UNAUTHORIZED":
-                return "401";
-            case "HttpStatus.FORBIDDEN":
-                return "403";
-            case "HttpStatus.METHOD_NOT_ALLOWED":
-                return "405";
-            case "HttpStatus.UNSUPPORTED_MEDIA_TYPE":
-                return "415";
-            default:
-                return "500";
+        try {
+            HttpStatusEnum httpStatusEnum = HttpStatusEnum.valueOf(status);
+            return String.valueOf(httpStatusEnum.value());
+        } catch (IllegalArgumentException e) {
+            return String.valueOf(HttpStatusEnum.INTERNAL_SERVER_ERROR.value());
         }
     }
 
@@ -61,23 +53,11 @@ public class HttpStatusUtil {
      * @return The description of the HTTP status
      */
     public static String getStatusDescription(String statusCode) {
-        switch (statusCode) {
-            case "200":
-                return "OK";
-            case "400":
-                return "Bad Request";
-            case "404":
-                return "Not Found";
-            case "401":
-                return "Unauthorized";
-            case "403":
-                return "Forbidden";
-            case "405":
-                return "Method Not Allowed";
-            case "415":
-                return "Unsupported Media Type";
-            default:
-                return "Internal Server Error";
+        try {
+            HttpStatusEnum httpStatusEnum = HttpStatusEnum.valueOf(statusCode);
+            return String.valueOf(httpStatusEnum.getReasonPhrase());
+        } catch (IllegalArgumentException e) {
+            return HttpStatusEnum.INTERNAL_SERVER_ERROR.getReasonPhrase();
         }
     }
 }
