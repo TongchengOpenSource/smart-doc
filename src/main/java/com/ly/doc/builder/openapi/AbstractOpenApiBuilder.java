@@ -40,7 +40,8 @@ import com.thoughtworks.qdox.JavaProjectBuilder;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.ly.doc.constants.DocGlobalConstants.*;
+import static com.ly.doc.constants.DocGlobalConstants.OPENAPI_2_COMPONENT_KRY;
+import static com.ly.doc.constants.DocGlobalConstants.OPENAPI_3_COMPONENT_KRY;
 
 
 /**
@@ -162,6 +163,7 @@ public abstract class AbstractOpenApiBuilder {
      * @param apiConfig    ApiConfig
      * @param apiMethodDoc Method
      * @param apiDoc       ApiDoc
+     * @param apiExceptionStatuses Exception status list
      * @return Map of path urls
      */
     public Map<String, Object> buildPathUrls(ApiConfig apiConfig, ApiMethodDoc apiMethodDoc, ApiDoc apiDoc, List<ApiExceptionStatus> apiExceptionStatuses) {

@@ -191,7 +191,10 @@ public class ParamsBuildHelper extends BaseHelper {
                         && (customRequestField.isIgnore()) && !isResp) {
                     continue;
                 }
+                // the param type from @JsonFormat
                 String fieldJsonFormatType = null;
+                // the param value from @JsonFormat
+                String fieldJsonFormatValue = null;
                 // has Annotation @JsonSerialize And using ToStringSerializer
                 boolean toStringSerializer = false;
                 for (JavaAnnotation annotation : javaAnnotations) {
@@ -237,6 +240,7 @@ public class ParamsBuildHelper extends BaseHelper {
                         }
                     } else if (DocAnnotationConstants.JSON_FORMAT.equals(simpleAnnotationName)) {
                         fieldJsonFormatType = DocUtil.processFieldTypeNameByJsonFormat(isShowJavaType, subTypeName, annotation);
+                        fieldJsonFormatValue = DocUtil.getJsonFormatString(field, annotation);
                     }
                 }
                 comment.append(JavaFieldUtil.getJsrComment(apiConfig.isShowValidation(), classLoader, javaAnnotations));
@@ -300,10 +304,16 @@ public class ParamsBuildHelper extends BaseHelper {
                 }
                 if (JavaClassValidateUtil.isPrimitive(subTypeName)) {
                     if (StringUtil.isEmpty(fieldValue)) {
-                        fieldValue = StringUtil.removeQuotes(DocUtil.getValByTypeAndFieldName(subTypeName, field.getName()));
+                        fieldValue = StringUtil.isNotEmpty(fieldJsonFormatValue)
+                                ? fieldJsonFormatValue
+                                : StringUtil.removeQuotes(DocUtil.getValByTypeAndFieldName(subTypeName, field.getName()));
                     }
-                    ApiParam param = ApiParam.of().setClassName(className).setField(pre + fieldName);
-                    param.setPid(pid).setMaxLength(maxLength).setValue(fieldValue);
+
+                    ApiParam param = ApiParam.of().setClassName(className)
+                            .setField(pre + fieldName)
+                            .setPid(pid)
+                            .setMaxLength(maxLength)
+                            .setValue(fieldValue);
                     param.setId(atomicOrDefault(atomicInteger, paramList.size() + param.getPid() + 1));
                     String processedType = (isResp && toStringSerializer) ? "string" : StringUtil.isNotEmpty(fieldJsonFormatType)
                             ? fieldJsonFormatType
@@ -313,7 +323,7 @@ public class ParamsBuildHelper extends BaseHelper {
                     // handle param
                     commonHandleParam(paramList, param, isRequired, comment.toString(), since, strRequired);
 
-                    JavaClass enumClass = ParamUtil.handleSeeEnum(param, field, projectBuilder, jsonRequest, tagsMap);
+                    JavaClass enumClass = ParamUtil.handleSeeEnum(param, field, projectBuilder, jsonRequest, tagsMap, fieldJsonFormatValue);
                     if (Objects.nonNull(enumClass)) {
                         String enumClassComment = DocGlobalConstants.EMPTY;
                         if (StringUtil.isNotEmpty(enumClass.getComment())) {
@@ -370,7 +380,7 @@ public class ParamsBuildHelper extends BaseHelper {
                     JavaClass javaClass = field.getType();
                     if (javaClass.isEnum()) {
                         comment.append(handleEnumComment(javaClass, projectBuilder));
-                        ParamUtil.handleSeeEnum(param, field, projectBuilder, jsonRequest, tagsMap);
+                        ParamUtil.handleSeeEnum(param, field, projectBuilder, jsonRequest, tagsMap, fieldJsonFormatValue);
                         // hand Param
                         commonHandleParam(paramList, param, isRequired, comment + appendComment, since, strRequired);
                     } else if (JavaClassValidateUtil.isCollection(subTypeName) || JavaClassValidateUtil.isArray(subTypeName)) {
