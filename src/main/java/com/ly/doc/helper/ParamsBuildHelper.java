@@ -22,41 +22,23 @@
  */
 package com.ly.doc.helper;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
-
+import com.ly.doc.builder.ProjectDocConfigBuilder;
 import com.ly.doc.constants.*;
-import com.ly.doc.utils.DocUtil;
-import com.ly.doc.utils.JavaClassUtil;
-import com.ly.doc.utils.JavaClassValidateUtil;
+import com.ly.doc.extension.json.PropertyNameHelper;
+import com.ly.doc.extension.json.PropertyNamingStrategies;
+import com.ly.doc.model.*;
+import com.ly.doc.utils.*;
 import com.power.common.model.EnumDictionary;
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.StringUtil;
-import com.ly.doc.builder.ProjectDocConfigBuilder;
-import com.ly.doc.extension.json.PropertyNameHelper;
-import com.ly.doc.extension.json.PropertyNamingStrategies;
-import com.ly.doc.model.ApiConfig;
-import com.ly.doc.model.ApiDataDictionary;
-import com.ly.doc.model.ApiParam;
-import com.ly.doc.model.CustomField;
-import com.ly.doc.model.DocJavaField;
-import com.ly.doc.utils.DocClassUtil;
-import com.ly.doc.utils.JavaFieldUtil;
-import com.ly.doc.utils.ParamUtil;
 import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaField;
-
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 /**
  * @author yu 2019/12/21.
@@ -209,7 +191,15 @@ public class ParamsBuildHelper extends BaseHelper {
                         && (customRequestField.isIgnore()) && !isResp) {
                     continue;
                 }
+                String fieldJsonFormatType = null;
+                // has Annotation @JsonSerialize And using ToStringSerializer
+                boolean toStringSerializer = false;
                 for (JavaAnnotation annotation : javaAnnotations) {
+                    if (DocAnnotationConstants.SHORT_JSON_SERIALIZE.equals(annotation.getType().getSimpleName()) &&
+                            DocAnnotationConstants.TO_STRING_SERIALIZER_USING.equals(annotation.getNamedParameter("using"))) {
+                        toStringSerializer = true;
+                        continue;
+                    }
                     if (JavaClassValidateUtil.isIgnoreFieldJson(annotation, isResp)) {
                         continue out;
                     }
@@ -245,6 +235,8 @@ public class ParamsBuildHelper extends BaseHelper {
                             // In other cases, if groupClasses is still empty, then strRequired is false.
                             strRequired = false;
                         }
+                    } else if (DocAnnotationConstants.JSON_FORMAT.equals(simpleAnnotationName)) {
+                        fieldJsonFormatType = DocUtil.processFieldTypeNameByJsonFormat(isShowJavaType, subTypeName, annotation);
                     }
                 }
                 comment.append(JavaFieldUtil.getJsrComment(apiConfig.isShowValidation(), classLoader, javaAnnotations));
@@ -313,7 +305,9 @@ public class ParamsBuildHelper extends BaseHelper {
                     ApiParam param = ApiParam.of().setClassName(className).setField(pre + fieldName);
                     param.setPid(pid).setMaxLength(maxLength).setValue(fieldValue);
                     param.setId(atomicOrDefault(atomicInteger, paramList.size() + param.getPid() + 1));
-                    String processedType = processFieldTypeName(isShowJavaType, subTypeName);
+                    String processedType = (isResp && toStringSerializer) ? "string" : StringUtil.isNotEmpty(fieldJsonFormatType)
+                            ? fieldJsonFormatType
+                            : processFieldTypeName(isShowJavaType, subTypeName);
                     param.setType(processedType);
                     param.setExtensions(extensionParams);
                     // handle param
@@ -368,7 +362,9 @@ public class ParamsBuildHelper extends BaseHelper {
                             processedType = DocClassUtil.processTypeNameForParams(typeSimpleName.toLowerCase());
                         }
                     } else {
-                        processedType = processFieldTypeName(isShowJavaType, typeSimpleName);
+                        processedType = StringUtil.isNotEmpty(fieldJsonFormatType)
+                                ? fieldJsonFormatType
+                                : processFieldTypeName(isShowJavaType, subTypeName);
                     }
                     param.setType(processedType);
                     JavaClass javaClass = field.getType();

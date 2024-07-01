@@ -271,10 +271,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IW
                 .setStatus(status);
     }
 
-    /**
-     * Spring default http error statuses
-     * @return
-     */
+
     @Override
     public List<ApiExceptionStatus> defaultHttpErrorStatuses() {
         ZonedDateTime now = ZonedDateTime.now();
