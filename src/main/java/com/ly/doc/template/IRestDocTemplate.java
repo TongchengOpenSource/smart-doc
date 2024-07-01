@@ -538,7 +538,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 
             for (DocJavaMethod docJavaMethod : docJavaMethods) {
                 JavaMethod method = docJavaMethod.getJavaMethod();
-                ExceptionAdviceMethod adviceMethod = processExceptionAdviceMethod(method);
+                ExceptionAdviceMethod adviceMethod = this.processExceptionAdviceMethod(method);
                 if (Objects.isNull(adviceMethod) || !adviceMethod.isExceptionHandlerMethod()
                         || Objects.isNull(adviceMethod.getStatus())) {
                     continue;
