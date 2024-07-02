@@ -22,8 +22,11 @@ package com.ly.doc.constants;
 
 import com.power.common.util.StringUtil;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 /**
- * Smart-doc Supported Framework
+ * Smart-doc Supported Framework.
  *
  * @author yu 2021/6/27.
  */
@@ -82,6 +85,16 @@ public enum FrameworkEnum {
             }
         }
         return className;
+    }
+
+    /**
+     * Get all supported frameworks.
+     *
+     * @return all supported frameworks
+     */
+    public static String allFramework() {
+        return Arrays.stream(FrameworkEnum.values()).map(FrameworkEnum::getFramework)
+                .collect(Collectors.joining(","));
     }
 
 

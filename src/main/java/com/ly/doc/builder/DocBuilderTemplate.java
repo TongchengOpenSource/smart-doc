@@ -285,7 +285,7 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
             ApiDoc apiDoc1 = new ApiDoc();
             int codeIndex = 0;
             if (isOnlyDefaultGroup) {
-                if (apiDocs.size() > 0) {
+                if (!apiDocs.isEmpty()) {
                     codeIndex = apiDocs.get(0).getChildrenApiDocs().size();
                 }
             } else {
@@ -320,7 +320,7 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
             apiDoc1.setChildrenApiDocs(childrenApiDocs);
             apiDoc1.setList(methodDocs);
             if (isOnlyDefaultGroup) {
-                if (apiDocs.size() > 0) {
+                if (!apiDocs.isEmpty()) {
                     apiDocs.get(0).getChildrenApiDocs().add(apiDoc1);
                 }
             } else {
@@ -483,7 +483,8 @@ public class DocBuilderTemplate extends BaseDocBuilderTemplate {
         this.checkAndInitForGetApiData(config);
         config.setMd5EncryptedHtmlName(true);
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
-        IDocBuildTemplate<ApiDoc> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework());
+        IDocBuildTemplate<ApiDoc> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(
+                config.getFramework(), config.getClassLoader());
         Objects.requireNonNull(docBuildTemplate, "doc build template is null");
         return docBuildTemplate.getApiData(configBuilder).getApiDatas();
     }

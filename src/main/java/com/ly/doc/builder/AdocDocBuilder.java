@@ -64,7 +64,8 @@ public class AdocDocBuilder {
         config.setParamsDataToTree(false);
         config.setAdoc(true);
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
-        IDocBuildTemplate<ApiDoc> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework());
+        IDocBuildTemplate<ApiDoc> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(
+                config.getFramework(), config.getClassLoader());
         Objects.requireNonNull(docBuildTemplate, "doc build template is null");
         List<ApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder).getApiDatas();
         if (config.isAllInOne()) {

@@ -40,9 +40,16 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
+ * spring boot doc build template.
+ *
  * @author yu 2019/12/21.
  */
 public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IWebSocketDocBuildTemplate<WebSocketDoc>, IRestDocTemplate, IWebSocketTemplate {
+
+    @Override
+    public boolean supportsFramework(String framework) {
+        return FrameworkEnum.SPRING.getFramework().equalsIgnoreCase(framework);
+    }
 
     @Override
     public ApiSchema<ApiDoc> renderApi(ProjectDocConfigBuilder projectBuilder, Collection<JavaClass> candidateClasses) {
@@ -50,9 +57,8 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IW
         List<ApiReqParam> configApiReqParams = Stream.of(apiConfig.getRequestHeaders(), apiConfig.getRequestParams()).filter(Objects::nonNull)
                 .flatMap(Collection::stream).collect(Collectors.toList());
         FrameworkAnnotations frameworkAnnotations = registeredAnnotations();
-        ApiSchema<ApiDoc> apiSchema = this.processApiData(projectBuilder, frameworkAnnotations,
+        return this.processApiData(projectBuilder, frameworkAnnotations,
                 configApiReqParams, new SpringMVCRequestMappingHandler(), new SpringMVCRequestHeaderHandler(), candidateClasses);
-        return apiSchema;
     }
 
     @Override
@@ -253,7 +259,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IW
     public ExceptionAdviceMethod processExceptionAdviceMethod(JavaMethod method) {
         List<JavaAnnotation> annotations = method.getAnnotations();
         boolean isExceptionHandlerMethod = false;
-        String status = null; //
+        String status = null;
         for (JavaAnnotation annotation : annotations) {
             String annotationName = annotation.getType().getValue();
             if (SpringMvcAnnotations.EXCEPTION_HANDLER.equals(annotationName)) {

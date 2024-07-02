@@ -68,7 +68,8 @@ public class TornaBuilder {
         DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
         builderTemplate.checkAndInit(config, Boolean.FALSE);
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
-        IDocBuildTemplate<ApiDoc> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework());
+        IDocBuildTemplate<ApiDoc> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(
+                config.getFramework(), config.getClassLoader());
         Objects.requireNonNull(docBuildTemplate, "doc build template is null");
         ApiSchema<ApiDoc> apiSchema = docBuildTemplate.getApiData(configBuilder);
         List<ApiDoc> apiDocList = docBuildTemplate.handleApiGroup(apiSchema.getApiDatas(), config);

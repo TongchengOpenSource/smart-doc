@@ -21,25 +21,32 @@
 package com.ly.doc.template;
 
 import com.ly.doc.builder.ProjectDocConfigBuilder;
-import com.ly.doc.constants.DocGlobalConstants;
 import com.ly.doc.constants.DocTags;
-import com.ly.doc.helper.ParamsBuildHelper;
-import com.ly.doc.model.*;
+import com.ly.doc.constants.FrameworkEnum;
+import com.ly.doc.model.ApiConfig;
+import com.ly.doc.model.ApiSchema;
+import com.ly.doc.model.JavadocJavaMethod;
+import com.ly.doc.model.WebSocketDoc;
 import com.ly.doc.model.annotation.FrameworkAnnotations;
 import com.ly.doc.model.javadoc.JavadocApiDoc;
-import com.ly.doc.model.rpc.RpcApiDoc;
-import com.ly.doc.utils.*;
-import com.power.common.util.CollectionUtil;
+import com.ly.doc.utils.DocUtil;
+import com.ly.doc.utils.JavaClassUtil;
 import com.power.common.util.StringUtil;
 import com.power.common.util.ValidateUtil;
-import com.thoughtworks.qdox.model.*;
+import com.thoughtworks.qdox.model.DocletTag;
+import com.thoughtworks.qdox.model.JavaClass;
+import com.thoughtworks.qdox.model.JavaType;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
-import static com.ly.doc.constants.DocTags.IGNORE;
-
+/**
+ * javadoc doc build template.
+ *
+ * @author chenchuxin
+ * @since 3.0.5
+ */
 public class JavadocDocBuildTemplate implements IDocBuildTemplate<JavadocApiDoc>, IWebSocketDocBuildTemplate<WebSocketDoc>, IJavadocDocTemplate {
 
     /**
@@ -48,11 +55,17 @@ public class JavadocDocBuildTemplate implements IDocBuildTemplate<JavadocApiDoc>
     private final AtomicInteger ATOMIC_INTEGER = new AtomicInteger(1);
 
     @Override
+    public boolean supportsFramework(String framework) {
+        return FrameworkEnum.JAVADOC.getFramework().equalsIgnoreCase(framework);
+    }
+
+    @Override
     public boolean addMethodModifiers() {
         return true;
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public ApiSchema<JavadocApiDoc> renderApi(ProjectDocConfigBuilder projectBuilder, Collection<JavaClass> candidateClasses) {
         ApiConfig apiConfig = projectBuilder.getApiConfig();
         List<JavadocApiDoc> apiDocList = new ArrayList<>();

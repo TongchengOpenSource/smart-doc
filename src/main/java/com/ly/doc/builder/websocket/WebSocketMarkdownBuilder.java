@@ -60,10 +60,8 @@ public class WebSocketMarkdownBuilder {
         config.setAdoc(false);
         config.setParamsDataToTree(false);
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
-        IWebSocketDocBuildTemplate<WebSocketDoc> docBuildTemplate = BuildTemplateFactory.getWebSocketDocBuildTemplate(config.getFramework());
-        if (null == docBuildTemplate) {
-            return;
-        }
+        IWebSocketDocBuildTemplate<WebSocketDoc> docBuildTemplate = BuildTemplateFactory.getWebSocketDocBuildTemplate(
+                config.getFramework(), config.getClassLoader());
         List<WebSocketDoc> webSocketDocList = docBuildTemplate.getWebSocketData(configBuilder);
         if (null == webSocketDocList || webSocketDocList.isEmpty()) {
             return;

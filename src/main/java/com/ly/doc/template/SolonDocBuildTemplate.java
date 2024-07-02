@@ -38,9 +38,18 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
+ * solon doc build template.
+ *
  * @author noear 2022/2/19 created
  */
 public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IWebSocketDocBuildTemplate<WebSocketDoc>, IRestDocTemplate, IWebSocketTemplate {
+
+
+    @Override
+    public boolean supportsFramework(String framework) {
+        return FrameworkEnum.SOLON.getFramework().equalsIgnoreCase(framework);
+    }
+
 
     @Override
     public ApiSchema<ApiDoc> renderApi(ProjectDocConfigBuilder projectBuilder, Collection<JavaClass> candidateClasses) {
@@ -48,9 +57,8 @@ public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IWebSoc
         List<ApiReqParam> configApiReqParams = Stream.of(apiConfig.getRequestHeaders(), apiConfig.getRequestParams()).filter(Objects::nonNull)
                 .flatMap(Collection::stream).collect(Collectors.toList());
         FrameworkAnnotations frameworkAnnotations = registeredAnnotations();
-        ApiSchema<ApiDoc> apiDocList = processApiData(projectBuilder, frameworkAnnotations, configApiReqParams,
+        return this.processApiData(projectBuilder, frameworkAnnotations, configApiReqParams,
                 new SolonRequestMappingHandler(), new SolonRequestHeaderHandler(), candidateClasses);
-        return apiDocList;
     }
 
     @Override
