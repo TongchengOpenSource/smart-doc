@@ -29,6 +29,7 @@ import com.thoughtworks.qdox.model.JavaClass;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author yu 2019/12/21.
@@ -46,12 +47,15 @@ public interface IDocBuildTemplate<T extends IDoc> extends IDocBuildBaseTemplate
         DocMapping.init();
         DocBuildHelper docBuildHelper = DocBuildHelper.create(projectBuilder);
 
-        preRender(docBuildHelper);
+        this.preRender(docBuildHelper);
         // get candidate classes
-        Collection<JavaClass> candidateClasses = getCandidateClasses(projectBuilder, docBuildHelper);
-        ApiSchema<T> apiSchema = renderApi(projectBuilder, candidateClasses);
+        Collection<JavaClass> candidateClasses = this.getCandidateClasses(projectBuilder, docBuildHelper);
+        ApiSchema<T> apiSchema = this.renderApi(projectBuilder, candidateClasses);
 
-        postRender(docBuildHelper, apiSchema.getApiDatas());
+        if (Objects.isNull(apiSchema)) {
+            apiSchema = new ApiSchema<>();
+        }
+        this.postRender(docBuildHelper, apiSchema.getApiDatas());
 
         return apiSchema;
     }
@@ -65,8 +69,6 @@ public interface IDocBuildTemplate<T extends IDoc> extends IDocBuildBaseTemplate
      * @return api ApiSchema
      */
     ApiSchema<T> renderApi(ProjectDocConfigBuilder projectBuilder, Collection<JavaClass> candidateClasses);
-
-
 
 
     /**

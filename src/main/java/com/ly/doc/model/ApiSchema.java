@@ -21,6 +21,7 @@
 
 package com.ly.doc.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -37,6 +38,9 @@ public class ApiSchema<T> {
     private List<ApiExceptionStatus> apiExceptionStatuses;
 
     public List<T> getApiDatas() {
+        if (apiDatas == null) {
+            apiDatas = new ArrayList<>();
+        }
         return apiDatas;
     }
 
@@ -45,6 +49,9 @@ public class ApiSchema<T> {
     }
 
     public List<ApiExceptionStatus> getApiExceptionStatuses() {
+        if (apiExceptionStatuses == null) {
+            apiExceptionStatuses = new ArrayList<>();
+        }
         return apiExceptionStatuses;
     }
 
