@@ -35,12 +35,16 @@ import com.ly.doc.model.rpc.RpcApiDoc;
 import com.ly.doc.template.IDocBuildTemplate;
 import com.ly.doc.utils.BeetlTemplateUtil;
 import com.ly.doc.utils.DocUtil;
-import com.power.common.util.*;
+import com.power.common.util.CollectionUtil;
+import com.power.common.util.FileUtil;
+import com.power.common.util.StringUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import org.beetl.core.Template;
 
-import java.nio.file.Path;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author yu 2020/5/16.
@@ -104,7 +108,7 @@ public class RpcDocBuilderTemplate extends BaseDocBuilderTemplate {
         tpl.binding(TemplateVariable.DEPENDENCY_LIST.getVariable(), config.getRpcApiDependencies());
         tpl.binding(TemplateVariable.RPC_CONSUMER_CONFIG.getVariable(), rpcConfigConfigContent);
         // binding common variable
-        super.bindingCommonVariable(config,javaProjectBuilder,tpl, apiDocList.isEmpty());
+        super.bindingCommonVariable(config, javaProjectBuilder, tpl, apiDocList.isEmpty());
         FileUtil.nioWriteFile(tpl.render(), outPath + DocGlobalConstants.FILE_SEPARATOR + outPutFileName);
     }
 
@@ -188,7 +192,8 @@ public class RpcDocBuilderTemplate extends BaseDocBuilderTemplate {
         this.checkAndInitForGetApiData(config);
         config.setMd5EncryptedHtmlName(true);
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
-        IDocBuildTemplate<RpcApiDoc> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework());
+        IDocBuildTemplate<RpcApiDoc> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(
+                config.getFramework(), config.getClassLoader());
         Objects.requireNonNull(docBuildTemplate, "doc build template is null");
         return docBuildTemplate.getApiData(configBuilder).getApiDatas();
     }
@@ -196,7 +201,8 @@ public class RpcDocBuilderTemplate extends BaseDocBuilderTemplate {
     public List<RpcApiDoc> getRpcApiDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
         config.setShowJavaType(true);
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
-        IDocBuildTemplate<RpcApiDoc> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework());
+        IDocBuildTemplate<RpcApiDoc> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(
+                config.getFramework(), config.getClassLoader());
         Objects.requireNonNull(docBuildTemplate, "doc build template is null");
         return docBuildTemplate.getApiData(configBuilder).getApiDatas();
     }

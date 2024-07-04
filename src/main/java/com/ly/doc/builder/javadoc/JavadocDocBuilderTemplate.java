@@ -27,14 +27,16 @@ import com.ly.doc.constants.DocGlobalConstants;
 import com.ly.doc.constants.FrameworkEnum;
 import com.ly.doc.constants.TemplateVariable;
 import com.ly.doc.factory.BuildTemplateFactory;
-import com.ly.doc.model.*;
+import com.ly.doc.model.ApiConfig;
+import com.ly.doc.model.ApiDocDict;
+import com.ly.doc.model.ApiErrorCode;
+import com.ly.doc.model.ApiSchema;
 import com.ly.doc.model.javadoc.JavadocApiAllData;
 import com.ly.doc.model.javadoc.JavadocApiDoc;
 import com.ly.doc.template.IDocBuildTemplate;
 import com.ly.doc.utils.BeetlTemplateUtil;
 import com.ly.doc.utils.DocUtil;
 import com.power.common.util.CollectionUtil;
-import com.power.common.util.DateTimeUtil;
 import com.power.common.util.FileUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import org.beetl.core.Template;
@@ -44,6 +46,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * java doc build template.
+ * @author chenchuxin
+ */
 public class JavadocDocBuilderTemplate extends BaseDocBuilderTemplate {
 
     private static final String DEPENDENCY_TITLE = "Add dependency";
@@ -92,7 +98,7 @@ public class JavadocDocBuilderTemplate extends BaseDocBuilderTemplate {
         Template tpl = BeetlTemplateUtil.getByName(template);
         tpl.binding(TemplateVariable.API_DOC_LIST.getVariable(), apiDocList);
         // binding common variable
-        super.bindingCommonVariable(config,javaProjectBuilder,tpl, apiDocList.isEmpty());
+        super.bindingCommonVariable(config, javaProjectBuilder, tpl, apiDocList.isEmpty());
 
         FileUtil.nioWriteFile(tpl.render(), outPath + DocGlobalConstants.FILE_SEPARATOR + outPutFileName);
     }
@@ -176,7 +182,8 @@ public class JavadocDocBuilderTemplate extends BaseDocBuilderTemplate {
         this.checkAndInitForGetApiData(config);
         config.setMd5EncryptedHtmlName(true);
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
-        IDocBuildTemplate<JavadocApiDoc> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework());
+        IDocBuildTemplate<JavadocApiDoc> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(
+                config.getFramework(), config.getClassLoader());
         Objects.requireNonNull(docBuildTemplate, "doc build template is null");
         ApiSchema<JavadocApiDoc> apiSchema = docBuildTemplate.getApiData(configBuilder);
         return apiSchema.getApiDatas();
@@ -185,7 +192,8 @@ public class JavadocDocBuilderTemplate extends BaseDocBuilderTemplate {
     public List<JavadocApiDoc> getJavadocApiDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
         config.setShowJavaType(true);
         ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
-        IDocBuildTemplate<JavadocApiDoc> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework());
+        IDocBuildTemplate<JavadocApiDoc> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(
+                config.getFramework(), config.getClassLoader());
         Objects.requireNonNull(docBuildTemplate, "doc build template is null");
         return docBuildTemplate.getApiData(configBuilder).getApiDatas();
     }

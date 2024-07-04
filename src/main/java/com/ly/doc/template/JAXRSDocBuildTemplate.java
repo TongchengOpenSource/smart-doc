@@ -35,7 +35,9 @@ import com.ly.doc.model.request.CurlRequest;
 import com.ly.doc.model.request.JaxrsPathMapping;
 import com.ly.doc.model.request.RequestMapping;
 import com.ly.doc.utils.*;
-import com.power.common.util.*;
+import com.power.common.util.CollectionUtil;
+import com.power.common.util.RandomUtil;
+import com.power.common.util.StringUtil;
 import com.thoughtworks.qdox.model.*;
 
 import java.util.*;
@@ -43,10 +45,8 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.ly.doc.constants.DocTags.IGNORE;
-
 /**
- * Build documents for JAX RS
+ * Build documents for JAX RS.
  *
  * @author Zxq
  * @since 2021/7/15
@@ -62,15 +62,20 @@ public class JAXRSDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IWebSoc
 
 
     @Override
+    public boolean supportsFramework(String framework) {
+        return FrameworkEnum.JAX_RS.getFramework().equalsIgnoreCase(framework);
+    }
+
+
+    @Override
     public ApiSchema<ApiDoc> renderApi(ProjectDocConfigBuilder projectBuilder, Collection<JavaClass> candidateClasses) {
         ApiConfig apiConfig = projectBuilder.getApiConfig();
         this.headers = apiConfig.getRequestHeaders();
         List<ApiReqParam> configApiReqParams = Stream.of(apiConfig.getRequestHeaders(), apiConfig.getRequestParams()).filter(Objects::nonNull)
                 .flatMap(Collection::stream).collect(Collectors.toList());
         FrameworkAnnotations frameworkAnnotations = this.registeredAnnotations();
-        ApiSchema<ApiDoc> apiSchema = this.processApiData(projectBuilder, frameworkAnnotations,
+        return this.processApiData(projectBuilder, frameworkAnnotations,
                 configApiReqParams, new SpringMVCRequestMappingHandler(), new SpringMVCRequestHeaderHandler(), candidateClasses);
-        return apiSchema;
     }
 
     @Override
@@ -93,6 +98,7 @@ public class JAXRSDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IWebSoc
      * @param projectBuilder projectBuilder
      * @return List<ApiMethodDoc>
      */
+    @SuppressWarnings("deprecation")
     private List<ApiMethodDoc> buildControllerMethod(final JavaClass cls, ApiConfig apiConfig,
                                                      ProjectDocConfigBuilder projectBuilder,
                                                      FrameworkAnnotations frameworkAnnotations) {
@@ -231,6 +237,7 @@ public class JAXRSDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IWebSoc
 
 
     @Override
+    @SuppressWarnings("deprecation")
     public FrameworkAnnotations registeredAnnotations() {
         FrameworkAnnotations annotations = FrameworkAnnotations.builder();
         HeaderAnnotation headerAnnotation = HeaderAnnotation.builder()
@@ -257,6 +264,7 @@ public class JAXRSDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IWebSoc
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public boolean isEntryPoint(JavaClass cls, FrameworkAnnotations frameworkAnnotations) {
         boolean isDefaultEntryPoint = defaultEntryPoint(cls, frameworkAnnotations);
         if (isDefaultEntryPoint) {
@@ -297,6 +305,7 @@ public class JAXRSDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IWebSoc
      * @param builder       builder
      * @return ApiMethodReqParam
      */
+    @SuppressWarnings("deprecation")
     private ApiMethodReqParam requestParams(final DocJavaMethod docJavaMethod, ProjectDocConfigBuilder builder) {
         List<ApiParam> paramList = new ArrayList<>();
         List<DocJavaParameter> parameterList = getJavaParameterList(builder, docJavaMethod, null);
@@ -523,6 +532,15 @@ public class JAXRSDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IWebSoc
                 .setQueryParams(queryParams);
     }
 
+    /**
+     * Constructs an API request example in JSON format based on the provided Java method and API method documentation.
+     *
+     * @param javaMethod        The object representing the Java method, encapsulating method details.
+     * @param apiMethodDoc      Documentation for the API method, detailing its configuration such as type, headers, URL, etc.
+     * @param configBuilder     The configuration builder for the project, used to access project-wide settings like field naming conventions and class information.
+     * @return                  An instance of ApiRequestExample configured with the appropriate URL, example body, and form data if applicable.
+     */
+    @SuppressWarnings("deprecation")
     private ApiRequestExample buildReqJson(DocJavaMethod javaMethod, ApiMethodDoc apiMethodDoc, ProjectDocConfigBuilder configBuilder) {
         String methodType = apiMethodDoc.getType();
         JavaMethod method = javaMethod.getJavaMethod();
