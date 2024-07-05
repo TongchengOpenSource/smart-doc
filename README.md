@@ -5,7 +5,7 @@
 ![number of issues closed](https://img.shields.io/github/issues-closed-raw/smart-doc-group/smart-doc)
 ![closed pull requests](https://img.shields.io/github/issues-pr-closed/smart-doc-group/smart-doc)
 ![java version](https://img.shields.io/badge/JAVA-1.8+-green.svg)
-[![chinese](https://img.shields.io/badge/chinese-中文文档-brightgreen)](https://smart-doc-group.github.io/#/zh-cn/)
+[![chinese](https://img.shields.io/badge/chinese-中文文档-brightgreen)](https://smart-doc-group.github.io/zh/)
 ![gitee star](https://gitee.com/smart-doc-team/smart-doc/badge/star.svg)
 ![git star](https://img.shields.io/github/stars/smart-doc-group/smart-doc.svg)
 ## Introduce
@@ -15,11 +15,11 @@ based on interface source code analysis to generate interface documents, and zer
 write Javadoc comments when developing, `smart-doc` can help you generate `Markdown` or `HTML5` document. `smart-doc` does not
 need to inject annotations into the code like `Swagger`.
 
-[quick start](https://smart-doc-group.github.io/#/)
+[quick start](https://smart-doc-group.github.io/)
 
 ## Documentation
-* [English](https://smart-doc-group.github.io/#/)
-* [中文](https://smart-doc-group.github.io/#/zh-cn/)
+* [English](https://smart-doc-group.github.io/)
+* [中文](https://smart-doc-group.github.io/zh/)
 
 ## Features
 
