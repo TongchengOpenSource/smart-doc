@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>smart-doc</artifactId>
     <packaging>jar</packaging>
-    <version>3.0.5</version>
+    <version>3.0.6</version>
 
     <name>smart-doc</name>
     <url>https://github.com/TongchengOpenSource/smart-doc.git</url>
@@ -150,6 +150,26 @@
                                 <goals>
                                     <goal>sign</goal>
                                 </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-checkstyle-plugin</artifactId>
+                        <version>3.4.0</version>
+                        <configuration>
+                            <configLocation>checkstyle/google_checks.xml</configLocation>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>checkstyle</id>
+                                <phase>validate</phase>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                                <configuration>
+                                    <failOnViolation>true</failOnViolation>
+                                </configuration>
                             </execution>
                         </executions>
                     </plugin>
