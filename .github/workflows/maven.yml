@@ -27,12 +27,16 @@ jobs:
         java-version: '11'
         distribution: 'temurin'
         cache: maven
-    - name: Setup review
-      uses: dbelyaev/action-checkstyle@master
+    - name: Setup reviewdog
+      uses: reviewdog/action-setup@v1
       with:
-        github_token: ${{ secrets.github_token }}
-        reporter: github-pr-review
-        level: warning
+        reviewdog_version: latest
+    - name: download checkstyle
+      run: curl -o checkstyle.jar -L https://github.com/checkstyle/checkstyle/releases/download/checkstyle-10.17.0/checkstyle-10.17.0-all.jar
+    - name: checkstyle
+      env:
+        REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: java -jar checkstyle.jar -c checkstyle/google_checks.xml -f xml src | reviewdog -f=checkstyle -name="Checkstyle" -reporter=github-check
     - name: Build with Maven
       run: mvn -B package --file pom.xml
 
