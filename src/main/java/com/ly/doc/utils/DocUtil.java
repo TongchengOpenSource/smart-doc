@@ -182,18 +182,18 @@ public class DocUtil {
 
     static {
 
-        DEFAULT_JSON_FORMAT_PATTERNS.put("java.util.Calendar", "yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
-        DEFAULT_JSON_FORMAT_PATTERNS.put("java.util.Date", "yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
-        DEFAULT_JSON_FORMAT_PATTERNS.put("java.time.LocalDateTime", "yyyy-MM-dd'T'HH:mm:ss.SSSSSS");
-        DEFAULT_JSON_FORMAT_PATTERNS.put("java.time.LocalDate", "yyyy-MM-dd");
-        DEFAULT_JSON_FORMAT_PATTERNS.put("java.time.LocalTime", "HH:mm:ss.SSSSSS");
-        DEFAULT_JSON_FORMAT_PATTERNS.put("java.time.ZonedDateTime", "yyyy-MM-dd'T'HH:mm:ss.SSSSSSXXX");
-        DEFAULT_JSON_FORMAT_PATTERNS.put("java.time.OffsetDateTime", "yyyy-MM-dd'T'HH:mm:ss.SSSSSSXXX");
-        DEFAULT_JSON_FORMAT_PATTERNS.put("java.time.Year", "yyyy");
-        DEFAULT_JSON_FORMAT_PATTERNS.put("java.time.YearMonth", "yyyy-MM");
-        DEFAULT_JSON_FORMAT_PATTERNS.put("java.time.MonthDay", "--MM-dd");
-        DEFAULT_JSON_FORMAT_PATTERNS.put("java.time.Instant", "yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSSXXX");
-        DEFAULT_JSON_FORMAT_PATTERNS.put("java.time.OffsetTime", "HH:mm:ss.SSSSSSXXX");
+        DEFAULT_JSON_FORMAT_PATTERNS.put(JavaTypeConstants.JAVA_UTIL_CALENDAR_FULLY, "yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+        DEFAULT_JSON_FORMAT_PATTERNS.put(JavaTypeConstants.JAVA_UTIL_DATE_FULLY, "yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+        DEFAULT_JSON_FORMAT_PATTERNS.put(JavaTypeConstants.JAVA_TIME_LOCAL_DATE_TIME_FULLY, "yyyy-MM-dd'T'HH:mm:ss.SSSSSS");
+        DEFAULT_JSON_FORMAT_PATTERNS.put(JavaTypeConstants.JAVA_TIME_LOCAL_DATE_FULLY, "yyyy-MM-dd");
+        DEFAULT_JSON_FORMAT_PATTERNS.put(JavaTypeConstants.JAVA_TIME_LOCAL_TIME_FULLY, "HH:mm:ss.SSSSSS");
+        DEFAULT_JSON_FORMAT_PATTERNS.put(JavaTypeConstants.JAVA_TIME_ZONED_DATE_TIME_FULLY, "yyyy-MM-dd'T'HH:mm:ss.SSSSSSXXX");
+        DEFAULT_JSON_FORMAT_PATTERNS.put(JavaTypeConstants.JAVA_TIME_OFFSET_DATE_TIME_FULLY, "yyyy-MM-dd'T'HH:mm:ss.SSSSSSXXX");
+        DEFAULT_JSON_FORMAT_PATTERNS.put(JavaTypeConstants.JAVA_TIME_YEAR_FULLY, "yyyy");
+        DEFAULT_JSON_FORMAT_PATTERNS.put(JavaTypeConstants.JAVA_TIME_YEAR_MONTH_FULLY, "yyyy-MM");
+        DEFAULT_JSON_FORMAT_PATTERNS.put(JavaTypeConstants.JAVA_TIME_MONTH_DAY_FULLY, "--MM-dd");
+        DEFAULT_JSON_FORMAT_PATTERNS.put(JavaTypeConstants.JAVA_TIME_INSTANT_FULLY, "yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSSXXX");
+        DEFAULT_JSON_FORMAT_PATTERNS.put(JavaTypeConstants.JAVA_TIME_OFFSET_TIME_FULLY, "HH:mm:ss.SSSSSSXXX");
 
     }
 
@@ -1436,8 +1436,8 @@ public class DocUtil {
      */
     public static boolean isTimeType(String fullyQualifiedName) {
         return fullyQualifiedName.startsWith("java.time") ||
-                fullyQualifiedName.equals("java.util.Date") ||
-                fullyQualifiedName.equals("java.util.Calendar");
+                JavaTypeConstants.JAVA_UTIL_DATE_FULLY.equals(fullyQualifiedName) ||
+                JavaTypeConstants.JAVA_UTIL_CALENDAR_FULLY.equals(fullyQualifiedName);
     }
 
     /**
@@ -1458,14 +1458,14 @@ public class DocUtil {
      * @return True if the class is a numeric type, otherwise false.
      */
     public static boolean isNumericType(String fullyQualifiedName) {
-        return fullyQualifiedName.equals("java.lang.Integer") ||
-                fullyQualifiedName.equals("java.lang.Long") ||
-                fullyQualifiedName.equals("java.lang.Float") ||
-                fullyQualifiedName.equals("java.lang.Double") ||
-                fullyQualifiedName.equals("java.math.BigDecimal") ||
-                fullyQualifiedName.equals("java.math.BigInteger") ||
-                fullyQualifiedName.equals("java.lang.Short") ||
-                fullyQualifiedName.equals("java.lang.Byte");
+        return JavaTypeConstants.JAVA_LANG_INTEGER_FULLY.equals(fullyQualifiedName) ||
+                JavaTypeConstants.JAVA_LANG_LONG_FULLY.equals(fullyQualifiedName) ||
+                JavaTypeConstants.JAVA_LANG_FLOAT_FULLY.equals(fullyQualifiedName) ||
+                JavaTypeConstants.JAVA_LANG_DOUBLE_FULLY.equals(fullyQualifiedName) ||
+                JavaTypeConstants.JAVA_MATH_BIG_DECIMAL_FULLY.equals(fullyQualifiedName) ||
+                JavaTypeConstants.JAVA_MATH_BIG_INTEGER_FULLY.equals(fullyQualifiedName) ||
+                JavaTypeConstants.JAVA_LANG_SHORT_FULLY.equals(fullyQualifiedName) ||
+                JavaTypeConstants.JAVA_LANG_BYTE_FULLY.equals(fullyQualifiedName);
     }
 
     /**
@@ -1518,14 +1518,8 @@ public class DocUtil {
      * @return A random number formatted based on the pattern and shape.
      */
     private static String generateRandomNumber(JavaClass javaClass, String patternValue, AnnotationValue shape) {
-        String fullyQualifiedName = javaClass.getFullyQualifiedName();
-        boolean isIntegerType = fullyQualifiedName.equals("java.lang.Integer") ||
-                fullyQualifiedName.equals("java.math.BigInteger") ||
-                fullyQualifiedName.equals("java.lang.Long") ||
-                fullyQualifiedName.equals("java.lang.Short") ||
-                fullyQualifiedName.equals("java.lang.Byte");
-
-        String randomNumber = isIntegerType ?
+        // generate random number
+        String randomNumber = isIntegerType(javaClass) ?
                 String.valueOf(RandomUtil.randomInt()) :
                 new DecimalFormat(patternValue).format(RandomUtil.randomDouble());
 
@@ -1536,6 +1530,22 @@ public class DocUtil {
         }
 
         return StringUtil.removeQuotes(randomNumber);
+    }
+
+    /**
+     * Checks if the specified Java class is an integer type.
+     *
+     * @param javaClass The Java class to check.
+     * @return True if the class is an integer type, otherwise false.
+     */
+    private static boolean isIntegerType(JavaClass javaClass) {
+        String fullyQualifiedName = javaClass.getFullyQualifiedName();
+
+        return JavaTypeConstants.JAVA_LANG_INTEGER_FULLY.equals(fullyQualifiedName) ||
+                JavaTypeConstants.JAVA_MATH_BIG_INTEGER_FULLY.equals(fullyQualifiedName) ||
+                JavaTypeConstants.JAVA_LANG_LONG_FULLY.equals(fullyQualifiedName) ||
+                JavaTypeConstants.JAVA_LANG_SHORT_FULLY.equals(fullyQualifiedName) ||
+                JavaTypeConstants.JAVA_LANG_BYTE_FULLY.equals(fullyQualifiedName);
     }
 
 
@@ -1570,50 +1580,50 @@ public class DocUtil {
      * @return A number value as a string.
      */
     private static String generateTimeToNumberValue(JavaClass javaClass) {
-        if (javaClass.isA("java.util.Calendar") || javaClass.isA("java.util.Date")) {
+        if (javaClass.isA(JavaTypeConstants.JAVA_UTIL_CALENDAR_FULLY) || javaClass.isA(JavaTypeConstants.JAVA_UTIL_DATE_FULLY)) {
             return String.valueOf(System.currentTimeMillis());
         }
-        if (javaClass.isA("java.time.Year")) {
+        if (javaClass.isA(JavaTypeConstants.JAVA_TIME_YEAR_FULLY)) {
             return Year.now().toString();
         }
-        if (javaClass.isA("java.time.DayOfWeek")) {
+        if (javaClass.isA(JavaTypeConstants.JAVA_TIME_DAY_OF_WEEK_FULLY)) {
             return String.valueOf(LocalDate.now().getDayOfWeek().getValue());
         }
-        if (javaClass.isA("java.time.LocalDateTime")) {
+        if (javaClass.isA(JavaTypeConstants.JAVA_TIME_LOCAL_DATE_TIME_FULLY)) {
             LocalDateTime now = LocalDateTime.now();
             return "[" + now.getYear() + "," + now.getMonthValue() + "," + now.getDayOfMonth() + "," +
                     now.getHour() + "," + now.getMinute() + "," + now.getSecond() + "," + now.getNano() + "]";
         }
-        if (javaClass.isA("java.time.LocalDate")) {
+        if (javaClass.isA(JavaTypeConstants.JAVA_TIME_LOCAL_DATE_FULLY)) {
             LocalDate now = LocalDate.now();
             return "[" + now.getYear() + "," + now.getMonthValue() + "," + now.getDayOfMonth() + "]";
         }
-        if (javaClass.isA("java.time.LocalTime")) {
+        if (javaClass.isA(JavaTypeConstants.JAVA_TIME_LOCAL_TIME_FULLY)) {
             LocalTime now = LocalTime.now();
             return "[" + now.getHour() + "," + now.getMinute() + "," + now.getSecond() + "," + now.getNano() + "]";
         }
-        if (javaClass.isA("java.time.ZonedDateTime")
-                || javaClass.isA("java.time.OffsetDateTime")
-                || javaClass.isA("java.time.Instant")) {
+        if (javaClass.isA(JavaTypeConstants.JAVA_TIME_ZONED_DATE_TIME_FULLY)
+                || javaClass.isA(JavaTypeConstants.JAVA_TIME_OFFSET_DATE_TIME_FULLY)
+                || javaClass.isA(JavaTypeConstants.JAVA_TIME_INSTANT_FULLY)) {
             Instant now = Instant.now();
             long seconds = now.getEpochSecond();
             int nanos = now.getNano();
             return seconds + "." + nanos;
         }
-        if (javaClass.isA("java.time.YearMonth")) {
+        if (javaClass.isA(JavaTypeConstants.JAVA_TIME_YEAR_MONTH_FULLY)) {
             YearMonth now = YearMonth.now();
             return "[" + now.getYear() + "," + now.getMonthValue() + "]";
         }
-        if (javaClass.isA("java.time.MonthDay")) {
+        if (javaClass.isA(JavaTypeConstants.JAVA_TIME_MONTH_DAY_FULLY)) {
             MonthDay now = MonthDay.now();
             return "[" + now.getMonthValue() + "," + now.getDayOfMonth() + "]";
         }
-        if (javaClass.isA("java.time.OffsetTime")) {
+        if (javaClass.isA(JavaTypeConstants.JAVA_TIME_OFFSET_TIME_FULLY)) {
             LocalTime now = LocalTime.now();
             return "[" + now.getHour() + "," + now.getMinute() + "," + now.getSecond() + "," + now.getNano()
                     + "," + "\"" + ZoneId.systemDefault().getRules().getOffset(Instant.now()) + "\"" + "]";
         }
-        if (javaClass.isA("java.time.Month")) {
+        if (javaClass.isA(JavaTypeConstants.JAVA_TIME_MONTH_FULLY)) {
             return String.valueOf(LocalDate.now().getMonth().getValue());
         }
         return null;
@@ -1647,24 +1657,24 @@ public class DocUtil {
             if (Objects.equals(DocAnnotationConstants.JSON_FORMAT_SHAPE_NUMBER, name)) {
                 if (DocUtil.isTimeType(fullyQualifiedName)) {
                     switch (fullyQualifiedName) {
-                        case "java.util.Calendar":
-                        case "java.util.Date":
+                        case JavaTypeConstants.JAVA_UTIL_CALENDAR_FULLY:
+                        case JavaTypeConstants.JAVA_UTIL_DATE_FULLY:
                             return "int64";
-                        case "java.time.Year":
+                        case JavaTypeConstants.JAVA_TIME_YEAR_FULLY:
                             return "int32";
-                        case "java.time.DayOfWeek":
-                        case "java.time.Month":
+                        case JavaTypeConstants.JAVA_TIME_DAY_OF_WEEK_FULLY:
+                        case JavaTypeConstants.JAVA_TIME_MONTH_FULLY:
                             return "int8";
-                        case "java.time.LocalDateTime":
-                        case "java.time.LocalDate":
-                        case "java.time.LocalTime":
-                        case "java.time.YearMonth":
-                        case "java.time.MonthDay":
-                        case "java.time.OffsetTime":
+                        case JavaTypeConstants.JAVA_TIME_LOCAL_DATE_TIME_FULLY:
+                        case JavaTypeConstants.JAVA_TIME_LOCAL_DATE_FULLY:
+                        case JavaTypeConstants.JAVA_TIME_LOCAL_TIME_FULLY:
+                        case JavaTypeConstants.JAVA_TIME_YEAR_MONTH_FULLY:
+                        case JavaTypeConstants.JAVA_TIME_MONTH_DAY_FULLY:
+                        case JavaTypeConstants.JAVA_TIME_OFFSET_TIME_FULLY:
                             return "array";
-                        case "java.time.ZonedDateTime":
-                        case "java.time.OffsetDateTime":
-                        case "java.time.Instant":
+                        case JavaTypeConstants.JAVA_TIME_ZONED_DATE_TIME_FULLY:
+                        case JavaTypeConstants.JAVA_TIME_OFFSET_DATE_TIME_FULLY:
+                        case JavaTypeConstants.JAVA_TIME_INSTANT_FULLY:
                             return "double";
                         default:
                             return null;

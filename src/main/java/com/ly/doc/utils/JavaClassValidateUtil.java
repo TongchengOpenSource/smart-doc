@@ -22,10 +22,7 @@
  */
 package com.ly.doc.utils;
 
-import com.ly.doc.constants.DocAnnotationConstants;
-import com.ly.doc.constants.JSRAnnotationConstants;
-import com.ly.doc.constants.SolonAnnotations;
-import com.ly.doc.constants.SpringMvcAnnotations;
+import com.ly.doc.constants.*;
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.StringUtil;
 import com.power.common.util.ValidateUtil;
@@ -151,17 +148,17 @@ public class JavaClassValidateUtil {
      */
     public static boolean isCollection(String type) {
         switch (type) {
-            case "java.util.List":
-            case "java.util.LinkedList":
-            case "java.util.ArrayList":
-            case "java.util.Set":
-            case "java.util.TreeSet":
-            case "java.util.HashSet":
-            case "java.util.SortedSet":
-            case "java.util.Collection":
-            case "java.util.ArrayDeque":
-            case "java.util.PriorityQueue":
-            case "java.util.EnumSet":
+            case JavaTypeConstants.JAVA_LIST_FULLY:
+            case JavaTypeConstants.JAVA_LINKED_LIST_FULLY:
+            case JavaTypeConstants.JAVA_ARRAY_LIST_FULLY:
+            case JavaTypeConstants.JAVA_SET_FULLY:
+            case JavaTypeConstants.JAVA_TREE_SET_FULLY:
+            case JavaTypeConstants.JAVA_HASH_SET_FULLY:
+            case JavaTypeConstants.JAVA_SORTED_SET_FULLY:
+            case JavaTypeConstants.JAVA_COLLECTION_FULLY:
+            case JavaTypeConstants.JAVA_ARRAY_DEQUE_FULLY:
+            case JavaTypeConstants.JAVA_PRIORITY_QUEUE_FULLY:
+            case JavaTypeConstants.JAVA_ENUM_SET_FULLY:
                 return true;
             default:
                 return false;
@@ -176,15 +173,15 @@ public class JavaClassValidateUtil {
      */
     public static boolean isMap(String type) {
         switch (type) {
-            case "java.util.Map":
-            case "java.util.SortedMap":
-            case "java.util.TreeMap":
-            case "java.util.LinkedHashMap":
-            case "java.util.HashMap":
-            case "java.util.concurrent.ConcurrentHashMap":
-            case "java.util.concurrent.ConcurrentMap":
-            case "java.util.Properties":
-            case "java.util.Hashtable":
+            case JavaTypeConstants.JAVA_MAP_FULLY:
+            case JavaTypeConstants.SORTED_MAP_FULLY:
+            case JavaTypeConstants.TREE_MAP_FULLY:
+            case JavaTypeConstants.LINKED_HASH_MAP_FULLY:
+            case JavaTypeConstants.HASH_MAP_FULLY:
+            case JavaTypeConstants.CONCURRENT_HASH_MAP_FULLY:
+            case JavaTypeConstants.CONCURRENT_MAP_FULLY:
+            case JavaTypeConstants.PROPERTIES_FULLY:
+            case JavaTypeConstants.HASHTABLE_FULLY:
                 return true;
             default:
                 return false;

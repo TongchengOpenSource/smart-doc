@@ -21,10 +21,7 @@
 package com.ly.doc.template;
 
 import com.ly.doc.builder.ProjectDocConfigBuilder;
-import com.ly.doc.constants.DocAnnotationConstants;
-import com.ly.doc.constants.DocGlobalConstants;
-import com.ly.doc.constants.DocTags;
-import com.ly.doc.constants.ParamTypeConstants;
+import com.ly.doc.constants.*;
 import com.ly.doc.helper.ParamsBuildHelper;
 import com.ly.doc.model.ApiConfig;
 import com.ly.doc.model.ApiParam;
@@ -109,7 +106,7 @@ public interface IJavadocDocTemplate extends IBaseDocBuildTemplate {
     default List<? extends JavadocJavaMethod> getParentsClassMethods(ApiConfig apiConfig, JavaClass cls) {
         List<JavadocJavaMethod> docJavaMethods = new ArrayList<>();
         JavaClass parentClass = cls.getSuperJavaClass();
-        if (Objects.nonNull(parentClass) && !"Object".equals(parentClass.getSimpleName())) {
+        if (Objects.nonNull(parentClass) && !JavaTypeConstants.OBJECT_SIMPLE_NAME.equals(parentClass.getSimpleName())) {
             Map<String, JavaType> actualTypesMap = JavaClassUtil.getActualTypesMap(parentClass);
             List<JavaMethod> parentMethodList = parentClass.getMethods();
             for (JavaMethod method : parentMethodList) {

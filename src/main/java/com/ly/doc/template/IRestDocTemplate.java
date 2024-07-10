@@ -431,7 +431,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 
         // Inherit mapping annotations from superclass, if any
         JavaClass superJavaClass = cls.getSuperJavaClass();
-        if (Objects.nonNull(superJavaClass) && !"Object".equals(superJavaClass.getSimpleName())) {
+        if (Objects.nonNull(superJavaClass) && !JavaTypeConstants.OBJECT_SIMPLE_NAME.equals(superJavaClass.getSimpleName())) {
             List<JavaAnnotation> superAnnotations = this.getClassAnnotations(superJavaClass, frameworkAnnotations);
             annotationsList.addAll(superAnnotations);
         }
@@ -478,7 +478,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 
         // Inherit mapping annotations from superclass, if any
         JavaClass superJavaClass = cls.getSuperJavaClass();
-        if (Objects.nonNull(superJavaClass) && !"Object".equals(superJavaClass.getSimpleName())) {
+        if (Objects.nonNull(superJavaClass) && !JavaTypeConstants.OBJECT_SIMPLE_NAME.equals(superJavaClass.getSimpleName())) {
             annotationsList.addAll(this.getClassAnnotations(superJavaClass, mappingAnnotationMap).stream()
                     .filter(annotation -> mappingAnnotationMap.containsKey(annotation.getType().getValue()) ||
                             mappingAnnotationMap.containsKey(annotation.getType().getFullyQualifiedName()))
@@ -1433,7 +1433,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
     default List<DocJavaMethod> getParentsClassMethods(ApiConfig apiConfig, ProjectDocConfigBuilder projectBuilder, JavaClass cls) {
         List<DocJavaMethod> docJavaMethods = new ArrayList<>();
         JavaClass parentClass = cls.getSuperJavaClass();
-        if (Objects.nonNull(parentClass) && !"Object".equals(parentClass.getSimpleName())) {
+        if (Objects.nonNull(parentClass) && !JavaTypeConstants.OBJECT_SIMPLE_NAME.equals(parentClass.getSimpleName())) {
             Map<String, JavaType> actualTypesMap = JavaClassUtil.getActualTypesMap(parentClass);
             List<JavaMethod> parentMethodList = parentClass.getMethods();
             for (JavaMethod method : parentMethodList) {

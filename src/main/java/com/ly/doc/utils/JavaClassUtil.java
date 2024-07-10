@@ -239,7 +239,7 @@ public class JavaClassUtil {
                 }
                 // Getting the Original Defined Type of Field
                 if (!docJavaField.isFile() || !docJavaField.isEnum() || !docJavaField.isPrimitive()
-                        || "java.lang.Object".equals(gicName)) {
+                        || JavaTypeConstants.JAVA_OBJECT_FULLY.equals(gicName)) {
                     String genericFieldTypeName = getFieldGenericType(javaField, classLoader);
                     if (StringUtil.isNotEmpty(genericFieldTypeName)) {
                         gicName = genericFieldTypeName;
