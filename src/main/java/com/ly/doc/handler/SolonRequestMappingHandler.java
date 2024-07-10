@@ -71,6 +71,7 @@ public class SolonRequestMappingHandler implements IRequestMappingHandler, IWebS
             if (SolonAnnotations.REQUEST_MAPPING.equals(annotationName) || SolonAnnotations.REQUEST_MAPPING_FULLY.equals(annotationName)) {
                 ClassLoader classLoader = projectBuilder.getApiConfig().getClassLoader();
                 shortUrl = DocUtil.handleMappingValue(classLoader, annotation);
+                shortUrl = shortUrl.equals("/") ? "" : shortUrl; //There is no need to add '/' to the end
                 Object produces = annotation.getNamedParameter("produces");
                 if (Objects.nonNull(produces)) {
                     mediaType = produces.toString();
