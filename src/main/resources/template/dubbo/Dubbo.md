@@ -22,7 +22,7 @@ for(doc in list){
 
 <%}%>
 
-**Definition：** ${doc.escapeMethodDefinition}
+**Definition:** ${doc.escapeMethodDefinition}
 
 <%if(isNotEmpty(doc.author)){%>
 **Author:** ${doc.author}

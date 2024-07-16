@@ -53,7 +53,7 @@ ${consumerConfigExample}
 *Version:* ${api.version} <% for(doc in api.list){
 %> <%if(doc.deprecated){%> ~~${htmlEscape(doc.desc)}~~ <%}else{%> ${htmlEscape(doc.desc)} <%}%>
 
-*Definition：* ${doc.methodDefinition}
+*Definition:* ${doc.methodDefinition}
 
 <%if(isNotEmpty(doc.author)){%>
 *Author:* ${doc.author} <%}%>
