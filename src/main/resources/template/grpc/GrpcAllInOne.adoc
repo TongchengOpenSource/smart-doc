@@ -1,0 +1,110 @@
+<%if(isNotEmpty(projectName)){%> ${projectName}
+<%}%>
+
+[width="100%",options="header"]
+[stripes=even]
+<%if(isNotEmpty(revisionLogList)){%>
+
+|====================
+|Version |Update Time  |Status | Author |Description
+<% for(revisionLog in revisionLogList){ %>
+|${revisionLog.version} |${revisionLog.revisionTime} |${revisionLog.status} |${revisionLog.author} |${revisionLog.remarks}
+<%}%>
+|====================
+
+<%}%>
+<% for(api in apiDocList){
+%>
+
+== ${htmlEscape(api.desc)}
+
+*URI:* ${api.uri}
+
+*Service:* ${api.name}
+
+*Protocol:* ${api.protocol}
+
+*Author:* ${api.author}
+
+*Version:* ${api.version} <% for(doc in api.list){
+%> <%if(doc.deprecated){%> ~~${htmlEscape(doc.desc)}~~ <%}else{%> ${htmlEscape(doc.desc)} <%}%>
+
+*Definition:* ${doc.escapeMethodDefinition}
+
+<%if(isNotEmpty(doc.author)){%>
+*Author:* ${doc.author} <%}%>
+
+*Description:* ${doc.detail}
+
+*MethodType:* ${doc.methodType}
+
+<%if(isNotEmpty(doc.requestParams)){%>
+*Invoke-parameters:*
+
+[width="100%",options="header"]
+[stripes=even]
+|====================
+|Parameter | Type  |Required|Description |Since
+<%
+for(param in doc.requestParams){
+%>
+|${param.field} |${param.type} |${param.required}|${htmlEscape(param.desc)}  |${param.version}
+<%}%>
+|====================
+
+<%}%>
+
+<%if(isNotEmpty(doc.responseParams)){%>
+*Response-fields:*
+[width="100%",options="header"]
+[stripes=even]
+
+|====================
+|Field | Type |Description |Since
+<%
+for(param in doc.responseParams){
+%>
+|${param.field} |${param.type} |${htmlEscape(param.desc)} |${param.version}
+<%}%>
+<%}%>
+|====================
+
+<%}%> <%}%>
+
+<%if(isNotEmpty(errorCodeList)){%>
+${errorListTitle}
+
+[width="100%",options="header"]
+[stripes=even]
+
+|====================
+|Error code |Description
+<% for(error in errorCodeList){  %>
+
+
+|${error.value} |${htmlEscape(error.desc)}
+<%}%>
+|====================
+
+
+<%}%>
+
+<%if(isNotEmpty(dictList)){ %>
+${dictListTitle}
+
+<% for(dict in dictList){
+%>
+[width="100%",options="header"]
+[stripes=even]
+
+${dict.title}
+|====================
+|Name |Code |Type |Description
+<% for(dataDict in dict.dataDictList){%>
+|${dataDict.name} |${dataDict.value} |${dataDict.type} |${htmlEscape(dataDict.desc)}
+<%}%>
+|====================
+
+<%}%>
+
+<%}%>

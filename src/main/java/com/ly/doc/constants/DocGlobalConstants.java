@@ -37,10 +37,20 @@ public interface DocGlobalConstants {
 
     String ABSOLUTE_CODE_PATH = System.getProperty("user.dir") + FILE_SEPARATOR + PROJECT_CODE_PATH;
 
+    /**
+     * Absolute path of target class.
+     */
+    String ABSOLUTE_TARGET_CLASS_PATH = System.getProperty("user.dir") + "/target/classes";
+
     String DOC_LANGUAGE = "smart-doc_language";
 
     String RANDOM_MOCK = "randomMock";
     String API_DOC_MD_TPL = "ApiDoc.md";
+
+    /**
+     * markdown api file extension.
+     */
+    String MARKDOWN_API_FILE_EXTENSION = "Api.md";
 
     String JMETER_TPL = "JMeter.jmx";
 
@@ -148,15 +158,11 @@ public interface DocGlobalConstants {
     String OPEN_API_JSON = "/openapi.json";
 
 
-
-
     String MODE_AND_VIEW_FULLY = "org.springframework.web.servlet.ModelAndView";
 
     String FEIGN_CLIENT_FULLY = "org.springframework.cloud.netflix.feign.FeignClient";
 
     String FEIGN_CLIENT = "FeignClient";
-
-
 
 
     String DEFAULT_VERSION = "-";
@@ -197,8 +203,6 @@ public interface DocGlobalConstants {
     String EMPTY = "";
 
 
-
-
     String CSS_CDN_CH = "https://fonts.googleapis.cnpmjs.org";
 
     String CSS_CDN = "https://fonts.googleapis.com";
@@ -235,4 +239,39 @@ public interface DocGlobalConstants {
      * websocket all in one md tpl
      */
     String WEBSOCKET_ALL_IN_ONE_MD_TPL = "WebSocket.md";
+
+    /**
+     * grpc all in one md tpl.
+     */
+    String GRPC_ALL_IN_ONE_MD_TPL = "grpc/GrpcAllInOne.md";
+
+    /**
+     * grpc all in one html tpl.
+     */
+    String GRPC_ALL_IN_ONE_HTML_TPL = "grpc/GrpcAllInOne.html";
+
+    /**
+     * grpc all in one search tpl.
+     */
+    String GRPC_ALL_IN_ONE_SEARCH_TPL = "grpc/GrpcSearch.btl";
+
+    /**
+     * grpc api doc Asciidoc tpl.
+     */
+    String GRPC_API_DOC_ADOC_TPL = "grpc/Grpc.adoc";
+
+    /**
+     * grpc all in one Asciidoc tpl.
+     */
+    String GRPC_ALL_IN_ONE_ADOC_TPL = "grpc/GrpcAllInOne.adoc";
+
+    /**
+     * grpc api out dir.
+     */
+    String GRPC_OUT_DIR = "grpc";
+
+    /**
+     * proto file suffix.
+     */
+    String PROTO_FILE_SUFFIX = ".proto";
 }

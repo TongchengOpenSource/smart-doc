@@ -39,7 +39,6 @@ import java.util.Objects;
  */
 public class ApiDocBuilder {
 
-    private static final String API_EXTENSION = "Api.md";
 
     /**
      * @param config ApiConfig
@@ -71,7 +70,7 @@ public class ApiDocBuilder {
             apiDocList = docBuildTemplate.handleApiGroup(apiDocList, config);
             builderTemplate.buildAllInOne(apiDocList, config, javaProjectBuilder, DocGlobalConstants.ALL_IN_ONE_MD_TPL, docName);
         } else {
-            builderTemplate.buildApiDoc(apiDocList, config, DocGlobalConstants.API_DOC_MD_TPL, API_EXTENSION);
+            builderTemplate.buildApiDoc(apiDocList, config, DocGlobalConstants.API_DOC_MD_TPL, DocGlobalConstants.MARKDOWN_API_FILE_EXTENSION);
             builderTemplate.buildErrorCodeDoc(config, DocGlobalConstants.ERROR_CODE_LIST_MD_TPL, DocGlobalConstants.ERROR_CODE_LIST_MD, javaProjectBuilder);
             builderTemplate.buildDirectoryDataDoc(config, javaProjectBuilder, DocGlobalConstants.DICT_LIST_MD_TPL, DocGlobalConstants.DICT_LIST_MD);
         }

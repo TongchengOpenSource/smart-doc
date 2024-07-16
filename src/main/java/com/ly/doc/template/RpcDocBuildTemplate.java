@@ -52,6 +52,11 @@ import java.util.stream.Collectors;
  */
 public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc>, IWebSocketDocBuildTemplate<WebSocketDoc>, IRpcDocTemplate {
 
+    /**
+     * api index
+     */
+    private final AtomicInteger ATOMIC_INTEGER = new AtomicInteger(1);
+
     @Override
     public boolean supportsFramework(String framework) {
         return FrameworkEnum.DUBBO.getFramework().equalsIgnoreCase(framework);
@@ -61,12 +66,7 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc>, IWebSo
     public boolean addMethodModifiers() {
         return false;
     }
-
-    /**
-     * api index
-     */
-    private final AtomicInteger ATOMIC_INTEGER = new AtomicInteger(1);
-
+    
     @Override
     @SuppressWarnings("unchecked")
     public ApiSchema<RpcApiDoc> renderApi(ProjectDocConfigBuilder projectBuilder, Collection<JavaClass> candidateClasses) {
@@ -176,7 +176,7 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc>, IWebSo
         apiDoc.setShortName(shortName);
         apiDoc.setAlias(className);
         apiDoc.setUri(builder.getServerUrl() + "/" + className);
-        apiDoc.setProtocol("dubbo");
+        apiDoc.setProtocol(FrameworkEnum.DUBBO.getFramework());
         if (builder.getApiConfig().isMd5EncryptedHtmlName()) {
             String name = DocUtil.generateId(apiDoc.getName());
             apiDoc.setAlias(name);
