@@ -20,15 +20,11 @@
  */
 package com.ly.doc.builder.javadoc;
 
-import com.ly.doc.builder.BaseDocBuilderTemplate;
 import com.ly.doc.constants.DocGlobalConstants;
 import com.ly.doc.helper.JavaProjectBuilderHelper;
 import com.ly.doc.model.ApiConfig;
 import com.ly.doc.model.javadoc.JavadocApiDoc;
-import com.ly.doc.utils.BeetlTemplateUtil;
-import com.power.common.util.FileUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
-import org.beetl.core.Template;
 
 import java.util.List;
 
@@ -53,12 +49,12 @@ public class JavadocHtmlBuilder {
      */
     public static void buildApiDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
         JavadocDocBuilderTemplate builderTemplate = new JavadocDocBuilderTemplate();
-        builderTemplate.checkAndInit(config,Boolean.TRUE);
+        builderTemplate.checkAndInit(config, Boolean.TRUE);
         List<JavadocApiDoc> apiDocList = builderTemplate.getJavadocApiDoc(config, javaProjectBuilder);
         builderTemplate.copyJQueryAndCss(config);
         String INDEX_HTML = "javadoc-index.html";
         builderTemplate.buildAllInOne(apiDocList, config, javaProjectBuilder, DocGlobalConstants.JAVADOC_ALL_IN_ONE_HTML_TPL, INDEX_HTML);
-        String SEARCH_JS = "search.js";
-        builderTemplate.buildSearchJs(apiDocList, config, javaProjectBuilder, DocGlobalConstants.JAVADOC_ALL_IN_ONE_SEARCH_TPL, SEARCH_JS);
+        builderTemplate.buildSearchJs(apiDocList, config, javaProjectBuilder, DocGlobalConstants.JAVADOC_ALL_IN_ONE_SEARCH_TPL,
+                DocGlobalConstants.SEARCH_JS_OUT);
     }
 }

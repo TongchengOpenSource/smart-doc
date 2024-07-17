@@ -55,7 +55,14 @@ public enum FrameworkEnum {
     /**
      * JAX-RS
      */
-    JAX_RS("JAX-RS", "com.ly.doc.template.JAXRSDocBuildTemplate");
+    JAX_RS("JAX-RS", "com.ly.doc.template.JAXRSDocBuildTemplate"),
+
+    /**
+     * grpc
+     */
+    GRPC("grpc", "com.ly.doc.template.GRpcDocBuildTemplate"),
+
+    ;
 
     /**
      * Framework name

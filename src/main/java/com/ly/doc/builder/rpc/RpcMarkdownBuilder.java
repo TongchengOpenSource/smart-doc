@@ -20,21 +20,19 @@
  */
 package com.ly.doc.builder.rpc;
 
-import java.util.List;
-
 import com.ly.doc.constants.DocGlobalConstants;
+import com.ly.doc.helper.JavaProjectBuilderHelper;
 import com.ly.doc.model.ApiConfig;
 import com.ly.doc.model.rpc.RpcApiDoc;
 import com.power.common.util.DateTimeUtil;
-import com.ly.doc.helper.JavaProjectBuilderHelper;
 import com.thoughtworks.qdox.JavaProjectBuilder;
+
+import java.util.List;
 
 /**
  * @author yu 2020/5/16.
  */
 public class RpcMarkdownBuilder {
-
-    private static final String API_EXTENSION = "Api.md";
 
     /**
      * @param config ApiConfig
@@ -53,14 +51,14 @@ public class RpcMarkdownBuilder {
     public static void buildApiDoc(ApiConfig apiConfig, JavaProjectBuilder javaProjectBuilder) {
         apiConfig.setAdoc(Boolean.FALSE);
         RpcDocBuilderTemplate builderTemplate = new RpcDocBuilderTemplate();
-        builderTemplate.checkAndInit(apiConfig,Boolean.TRUE);
+        builderTemplate.checkAndInit(apiConfig, Boolean.TRUE);
         List<RpcApiDoc> apiDocList = builderTemplate.getRpcApiDoc(apiConfig, javaProjectBuilder);
         if (apiConfig.isAllInOne()) {
             String version = apiConfig.isCoverOld() ? "" : "-V" + DateTimeUtil.long2Str(System.currentTimeMillis(), DocGlobalConstants.DATE_FORMAT_YYYY_MM_DD_HH_MM);
             String docName = builderTemplate.allInOneDocName(apiConfig, "rpc-all" + version, DocGlobalConstants.MARKDOWN_EXTENSION);
             builderTemplate.buildAllInOne(apiDocList, apiConfig, javaProjectBuilder, DocGlobalConstants.RPC_ALL_IN_ONE_MD_TPL, docName);
         } else {
-            builderTemplate.buildApiDoc(apiDocList, apiConfig, DocGlobalConstants.RPC_API_DOC_MD_TPL, API_EXTENSION);
+            builderTemplate.buildApiDoc(apiDocList, apiConfig, DocGlobalConstants.RPC_API_DOC_MD_TPL, DocGlobalConstants.MARKDOWN_API_FILE_EXTENSION);
             builderTemplate.buildErrorCodeDoc(apiConfig, DocGlobalConstants.ERROR_CODE_LIST_MD_TPL, DocGlobalConstants.ERROR_CODE_LIST_MD, javaProjectBuilder);
         }
     }

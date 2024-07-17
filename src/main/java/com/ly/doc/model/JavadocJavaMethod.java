@@ -28,6 +28,12 @@ import com.thoughtworks.qdox.model.JavaType;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * java method.
+ *
+ * @author chenchuxin
+ * @since 3.0.5
+ */
 public class JavadocJavaMethod implements IMethod {
 
     /**

@@ -21,7 +21,7 @@
  */
 package com.ly.doc.builder.javadoc;
 
-import com.ly.doc.builder.BaseDocBuilderTemplate;
+import com.ly.doc.builder.IBaseDocBuilderTemplate;
 import com.ly.doc.builder.ProjectDocConfigBuilder;
 import com.ly.doc.constants.DocGlobalConstants;
 import com.ly.doc.constants.FrameworkEnum;
@@ -48,16 +48,17 @@ import java.util.Objects;
 
 /**
  * java doc build template.
+ *
  * @author chenchuxin
  */
-public class JavadocDocBuilderTemplate extends BaseDocBuilderTemplate {
+public class JavadocDocBuilderTemplate implements IBaseDocBuilderTemplate {
 
     private static final String DEPENDENCY_TITLE = "Add dependency";
 
     @Override
     public void checkAndInit(ApiConfig config, boolean checkOutPath) {
         config.setFramework(FrameworkEnum.JAVADOC.getFramework());
-        super.checkAndInit(config, checkOutPath);
+        IBaseDocBuilderTemplate.super.checkAndInit(config, checkOutPath);
         config.setOutPath(config.getOutPath() + DocGlobalConstants.FILE_SEPARATOR + DocGlobalConstants.JAVADOC_OUT_DIR);
     }
 
@@ -98,7 +99,7 @@ public class JavadocDocBuilderTemplate extends BaseDocBuilderTemplate {
         Template tpl = BeetlTemplateUtil.getByName(template);
         tpl.binding(TemplateVariable.API_DOC_LIST.getVariable(), apiDocList);
         // binding common variable
-        super.bindingCommonVariable(config, javaProjectBuilder, tpl, apiDocList.isEmpty());
+        IBaseDocBuilderTemplate.super.bindingCommonVariable(config, javaProjectBuilder, tpl, apiDocList.isEmpty());
 
         FileUtil.nioWriteFile(tpl.render(), outPath + DocGlobalConstants.FILE_SEPARATOR + outPutFileName);
     }

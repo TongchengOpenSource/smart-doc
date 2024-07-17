@@ -15,7 +15,7 @@ for(doc in list){
 ## ${htmlEscape(doc.desc)}
 <%}%>
 
-*Definition：* ${doc.methodDefinition}
+*Definition:* ${doc.methodDefinition}
 
 <%if(isNotEmpty(doc.author)){%>
 *Author:* ${doc.author}

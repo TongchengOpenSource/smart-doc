@@ -39,11 +39,11 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
+ * doc builder template.
+ *
  * @author yu 2019/9/26.
  */
-public class DocBuilderTemplate extends BaseDocBuilderTemplate {
-
-    private static final long NOW = System.currentTimeMillis();
+public class DocBuilderTemplate implements IBaseDocBuilderTemplate {
 
     /**
      * get all api data

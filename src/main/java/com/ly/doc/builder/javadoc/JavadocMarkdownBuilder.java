@@ -31,7 +31,6 @@ import java.util.List;
 
 public class JavadocMarkdownBuilder {
 
-    private static final String API_EXTENSION = "Api.md";
 
     /**
      * @param config ApiConfig
@@ -50,14 +49,14 @@ public class JavadocMarkdownBuilder {
     public static void buildApiDoc(ApiConfig apiConfig, JavaProjectBuilder javaProjectBuilder) {
         apiConfig.setAdoc(Boolean.FALSE);
         JavadocDocBuilderTemplate builderTemplate = new JavadocDocBuilderTemplate();
-        builderTemplate.checkAndInit(apiConfig,Boolean.TRUE);
+        builderTemplate.checkAndInit(apiConfig, Boolean.TRUE);
         List<JavadocApiDoc> apiDocList = builderTemplate.getJavadocApiDoc(apiConfig, javaProjectBuilder);
         if (apiConfig.isAllInOne()) {
             String version = apiConfig.isCoverOld() ? "" : "-V" + DateTimeUtil.long2Str(System.currentTimeMillis(), DocGlobalConstants.DATE_FORMAT_YYYY_MM_DD_HH_MM);
             String docName = builderTemplate.allInOneDocName(apiConfig, "javadoc-all" + version, DocGlobalConstants.MARKDOWN_EXTENSION);
             builderTemplate.buildAllInOne(apiDocList, apiConfig, javaProjectBuilder, DocGlobalConstants.JAVADOC_ALL_IN_ONE_MD_TPL, docName);
         } else {
-            builderTemplate.buildApiDoc(apiDocList, apiConfig, DocGlobalConstants.JAVADOC_API_DOC_MD_TPL, API_EXTENSION);
+            builderTemplate.buildApiDoc(apiDocList, apiConfig, DocGlobalConstants.JAVADOC_API_DOC_MD_TPL, DocGlobalConstants.MARKDOWN_API_FILE_EXTENSION);
             builderTemplate.buildErrorCodeDoc(apiConfig, DocGlobalConstants.ERROR_CODE_LIST_MD_TPL, DocGlobalConstants.ERROR_CODE_LIST_MD, javaProjectBuilder);
         }
     }
