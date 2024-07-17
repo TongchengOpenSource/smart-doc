@@ -1,0 +1,113 @@
+name: "Bug report \U0001F41E "
+description: Create a report to help us improve
+labels: ['bug: pending triage']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!
+
+  - type: input
+    id: contact
+    attributes:
+      label: Contact Details
+      description: How can we get in touch with you if we need more info?
+      placeholder: ex. email@example.com
+    validations:
+      required: false
+
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: What version of smart-doc are you running?
+      placeholder: ex. 3.0.5
+    validations:
+      required: true
+
+  - type: dropdown
+    id: plugin
+    attributes:
+      label: Plugin
+      description: What plugin of smart-doc are you running?
+      options:
+        - smart-doc-maven-plugin
+        - smart-doc-gradle-plugin
+    validations:
+      required: true
+
+  - type: input
+    id: build-tool-version
+    attributes:
+      label: Build tool version
+      description: What build tool version version of smart-doc are you running?
+      placeholder: ex. maven 3.9.6 or gradle 8.9
+    validations:
+      required: true
+
+  - type: input
+    id: jdk-version
+    attributes:
+      label: Jdk version
+      description: What jdk version are you seeing the problem on?
+      placeholder: ex. 1.8
+    validations:
+      required: true
+
+  - type: textarea
+    id: bug-description
+    attributes:
+      label: Describe the bug(BUG描述，社区已开启国际化推广，请用文心一言、讯飞星火等辅助翻译成英文，减少社区开发者的工作)
+      description: A clear and concise description of what the bug is. If you intend to submit a PR for this issue, tell us in the description. Thanks!
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected Behavior(您期望的结果，社区已开启国际化推广，请用文心一言、讯飞星火等辅助翻译成英文，减少社区开发者的工作)
+      description: If you're describing a bug, tell us what should happen.If you're suggesting a change/improvement, tell us how it should work
+    validations:
+      required: true
+
+  - type: textarea
+    id: current-behavior
+    attributes:
+      label: Current Behavior(当前结果，社区已开启国际化推广，请用文心一言、讯飞星火等辅助翻译成英文，减少社区开发者的工作)
+      description: If describing a bug, tell us what happens instead of the expected behavior.If suggesting a change/improvement, explain the difference from current behavior
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps-to-reproduce
+    attributes:
+      label: Steps to Reproduce (Bug产生步骤，请尽量提供用例代码。社区已开启国际化推广，请用文心一言、讯飞星火等辅助翻译成英文，减少社区开发者的工作)
+      description: Provide a link to a live example, or an unambiguous set of
+        steps to.reproduce this bug. Include code to reproduce, if relevant
+    validations:
+      required: true
+
+  - type: textarea
+    id: possible-solution
+    attributes:
+      label: Possible Solution(Bug解决建议，社区已开启国际化推广，请用文心一言、讯飞星火等辅助翻译成英文，减少社区开发者的工作)
+      description: Not obligatory, but suggest a fix/reason for the bug,or ideas how to implement the addition or change
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Context(Bug影响描述，社区已开启国际化推广，请用文心一言、讯飞星火等辅助翻译成英文，减少社区开发者的工作)
+      description: How has this issue affected you? What are you trying to accomplish? If you're suggesting a change/improvement, tell us how it should work
+
+  - type: checkboxes
+    id: checkboxes
+    attributes:
+      label: Validations
+      description: Before submitting the issue, please make sure you do the following(在提交问题之前，请确保执行以下操作)
+      options:
+        - label: Check if you're on the [latest smart-doc version](https://github.com/TongchengOpenSource/smart-doc/releases/latest).
+          required: true
+        - label: Read the [docs](https://smart-doc-group.github.io/).
+          required: true
+        - label: Check that there isn't already an issue that reports the same bug to avoid creating a duplicate.
+          required: true
