@@ -1,0 +1,56 @@
+name: "Feature Request \U0001F680"
+description: Suggest an idea for this project
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for your interest in the project and taking the time to fill out this feature report!
+
+  - type: textarea
+    id: feature-description
+    attributes:
+      label: Is your feature request related to a problem? Please describe.(关于这个PR的描述，社区已开启国际化推广，请文心一言、讯飞星火等辅助翻译成英文，减少社区开发者的工作)
+      description: A clear and concise description of what the problem is.
+    validations:
+      required: true
+
+  - type: textarea
+    id: basic-example
+    attributes:
+      label: Basic example(pr的用例，社区已开启国际化推广，请文心一言、讯飞星火等辅助翻译成英文，减少社区开发者的工作)
+      description: If the proposal involves a new or changed API, include a basic code example. Omit this section if it's not applicable.
+    validations:
+      required: true
+
+  - type: textarea
+    id: suggested-solution
+    attributes:
+      label: Describe the solution you'd like(描述您想要的解决方案，社区已开启国际化推广，请文心一言、讯飞星火等辅助翻译成英文，减少社区开发者的工作)
+      description: A clear and concise description of what you want to happen.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternative
+    attributes:
+      label: Describe alternatives you've considered(描述你考虑过的替代方案，社区已开启国际化推广，请文心一言、讯飞星火等辅助翻译成英文，减少社区开发者的工作)
+      description: A clear and concise description of any alternative solutions or features you've considered.
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional context(其他背景信息，社区已开启国际化推广，请文心一言、讯飞星火等辅助翻译成英文，减少社区开发者的工作)
+      description: Add any other context or screenshots about the feature request here.
+
+  - type: checkboxes
+    id: checkboxes
+    attributes:
+      label: Validations
+      description: Before submitting the issue, please make sure you do the following(在提交问题之前，请确保执行以下操作)
+      options:
+        - label: Read the [docs](https://smart-doc-group.github.io/).
+          required: true
+        - label: Read the [Contributing Guidelines](https://smart-doc-group.github.io/guide/community/contributing).
+          required: true
+        - label: Check that there isn't already an issue that reports the same bug to avoid creating a duplicate.
+          required: true
