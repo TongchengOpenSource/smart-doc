@@ -26,69 +26,69 @@ package com.ly.doc.model.torna;
  **/
 public class DubboInfo {
 
-    private String interfaceName;
-    private String author;
-    private String version;
-    private String protocol;
-    private String dependency;
+	private String interfaceName;
 
-    public DubboInfo builder() {
-        return new DubboInfo();
-    }
+	private String author;
 
-    public String getInterfaceName() {
-        return interfaceName;
-    }
+	private String version;
 
-    public DubboInfo setInterfaceName(String interfaceName) {
-        this.interfaceName = interfaceName;
-        return this;
-    }
+	private String protocol;
 
-    public String getAuthor() {
-        return author;
-    }
+	private String dependency;
 
-    public DubboInfo setAuthor(String author) {
-        this.author = author;
-        return this;
-    }
+	public DubboInfo builder() {
+		return new DubboInfo();
+	}
 
-    public String getVersion() {
-        return version;
-    }
+	public String getInterfaceName() {
+		return interfaceName;
+	}
 
-    public DubboInfo setVersion(String version) {
-        this.version = version;
-        return this;
-    }
+	public DubboInfo setInterfaceName(String interfaceName) {
+		this.interfaceName = interfaceName;
+		return this;
+	}
 
-    public String getProtocol() {
-        return protocol;
-    }
+	public String getAuthor() {
+		return author;
+	}
 
-    public DubboInfo setProtocol(String protocol) {
-        this.protocol = protocol;
-        return this;
-    }
+	public DubboInfo setAuthor(String author) {
+		this.author = author;
+		return this;
+	}
 
-    public String getDependency() {
-        return dependency;
-    }
+	public String getVersion() {
+		return version;
+	}
 
-    public DubboInfo setDependency(String dependency) {
-        this.dependency = dependency;
-        return this;
-    }
+	public DubboInfo setVersion(String version) {
+		this.version = version;
+		return this;
+	}
 
-    @Override
-    public String toString() {
-        return "DubboInfo{" +
-            "interfaceName='" + interfaceName + '\'' +
-            ", author='" + author + '\'' +
-            ", version='" + version + '\'' +
-            ", protocol='" + protocol + '\'' +
-            ", dependency='" + dependency + '\'' +
-            '}';
-    }
+	public String getProtocol() {
+		return protocol;
+	}
+
+	public DubboInfo setProtocol(String protocol) {
+		this.protocol = protocol;
+		return this;
+	}
+
+	public String getDependency() {
+		return dependency;
+	}
+
+	public DubboInfo setDependency(String dependency) {
+		this.dependency = dependency;
+		return this;
+	}
+
+	@Override
+	public String toString() {
+		return "DubboInfo{" + "interfaceName='" + interfaceName + '\'' + ", author='" + author + '\'' + ", version='"
+				+ version + '\'' + ", protocol='" + protocol + '\'' + ", dependency='" + dependency + '\'' + '}';
+	}
+
 }

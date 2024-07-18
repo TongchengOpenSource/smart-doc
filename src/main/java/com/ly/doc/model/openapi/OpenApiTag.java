@@ -31,58 +31,59 @@ import java.util.Objects;
  */
 public class OpenApiTag {
 
-    /**
-     * the tag name
-     */
-    private String name;
+	/**
+	 * the tag name
+	 */
+	private String name;
 
-    /**
-     * the tag description
-     */
-    private String description;
+	/**
+	 * the tag description
+	 */
+	private String description;
 
-    public OpenApiTag() {
-    }
+	public OpenApiTag() {
+	}
 
-    public OpenApiTag(String name, String description) {
-        this.name = name;
-        this.description = description;
-    }
+	public OpenApiTag(String name, String description) {
+		this.name = name;
+		this.description = description;
+	}
 
-    public static OpenApiTag of(String name, String description) {
-        return new OpenApiTag(name, description);
-    }
+	public static OpenApiTag of(String name, String description) {
+		return new OpenApiTag(name, description);
+	}
 
-    public String getName() {
-        return name;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public String getDescription() {
-        return description;
-    }
+	public String getDescription() {
+		return description;
+	}
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        OpenApiTag that = (OpenApiTag) o;
-        return Objects.equals(getName(), that.getName()) && Objects.equals(getDescription(), that.getDescription());
-    }
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		OpenApiTag that = (OpenApiTag) o;
+		return Objects.equals(getName(), that.getName()) && Objects.equals(getDescription(), that.getDescription());
+	}
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(getName(), getDescription());
-    }
+	@Override
+	public int hashCode() {
+		return Objects.hash(getName(), getDescription());
+	}
+
 }

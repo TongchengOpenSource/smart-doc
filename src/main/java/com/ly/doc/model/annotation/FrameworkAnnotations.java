@@ -23,148 +23,150 @@ package com.ly.doc.model.annotation;
 import java.util.Map;
 
 /**
- * A model class representing various framework annotations.
- * Provides getter and setter methods to access and modify the annotations.
+ * A model class representing various framework annotations. Provides getter and setter
+ * methods to access and modify the annotations.
  * <p>
  * This class includes annotations for entry points, headers, mappings, path variables,
- * request parameters, request bodies, request parts, exception advice, and server endpoints.
+ * request parameters, request bodies, request parts, exception advice, and server
+ * endpoints.
  * </p>
  *
  * @author yu3.sun on 2022/10/1
  */
 public class FrameworkAnnotations {
 
-    /**
-     * Map of entry annotations.
-     */
-    private Map<String, EntryAnnotation> entryAnnotations;
+	/**
+	 * Map of entry annotations.
+	 */
+	private Map<String, EntryAnnotation> entryAnnotations;
 
-    /**
-     * Header annotation.
-     */
-    private HeaderAnnotation headerAnnotation;
+	/**
+	 * Header annotation.
+	 */
+	private HeaderAnnotation headerAnnotation;
 
-    /**
-     * Map of mapping annotations.
-     */
-    private Map<String, MappingAnnotation> mappingAnnotations;
+	/**
+	 * Map of mapping annotations.
+	 */
+	private Map<String, MappingAnnotation> mappingAnnotations;
 
-    /**
-     * Path variable annotation.
-     */
-    private PathVariableAnnotation pathVariableAnnotation;
+	/**
+	 * Path variable annotation.
+	 */
+	private PathVariableAnnotation pathVariableAnnotation;
 
-    /**
-     * Request parameter annotation.
-     */
-    private RequestParamAnnotation requestParamAnnotation;
+	/**
+	 * Request parameter annotation.
+	 */
+	private RequestParamAnnotation requestParamAnnotation;
 
-    /**
-     * Request body annotation.
-     */
-    private RequestBodyAnnotation requestBodyAnnotation;
+	/**
+	 * Request body annotation.
+	 */
+	private RequestBodyAnnotation requestBodyAnnotation;
 
-    /**
-     * Request part annotation.
-     */
-    private RequestPartAnnotation requestPartAnnotation;
+	/**
+	 * Request part annotation.
+	 */
+	private RequestPartAnnotation requestPartAnnotation;
 
-    /**
-     * Map of exception advice annotations.
-     */
-    private Map<String, ExceptionAdviceAnnotation> exceptionAdviceAnnotations;
+	/**
+	 * Map of exception advice annotations.
+	 */
+	private Map<String, ExceptionAdviceAnnotation> exceptionAdviceAnnotations;
 
-    /**
-     * WebSocket server endpoint annotation.
-     * <p>
-     * javax.websocket.server.ServerEndpoint
-     * jakarta.websocket.server.ServerEndpoint
-     * </p>
-     */
-    private ServerEndpointAnnotation serverEndpointAnnotation;
+	/**
+	 * WebSocket server endpoint annotation.
+	 * <p>
+	 * javax.websocket.server.ServerEndpoint jakarta.websocket.server.ServerEndpoint
+	 * </p>
+	 */
+	private ServerEndpointAnnotation serverEndpointAnnotation;
 
-    public static FrameworkAnnotations builder() {
-        return new FrameworkAnnotations();
-    }
+	public static FrameworkAnnotations builder() {
+		return new FrameworkAnnotations();
+	}
 
-    public Map<String, EntryAnnotation> getEntryAnnotations() {
-        return entryAnnotations;
-    }
+	public Map<String, EntryAnnotation> getEntryAnnotations() {
+		return entryAnnotations;
+	}
 
-    public FrameworkAnnotations setEntryAnnotations(Map<String, EntryAnnotation> entryAnnotations) {
-        this.entryAnnotations = entryAnnotations;
-        return this;
-    }
+	public FrameworkAnnotations setEntryAnnotations(Map<String, EntryAnnotation> entryAnnotations) {
+		this.entryAnnotations = entryAnnotations;
+		return this;
+	}
 
-    public HeaderAnnotation getHeaderAnnotation() {
-        return headerAnnotation;
-    }
+	public HeaderAnnotation getHeaderAnnotation() {
+		return headerAnnotation;
+	}
 
-    public FrameworkAnnotations setHeaderAnnotation(HeaderAnnotation headerAnnotation) {
-        this.headerAnnotation = headerAnnotation;
-        return this;
-    }
+	public FrameworkAnnotations setHeaderAnnotation(HeaderAnnotation headerAnnotation) {
+		this.headerAnnotation = headerAnnotation;
+		return this;
+	}
 
-    public Map<String, MappingAnnotation> getMappingAnnotations() {
-        return mappingAnnotations;
-    }
+	public Map<String, MappingAnnotation> getMappingAnnotations() {
+		return mappingAnnotations;
+	}
 
-    public FrameworkAnnotations setMappingAnnotations(Map<String, MappingAnnotation> mappingAnnotation) {
-        this.mappingAnnotations = mappingAnnotation;
-        return this;
-    }
+	public FrameworkAnnotations setMappingAnnotations(Map<String, MappingAnnotation> mappingAnnotation) {
+		this.mappingAnnotations = mappingAnnotation;
+		return this;
+	}
 
-    public PathVariableAnnotation getPathVariableAnnotation() {
-        return pathVariableAnnotation;
-    }
+	public PathVariableAnnotation getPathVariableAnnotation() {
+		return pathVariableAnnotation;
+	}
 
-    public FrameworkAnnotations setPathVariableAnnotation(PathVariableAnnotation pathVariableAnnotation) {
-        this.pathVariableAnnotation = pathVariableAnnotation;
-        return this;
-    }
+	public FrameworkAnnotations setPathVariableAnnotation(PathVariableAnnotation pathVariableAnnotation) {
+		this.pathVariableAnnotation = pathVariableAnnotation;
+		return this;
+	}
 
-    public RequestParamAnnotation getRequestParamAnnotation() {
-        return requestParamAnnotation;
-    }
+	public RequestParamAnnotation getRequestParamAnnotation() {
+		return requestParamAnnotation;
+	}
 
-    public FrameworkAnnotations setRequestParamAnnotation(RequestParamAnnotation requestParamAnnotation) {
-        this.requestParamAnnotation = requestParamAnnotation;
-        return this;
-    }
+	public FrameworkAnnotations setRequestParamAnnotation(RequestParamAnnotation requestParamAnnotation) {
+		this.requestParamAnnotation = requestParamAnnotation;
+		return this;
+	}
 
-    public RequestBodyAnnotation getRequestBodyAnnotation() {
-        return requestBodyAnnotation;
-    }
+	public RequestBodyAnnotation getRequestBodyAnnotation() {
+		return requestBodyAnnotation;
+	}
 
-    public FrameworkAnnotations setRequestBodyAnnotation(RequestBodyAnnotation requestBodyAnnotation) {
-        this.requestBodyAnnotation = requestBodyAnnotation;
-        return this;
-    }
+	public FrameworkAnnotations setRequestBodyAnnotation(RequestBodyAnnotation requestBodyAnnotation) {
+		this.requestBodyAnnotation = requestBodyAnnotation;
+		return this;
+	}
 
-    public RequestPartAnnotation getRequestPartAnnotation() {
-        return requestPartAnnotation;
-    }
+	public RequestPartAnnotation getRequestPartAnnotation() {
+		return requestPartAnnotation;
+	}
 
-    public FrameworkAnnotations setRequestPartAnnotation(RequestPartAnnotation requestPartAnnotation) {
-        this.requestPartAnnotation = requestPartAnnotation;
-        return this;
-    }
+	public FrameworkAnnotations setRequestPartAnnotation(RequestPartAnnotation requestPartAnnotation) {
+		this.requestPartAnnotation = requestPartAnnotation;
+		return this;
+	}
 
-    public ServerEndpointAnnotation getServerEndpointAnnotation() {
-        return serverEndpointAnnotation;
-    }
+	public ServerEndpointAnnotation getServerEndpointAnnotation() {
+		return serverEndpointAnnotation;
+	}
 
-    public FrameworkAnnotations setServerEndpointAnnotation(ServerEndpointAnnotation serverEndpointAnnotation) {
-        this.serverEndpointAnnotation = serverEndpointAnnotation;
-        return this;
-    }
+	public FrameworkAnnotations setServerEndpointAnnotation(ServerEndpointAnnotation serverEndpointAnnotation) {
+		this.serverEndpointAnnotation = serverEndpointAnnotation;
+		return this;
+	}
 
-    public Map<String, ExceptionAdviceAnnotation> getExceptionAdviceAnnotations() {
-        return exceptionAdviceAnnotations;
-    }
+	public Map<String, ExceptionAdviceAnnotation> getExceptionAdviceAnnotations() {
+		return exceptionAdviceAnnotations;
+	}
 
-    public FrameworkAnnotations setExceptionAdviceAnnotations(Map<String, ExceptionAdviceAnnotation> exceptionAdviceAnnotations) {
-        this.exceptionAdviceAnnotations = exceptionAdviceAnnotations;
-        return this;
-    }
+	public FrameworkAnnotations setExceptionAdviceAnnotations(
+			Map<String, ExceptionAdviceAnnotation> exceptionAdviceAnnotations) {
+		this.exceptionAdviceAnnotations = exceptionAdviceAnnotations;
+		return this;
+	}
+
 }

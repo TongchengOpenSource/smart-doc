@@ -20,7 +20,6 @@
  */
 package com.ly.doc.model.postman.request.body;
 
-
 import java.util.List;
 
 import com.ly.doc.model.FormData;
@@ -30,58 +29,62 @@ import com.ly.doc.model.FormData;
  */
 public class BodyBean {
 
-    private String mode;
-    private String raw;
-    private List<FormData> formdata;
-    private BodyOptions options;
+	private String mode;
 
-    public BodyBean(boolean isFormData) {
-        if (!isFormData) {
-            this.options = new BodyOptions();
-        }
-    }
+	private String raw;
 
-    public List<FormData> getFormdata() {
-        return formdata;
-    }
+	private List<FormData> formdata;
 
-    public void setFormdata(List<FormData> formdata) {
-        this.formdata = formdata;
-    }
+	private BodyOptions options;
 
-    public String getMode() {
-        return mode;
-    }
+	public BodyBean(boolean isFormData) {
+		if (!isFormData) {
+			this.options = new BodyOptions();
+		}
+	}
 
-    public void setMode(String mode) {
-        this.mode = mode;
-    }
+	public List<FormData> getFormdata() {
+		return formdata;
+	}
 
-    public String getRaw() {
-        return raw;
-    }
+	public void setFormdata(List<FormData> formdata) {
+		this.formdata = formdata;
+	}
 
-    public void setRaw(String raw) {
-        this.raw = raw;
-    }
+	public String getMode() {
+		return mode;
+	}
 
-    private class BodyOptions {
+	public void setMode(String mode) {
+		this.mode = mode;
+	}
 
-        private Raw raw;
+	public String getRaw() {
+		return raw;
+	}
 
-        public BodyOptions() {
-            this.raw = new Raw();
-        }
+	public void setRaw(String raw) {
+		this.raw = raw;
+	}
 
-        private class Raw {
+	private class BodyOptions {
 
-            private String language;
+		private Raw raw;
 
-            Raw() {
-                this.language = "json";
-            }
-        }
-    }
+		public BodyOptions() {
+			this.raw = new Raw();
+		}
 
+		private class Raw {
+
+			private String language;
+
+			Raw() {
+				this.language = "json";
+			}
+
+		}
+
+	}
 
 }

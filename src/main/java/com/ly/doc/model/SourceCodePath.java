@@ -27,44 +27,45 @@ package com.ly.doc.model;
  */
 public class SourceCodePath {
 
-    /**
-     * Source code path
-     */
-    private String path;
+	/**
+	 * Source code path
+	 */
+	private String path;
 
-    /**
-     * path description
-     */
-    private String desc;
+	/**
+	 * path description
+	 */
+	private String desc;
 
-    public static SourceCodePath builder() {
-        return new SourceCodePath();
-    }
+	public static SourceCodePath builder() {
+		return new SourceCodePath();
+	}
 
-    public String getPath() {
-        return path;
-    }
+	public String getPath() {
+		return path;
+	}
 
-    public SourceCodePath setPath(String path) {
-        this.path = path;
-        return this;
-    }
+	public SourceCodePath setPath(String path) {
+		this.path = path;
+		return this;
+	}
 
-    public String getDesc() {
-        return desc;
-    }
+	public String getDesc() {
+		return desc;
+	}
 
-    public SourceCodePath setDesc(String desc) {
-        this.desc = desc;
-        return this;
-    }
+	public SourceCodePath setDesc(String desc) {
+		this.desc = desc;
+		return this;
+	}
 
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("{");
-        sb.append("\"path\":\"").append(path).append('\"');
-        sb.append(",\"desc\":\"").append(desc).append('\"');
-        sb.append('}');
-        return sb.toString();
-    }
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder("{");
+		sb.append("\"path\":\"").append(path).append('\"');
+		sb.append(",\"desc\":\"").append(desc).append('\"');
+		sb.append('}');
+		return sb.toString();
+	}
+
 }

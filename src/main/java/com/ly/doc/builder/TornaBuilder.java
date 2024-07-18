@@ -40,82 +40,78 @@ import java.util.Objects;
 
 import static com.ly.doc.constants.TornaConstants.DEFAULT_GROUP_CODE;
 
-
 /**
  * @author xingzi 2021/2/2 18:05
  **/
 public class TornaBuilder {
 
-    /**
-     * build controller api,for unit testing
-     *
-     * @param config config
-     */
-    public static void buildApiDoc(ApiConfig config) {
-        JavaProjectBuilder javaProjectBuilder = JavaProjectBuilderHelper.create();
-        buildApiDoc(config, javaProjectBuilder);
-    }
+	/**
+	 * build controller api,for unit testing
+	 * @param config config
+	 */
+	public static void buildApiDoc(ApiConfig config) {
+		JavaProjectBuilder javaProjectBuilder = JavaProjectBuilderHelper.create();
+		buildApiDoc(config, javaProjectBuilder);
+	}
 
+	/**
+	 * Only for smart-doc maven plugin and gradle plugin.
+	 * @param config ApiConfig
+	 * @param javaProjectBuilder ProjectDocConfigBuilder
+	 */
+	public static void buildApiDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
+		config.setParamsDataToTree(true);
+		DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
+		builderTemplate.checkAndInit(config, Boolean.FALSE);
+		ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
+		IDocBuildTemplate<ApiDoc> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework(),
+				config.getClassLoader());
+		Objects.requireNonNull(docBuildTemplate, "doc build template is null");
+		ApiSchema<ApiDoc> apiSchema = docBuildTemplate.getApiData(configBuilder);
+		List<ApiDoc> apiDocList = docBuildTemplate.handleApiGroup(apiSchema.getApiDatas(), config);
+		buildTorna(apiDocList, config, javaProjectBuilder);
+	}
 
-    /**
-     * Only for smart-doc maven plugin and gradle plugin.
-     *
-     * @param config             ApiConfig
-     * @param javaProjectBuilder ProjectDocConfigBuilder
-     */
-    public static void buildApiDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
-        config.setParamsDataToTree(true);
-        DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
-        builderTemplate.checkAndInit(config, Boolean.FALSE);
-        ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
-        IDocBuildTemplate<ApiDoc> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(
-                config.getFramework(), config.getClassLoader());
-        Objects.requireNonNull(docBuildTemplate, "doc build template is null");
-        ApiSchema<ApiDoc> apiSchema = docBuildTemplate.getApiData(configBuilder);
-        List<ApiDoc> apiDocList = docBuildTemplate.handleApiGroup(apiSchema.getApiDatas(), config);
-        buildTorna(apiDocList, config, javaProjectBuilder);
-    }
+	/**
+	 * build torna Data
+	 * @param apiDocs apiData
+	 * @param apiConfig ApiConfig
+	 * @param builder JavaProjectBuilder
+	 */
+	public static void buildTorna(List<ApiDoc> apiDocs, ApiConfig apiConfig, JavaProjectBuilder builder) {
+		TornaApi tornaApi = new TornaApi();
+		tornaApi.setAuthor(apiConfig.getAuthor());
+		tornaApi.setIsReplace(BooleanUtils.toInteger(apiConfig.getReplace()));
+		Apis api;
+		List<Apis> groupApiList = new ArrayList<>();
+		// Convert ApiDoc to Apis
+		for (ApiDoc groupApi : apiDocs) {
+			List<Apis> apisList = new ArrayList<>();
+			List<ApiDoc> childrenApiDocs = groupApi.getChildrenApiDocs();
+			for (ApiDoc a : childrenApiDocs) {
+				api = new Apis();
+				api.setName(StringUtils.isBlank(a.getDesc()) ? a.getName() : a.getDesc());
+				api.setItems(TornaUtil.buildApis(a.getList(), TornaUtil.setDebugEnv(apiConfig, tornaApi)));
+				api.setIsFolder(TornaConstants.YES);
+				api.setAuthor(a.getAuthor());
+				api.setOrderIndex(a.getOrder());
+				apisList.add(api);
+			}
+			api = new Apis();
+			api.setName(StringUtils.isBlank(groupApi.getDesc()) ? groupApi.getName() : groupApi.getDesc());
+			api.setAuthor(tornaApi.getAuthor());
+			api.setOrderIndex(groupApi.getOrder());
+			api.setIsFolder(TornaConstants.YES);
+			api.setItems(apisList);
+			groupApiList.add(api);
 
-    /**
-     * build torna Data
-     *
-     * @param apiDocs   apiData
-     * @param apiConfig ApiConfig
-     * @param builder   JavaProjectBuilder
-     */
-    public static void buildTorna(List<ApiDoc> apiDocs, ApiConfig apiConfig, JavaProjectBuilder builder) {
-        TornaApi tornaApi = new TornaApi();
-        tornaApi.setAuthor(apiConfig.getAuthor());
-        tornaApi.setIsReplace(BooleanUtils.toInteger(apiConfig.getReplace()));
-        Apis api;
-        List<Apis> groupApiList = new ArrayList<>();
-        // Convert ApiDoc to Apis
-        for (ApiDoc groupApi : apiDocs) {
-            List<Apis> apisList = new ArrayList<>();
-            List<ApiDoc> childrenApiDocs = groupApi.getChildrenApiDocs();
-            for (ApiDoc a : childrenApiDocs) {
-                api = new Apis();
-                api.setName(StringUtils.isBlank(a.getDesc()) ? a.getName() : a.getDesc());
-                api.setItems(TornaUtil.buildApis(a.getList(), TornaUtil.setDebugEnv(apiConfig, tornaApi)));
-                api.setIsFolder(TornaConstants.YES);
-                api.setAuthor(a.getAuthor());
-                api.setOrderIndex(a.getOrder());
-                apisList.add(api);
-            }
-            api = new Apis();
-            api.setName(StringUtils.isBlank(groupApi.getDesc()) ? groupApi.getName() : groupApi.getDesc());
-            api.setAuthor(tornaApi.getAuthor());
-            api.setOrderIndex(groupApi.getOrder());
-            api.setIsFolder(TornaConstants.YES);
-            api.setItems(apisList);
-            groupApiList.add(api);
+		}
+		tornaApi.setCommonErrorCodes(TornaUtil.buildErrorCode(apiConfig, builder));
+		// delete default group when only default group
+		tornaApi.setApis(groupApiList.size() == 1 && DEFAULT_GROUP_CODE.equals(groupApiList.get(0).getName())
+				? groupApiList.get(0).getItems() : groupApiList);
+		// Push to torna
+		TornaUtil.pushToTorna(tornaApi, apiConfig, builder);
+	}
 
-        }
-        tornaApi.setCommonErrorCodes(TornaUtil.buildErrorCode(apiConfig, builder));
-        // delete default group when only default group
-        tornaApi.setApis(groupApiList.size() == 1 && DEFAULT_GROUP_CODE.equals(groupApiList.get(0).getName()) ? groupApiList.get(0).getItems() : groupApiList);
-        // Push to torna
-        TornaUtil.pushToTorna(tornaApi, apiConfig, builder);
-    }
 }
-

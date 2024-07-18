@@ -25,58 +25,58 @@ package com.ly.doc.model.torna;
  **/
 public class Item {
 
-    /**
-     * {
-     * *                                 "name": "WAIT_PAY",
-     * *                                 "type": "string",
-     * *                                 "value": "0",
-     * *                                 "description": "未支付"
-     * *                             }
-     */
-    private String name;
-    private String type;
-    private String value;
-    private String description;
+	/**
+	 * { * "name": "WAIT_PAY", * "type": "string", * "value": "0", * "description": "未支付"
+	 * * }
+	 */
+	private String name;
 
-    public Item() {
-    }
+	private String type;
 
-    public Item(String name, String type, String value, String description) {
-        this.name = name;
-        this.type = type;
-        this.value = value;
-        this.description = description;
-    }
+	private String value;
 
-    public String getName() {
-        return name;
-    }
+	private String description;
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public Item() {
+	}
 
-    public String getType() {
-        return type;
-    }
+	public Item(String name, String type, String value, String description) {
+		this.name = name;
+		this.type = type;
+		this.value = value;
+		this.description = description;
+	}
 
-    public void setType(String type) {
-        this.type = type;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public String getValue() {
-        return value;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public void setValue(String value) {
-        this.value = value;
-    }
+	public String getType() {
+		return type;
+	}
 
-    public String getDescription() {
-        return description;
-    }
+	public void setType(String type) {
+		this.type = type;
+	}
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+	public String getValue() {
+		return value;
+	}
+
+	public void setValue(String value) {
+		this.value = value;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
 }

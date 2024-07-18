@@ -25,49 +25,48 @@ package com.ly.doc.model.rpc;
  */
 public class RpcApiDependency {
 
-    private String groupId;
+	private String groupId;
 
-    private String artifactId;
+	private String artifactId;
 
-    private String version;
+	private String version;
 
-    public static RpcApiDependency builder() {
-        return new RpcApiDependency();
-    }
+	public static RpcApiDependency builder() {
+		return new RpcApiDependency();
+	}
 
-    public String getGroupId() {
-        return groupId;
-    }
+	public String getGroupId() {
+		return groupId;
+	}
 
-    public RpcApiDependency setGroupId(String groupId) {
-        this.groupId = groupId;
-        return this;
-    }
+	public RpcApiDependency setGroupId(String groupId) {
+		this.groupId = groupId;
+		return this;
+	}
 
-    public String getArtifactId() {
-        return artifactId;
-    }
+	public String getArtifactId() {
+		return artifactId;
+	}
 
-    public RpcApiDependency setArtifactId(String artifactId) {
-        this.artifactId = artifactId;
-        return this;
-    }
+	public RpcApiDependency setArtifactId(String artifactId) {
+		this.artifactId = artifactId;
+		return this;
+	}
 
-    public String getVersion() {
-        return version;
-    }
+	public String getVersion() {
+		return version;
+	}
 
-    public RpcApiDependency setVersion(String version) {
-        this.version = version;
-        return this;
-    }
+	public RpcApiDependency setVersion(String version) {
+		this.version = version;
+		return this;
+	}
 
-    @Override
-    public String toString() {
-        return "<dependency>" + "\r" +
-            "\t" + "<groupId>" + groupId + "</groupId>" + "\n" +
-            "\t" + "<artifactId>" + artifactId + "</artifactId>" + "\n" +
-            "\t" + "<version>" + version + "</version>" + "" +
-            "\r" + "</dependency>";
-    }
+	@Override
+	public String toString() {
+		return "<dependency>" + "\r" + "\t" + "<groupId>" + groupId + "</groupId>" + "\n" + "\t" + "<artifactId>"
+				+ artifactId + "</artifactId>" + "\n" + "\t" + "<version>" + version + "</version>" + "" + "\r"
+				+ "</dependency>";
+	}
+
 }

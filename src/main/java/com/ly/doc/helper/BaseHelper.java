@@ -33,27 +33,27 @@ import com.power.common.util.StringUtil;
  */
 public abstract class BaseHelper {
 
-    protected static String getFieldValueFromMockForJson(String subTypeName, Map<String, String> tagsMap, String typeSimpleName) {
-        String fieldValue = "";
-        if (tagsMap.containsKey(DocTags.MOCK) && StringUtil.isNotEmpty(tagsMap.get(DocTags.MOCK))) {
-            fieldValue = tagsMap.get(DocTags.MOCK);
-            fieldValue = StringEscapeUtil.unescapeJava(fieldValue);
-            if (!DocUtil.javaPrimaryType(typeSimpleName)
-                && !JavaClassValidateUtil.isCollection(subTypeName)
-                && !JavaClassValidateUtil.isMap(subTypeName)
-                && !JavaClassValidateUtil.isArray(subTypeName)) {
-                fieldValue = StringEscapeUtil.escapeJava(fieldValue, true);
-                fieldValue = DocUtil.handleJsonStr(fieldValue);
-            }
-        }
-        return fieldValue;
-    }
+	protected static String getFieldValueFromMockForJson(String subTypeName, Map<String, String> tagsMap,
+			String typeSimpleName) {
+		String fieldValue = "";
+		if (tagsMap.containsKey(DocTags.MOCK) && StringUtil.isNotEmpty(tagsMap.get(DocTags.MOCK))) {
+			fieldValue = tagsMap.get(DocTags.MOCK);
+			fieldValue = StringEscapeUtil.unescapeJava(fieldValue);
+			if (!DocUtil.javaPrimaryType(typeSimpleName) && !JavaClassValidateUtil.isCollection(subTypeName)
+					&& !JavaClassValidateUtil.isMap(subTypeName) && !JavaClassValidateUtil.isArray(subTypeName)) {
+				fieldValue = StringEscapeUtil.escapeJava(fieldValue, true);
+				fieldValue = DocUtil.handleJsonStr(fieldValue);
+			}
+		}
+		return fieldValue;
+	}
 
-    protected static String getFieldValueFromMock(Map<String, String> tagsMap) {
-        String fieldValue = "";
-        if (tagsMap.containsKey(DocTags.MOCK) && StringUtil.isNotEmpty(tagsMap.get(DocTags.MOCK))) {
-            fieldValue = StringEscapeUtil.unescapeJava(tagsMap.get(DocTags.MOCK));
-        }
-        return fieldValue;
-    }
+	protected static String getFieldValueFromMock(Map<String, String> tagsMap) {
+		String fieldValue = "";
+		if (tagsMap.containsKey(DocTags.MOCK) && StringUtil.isNotEmpty(tagsMap.get(DocTags.MOCK))) {
+			fieldValue = StringEscapeUtil.unescapeJava(tagsMap.get(DocTags.MOCK));
+		}
+		return fieldValue;
+	}
+
 }

@@ -34,14 +34,13 @@ import com.power.common.util.StringUtil;
  */
 public class RpcDocBuilderTemplate implements IRpcDocBuilderTemplate {
 
-
-    @Override
-    public void checkAndInit(ApiConfig config, boolean checkOutPath) {
-        if (StringUtil.isEmpty(config.getFramework())) {
-            config.setFramework(FrameworkEnum.DUBBO.getFramework());
-        }
-        IRpcDocBuilderTemplate.super.checkAndInit(config, checkOutPath);
-        config.setOutPath(config.getOutPath() + DocGlobalConstants.FILE_SEPARATOR + DocGlobalConstants.RPC_OUT_DIR);
-    }
+	@Override
+	public void checkAndInit(ApiConfig config, boolean checkOutPath) {
+		if (StringUtil.isEmpty(config.getFramework())) {
+			config.setFramework(FrameworkEnum.DUBBO.getFramework());
+		}
+		IRpcDocBuilderTemplate.super.checkAndInit(config, checkOutPath);
+		config.setOutPath(config.getOutPath() + DocGlobalConstants.FILE_SEPARATOR + DocGlobalConstants.RPC_OUT_DIR);
+	}
 
 }

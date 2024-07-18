@@ -31,17 +31,20 @@ package com.ly.doc.model.annotation;
  * @since 3.0.5
  */
 public class ExceptionAdviceAnnotation {
-    private String annotationName;
 
-    public static ExceptionAdviceAnnotation builder() {
-        return new ExceptionAdviceAnnotation();
-    }
+	private String annotationName;
 
-    public String getAnnotationName() {
-        return annotationName;
-    }
-    public ExceptionAdviceAnnotation setAnnotationName(String annotationName) {
-        this.annotationName = annotationName;
-        return this;
-    }
+	public static ExceptionAdviceAnnotation builder() {
+		return new ExceptionAdviceAnnotation();
+	}
+
+	public String getAnnotationName() {
+		return annotationName;
+	}
+
+	public ExceptionAdviceAnnotation setAnnotationName(String annotationName) {
+		this.annotationName = annotationName;
+		return this;
+	}
+
 }

@@ -40,36 +40,38 @@ import java.util.List;
  */
 public class WebSocketMarkdownBuilder {
 
-    /**
-     * @param config ApiConfig
-     */
-    public static void buildApiDoc(ApiConfig config) {
-        JavaProjectBuilder javaProjectBuilder = JavaProjectBuilderHelper.create();
-        buildApiDoc(config, javaProjectBuilder);
-    }
+	/**
+	 * @param config ApiConfig
+	 */
+	public static void buildApiDoc(ApiConfig config) {
+		JavaProjectBuilder javaProjectBuilder = JavaProjectBuilderHelper.create();
+		buildApiDoc(config, javaProjectBuilder);
+	}
 
-    /**
-     * Only for smart-doc maven plugin and gradle plugin.
-     *
-     * @param config             ApiConfig
-     * @param javaProjectBuilder ProjectDocConfigBuilder
-     */
-    public static void buildApiDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
-        DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
-        builderTemplate.checkAndInit(config, Boolean.TRUE);
-        config.setAdoc(false);
-        config.setParamsDataToTree(false);
-        ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
-        IWebSocketDocBuildTemplate<WebSocketDoc> docBuildTemplate = BuildTemplateFactory.getWebSocketDocBuildTemplate(
-                config.getFramework(), config.getClassLoader());
-        List<WebSocketDoc> webSocketDocList = docBuildTemplate.getWebSocketData(configBuilder);
-        if (null == webSocketDocList || webSocketDocList.isEmpty()) {
-            return;
-        }
+	/**
+	 * Only for smart-doc maven plugin and gradle plugin.
+	 * @param config ApiConfig
+	 * @param javaProjectBuilder ProjectDocConfigBuilder
+	 */
+	public static void buildApiDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
+		DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
+		builderTemplate.checkAndInit(config, Boolean.TRUE);
+		config.setAdoc(false);
+		config.setParamsDataToTree(false);
+		ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
+		IWebSocketDocBuildTemplate<WebSocketDoc> docBuildTemplate = BuildTemplateFactory
+			.getWebSocketDocBuildTemplate(config.getFramework(), config.getClassLoader());
+		List<WebSocketDoc> webSocketDocList = docBuildTemplate.getWebSocketData(configBuilder);
+		if (null == webSocketDocList || webSocketDocList.isEmpty()) {
+			return;
+		}
 
-        String version = config.isCoverOld() ? "" : "-V" + DateTimeUtil.long2Str(System.currentTimeMillis(), DocGlobalConstants.DATE_FORMAT_YYYY_MM_DD_HH_MM);
-        String docName = builderTemplate.allInOneDocName(config, "WebSocket" + version + DocGlobalConstants.MARKDOWN_EXTENSION, DocGlobalConstants.MARKDOWN_EXTENSION);
-        builderTemplate.buildWebSocket(webSocketDocList, config, javaProjectBuilder,
-                DocGlobalConstants.WEBSOCKET_ALL_IN_ONE_MD_TPL, docName);
-    }
+		String version = config.isCoverOld() ? "" : "-V"
+				+ DateTimeUtil.long2Str(System.currentTimeMillis(), DocGlobalConstants.DATE_FORMAT_YYYY_MM_DD_HH_MM);
+		String docName = builderTemplate.allInOneDocName(config,
+				"WebSocket" + version + DocGlobalConstants.MARKDOWN_EXTENSION, DocGlobalConstants.MARKDOWN_EXTENSION);
+		builderTemplate.buildWebSocket(webSocketDocList, config, javaProjectBuilder,
+				DocGlobalConstants.WEBSOCKET_ALL_IN_ONE_MD_TPL, docName);
+	}
+
 }

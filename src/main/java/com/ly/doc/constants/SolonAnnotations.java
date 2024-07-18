@@ -26,42 +26,58 @@ package com.ly.doc.constants;
  */
 public interface SolonAnnotations {
 
-    String REQUEST_MAPPING = "Mapping";
-    String REQUEST_MAPPING_FULLY = "org.noear.solon.annotation.Mapping";
+	String REQUEST_MAPPING = "Mapping";
 
-    String GET_MAPPING = "Get";
-    String GET_MAPPING_FULLY = "org.noear.solon.annotation.Get";
+	String REQUEST_MAPPING_FULLY = "org.noear.solon.annotation.Mapping";
 
-    String POST_MAPPING = "Post";
-    String POST_MAPPING_FULLY = "org.noear.solon.annotation.Post";
-    String PUT_MAPPING = "Put";
-    String PUT_MAPPING_FULLY = "org.noear.solon.annotation.Put";
-    String PATCH_MAPPING = "Patch";
-    String PATCH_MAPPING_FULLY = "org.noear.solon.annotation.Patch";
-    String DELETE_MAPPING = "Delete";
-    String DELETE_MAPPING_FULLY = "org.noear.solon.annotation.Delete";
+	String GET_MAPPING = "Get";
 
-    String REQUEST_PARAM = "Path";
-    String REQUEST_PARAM_FULL = "org.noear.solon.annotation.Path";
+	String GET_MAPPING_FULLY = "org.noear.solon.annotation.Get";
 
-    String PATH_VAR = "PathVar";
-    String PATH_VAR_FULL = "org.noear.solon.annotation.PathVar";
+	String POST_MAPPING = "Post";
 
-    String REQUEST_HERDER = "Header";
-    String REQUEST_HERDER_FULL = "org.noear.solon.annotation.Header";
+	String POST_MAPPING_FULLY = "org.noear.solon.annotation.Post";
 
-    String REQUEST_BODY = "Body";
-    String REQUEST_BODY_FULLY = "org.noear.solon.annotation.Body";
+	String PUT_MAPPING = "Put";
 
-    String CONTROLLER = "Controller";
-    String CONTROLLER_FULL = "org.noear.solon.annotation.Controller";
+	String PUT_MAPPING_FULLY = "org.noear.solon.annotation.Put";
 
-    String COMPONENT = "Component";
-    String COMPONENT_FULL = "org.noear.solon.annotation.Component";
+	String PATCH_MAPPING = "Patch";
 
-    String REMOTING = "Remoting";
-    String REMOTING_FULL = "org.noear.solon.annotation.Remoting";
+	String PATCH_MAPPING_FULLY = "org.noear.solon.annotation.Patch";
 
-    String MODE_AND_VIEW_FULLY = "org.noear.solon.core.handle.ModelAndView";
+	String DELETE_MAPPING = "Delete";
+
+	String DELETE_MAPPING_FULLY = "org.noear.solon.annotation.Delete";
+
+	String REQUEST_PARAM = "Path";
+
+	String REQUEST_PARAM_FULL = "org.noear.solon.annotation.Path";
+
+	String PATH_VAR = "PathVar";
+
+	String PATH_VAR_FULL = "org.noear.solon.annotation.PathVar";
+
+	String REQUEST_HERDER = "Header";
+
+	String REQUEST_HERDER_FULL = "org.noear.solon.annotation.Header";
+
+	String REQUEST_BODY = "Body";
+
+	String REQUEST_BODY_FULLY = "org.noear.solon.annotation.Body";
+
+	String CONTROLLER = "Controller";
+
+	String CONTROLLER_FULL = "org.noear.solon.annotation.Controller";
+
+	String COMPONENT = "Component";
+
+	String COMPONENT_FULL = "org.noear.solon.annotation.Component";
+
+	String REMOTING = "Remoting";
+
+	String REMOTING_FULL = "org.noear.solon.annotation.Remoting";
+
+	String MODE_AND_VIEW_FULLY = "org.noear.solon.core.handle.ModelAndView";
 
 }

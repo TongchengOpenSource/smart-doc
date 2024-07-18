@@ -30,47 +30,44 @@ import java.util.List;
  */
 public class ServerEndpoint {
 
-    /**
-     * The URI or URI-template that the annotated class should be mapped to.
-     */
-    private String url;
+	/**
+	 * The URI or URI-template that the annotated class should be mapped to.
+	 */
+	private String url;
 
-    /**
-     * the subProtocol list of annotation
-     */
-    private List<String> subProtocols;
+	/**
+	 * the subProtocol list of annotation
+	 */
+	private List<String> subProtocols;
 
-    public ServerEndpoint() {
-        this.subProtocols = Collections.emptyList();
-    }
+	public ServerEndpoint() {
+		this.subProtocols = Collections.emptyList();
+	}
 
+	/**
+	 * builder ServerEndpoint
+	 * @return ServerEndpoint
+	 */
+	public static ServerEndpoint builder() {
+		return new ServerEndpoint();
+	}
 
-    /**
-     * builder ServerEndpoint
-     *
-     * @return ServerEndpoint
-     */
-    public static ServerEndpoint builder() {
-        return new ServerEndpoint();
-    }
+	public String getUrl() {
+		return url;
+	}
 
+	public List<String> getSubProtocols() {
+		return subProtocols;
+	}
 
-    public String getUrl() {
-        return url;
-    }
+	public ServerEndpoint setUrl(String url) {
+		this.url = url;
+		return this;
+	}
 
-    public List<String> getSubProtocols() {
-        return subProtocols;
-    }
-
-    public ServerEndpoint setUrl(String url) {
-        this.url = url;
-        return this;
-    }
-
-    public ServerEndpoint setSubProtocols(List<String> subProtocols) {
-        this.subProtocols = subProtocols;
-        return this;
-    }
+	public ServerEndpoint setSubProtocols(List<String> subProtocols) {
+		this.subProtocols = subProtocols;
+		return this;
+	}
 
 }

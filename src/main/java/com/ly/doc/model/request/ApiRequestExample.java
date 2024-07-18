@@ -33,83 +33,85 @@ import org.apache.commons.lang3.StringUtils;
 
 public class ApiRequestExample {
 
-    /**
-     * json body
-     */
-    private String jsonBody;
+	/**
+	 * json body
+	 */
+	private String jsonBody;
 
-    /**
-     * example body
-     */
-    private String exampleBody;
+	/**
+	 * example body
+	 */
+	private String exampleBody;
 
-    /**
-     * url
-     */
-    private String url;
+	/**
+	 * url
+	 */
+	private String url;
 
-    /**
-     * list of form data
-     */
-    private List<FormData> formDataList;
+	/**
+	 * list of form data
+	 */
+	private List<FormData> formDataList;
 
-    private boolean json;
+	private boolean json;
 
-    public static ApiRequestExample builder() {
-        return new ApiRequestExample();
-    }
+	public static ApiRequestExample builder() {
+		return new ApiRequestExample();
+	}
 
-    public String getJsonBody() {
-        return jsonBody;
-    }
+	public String getJsonBody() {
+		return jsonBody;
+	}
 
-    public ApiRequestExample setJsonBody(String jsonBody) {
-        this.jsonBody = jsonBody;
-        return this;
-    }
+	public ApiRequestExample setJsonBody(String jsonBody) {
+		this.jsonBody = jsonBody;
+		return this;
+	}
 
-    public ApiRequestExample addJsonBody(String jsonBody) {
-        if (StringUtil.isNotEmpty(jsonBody)) {
-            this.jsonBody = StringUtils.joinWith("&", this.jsonBody, jsonBody);
-        } else {
-            this.jsonBody = jsonBody;
-        }
-        return this;
-    }
+	public ApiRequestExample addJsonBody(String jsonBody) {
+		if (StringUtil.isNotEmpty(jsonBody)) {
+			this.jsonBody = StringUtils.joinWith("&", this.jsonBody, jsonBody);
+		}
+		else {
+			this.jsonBody = jsonBody;
+		}
+		return this;
+	}
 
-    public String getUrl() {
-        return url;
-    }
+	public String getUrl() {
+		return url;
+	}
 
-    public ApiRequestExample setUrl(String url) {
-        this.url = url;
-        return this;
-    }
+	public ApiRequestExample setUrl(String url) {
+		this.url = url;
+		return this;
+	}
 
-    public List<FormData> getFormDataList() {
-        return formDataList;
-    }
+	public List<FormData> getFormDataList() {
+		return formDataList;
+	}
 
-    public ApiRequestExample setFormDataList(List<FormData> formDataList) {
-        this.formDataList = formDataList;
-        return this;
-    }
+	public ApiRequestExample setFormDataList(List<FormData> formDataList) {
+		this.formDataList = formDataList;
+		return this;
+	}
 
-    public boolean isJson() {
-        return json;
-    }
+	public boolean isJson() {
+		return json;
+	}
 
-    public ApiRequestExample setJson(boolean json) {
-        this.json = json;
-        return this;
-    }
+	public ApiRequestExample setJson(boolean json) {
+		this.json = json;
+		return this;
+	}
 
-    public String getExampleBody() {
-        return exampleBody;
-    }
+	public String getExampleBody() {
+		return exampleBody;
+	}
 
-    public ApiRequestExample setExampleBody(String exampleBody) {
-        this.exampleBody = exampleBody;
-        return this;
-    }
+	public ApiRequestExample setExampleBody(String exampleBody) {
+		this.exampleBody = exampleBody;
+		return this;
+	}
+
 }

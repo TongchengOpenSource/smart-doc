@@ -6,8 +6,9 @@ package com.ly.doc.enums;
  */
 public interface BaseEnum extends IEnum {
 
-    /**
-     * get the enum desc
-     */
-    String getDesc();
+	/**
+	 * get the enum desc
+	 */
+	String getDesc();
+
 }

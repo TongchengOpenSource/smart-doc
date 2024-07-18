@@ -27,23 +27,23 @@ package com.ly.doc.handler;
  */
 public class DefaultWebSocketRequestHandler implements IWebSocketRequestHandler {
 
-    /**
-     * default webSocket request handler
-     */
-    private static final DefaultWebSocketRequestHandler INSTANCE = new DefaultWebSocketRequestHandler();
+	/**
+	 * default webSocket request handler
+	 */
+	private static final DefaultWebSocketRequestHandler INSTANCE = new DefaultWebSocketRequestHandler();
 
-    /**
-     * private constructor
-     */
-    private DefaultWebSocketRequestHandler() {
-    }
+	/**
+	 * private constructor
+	 */
+	private DefaultWebSocketRequestHandler() {
+	}
 
-    /**
-     * get instance
-     *
-     * @return INSTANCE
-     */
-    public static DefaultWebSocketRequestHandler getInstance() {
-        return INSTANCE;
-    }
+	/**
+	 * get instance
+	 * @return INSTANCE
+	 */
+	public static DefaultWebSocketRequestHandler getInstance() {
+		return INSTANCE;
+	}
+
 }

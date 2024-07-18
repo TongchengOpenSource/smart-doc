@@ -36,247 +36,246 @@ import java.util.Map;
  */
 public class JavadocJavaMethod implements IMethod {
 
-    /**
-     * java method
-     */
-    private JavaMethod javaMethod;
+	/**
+	 * java method
+	 */
+	private JavaMethod javaMethod;
 
-    /**
-     * methodId handled by md5
-     */
-    private String methodId;
+	/**
+	 * methodId handled by md5
+	 */
+	private String methodId;
 
-    /**
-     * method name
-     */
-    private String name;
+	/**
+	 * method name
+	 */
+	private String name;
 
-    /**
-     * method order
-     */
-    private int order;
+	/**
+	 * method order
+	 */
+	private int order;
 
+	/**
+	 * method description
+	 */
+	private String desc;
 
-    /**
-     * method description
-     */
-    private String desc;
+	/**
+	 * method definition
+	 */
+	private String methodDefinition;
 
-    /**
-     * method definition
-     */
-    private String methodDefinition;
+	/**
+	 * escape method definition
+	 */
+	private String escapeMethodDefinition;
 
-    /**
-     * escape method definition
-     */
-    private String escapeMethodDefinition;
+	/**
+	 * detailed introduction of the method
+	 */
+	private String detail;
 
-    /**
-     * detailed introduction of the method
-     */
-    private String detail;
+	/**
+	 * method describe
+	 */
+	private String throwsInfo;
 
-    /**
-     * method describe
-     */
-    private String throwsInfo;
+	/**
+	 * return class Info
+	 */
+	private String returnClassInfo;
 
-    /**
-     * return class Info
-     */
-    private String returnClassInfo;
+	/**
+	 * http request params
+	 */
+	private List<ApiParam> requestParams;
 
-    /**
-     * http request params
-     */
-    private List<ApiParam> requestParams;
+	/**
+	 * http request author
+	 */
+	private String author;
 
-    /**
-     * http request author
-     */
-    private String author;
+	/**
+	 * http response params
+	 */
+	private List<ApiParam> responseParams;
 
-    /**
-     * http response params
-     */
-    private List<ApiParam> responseParams;
+	/**
+	 * method deprecated
+	 */
+	private boolean deprecated;
 
-    /**
-     * method deprecated
-     */
-    private boolean deprecated;
+	private Map<String, JavaType> actualTypesMap;
 
-    private Map<String, JavaType> actualTypesMap;
+	private String version;
 
+	public String getVersion() {
+		return version;
+	}
 
-    private String version;
+	public JavadocJavaMethod setVersion(String version) {
+		this.version = version;
+		return this;
+	}
 
-    public String getVersion() {
-        return version;
-    }
+	public static JavadocJavaMethod builder() {
+		return new JavadocJavaMethod();
+	}
 
-    public JavadocJavaMethod setVersion(String version) {
-        this.version = version;
-        return this;
-    }
+	public JavaMethod getJavaMethod() {
+		return javaMethod;
+	}
 
-    public static JavadocJavaMethod builder() {
-        return new JavadocJavaMethod();
-    }
+	public JavadocJavaMethod setJavaMethod(JavaMethod javaMethod) {
+		this.javaMethod = javaMethod;
+		return this;
+	}
 
-    public JavaMethod getJavaMethod() {
-        return javaMethod;
-    }
+	public String getMethodId() {
+		return methodId;
+	}
 
-    public JavadocJavaMethod setJavaMethod(JavaMethod javaMethod) {
-        this.javaMethod = javaMethod;
-        return this;
-    }
+	public JavadocJavaMethod setMethodId(String methodId) {
+		this.methodId = methodId;
+		return this;
+	}
 
-    public String getMethodId() {
-        return methodId;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public JavadocJavaMethod setMethodId(String methodId) {
-        this.methodId = methodId;
-        return this;
-    }
+	public JavadocJavaMethod setName(String name) {
+		this.name = name;
+		return this;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public int getOrder() {
+		return order;
+	}
 
-    public JavadocJavaMethod setName(String name) {
-        this.name = name;
-        return this;
-    }
+	public JavadocJavaMethod setOrder(int order) {
+		this.order = order;
+		return this;
+	}
 
-    public int getOrder() {
-        return order;
-    }
+	public String getDesc() {
+		return desc;
+	}
 
-    public JavadocJavaMethod setOrder(int order) {
-        this.order = order;
-        return this;
-    }
+	public JavadocJavaMethod setDesc(String desc) {
+		this.desc = desc;
+		return this;
+	}
 
-    public String getDesc() {
-        return desc;
-    }
+	public String getDetail() {
+		return detail;
+	}
 
-    public JavadocJavaMethod setDesc(String desc) {
-        this.desc = desc;
-        return this;
-    }
+	public JavadocJavaMethod setDetail(String detail) {
+		this.detail = detail;
+		return this;
+	}
 
-    public String getDetail() {
-        return detail;
-    }
+	public String getThrowsInfo() {
+		return throwsInfo;
+	}
 
-    public JavadocJavaMethod setDetail(String detail) {
-        this.detail = detail;
-        return this;
-    }
+	public JavadocJavaMethod setThrowsInfo(String throwsInfo) {
+		this.throwsInfo = throwsInfo;
+		return this;
+	}
 
-    public String getThrowsInfo() {
-        return throwsInfo;
-    }
+	public String getReturnClassInfo() {
+		return returnClassInfo;
+	}
 
-    public JavadocJavaMethod setThrowsInfo(String throwsInfo) {
-        this.throwsInfo = throwsInfo;
-        return this;
-    }
+	public JavadocJavaMethod setReturnClassInfo(String returnClassInfo) {
+		this.returnClassInfo = returnClassInfo;
+		return this;
+	}
 
-    public String getReturnClassInfo() {
-        return returnClassInfo;
-    }
+	public String getAuthor() {
+		return author;
+	}
 
-    public JavadocJavaMethod setReturnClassInfo(String returnClassInfo) {
-        this.returnClassInfo = returnClassInfo;
-        return this;
-    }
+	public JavadocJavaMethod setAuthor(String author) {
+		this.author = author;
+		return this;
+	}
 
-    public String getAuthor() {
-        return author;
-    }
+	public List<ApiParam> getResponseParams() {
+		return responseParams;
+	}
 
-    public JavadocJavaMethod setAuthor(String author) {
-        this.author = author;
-        return this;
-    }
+	public JavadocJavaMethod setResponseParams(List<ApiParam> responseParams) {
+		this.responseParams = responseParams;
+		return this;
+	}
 
-    public List<ApiParam> getResponseParams() {
-        return responseParams;
-    }
+	public boolean isDeprecated() {
+		return deprecated;
+	}
 
-    public JavadocJavaMethod setResponseParams(List<ApiParam> responseParams) {
-        this.responseParams = responseParams;
-        return this;
-    }
+	public JavadocJavaMethod setDeprecated(boolean deprecated) {
+		this.deprecated = deprecated;
+		return this;
+	}
 
-    public boolean isDeprecated() {
-        return deprecated;
-    }
+	public List<ApiParam> getRequestParams() {
+		return requestParams;
+	}
 
-    public JavadocJavaMethod setDeprecated(boolean deprecated) {
-        this.deprecated = deprecated;
-        return this;
-    }
+	public JavadocJavaMethod setRequestParams(List<ApiParam> requestParams) {
+		this.requestParams = requestParams;
+		return this;
+	}
 
-    public List<ApiParam> getRequestParams() {
-        return requestParams;
-    }
+	public String getMethodDefinition() {
+		return methodDefinition;
+	}
 
-    public JavadocJavaMethod setRequestParams(List<ApiParam> requestParams) {
-        this.requestParams = requestParams;
-        return this;
-    }
+	public JavadocJavaMethod setMethodDefinition(String methodDefinition) {
+		this.methodDefinition = methodDefinition;
+		return this;
+	}
 
-    public String getMethodDefinition() {
-        return methodDefinition;
-    }
+	public String getEscapeMethodDefinition() {
+		return escapeMethodDefinition;
+	}
 
-    public JavadocJavaMethod setMethodDefinition(String methodDefinition) {
-        this.methodDefinition = methodDefinition;
-        return this;
-    }
+	public JavadocJavaMethod setEscapeMethodDefinition(String escapeMethodDefinition) {
+		this.escapeMethodDefinition = escapeMethodDefinition;
+		return this;
+	}
 
-    public String getEscapeMethodDefinition() {
-        return escapeMethodDefinition;
-    }
+	public Map<String, JavaType> getActualTypesMap() {
+		return actualTypesMap;
+	}
 
-    public JavadocJavaMethod setEscapeMethodDefinition(String escapeMethodDefinition) {
-        this.escapeMethodDefinition = escapeMethodDefinition;
-        return this;
-    }
+	public JavadocJavaMethod setActualTypesMap(Map<String, JavaType> actualTypesMap) {
+		this.actualTypesMap = actualTypesMap;
+		return this;
+	}
 
-    public Map<String, JavaType> getActualTypesMap() {
-        return actualTypesMap;
-    }
+	@Override
+	public JavaClass getDeclaringClass() {
+		return this.javaMethod.getDeclaringClass();
+	}
 
-    public JavadocJavaMethod setActualTypesMap(Map<String, JavaType> actualTypesMap) {
-        this.actualTypesMap = actualTypesMap;
-        return this;
-    }
+	@Override
+	public String getMethodName() {
+		return this.name;
+	}
 
-    @Override
-    public JavaClass getDeclaringClass() {
-        return this.javaMethod.getDeclaringClass();
-    }
+	@Override
+	public List<String> getArgsClasses() {
+		return ParamUtil.extractQualifiedName(this.requestParams);
+	}
 
-    @Override
-    public String getMethodName() {
-        return this.name;
-    }
+	@Override
+	public List<String> getReturnClasses() {
+		return ParamUtil.extractQualifiedName(this.responseParams);
+	}
 
-    @Override
-    public List<String> getArgsClasses() {
-        return ParamUtil.extractQualifiedName(this.requestParams);
-    }
-
-    @Override
-    public List<String> getReturnClasses() {
-        return ParamUtil.extractQualifiedName(this.responseParams);
-    }
 }

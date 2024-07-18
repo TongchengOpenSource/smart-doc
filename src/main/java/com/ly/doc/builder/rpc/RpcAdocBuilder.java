@@ -33,38 +33,39 @@ import com.thoughtworks.qdox.JavaProjectBuilder;
  */
 public class RpcAdocBuilder {
 
-    private static final String API_EXTENSION = "RpcApi.adoc";
+	private static final String API_EXTENSION = "RpcApi.adoc";
 
-    private static final String INDEX_DOC = "rpc-index.adoc";
+	private static final String INDEX_DOC = "rpc-index.adoc";
 
-    /**
-     * build adoc
-     *
-     * @param config ApiConfig
-     */
-    public static void buildApiDoc(ApiConfig config) {
-        JavaProjectBuilder javaProjectBuilder = JavaProjectBuilderHelper.create();
-        buildApiDoc(config, javaProjectBuilder);
-    }
+	/**
+	 * build adoc
+	 * @param config ApiConfig
+	 */
+	public static void buildApiDoc(ApiConfig config) {
+		JavaProjectBuilder javaProjectBuilder = JavaProjectBuilderHelper.create();
+		buildApiDoc(config, javaProjectBuilder);
+	}
 
-    /**
-     * Only for smart-doc maven plugin and gradle plugin.
-     *
-     * @param config             ApiConfig
-     * @param javaProjectBuilder ProjectDocConfigBuilder
-     */
-    public static void buildApiDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
-        config.setAdoc(true);
-        RpcDocBuilderTemplate builderTemplate = new RpcDocBuilderTemplate();
-        builderTemplate.checkAndInit(config,Boolean.TRUE);
-        List<RpcApiDoc> apiDocList = builderTemplate.getRpcApiDoc(config, javaProjectBuilder);
-        if (config.isAllInOne()) {
-            String docName = builderTemplate.allInOneDocName(config, INDEX_DOC, ".adoc");
-            builderTemplate.buildAllInOne(apiDocList, config, javaProjectBuilder, DocGlobalConstants.RPC_ALL_IN_ONE_ADOC_TPL, docName);
-        } else {
-            builderTemplate.buildApiDoc(apiDocList, config, DocGlobalConstants.RPC_API_DOC_ADOC_TPL, API_EXTENSION);
-            builderTemplate.buildErrorCodeDoc(config, DocGlobalConstants.ERROR_CODE_LIST_ADOC_TPL, DocGlobalConstants.ERROR_CODE_LIST_ADOC, javaProjectBuilder);
-        }
-    }
+	/**
+	 * Only for smart-doc maven plugin and gradle plugin.
+	 * @param config ApiConfig
+	 * @param javaProjectBuilder ProjectDocConfigBuilder
+	 */
+	public static void buildApiDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
+		config.setAdoc(true);
+		RpcDocBuilderTemplate builderTemplate = new RpcDocBuilderTemplate();
+		builderTemplate.checkAndInit(config, Boolean.TRUE);
+		List<RpcApiDoc> apiDocList = builderTemplate.getRpcApiDoc(config, javaProjectBuilder);
+		if (config.isAllInOne()) {
+			String docName = builderTemplate.allInOneDocName(config, INDEX_DOC, ".adoc");
+			builderTemplate.buildAllInOne(apiDocList, config, javaProjectBuilder,
+					DocGlobalConstants.RPC_ALL_IN_ONE_ADOC_TPL, docName);
+		}
+		else {
+			builderTemplate.buildApiDoc(apiDocList, config, DocGlobalConstants.RPC_API_DOC_ADOC_TPL, API_EXTENSION);
+			builderTemplate.buildErrorCodeDoc(config, DocGlobalConstants.ERROR_CODE_LIST_ADOC_TPL,
+					DocGlobalConstants.ERROR_CODE_LIST_ADOC, javaProjectBuilder);
+		}
+	}
 
 }

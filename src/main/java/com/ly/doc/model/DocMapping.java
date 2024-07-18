@@ -26,30 +26,29 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * @author CKM
- * Relational Mapping 2023/03/20 10:13:00
+ * @author CKM Relational Mapping 2023/03/20 10:13:00
  */
 public class DocMapping {
 
-    public static  Map<String, TagDoc> TAG_DOC = new ConcurrentHashMap<>(64);
+	public static Map<String, TagDoc> TAG_DOC = new ConcurrentHashMap<>(64);
 
-    public static void tagDocPut(String tag, ApiDoc apiDoc, ApiMethodDoc methodDoc) {
-        if (StringUtils.isBlank(tag)) {
-            return;
-        }
-        TagDoc tagDoc = TAG_DOC.computeIfAbsent(tag, TagDoc::new);
-        if (Objects.nonNull(apiDoc)) {
-            apiDoc.getTagRefs().add(tagDoc);
-            tagDoc.getClazzDocs().add(apiDoc);
-        }
-        if (Objects.nonNull(methodDoc)) {
-            methodDoc.getTagRefs().add(tagDoc);
-            tagDoc.getMethodDocs().add(methodDoc);
-        }
-    }
+	public static void tagDocPut(String tag, ApiDoc apiDoc, ApiMethodDoc methodDoc) {
+		if (StringUtils.isBlank(tag)) {
+			return;
+		}
+		TagDoc tagDoc = TAG_DOC.computeIfAbsent(tag, TagDoc::new);
+		if (Objects.nonNull(apiDoc)) {
+			apiDoc.getTagRefs().add(tagDoc);
+			tagDoc.getClazzDocs().add(apiDoc);
+		}
+		if (Objects.nonNull(methodDoc)) {
+			methodDoc.getTagRefs().add(tagDoc);
+			tagDoc.getMethodDocs().add(methodDoc);
+		}
+	}
 
-    public static void init() {
-        TAG_DOC = new ConcurrentHashMap<>(64);
-    }
+	public static void init() {
+		TAG_DOC = new ConcurrentHashMap<>(64);
+	}
 
 }

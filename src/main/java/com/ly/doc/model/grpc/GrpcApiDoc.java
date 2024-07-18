@@ -38,176 +38,174 @@ import java.util.Objects;
  */
 public class GrpcApiDoc implements Serializable, IDoc, Comparable<GrpcApiDoc> {
 
-    private static final long serialVersionUID = -3116322721344529338L;
+	private static final long serialVersionUID = -3116322721344529338L;
 
+	/**
+	 * Order of controller
+	 *
+	 * @since 1.7+
+	 */
+	public int order;
 
-    /**
-     * Order of controller
-     *
-     * @since 1.7+
-     */
-    public int order;
+	/**
+	 * interface title
+	 */
+	public String title;
 
-    /**
-     * interface title
-     */
-    public String title;
+	/**
+	 * interface name
+	 */
+	private String name;
 
-    /**
-     * interface name
-     */
-    private String name;
+	/**
+	 * interface short name
+	 */
+	private String shortName;
 
-    /**
-     * interface short name
-     */
-    private String shortName;
+	/**
+	 * controller alias handled by md5
+	 *
+	 * @since 1.7+
+	 */
+	private String alias;
 
-    /**
-     * controller alias handled by md5
-     *
-     * @since 1.7+
-     */
-    private String alias;
+	/**
+	 * method description
+	 */
+	private String desc;
 
-    /**
-     * method description
-     */
-    private String desc;
+	/**
+	 * interface protocol
+	 */
+	private String protocol;
 
-    /**
-     * interface protocol
-     */
-    private String protocol;
+	/**
+	 * interface author
+	 */
+	private String author;
 
-    /**
-     * interface author
-     */
-    private String author;
+	/**
+	 * interface uri
+	 */
+	private String uri;
 
-    /**
-     * interface uri
-     */
-    private String uri;
+	/**
+	 * interface version
+	 */
+	private String version;
 
-    /**
-     * interface version
-     */
-    private String version;
+	/**
+	 * List of method doc
+	 */
+	private List<GrpcJavaMethod> list;
 
+	public int getOrder() {
+		return order;
+	}
 
-    /**
-     * List of method doc
-     */
-    private List<GrpcJavaMethod> list;
+	public void setOrder(int order) {
+		this.order = order;
+	}
 
-    public int getOrder() {
-        return order;
-    }
+	public String getTitle() {
+		return title;
+	}
 
-    public void setOrder(int order) {
-        this.order = order;
-    }
+	public void setTitle(String title) {
+		this.title = title;
+	}
 
-    public String getTitle() {
-        return title;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public String getAlias() {
+		return alias;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public void setAlias(String alias) {
+		this.alias = alias;
+	}
 
-    public String getAlias() {
-        return alias;
-    }
+	public String getDesc() {
+		return desc;
+	}
 
-    public void setAlias(String alias) {
-        this.alias = alias;
-    }
+	public void setDesc(String desc) {
+		this.desc = desc;
+	}
 
-    public String getDesc() {
-        return desc;
-    }
+	public String getProtocol() {
+		return protocol;
+	}
 
-    public void setDesc(String desc) {
-        this.desc = desc;
-    }
+	public void setProtocol(String protocol) {
+		this.protocol = protocol;
+	}
 
-    public String getProtocol() {
-        return protocol;
-    }
+	public String getUri() {
+		return uri;
+	}
 
-    public void setProtocol(String protocol) {
-        this.protocol = protocol;
-    }
+	public void setUri(String uri) {
+		this.uri = uri;
+	}
 
-    public String getUri() {
-        return uri;
-    }
+	public String getVersion() {
+		return version;
+	}
 
-    public void setUri(String uri) {
-        this.uri = uri;
-    }
+	public void setVersion(String version) {
+		this.version = version;
+	}
 
-    public String getVersion() {
-        return version;
-    }
+	public List<GrpcJavaMethod> getList() {
+		return list;
+	}
 
-    public void setVersion(String version) {
-        this.version = version;
-    }
+	public void setList(List<GrpcJavaMethod> list) {
+		this.list = list;
+	}
 
-    public List<GrpcJavaMethod> getList() {
-        return list;
-    }
+	public String getShortName() {
+		return shortName;
+	}
 
-    public void setList(List<GrpcJavaMethod> list) {
-        this.list = list;
-    }
+	public void setShortName(String shortName) {
+		this.shortName = shortName;
+	}
 
-    public String getShortName() {
-        return shortName;
-    }
+	public String getAuthor() {
+		return author;
+	}
 
-    public void setShortName(String shortName) {
-        this.shortName = shortName;
-    }
+	public void setAuthor(String author) {
+		this.author = author;
+	}
 
-    public String getAuthor() {
-        return author;
-    }
+	@Override
+	public int compareTo(GrpcApiDoc o) {
+		if (Objects.nonNull(o.getDesc())) {
+			return desc.compareTo(o.getDesc());
+		}
+		return name.compareTo(o.getName());
+	}
 
-    public void setAuthor(String author) {
-        this.author = author;
-    }
+	@Override
+	public String getDocClass() {
+		return this.name;
+	}
 
+	@Override
+	public List<IMethod> getMethods() {
+		if (CollectionUtil.isEmpty(this.list)) {
+			return Collections.emptyList();
+		}
+		return new ArrayList<>(this.list);
+	}
 
-    @Override
-    public int compareTo(GrpcApiDoc o) {
-        if (Objects.nonNull(o.getDesc())) {
-            return desc.compareTo(o.getDesc());
-        }
-        return name.compareTo(o.getName());
-    }
-
-    @Override
-    public String getDocClass() {
-        return this.name;
-    }
-
-    @Override
-    public List<IMethod> getMethods() {
-        if (CollectionUtil.isEmpty(this.list)) {
-            return Collections.emptyList();
-        }
-        return new ArrayList<>(this.list);
-    }
 }

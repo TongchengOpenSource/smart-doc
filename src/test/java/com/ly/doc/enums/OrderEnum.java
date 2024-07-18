@@ -4,37 +4,35 @@ package com.ly.doc.enums;
  * @author yu 2019/10/31.
  */
 public enum OrderEnum implements BaseEnum {
-    SUCCESS("0000", "success"),
 
-    PARAM_EMPTY("1001", "必选参数为空"),
+	SUCCESS("0000", "success"),
 
-    PARAM_ERROR("1002", "参数格式错误"),
+	PARAM_EMPTY("1001", "必选参数为空"),
 
-    UNKNOWN_ERROR("9999", "系统繁忙，请稍后再试....");
+	PARAM_ERROR("1002", "参数格式错误"),
 
-    private String code;
+	UNKNOWN_ERROR("9999", "系统繁忙，请稍后再试....");
 
-    private String desc;
+	private String code;
 
-    OrderEnum(String code, String desc) {
-        this.code = code;
-        this.desc = desc;
-    }
+	private String desc;
 
-    public String getCode() {
-        return this.code;
-    }
+	OrderEnum(String code, String desc) {
+		this.code = code;
+		this.desc = desc;
+	}
 
+	public String getCode() {
+		return this.code;
+	}
 
-    public String getDesc() {
-        return desc;
-    }
+	public String getDesc() {
+		return desc;
+	}
 
-    @Override
-    public String toString() {
-        return "ErrorCodeEnum{" +
-            "code='" + code + '\'' +
-            ", desc='" + desc + '\'' +
-            '}';
-    }
+	@Override
+	public String toString() {
+		return "ErrorCodeEnum{" + "code='" + code + '\'' + ", desc='" + desc + '\'' + '}';
+	}
+
 }

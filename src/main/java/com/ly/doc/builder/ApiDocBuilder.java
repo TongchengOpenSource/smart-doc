@@ -39,40 +39,47 @@ import java.util.Objects;
  */
 public class ApiDocBuilder {
 
+	/**
+	 * @param config ApiConfig
+	 */
+	public static void buildApiDoc(ApiConfig config) {
+		JavaProjectBuilder javaProjectBuilder = JavaProjectBuilderHelper.create();
+		buildApiDoc(config, javaProjectBuilder);
+	}
 
-    /**
-     * @param config ApiConfig
-     */
-    public static void buildApiDoc(ApiConfig config) {
-        JavaProjectBuilder javaProjectBuilder = JavaProjectBuilderHelper.create();
-        buildApiDoc(config, javaProjectBuilder);
-    }
+	/**
+	 * Only for smart-doc maven plugin and gradle plugin.
+	 * @param config ApiConfig
+	 * @param javaProjectBuilder ProjectDocConfigBuilder
+	 */
+	public static void buildApiDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
+		DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
+		builderTemplate.checkAndInit(config, Boolean.TRUE);
+		config.setAdoc(false);
+		config.setParamsDataToTree(false);
+		ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
+		IDocBuildTemplate<ApiDoc> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework(),
+				config.getClassLoader());
+		Objects.requireNonNull(docBuildTemplate, "doc build template is null");
+		List<ApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder).getApiDatas();
+		if (config.isAllInOne()) {
+			String version = config.isCoverOld() ? "" : "-V" + DateTimeUtil.long2Str(System.currentTimeMillis(),
+					DocGlobalConstants.DATE_FORMAT_YYYY_MM_DD_HH_MM);
+			String docName = builderTemplate.allInOneDocName(config,
+					"AllInOne" + version + DocGlobalConstants.MARKDOWN_EXTENSION,
+					DocGlobalConstants.MARKDOWN_EXTENSION);
+			apiDocList = docBuildTemplate.handleApiGroup(apiDocList, config);
+			builderTemplate.buildAllInOne(apiDocList, config, javaProjectBuilder, DocGlobalConstants.ALL_IN_ONE_MD_TPL,
+					docName);
+		}
+		else {
+			builderTemplate.buildApiDoc(apiDocList, config, DocGlobalConstants.API_DOC_MD_TPL,
+					DocGlobalConstants.MARKDOWN_API_FILE_EXTENSION);
+			builderTemplate.buildErrorCodeDoc(config, DocGlobalConstants.ERROR_CODE_LIST_MD_TPL,
+					DocGlobalConstants.ERROR_CODE_LIST_MD, javaProjectBuilder);
+			builderTemplate.buildDirectoryDataDoc(config, javaProjectBuilder, DocGlobalConstants.DICT_LIST_MD_TPL,
+					DocGlobalConstants.DICT_LIST_MD);
+		}
+	}
 
-    /**
-     * Only for smart-doc maven plugin and gradle plugin.
-     *
-     * @param config             ApiConfig
-     * @param javaProjectBuilder ProjectDocConfigBuilder
-     */
-    public static void buildApiDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
-        DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
-        builderTemplate.checkAndInit(config, Boolean.TRUE);
-        config.setAdoc(false);
-        config.setParamsDataToTree(false);
-        ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
-        IDocBuildTemplate<ApiDoc> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(
-                config.getFramework(), config.getClassLoader());
-        Objects.requireNonNull(docBuildTemplate, "doc build template is null");
-        List<ApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder).getApiDatas();
-        if (config.isAllInOne()) {
-            String version = config.isCoverOld() ? "" : "-V" + DateTimeUtil.long2Str(System.currentTimeMillis(), DocGlobalConstants.DATE_FORMAT_YYYY_MM_DD_HH_MM);
-            String docName = builderTemplate.allInOneDocName(config, "AllInOne" + version + DocGlobalConstants.MARKDOWN_EXTENSION, DocGlobalConstants.MARKDOWN_EXTENSION);
-            apiDocList = docBuildTemplate.handleApiGroup(apiDocList, config);
-            builderTemplate.buildAllInOne(apiDocList, config, javaProjectBuilder, DocGlobalConstants.ALL_IN_ONE_MD_TPL, docName);
-        } else {
-            builderTemplate.buildApiDoc(apiDocList, config, DocGlobalConstants.API_DOC_MD_TPL, DocGlobalConstants.MARKDOWN_API_FILE_EXTENSION);
-            builderTemplate.buildErrorCodeDoc(config, DocGlobalConstants.ERROR_CODE_LIST_MD_TPL, DocGlobalConstants.ERROR_CODE_LIST_MD, javaProjectBuilder);
-            builderTemplate.buildDirectoryDataDoc(config, javaProjectBuilder, DocGlobalConstants.DICT_LIST_MD_TPL, DocGlobalConstants.DICT_LIST_MD);
-        }
-    }
 }

@@ -20,7 +20,6 @@
  */
 package com.ly.doc.constants;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,145 +29,147 @@ import java.util.List;
  * @author yu 2019/9/19.
  */
 public enum DocValidatorAnnotationEnum {
-    /**
-     * Spring validator annotations `@NotEmpty`
-     */
-    NOT_EMPTY(JSRAnnotationConstants.NOT_EMPTY),
 
-    /**
-     * Spring validator annotations `@NotBlank`
-     */
-    NOT_BLANK(JSRAnnotationConstants.NOT_BLANK),
+	/**
+	 * Spring validator annotations `@NotEmpty`
+	 */
+	NOT_EMPTY(JSRAnnotationConstants.NOT_EMPTY),
 
-    /**
-     * Spring validator annotations `@NotNull`
-     */
-    NOT_NULL(JSRAnnotationConstants.NOT_NULL),
+	/**
+	 * Spring validator annotations `@NotBlank`
+	 */
+	NOT_BLANK(JSRAnnotationConstants.NOT_BLANK),
 
-    /**
-     * Spring validator annotations `@Null`
-     */
-    NULL(JSRAnnotationConstants.NULL),
+	/**
+	 * Spring validator annotations `@NotNull`
+	 */
+	NOT_NULL(JSRAnnotationConstants.NOT_NULL),
 
-    /**
-     * Spring validator annotations `@AssertTrue`
-     */
-    ASSERT_TRUE(JSRAnnotationConstants.ASSERT_TRUE),
+	/**
+	 * Spring validator annotations `@Null`
+	 */
+	NULL(JSRAnnotationConstants.NULL),
 
-    /**
-     * Spring validator annotations `@AssertFalse`
-     */
-    ASSERT_FALSE(JSRAnnotationConstants.ASSERT_FALSE),
+	/**
+	 * Spring validator annotations `@AssertTrue`
+	 */
+	ASSERT_TRUE(JSRAnnotationConstants.ASSERT_TRUE),
 
-    /**
-     * Spring validator annotations `@Min`
-     */
-    MIN(JSRAnnotationConstants.MIN),
+	/**
+	 * Spring validator annotations `@AssertFalse`
+	 */
+	ASSERT_FALSE(JSRAnnotationConstants.ASSERT_FALSE),
 
-    /**
-     * Spring validator annotations `@Max`
-     */
-    MAX(JSRAnnotationConstants.MAX),
+	/**
+	 * Spring validator annotations `@Min`
+	 */
+	MIN(JSRAnnotationConstants.MIN),
 
-    /**
-     * Spring validator annotations `@DecimalMin`
-     */
-    DECIMAL_MIN(JSRAnnotationConstants.DECIMAL_MIN),
+	/**
+	 * Spring validator annotations `@Max`
+	 */
+	MAX(JSRAnnotationConstants.MAX),
 
-    /**
-     * Spring validator annotations `@DecimalMax`
-     */
-    DECIMAL_MAX(JSRAnnotationConstants.DECIMAL_MAX),
+	/**
+	 * Spring validator annotations `@DecimalMin`
+	 */
+	DECIMAL_MIN(JSRAnnotationConstants.DECIMAL_MIN),
 
-    /**
-     * Spring validator annotations `@Size`
-     */
-    SIZE(JSRAnnotationConstants.SIZE),
+	/**
+	 * Spring validator annotations `@DecimalMax`
+	 */
+	DECIMAL_MAX(JSRAnnotationConstants.DECIMAL_MAX),
 
-    /**
-     * Spring validator annotations `@Digits`
-     */
-    DIGITS(JSRAnnotationConstants.DIGITS),
+	/**
+	 * Spring validator annotations `@Size`
+	 */
+	SIZE(JSRAnnotationConstants.SIZE),
 
-    /**
-     * Spring validator annotations `@Past`
-     */
-    PAST(JSRAnnotationConstants.PAST),
+	/**
+	 * Spring validator annotations `@Digits`
+	 */
+	DIGITS(JSRAnnotationConstants.DIGITS),
 
-    /**
-     * Spring validator annotations `@PastOrPresent`
-     */
-    PAST_OR_PRESENT(JSRAnnotationConstants.PAST_OR_PRESENT),
+	/**
+	 * Spring validator annotations `@Past`
+	 */
+	PAST(JSRAnnotationConstants.PAST),
 
-    /**
-     * Spring validator annotations `@Future`
-     */
-    FUTURE(JSRAnnotationConstants.FUTURE),
+	/**
+	 * Spring validator annotations `@PastOrPresent`
+	 */
+	PAST_OR_PRESENT(JSRAnnotationConstants.PAST_OR_PRESENT),
 
-    /**
-     * Spring validator annotations `@FutureOrPresent`
-     */
-    FUTURE_OR_PRESENT(JSRAnnotationConstants.FUTURE_OR_PRESENT),
+	/**
+	 * Spring validator annotations `@Future`
+	 */
+	FUTURE(JSRAnnotationConstants.FUTURE),
 
-    /**
-     * Spring validator annotations `@Pattern`
-     */
-    PATTERN(JSRAnnotationConstants.PATTERN),
+	/**
+	 * Spring validator annotations `@FutureOrPresent`
+	 */
+	FUTURE_OR_PRESENT(JSRAnnotationConstants.FUTURE_OR_PRESENT),
 
-    /**
-     * Spring validator annotations `@Positive`
-     */
-    POSITIVE(JSRAnnotationConstants.POSITIVE),
+	/**
+	 * Spring validator annotations `@Pattern`
+	 */
+	PATTERN(JSRAnnotationConstants.PATTERN),
 
-    /**
-     * Spring validator annotations `@PositiveOrZero`
-     */
-    POSITIVE_OR_ZERO(JSRAnnotationConstants.POSITIVE_OR_ZERO),
+	/**
+	 * Spring validator annotations `@Positive`
+	 */
+	POSITIVE(JSRAnnotationConstants.POSITIVE),
 
-    /**
-     * Spring validator annotations `@Negative`
-     */
-    NEGATIVE(JSRAnnotationConstants.NEGATIVE),
+	/**
+	 * Spring validator annotations `@PositiveOrZero`
+	 */
+	POSITIVE_OR_ZERO(JSRAnnotationConstants.POSITIVE_OR_ZERO),
 
-    /**
-     * Spring validator annotations `@NegativeOrZero`
-     */
-    NEGATIVE_OR_ZERO(JSRAnnotationConstants.NEGATIVE_OR_ZERO),
+	/**
+	 * Spring validator annotations `@Negative`
+	 */
+	NEGATIVE(JSRAnnotationConstants.NEGATIVE),
 
-    /**
-     * Spring validator annotations `@Email`
-     */
-    EMAIL(JSRAnnotationConstants.EMAIL),
+	/**
+	 * Spring validator annotations `@NegativeOrZero`
+	 */
+	NEGATIVE_OR_ZERO(JSRAnnotationConstants.NEGATIVE_OR_ZERO),
 
-    /**
-     * Spring validator annotations `@Length`
-     */
-    LENGTH(JSRAnnotationConstants.LENGTH),
+	/**
+	 * Spring validator annotations `@Email`
+	 */
+	EMAIL(JSRAnnotationConstants.EMAIL),
 
-    /**
-     * Spring validator annotations `@Range`
-     */
-    RANGE(JSRAnnotationConstants.RANGE),
+	/**
+	 * Spring validator annotations `@Length`
+	 */
+	LENGTH(JSRAnnotationConstants.LENGTH),
 
-    /**
-     * Spring validator annotations `@Validated`
-     */
-    VALIDATED(JSRAnnotationConstants.VALIDATED);
+	/**
+	 * Spring validator annotations `@Range`
+	 */
+	RANGE(JSRAnnotationConstants.RANGE),
 
-    /**
-     * annotation value
-     */
-    private final String value;
+	/**
+	 * Spring validator annotations `@Validated`
+	 */
+	VALIDATED(JSRAnnotationConstants.VALIDATED);
 
-    DocValidatorAnnotationEnum(String value) {
-        this.value = value;
-    }
+	/**
+	 * annotation value
+	 */
+	private final String value;
 
-    public static List<String> listValidatorAnnotations() {
-        List<String> annotations = new ArrayList<>();
-        for (DocValidatorAnnotationEnum annotation : DocValidatorAnnotationEnum.values()) {
-            annotations.add(annotation.value);
-        }
-        return annotations;
-    }
+	DocValidatorAnnotationEnum(String value) {
+		this.value = value;
+	}
+
+	public static List<String> listValidatorAnnotations() {
+		List<String> annotations = new ArrayList<>();
+		for (DocValidatorAnnotationEnum annotation : DocValidatorAnnotationEnum.values()) {
+			annotations.add(annotation.value);
+		}
+		return annotations;
+	}
+
 }

@@ -31,31 +31,30 @@ import com.thoughtworks.qdox.JavaProjectBuilder;
  */
 public class ApiDataBuilder {
 
-    /**
-     * Get list of ApiDoc
-     *
-     * @param config ApiConfig
-     * @return List of ApiDoc
-     */
-    public static ApiAllData getApiData(ApiConfig config) {
-        return getApiData(config, Boolean.FALSE);
-    }
+	/**
+	 * Get list of ApiDoc
+	 * @param config ApiConfig
+	 * @return List of ApiDoc
+	 */
+	public static ApiAllData getApiData(ApiConfig config) {
+		return getApiData(config, Boolean.FALSE);
+	}
 
-    /**
-     * Get list of ApiDoc
-     *
-     * @param config ApiConfig
-     * @return List of ApiDoc
-     */
-    public static ApiAllData getApiDataTree(ApiConfig config) {
-        return getApiData(config, Boolean.TRUE);
-    }
+	/**
+	 * Get list of ApiDoc
+	 * @param config ApiConfig
+	 * @return List of ApiDoc
+	 */
+	public static ApiAllData getApiDataTree(ApiConfig config) {
+		return getApiData(config, Boolean.TRUE);
+	}
 
-    private static ApiAllData getApiData(ApiConfig config, boolean toTree) {
-        config.setParamsDataToTree(toTree);
-        DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
-        builderTemplate.checkAndInitForGetApiData(config);
-        JavaProjectBuilder javaProjectBuilder = JavaProjectBuilderHelper.create();
-        return builderTemplate.getApiData(config, javaProjectBuilder);
-    }
+	private static ApiAllData getApiData(ApiConfig config, boolean toTree) {
+		config.setParamsDataToTree(toTree);
+		DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
+		builderTemplate.checkAndInitForGetApiData(config);
+		JavaProjectBuilder javaProjectBuilder = JavaProjectBuilderHelper.create();
+		return builderTemplate.getApiData(config, javaProjectBuilder);
+	}
+
 }

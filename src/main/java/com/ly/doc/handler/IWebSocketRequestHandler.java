@@ -33,7 +33,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-
 /**
  * websocket handler
  *
@@ -41,33 +40,31 @@ import java.util.stream.Collectors;
  */
 public interface IWebSocketRequestHandler {
 
+	/**
+	 * handle class annotation `@ServerEndpoint`
+	 * @param javaAnnotation javaAnnotation @ServerEndpoint
+	 * @param cls JavaClass
+	 * @return ServerEndpoint
+	 */
+	default ServerEndpoint handleServerEndpoint(JavaClass cls, JavaAnnotation javaAnnotation) {
+		if (Objects.nonNull(cls.getTagByName(DocTags.IGNORE))) {
+			return null;
+		}
+		ServerEndpoint builder = ServerEndpoint.builder();
+		// get the value of JavaAnnotation
+		AnnotationValue property = javaAnnotation.getProperty(DocAnnotationConstants.VALUE_PROP);
+		// if value is not null
+		if (Objects.nonNull(property)) {
+			builder.setUrl(StringUtil.removeQuotes(property.toString()));
+		}
+		// get subProtocols of annotation
+		AnnotationValue subProtocolsOfAnnotation = javaAnnotation.getProperty("subprotocols");
+		if (Objects.nonNull(subProtocolsOfAnnotation) && subProtocolsOfAnnotation instanceof AnnotationValueList) {
+			List<AnnotationValue> valueList = ((AnnotationValueList) subProtocolsOfAnnotation).getValueList();
+			List<String> subProtocols = valueList.stream().map(Object::toString).collect(Collectors.toList());
+			builder.setSubProtocols(subProtocols);
+		}
+		return builder;
+	}
 
-    /**
-     * handle class annotation `@ServerEndpoint`
-     *
-     * @param javaAnnotation javaAnnotation @ServerEndpoint
-     * @param cls            JavaClass
-     * @return ServerEndpoint
-     */
-    default ServerEndpoint handleServerEndpoint(JavaClass cls, JavaAnnotation javaAnnotation) {
-        if (Objects.nonNull(cls.getTagByName(DocTags.IGNORE))) {
-            return null;
-        }
-        ServerEndpoint builder = ServerEndpoint.builder();
-        // get the value of JavaAnnotation
-        AnnotationValue property = javaAnnotation.getProperty(DocAnnotationConstants.VALUE_PROP);
-        // if value is not null
-        if (Objects.nonNull(property)) {
-            builder.setUrl(StringUtil.removeQuotes(property.toString()));
-        }
-        // get subProtocols of annotation
-        AnnotationValue subProtocolsOfAnnotation = javaAnnotation.getProperty("subprotocols");
-        if (Objects.nonNull(subProtocolsOfAnnotation) && subProtocolsOfAnnotation instanceof AnnotationValueList) {
-            List<AnnotationValue> valueList = ((AnnotationValueList) subProtocolsOfAnnotation).getValueList();
-            List<String> subProtocols = valueList.stream().map(Object::toString)
-                    .collect(Collectors.toList());
-            builder.setSubProtocols(subProtocols);
-        }
-        return builder;
-    }
 }

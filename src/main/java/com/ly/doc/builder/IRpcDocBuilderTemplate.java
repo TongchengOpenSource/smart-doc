@@ -43,181 +43,175 @@ import java.util.Objects;
 
 public interface IRpcDocBuilderTemplate extends IBaseDocBuilderTemplate {
 
-    /**
-     * Add dependency title
-     */
-    String DEPENDENCY_TITLE = "Add dependency";
+	/**
+	 * Add dependency title
+	 */
+	String DEPENDENCY_TITLE = "Add dependency";
 
-    /**
-     * Generate api documentation for all controllers.
-     *
-     * @param apiDocList    list of api doc
-     * @param config        api config
-     * @param template      template
-     * @param fileExtension file extension
-     */
-    default void buildApiDoc(List<RpcApiDoc> apiDocList, ApiConfig config, String template, String fileExtension) {
-        FileUtil.mkdirs(config.getOutPath());
-        for (RpcApiDoc rpcDoc : apiDocList) {
-            Template mapper = BeetlTemplateUtil.getByName(template);
-            mapper.binding(TemplateVariable.DESC.getVariable(), rpcDoc.getDesc());
-            mapper.binding(TemplateVariable.NAME.getVariable(), rpcDoc.getName());
-            mapper.binding(TemplateVariable.LIST.getVariable(), rpcDoc.getList());
-            mapper.binding(TemplateVariable.AUTHOR.getVariable(), rpcDoc.getAuthor());
-            mapper.binding(TemplateVariable.PROTOCOL.getVariable(), rpcDoc.getProtocol());
-            mapper.binding(TemplateVariable.VERSION.getVariable(), rpcDoc.getVersion());
-            mapper.binding(TemplateVariable.URI.getVariable(), rpcDoc.getUri());
-            this.writeApiDocFile(mapper, config, rpcDoc, fileExtension);
-        }
-    }
+	/**
+	 * Generate api documentation for all controllers.
+	 * @param apiDocList list of api doc
+	 * @param config api config
+	 * @param template template
+	 * @param fileExtension file extension
+	 */
+	default void buildApiDoc(List<RpcApiDoc> apiDocList, ApiConfig config, String template, String fileExtension) {
+		FileUtil.mkdirs(config.getOutPath());
+		for (RpcApiDoc rpcDoc : apiDocList) {
+			Template mapper = BeetlTemplateUtil.getByName(template);
+			mapper.binding(TemplateVariable.DESC.getVariable(), rpcDoc.getDesc());
+			mapper.binding(TemplateVariable.NAME.getVariable(), rpcDoc.getName());
+			mapper.binding(TemplateVariable.LIST.getVariable(), rpcDoc.getList());
+			mapper.binding(TemplateVariable.AUTHOR.getVariable(), rpcDoc.getAuthor());
+			mapper.binding(TemplateVariable.PROTOCOL.getVariable(), rpcDoc.getProtocol());
+			mapper.binding(TemplateVariable.VERSION.getVariable(), rpcDoc.getVersion());
+			mapper.binding(TemplateVariable.URI.getVariable(), rpcDoc.getUri());
+			this.writeApiDocFile(mapper, config, rpcDoc, fileExtension);
+		}
+	}
 
+	/**
+	 * Write rpc api doc file.
+	 * @param mapper template
+	 * @param config api config
+	 * @param rpcDoc api doc
+	 * @param fileExtension file extension
+	 */
+	default void writeApiDocFile(Template mapper, ApiConfig config, RpcApiDoc rpcDoc, String fileExtension) {
+		FileUtil.nioWriteFile(mapper.render(),
+				config.getOutPath() + DocGlobalConstants.FILE_SEPARATOR + rpcDoc.getShortName() + fileExtension);
+	}
 
-    /**
-     * Write rpc api doc file.
-     *
-     * @param mapper        template
-     * @param config        api config
-     * @param rpcDoc        api doc
-     * @param fileExtension file extension
-     */
-    default void writeApiDocFile(Template mapper, ApiConfig config, RpcApiDoc rpcDoc, String fileExtension) {
-        FileUtil.nioWriteFile(mapper.render(), config.getOutPath() + DocGlobalConstants.FILE_SEPARATOR + rpcDoc.getShortName() + fileExtension);
-    }
+	/**
+	 * Merge all api doc into one document.
+	 * @param apiDocList list data of Api doc
+	 * @param config api config
+	 * @param javaProjectBuilder JavaProjectBuilder
+	 * @param template template
+	 * @param outPutFileName output file
+	 */
+	default void buildAllInOne(List<RpcApiDoc> apiDocList, ApiConfig config, JavaProjectBuilder javaProjectBuilder,
+			String template, String outPutFileName) {
+		String outPath = config.getOutPath();
+		String rpcConfig = config.getRpcConsumerConfig();
+		String rpcConfigConfigContent = null;
+		if (Objects.nonNull(rpcConfig)) {
+			rpcConfigConfigContent = FileUtil.getFileContent(rpcConfig);
+		}
+		FileUtil.mkdirs(outPath);
+		Template tpl = BeetlTemplateUtil.getByName(template);
+		tpl.binding(TemplateVariable.API_DOC_LIST.getVariable(), apiDocList);
+		tpl.binding(TemplateVariable.DEPENDENCY_LIST.getVariable(), config.getRpcApiDependencies());
+		tpl.binding(TemplateVariable.RPC_CONSUMER_CONFIG.getVariable(), rpcConfigConfigContent);
+		// binding common variable
+		bindingCommonVariable(config, javaProjectBuilder, tpl, apiDocList.isEmpty());
+		FileUtil.nioWriteFile(tpl.render(), outPath + DocGlobalConstants.FILE_SEPARATOR + outPutFileName);
+	}
 
+	/**
+	 * Build search js.
+	 * @param apiDocList list data of Api doc
+	 * @param config api config
+	 * @param javaProjectBuilder projectBuilder
+	 * @param template template
+	 * @param outPutFileName output file
+	 */
+	default void buildSearchJs(List<RpcApiDoc> apiDocList, ApiConfig config, JavaProjectBuilder javaProjectBuilder,
+			String template, String outPutFileName) {
+		List<ApiErrorCode> errorCodeList = DocUtil.errorCodeDictToList(config, javaProjectBuilder);
+		Template tpl = BeetlTemplateUtil.getByName(template);
+		// directory tree
+		List<RpcApiDoc> apiDocs = new ArrayList<>();
+		RpcApiDoc apiDoc = new RpcApiDoc();
+		apiDoc.setAlias(DEPENDENCY_TITLE);
+		apiDoc.setOrder(1);
+		apiDoc.setDesc(DEPENDENCY_TITLE);
+		apiDoc.setList(new ArrayList<>(0));
+		apiDocs.add(apiDoc);
+		for (RpcApiDoc apiDoc1 : apiDocList) {
+			apiDoc1.setOrder(apiDocs.size() + 1);
+			apiDocs.add(apiDoc1);
+		}
+		Map<String, String> titleMap = setDirectoryLanguageVariable(config, tpl);
+		if (CollectionUtil.isNotEmpty(errorCodeList)) {
+			RpcApiDoc apiDoc1 = new RpcApiDoc();
+			apiDoc1.setOrder(apiDocs.size() + 1);
+			apiDoc1.setDesc(titleMap.get(TemplateVariable.ERROR_LIST_TITLE.getVariable()));
+			apiDoc1.setList(new ArrayList<>(0));
+			apiDocs.add(apiDoc1);
+		}
 
-    /**
-     * Merge all api doc into one document.
-     *
-     * @param apiDocList         list  data of Api doc
-     * @param config             api config
-     * @param javaProjectBuilder JavaProjectBuilder
-     * @param template           template
-     * @param outPutFileName     output file
-     */
-    default void buildAllInOne(List<RpcApiDoc> apiDocList, ApiConfig config, JavaProjectBuilder javaProjectBuilder, String template,
-                               String outPutFileName) {
-        String outPath = config.getOutPath();
-        String rpcConfig = config.getRpcConsumerConfig();
-        String rpcConfigConfigContent = null;
-        if (Objects.nonNull(rpcConfig)) {
-            rpcConfigConfigContent = FileUtil.getFileContent(rpcConfig);
-        }
-        FileUtil.mkdirs(outPath);
-        Template tpl = BeetlTemplateUtil.getByName(template);
-        tpl.binding(TemplateVariable.API_DOC_LIST.getVariable(), apiDocList);
-        tpl.binding(TemplateVariable.DEPENDENCY_LIST.getVariable(), config.getRpcApiDependencies());
-        tpl.binding(TemplateVariable.RPC_CONSUMER_CONFIG.getVariable(), rpcConfigConfigContent);
-        // binding common variable
-        bindingCommonVariable(config, javaProjectBuilder, tpl, apiDocList.isEmpty());
-        FileUtil.nioWriteFile(tpl.render(), outPath + DocGlobalConstants.FILE_SEPARATOR + outPutFileName);
-    }
+		// set dict list
+		List<ApiDocDict> apiDocDictList = DocUtil.buildDictionary(config, javaProjectBuilder);
+		tpl.binding(TemplateVariable.DICT_LIST.getVariable(), apiDocDictList);
+		tpl.binding(TemplateVariable.DIRECTORY_TREE.getVariable(), apiDocs);
+		FileUtil.nioWriteFile(tpl.render(), config.getOutPath() + DocGlobalConstants.FILE_SEPARATOR + outPutFileName);
+	}
 
-    /**
-     * Build search js.
-     *
-     * @param apiDocList         list  data of Api doc
-     * @param config             api config
-     * @param javaProjectBuilder projectBuilder
-     * @param template           template
-     * @param outPutFileName     output file
-     */
-    default void buildSearchJs(List<RpcApiDoc> apiDocList, ApiConfig config, JavaProjectBuilder javaProjectBuilder
-            , String template, String outPutFileName) {
-        List<ApiErrorCode> errorCodeList = DocUtil.errorCodeDictToList(config, javaProjectBuilder);
-        Template tpl = BeetlTemplateUtil.getByName(template);
-        // directory tree
-        List<RpcApiDoc> apiDocs = new ArrayList<>();
-        RpcApiDoc apiDoc = new RpcApiDoc();
-        apiDoc.setAlias(DEPENDENCY_TITLE);
-        apiDoc.setOrder(1);
-        apiDoc.setDesc(DEPENDENCY_TITLE);
-        apiDoc.setList(new ArrayList<>(0));
-        apiDocs.add(apiDoc);
-        for (RpcApiDoc apiDoc1 : apiDocList) {
-            apiDoc1.setOrder(apiDocs.size() + 1);
-            apiDocs.add(apiDoc1);
-        }
-        Map<String, String> titleMap = setDirectoryLanguageVariable(config, tpl);
-        if (CollectionUtil.isNotEmpty(errorCodeList)) {
-            RpcApiDoc apiDoc1 = new RpcApiDoc();
-            apiDoc1.setOrder(apiDocs.size() + 1);
-            apiDoc1.setDesc(titleMap.get(TemplateVariable.ERROR_LIST_TITLE.getVariable()));
-            apiDoc1.setList(new ArrayList<>(0));
-            apiDocs.add(apiDoc1);
-        }
+	/**
+	 * build error_code adoc.
+	 * @param config api config
+	 * @param template template
+	 * @param outPutFileName output file
+	 * @param javaProjectBuilder javaProjectBuilder
+	 */
+	default void buildErrorCodeDoc(ApiConfig config, String template, String outPutFileName,
+			JavaProjectBuilder javaProjectBuilder) {
+		List<ApiErrorCode> errorCodeList = DocUtil.errorCodeDictToList(config, javaProjectBuilder);
+		Template mapper = BeetlTemplateUtil.getByName(template);
+		mapper.binding(TemplateVariable.LIST.getVariable(), errorCodeList);
+		FileUtil.nioWriteFile(mapper.render(),
+				config.getOutPath() + DocGlobalConstants.FILE_SEPARATOR + outPutFileName);
+	}
 
-        // set dict list
-        List<ApiDocDict> apiDocDictList = DocUtil.buildDictionary(config, javaProjectBuilder);
-        tpl.binding(TemplateVariable.DICT_LIST.getVariable(), apiDocDictList);
-        tpl.binding(TemplateVariable.DIRECTORY_TREE.getVariable(), apiDocs);
-        FileUtil.nioWriteFile(tpl.render(), config.getOutPath() + DocGlobalConstants.FILE_SEPARATOR + outPutFileName);
-    }
+	/**
+	 * get all api data
+	 * @param config ApiConfig
+	 * @param javaProjectBuilder JavaProjectBuilder
+	 * @return ApiAllData
+	 */
+	default RpcApiAllData getApiData(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
+		RpcApiAllData apiAllData = new RpcApiAllData();
+		apiAllData.setProjectId(DocUtil.generateId(config.getProjectName()));
+		apiAllData.setLanguage(config.getLanguage().getCode());
+		apiAllData.setProjectName(config.getProjectName());
+		apiAllData.setApiDocList(listOfApiData(config, javaProjectBuilder));
+		apiAllData.setErrorCodeList(DocUtil.errorCodeDictToList(config, javaProjectBuilder));
+		apiAllData.setRevisionLogs(config.getRevisionLogs());
+		apiAllData.setApiDocDictList(DocUtil.buildDictionary(config, javaProjectBuilder));
+		apiAllData.setDependencyList(config.getRpcApiDependencies());
+		return apiAllData;
+	}
 
-    /**
-     * build error_code adoc.
-     *
-     * @param config             api config
-     * @param template           template
-     * @param outPutFileName     output file
-     * @param javaProjectBuilder javaProjectBuilder
-     */
-    default void buildErrorCodeDoc(ApiConfig config, String template, String outPutFileName, JavaProjectBuilder javaProjectBuilder) {
-        List<ApiErrorCode> errorCodeList = DocUtil.errorCodeDictToList(config, javaProjectBuilder);
-        Template mapper = BeetlTemplateUtil.getByName(template);
-        mapper.binding(TemplateVariable.LIST.getVariable(), errorCodeList);
-        FileUtil.nioWriteFile(mapper.render(), config.getOutPath() + DocGlobalConstants.FILE_SEPARATOR + outPutFileName);
-    }
+	/**
+	 * get all api data.
+	 * @param config ApiConfig
+	 * @param javaProjectBuilder JavaProjectBuilder
+	 * @return ApiAllData
+	 */
+	default List<RpcApiDoc> listOfApiData(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
+		this.checkAndInitForGetApiData(config);
+		config.setMd5EncryptedHtmlName(true);
+		ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
+		IDocBuildTemplate<RpcApiDoc> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework(),
+				config.getClassLoader());
+		Objects.requireNonNull(docBuildTemplate, "doc build template is null");
+		return docBuildTemplate.getApiData(configBuilder).getApiDatas();
+	}
 
-    /**
-     * get all api data
-     *
-     * @param config             ApiConfig
-     * @param javaProjectBuilder JavaProjectBuilder
-     * @return ApiAllData
-     */
-    default RpcApiAllData getApiData(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
-        RpcApiAllData apiAllData = new RpcApiAllData();
-        apiAllData.setProjectId(DocUtil.generateId(config.getProjectName()));
-        apiAllData.setLanguage(config.getLanguage().getCode());
-        apiAllData.setProjectName(config.getProjectName());
-        apiAllData.setApiDocList(listOfApiData(config, javaProjectBuilder));
-        apiAllData.setErrorCodeList(DocUtil.errorCodeDictToList(config, javaProjectBuilder));
-        apiAllData.setRevisionLogs(config.getRevisionLogs());
-        apiAllData.setApiDocDictList(DocUtil.buildDictionary(config, javaProjectBuilder));
-        apiAllData.setDependencyList(config.getRpcApiDependencies());
-        return apiAllData;
-    }
+	/**
+	 * get all api data.
+	 * @param config ApiConfig
+	 * @param javaProjectBuilder JavaProjectBuilder
+	 * @return ApiAllData
+	 */
+	default List<RpcApiDoc> getRpcApiDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
+		config.setShowJavaType(true);
+		ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
+		IDocBuildTemplate<RpcApiDoc> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework(),
+				config.getClassLoader());
+		Objects.requireNonNull(docBuildTemplate, "doc build template is null");
+		return docBuildTemplate.getApiData(configBuilder).getApiDatas();
+	}
 
-    /**
-     * get all api data.
-     *
-     * @param config             ApiConfig
-     * @param javaProjectBuilder JavaProjectBuilder
-     * @return ApiAllData
-     */
-    default List<RpcApiDoc> listOfApiData(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
-        this.checkAndInitForGetApiData(config);
-        config.setMd5EncryptedHtmlName(true);
-        ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
-        IDocBuildTemplate<RpcApiDoc> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(
-                config.getFramework(), config.getClassLoader());
-        Objects.requireNonNull(docBuildTemplate, "doc build template is null");
-        return docBuildTemplate.getApiData(configBuilder).getApiDatas();
-    }
-
-    /**
-     * get all api data.
-     *
-     * @param config             ApiConfig
-     * @param javaProjectBuilder JavaProjectBuilder
-     * @return ApiAllData
-     */
-    default List<RpcApiDoc> getRpcApiDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
-        config.setShowJavaType(true);
-        ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
-        IDocBuildTemplate<RpcApiDoc> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(
-                config.getFramework(), config.getClassLoader());
-        Objects.requireNonNull(docBuildTemplate, "doc build template is null");
-        return docBuildTemplate.getApiData(configBuilder).getApiDatas();
-    }
 }

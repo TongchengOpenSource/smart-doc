@@ -27,16 +27,16 @@ import java.util.List;
  */
 public interface IDoc {
 
-    /**
-     * doc class qualified name
-     * @return class qualified name
-     */
-    String getDocClass();
+	/**
+	 * doc class qualified name
+	 * @return class qualified name
+	 */
+	String getDocClass();
 
-    /**
-     * get doc methods
-     * @return methods
-     */
-    List<IMethod> getMethods();
+	/**
+	 * get doc methods
+	 * @return methods
+	 */
+	List<IMethod> getMethods();
 
 }

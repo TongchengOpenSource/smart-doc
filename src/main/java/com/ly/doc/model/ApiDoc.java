@@ -20,7 +20,6 @@
  */
 package com.ly.doc.model;
 
-
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.StringUtil;
 
@@ -31,238 +30,234 @@ import java.util.*;
  */
 public class ApiDoc implements IDoc, Comparable<ApiDoc> {
 
-    /**
-     * Order of controller
-     *
-     * @since 1.7+
-     */
-    public Integer order;
+	/**
+	 * Order of controller
+	 *
+	 * @since 1.7+
+	 */
+	public Integer order;
 
-    /**
-     * controller name
-     */
-    private String name;
+	/**
+	 * controller name
+	 */
+	private String name;
 
-    /**
-     * controller alias handled by md5
-     *
-     * @since 1.7+
-     */
-    private String alias;
+	/**
+	 * controller alias handled by md5
+	 *
+	 * @since 1.7+
+	 */
+	private String alias;
 
-    /**
-     * tags
-     *
-     * @author cqmike
-     */
-    private String[] tags;
+	/**
+	 * tags
+	 *
+	 * @author cqmike
+	 */
+	private String[] tags;
 
-    private final Set<TagDoc> tagRefs = Collections.synchronizedSet(new LinkedHashSet<>());
-    /**
-     * group
-     *
-     * @author cqmike
-     */
-    private String group;
+	private final Set<TagDoc> tagRefs = Collections.synchronizedSet(new LinkedHashSet<>());
 
-    /**
-     * class in package name
-     */
-    private String packageName;
+	/**
+	 * group
+	 *
+	 * @author cqmike
+	 */
+	private String group;
 
-    /**
-     * List of method doc
-     */
-    private List<ApiMethodDoc> list;
+	/**
+	 * class in package name
+	 */
+	private String packageName;
 
-    /**
-     * method description
-     */
-    private String desc;
+	/**
+	 * List of method doc
+	 */
+	private List<ApiMethodDoc> list;
 
-    /**
-     * link
-     */
-    private String link;
+	/**
+	 * method description
+	 */
+	private String desc;
 
-    private String author;
+	/**
+	 * link
+	 */
+	private String link;
 
-    /**
-     * if this is group, then is true
-     */
-    private boolean isFolder;
+	private String author;
 
-    /**
-     * children
-     */
-    private List<ApiDoc> childrenApiDocs = new ArrayList<>();
+	/**
+	 * if this is group, then is true
+	 */
+	private boolean isFolder;
 
-    public static ApiDoc buildTagApiDoc(ApiDoc source, String tag, ApiMethodDoc methodDoc) {
-        ApiDoc apiDoc = new ApiDoc();
-        apiDoc.setAlias(source.getAlias());
-        apiDoc.setLink(source.getLink());
-        apiDoc.setDesc(tag);
-        apiDoc.setAuthor(source.getAuthor());
-        apiDoc.setPackageName(source.getPackageName());
-        apiDoc.setName(tag);
-        apiDoc.setList(new ArrayList<>());
-        ApiMethodDoc clone = methodDoc.clone();
-        clone.setOrder(apiDoc.getList().size() + 1);
-        apiDoc.getList().add(clone);
-        return apiDoc;
-    }
+	/**
+	 * children
+	 */
+	private List<ApiDoc> childrenApiDocs = new ArrayList<>();
 
-    public static ApiDoc buildGroupApiDoc(String group) {
-        ApiDoc apiDoc = new ApiDoc();
-        apiDoc.setFolder(true);
-        apiDoc.setGroup(group);
-        apiDoc.setAlias(group);
-        apiDoc.setName(group);
-        apiDoc.setDesc(group);
-        apiDoc.setChildrenApiDocs(new ArrayList<>());
-        return apiDoc;
-    }
+	public static ApiDoc buildTagApiDoc(ApiDoc source, String tag, ApiMethodDoc methodDoc) {
+		ApiDoc apiDoc = new ApiDoc();
+		apiDoc.setAlias(source.getAlias());
+		apiDoc.setLink(source.getLink());
+		apiDoc.setDesc(tag);
+		apiDoc.setAuthor(source.getAuthor());
+		apiDoc.setPackageName(source.getPackageName());
+		apiDoc.setName(tag);
+		apiDoc.setList(new ArrayList<>());
+		ApiMethodDoc clone = methodDoc.clone();
+		clone.setOrder(apiDoc.getList().size() + 1);
+		apiDoc.getList().add(clone);
+		return apiDoc;
+	}
 
-    public String getAuthor() {
-        return author;
-    }
+	public static ApiDoc buildGroupApiDoc(String group) {
+		ApiDoc apiDoc = new ApiDoc();
+		apiDoc.setFolder(true);
+		apiDoc.setGroup(group);
+		apiDoc.setAlias(group);
+		apiDoc.setName(group);
+		apiDoc.setDesc(group);
+		apiDoc.setChildrenApiDocs(new ArrayList<>());
+		return apiDoc;
+	}
 
-    public void setAuthor(String author) {
-        this.author = author;
-    }
+	public String getAuthor() {
+		return author;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public void setAuthor(String author) {
+		this.author = author;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public List<ApiMethodDoc> getList() {
-        return list;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public void setList(List<ApiMethodDoc> list) {
-        this.list = list;
-    }
+	public List<ApiMethodDoc> getList() {
+		return list;
+	}
 
-    public String getDesc() {
-        return desc;
-    }
+	public void setList(List<ApiMethodDoc> list) {
+		this.list = list;
+	}
 
-    public void setDesc(String desc) {
-        this.desc = desc;
-    }
+	public String getDesc() {
+		return desc;
+	}
 
-    public Integer getOrder() {
-        return order;
-    }
+	public void setDesc(String desc) {
+		this.desc = desc;
+	}
 
-    public void setOrder(Integer order) {
-        this.order = order;
-    }
+	public Integer getOrder() {
+		return order;
+	}
 
-    public String getAlias() {
-        return alias;
-    }
+	public void setOrder(Integer order) {
+		this.order = order;
+	}
 
-    public void setAlias(String alias) {
-        this.alias = alias;
-    }
+	public String getAlias() {
+		return alias;
+	}
 
-    public String[] getTags() {
-        return tags;
-    }
+	public void setAlias(String alias) {
+		this.alias = alias;
+	}
 
-    public void setTags(String[] tags) {
-        this.tags = tags;
-    }
+	public String[] getTags() {
+		return tags;
+	}
 
-    public String getLink() {
-        if (StringUtil.isNotEmpty(link)) {
-            return link;
-        }
-        return desc.replace(" ", "_").toLowerCase();
-    }
+	public void setTags(String[] tags) {
+		this.tags = tags;
+	}
 
-    public void setLink(String link) {
-        this.link = link;
-    }
+	public String getLink() {
+		if (StringUtil.isNotEmpty(link)) {
+			return link;
+		}
+		return desc.replace(" ", "_").toLowerCase();
+	}
 
-    public String getPackageName() {
-        return packageName;
-    }
+	public void setLink(String link) {
+		this.link = link;
+	}
 
-    public void setPackageName(String packageName) {
-        this.packageName = packageName;
-    }
+	public String getPackageName() {
+		return packageName;
+	}
 
-    public String getGroup() {
-        return group;
-    }
+	public void setPackageName(String packageName) {
+		this.packageName = packageName;
+	}
 
-    public void setGroup(String group) {
-        this.group = group;
-    }
+	public String getGroup() {
+		return group;
+	}
 
-    public boolean isFolder() {
-        return isFolder;
-    }
+	public void setGroup(String group) {
+		this.group = group;
+	}
 
-    public void setFolder(boolean folder) {
-        isFolder = folder;
-    }
+	public boolean isFolder() {
+		return isFolder;
+	}
 
-    public List<ApiDoc> getChildrenApiDocs() {
-        return childrenApiDocs;
-    }
+	public void setFolder(boolean folder) {
+		isFolder = folder;
+	}
 
-    public void setChildrenApiDocs(List<ApiDoc> childrenApiDocs) {
-        this.childrenApiDocs = childrenApiDocs;
-    }
+	public List<ApiDoc> getChildrenApiDocs() {
+		return childrenApiDocs;
+	}
 
-    public Set<TagDoc> getTagRefs() {
-        return tagRefs;
-    }
+	public void setChildrenApiDocs(List<ApiDoc> childrenApiDocs) {
+		this.childrenApiDocs = childrenApiDocs;
+	}
 
-    @Override
-    public int compareTo(ApiDoc o) {
-        if (Objects.nonNull(o.getDesc())) {
-            return desc.compareTo(o.getDesc());
-        }
-        return name.compareTo(o.getName());
-    }
+	public Set<TagDoc> getTagRefs() {
+		return tagRefs;
+	}
 
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("{");
-        sb.append("\"order\":")
-                .append(order);
-        sb.append(",\"name\":\"")
-                .append(name).append('\"');
-        sb.append(",\"alias\":\"")
-                .append(alias).append('\"');
-        sb.append(",\"list\":")
-                .append(list);
-        sb.append(",\"desc\":\"")
-                .append(desc).append('\"');
-        sb.append('}');
-        return sb.toString();
-    }
+	@Override
+	public int compareTo(ApiDoc o) {
+		if (Objects.nonNull(o.getDesc())) {
+			return desc.compareTo(o.getDesc());
+		}
+		return name.compareTo(o.getName());
+	}
 
-    @Override
-    public String getDocClass() {
-        return this.packageName + "." + this.name;
-    }
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder("{");
+		sb.append("\"order\":").append(order);
+		sb.append(",\"name\":\"").append(name).append('\"');
+		sb.append(",\"alias\":\"").append(alias).append('\"');
+		sb.append(",\"list\":").append(list);
+		sb.append(",\"desc\":\"").append(desc).append('\"');
+		sb.append('}');
+		return sb.toString();
+	}
 
-    @Override
-    public List<IMethod> getMethods() {
-        if (CollectionUtil.isEmpty(this.list)) {
-            return Collections.emptyList();
-        }
+	@Override
+	public String getDocClass() {
+		return this.packageName + "." + this.name;
+	}
 
-        return new ArrayList<>(this.list);
-    }
+	@Override
+	public List<IMethod> getMethods() {
+		if (CollectionUtil.isEmpty(this.list)) {
+			return Collections.emptyList();
+		}
+
+		return new ArrayList<>(this.list);
+	}
 
 }

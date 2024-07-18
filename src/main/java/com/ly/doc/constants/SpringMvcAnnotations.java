@@ -25,46 +25,46 @@ package com.ly.doc.constants;
  */
 public interface SpringMvcAnnotations {
 
-    String REQUEST_MAPPING = "RequestMapping";
+	String REQUEST_MAPPING = "RequestMapping";
 
-    String GET_MAPPING = "GetMapping";
+	String GET_MAPPING = "GetMapping";
 
-    String POST_MAPPING = "PostMapping";
+	String POST_MAPPING = "PostMapping";
 
-    String PUT_MAPPING = "PutMapping";
+	String PUT_MAPPING = "PutMapping";
 
-    String PATCH_MAPPING = "PatchMapping";
+	String PATCH_MAPPING = "PatchMapping";
 
-    String DELETE_MAPPING = "DeleteMapping";
+	String DELETE_MAPPING = "DeleteMapping";
 
-    String REQUEST_HERDER = "RequestHeader";
+	String REQUEST_HERDER = "RequestHeader";
 
-    String REQUEST_PARAM = "RequestParam";
+	String REQUEST_PARAM = "RequestParam";
 
-    String REQUEST_PART = "RequestPart";
+	String REQUEST_PART = "RequestPart";
 
-    String REQUEST_BODY = "RequestBody";
+	String REQUEST_BODY = "RequestBody";
 
-    String CONTROLLER = "Controller";
+	String CONTROLLER = "Controller";
 
-    String REST_CONTROLLER = "RestController";
+	String REST_CONTROLLER = "RestController";
 
-    String PATH_VARIABLE = "PathVariable";
+	String PATH_VARIABLE = "PathVariable";
 
-    String SESSION_ATTRIBUTE = "SessionAttribute";
+	String SESSION_ATTRIBUTE = "SessionAttribute";
 
-    String REQUEST_ATTRIBUTE = "RequestAttribute";
+	String REQUEST_ATTRIBUTE = "RequestAttribute";
 
-    String REQUEST_BODY_FULLY = "org.springframework.web.bind.annotation.RequestBody";
+	String REQUEST_BODY_FULLY = "org.springframework.web.bind.annotation.RequestBody";
 
-    String SERVER_ENDPOINT = "ServerEndpoint";
+	String SERVER_ENDPOINT = "ServerEndpoint";
 
-    String REST_CONTROLLER_ADVICE = "RestControllerAdvice";
+	String REST_CONTROLLER_ADVICE = "RestControllerAdvice";
 
-    String CONTROLLER_ADVICE = "ControllerAdvice";
+	String CONTROLLER_ADVICE = "ControllerAdvice";
 
-    String EXCEPTION_HANDLER = "ExceptionHandler";
+	String EXCEPTION_HANDLER = "ExceptionHandler";
 
-    String RESPONSE_STATUS = "ResponseStatus";
+	String RESPONSE_STATUS = "ResponseStatus";
 
 }

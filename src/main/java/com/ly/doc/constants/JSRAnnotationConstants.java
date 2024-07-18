@@ -25,141 +25,140 @@ package com.ly.doc.constants;
  */
 public interface JSRAnnotationConstants {
 
-    // begin from javax.validation:validation-api
-    /**
-     * Spring validator annotations `@AssertFalse`
-     */
-    String ASSERT_FALSE = "AssertFalse";
+	// begin from javax.validation:validation-api
+	/**
+	 * Spring validator annotations `@AssertFalse`
+	 */
+	String ASSERT_FALSE = "AssertFalse";
 
-    /**
-     * Spring validator annotations `@AssertTrue`
-     */
-    String ASSERT_TRUE = "AssertTrue";
+	/**
+	 * Spring validator annotations `@AssertTrue`
+	 */
+	String ASSERT_TRUE = "AssertTrue";
 
-    /**
-     * Spring validator annotations `@DecimalMax`
-     */
-    String DECIMAL_MAX = "DecimalMax";
+	/**
+	 * Spring validator annotations `@DecimalMax`
+	 */
+	String DECIMAL_MAX = "DecimalMax";
 
-    /**
-     * Spring validator annotations `@DecimalMin`
-     */
-    String DECIMAL_MIN = "DecimalMin";
+	/**
+	 * Spring validator annotations `@DecimalMin`
+	 */
+	String DECIMAL_MIN = "DecimalMin";
 
-    /**
-     * Spring validator annotations `@Digits`
-     */
-    String DIGITS = "Digits";
+	/**
+	 * Spring validator annotations `@Digits`
+	 */
+	String DIGITS = "Digits";
 
-    /**
-     * Spring validator annotations `@Email`
-     */
-    String EMAIL = "Email";
+	/**
+	 * Spring validator annotations `@Email`
+	 */
+	String EMAIL = "Email";
 
-    /**
-     * Spring validator annotations `@Future`
-     */
-    String FUTURE = "Future";
+	/**
+	 * Spring validator annotations `@Future`
+	 */
+	String FUTURE = "Future";
 
-    /**
-     * Spring validator annotations `@FutureOrPresent`
-     */
-    String FUTURE_OR_PRESENT = "FutureOrPresent";
+	/**
+	 * Spring validator annotations `@FutureOrPresent`
+	 */
+	String FUTURE_OR_PRESENT = "FutureOrPresent";
 
-    /**
-     * Spring validator annotations `@Max`
-     */
-    String MAX = "Max";
+	/**
+	 * Spring validator annotations `@Max`
+	 */
+	String MAX = "Max";
 
-    /**
-     * Spring validator annotations `@Min`
-     */
-    String MIN = "Min";
+	/**
+	 * Spring validator annotations `@Min`
+	 */
+	String MIN = "Min";
 
-    /**
-     * Spring validator annotations `@Negative`
-     */
-    String NEGATIVE = "Negative";
+	/**
+	 * Spring validator annotations `@Negative`
+	 */
+	String NEGATIVE = "Negative";
 
-    /**
-     * Spring validator annotations `@NegativeOrZero`
-     */
-    String NEGATIVE_OR_ZERO = "NegativeOrZero";
+	/**
+	 * Spring validator annotations `@NegativeOrZero`
+	 */
+	String NEGATIVE_OR_ZERO = "NegativeOrZero";
 
-    /**
-     * Spring validator annotations `@NotBlank`
-     */
-    String NOT_BLANK = "NotBlank";
+	/**
+	 * Spring validator annotations `@NotBlank`
+	 */
+	String NOT_BLANK = "NotBlank";
 
-    /**
-     * Spring validator annotations `@NotEmpty`
-     */
-    String NOT_EMPTY = "NotEmpty";
+	/**
+	 * Spring validator annotations `@NotEmpty`
+	 */
+	String NOT_EMPTY = "NotEmpty";
 
-    /**
-     * Spring validator annotations `@NotNull`
-     */
-    String NOT_NULL = "NotNull";
+	/**
+	 * Spring validator annotations `@NotNull`
+	 */
+	String NOT_NULL = "NotNull";
 
-    /**
-     * Spring validator annotations `@Null`
-     */
-    String NULL = "Null";
+	/**
+	 * Spring validator annotations `@Null`
+	 */
+	String NULL = "Null";
 
-    /**
-     * Spring validator annotations `@Past`
-     */
-    String PAST = "Past";
+	/**
+	 * Spring validator annotations `@Past`
+	 */
+	String PAST = "Past";
 
-    /**
-     * Spring validator annotations `@PastOrPresent`
-     */
-    String PAST_OR_PRESENT = "PastOrPresent";
+	/**
+	 * Spring validator annotations `@PastOrPresent`
+	 */
+	String PAST_OR_PRESENT = "PastOrPresent";
 
-    /**
-     * Spring validator annotations `@Pattern`
-     */
-    String PATTERN = "Pattern";
+	/**
+	 * Spring validator annotations `@Pattern`
+	 */
+	String PATTERN = "Pattern";
 
-    /**
-     * Spring validator annotations `@Positive`
-     */
-    String POSITIVE = "Positive";
+	/**
+	 * Spring validator annotations `@Positive`
+	 */
+	String POSITIVE = "Positive";
 
-    /**
-     * Spring validator annotations `@PositiveOrZero`
-     */
-    String POSITIVE_OR_ZERO = "PositiveOrZero";
+	/**
+	 * Spring validator annotations `@PositiveOrZero`
+	 */
+	String POSITIVE_OR_ZERO = "PositiveOrZero";
 
-    /**
-     * Spring validator annotations `@Size`
-     */
-    String SIZE = "Size";
+	/**
+	 * Spring validator annotations `@Size`
+	 */
+	String SIZE = "Size";
 
-    // end from javax.validation:validation-api
+	// end from javax.validation:validation-api
 
-    // begin from org.hibernate.validator:hibernate-validator
-    /**
-     * Spring validator annotations `@Length`
-     */
-    String LENGTH = "Length";
+	// begin from org.hibernate.validator:hibernate-validator
+	/**
+	 * Spring validator annotations `@Length`
+	 */
+	String LENGTH = "Length";
 
-    /**
-     * Spring validator annotations `@Range`
-     */
-    String RANGE = "Range";
+	/**
+	 * Spring validator annotations `@Range`
+	 */
+	String RANGE = "Range";
 
-    // end from org.hibernate.validator:hibernate-validator
+	// end from org.hibernate.validator:hibernate-validator
 
-    /**
-     * java annotations `@Valid`
-     * jakarta.validation.Valid
-     * javax.validation.Valid
-     */
-    String VALID = "Valid";
+	/**
+	 * java annotations `@Valid` jakarta.validation.Valid javax.validation.Valid
+	 */
+	String VALID = "Valid";
 
-    /**
-     * Spring validator annotations `@Validated`
-     */
-    String VALIDATED = "Validated";
+	/**
+	 * Spring validator annotations `@Validated`
+	 */
+	String VALIDATED = "Validated";
+
 }

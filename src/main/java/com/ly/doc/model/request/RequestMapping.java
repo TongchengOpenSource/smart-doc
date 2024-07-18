@@ -25,76 +25,78 @@ package com.ly.doc.model.request;
  */
 public class RequestMapping {
 
-    /**
-     * url
-     */
-    private String url;
+	/**
+	 * url
+	 */
+	private String url;
 
-    /**
-     * path
-     */
-    private String shortUrl;
-    /**
-     * method type
-     */
-    private String methodType;
+	/**
+	 * path
+	 */
+	private String shortUrl;
 
-    /**
-     * media type
-     */
-    private String mediaType;
+	/**
+	 * method type
+	 */
+	private String methodType;
 
-    /**
-     * method deprecated
-     */
-    private boolean deprecated;
+	/**
+	 * media type
+	 */
+	private String mediaType;
 
-    public static RequestMapping builder() {
-        return new RequestMapping();
-    }
+	/**
+	 * method deprecated
+	 */
+	private boolean deprecated;
 
-    public String getUrl() {
-        return url;
-    }
+	public static RequestMapping builder() {
+		return new RequestMapping();
+	}
 
-    public RequestMapping setUrl(String url) {
-        this.url = url;
-        return this;
-    }
+	public String getUrl() {
+		return url;
+	}
 
-    public String getShortUrl() {
-        return shortUrl;
-    }
+	public RequestMapping setUrl(String url) {
+		this.url = url;
+		return this;
+	}
 
-    public RequestMapping setShortUrl(String shortUrl) {
-        this.shortUrl = shortUrl;
-        return this;
-    }
+	public String getShortUrl() {
+		return shortUrl;
+	}
 
-    public String getMethodType() {
-        return methodType;
-    }
+	public RequestMapping setShortUrl(String shortUrl) {
+		this.shortUrl = shortUrl;
+		return this;
+	}
 
-    public RequestMapping setMethodType(String methodType) {
-        this.methodType = methodType;
-        return this;
-    }
+	public String getMethodType() {
+		return methodType;
+	}
 
-    public String getMediaType() {
-        return mediaType;
-    }
+	public RequestMapping setMethodType(String methodType) {
+		this.methodType = methodType;
+		return this;
+	}
 
-    public RequestMapping setMediaType(String mediaType) {
-        this.mediaType = mediaType;
-        return this;
-    }
+	public String getMediaType() {
+		return mediaType;
+	}
 
-    public boolean isDeprecated() {
-        return deprecated;
-    }
+	public RequestMapping setMediaType(String mediaType) {
+		this.mediaType = mediaType;
+		return this;
+	}
 
-    public RequestMapping setDeprecated(boolean deprecated) {
-        this.deprecated = deprecated;
-        return this;
-    }
+	public boolean isDeprecated() {
+		return deprecated;
+	}
+
+	public RequestMapping setDeprecated(boolean deprecated) {
+		this.deprecated = deprecated;
+		return this;
+	}
+
 }

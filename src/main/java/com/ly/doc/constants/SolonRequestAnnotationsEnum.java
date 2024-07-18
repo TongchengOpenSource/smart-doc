@@ -27,61 +27,62 @@ import java.util.List;
  * @author yu 2019/12/20.
  */
 public enum SolonRequestAnnotationsEnum {
-    /**
-     * Solon Request Annotation PathVar
-     */
-    PATH_VAR("Path"),
 
-    /**
-     * Solon Request Annotation PathVar full
-     */
-    PATH_VAR_FULLY("org.noear.solon.annotation.Path"),
+	/**
+	 * Solon Request Annotation PathVar
+	 */
+	PATH_VAR("Path"),
 
-    /**
-     * Solon Request Annotation Param
-     */
-    REQ_PARAM("Param"),
+	/**
+	 * Solon Request Annotation PathVar full
+	 */
+	PATH_VAR_FULLY("org.noear.solon.annotation.Path"),
 
-    /**
-     * Solon Request Annotation Param full
-     */
-    REQ_PARAM_FULLY("org.noear.solon.annotation.Param"),
+	/**
+	 * Solon Request Annotation Param
+	 */
+	REQ_PARAM("Param"),
 
-    /**
-     * Solon Request Annotation Body
-     */
-    REQUEST_BODY("Body"),
+	/**
+	 * Solon Request Annotation Param full
+	 */
+	REQ_PARAM_FULLY("org.noear.solon.annotation.Param"),
 
-    /**
-     * Solon Request Annotation Body full
-     */
-    REQUEST_BODY_FULLY("org.noear.solon.annotation.Body"),
+	/**
+	 * Solon Request Annotation Body
+	 */
+	REQUEST_BODY("Body"),
 
-    /**
-     * Solon Request Annotation Header
-     */
-    REQUEST_HERDER("Header"),
+	/**
+	 * Solon Request Annotation Body full
+	 */
+	REQUEST_BODY_FULLY("org.noear.solon.annotation.Body"),
 
-    /**
-     * Solon Request Annotation Header full
-     */
-    REQUEST_HERDER_FULLY("org.noear.solon.annotation.Header"),
-    ;
+	/**
+	 * Solon Request Annotation Header
+	 */
+	REQUEST_HERDER("Header"),
 
-    /**
-     * Solon Request Annotation value
-     */
-    private final String value;
+	/**
+	 * Solon Request Annotation Header full
+	 */
+	REQUEST_HERDER_FULLY("org.noear.solon.annotation.Header"),;
 
-    SolonRequestAnnotationsEnum(String value) {
-        this.value = value;
-    }
+	/**
+	 * Solon Request Annotation value
+	 */
+	private final String value;
 
-    public static List<String> listMvcRequestAnnotations() {
-        List<String> annotations = new ArrayList<>();
-        for (SolonRequestAnnotationsEnum annotation : SolonRequestAnnotationsEnum.values()) {
-            annotations.add(annotation.value);
-        }
-        return annotations;
-    }
+	SolonRequestAnnotationsEnum(String value) {
+		this.value = value;
+	}
+
+	public static List<String> listMvcRequestAnnotations() {
+		List<String> annotations = new ArrayList<>();
+		for (SolonRequestAnnotationsEnum annotation : SolonRequestAnnotationsEnum.values()) {
+			annotations.add(annotation.value);
+		}
+		return annotations;
+	}
+
 }

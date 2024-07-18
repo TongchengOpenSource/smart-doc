@@ -27,5 +27,4 @@ import com.ly.doc.model.RpcJavaMethod;
  */
 public class RpcApiMethodRpc extends RpcJavaMethod {
 
-
 }

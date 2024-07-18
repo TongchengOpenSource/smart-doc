@@ -27,15 +27,17 @@ import org.beetl.core.Function;
 
 /**
  * beetl template function
+ *
  * @author yu 2021/6/26.
  */
 public class HtmlEscape implements Function {
 
-    @Override
-    public String call(Object[] paras, Context ctx) {
-        String str = String.valueOf(paras[0]).replaceAll("&", "&amp;");
-        str = str.replaceAll("\"", "&quot;");
-        str = str.replaceAll("<p>", "").replaceAll("</p>", " ");
-        return DocUtil.replaceNewLineToHtmlBr(DocUtil.getEscapeAndCleanComment(str));
-    }
+	@Override
+	public String call(Object[] paras, Context ctx) {
+		String str = String.valueOf(paras[0]).replaceAll("&", "&amp;");
+		str = str.replaceAll("\"", "&quot;");
+		str = str.replaceAll("<p>", "").replaceAll("</p>", " ");
+		return DocUtil.replaceNewLineToHtmlBr(DocUtil.getEscapeAndCleanComment(str));
+	}
+
 }

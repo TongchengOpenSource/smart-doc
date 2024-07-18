@@ -25,40 +25,39 @@ package com.ly.doc.model;
  */
 public class ApiObjectReplacement {
 
-    private String className;
+	private String className;
 
-    private String replacementClassName;
+	private String replacementClassName;
 
-    public static ApiObjectReplacement builder() {
-        return new ApiObjectReplacement();
-    }
+	public static ApiObjectReplacement builder() {
+		return new ApiObjectReplacement();
+	}
 
-    public String getClassName() {
-        return className;
-    }
+	public String getClassName() {
+		return className;
+	}
 
-    public ApiObjectReplacement setClassName(String className) {
-        this.className = className;
-        return this;
-    }
+	public ApiObjectReplacement setClassName(String className) {
+		this.className = className;
+		return this;
+	}
 
-    public String getReplacementClassName() {
-        return replacementClassName;
-    }
+	public String getReplacementClassName() {
+		return replacementClassName;
+	}
 
-    public ApiObjectReplacement setReplacementClassName(String replacementClassName) {
-        this.replacementClassName = replacementClassName;
-        return this;
-    }
+	public ApiObjectReplacement setReplacementClassName(String replacementClassName) {
+		this.replacementClassName = replacementClassName;
+		return this;
+	}
 
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("{");
-        sb.append("\"className\":\"")
-            .append(className).append('\"');
-        sb.append(",\"replacementClassName\":\"")
-            .append(replacementClassName).append('\"');
-        sb.append('}');
-        return sb.toString();
-    }
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder("{");
+		sb.append("\"className\":\"").append(className).append('\"');
+		sb.append(",\"replacementClassName\":\"").append(replacementClassName).append('\"');
+		sb.append('}');
+		return sb.toString();
+	}
+
 }

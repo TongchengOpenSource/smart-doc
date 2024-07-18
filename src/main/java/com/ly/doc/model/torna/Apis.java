@@ -27,222 +27,246 @@ import java.util.List;
  **/
 public class Apis {
 
-    private String name;
-    private String description;
-    private String url;
-    private String httpMethod;
-    private String contentType;
-    private String isFolder;
-    private String parentId;
-    private String isShow;
-    private String author;
-    private Integer orderIndex;
-    private DubboInfo dubboInfo;
-    private List<HttpParam> headerParams;
-    private List<HttpParam> pathParams;
-    private List<HttpParam> queryParams;
-    private List<HttpParam> requestParams;
-    private List<HttpParam> responseParams;
-    private String errorCodeParams;
-    private List<Apis> items;
-    private Integer isRequestArray;
-    private String requestArrayType;
-    private Integer isResponseArray;
-    private String responseArrayType;
-    private String deprecated;
-    private String version;
+	private String name;
 
-    public String getVersion() {
-        return version;
-    }
+	private String description;
 
-    public Apis setVersion(String version) {
-        this.version = version;
-        return this;
-    }
+	private String url;
 
-    public Integer getIsRequestArray() {
-        return isRequestArray;
-    }
+	private String httpMethod;
 
-    public void setIsRequestArray(Integer isRequestArray) {
-        this.isRequestArray = isRequestArray;
-    }
+	private String contentType;
 
-    public String getRequestArrayType() {
-        return requestArrayType;
-    }
+	private String isFolder;
 
-    public void setRequestArrayType(String requestArrayType) {
-        this.requestArrayType = requestArrayType;
-    }
+	private String parentId;
 
-    public Integer getIsResponseArray() {
-        return isResponseArray;
-    }
+	private String isShow;
 
-    public void setIsResponseArray(Integer isResponseArray) {
-        this.isResponseArray = isResponseArray;
-    }
+	private String author;
 
-    public String getResponseArrayType() {
-        return responseArrayType;
-    }
+	private Integer orderIndex;
 
-    public void setResponseArrayType(String responseArrayType) {
-        this.responseArrayType = responseArrayType;
-    }
+	private DubboInfo dubboInfo;
 
-    public Integer getOrderIndex() {
-        return orderIndex;
-    }
+	private List<HttpParam> headerParams;
 
-    public void setOrderIndex(Integer orderIndex) {
-        this.orderIndex = orderIndex;
-    }
+	private List<HttpParam> pathParams;
 
-    public String getAuthor() {
-        return author;
-    }
+	private List<HttpParam> queryParams;
 
-    public void setAuthor(String author) {
-        this.author = author;
-    }
+	private List<HttpParam> requestParams;
 
-    public String getName() {
-        return name;
-    }
+	private List<HttpParam> responseParams;
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	private String errorCodeParams;
 
-    public String getDescription() {
-        return description;
-    }
+	private List<Apis> items;
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+	private Integer isRequestArray;
 
-    public String getUrl() {
-        return url;
-    }
+	private String requestArrayType;
 
-    public void setUrl(String url) {
-        this.url = url;
-    }
+	private Integer isResponseArray;
 
-    public String getHttpMethod() {
-        return httpMethod;
-    }
+	private String responseArrayType;
 
-    public void setHttpMethod(String httpMethod) {
-        this.httpMethod = httpMethod;
-    }
+	private String deprecated;
 
-    public String getContentType() {
-        return contentType;
-    }
+	private String version;
 
-    public void setContentType(String contentType) {
-        this.contentType = contentType;
-    }
+	public String getVersion() {
+		return version;
+	}
 
-    public String getIsFolder() {
-        return isFolder;
-    }
+	public Apis setVersion(String version) {
+		this.version = version;
+		return this;
+	}
 
-    public void setIsFolder(String isFolder) {
-        this.isFolder = isFolder;
-    }
+	public Integer getIsRequestArray() {
+		return isRequestArray;
+	}
 
-    public String getParentId() {
-        return parentId;
-    }
+	public void setIsRequestArray(Integer isRequestArray) {
+		this.isRequestArray = isRequestArray;
+	}
 
-    public void setParentId(String parentId) {
-        this.parentId = parentId;
-    }
+	public String getRequestArrayType() {
+		return requestArrayType;
+	}
 
-    public String getIsShow() {
-        return isShow;
-    }
+	public void setRequestArrayType(String requestArrayType) {
+		this.requestArrayType = requestArrayType;
+	}
 
-    public void setIsShow(String isShow) {
-        this.isShow = isShow;
-    }
+	public Integer getIsResponseArray() {
+		return isResponseArray;
+	}
 
-    public List<HttpParam> getQueryParams() {
-        return queryParams;
-    }
+	public void setIsResponseArray(Integer isResponseArray) {
+		this.isResponseArray = isResponseArray;
+	}
 
-    public void setQueryParams(List<HttpParam> queryParams) {
-        this.queryParams = queryParams;
-    }
+	public String getResponseArrayType() {
+		return responseArrayType;
+	}
 
-    public List<HttpParam> getRequestParams() {
-        return requestParams;
-    }
+	public void setResponseArrayType(String responseArrayType) {
+		this.responseArrayType = responseArrayType;
+	}
 
-    public void setRequestParams(List<HttpParam> requestParams) {
-        this.requestParams = requestParams;
-    }
+	public Integer getOrderIndex() {
+		return orderIndex;
+	}
 
-    public List<HttpParam> getHeaderParams() {
-        return headerParams;
-    }
+	public void setOrderIndex(Integer orderIndex) {
+		this.orderIndex = orderIndex;
+	}
 
-    public void setHeaderParams(List<HttpParam> headerParams) {
-        this.headerParams = headerParams;
-    }
+	public String getAuthor() {
+		return author;
+	}
 
-    public List<HttpParam> getPathParams() {
-        return pathParams;
-    }
+	public void setAuthor(String author) {
+		this.author = author;
+	}
 
-    public Apis setPathParams(List<HttpParam> pathParams) {
-        this.pathParams = pathParams;
-        return this;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public List<HttpParam> getResponseParams() {
-        return responseParams;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public void setResponseParams(List<HttpParam> responseParams) {
-        this.responseParams = responseParams;
-    }
+	public String getDescription() {
+		return description;
+	}
 
-    public String getErrorCodeParams() {
-        return errorCodeParams;
-    }
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
-    public void setErrorCodeParams(String errorCodeParams) {
-        this.errorCodeParams = errorCodeParams;
-    }
+	public String getUrl() {
+		return url;
+	}
 
-    public List<Apis> getItems() {
-        return items;
-    }
+	public void setUrl(String url) {
+		this.url = url;
+	}
 
-    public void setItems(List<Apis> items) {
-        this.items = items;
-    }
+	public String getHttpMethod() {
+		return httpMethod;
+	}
 
-    public DubboInfo getDubboInfo() {
-        return dubboInfo;
-    }
+	public void setHttpMethod(String httpMethod) {
+		this.httpMethod = httpMethod;
+	}
 
-    public void setDubboInfo(DubboInfo dubboInfo) {
-        this.dubboInfo = dubboInfo;
-    }
+	public String getContentType() {
+		return contentType;
+	}
 
-    public String getDeprecated() {
-        return deprecated;
-    }
+	public void setContentType(String contentType) {
+		this.contentType = contentType;
+	}
 
-    public void setDeprecated(String deprecated) {
-        this.deprecated = deprecated;
-    }
+	public String getIsFolder() {
+		return isFolder;
+	}
+
+	public void setIsFolder(String isFolder) {
+		this.isFolder = isFolder;
+	}
+
+	public String getParentId() {
+		return parentId;
+	}
+
+	public void setParentId(String parentId) {
+		this.parentId = parentId;
+	}
+
+	public String getIsShow() {
+		return isShow;
+	}
+
+	public void setIsShow(String isShow) {
+		this.isShow = isShow;
+	}
+
+	public List<HttpParam> getQueryParams() {
+		return queryParams;
+	}
+
+	public void setQueryParams(List<HttpParam> queryParams) {
+		this.queryParams = queryParams;
+	}
+
+	public List<HttpParam> getRequestParams() {
+		return requestParams;
+	}
+
+	public void setRequestParams(List<HttpParam> requestParams) {
+		this.requestParams = requestParams;
+	}
+
+	public List<HttpParam> getHeaderParams() {
+		return headerParams;
+	}
+
+	public void setHeaderParams(List<HttpParam> headerParams) {
+		this.headerParams = headerParams;
+	}
+
+	public List<HttpParam> getPathParams() {
+		return pathParams;
+	}
+
+	public Apis setPathParams(List<HttpParam> pathParams) {
+		this.pathParams = pathParams;
+		return this;
+	}
+
+	public List<HttpParam> getResponseParams() {
+		return responseParams;
+	}
+
+	public void setResponseParams(List<HttpParam> responseParams) {
+		this.responseParams = responseParams;
+	}
+
+	public String getErrorCodeParams() {
+		return errorCodeParams;
+	}
+
+	public void setErrorCodeParams(String errorCodeParams) {
+		this.errorCodeParams = errorCodeParams;
+	}
+
+	public List<Apis> getItems() {
+		return items;
+	}
+
+	public void setItems(List<Apis> items) {
+		this.items = items;
+	}
+
+	public DubboInfo getDubboInfo() {
+		return dubboInfo;
+	}
+
+	public void setDubboInfo(DubboInfo dubboInfo) {
+		this.dubboInfo = dubboInfo;
+	}
+
+	public String getDeprecated() {
+		return deprecated;
+	}
+
+	public void setDeprecated(String deprecated) {
+		this.deprecated = deprecated;
+	}
+
 }

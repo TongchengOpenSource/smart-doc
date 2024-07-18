@@ -36,31 +36,31 @@ import java.util.List;
  */
 public class GrpcHtmlBuilder {
 
-    /**
-     * build grpc api
-     *
-     * @param config config
-     */
-    public static void buildApiDoc(ApiConfig config) {
-        JavaProjectBuilder javaProjectBuilder = JavaProjectBuilderHelper.create();
-        buildApiDoc(config, javaProjectBuilder);
-    }
+	/**
+	 * build grpc api
+	 * @param config config
+	 */
+	public static void buildApiDoc(ApiConfig config) {
+		JavaProjectBuilder javaProjectBuilder = JavaProjectBuilderHelper.create();
+		buildApiDoc(config, javaProjectBuilder);
+	}
 
-    /**
-     * Only for smart-doc maven plugin and gradle plugin.
-     *
-     * @param apiConfig          ApiConfig
-     * @param javaProjectBuilder ProjectDocConfigBuilder
-     */
-    public static void buildApiDoc(ApiConfig apiConfig, JavaProjectBuilder javaProjectBuilder) {
-        apiConfig.setAdoc(Boolean.FALSE);
-        GrpcDocBuilderTemplate builderTemplate = new GrpcDocBuilderTemplate();
-        builderTemplate.checkAndInit(apiConfig, Boolean.TRUE);
-        List<RpcApiDoc> apiDocList = builderTemplate.getRpcApiDoc(apiConfig, javaProjectBuilder);
-        builderTemplate.copyJQueryAndCss(apiConfig);
-        String indexHtml = "grpc-index.html";
-        builderTemplate.buildAllInOne(apiDocList, apiConfig, javaProjectBuilder, DocGlobalConstants.GRPC_ALL_IN_ONE_HTML_TPL, indexHtml);
-        builderTemplate.buildSearchJs(apiDocList, apiConfig, javaProjectBuilder, DocGlobalConstants.GRPC_ALL_IN_ONE_SEARCH_TPL,
-                DocGlobalConstants.SEARCH_JS_OUT);
-    }
+	/**
+	 * Only for smart-doc maven plugin and gradle plugin.
+	 * @param apiConfig ApiConfig
+	 * @param javaProjectBuilder ProjectDocConfigBuilder
+	 */
+	public static void buildApiDoc(ApiConfig apiConfig, JavaProjectBuilder javaProjectBuilder) {
+		apiConfig.setAdoc(Boolean.FALSE);
+		GrpcDocBuilderTemplate builderTemplate = new GrpcDocBuilderTemplate();
+		builderTemplate.checkAndInit(apiConfig, Boolean.TRUE);
+		List<RpcApiDoc> apiDocList = builderTemplate.getRpcApiDoc(apiConfig, javaProjectBuilder);
+		builderTemplate.copyJQueryAndCss(apiConfig);
+		String indexHtml = "grpc-index.html";
+		builderTemplate.buildAllInOne(apiDocList, apiConfig, javaProjectBuilder,
+				DocGlobalConstants.GRPC_ALL_IN_ONE_HTML_TPL, indexHtml);
+		builderTemplate.buildSearchJs(apiDocList, apiConfig, javaProjectBuilder,
+				DocGlobalConstants.GRPC_ALL_IN_ONE_SEARCH_TPL, DocGlobalConstants.SEARCH_JS_OUT);
+	}
+
 }

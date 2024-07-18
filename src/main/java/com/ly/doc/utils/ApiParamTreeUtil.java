@@ -38,114 +38,123 @@ import java.util.stream.Collectors;
  */
 public class ApiParamTreeUtil {
 
-    public static List<ApiParam> apiParamToTree(List<ApiParam> apiParamList) {
-        if (CollectionUtil.isEmpty(apiParamList)) {
-            return new ArrayList<>(0);
-        }
-        List<ApiParam> params = new ArrayList<>();
-        // find root
-        for (ApiParam apiParam : apiParamList) {
-            // remove pre of field
-            apiParam.setField(apiParam.getField().replaceAll(DocGlobalConstants.PARAM_PREFIX, "").replaceAll("&nbsp;", ""));
-            // pid == 0
-            if (apiParam.getPid() == 0) {
-                params.add(apiParam);
-            }
-        }
-        for (ApiParam apiParam : params) {
-            // remove pre of field
-            apiParam.setChildren(getChild(apiParam.getId(), apiParamList, 0));
-        }
-        return params;
-    }
+	public static List<ApiParam> apiParamToTree(List<ApiParam> apiParamList) {
+		if (CollectionUtil.isEmpty(apiParamList)) {
+			return new ArrayList<>(0);
+		}
+		List<ApiParam> params = new ArrayList<>();
+		// find root
+		for (ApiParam apiParam : apiParamList) {
+			// remove pre of field
+			apiParam
+				.setField(apiParam.getField().replaceAll(DocGlobalConstants.PARAM_PREFIX, "").replaceAll("&nbsp;", ""));
+			// pid == 0
+			if (apiParam.getPid() == 0) {
+				params.add(apiParam);
+			}
+		}
+		for (ApiParam apiParam : params) {
+			// remove pre of field
+			apiParam.setChildren(getChild(apiParam.getId(), apiParamList, 0));
+		}
+		return params;
+	}
 
-    /**
-     * find child
-     *
-     * @param id           param id
-     * @param apiParamList List of ApiParam
-     * @param counter      invoked counter
-     * @return List of ApiParam
-     */
-    private static List<ApiParam> getChild(int id, List<ApiParam> apiParamList, int counter) {
-        List<ApiParam> childList = new ArrayList<>();
-        if (counter > 7) {
-            return childList;
-        }
-        for (ApiParam param : apiParamList) {
-            if (param.getPid() == id) {
-                childList.add(param);
-            }
-        }
-        counter++;
-        for (ApiParam param : childList) {
-            param.setChildren(getChild(param.getId(), apiParamList, counter));
-        }
-        if (childList.isEmpty()) {
-            return new ArrayList<>(0);
-        }
-        return childList;
-    }
+	/**
+	 * find child
+	 * @param id param id
+	 * @param apiParamList List of ApiParam
+	 * @param counter invoked counter
+	 * @return List of ApiParam
+	 */
+	private static List<ApiParam> getChild(int id, List<ApiParam> apiParamList, int counter) {
+		List<ApiParam> childList = new ArrayList<>();
+		if (counter > 7) {
+			return childList;
+		}
+		for (ApiParam param : apiParamList) {
+			if (param.getPid() == id) {
+				childList.add(param);
+			}
+		}
+		counter++;
+		for (ApiParam param : childList) {
+			param.setChildren(getChild(param.getId(), apiParamList, counter));
+		}
+		if (childList.isEmpty()) {
+			return new ArrayList<>(0);
+		}
+		return childList;
+	}
 
-    /**
-     * Constructs method request parameters based on the parameter list, query parameter map, and path parameter map.
-     * This method categorizes parameters into path, query, and body parameters, and treats all as query parameters
-     * if the request method type is GET or DELETE.
-     *
-     * @param paramList        List of parameters containing all unconfigured parameter information.
-     * @param queryReqParamMap Mapping of configured query parameters.
-     * @param pathReqParamMap  Mapping of configured path parameters.
-     * @param methodType      The request method type, determining whether to treat all parameters as query parameters.
-     * @return An instance of ApiMethodReqParam built with categorized parameter information.
-     */
-    public static ApiMethodReqParam buildMethodReqParam(List<ApiParam> paramList, final Map<String, ApiReqParam> queryReqParamMap,
-                                                        final Map<String, ApiReqParam> pathReqParamMap,String methodType) {
-        List<ApiParam> pathParams = new ArrayList<>();
-        List<ApiParam> queryParams = new ArrayList<>();
-        List<ApiParam> bodyParams = new ArrayList<>();
-        for (ApiParam param : paramList) {
-            if (param.isPathParam()) {
-                if (pathReqParamMap.containsKey(param.getField())) {
-                    param.setConfigParam(true).setValue(pathReqParamMap.get(param.getField()).getValue());
-                }
-                param.setId(pathParams.size() + 1);
-                pathParams.add(param);
-            } else if (param.isQueryParam() || Methods.GET.getValue().equals(methodType)|| Methods.DELETE.getValue().equals(methodType)) {
-                if (queryReqParamMap.containsKey(param.getField())) {
-                    param.setConfigParam(true).setValue(queryReqParamMap.get(param.getField()).getValue());
-                }
-                param.setId(queryParams.size() + 1);
-                queryParams.add(param);
-            } else {
-                param.setId(bodyParams.size() + 1);
-                bodyParams.add(param);
-            }
-        }
+	/**
+	 * Constructs method request parameters based on the parameter list, query parameter
+	 * map, and path parameter map. This method categorizes parameters into path, query,
+	 * and body parameters, and treats all as query parameters if the request method type
+	 * is GET or DELETE.
+	 * @param paramList List of parameters containing all unconfigured parameter
+	 * information.
+	 * @param queryReqParamMap Mapping of configured query parameters.
+	 * @param pathReqParamMap Mapping of configured path parameters.
+	 * @param methodType The request method type, determining whether to treat all
+	 * parameters as query parameters.
+	 * @return An instance of ApiMethodReqParam built with categorized parameter
+	 * information.
+	 */
+	public static ApiMethodReqParam buildMethodReqParam(List<ApiParam> paramList,
+			final Map<String, ApiReqParam> queryReqParamMap, final Map<String, ApiReqParam> pathReqParamMap,
+			String methodType) {
+		List<ApiParam> pathParams = new ArrayList<>();
+		List<ApiParam> queryParams = new ArrayList<>();
+		List<ApiParam> bodyParams = new ArrayList<>();
+		for (ApiParam param : paramList) {
+			if (param.isPathParam()) {
+				if (pathReqParamMap.containsKey(param.getField())) {
+					param.setConfigParam(true).setValue(pathReqParamMap.get(param.getField()).getValue());
+				}
+				param.setId(pathParams.size() + 1);
+				pathParams.add(param);
+			}
+			else if (param.isQueryParam() || Methods.GET.getValue().equals(methodType)
+					|| Methods.DELETE.getValue().equals(methodType)) {
+				if (queryReqParamMap.containsKey(param.getField())) {
+					param.setConfigParam(true).setValue(queryReqParamMap.get(param.getField()).getValue());
+				}
+				param.setId(queryParams.size() + 1);
+				queryParams.add(param);
+			}
+			else {
+				param.setId(bodyParams.size() + 1);
+				bodyParams.add(param);
+			}
+		}
 
-        final Set<String> queryParamSet = queryParams.stream().map(ApiParam::getField).collect(Collectors.toSet());
-        for (ApiReqParam value : queryReqParamMap.values()) {
-            if (queryParamSet.contains(value.getName())) {
-                continue;
-            }
-            final ApiParam apiParam = ApiReqParam.convertToApiParam(value)
-                .setQueryParam(true).setId(queryParams.size() + 1);
-            queryParams.add(apiParam);
-        }
+		final Set<String> queryParamSet = queryParams.stream().map(ApiParam::getField).collect(Collectors.toSet());
+		for (ApiReqParam value : queryReqParamMap.values()) {
+			if (queryParamSet.contains(value.getName())) {
+				continue;
+			}
+			final ApiParam apiParam = ApiReqParam.convertToApiParam(value)
+				.setQueryParam(true)
+				.setId(queryParams.size() + 1);
+			queryParams.add(apiParam);
+		}
 
-        final Set<String> pathParamSet = pathParams.stream().map(ApiParam::getField).collect(Collectors.toSet());
-        for (ApiReqParam value : pathReqParamMap.values()) {
-            if (pathParamSet.contains(value.getName())) {
-                continue;
-            }
-            final ApiParam apiParam = ApiReqParam.convertToApiParam(value)
-                .setPathParam(true).setId(pathParams.size() + 1);
-            pathParams.add(apiParam);
-        }
+		final Set<String> pathParamSet = pathParams.stream().map(ApiParam::getField).collect(Collectors.toSet());
+		for (ApiReqParam value : pathReqParamMap.values()) {
+			if (pathParamSet.contains(value.getName())) {
+				continue;
+			}
+			final ApiParam apiParam = ApiReqParam.convertToApiParam(value)
+				.setPathParam(true)
+				.setId(pathParams.size() + 1);
+			pathParams.add(apiParam);
+		}
 
-        return ApiMethodReqParam.builder()
-            .setRequestParams(bodyParams)
-            .setPathParams(pathParams)
-            .setQueryParams(queryParams);
-    }
+		return ApiMethodReqParam.builder()
+			.setRequestParams(bodyParams)
+			.setPathParams(pathParams)
+			.setQueryParams(queryParams);
+	}
 
 }

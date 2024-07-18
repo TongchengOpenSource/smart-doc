@@ -42,113 +42,105 @@ import static com.ly.doc.constants.DocTags.IGNORE;
  */
 public class JaxrsPathHandler {
 
-    /**
-     * ANNOTATION_NAMES
-     */
-    private static final Set<String> ANNOTATION_NAMES = Collections.unmodifiableSet(new HashSet<>(
-            Arrays.asList(
-                    JakartaJaxrsAnnotations.JAXB_DELETE_FULLY, JakartaJaxrsAnnotations.JAX_PUT_FULLY,
-                    JakartaJaxrsAnnotations.JAX_GET_FULLY, JakartaJaxrsAnnotations.JAX_POST_FULLY,
-                    JakartaJaxrsAnnotations.JAX_PATCH_FULLY, JakartaJaxrsAnnotations.JAX_HEAD_FULLY,
-                    JAXRSAnnotations.JAXB_DELETE_FULLY, JAXRSAnnotations.JAX_PUT_FULLY,
-                    JAXRSAnnotations.JAX_GET_FULLY, JAXRSAnnotations.JAX_POST_FULLY,
-                    JAXRSAnnotations.JAXB_PATCH_FULLY, JAXRSAnnotations.JAXB_HEAD_FULLY
-            )));
+	/**
+	 * ANNOTATION_NAMES
+	 */
+	private static final Set<String> ANNOTATION_NAMES = Collections
+		.unmodifiableSet(new HashSet<>(Arrays.asList(JakartaJaxrsAnnotations.JAXB_DELETE_FULLY,
+				JakartaJaxrsAnnotations.JAX_PUT_FULLY, JakartaJaxrsAnnotations.JAX_GET_FULLY,
+				JakartaJaxrsAnnotations.JAX_POST_FULLY, JakartaJaxrsAnnotations.JAX_PATCH_FULLY,
+				JakartaJaxrsAnnotations.JAX_HEAD_FULLY, JAXRSAnnotations.JAXB_DELETE_FULLY,
+				JAXRSAnnotations.JAX_PUT_FULLY, JAXRSAnnotations.JAX_GET_FULLY, JAXRSAnnotations.JAX_POST_FULLY,
+				JAXRSAnnotations.JAXB_PATCH_FULLY, JAXRSAnnotations.JAXB_HEAD_FULLY)));
 
-    Map<String, String> constantsMap;
+	Map<String, String> constantsMap;
 
-    public JaxrsPathMapping handle(ProjectDocConfigBuilder projectBuilder,
-                                   String baseUrl,
-                                   JavaMethod method,
-                                   String mediaType) {
+	public JaxrsPathMapping handle(ProjectDocConfigBuilder projectBuilder, String baseUrl, JavaMethod method,
+			String mediaType) {
 
-        List<JavaAnnotation> annotations = method.getAnnotations();
-        this.constantsMap = projectBuilder.getConstantsMap();
-        String methodType = null;
-        String shortUrl = "";
-        String serverUrl = projectBuilder.getServerUrl();
-        String contextPath = projectBuilder.getApiConfig().getPathPrefix();
-        boolean deprecated = false;
-        for (JavaAnnotation annotation : annotations) {
-            String annotationName = annotation.getType().getFullyQualifiedName();
-            // method level annotation will override class level annotation
-            if (annotationName.equals(JakartaJaxrsAnnotations.JAX_CONSUMES_FULLY)
-                    || annotationName.equals(JAXRSAnnotations.JAX_CONSUMES_FULLY)) {
-                Object value = annotation.getNamedParameter("value");
-                if (Objects.nonNull(value)) {
-                    mediaType = MediaType.valueOf(value.toString());
-                }
-            }
-            // Deprecated annotation on method
-            if (JavaTypeConstants.JAVA_DEPRECATED_FULLY.equals(annotationName)) {
-                deprecated = true;
-            }
-            if (JakartaJaxrsAnnotations.JAX_PATH_FULLY.equals(annotationName)
-                    || JakartaJaxrsAnnotations.JAX_PATH_PARAM_FULLY.equals(annotationName)
-                    || JakartaJaxrsAnnotations.JAXB_REST_PATH_FULLY.equals(annotationName)
-                    || JAXRSAnnotations.JAX_PATH_FULLY.equals(annotationName)
-                    || JAXRSAnnotations.JAX_PATH_PARAM_FULLY.equals(annotationName)) {
-                ClassLoader classLoader = projectBuilder.getApiConfig().getClassLoader();
-                shortUrl = DocUtil.handleMappingValue(classLoader, annotation);
-            }
-            // annotationName like "Get" "Post", not "jakarta.ws.rs.Get" "jakarta.ws.rs.Post"
-            if (ANNOTATION_NAMES.stream().anyMatch(it -> it.contains(annotationName))) {
-                methodType = annotation.getType().getName();
-            }
-        }
-        // @deprecated tag on method
-        if (Objects.nonNull(method.getTagByName(DEPRECATED))) {
-            deprecated = true;
-        }
-        JaxrsPathMapping jaxrsPathMapping = getJaxbPathMapping(projectBuilder, baseUrl, method, shortUrl, serverUrl, contextPath);
-        if (jaxrsPathMapping != null) {
-            return jaxrsPathMapping.setDeprecated(deprecated)
-                    .setMethodType(methodType)
-                    .setMediaType(mediaType);
-        }
-        return null;
-    }
+		List<JavaAnnotation> annotations = method.getAnnotations();
+		this.constantsMap = projectBuilder.getConstantsMap();
+		String methodType = null;
+		String shortUrl = "";
+		String serverUrl = projectBuilder.getServerUrl();
+		String contextPath = projectBuilder.getApiConfig().getPathPrefix();
+		boolean deprecated = false;
+		for (JavaAnnotation annotation : annotations) {
+			String annotationName = annotation.getType().getFullyQualifiedName();
+			// method level annotation will override class level annotation
+			if (annotationName.equals(JakartaJaxrsAnnotations.JAX_CONSUMES_FULLY)
+					|| annotationName.equals(JAXRSAnnotations.JAX_CONSUMES_FULLY)) {
+				Object value = annotation.getNamedParameter("value");
+				if (Objects.nonNull(value)) {
+					mediaType = MediaType.valueOf(value.toString());
+				}
+			}
+			// Deprecated annotation on method
+			if (JavaTypeConstants.JAVA_DEPRECATED_FULLY.equals(annotationName)) {
+				deprecated = true;
+			}
+			if (JakartaJaxrsAnnotations.JAX_PATH_FULLY.equals(annotationName)
+					|| JakartaJaxrsAnnotations.JAX_PATH_PARAM_FULLY.equals(annotationName)
+					|| JakartaJaxrsAnnotations.JAXB_REST_PATH_FULLY.equals(annotationName)
+					|| JAXRSAnnotations.JAX_PATH_FULLY.equals(annotationName)
+					|| JAXRSAnnotations.JAX_PATH_PARAM_FULLY.equals(annotationName)) {
+				ClassLoader classLoader = projectBuilder.getApiConfig().getClassLoader();
+				shortUrl = DocUtil.handleMappingValue(classLoader, annotation);
+			}
+			// annotationName like "Get" "Post", not "jakarta.ws.rs.Get"
+			// "jakarta.ws.rs.Post"
+			if (ANNOTATION_NAMES.stream().anyMatch(it -> it.contains(annotationName))) {
+				methodType = annotation.getType().getName();
+			}
+		}
+		// @deprecated tag on method
+		if (Objects.nonNull(method.getTagByName(DEPRECATED))) {
+			deprecated = true;
+		}
+		JaxrsPathMapping jaxrsPathMapping = getJaxbPathMapping(projectBuilder, baseUrl, method, shortUrl, serverUrl,
+				contextPath);
+		if (jaxrsPathMapping != null) {
+			return jaxrsPathMapping.setDeprecated(deprecated).setMethodType(methodType).setMediaType(mediaType);
+		}
+		return null;
+	}
 
-    private JaxrsPathMapping getJaxbPathMapping(ProjectDocConfigBuilder projectBuilder,
-                                                String baseUrl, JavaMethod method,
-                                                String shortUrl,
-                                                String serverUrl,
-                                                String contextPath) {
-        String url;
-        if (Objects.nonNull(shortUrl)) {
-            if (Objects.nonNull(method.getTagByName(IGNORE))) {
-                return null;
-            }
-            shortUrl = StringUtil.removeQuotes(shortUrl);
-            List<String> urls = DocUtil.split(shortUrl);
-            url = String.join(DocGlobalConstants.PATH_DELIMITER, serverUrl, contextPath, baseUrl, shortUrl);
-            shortUrl = String.join(DocGlobalConstants.PATH_DELIMITER, DocGlobalConstants.PATH_DELIMITER, contextPath, baseUrl, shortUrl);
-            if (urls.size() > 1) {
-                url = DocUrlUtil.getMvcUrls(serverUrl, contextPath + "/" + baseUrl, urls);
-                shortUrl = DocUrlUtil.getMvcUrls(DocGlobalConstants.EMPTY, contextPath + "/" + baseUrl, urls);
-            }
-            for (Map.Entry<String, String> entry : constantsMap.entrySet()) {
-                String key = entry.getKey();
-                String value = entry.getValue();
-                if (url.contains(key)) {
-                    url = url.replace(key, value).replace("+", "");
-                }
-                if (shortUrl.contains(key)) {
-                    shortUrl = shortUrl.replace(key, value).replace("+", "");
-                }
-            }
-            String urlSuffix = projectBuilder.getApiConfig().getUrlSuffix();
-            url = UrlUtil.simplifyUrl(url);
-            shortUrl = UrlUtil.simplifyUrl(shortUrl);
-            if (StringUtil.isNotEmpty(urlSuffix)) {
-                url += urlSuffix;
-                shortUrl += urlSuffix;
-            }
-            return JaxrsPathMapping.builder()
-                    .setUrl(StringUtil.trim(url))
-                    .setShortUrl(StringUtil.trim(shortUrl));
-        }
-        return null;
-    }
+	private JaxrsPathMapping getJaxbPathMapping(ProjectDocConfigBuilder projectBuilder, String baseUrl,
+			JavaMethod method, String shortUrl, String serverUrl, String contextPath) {
+		String url;
+		if (Objects.nonNull(shortUrl)) {
+			if (Objects.nonNull(method.getTagByName(IGNORE))) {
+				return null;
+			}
+			shortUrl = StringUtil.removeQuotes(shortUrl);
+			List<String> urls = DocUtil.split(shortUrl);
+			url = String.join(DocGlobalConstants.PATH_DELIMITER, serverUrl, contextPath, baseUrl, shortUrl);
+			shortUrl = String.join(DocGlobalConstants.PATH_DELIMITER, DocGlobalConstants.PATH_DELIMITER, contextPath,
+					baseUrl, shortUrl);
+			if (urls.size() > 1) {
+				url = DocUrlUtil.getMvcUrls(serverUrl, contextPath + "/" + baseUrl, urls);
+				shortUrl = DocUrlUtil.getMvcUrls(DocGlobalConstants.EMPTY, contextPath + "/" + baseUrl, urls);
+			}
+			for (Map.Entry<String, String> entry : constantsMap.entrySet()) {
+				String key = entry.getKey();
+				String value = entry.getValue();
+				if (url.contains(key)) {
+					url = url.replace(key, value).replace("+", "");
+				}
+				if (shortUrl.contains(key)) {
+					shortUrl = shortUrl.replace(key, value).replace("+", "");
+				}
+			}
+			String urlSuffix = projectBuilder.getApiConfig().getUrlSuffix();
+			url = UrlUtil.simplifyUrl(url);
+			shortUrl = UrlUtil.simplifyUrl(shortUrl);
+			if (StringUtil.isNotEmpty(urlSuffix)) {
+				url += urlSuffix;
+				shortUrl += urlSuffix;
+			}
+			return JaxrsPathMapping.builder().setUrl(StringUtil.trim(url)).setShortUrl(StringUtil.trim(shortUrl));
+		}
+		return null;
+	}
 
 }

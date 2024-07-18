@@ -36,31 +36,30 @@ import java.util.List;
  */
 public interface IWebSocketDocBuildTemplate<T extends WebSocketDoc> extends IDocBuildBaseTemplate {
 
+	/**
+	 * get websocket data by ProjectDocConfigBuilder
+	 * @param projectBuilder ProjectDocConfigBuilder
+	 * @return websocket data
+	 */
+	default List<T> getWebSocketData(ProjectDocConfigBuilder projectBuilder) {
+		// For DocMapping initialization, when building multiple modules together, it is
+		// necessary to initialize and clear the cache
+		DocMapping.init();
+		DocBuildHelper docBuildHelper = DocBuildHelper.create(projectBuilder);
 
-    /**
-     * get websocket data by ProjectDocConfigBuilder
-     *
-     * @param projectBuilder ProjectDocConfigBuilder
-     * @return websocket data
-     */
-    default List<T> getWebSocketData(ProjectDocConfigBuilder projectBuilder) {
-        // For DocMapping initialization, when building multiple modules together, it is necessary to initialize and clear the cache
-        DocMapping.init();
-        DocBuildHelper docBuildHelper = DocBuildHelper.create(projectBuilder);
+		preRender(docBuildHelper);
 
-        preRender(docBuildHelper);
+		Collection<JavaClass> candidateClasses = getCandidateClasses(projectBuilder, docBuildHelper);
 
-        Collection<JavaClass> candidateClasses = getCandidateClasses(projectBuilder, docBuildHelper);
+		return renderWebSocketApi(projectBuilder, candidateClasses);
+	}
 
-        return renderWebSocketApi(projectBuilder, candidateClasses);
-    }
+	/**
+	 * render websocket api
+	 * @param projectBuilder ProjectDocConfigBuilder
+	 * @param candidateClasses candidate classes
+	 * @return websocket data
+	 */
+	List<T> renderWebSocketApi(ProjectDocConfigBuilder projectBuilder, Collection<JavaClass> candidateClasses);
 
-    /**
-     * render websocket api
-     *
-     * @param projectBuilder   ProjectDocConfigBuilder
-     * @param candidateClasses candidate classes
-     * @return websocket data
-     */
-    List<T> renderWebSocketApi(ProjectDocConfigBuilder projectBuilder, Collection<JavaClass> candidateClasses);
 }

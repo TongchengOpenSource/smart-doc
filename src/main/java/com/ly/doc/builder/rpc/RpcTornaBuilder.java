@@ -41,57 +41,55 @@ import org.apache.commons.lang3.StringUtils;
  **/
 public class RpcTornaBuilder {
 
-    /**
-     * build controller api
-     *
-     * @param config config
-     */
-    public static void buildApiDoc(ApiConfig config) {
-        JavaProjectBuilder javaProjectBuilder = JavaProjectBuilderHelper.create();
-        buildApiDoc(config, javaProjectBuilder);
-    }
+	/**
+	 * build controller api
+	 * @param config config
+	 */
+	public static void buildApiDoc(ApiConfig config) {
+		JavaProjectBuilder javaProjectBuilder = JavaProjectBuilderHelper.create();
+		buildApiDoc(config, javaProjectBuilder);
+	}
 
+	/**
+	 * Only for smart-doc maven plugin and gradle plugin.
+	 * @param config ApiConfig
+	 * @param javaProjectBuilder ProjectDocConfigBuilder
+	 */
+	public static void buildApiDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
+		config.setParamsDataToTree(true);
+		RpcDocBuilderTemplate builderTemplate = new RpcDocBuilderTemplate();
+		builderTemplate.checkAndInit(config, Boolean.FALSE);
+		List<RpcApiDoc> apiDocList = builderTemplate.getRpcApiDoc(config, javaProjectBuilder);
+		buildTorna(apiDocList, config, javaProjectBuilder);
+	}
 
-    /**
-     * Only for smart-doc maven plugin and gradle plugin.
-     *
-     * @param config             ApiConfig
-     * @param javaProjectBuilder ProjectDocConfigBuilder
-     */
-    public static void buildApiDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
-        config.setParamsDataToTree(true);
-        RpcDocBuilderTemplate builderTemplate = new RpcDocBuilderTemplate();
-        builderTemplate.checkAndInit(config, Boolean.FALSE);
-        List<RpcApiDoc> apiDocList = builderTemplate.getRpcApiDoc(config, javaProjectBuilder);
-        buildTorna(apiDocList, config, javaProjectBuilder);
-    }
+	public static void buildTorna(List<RpcApiDoc> apiDocs, ApiConfig apiConfig, JavaProjectBuilder builder) {
+		TornaApi tornaApi = new TornaApi();
+		tornaApi.setAuthor(apiConfig.getAuthor());
+		tornaApi.setIsReplace(BooleanUtils.toInteger(apiConfig.getReplace()));
+		Apis api;
+		List<Apis> apisList = new ArrayList<>();
+		// Add data
+		for (RpcApiDoc a : apiDocs) {
+			api = new Apis();
+			api.setName(StringUtils.isBlank(a.getDesc()) ? a.getName() : a.getDesc());
+			TornaUtil.setDebugEnv(apiConfig, tornaApi);
+			api.setItems(TornaUtil.buildDubboApis(a.getList()));
+			api.setIsFolder(TornaConstants.YES);
+			api.setAuthor(a.getAuthor());
+			api.setDubboInfo(new DubboInfo().builder()
+				.setAuthor(a.getAuthor())
+				.setProtocol(a.getProtocol())
+				.setVersion(a.getVersion())
+				.setDependency(TornaUtil.buildDependencies(apiConfig.getRpcApiDependencies()))
+				.setInterfaceName(a.getName()));
+			api.setOrderIndex(a.getOrder());
+			apisList.add(api);
+		}
+		tornaApi.setCommonErrorCodes(TornaUtil.buildErrorCode(apiConfig, builder));
+		tornaApi.setApis(apisList);
+		// Push to torna
+		TornaUtil.pushToTorna(tornaApi, apiConfig, builder);
+	}
 
-    public static void buildTorna(List<RpcApiDoc> apiDocs, ApiConfig apiConfig, JavaProjectBuilder builder) {
-        TornaApi tornaApi = new TornaApi();
-        tornaApi.setAuthor(apiConfig.getAuthor());
-        tornaApi.setIsReplace(BooleanUtils.toInteger(apiConfig.getReplace()));
-        Apis api;
-        List<Apis> apisList = new ArrayList<>();
-        // Add data
-        for (RpcApiDoc a : apiDocs) {
-            api = new Apis();
-            api.setName(StringUtils.isBlank(a.getDesc()) ? a.getName() : a.getDesc());
-            TornaUtil.setDebugEnv(apiConfig, tornaApi);
-            api.setItems(TornaUtil.buildDubboApis(a.getList()));
-            api.setIsFolder(TornaConstants.YES);
-            api.setAuthor(a.getAuthor());
-            api.setDubboInfo(new DubboInfo().builder()
-                    .setAuthor(a.getAuthor())
-                    .setProtocol(a.getProtocol())
-                    .setVersion(a.getVersion())
-                    .setDependency(TornaUtil.buildDependencies(apiConfig.getRpcApiDependencies()))
-                    .setInterfaceName(a.getName()));
-            api.setOrderIndex(a.getOrder());
-            apisList.add(api);
-        }
-        tornaApi.setCommonErrorCodes(TornaUtil.buildErrorCode(apiConfig, builder));
-        tornaApi.setApis(apisList);
-        // Push to torna
-        TornaUtil.pushToTorna(tornaApi, apiConfig, builder);
-    }
 }

@@ -40,61 +40,61 @@ import org.beetl.core.resource.ClasspathResourceLoader;
  */
 public class BeetlTemplateUtil {
 
+	/**
+	 * Get Beetl template by file name
+	 * @param templateName template name
+	 * @return Beetl Template Object
+	 */
+	public static Template getByName(String templateName) {
+		try {
+			ClasspathResourceLoader resourceLoader = new ClasspathResourceLoader("/template/");
+			Configuration cfg = Configuration.defaultConfiguration();
+			cfg.add("/smart-doc-beetl.properties");
+			GroupTemplate gt = new GroupTemplate(resourceLoader, cfg);
+			return gt.getTemplate(templateName);
+		}
+		catch (IOException e) {
+			throw new RuntimeException("Can't get Beetl template.");
+		}
+	}
 
-    /**
-     * Get Beetl template by file name
-     *
-     * @param templateName template name
-     * @return Beetl Template Object
-     */
-    public static Template getByName(String templateName) {
-        try {
-            ClasspathResourceLoader resourceLoader = new ClasspathResourceLoader("/template/");
-            Configuration cfg = Configuration.defaultConfiguration();
-            cfg.add("/smart-doc-beetl.properties");
-            GroupTemplate gt = new GroupTemplate(resourceLoader, cfg);
-            return gt.getTemplate(templateName);
-        } catch (IOException e) {
-            throw new RuntimeException("Can't get Beetl template.");
-        }
-    }
+	/**
+	 * Batch bind binding value to Beetl templates and return all file rendered, Map key
+	 * is file name,value is file content
+	 * @param path path
+	 * @param params params
+	 * @return map
+	 */
+	public static Map<String, String> getTemplatesRendered(String path, Map<String, Object> params) {
+		Map<String, String> templateMap = new HashMap<>(16);
+		File[] files = FileUtil.getResourceFolderFiles(path);
+		GroupTemplate gt = getGroupTemplate(path);
+		for (File f : files) {
+			if (f.isFile()) {
+				String fileName = f.getName();
+				Template tp = gt.getTemplate(fileName);
+				if (Objects.nonNull(params)) {
+					tp.binding(params);
+				}
+				templateMap.put(fileName, tp.render());
+			}
+		}
+		return templateMap;
+	}
 
-    /**
-     * Batch bind binding value to Beetl templates and return all file rendered,
-     * Map key is file name,value is file content
-     *
-     * @param path   path
-     * @param params params
-     * @return map
-     */
-    public static Map<String, String> getTemplatesRendered(String path, Map<String, Object> params) {
-        Map<String, String> templateMap = new HashMap<>(16);
-        File[] files = FileUtil.getResourceFolderFiles(path);
-        GroupTemplate gt = getGroupTemplate(path);
-        for (File f : files) {
-            if (f.isFile()) {
-                String fileName = f.getName();
-                Template tp = gt.getTemplate(fileName);
-                if (Objects.nonNull(params)) {
-                    tp.binding(params);
-                }
-                templateMap.put(fileName, tp.render());
-            }
-        }
-        return templateMap;
-    }
+	/**
+	 * @param path file path
+	 * @return group template
+	 */
+	private static GroupTemplate getGroupTemplate(String path) {
+		try {
+			ClasspathResourceLoader resourceLoader = new ClasspathResourceLoader("/" + path + "/");
+			Configuration cfg = Configuration.defaultConfiguration();
+			return new GroupTemplate(resourceLoader, cfg);
+		}
+		catch (IOException e) {
+			throw new RuntimeException("Can't found Beetl template.");
+		}
+	}
 
-    /**
-     * @param path file path
-     * @return group template
-     */
-    private static GroupTemplate getGroupTemplate(String path) {
-        try {
-            ClasspathResourceLoader resourceLoader = new ClasspathResourceLoader("/" + path + "/");
-            Configuration cfg = Configuration.defaultConfiguration();
-            return new GroupTemplate(resourceLoader, cfg);
-        } catch (IOException e) {
-            throw new RuntimeException("Can't found Beetl template.");
-        }
-    }
 }

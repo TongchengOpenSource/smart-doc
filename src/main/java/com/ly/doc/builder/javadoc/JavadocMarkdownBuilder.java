@@ -31,33 +31,38 @@ import java.util.List;
 
 public class JavadocMarkdownBuilder {
 
+	/**
+	 * @param config ApiConfig
+	 */
+	public static void buildApiDoc(ApiConfig config) {
+		JavaProjectBuilder javaProjectBuilder = JavaProjectBuilderHelper.create();
+		buildApiDoc(config, javaProjectBuilder);
+	}
 
-    /**
-     * @param config ApiConfig
-     */
-    public static void buildApiDoc(ApiConfig config) {
-        JavaProjectBuilder javaProjectBuilder = JavaProjectBuilderHelper.create();
-        buildApiDoc(config, javaProjectBuilder);
-    }
+	/**
+	 * Only for smart-doc maven plugin and gradle plugin.
+	 * @param apiConfig ApiConfig
+	 * @param javaProjectBuilder ProjectDocConfigBuilder
+	 */
+	public static void buildApiDoc(ApiConfig apiConfig, JavaProjectBuilder javaProjectBuilder) {
+		apiConfig.setAdoc(Boolean.FALSE);
+		JavadocDocBuilderTemplate builderTemplate = new JavadocDocBuilderTemplate();
+		builderTemplate.checkAndInit(apiConfig, Boolean.TRUE);
+		List<JavadocApiDoc> apiDocList = builderTemplate.getJavadocApiDoc(apiConfig, javaProjectBuilder);
+		if (apiConfig.isAllInOne()) {
+			String version = apiConfig.isCoverOld() ? "" : "-V" + DateTimeUtil.long2Str(System.currentTimeMillis(),
+					DocGlobalConstants.DATE_FORMAT_YYYY_MM_DD_HH_MM);
+			String docName = builderTemplate.allInOneDocName(apiConfig, "javadoc-all" + version,
+					DocGlobalConstants.MARKDOWN_EXTENSION);
+			builderTemplate.buildAllInOne(apiDocList, apiConfig, javaProjectBuilder,
+					DocGlobalConstants.JAVADOC_ALL_IN_ONE_MD_TPL, docName);
+		}
+		else {
+			builderTemplate.buildApiDoc(apiDocList, apiConfig, DocGlobalConstants.JAVADOC_API_DOC_MD_TPL,
+					DocGlobalConstants.MARKDOWN_API_FILE_EXTENSION);
+			builderTemplate.buildErrorCodeDoc(apiConfig, DocGlobalConstants.ERROR_CODE_LIST_MD_TPL,
+					DocGlobalConstants.ERROR_CODE_LIST_MD, javaProjectBuilder);
+		}
+	}
 
-    /**
-     * Only for smart-doc maven plugin and gradle plugin.
-     *
-     * @param apiConfig          ApiConfig
-     * @param javaProjectBuilder ProjectDocConfigBuilder
-     */
-    public static void buildApiDoc(ApiConfig apiConfig, JavaProjectBuilder javaProjectBuilder) {
-        apiConfig.setAdoc(Boolean.FALSE);
-        JavadocDocBuilderTemplate builderTemplate = new JavadocDocBuilderTemplate();
-        builderTemplate.checkAndInit(apiConfig, Boolean.TRUE);
-        List<JavadocApiDoc> apiDocList = builderTemplate.getJavadocApiDoc(apiConfig, javaProjectBuilder);
-        if (apiConfig.isAllInOne()) {
-            String version = apiConfig.isCoverOld() ? "" : "-V" + DateTimeUtil.long2Str(System.currentTimeMillis(), DocGlobalConstants.DATE_FORMAT_YYYY_MM_DD_HH_MM);
-            String docName = builderTemplate.allInOneDocName(apiConfig, "javadoc-all" + version, DocGlobalConstants.MARKDOWN_EXTENSION);
-            builderTemplate.buildAllInOne(apiDocList, apiConfig, javaProjectBuilder, DocGlobalConstants.JAVADOC_ALL_IN_ONE_MD_TPL, docName);
-        } else {
-            builderTemplate.buildApiDoc(apiDocList, apiConfig, DocGlobalConstants.JAVADOC_API_DOC_MD_TPL, DocGlobalConstants.MARKDOWN_API_FILE_EXTENSION);
-            builderTemplate.buildErrorCodeDoc(apiConfig, DocGlobalConstants.ERROR_CODE_LIST_MD_TPL, DocGlobalConstants.ERROR_CODE_LIST_MD, javaProjectBuilder);
-        }
-    }
 }

@@ -30,38 +30,39 @@ import java.util.List;
  */
 public class ProtoJson {
 
-    /**
-     * files.
-     */
-    private List<ProtoFile> files;
+	/**
+	 * files.
+	 */
+	private List<ProtoFile> files;
 
-    /**
-     * scalarValueTypes.
-     */
-    private List<ScalarValueType> scalarValueTypes;
+	/**
+	 * scalarValueTypes.
+	 */
+	private List<ScalarValueType> scalarValueTypes;
 
-    public static ProtoJson builder() {
-        return new ProtoJson();
-    }
+	public static ProtoJson builder() {
+		return new ProtoJson();
+	}
 
-    public List<ProtoFile> getFiles() {
-        if (files == null) {
-            files = new ArrayList<>();
-        }
-        return files;
-    }
+	public List<ProtoFile> getFiles() {
+		if (files == null) {
+			files = new ArrayList<>();
+		}
+		return files;
+	}
 
-    public ProtoJson setFiles(List<ProtoFile> files) {
-        this.files = files;
-        return this;
-    }
+	public ProtoJson setFiles(List<ProtoFile> files) {
+		this.files = files;
+		return this;
+	}
 
-    public List<ScalarValueType> getScalarValueTypes() {
-        return scalarValueTypes;
-    }
+	public List<ScalarValueType> getScalarValueTypes() {
+		return scalarValueTypes;
+	}
 
-    public ProtoJson setScalarValueTypes(List<ScalarValueType> scalarValueTypes) {
-        this.scalarValueTypes = scalarValueTypes;
-        return this;
-    }
+	public ProtoJson setScalarValueTypes(List<ScalarValueType> scalarValueTypes) {
+		this.scalarValueTypes = scalarValueTypes;
+		return this;
+	}
+
 }

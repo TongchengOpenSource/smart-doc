@@ -27,142 +27,157 @@ import java.util.List;
  **/
 public class HttpParam {
 
-    private String name;
-    private String type;
-    private String value;
-    private String required;
-    private String maxLength;
-    private String example;
-    private String description;
-    private String parentId;
-    private EnumInfo enumInfo;
-    private String code;
-    private String msg;
-    private String solution;
-    private List<HttpParam> children;
-    private Integer orderIndex;
-    private String version;
+	private String name;
 
-    public String getVersion() {
-        return version;
-    }
+	private String type;
 
-    public HttpParam setVersion(String version) {
-        this.version = version;
-        return this;
-    }
+	private String value;
 
-    public EnumInfo getEnumInfo() {
-        return enumInfo;
-    }
+	private String required;
 
-    public HttpParam setEnumInfo(EnumInfo enumInfo) {
-        this.enumInfo = enumInfo;
-        return this;
-    }
+	private String maxLength;
 
-    public String getName() {
-        return name;
-    }
+	private String example;
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	private String description;
 
-    public String getType() {
-        return type;
-    }
+	private String parentId;
 
-    public void setType(String type) {
-        this.type = type;
-    }
+	private EnumInfo enumInfo;
 
-    public String getValue() {
-        return value;
-    }
+	private String code;
 
-    public void setValue(String value) {
-        this.value = value;
-    }
+	private String msg;
 
-    public String getRequired() {
-        return required;
-    }
+	private String solution;
 
-    public void setRequired(String required) {
-        this.required = required;
-    }
+	private List<HttpParam> children;
 
-    public String getMaxLength() {
-        return maxLength;
-    }
+	private Integer orderIndex;
 
-    public void setMaxLength(String maxLength) {
-        this.maxLength = maxLength;
-    }
+	private String version;
 
-    public String getExample() {
-        return example;
-    }
+	public String getVersion() {
+		return version;
+	}
 
-    public void setExample(String example) {
-        this.example = example;
-    }
+	public HttpParam setVersion(String version) {
+		this.version = version;
+		return this;
+	}
 
-    public String getDescription() {
-        return description;
-    }
+	public EnumInfo getEnumInfo() {
+		return enumInfo;
+	}
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+	public HttpParam setEnumInfo(EnumInfo enumInfo) {
+		this.enumInfo = enumInfo;
+		return this;
+	}
 
-    public String getParentId() {
-        return parentId;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public void setParentId(String parentId) {
-        this.parentId = parentId;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public String getCode() {
-        return code;
-    }
+	public String getType() {
+		return type;
+	}
 
-    public void setCode(String code) {
-        this.code = code;
-    }
+	public void setType(String type) {
+		this.type = type;
+	}
 
-    public String getMsg() {
-        return msg;
-    }
+	public String getValue() {
+		return value;
+	}
 
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
+	public void setValue(String value) {
+		this.value = value;
+	}
 
-    public String getSolution() {
-        return solution;
-    }
+	public String getRequired() {
+		return required;
+	}
 
-    public void setSolution(String solution) {
-        this.solution = solution;
-    }
+	public void setRequired(String required) {
+		this.required = required;
+	}
 
-    public List<HttpParam> getChildren() {
-        return children;
-    }
+	public String getMaxLength() {
+		return maxLength;
+	}
 
-    public void setChildren(List<HttpParam> children) {
-        this.children = children;
-    }
+	public void setMaxLength(String maxLength) {
+		this.maxLength = maxLength;
+	}
 
-    public Integer getOrderIndex() {
-        return orderIndex;
-    }
+	public String getExample() {
+		return example;
+	}
 
-    public HttpParam setOrderIndex(Integer orderIndex) {
-        this.orderIndex = orderIndex;
-        return this;
-    }
+	public void setExample(String example) {
+		this.example = example;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getParentId() {
+		return parentId;
+	}
+
+	public void setParentId(String parentId) {
+		this.parentId = parentId;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public String getMsg() {
+		return msg;
+	}
+
+	public void setMsg(String msg) {
+		this.msg = msg;
+	}
+
+	public String getSolution() {
+		return solution;
+	}
+
+	public void setSolution(String solution) {
+		this.solution = solution;
+	}
+
+	public List<HttpParam> getChildren() {
+		return children;
+	}
+
+	public void setChildren(List<HttpParam> children) {
+		this.children = children;
+	}
+
+	public Integer getOrderIndex() {
+		return orderIndex;
+	}
+
+	public HttpParam setOrderIndex(Integer orderIndex) {
+		this.orderIndex = orderIndex;
+		return this;
+	}
+
 }

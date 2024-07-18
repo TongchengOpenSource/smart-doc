@@ -25,52 +25,52 @@ package com.ly.doc.model.annotation;
  */
 public class HeaderAnnotation {
 
-    private String annotationName;
+	private String annotationName;
 
-    private String valueProp;
+	private String valueProp;
 
-    private String defaultValueProp;
+	private String defaultValueProp;
 
-    private String requiredProp;
+	private String requiredProp;
 
+	public static HeaderAnnotation builder() {
+		return new HeaderAnnotation();
+	}
 
-    public static HeaderAnnotation builder() {
-        return new HeaderAnnotation();
-    }
+	public String getAnnotationName() {
+		return annotationName;
+	}
 
-    public String getAnnotationName() {
-        return annotationName;
-    }
+	public HeaderAnnotation setAnnotationName(String annotationName) {
+		this.annotationName = annotationName;
+		return this;
+	}
 
-    public HeaderAnnotation setAnnotationName(String annotationName) {
-        this.annotationName = annotationName;
-        return this;
-    }
+	public String getValueProp() {
+		return valueProp;
+	}
 
-    public String getValueProp() {
-        return valueProp;
-    }
+	public HeaderAnnotation setValueProp(String valueProp) {
+		this.valueProp = valueProp;
+		return this;
+	}
 
-    public HeaderAnnotation setValueProp(String valueProp) {
-        this.valueProp = valueProp;
-        return this;
-    }
+	public String getDefaultValueProp() {
+		return defaultValueProp;
+	}
 
-    public String getDefaultValueProp() {
-        return defaultValueProp;
-    }
+	public HeaderAnnotation setDefaultValueProp(String defaultValueProp) {
+		this.defaultValueProp = defaultValueProp;
+		return this;
+	}
 
-    public HeaderAnnotation setDefaultValueProp(String defaultValueProp) {
-        this.defaultValueProp = defaultValueProp;
-        return this;
-    }
+	public String getRequiredProp() {
+		return requiredProp;
+	}
 
-    public String getRequiredProp() {
-        return requiredProp;
-    }
+	public HeaderAnnotation setRequiredProp(String requiredProp) {
+		this.requiredProp = requiredProp;
+		return this;
+	}
 
-    public HeaderAnnotation setRequiredProp(String requiredProp) {
-        this.requiredProp = requiredProp;
-        return this;
-    }
 }

@@ -30,72 +30,74 @@ import com.ly.doc.model.FormData;
  */
 public class CurlRequest {
 
-    private String type;
+	private String type;
 
-    private List<ApiReqParam> reqHeaders;
-    private List<FormData> fileFormDataList;
+	private List<ApiReqParam> reqHeaders;
 
-    private String url;
+	private List<FormData> fileFormDataList;
 
-    private String body;
+	private String url;
 
-    private String contentType;
+	private String body;
 
-    public static CurlRequest builder() {
-        return new CurlRequest();
-    }
+	private String contentType;
 
-    public List<FormData> getFileFormDataList() {
-        return fileFormDataList;
-    }
+	public static CurlRequest builder() {
+		return new CurlRequest();
+	}
 
-    public CurlRequest setFileFormDataList(List<FormData> fileFormDataList) {
-        this.fileFormDataList = fileFormDataList;
-        return this;
-    }
+	public List<FormData> getFileFormDataList() {
+		return fileFormDataList;
+	}
 
-    public String getType() {
-        return type;
-    }
+	public CurlRequest setFileFormDataList(List<FormData> fileFormDataList) {
+		this.fileFormDataList = fileFormDataList;
+		return this;
+	}
 
-    public CurlRequest setType(String type) {
-        this.type = type;
-        return this;
-    }
+	public String getType() {
+		return type;
+	}
 
-    public List<ApiReqParam> getReqHeaders() {
-        return reqHeaders;
-    }
+	public CurlRequest setType(String type) {
+		this.type = type;
+		return this;
+	}
 
-    public CurlRequest setReqHeaders(List<ApiReqParam> reqHeaders) {
-        this.reqHeaders = reqHeaders;
-        return this;
-    }
+	public List<ApiReqParam> getReqHeaders() {
+		return reqHeaders;
+	}
 
-    public String getUrl() {
-        return url;
-    }
+	public CurlRequest setReqHeaders(List<ApiReqParam> reqHeaders) {
+		this.reqHeaders = reqHeaders;
+		return this;
+	}
 
-    public CurlRequest setUrl(String url) {
-        this.url = url;
-        return this;
-    }
+	public String getUrl() {
+		return url;
+	}
 
-    public String getBody() {
-        return body;
-    }
+	public CurlRequest setUrl(String url) {
+		this.url = url;
+		return this;
+	}
 
-    public CurlRequest setBody(String body) {
-        this.body = body;
-        return this;
-    }
+	public String getBody() {
+		return body;
+	}
 
-    public String getContentType() {
-        return contentType;
-    }
+	public CurlRequest setBody(String body) {
+		this.body = body;
+		return this;
+	}
 
-    public CurlRequest setContentType(String contentType) {
-        this.contentType = contentType;
-        return this;
-    }
+	public String getContentType() {
+		return contentType;
+	}
+
+	public CurlRequest setContentType(String contentType) {
+		this.contentType = contentType;
+		return this;
+	}
+
 }

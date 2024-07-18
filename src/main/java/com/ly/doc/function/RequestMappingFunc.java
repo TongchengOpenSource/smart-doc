@@ -23,14 +23,15 @@ package com.ly.doc.function;
 import com.ly.doc.model.request.RequestMapping;
 import com.thoughtworks.qdox.model.JavaClass;
 
-
 /**
  * beetl template function
+ *
  * @author yu 2022/12/02.
  */
 
 @FunctionalInterface
 public interface RequestMappingFunc {
 
-    void process(JavaClass cls, RequestMapping requestMapping);
+	void process(JavaClass cls, RequestMapping requestMapping);
+
 }

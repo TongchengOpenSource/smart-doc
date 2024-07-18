@@ -30,33 +30,35 @@ import java.util.Set;
  * tag relationship 2023/03/20 10:13:00
  */
 public class TagDoc {
-    private String tag;
 
-    private final Set<ApiDoc> clazzDocs = Collections.synchronizedSet(new LinkedHashSet<>());
+	private String tag;
 
-    private final Set<ApiMethodDoc> methodDocs = Collections.synchronizedSet(new LinkedHashSet<>(64));
+	private final Set<ApiDoc> clazzDocs = Collections.synchronizedSet(new LinkedHashSet<>());
 
-    private TagDoc() {
-    }
+	private final Set<ApiMethodDoc> methodDocs = Collections.synchronizedSet(new LinkedHashSet<>(64));
 
-    public TagDoc(String tag) {
-        super();
-        this.tag = tag;
-    }
+	private TagDoc() {
+	}
 
-    public String getTag() {
-        return tag;
-    }
+	public TagDoc(String tag) {
+		super();
+		this.tag = tag;
+	}
 
-    public void setTag(String tag) {
-        this.tag = tag;
-    }
+	public String getTag() {
+		return tag;
+	}
 
-    public Set<ApiDoc> getClazzDocs() {
-        return clazzDocs;
-    }
+	public void setTag(String tag) {
+		this.tag = tag;
+	}
 
-    public Set<ApiMethodDoc> getMethodDocs() {
-        return methodDocs;
-    }
+	public Set<ApiDoc> getClazzDocs() {
+		return clazzDocs;
+	}
+
+	public Set<ApiMethodDoc> getMethodDocs() {
+		return methodDocs;
+	}
+
 }

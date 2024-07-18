@@ -36,51 +36,52 @@ import com.ly.doc.model.request.CurlRequest;
  */
 public class CurlUtil {
 
-    public static String toCurl(CurlRequest request) {
-        if (Objects.isNull(request)) {
-            return "";
-        }
-        String methodType = request.getType();
-        if (Objects.nonNull(methodType) && methodType.contains(".")) {
-            methodType = methodType.substring(methodType.indexOf(".") + 1);
-        }
-        StringBuilder sb = new StringBuilder();
-        sb.append("curl");
-        sb.append(" -X");
-        sb.append(" ").append(methodType);
-        if (request.getUrl().indexOf("https") == 0) {
-            sb.append(" -k");
-        }
-        if (StringUtil.isNotEmpty(request.getContentType()) &&
-                !MediaType.APPLICATION_FORM_URLENCODED_VALUE.equals(request.getContentType())) {
-            sb.append(" -H");
-            sb.append(" \"Content-Type: ").append(request.getContentType()).append("\"");
-        }
-        if (CollectionUtil.isNotEmpty(request.getReqHeaders())) {
-            for (ApiReqParam reqHeader : request.getReqHeaders()) {
-                sb.append(" -H");
-                if (StringUtil.isEmpty(reqHeader.getValue())) {
-                    sb.append(" \"").append(reqHeader.getName()).append("\"");
-                } else {
-                    sb.append(" \"").append(reqHeader.getName()).append(':')
-                            .append(reqHeader.getValue()).append("\"");
-                }
-            }
-        }
+	public static String toCurl(CurlRequest request) {
+		if (Objects.isNull(request)) {
+			return "";
+		}
+		String methodType = request.getType();
+		if (Objects.nonNull(methodType) && methodType.contains(".")) {
+			methodType = methodType.substring(methodType.indexOf(".") + 1);
+		}
+		StringBuilder sb = new StringBuilder();
+		sb.append("curl");
+		sb.append(" -X");
+		sb.append(" ").append(methodType);
+		if (request.getUrl().indexOf("https") == 0) {
+			sb.append(" -k");
+		}
+		if (StringUtil.isNotEmpty(request.getContentType())
+				&& !MediaType.APPLICATION_FORM_URLENCODED_VALUE.equals(request.getContentType())) {
+			sb.append(" -H");
+			sb.append(" \"Content-Type: ").append(request.getContentType()).append("\"");
+		}
+		if (CollectionUtil.isNotEmpty(request.getReqHeaders())) {
+			for (ApiReqParam reqHeader : request.getReqHeaders()) {
+				sb.append(" -H");
+				if (StringUtil.isEmpty(reqHeader.getValue())) {
+					sb.append(" \"").append(reqHeader.getName()).append("\"");
+				}
+				else {
+					sb.append(" \"").append(reqHeader.getName()).append(':').append(reqHeader.getValue()).append("\"");
+				}
+			}
+		}
 
-        List<FormData> fileFormDataList = request.getFileFormDataList();
-        if (CollectionUtil.isNotEmpty(fileFormDataList)) {
-            fileFormDataList.forEach(file -> sb.append(" -F '").append(file.getKey()).append("='"));
-        }
+		List<FormData> fileFormDataList = request.getFileFormDataList();
+		if (CollectionUtil.isNotEmpty(fileFormDataList)) {
+			fileFormDataList.forEach(file -> sb.append(" -F '").append(file.getKey()).append("='"));
+		}
 
-        sb.append(" -i");
-        // append request url
-        sb.append(" ").append("'").append(request.getUrl()).append("'");
-        if (StringUtil.isNotEmpty(request.getBody())) {
-            sb.append(" --data");
-            String data = request.getBody().replaceAll("'", "'\\\\''");
-            sb.append(" '").append(data).append("'");
-        }
-        return sb.toString();
-    }
+		sb.append(" -i");
+		// append request url
+		sb.append(" ").append("'").append(request.getUrl()).append("'");
+		if (StringUtil.isNotEmpty(request.getBody())) {
+			sb.append(" --data");
+			String data = request.getBody().replaceAll("'", "'\\\\''");
+			sb.append(" '").append(data).append("'");
+		}
+		return sb.toString();
+	}
+
 }

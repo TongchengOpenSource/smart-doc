@@ -27,34 +27,37 @@ import java.util.List;
  **/
 public class TornaDic {
 
-    private String name;
-    private String description;
-    private List<HttpParam> items;
+	private String name;
 
-    public String getDescription() {
-        return description;
-    }
+	private String description;
 
-    public TornaDic setDescription(String description) {
-        this.description = description;
-        return this;
-    }
+	private List<HttpParam> items;
 
-    public List<HttpParam> getItems() {
-        return items;
-    }
+	public String getDescription() {
+		return description;
+	}
 
-    public TornaDic setItems(List<HttpParam> items) {
-        this.items = items;
-        return this;
-    }
+	public TornaDic setDescription(String description) {
+		this.description = description;
+		return this;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public List<HttpParam> getItems() {
+		return items;
+	}
 
-    public TornaDic setName(String name) {
-        this.name = name;
-        return this;
-    }
+	public TornaDic setItems(List<HttpParam> items) {
+		this.items = items;
+		return this;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public TornaDic setName(String name) {
+		this.name = name;
+		return this;
+	}
+
 }

@@ -30,66 +30,64 @@ import com.thoughtworks.qdox.model.JavaParameter;
  */
 public class DocJavaParameter {
 
-    private JavaParameter javaParameter;
+	private JavaParameter javaParameter;
 
-    private String genericCanonicalName;
+	private String genericCanonicalName;
 
-    private String genericFullyQualifiedName;
+	private String genericFullyQualifiedName;
 
+	private String fullyQualifiedName;
 
-    private String fullyQualifiedName;
+	private String typeValue;
 
-    private String typeValue;
+	List<JavaAnnotation> annotations;
 
+	public JavaParameter getJavaParameter() {
+		return javaParameter;
+	}
 
-    List<JavaAnnotation> annotations;
+	public void setJavaParameter(JavaParameter javaParameter) {
+		this.javaParameter = javaParameter;
+	}
 
+	public String getGenericCanonicalName() {
+		return genericCanonicalName;
+	}
 
-    public JavaParameter getJavaParameter() {
-        return javaParameter;
-    }
+	public void setGenericCanonicalName(String genericCanonicalName) {
+		this.genericCanonicalName = genericCanonicalName;
+	}
 
-    public void setJavaParameter(JavaParameter javaParameter) {
-        this.javaParameter = javaParameter;
-    }
+	public String getGenericFullyQualifiedName() {
+		return genericFullyQualifiedName;
+	}
 
-    public String getGenericCanonicalName() {
-        return genericCanonicalName;
-    }
+	public void setGenericFullyQualifiedName(String genericFullyQualifiedName) {
+		this.genericFullyQualifiedName = genericFullyQualifiedName;
+	}
 
-    public void setGenericCanonicalName(String genericCanonicalName) {
-        this.genericCanonicalName = genericCanonicalName;
-    }
+	public String getFullyQualifiedName() {
+		return fullyQualifiedName;
+	}
 
-    public String getGenericFullyQualifiedName() {
-        return genericFullyQualifiedName;
-    }
+	public void setFullyQualifiedName(String fullyQualifiedName) {
+		this.fullyQualifiedName = fullyQualifiedName;
+	}
 
-    public void setGenericFullyQualifiedName(String genericFullyQualifiedName) {
-        this.genericFullyQualifiedName = genericFullyQualifiedName;
-    }
+	public String getTypeValue() {
+		return typeValue;
+	}
 
-    public String getFullyQualifiedName() {
-        return fullyQualifiedName;
-    }
+	public void setTypeValue(String typeValue) {
+		this.typeValue = typeValue;
+	}
 
-    public void setFullyQualifiedName(String fullyQualifiedName) {
-        this.fullyQualifiedName = fullyQualifiedName;
-    }
+	public List<JavaAnnotation> getAnnotations() {
+		return annotations;
+	}
 
-    public String getTypeValue() {
-        return typeValue;
-    }
+	public void setAnnotations(List<JavaAnnotation> annotations) {
+		this.annotations = annotations;
+	}
 
-    public void setTypeValue(String typeValue) {
-        this.typeValue = typeValue;
-    }
-
-    public List<JavaAnnotation> getAnnotations() {
-        return annotations;
-    }
-
-    public void setAnnotations(List<JavaAnnotation> annotations) {
-        this.annotations = annotations;
-    }
 }

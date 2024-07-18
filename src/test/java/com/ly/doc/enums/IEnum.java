@@ -6,8 +6,9 @@ package com.ly.doc.enums;
  */
 public interface IEnum {
 
-    /**
-     * get the enum code
-     */
-    String getCode();
+	/**
+	 * get the enum code
+	 */
+	String getCode();
+
 }

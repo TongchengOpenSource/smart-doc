@@ -27,62 +27,61 @@ import java.util.List;
  **/
 public class TornaApi {
 
-    /**
-     * "debugEnvs": [
-     * {
-     * "name": "Test environment",
-     * "url": "http://10.1.30.165:2222"
-     * }
-     * ],
-     * "apis": [
-     */
-    List<DebugEnv> debugEnvs;
-    List<Apis> apis;
-    String author;
-    List<CommonErrorCode> commonErrorCodes;
+	/**
+	 * "debugEnvs": [ { "name": "Test environment", "url": "http://10.1.30.165:2222" } ],
+	 * "apis": [
+	 */
+	List<DebugEnv> debugEnvs;
 
-    /**
-     * Whether to replace the document. 1: Replace, 0: Do not replace (append). Default: 1
-     */
-    Integer isReplace;
+	List<Apis> apis;
 
-    public Integer getIsReplace() {
-        return isReplace;
-    }
+	String author;
 
-    public void setIsReplace(Integer isReplace) {
-        this.isReplace = isReplace;
-    }
+	List<CommonErrorCode> commonErrorCodes;
 
-    public String getAuthor() {
-        return author;
-    }
+	/**
+	 * Whether to replace the document. 1: Replace, 0: Do not replace (append). Default: 1
+	 */
+	Integer isReplace;
 
-    public void setAuthor(String author) {
-        this.author = author;
-    }
+	public Integer getIsReplace() {
+		return isReplace;
+	}
 
-    public List<DebugEnv> getDebugEnvs() {
-        return debugEnvs;
-    }
+	public void setIsReplace(Integer isReplace) {
+		this.isReplace = isReplace;
+	}
 
-    public void setDebugEnvs(List<DebugEnv> debugEnvs) {
-        this.debugEnvs = debugEnvs;
-    }
+	public String getAuthor() {
+		return author;
+	}
 
-    public List<Apis> getApis() {
-        return apis;
-    }
+	public void setAuthor(String author) {
+		this.author = author;
+	}
 
-    public void setApis(List<Apis> apis) {
-        this.apis = apis;
-    }
+	public List<DebugEnv> getDebugEnvs() {
+		return debugEnvs;
+	}
 
-    public List<CommonErrorCode> getCommonErrorCodes() {
-        return commonErrorCodes;
-    }
+	public void setDebugEnvs(List<DebugEnv> debugEnvs) {
+		this.debugEnvs = debugEnvs;
+	}
 
-    public void setCommonErrorCodes(List<CommonErrorCode> commonErrorCodes) {
-        this.commonErrorCodes = commonErrorCodes;
-    }
+	public List<Apis> getApis() {
+		return apis;
+	}
+
+	public void setApis(List<Apis> apis) {
+		this.apis = apis;
+	}
+
+	public List<CommonErrorCode> getCommonErrorCodes() {
+		return commonErrorCodes;
+	}
+
+	public void setCommonErrorCodes(List<CommonErrorCode> commonErrorCodes) {
+		this.commonErrorCodes = commonErrorCodes;
+	}
+
 }

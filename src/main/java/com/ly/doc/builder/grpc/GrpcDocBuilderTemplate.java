@@ -49,47 +49,46 @@ import java.util.Map;
  */
 public class GrpcDocBuilderTemplate implements IRpcDocBuilderTemplate {
 
+	@Override
+	public void checkAndInit(ApiConfig config, boolean checkOutPath) {
+		if (StringUtil.isEmpty(config.getFramework())) {
+			config.setFramework(FrameworkEnum.GRPC.getFramework());
+		}
+		IRpcDocBuilderTemplate.super.checkAndInit(config, checkOutPath);
+		config.setOutPath(config.getOutPath() + DocGlobalConstants.FILE_SEPARATOR + DocGlobalConstants.GRPC_OUT_DIR);
+	}
 
-    @Override
-    public void checkAndInit(ApiConfig config, boolean checkOutPath) {
-        if (StringUtil.isEmpty(config.getFramework())) {
-            config.setFramework(FrameworkEnum.GRPC.getFramework());
-        }
-        IRpcDocBuilderTemplate.super.checkAndInit(config, checkOutPath);
-        config.setOutPath(config.getOutPath() + DocGlobalConstants.FILE_SEPARATOR + DocGlobalConstants.GRPC_OUT_DIR);
-    }
+	@Override
+	public void writeApiDocFile(Template mapper, ApiConfig config, RpcApiDoc rpcDoc, String fileExtension) {
+		FileUtil.nioWriteFile(mapper.render(),
+				config.getOutPath() + DocGlobalConstants.FILE_SEPARATOR + rpcDoc.getName() + fileExtension);
+	}
 
-    @Override
-    public void writeApiDocFile(Template mapper, ApiConfig config, RpcApiDoc rpcDoc, String fileExtension) {
-        FileUtil.nioWriteFile(mapper.render(), config.getOutPath() + DocGlobalConstants.FILE_SEPARATOR + rpcDoc.getName() + fileExtension);
-    }
+	@Override
+	public void buildSearchJs(List<RpcApiDoc> apiDocList, ApiConfig config, JavaProjectBuilder javaProjectBuilder,
+			String template, String outPutFileName) {
+		List<ApiErrorCode> errorCodeList = DocUtil.errorCodeDictToList(config, javaProjectBuilder);
+		Template tpl = BeetlTemplateUtil.getByName(template);
+		// directory tree
+		List<RpcApiDoc> apiDocs = new ArrayList<>();
+		for (RpcApiDoc apiDoc1 : apiDocList) {
+			apiDoc1.setOrder(apiDocs.size());
+			apiDocs.add(apiDoc1);
+		}
+		Map<String, String> titleMap = setDirectoryLanguageVariable(config, tpl);
+		if (CollectionUtil.isNotEmpty(errorCodeList)) {
+			RpcApiDoc apiDoc1 = new RpcApiDoc();
+			apiDoc1.setOrder(apiDocs.size());
+			apiDoc1.setDesc(titleMap.get(TemplateVariable.ERROR_LIST_TITLE.getVariable()));
+			apiDoc1.setList(new ArrayList<>(0));
+			apiDocs.add(apiDoc1);
+		}
 
-
-    @Override
-    public void buildSearchJs(List<RpcApiDoc> apiDocList, ApiConfig config, JavaProjectBuilder javaProjectBuilder
-            , String template, String outPutFileName) {
-        List<ApiErrorCode> errorCodeList = DocUtil.errorCodeDictToList(config, javaProjectBuilder);
-        Template tpl = BeetlTemplateUtil.getByName(template);
-        // directory tree
-        List<RpcApiDoc> apiDocs = new ArrayList<>();
-        for (RpcApiDoc apiDoc1 : apiDocList) {
-            apiDoc1.setOrder(apiDocs.size());
-            apiDocs.add(apiDoc1);
-        }
-        Map<String, String> titleMap = setDirectoryLanguageVariable(config, tpl);
-        if (CollectionUtil.isNotEmpty(errorCodeList)) {
-            RpcApiDoc apiDoc1 = new RpcApiDoc();
-            apiDoc1.setOrder(apiDocs.size());
-            apiDoc1.setDesc(titleMap.get(TemplateVariable.ERROR_LIST_TITLE.getVariable()));
-            apiDoc1.setList(new ArrayList<>(0));
-            apiDocs.add(apiDoc1);
-        }
-
-        // set dict list
-        List<ApiDocDict> apiDocDictList = DocUtil.buildDictionary(config, javaProjectBuilder);
-        tpl.binding(TemplateVariable.DICT_LIST.getVariable(), apiDocDictList);
-        tpl.binding(TemplateVariable.DIRECTORY_TREE.getVariable(), apiDocs);
-        FileUtil.nioWriteFile(tpl.render(), config.getOutPath() + DocGlobalConstants.FILE_SEPARATOR + outPutFileName);
-    }
+		// set dict list
+		List<ApiDocDict> apiDocDictList = DocUtil.buildDictionary(config, javaProjectBuilder);
+		tpl.binding(TemplateVariable.DICT_LIST.getVariable(), apiDocDictList);
+		tpl.binding(TemplateVariable.DIRECTORY_TREE.getVariable(), apiDocs);
+		FileUtil.nioWriteFile(tpl.render(), config.getOutPath() + DocGlobalConstants.FILE_SEPARATOR + outPutFileName);
+	}
 
 }

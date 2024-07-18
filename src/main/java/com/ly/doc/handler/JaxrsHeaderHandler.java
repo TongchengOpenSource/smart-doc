@@ -39,7 +39,6 @@ import com.thoughtworks.qdox.model.JavaParameter;
 
 import org.apache.commons.lang3.StringUtils;
 
-
 /**
  * Jaxrs Header Handler
  *
@@ -47,71 +46,67 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class JaxrsHeaderHandler {
 
-    /**
-     * Handle JAX RS Header
-     *
-     * @param method         method
-     * @param projectBuilder ProjectDocConfigBuilder
-     * @return list of ApiReqParam
-     */
-    public List<ApiReqParam> handle(JavaMethod method, ProjectDocConfigBuilder projectBuilder) {
-        Map<String, String> constantsMap = projectBuilder.getConstantsMap();
+	/**
+	 * Handle JAX RS Header
+	 * @param method method
+	 * @param projectBuilder ProjectDocConfigBuilder
+	 * @return list of ApiReqParam
+	 */
+	public List<ApiReqParam> handle(JavaMethod method, ProjectDocConfigBuilder projectBuilder) {
+		Map<String, String> constantsMap = projectBuilder.getConstantsMap();
 
-        ClassLoader classLoader = projectBuilder.getApiConfig().getClassLoader();
-        List<ApiReqParam> apiReqHeaders = new ArrayList<>();
-        List<JavaParameter> parameters = method.getParameters();
-        for (JavaParameter javaParameter : parameters) {
-            List<JavaAnnotation> annotations = javaParameter.getAnnotations();
-            String paramName = javaParameter.getName();
+		ClassLoader classLoader = projectBuilder.getApiConfig().getClassLoader();
+		List<ApiReqParam> apiReqHeaders = new ArrayList<>();
+		List<JavaParameter> parameters = method.getParameters();
+		for (JavaParameter javaParameter : parameters) {
+			List<JavaAnnotation> annotations = javaParameter.getAnnotations();
+			String paramName = javaParameter.getName();
 
-            // hit target head annotation
-            ApiReqParam apiReqHeader = new ApiReqParam();
+			// hit target head annotation
+			ApiReqParam apiReqHeader = new ApiReqParam();
 
-            String defaultValue = "";
-            for (JavaAnnotation annotation : annotations) {
-                String annotationName = annotation.getType().getFullyQualifiedName();
-                //Obtain header default value
-                if (JakartaJaxrsAnnotations.JAX_DEFAULT_VALUE_FULLY.equals(annotationName)
-                        || JAXRSAnnotations.JAX_DEFAULT_VALUE_FULLY.equals(annotationName)) {
-                    defaultValue = StringUtil.removeQuotes(DocUtil.getRequestHeaderValue(classLoader, annotation));
-                    defaultValue = DocUtil.handleConstants(constantsMap, defaultValue);
-                }
-                apiReqHeader.setValue(defaultValue);
+			String defaultValue = "";
+			for (JavaAnnotation annotation : annotations) {
+				String annotationName = annotation.getType().getFullyQualifiedName();
+				// Obtain header default value
+				if (JakartaJaxrsAnnotations.JAX_DEFAULT_VALUE_FULLY.equals(annotationName)
+						|| JAXRSAnnotations.JAX_DEFAULT_VALUE_FULLY.equals(annotationName)) {
+					defaultValue = StringUtil.removeQuotes(DocUtil.getRequestHeaderValue(classLoader, annotation));
+					defaultValue = DocUtil.handleConstants(constantsMap, defaultValue);
+				}
+				apiReqHeader.setValue(defaultValue);
 
-                // Obtain header value
-                if (JakartaJaxrsAnnotations.JAX_HEADER_PARAM_FULLY.equals(annotationName)
-                        || JAXRSAnnotations.JAX_HEADER_PARAM_FULLY.equals(annotationName)) {
-                    String name = StringUtil.removeQuotes(DocUtil.getRequestHeaderValue(classLoader, annotation));
-                    name = DocUtil.handleConstants(constantsMap, name);
-                    apiReqHeader.setName(name);
+				// Obtain header value
+				if (JakartaJaxrsAnnotations.JAX_HEADER_PARAM_FULLY.equals(annotationName)
+						|| JAXRSAnnotations.JAX_HEADER_PARAM_FULLY.equals(annotationName)) {
+					String name = StringUtil.removeQuotes(DocUtil.getRequestHeaderValue(classLoader, annotation));
+					name = DocUtil.handleConstants(constantsMap, name);
+					apiReqHeader.setName(name);
 
-                    String typeName = javaParameter.getType().getValue().toLowerCase();
-                    apiReqHeader.setType(DocClassUtil.processTypeNameForParams(typeName));
+					String typeName = javaParameter.getType().getValue().toLowerCase();
+					apiReqHeader.setType(DocClassUtil.processTypeNameForParams(typeName));
 
-                    String className = method.getDeclaringClass().getCanonicalName();
-                    Map<String, String> paramMap = DocUtil.getCommentsByTag(method, DocTags.PARAM, className);
-                    String paramComments = paramMap.get(paramName);
-                    apiReqHeader.setDesc(getComments(defaultValue, paramComments));
-                    apiReqHeaders.add(apiReqHeader);
-                }
-            }
-        }
-        return apiReqHeaders;
-    }
+					String className = method.getDeclaringClass().getCanonicalName();
+					Map<String, String> paramMap = DocUtil.getCommentsByTag(method, DocTags.PARAM, className);
+					String paramComments = paramMap.get(paramName);
+					apiReqHeader.setDesc(getComments(defaultValue, paramComments));
+					apiReqHeaders.add(apiReqHeader);
+				}
+			}
+		}
+		return apiReqHeaders;
+	}
 
-
-    private String getComments(String defaultValue, String paramComments) {
-        if (Objects.nonNull(paramComments)) {
-            StringBuilder desc = new StringBuilder();
-            desc.append(paramComments);
-            if (StringUtils.isNotBlank(defaultValue)) {
-                desc.append("(defaultValue: ")
-                        .append(defaultValue)
-                        .append(")");
-            }
-            return desc.toString();
-        }
-        return "";
-    }
+	private String getComments(String defaultValue, String paramComments) {
+		if (Objects.nonNull(paramComments)) {
+			StringBuilder desc = new StringBuilder();
+			desc.append(paramComments);
+			if (StringUtils.isNotBlank(defaultValue)) {
+				desc.append("(defaultValue: ").append(defaultValue).append(")");
+			}
+			return desc.toString();
+		}
+		return "";
+	}
 
 }

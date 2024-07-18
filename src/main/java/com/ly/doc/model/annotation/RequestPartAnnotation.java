@@ -6,60 +6,65 @@ package com.ly.doc.model.annotation;
  * @author shalousun
  */
 public class RequestPartAnnotation {
-    /**
-     * annotation name
-     */
-    private String annotationName;
-    /**
-     * annotation fully name
-     */
-    private String annotationFullyName;
-    /**
-     * annotation defaultValueProp
-     */
-    private String defaultValueProp;
-    /**
-     * annotation requiredProp
-     */
-    private String requiredProp;
 
-    public static RequestPartAnnotation builder() {
-        return new RequestPartAnnotation();
-    }
+	/**
+	 * annotation name
+	 */
+	private String annotationName;
 
-    public String getAnnotationName() {
-        return annotationName;
-    }
+	/**
+	 * annotation fully name
+	 */
+	private String annotationFullyName;
 
-    public RequestPartAnnotation setAnnotationName(String annotationName) {
-        this.annotationName = annotationName;
-        return this;
-    }
+	/**
+	 * annotation defaultValueProp
+	 */
+	private String defaultValueProp;
 
-    public String getAnnotationFullyName() {
-        return annotationFullyName;
-    }
+	/**
+	 * annotation requiredProp
+	 */
+	private String requiredProp;
 
-    public RequestPartAnnotation setAnnotationFullyName(String annotationFullyName) {
-        this.annotationFullyName = annotationFullyName;
-        return this;
-    }
+	public static RequestPartAnnotation builder() {
+		return new RequestPartAnnotation();
+	}
 
-    public String getDefaultValueProp() {
-        return defaultValueProp;
-    }
+	public String getAnnotationName() {
+		return annotationName;
+	}
 
-    public RequestPartAnnotation setDefaultValueProp(String defaultValueProp) {
-        this.defaultValueProp = defaultValueProp;
-        return this;
-    }
+	public RequestPartAnnotation setAnnotationName(String annotationName) {
+		this.annotationName = annotationName;
+		return this;
+	}
 
-    public String getRequiredProp() {
-        return requiredProp;
-    }
+	public String getAnnotationFullyName() {
+		return annotationFullyName;
+	}
 
-    public RequestPartAnnotation setRequiredProp(String requiredProp) {
-        this.requiredProp = requiredProp;
-        return this;
-    }
+	public RequestPartAnnotation setAnnotationFullyName(String annotationFullyName) {
+		this.annotationFullyName = annotationFullyName;
+		return this;
+	}
+
+	public String getDefaultValueProp() {
+		return defaultValueProp;
+	}
+
+	public RequestPartAnnotation setDefaultValueProp(String defaultValueProp) {
+		this.defaultValueProp = defaultValueProp;
+		return this;
+	}
+
+	public String getRequiredProp() {
+		return requiredProp;
+	}
+
+	public RequestPartAnnotation setRequiredProp(String requiredProp) {
+		this.requiredProp = requiredProp;
+		return this;
+	}
+
 }

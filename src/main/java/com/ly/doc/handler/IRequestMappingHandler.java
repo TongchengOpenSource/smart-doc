@@ -50,49 +50,48 @@ import static com.ly.doc.constants.DocTags.IGNORE;
  */
 public interface IRequestMappingHandler {
 
-    default RequestMapping formatMappingData(ProjectDocConfigBuilder projectBuilder, String controllerBaseUrl, RequestMapping requestMapping) {
-        String shortUrl = requestMapping.getShortUrl();
-        if (Objects.nonNull(shortUrl)) {
-            String serverUrl = projectBuilder.getServerUrl();
-            String contextPath = projectBuilder.getApiConfig().getPathPrefix();
-            shortUrl = StringUtil.removeQuotes(shortUrl);
-            String url = DocUrlUtil.getMvcUrls(serverUrl, contextPath + "/" + controllerBaseUrl, shortUrl);
-            shortUrl = DocUrlUtil.getMvcUrls(DocGlobalConstants.EMPTY, contextPath + "/" + controllerBaseUrl, shortUrl);
-            String urlSuffix = projectBuilder.getApiConfig().getUrlSuffix();
-            if (StringUtil.isEmpty(urlSuffix)) {
-                urlSuffix = StringUtil.EMPTY;
-            }
-            url = UrlUtil.simplifyUrl(StringUtil.trim(url)) + urlSuffix;
-            shortUrl = UrlUtil.simplifyUrl(StringUtil.trim(shortUrl)) + urlSuffix;
-            url = DocUtil.formatPathUrl(url);
-            shortUrl = DocUtil.formatPathUrl(shortUrl);
-            requestMapping.setUrl(url).setShortUrl(shortUrl);
-            return requestMapping;
-        }
-        return requestMapping;
-    }
+	default RequestMapping formatMappingData(ProjectDocConfigBuilder projectBuilder, String controllerBaseUrl,
+			RequestMapping requestMapping) {
+		String shortUrl = requestMapping.getShortUrl();
+		if (Objects.nonNull(shortUrl)) {
+			String serverUrl = projectBuilder.getServerUrl();
+			String contextPath = projectBuilder.getApiConfig().getPathPrefix();
+			shortUrl = StringUtil.removeQuotes(shortUrl);
+			String url = DocUrlUtil.getMvcUrls(serverUrl, contextPath + "/" + controllerBaseUrl, shortUrl);
+			shortUrl = DocUrlUtil.getMvcUrls(DocGlobalConstants.EMPTY, contextPath + "/" + controllerBaseUrl, shortUrl);
+			String urlSuffix = projectBuilder.getApiConfig().getUrlSuffix();
+			if (StringUtil.isEmpty(urlSuffix)) {
+				urlSuffix = StringUtil.EMPTY;
+			}
+			url = UrlUtil.simplifyUrl(StringUtil.trim(url)) + urlSuffix;
+			shortUrl = UrlUtil.simplifyUrl(StringUtil.trim(shortUrl)) + urlSuffix;
+			url = DocUtil.formatPathUrl(url);
+			shortUrl = DocUtil.formatPathUrl(shortUrl);
+			requestMapping.setUrl(url).setShortUrl(shortUrl);
+			return requestMapping;
+		}
+		return requestMapping;
+	}
 
-    default List<JavaAnnotation> getAnnotations(JavaMethod method) {
-        List<JavaAnnotation> annotations = new ArrayList<>();
-        // add interface method annotations
-        List<JavaClass> interfaces = method.getDeclaringClass().getInterfaces();
-        if (CollectionUtil.isNotEmpty(interfaces)) {
-            for (JavaClass interfaceClass : interfaces) {
-                JavaMethod interfaceMethod = interfaceClass.getMethod(method.getName(), method.getParameterTypes(), method.isVarArgs());
-                if (interfaceMethod != null) {
-                    // can be overridden by implement class
-                    annotations.addAll(interfaceMethod.getAnnotations());
-                }
-            }
-        }
-        annotations.addAll(method.getAnnotations());
-        return annotations;
-    }
+	default List<JavaAnnotation> getAnnotations(JavaMethod method) {
+		List<JavaAnnotation> annotations = new ArrayList<>();
+		// add interface method annotations
+		List<JavaClass> interfaces = method.getDeclaringClass().getInterfaces();
+		if (CollectionUtil.isNotEmpty(interfaces)) {
+			for (JavaClass interfaceClass : interfaces) {
+				JavaMethod interfaceMethod = interfaceClass.getMethod(method.getName(), method.getParameterTypes(),
+						method.isVarArgs());
+				if (interfaceMethod != null) {
+					// can be overridden by implement class
+					annotations.addAll(interfaceMethod.getAnnotations());
+				}
+			}
+		}
+		annotations.addAll(method.getAnnotations());
+		return annotations;
+	}
 
-    RequestMapping handle(ProjectDocConfigBuilder projectBuilder, String controllerBaseUrl, JavaMethod method,
-                          FrameworkAnnotations frameworkAnnotations,
-                          RequestMappingFunc requestMappingFunc);
-
+	RequestMapping handle(ProjectDocConfigBuilder projectBuilder, String controllerBaseUrl, JavaMethod method,
+			FrameworkAnnotations frameworkAnnotations, RequestMappingFunc requestMappingFunc);
 
 }
-
