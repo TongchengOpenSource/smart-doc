@@ -12,3 +12,8 @@ checkstyle-checkstyle:
 checkstyle-check:
 	mvn checkstyle:check
 
+spring-javaformat-validate:
+	mvn spring-javaformat:validate
+
+spring-javaformat-apply:
+	mvn spring-javaformat:apply
