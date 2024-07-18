@@ -1,0 +1,40 @@
+name: Spring Java Format Validate
+
+on: [push, pull_request]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+
+      - name: Install Maven
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Execute Spring Java Format Validation
+        id: format-validation
+        run: |
+          echo "Executing Spring code format validation"
+          mvn spring-javaformat:validate
+        continue-on-error: true
+
+      - name: Check format validation result
+        if: always()
+        run: |
+          echo "Checking format validation result"
+          if [ ${{ steps.format-validation.outcome }} == 'failure' ]; then
+            echo "Spring code format validation failed, please run `spring-javaformat:apply` to fix and resubmit"
+            exit 1
+          fi
