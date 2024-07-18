@@ -27,94 +27,90 @@ package com.ly.doc.model;
  */
 public class RevisionLog {
 
-    /**
-     * version
-     */
-    private String version;
+	/**
+	 * version
+	 */
+	private String version;
 
-    /**
-     * status
-     */
-    private String status;
+	/**
+	 * status
+	 */
+	private String status;
 
-    /**
-     * author
-     */
-    private String author;
+	/**
+	 * author
+	 */
+	private String author;
 
-    /**
-     * update time
-     */
-    private String revisionTime;
+	/**
+	 * update time
+	 */
+	private String revisionTime;
 
-    /**
-     * description
-     */
-    private String remarks;
+	/**
+	 * description
+	 */
+	private String remarks;
 
-    public static RevisionLog builder() {
-        return new RevisionLog();
-    }
+	public static RevisionLog builder() {
+		return new RevisionLog();
+	}
 
-    public String getVersion() {
-        return version;
-    }
+	public String getVersion() {
+		return version;
+	}
 
-    public RevisionLog setVersion(String version) {
-        this.version = version;
-        return this;
-    }
+	public RevisionLog setVersion(String version) {
+		this.version = version;
+		return this;
+	}
 
-    public String getStatus() {
-        return status;
-    }
+	public String getStatus() {
+		return status;
+	}
 
-    public RevisionLog setStatus(String status) {
-        this.status = status;
-        return this;
-    }
+	public RevisionLog setStatus(String status) {
+		this.status = status;
+		return this;
+	}
 
-    public String getAuthor() {
-        return author;
-    }
+	public String getAuthor() {
+		return author;
+	}
 
-    public RevisionLog setAuthor(String author) {
-        this.author = author;
-        return this;
-    }
+	public RevisionLog setAuthor(String author) {
+		this.author = author;
+		return this;
+	}
 
-    public String getRevisionTime() {
-        return revisionTime;
-    }
+	public String getRevisionTime() {
+		return revisionTime;
+	}
 
-    public RevisionLog setRevisionTime(String revisionTime) {
-        this.revisionTime = revisionTime;
-        return this;
-    }
+	public RevisionLog setRevisionTime(String revisionTime) {
+		this.revisionTime = revisionTime;
+		return this;
+	}
 
-    public String getRemarks() {
-        return remarks;
-    }
+	public String getRemarks() {
+		return remarks;
+	}
 
-    public RevisionLog setRemarks(String remarks) {
-        this.remarks = remarks;
-        return this;
-    }
+	public RevisionLog setRemarks(String remarks) {
+		this.remarks = remarks;
+		return this;
+	}
 
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("{");
-        sb.append("\"version\":\"")
-            .append(version).append('\"');
-        sb.append(",\"status\":\"")
-            .append(status).append('\"');
-        sb.append(",\"author\":\"")
-            .append(author).append('\"');
-        sb.append(",\"revisionTime\":\"")
-            .append(revisionTime).append('\"');
-        sb.append(",\"remarks\":\"")
-            .append(remarks).append('\"');
-        sb.append('}');
-        return sb.toString();
-    }
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder("{");
+		sb.append("\"version\":\"").append(version).append('\"');
+		sb.append(",\"status\":\"").append(status).append('\"');
+		sb.append(",\"author\":\"").append(author).append('\"');
+		sb.append(",\"revisionTime\":\"").append(revisionTime).append('\"');
+		sb.append(",\"remarks\":\"").append(remarks).append('\"');
+		sb.append('}');
+		return sb.toString();
+	}
+
 }

@@ -41,94 +41,103 @@ import java.util.Objects;
  */
 public class HtmlApiDocBuilder {
 
-    private static final String ERROR_CODE_HTML = "error.html";
-    private static final String DICT_HTML = "dict.html";
-    private static String INDEX_HTML = "index.html";
+	private static final String ERROR_CODE_HTML = "error.html";
 
-    /**
-     * build controller api
-     *
-     * @param config config
-     */
-    public static void buildApiDoc(ApiConfig config) {
-        JavaProjectBuilder javaProjectBuilder = JavaProjectBuilderHelper.create();
-        buildApiDoc(config, javaProjectBuilder);
-    }
+	private static final String DICT_HTML = "dict.html";
 
-    /**
-     * Only for smart-doc maven plugin and gradle plugin.
-     *
-     * @param config             ApiConfig
-     * @param javaProjectBuilder ProjectDocConfigBuilder
-     */
-    public static void buildApiDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
-        DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
-        builderTemplate.checkAndInit(config, Boolean.TRUE);
-        config.setParamsDataToTree(false);
-        ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
-        IDocBuildTemplate<ApiDoc> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(
-                config.getFramework(), config.getClassLoader());
-        Objects.requireNonNull(docBuildTemplate, "doc build template is null");
-        List<ApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder).getApiDatas();
-        builderTemplate.copyJQueryAndCss(config);
-        if (config.isAllInOne()) {
-            apiDocList = docBuildTemplate.handleApiGroup(apiDocList, config);
-            if (config.isCreateDebugPage()) {
-                INDEX_HTML = DocGlobalConstants.DEBUG_PAGE_ALL_TPL;
-                if (StringUtils.isNotEmpty(config.getAllInOneDocFileName())) {
-                    INDEX_HTML = config.getAllInOneDocFileName();
-                }
-                builderTemplate.buildAllInOne(apiDocList, config, javaProjectBuilder, DocGlobalConstants.DEBUG_PAGE_ALL_TPL, INDEX_HTML);
-                Template mockJs = BeetlTemplateUtil.getByName(DocGlobalConstants.DEBUG_JS_TPL);
-                FileUtil.nioWriteFile(mockJs.render(), config.getOutPath() + DocGlobalConstants.FILE_SEPARATOR + DocGlobalConstants.DEBUG_JS_OUT);
-            } else {
-                if (StringUtils.isNotEmpty(config.getAllInOneDocFileName())) {
-                    INDEX_HTML = config.getAllInOneDocFileName();
-                }
-                builderTemplate.buildAllInOne(apiDocList, config, javaProjectBuilder, DocGlobalConstants.ALL_IN_ONE_HTML_TPL, INDEX_HTML);
-            }
-            builderTemplate.buildSearchJs(config, javaProjectBuilder, apiDocList, DocGlobalConstants.SEARCH_ALL_JS_TPL);
-        } else {
-            String indexAlias;
-            if (config.isCreateDebugPage()) {
-                indexAlias = "debug";
-                buildDoc(builderTemplate, apiDocList, config, javaProjectBuilder, DocGlobalConstants.DEBUG_PAGE_SINGLE_TPL, indexAlias);
-                Template mockJs = BeetlTemplateUtil.getByName(DocGlobalConstants.DEBUG_JS_TPL);
-                FileUtil.nioWriteFile(mockJs.render(), config.getOutPath() + DocGlobalConstants.FILE_SEPARATOR + DocGlobalConstants.DEBUG_JS_OUT);
-            } else {
-                indexAlias = "api";
-                buildDoc(builderTemplate, apiDocList, config, javaProjectBuilder, DocGlobalConstants.SINGLE_INDEX_HTML_TPL, indexAlias);
-            }
-            builderTemplate.buildErrorCodeDoc(config, javaProjectBuilder, apiDocList, DocGlobalConstants.SINGLE_ERROR_HTML_TPL,
-                    ERROR_CODE_HTML, indexAlias);
-            builderTemplate.buildDirectoryDataDoc(config, javaProjectBuilder, apiDocList,
-                    DocGlobalConstants.SINGLE_DICT_HTML_TPL, DICT_HTML, indexAlias);
-            builderTemplate.buildSearchJs(config, javaProjectBuilder, apiDocList, DocGlobalConstants.SEARCH_JS_TPL);
-        }
+	private static String INDEX_HTML = "index.html";
 
-    }
+	/**
+	 * build controller api
+	 * @param config config
+	 */
+	public static void buildApiDoc(ApiConfig config) {
+		JavaProjectBuilder javaProjectBuilder = JavaProjectBuilderHelper.create();
+		buildApiDoc(config, javaProjectBuilder);
+	}
 
-    /**
-     * build ever controller api
-     *
-     * @param builderTemplate    DocBuilderTemplate
-     * @param apiDocList         list of api doc
-     * @param config             ApiConfig
-     * @param javaProjectBuilder ProjectDocConfigBuilder
-     * @param template           template
-     * @param indexHtml          indexHtml
-     */
-    private static void buildDoc(DocBuilderTemplate builderTemplate, List<ApiDoc> apiDocList, ApiConfig config
-            , JavaProjectBuilder javaProjectBuilder, String template, String indexHtml) {
-        FileUtil.mkdirs(config.getOutPath());
-        int index = 0;
-        for (ApiDoc doc : apiDocList) {
-            if (index == 0) {
-                doc.setAlias(indexHtml);
-            }
-            builderTemplate.buildDoc(apiDocList, config, javaProjectBuilder, template,
-                    doc.getAlias() + ".html", doc, indexHtml);
-            index++;
-        }
-    }
+	/**
+	 * Only for smart-doc maven plugin and gradle plugin.
+	 * @param config ApiConfig
+	 * @param javaProjectBuilder ProjectDocConfigBuilder
+	 */
+	public static void buildApiDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
+		DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
+		builderTemplate.checkAndInit(config, Boolean.TRUE);
+		config.setParamsDataToTree(false);
+		ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
+		IDocBuildTemplate<ApiDoc> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework(),
+				config.getClassLoader());
+		Objects.requireNonNull(docBuildTemplate, "doc build template is null");
+		List<ApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder).getApiDatas();
+		builderTemplate.copyJQueryAndCss(config);
+		if (config.isAllInOne()) {
+			apiDocList = docBuildTemplate.handleApiGroup(apiDocList, config);
+			if (config.isCreateDebugPage()) {
+				INDEX_HTML = DocGlobalConstants.DEBUG_PAGE_ALL_TPL;
+				if (StringUtils.isNotEmpty(config.getAllInOneDocFileName())) {
+					INDEX_HTML = config.getAllInOneDocFileName();
+				}
+				builderTemplate.buildAllInOne(apiDocList, config, javaProjectBuilder,
+						DocGlobalConstants.DEBUG_PAGE_ALL_TPL, INDEX_HTML);
+				Template mockJs = BeetlTemplateUtil.getByName(DocGlobalConstants.DEBUG_JS_TPL);
+				FileUtil.nioWriteFile(mockJs.render(),
+						config.getOutPath() + DocGlobalConstants.FILE_SEPARATOR + DocGlobalConstants.DEBUG_JS_OUT);
+			}
+			else {
+				if (StringUtils.isNotEmpty(config.getAllInOneDocFileName())) {
+					INDEX_HTML = config.getAllInOneDocFileName();
+				}
+				builderTemplate.buildAllInOne(apiDocList, config, javaProjectBuilder,
+						DocGlobalConstants.ALL_IN_ONE_HTML_TPL, INDEX_HTML);
+			}
+			builderTemplate.buildSearchJs(config, javaProjectBuilder, apiDocList, DocGlobalConstants.SEARCH_ALL_JS_TPL);
+		}
+		else {
+			String indexAlias;
+			if (config.isCreateDebugPage()) {
+				indexAlias = "debug";
+				buildDoc(builderTemplate, apiDocList, config, javaProjectBuilder,
+						DocGlobalConstants.DEBUG_PAGE_SINGLE_TPL, indexAlias);
+				Template mockJs = BeetlTemplateUtil.getByName(DocGlobalConstants.DEBUG_JS_TPL);
+				FileUtil.nioWriteFile(mockJs.render(),
+						config.getOutPath() + DocGlobalConstants.FILE_SEPARATOR + DocGlobalConstants.DEBUG_JS_OUT);
+			}
+			else {
+				indexAlias = "api";
+				buildDoc(builderTemplate, apiDocList, config, javaProjectBuilder,
+						DocGlobalConstants.SINGLE_INDEX_HTML_TPL, indexAlias);
+			}
+			builderTemplate.buildErrorCodeDoc(config, javaProjectBuilder, apiDocList,
+					DocGlobalConstants.SINGLE_ERROR_HTML_TPL, ERROR_CODE_HTML, indexAlias);
+			builderTemplate.buildDirectoryDataDoc(config, javaProjectBuilder, apiDocList,
+					DocGlobalConstants.SINGLE_DICT_HTML_TPL, DICT_HTML, indexAlias);
+			builderTemplate.buildSearchJs(config, javaProjectBuilder, apiDocList, DocGlobalConstants.SEARCH_JS_TPL);
+		}
+
+	}
+
+	/**
+	 * build ever controller api
+	 * @param builderTemplate DocBuilderTemplate
+	 * @param apiDocList list of api doc
+	 * @param config ApiConfig
+	 * @param javaProjectBuilder ProjectDocConfigBuilder
+	 * @param template template
+	 * @param indexHtml indexHtml
+	 */
+	private static void buildDoc(DocBuilderTemplate builderTemplate, List<ApiDoc> apiDocList, ApiConfig config,
+			JavaProjectBuilder javaProjectBuilder, String template, String indexHtml) {
+		FileUtil.mkdirs(config.getOutPath());
+		int index = 0;
+		for (ApiDoc doc : apiDocList) {
+			if (index == 0) {
+				doc.setAlias(indexHtml);
+			}
+			builderTemplate.buildDoc(apiDocList, config, javaProjectBuilder, template, doc.getAlias() + ".html", doc,
+					indexHtml);
+			index++;
+		}
+	}
+
 }

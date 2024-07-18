@@ -20,137 +20,130 @@
  */
 package com.ly.doc.model;
 
+import com.power.common.model.EnumDictionary;
+import com.power.common.util.EnumUtil;
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-
-import com.power.common.model.EnumDictionary;
-import com.power.common.util.EnumUtil;
-
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author yu 2019/10/31.
  */
 public class ApiDataDictionary {
 
-    /**
-     * Dictionary
-     */
-    private String title;
+	/**
+	 * Dictionary
+	 */
+	private String title;
 
-    /**
-     * enumClass
-     */
-    private Class<?> enumClass;
+	/**
+	 * enumClass
+	 */
+	private Class<?> enumClass;
 
-    /**
-     * enum implements
-     * when enumClass is interface
-     */
-    private Set<Class<? extends Enum>> enumImplementSet;
+	/**
+	 * enum implements when enumClass is interface
+	 */
+	private Set<Class<? extends Enum<?>>> enumImplementSet;
 
-    /**
-     * enum class name
-     */
-    private String enumClassName;
+	/**
+	 * enum class name
+	 */
+	private String enumClassName;
 
-    /**
-     * code field
-     */
-    private String codeField;
+	/**
+	 * code field
+	 */
+	private String codeField;
 
-    /**
-     * description field
-     */
-    private String descField;
+	/**
+	 * description field
+	 */
+	private String descField;
 
-    public static ApiDataDictionary builder() {
-        return new ApiDataDictionary();
-    }
+	public static ApiDataDictionary builder() {
+		return new ApiDataDictionary();
+	}
 
+	public String getTitle() {
+		return title;
+	}
 
-    public String getTitle() {
-        return title;
-    }
+	public ApiDataDictionary setTitle(String title) {
+		this.title = title;
+		return this;
+	}
 
-    public ApiDataDictionary setTitle(String title) {
-        this.title = title;
-        return this;
-    }
+	public Class getEnumClass() {
+		return enumClass;
+	}
 
-    public Class getEnumClass() {
-        return enumClass;
-    }
+	public ApiDataDictionary setEnumClass(Class<?> enumClass) {
+		this.enumClass = enumClass;
+		if (StringUtils.isBlank(this.enumClassName) && Objects.nonNull(enumClass)) {
+			this.enumClassName = enumClass.getSimpleName();
+		}
+		return this;
+	}
 
-    public ApiDataDictionary setEnumClass(Class<?> enumClass) {
-        this.enumClass = enumClass;
-        if (StringUtils.isBlank(this.enumClassName) && Objects.nonNull(enumClass)) {
-            this.enumClassName = enumClass.getSimpleName();
-        }
-        return this;
-    }
+	public Set<Class<? extends Enum<?>>> getEnumImplementSet() {
+		return enumImplementSet;
+	}
 
-    public Set<Class<? extends Enum>> getEnumImplementSet() {
-        return enumImplementSet;
-    }
+	public ApiDataDictionary setEnumImplementSet(Set<Class<? extends Enum<?>>> enumImplementSet) {
+		this.enumImplementSet = enumImplementSet;
+		return this;
+	}
 
-    public ApiDataDictionary setEnumImplementSet(Set<Class<? extends Enum>> enumImplementSet) {
-        this.enumImplementSet = enumImplementSet;
-        return this;
-    }
+	public String getCodeField() {
+		return codeField;
+	}
 
-    public String getCodeField() {
-        return codeField;
-    }
+	public ApiDataDictionary setCodeField(String codeField) {
+		this.codeField = codeField;
+		return this;
+	}
 
-    public ApiDataDictionary setCodeField(String codeField) {
-        this.codeField = codeField;
-        return this;
-    }
+	public String getDescField() {
+		return descField;
+	}
 
-    public String getDescField() {
-        return descField;
-    }
+	public ApiDataDictionary setDescField(String descField) {
+		this.descField = descField;
+		return this;
+	}
 
-    public ApiDataDictionary setDescField(String descField) {
-        this.descField = descField;
-        return this;
-    }
+	public String getEnumClassName() {
+		return enumClassName;
+	}
 
-    public String getEnumClassName() {
-        return enumClassName;
-    }
+	public ApiDataDictionary setEnumClassName(String enumClassName) {
+		this.enumClassName = enumClassName;
+		return this;
+	}
 
-    public ApiDataDictionary setEnumClassName(String enumClassName) {
-        this.enumClassName = enumClassName;
-        return this;
-    }
+	public List<EnumDictionary> getEnumDataDict(Class enumClass) {
+		if (Objects.nonNull(enumClass)) {
+			return EnumUtil.getEnumInformation(enumClass, this.getCodeField(), this.getDescField());
+		}
+		else {
+			return new ArrayList<>();
+		}
+	}
 
-    public List<EnumDictionary> getEnumDataDict(Class enumClass) {
-        if (Objects.nonNull(enumClass)) {
-            return EnumUtil.getEnumInformation(enumClass, this.getCodeField(),
-                this.getDescField());
-        } else {
-            return new ArrayList<>();
-        }
-    }
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder("{");
+		sb.append("\"title\":\"").append(title).append('\"');
+		sb.append(",\"enumClass\":").append(enumClass);
+		sb.append(",\"enumClassName\":\"").append(enumClassName).append('\"');
+		sb.append(",\"codeField\":\"").append(codeField).append('\"');
+		sb.append(",\"descField\":\"").append(descField).append('\"');
+		sb.append('}');
+		return sb.toString();
+	}
 
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("{");
-        sb.append("\"title\":\"")
-            .append(title).append('\"');
-        sb.append(",\"enumClass\":")
-            .append(enumClass);
-        sb.append(",\"enumClassName\":\"")
-            .append(enumClassName).append('\"');
-        sb.append(",\"codeField\":\"")
-            .append(codeField).append('\"');
-        sb.append(",\"descField\":\"")
-            .append(descField).append('\"');
-        sb.append('}');
-        return sb.toString();
-    }
 }

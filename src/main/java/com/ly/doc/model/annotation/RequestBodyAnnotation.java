@@ -25,29 +25,30 @@ package com.ly.doc.model.annotation;
  */
 public class RequestBodyAnnotation {
 
-    private String annotationName;
+	private String annotationName;
 
-    private String annotationFullyName;
+	private String annotationFullyName;
 
-    public static RequestBodyAnnotation builder() {
-        return new RequestBodyAnnotation();
-    }
+	public static RequestBodyAnnotation builder() {
+		return new RequestBodyAnnotation();
+	}
 
-    public String getAnnotationName() {
-        return annotationName;
-    }
+	public String getAnnotationName() {
+		return annotationName;
+	}
 
-    public RequestBodyAnnotation setAnnotationName(String annotationName) {
-        this.annotationName = annotationName;
-        return this;
-    }
+	public RequestBodyAnnotation setAnnotationName(String annotationName) {
+		this.annotationName = annotationName;
+		return this;
+	}
 
-    public String getAnnotationFullyName() {
-        return annotationFullyName;
-    }
+	public String getAnnotationFullyName() {
+		return annotationFullyName;
+	}
 
-    public RequestBodyAnnotation setAnnotationFullyName(String annotationFullyName) {
-        this.annotationFullyName = annotationFullyName;
-        return this;
-    }
+	public RequestBodyAnnotation setAnnotationFullyName(String annotationFullyName) {
+		this.annotationFullyName = annotationFullyName;
+		return this;
+	}
+
 }

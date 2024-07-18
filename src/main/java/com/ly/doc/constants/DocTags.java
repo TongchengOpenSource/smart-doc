@@ -25,125 +25,126 @@ package com.ly.doc.constants;
  */
 public interface DocTags {
 
-    /**
-     * java since tag
-     */
-    String SINCE = "since";
+	/**
+	 * java since tag
+	 */
+	String SINCE = "since";
 
-    /**
-     * java param tag
-     */
-    String PARAM = "param";
+	/**
+	 * java param tag
+	 */
+	String PARAM = "param";
 
-    /**
-     * java apiNote tag for method detail
-     */
-    String API_NOTE = "apiNote";
+	/**
+	 * java apiNote tag for method detail
+	 */
+	String API_NOTE = "apiNote";
 
-    /**
-     * java author tag for method author
-     */
-    String AUTHOR = "author";
+	/**
+	 * java author tag for method author
+	 */
+	String AUTHOR = "author";
 
-    /**
-     * java version tag
-     */
-    String VERSION = "version";
+	/**
+	 * java version tag
+	 */
+	String VERSION = "version";
 
-    /**
-     * java deprecated tag
-     */
-    String DEPRECATED = "deprecated";
+	/**
+	 * java deprecated tag
+	 */
+	String DEPRECATED = "deprecated";
 
-    /**
-     * custom ignore tag
-     */
-    String IGNORE = "ignore";
+	/**
+	 * custom ignore tag
+	 */
+	String IGNORE = "ignore";
 
-    /**
-     * custom @mock tag
-     */
-    String MOCK = "mock";
+	/**
+	 * custom @mock tag
+	 */
+	String MOCK = "mock";
 
-    /**
-     * custom @dubbo tag
-     */
-    String DUBBO = "dubbo";
+	/**
+	 * custom @dubbo tag
+	 */
+	String DUBBO = "dubbo";
 
-    /**
-     * custom @javadoc tag
-     */
-    String JAVA_DOC = "javadoc";
+	/**
+	 * custom @javadoc tag
+	 */
+	String JAVA_DOC = "javadoc";
 
-    /**
-     * custom @api tag
-     */
-    String REST_API = "restApi";
+	/**
+	 * custom @api tag
+	 */
+	String REST_API = "restApi";
 
-    /**
-     * custom @order tag
-     */
-    String ORDER = "order";
+	/**
+	 * custom @order tag
+	 */
+	String ORDER = "order";
 
-    /**
-     * custom @group tag
-     */
-    String GROUP = "group";
+	/**
+	 * custom @group tag
+	 */
+	String GROUP = "group";
 
-    /**
-     * custom @download tag
-     */
-    String DOWNLOAD = "download";
+	/**
+	 * custom @download tag
+	 */
+	String DOWNLOAD = "download";
 
-    /**
-     * custom @page tag
-     */
-    String PAGE = "page";
+	/**
+	 * custom @page tag
+	 */
+	String PAGE = "page";
 
-    /**
-     * custom @ignoreParams tag
-     */
-    String IGNORE_PARAMS = "ignoreParams";
+	/**
+	 * custom @ignoreParams tag
+	 */
+	String IGNORE_PARAMS = "ignoreParams";
 
+	/**
+	 * Ignore ResponseBodyAdvice
+	 */
+	String IGNORE_RESPONSE_BODY_ADVICE = "ignoreResponseBodyAdvice";
 
-    /**
-     * Ignore ResponseBodyAdvice
-     */
-    String IGNORE_RESPONSE_BODY_ADVICE = "ignoreResponseBodyAdvice";
+	String IGNORE_REQUEST_BODY_ADVICE = "ignoreRequestBodyAdvice";
 
-    String IGNORE_REQUEST_BODY_ADVICE = "ignoreRequestBodyAdvice";
+	/**
+	 * response tag @since 2.2.0
+	 */
+	String API_RESPONSE = "response";
 
-    /**
-     * response tag @since 2.2.0
-     */
-    String API_RESPONSE = "response";
+	/**
+	 * custom @tag
+	 */
+	String TAG = "tag";
 
-    /**
-     * custom @tag
-     */
-    String TAG = "tag";
+	/**
+	 * custom @dubboRest tag
+	 */
+	String DUBBO_REST = "dubboRest";
 
-    /**
-     * custom @dubboRest tag
-     */
-    String DUBBO_REST = "dubboRest";
+	/**
+	 * tag @see
+	 */
+	String SEE = "see";
 
-    /**
-     * tag @see
-     */
-    String SEE = "see";
+	/**
+	 * tag @protocol
+	 */
+	String PROTOCOL = "protocol";
 
-    /**
-     * tag @protocol
-     */
-    String PROTOCOL = "protocol";
+	/**
+	 * dubbo service name
+	 */
+	String SERVICE = "service";
 
-    /**
-     * dubbo service name
-     */
-    String SERVICE = "service";
-    /**
-     * extension for openapi
-     */
-    String EXTENSION = "extension";
+	/**
+	 * extension for openapi
+	 */
+	String EXTENSION = "extension";
+
 }

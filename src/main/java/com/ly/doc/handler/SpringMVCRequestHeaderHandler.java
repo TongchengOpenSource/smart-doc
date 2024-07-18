@@ -29,27 +29,28 @@ import com.ly.doc.model.annotation.HeaderAnnotation;
  */
 public class SpringMVCRequestHeaderHandler implements IHeaderHandler {
 
-    @Override
-    public boolean isMapping(String annotationName) {
-        switch (annotationName) {
-            case "GetMapping":
-            case "RequestMapping":
-            case "PostMapping":
-            case "PutMapping":
-            case "PatchMapping":
-            case "DeleteMapping":
-                return true;
-            default:
-                return false;
-        }
-    }
+	@Override
+	public boolean isMapping(String annotationName) {
+		switch (annotationName) {
+			case "GetMapping":
+			case "RequestMapping":
+			case "PostMapping":
+			case "PutMapping":
+			case "PatchMapping":
+			case "DeleteMapping":
+				return true;
+			default:
+				return false;
+		}
+	}
 
-    @Override
-    public HeaderAnnotation getHeaderAnnotation() {
-        return HeaderAnnotation.builder()
-            .setAnnotationName(SpringMvcAnnotations.REQUEST_HERDER)
-            .setValueProp(DocAnnotationConstants.VALUE_PROP)
-            .setDefaultValueProp(DocAnnotationConstants.DEFAULT_VALUE_PROP)
-            .setRequiredProp(DocAnnotationConstants.REQUIRED_PROP);
-    }
+	@Override
+	public HeaderAnnotation getHeaderAnnotation() {
+		return HeaderAnnotation.builder()
+			.setAnnotationName(SpringMvcAnnotations.REQUEST_HERDER)
+			.setValueProp(DocAnnotationConstants.VALUE_PROP)
+			.setDefaultValueProp(DocAnnotationConstants.DEFAULT_VALUE_PROP)
+			.setRequiredProp(DocAnnotationConstants.REQUIRED_PROP);
+	}
+
 }

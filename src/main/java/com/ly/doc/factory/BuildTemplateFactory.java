@@ -33,47 +33,49 @@ import java.util.ServiceLoader;
  *
  * @author yu 2021/6/27.
  */
-@SuppressWarnings({"rawtypes", "unchecked"})
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class BuildTemplateFactory {
 
-    /**
-     * Get Doc build template.
-     *
-     * @param framework   framework name
-     * @param <T>         API doc type
-     * @param classLoader classLoader
-     * @return Implements of IDocBuildTemplate
-     */
-    public static <T extends IDoc> IDocBuildTemplate<T> getDocBuildTemplate(String framework, ClassLoader classLoader) {
-        ServiceLoader<IDocBuildTemplate> loader = ServiceLoader.load(IDocBuildTemplate.class, classLoader);
-        for (IDocBuildTemplate<T> template : loader) {
-            // if support framework
-            if (template.supportsFramework(framework)) {
-                return template;
-            }
-        }
-        throw new RuntimeException(
-                "The framework=>" + framework + " is not found , smart-doc currently supported framework name can only be set in [" + FrameworkEnum.allFramework() + "].");
-    }
+	/**
+	 * Get Doc build template.
+	 * @param framework framework name
+	 * @param <T> API doc type
+	 * @param classLoader classLoader
+	 * @return Implements of IDocBuildTemplate
+	 */
+	public static <T extends IDoc> IDocBuildTemplate<T> getDocBuildTemplate(String framework, ClassLoader classLoader) {
+		ServiceLoader<IDocBuildTemplate> loader = ServiceLoader.load(IDocBuildTemplate.class, classLoader);
+		for (IDocBuildTemplate<T> template : loader) {
+			// if support framework
+			if (template.supportsFramework(framework)) {
+				return template;
+			}
+		}
+		throw new RuntimeException("The framework=>" + framework
+				+ " is not found , smart-doc currently supported framework name can only be set in ["
+				+ FrameworkEnum.allFramework() + "].");
+	}
 
+	/**
+	 * Get WebSocket Doc build template.
+	 * @param framework framework name
+	 * @param <T> API doc type
+	 * @param classLoader classLoader
+	 * @return Implements of IDocBuildTemplate
+	 */
+	public static <T extends WebSocketDoc> IWebSocketDocBuildTemplate<T> getWebSocketDocBuildTemplate(String framework,
+			ClassLoader classLoader) {
+		ServiceLoader<IWebSocketDocBuildTemplate> loader = ServiceLoader.load(IWebSocketDocBuildTemplate.class,
+				classLoader);
+		for (IWebSocketDocBuildTemplate<T> template : loader) {
+			// if support framework
+			if (template.supportsFramework(framework)) {
+				return template;
+			}
+		}
+		throw new RuntimeException("The framework=>" + framework
+				+ " is not found , smart-doc currently supported framework name can only be set in ["
+				+ FrameworkEnum.allFramework() + "].");
+	}
 
-    /**
-     * Get WebSocket Doc build template.
-     *
-     * @param framework   framework name
-     * @param <T>         API doc type
-     * @param classLoader classLoader
-     * @return Implements of IDocBuildTemplate
-     */
-    public static <T extends WebSocketDoc> IWebSocketDocBuildTemplate<T> getWebSocketDocBuildTemplate(String framework, ClassLoader classLoader) {
-        ServiceLoader<IWebSocketDocBuildTemplate> loader = ServiceLoader.load(IWebSocketDocBuildTemplate.class, classLoader);
-        for (IWebSocketDocBuildTemplate<T> template : loader) {
-            // if support framework
-            if (template.supportsFramework(framework)) {
-                return template;
-            }
-        }
-        throw new RuntimeException(
-                "The framework=>" + framework + " is not found , smart-doc currently supported framework name can only be set in [" + FrameworkEnum.allFramework() + "].");
-    }
 }

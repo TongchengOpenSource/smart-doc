@@ -31,49 +31,54 @@ import com.ly.doc.model.postman.UrlBean;
  */
 public class RequestBean {
 
-    private String method;
-    private BodyBean body;
-    private UrlBean url;
-    private String description;
-    private List<HeaderBean> header;
+	private String method;
 
-    public String getMethod() {
-        return method;
-    }
+	private BodyBean body;
 
-    public void setMethod(String method) {
-        this.method = method;
-    }
+	private UrlBean url;
 
-    public BodyBean getBody() {
-        return body;
-    }
+	private String description;
 
-    public void setBody(BodyBean body) {
-        this.body = body;
-    }
+	private List<HeaderBean> header;
 
-    public UrlBean getUrl() {
-        return url;
-    }
+	public String getMethod() {
+		return method;
+	}
 
-    public void setUrl(UrlBean url) {
-        this.url = url;
-    }
+	public void setMethod(String method) {
+		this.method = method;
+	}
 
-    public String getDescription() {
-        return description;
-    }
+	public BodyBean getBody() {
+		return body;
+	}
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+	public void setBody(BodyBean body) {
+		this.body = body;
+	}
 
-    public List<HeaderBean> getHeader() {
-        return header;
-    }
+	public UrlBean getUrl() {
+		return url;
+	}
 
-    public void setHeader(List<HeaderBean> header) {
-        this.header = header;
-    }
+	public void setUrl(UrlBean url) {
+		this.url = url;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public List<HeaderBean> getHeader() {
+		return header;
+	}
+
+	public void setHeader(List<HeaderBean> header) {
+		this.header = header;
+	}
+
 }

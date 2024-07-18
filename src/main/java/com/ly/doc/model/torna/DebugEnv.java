@@ -25,22 +25,24 @@ package com.ly.doc.model.torna;
  **/
 public class DebugEnv {
 
-    private String name;
-    private String url;
+	private String name;
 
-    public String getName() {
-        return name;
-    }
+	private String url;
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public String getUrl() {
-        return url;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public void setUrl(String url) {
-        this.url = url;
-    }
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
 }

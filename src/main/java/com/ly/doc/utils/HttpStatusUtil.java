@@ -28,36 +28,37 @@ import com.ly.doc.constants.HttpStatusEnum;
  */
 public class HttpStatusUtil {
 
+	/**
+	 * Retrieves the corresponding HTTP status code as a string based on the input status
+	 * string. This method maps status strings from the HttpStatus enum to their numeric
+	 * HTTP status code equivalents.
+	 * @param status The status string from the HttpStatus enum
+	 * @return The HTTP status code as a string
+	 */
+	public static String getStatusCode(String status) {
+		try {
+			HttpStatusEnum httpStatusEnum = HttpStatusEnum.valueOf(status);
+			return String.valueOf(httpStatusEnum.value());
+		}
+		catch (IllegalArgumentException e) {
+			return String.valueOf(HttpStatusEnum.INTERNAL_SERVER_ERROR.value());
+		}
+	}
 
-    /**
-     * Retrieves the corresponding HTTP status code as a string based on the input status string.
-     * This method maps status strings from the HttpStatus enum to their numeric HTTP status code equivalents.
-     *
-     * @param status The status string from the HttpStatus enum
-     * @return The HTTP status code as a string
-     */
-    public static String getStatusCode(String status) {
-        try {
-            HttpStatusEnum httpStatusEnum = HttpStatusEnum.valueOf(status);
-            return String.valueOf(httpStatusEnum.value());
-        } catch (IllegalArgumentException e) {
-            return String.valueOf(HttpStatusEnum.INTERNAL_SERVER_ERROR.value());
-        }
-    }
+	/**
+	 * Retrieves the description of an HTTP status based on the input status code string.
+	 * This method translates numeric HTTP status codes into human-readable descriptions.
+	 * @param statusCode The HTTP status code as a string
+	 * @return The description of the HTTP status
+	 */
+	public static String getStatusDescription(String statusCode) {
+		try {
+			HttpStatusEnum httpStatusEnum = HttpStatusEnum.valueOf(statusCode);
+			return String.valueOf(httpStatusEnum.getReasonPhrase());
+		}
+		catch (IllegalArgumentException e) {
+			return HttpStatusEnum.INTERNAL_SERVER_ERROR.getReasonPhrase();
+		}
+	}
 
-    /**
-     * Retrieves the description of an HTTP status based on the input status code string.
-     * This method translates numeric HTTP status codes into human-readable descriptions.
-     *
-     * @param statusCode The HTTP status code as a string
-     * @return The description of the HTTP status
-     */
-    public static String getStatusDescription(String statusCode) {
-        try {
-            HttpStatusEnum httpStatusEnum = HttpStatusEnum.valueOf(statusCode);
-            return String.valueOf(httpStatusEnum.getReasonPhrase());
-        } catch (IllegalArgumentException e) {
-            return HttpStatusEnum.INTERNAL_SERVER_ERROR.getReasonPhrase();
-        }
-    }
 }

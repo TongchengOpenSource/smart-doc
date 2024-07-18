@@ -120,6 +120,21 @@
                     </execution>
                 </executions>
             </plugin>
+            <!-- spring java format -->
+            <plugin>
+                <groupId>io.spring.javaformat</groupId>
+                <artifactId>spring-javaformat-maven-plugin</artifactId>
+                <version>0.0.42</version>
+                <executions>
+                    <execution>
+                        <phase>validate</phase>
+                        <inherited>true</inherited>
+                        <goals>
+                            <goal>validate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
         <finalName>smart-doc</finalName>
     </build>

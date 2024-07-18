@@ -25,85 +25,88 @@ package com.ly.doc.model.request;
  */
 public class JaxrsPathMapping extends RequestMapping {
 
-    /**
-     * url
-     */
-    private String url;
+	/**
+	 * url
+	 */
+	private String url;
 
-    /**
-     * path
-     */
-    private String shortUrl;
-    /**
-     * methodType
-     */
-    private String methodType;
-    /**
-     * media type
-     */
-    private String mediaType;
+	/**
+	 * path
+	 */
+	private String shortUrl;
 
-    /**
-     * method deprecated
-     */
-    private boolean deprecated;
+	/**
+	 * methodType
+	 */
+	private String methodType;
 
-    public static JaxrsPathMapping builder() {
-        return new JaxrsPathMapping();
-    }
+	/**
+	 * media type
+	 */
+	private String mediaType;
 
-    @Override
-    public String getUrl() {
-        return url;
-    }
+	/**
+	 * method deprecated
+	 */
+	private boolean deprecated;
 
-    @Override
-    public JaxrsPathMapping setUrl(String url) {
-        this.url = url;
-        return this;
-    }
+	public static JaxrsPathMapping builder() {
+		return new JaxrsPathMapping();
+	}
 
-    @Override
-    public String getShortUrl() {
-        return shortUrl;
-    }
+	@Override
+	public String getUrl() {
+		return url;
+	}
 
-    @Override
-    public JaxrsPathMapping setShortUrl(String shortUrl) {
-        this.shortUrl = shortUrl;
-        return this;
-    }
+	@Override
+	public JaxrsPathMapping setUrl(String url) {
+		this.url = url;
+		return this;
+	}
 
-    @Override
-    public String getMethodType() {
-        return methodType;
-    }
+	@Override
+	public String getShortUrl() {
+		return shortUrl;
+	}
 
-    @Override
-    public JaxrsPathMapping setMethodType(String methodType) {
-        this.methodType = methodType;
-        return this;
-    }
+	@Override
+	public JaxrsPathMapping setShortUrl(String shortUrl) {
+		this.shortUrl = shortUrl;
+		return this;
+	}
 
-    @Override
-    public String getMediaType() {
-        return mediaType;
-    }
+	@Override
+	public String getMethodType() {
+		return methodType;
+	}
 
-    @Override
-    public JaxrsPathMapping setMediaType(String mediaType) {
-        this.mediaType = mediaType;
-        return this;
-    }
+	@Override
+	public JaxrsPathMapping setMethodType(String methodType) {
+		this.methodType = methodType;
+		return this;
+	}
 
-    @Override
-    public boolean isDeprecated() {
-        return deprecated;
-    }
+	@Override
+	public String getMediaType() {
+		return mediaType;
+	}
 
-    @Override
-    public JaxrsPathMapping setDeprecated(boolean deprecated) {
-        this.deprecated = deprecated;
-        return this;
-    }
+	@Override
+	public JaxrsPathMapping setMediaType(String mediaType) {
+		this.mediaType = mediaType;
+		return this;
+	}
+
+	@Override
+	public boolean isDeprecated() {
+		return deprecated;
+	}
+
+	@Override
+	public JaxrsPathMapping setDeprecated(boolean deprecated) {
+		this.deprecated = deprecated;
+		return this;
+	}
+
 }

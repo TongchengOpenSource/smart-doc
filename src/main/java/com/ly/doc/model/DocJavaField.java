@@ -32,224 +32,223 @@ import com.thoughtworks.qdox.model.JavaField;
  */
 public class DocJavaField {
 
-    /**
-     * field info
-     */
-    private JavaField javaField;
+	/**
+	 * field info
+	 */
+	private JavaField javaField;
 
-    /**
-     * comment
-     */
-    private String comment;
+	/**
+	 * comment
+	 */
+	private String comment;
 
-    /**
-     * tags
-     */
-    private List<DocletTag> docletTags;
+	/**
+	 * tags
+	 */
+	private List<DocletTag> docletTags;
 
-    /**
-     * annotations
-     */
-    private List<JavaAnnotation> annotations;
+	/**
+	 * annotations
+	 */
+	private List<JavaAnnotation> annotations;
 
-    /**
-     * field fullyQualifiedName
-     */
-    private String typeFullyQualifiedName;
+	/**
+	 * field fullyQualifiedName
+	 */
+	private String typeFullyQualifiedName;
 
-    /**
-     * field genericCanonicalName
-     */
-    private String typeGenericCanonicalName;
+	/**
+	 * field genericCanonicalName
+	 */
+	private String typeGenericCanonicalName;
 
-    /**
-     * genericFullyQualifiedName
-     */
-    private String typeGenericFullyQualifiedName;
+	/**
+	 * genericFullyQualifiedName
+	 */
+	private String typeGenericFullyQualifiedName;
 
-    /**
-     * field generic actualJavaType;
-     */
-    private String actualJavaType;
+	/**
+	 * field generic actualJavaType;
+	 */
+	private String actualJavaType;
 
-    /**
-     * field name
-     */
-    private String fieldName;
+	/**
+	 * field name
+	 */
+	private String fieldName;
 
-    private boolean array;
+	private boolean array;
 
-    private boolean primitive;
+	private boolean primitive;
 
-    private boolean collection;
+	private boolean collection;
 
-    private boolean file;
+	private boolean file;
 
-    private boolean isEnum;
+	private boolean isEnum;
 
-    /**
-     * owner class
-     */
-    private String declaringClassName;
+	/**
+	 * owner class
+	 */
+	private String declaringClassName;
 
+	private String typeSimpleName;
 
-    private String typeSimpleName;
+	public static DocJavaField builder() {
+		return new DocJavaField();
+	}
 
+	public JavaField getJavaField() {
+		return javaField;
+	}
 
-    public static DocJavaField builder() {
-        return new DocJavaField();
-    }
+	public DocJavaField setJavaField(JavaField javaField) {
+		this.javaField = javaField;
+		return this;
+	}
 
-    public JavaField getJavaField() {
-        return javaField;
-    }
+	public String getComment() {
+		return comment;
+	}
 
-    public DocJavaField setJavaField(JavaField javaField) {
-        this.javaField = javaField;
-        return this;
-    }
+	public DocJavaField setComment(String comment) {
+		this.comment = comment;
+		return this;
+	}
 
-    public String getComment() {
-        return comment;
-    }
+	public String getTypeFullyQualifiedName() {
+		return typeFullyQualifiedName;
+	}
 
-    public DocJavaField setComment(String comment) {
-        this.comment = comment;
-        return this;
-    }
+	public DocJavaField setTypeFullyQualifiedName(String typeFullyQualifiedName) {
+		this.typeFullyQualifiedName = typeFullyQualifiedName;
+		return this;
+	}
 
-    public String getTypeFullyQualifiedName() {
-        return typeFullyQualifiedName;
-    }
+	public String getTypeGenericCanonicalName() {
+		return typeGenericCanonicalName;
+	}
 
-    public DocJavaField setTypeFullyQualifiedName(String typeFullyQualifiedName) {
-        this.typeFullyQualifiedName = typeFullyQualifiedName;
-        return this;
-    }
+	public DocJavaField setTypeGenericCanonicalName(String typeGenericCanonicalName) {
+		this.typeGenericCanonicalName = typeGenericCanonicalName;
+		return this;
+	}
 
-    public String getTypeGenericCanonicalName() {
-        return typeGenericCanonicalName;
-    }
+	public String getActualJavaType() {
+		return actualJavaType;
+	}
 
-    public DocJavaField setTypeGenericCanonicalName(String typeGenericCanonicalName) {
-        this.typeGenericCanonicalName = typeGenericCanonicalName;
-        return this;
-    }
+	public DocJavaField setActualJavaType(String actualJavaType) {
+		this.actualJavaType = actualJavaType;
+		return this;
+	}
 
-    public String getActualJavaType() {
-        return actualJavaType;
-    }
+	public List<DocletTag> getDocletTags() {
+		if (docletTags == null) {
+			return new ArrayList<>();
+		}
+		return docletTags;
+	}
 
-    public DocJavaField setActualJavaType(String actualJavaType) {
-        this.actualJavaType = actualJavaType;
-        return this;
-    }
+	public DocJavaField setDocletTags(List<DocletTag> docletTags) {
+		this.docletTags = docletTags;
+		return this;
+	}
 
-    public List<DocletTag> getDocletTags() {
-        if (docletTags == null) {
-            return new ArrayList<>();
-        }
-        return docletTags;
-    }
+	public List<JavaAnnotation> getAnnotations() {
+		List<JavaAnnotation> fieldAnnotations = javaField.getAnnotations();
+		if (fieldAnnotations != null && !fieldAnnotations.isEmpty()) {
+			return fieldAnnotations;
+		}
+		if (annotations == null) {
+			return new ArrayList<>();
+		}
+		return this.annotations;
+	}
 
-    public DocJavaField setDocletTags(List<DocletTag> docletTags) {
-        this.docletTags = docletTags;
-        return this;
-    }
+	public DocJavaField setAnnotations(List<JavaAnnotation> annotations) {
+		this.annotations = annotations;
+		return this;
+	}
 
-    public List<JavaAnnotation> getAnnotations() {
-        List<JavaAnnotation> fieldAnnotations = javaField.getAnnotations();
-        if (fieldAnnotations != null && !fieldAnnotations.isEmpty()) {
-            return fieldAnnotations;
-        }
-        if (annotations == null) {
-            return new ArrayList<>();
-        }
-        return this.annotations;
-    }
+	public boolean isArray() {
+		return array;
+	}
 
-    public DocJavaField setAnnotations(List<JavaAnnotation> annotations) {
-        this.annotations = annotations;
-        return this;
-    }
+	public DocJavaField setArray(boolean array) {
+		this.array = array;
+		return this;
+	}
 
-    public boolean isArray() {
-        return array;
-    }
+	public boolean isPrimitive() {
+		return primitive;
+	}
 
-    public DocJavaField setArray(boolean array) {
-        this.array = array;
-        return this;
-    }
+	public DocJavaField setPrimitive(boolean primitive) {
+		this.primitive = primitive;
+		return this;
+	}
 
-    public boolean isPrimitive() {
-        return primitive;
-    }
+	public boolean isCollection() {
+		return collection;
+	}
 
-    public DocJavaField setPrimitive(boolean primitive) {
-        this.primitive = primitive;
-        return this;
-    }
+	public DocJavaField setCollection(boolean collection) {
+		this.collection = collection;
+		return this;
+	}
 
-    public boolean isCollection() {
-        return collection;
-    }
+	public boolean isFile() {
+		return file;
+	}
 
-    public DocJavaField setCollection(boolean collection) {
-        this.collection = collection;
-        return this;
-    }
+	public DocJavaField setFile(boolean file) {
+		this.file = file;
+		return this;
+	}
 
-    public boolean isFile() {
-        return file;
-    }
+	public boolean isEnum() {
+		return isEnum;
+	}
 
-    public DocJavaField setFile(boolean file) {
-        this.file = file;
-        return this;
-    }
+	public void setEnum(boolean anEnum) {
+		isEnum = anEnum;
+	}
 
-    public boolean isEnum() {
-        return isEnum;
-    }
+	public String getFieldName() {
+		return fieldName;
+	}
 
-    public void setEnum(boolean anEnum) {
-        isEnum = anEnum;
-    }
+	public DocJavaField setFieldName(String fieldName) {
+		this.fieldName = fieldName;
+		return this;
+	}
 
-    public String getFieldName() {
-        return fieldName;
-    }
+	public String getDeclaringClassName() {
+		return declaringClassName;
+	}
 
-    public DocJavaField setFieldName(String fieldName) {
-        this.fieldName = fieldName;
-        return this;
-    }
+	public DocJavaField setDeclaringClassName(String declaringClassName) {
+		this.declaringClassName = declaringClassName;
+		return this;
+	}
 
-    public String getDeclaringClassName() {
-        return declaringClassName;
-    }
+	public String getTypeGenericFullyQualifiedName() {
+		return typeGenericFullyQualifiedName;
+	}
 
-    public DocJavaField setDeclaringClassName(String declaringClassName) {
-        this.declaringClassName = declaringClassName;
-        return this;
-    }
+	public DocJavaField setTypeGenericFullyQualifiedName(String typeGenericFullyQualifiedName) {
+		this.typeGenericFullyQualifiedName = typeGenericFullyQualifiedName;
+		return this;
+	}
 
-    public String getTypeGenericFullyQualifiedName() {
-        return typeGenericFullyQualifiedName;
-    }
+	public String getTypeSimpleName() {
+		return typeSimpleName;
+	}
 
-    public DocJavaField setTypeGenericFullyQualifiedName(String typeGenericFullyQualifiedName) {
-        this.typeGenericFullyQualifiedName = typeGenericFullyQualifiedName;
-        return this;
-    }
+	public DocJavaField setTypeSimpleName(String typeSimpleName) {
+		this.typeSimpleName = typeSimpleName;
+		return this;
+	}
 
-    public String getTypeSimpleName() {
-        return typeSimpleName;
-    }
-
-    public DocJavaField setTypeSimpleName(String typeSimpleName) {
-        this.typeSimpleName = typeSimpleName;
-        return this;
-    }
 }

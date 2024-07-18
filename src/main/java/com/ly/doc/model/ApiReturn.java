@@ -26,29 +26,30 @@ package com.ly.doc.model;
  */
 public class ApiReturn {
 
-    /**
-     * return type generic name
-     */
-    private String genericCanonicalName;
+	/**
+	 * return type generic name
+	 */
+	private String genericCanonicalName;
 
-    /**
-     * return type simple name
-     */
-    private String simpleName;
+	/**
+	 * return type simple name
+	 */
+	private String simpleName;
 
-    public String getGenericCanonicalName() {
-        return genericCanonicalName;
-    }
+	public String getGenericCanonicalName() {
+		return genericCanonicalName;
+	}
 
-    public void setGenericCanonicalName(String genericCanonicalName) {
-        this.genericCanonicalName = genericCanonicalName;
-    }
+	public void setGenericCanonicalName(String genericCanonicalName) {
+		this.genericCanonicalName = genericCanonicalName;
+	}
 
-    public String getSimpleName() {
-        return simpleName;
-    }
+	public String getSimpleName() {
+		return simpleName;
+	}
 
-    public void setSimpleName(String simpleName) {
-        this.simpleName = simpleName;
-    }
+	public void setSimpleName(String simpleName) {
+		this.simpleName = simpleName;
+	}
+
 }

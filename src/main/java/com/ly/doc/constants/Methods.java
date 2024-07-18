@@ -26,47 +26,48 @@ package com.ly.doc.constants;
  * @author yu 2019/11/21.
  */
 public enum Methods {
-    /**
-     * http methods POST
-     */
-    POST("POST"),
 
-    /**
-     * http methods GET
-     */
-    GET("GET"),
+	/**
+	 * http methods POST
+	 */
+	POST("POST"),
 
-    /**
-     * http methods PUT
-     */
-    PUT("PUT"),
+	/**
+	 * http methods GET
+	 */
+	GET("GET"),
 
-    /**
-     * http methods PATCH
-     */
-    PATCH("PATCH"),
+	/**
+	 * http methods PUT
+	 */
+	PUT("PUT"),
 
-    /**
-     * http methods DELETE
-     */
-    DELETE("DELETE"),
+	/**
+	 * http methods PATCH
+	 */
+	PATCH("PATCH"),
 
-    /**
-     * http methods OPTIONS
-     */
-    OPTIONS("OPTIONS"),
-    ;
+	/**
+	 * http methods DELETE
+	 */
+	DELETE("DELETE"),
 
-    /**
-     * http methods value
-     */
-    private final String value;
+	/**
+	 * http methods OPTIONS
+	 */
+	OPTIONS("OPTIONS"),;
 
-    Methods(String value) {
-        this.value = value;
-    }
+	/**
+	 * http methods value
+	 */
+	private final String value;
 
-    public String getValue() {
-        return value;
-    }
+	Methods(String value) {
+		this.value = value;
+	}
+
+	public String getValue() {
+		return value;
+	}
+
 }

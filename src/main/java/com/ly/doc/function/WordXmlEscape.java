@@ -26,19 +26,21 @@ import org.beetl.core.Function;
 
 /**
  * beetl template function
+ *
  * @author yu 2021/6/26.
  */
 public class WordXmlEscape implements Function {
 
-    @Override
-    public String call(Object[] paras, Context ctx) {
-        String str = String.valueOf(paras[0])
-                .replaceAll(" ", " ")
-                .replaceAll("&nbsp;&nbsp;", " ")
-                .replaceAll("&nbsp;", "")
-                .replaceAll("<br/>", "")
-                .replaceAll("&", "&amp;")
-                .replaceAll("<", "&lt;");
-        return DocUtil.getEscapeAndCleanComment(str);
-    }
+	@Override
+	public String call(Object[] paras, Context ctx) {
+		String str = String.valueOf(paras[0])
+			.replaceAll(" ", " ")
+			.replaceAll("&nbsp;&nbsp;", " ")
+			.replaceAll("&nbsp;", "")
+			.replaceAll("<br/>", "")
+			.replaceAll("&", "&amp;")
+			.replaceAll("<", "&lt;");
+		return DocUtil.getEscapeAndCleanComment(str);
+	}
+
 }

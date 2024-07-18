@@ -25,10 +25,11 @@ package com.ly.doc.constants;
  * @author yu 2024/6/7
  */
 public interface JSRAnnotationPropConstants {
-    String MAX_PROP = "max";
 
-    String MIN_PROP = "min";
+	String MAX_PROP = "max";
 
-    String VALUE = "value";
+	String MIN_PROP = "min";
+
+	String VALUE = "value";
 
 }

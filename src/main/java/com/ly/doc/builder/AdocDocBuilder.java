@@ -38,44 +38,47 @@ import java.util.Objects;
  */
 public class AdocDocBuilder {
 
-    private static final String API_EXTENSION = "Api.adoc";
+	private static final String API_EXTENSION = "Api.adoc";
 
-    private static final String INDEX_DOC = "index.adoc";
+	private static final String INDEX_DOC = "index.adoc";
 
-    /**
-     * build adoc
-     *
-     * @param config ApiConfig
-     */
-    public static void buildApiDoc(ApiConfig config) {
-        JavaProjectBuilder javaProjectBuilder = JavaProjectBuilderHelper.create();
-        buildApiDoc(config, javaProjectBuilder);
-    }
+	/**
+	 * build adoc
+	 * @param config ApiConfig
+	 */
+	public static void buildApiDoc(ApiConfig config) {
+		JavaProjectBuilder javaProjectBuilder = JavaProjectBuilderHelper.create();
+		buildApiDoc(config, javaProjectBuilder);
+	}
 
-    /**
-     * Only for smart-doc maven plugin and gradle plugin.
-     *
-     * @param config             ApiConfig
-     * @param javaProjectBuilder ProjectDocConfigBuilder
-     */
-    public static void buildApiDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
-        DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
-        builderTemplate.checkAndInit(config, Boolean.TRUE);
-        config.setParamsDataToTree(false);
-        config.setAdoc(true);
-        ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
-        IDocBuildTemplate<ApiDoc> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(
-                config.getFramework(), config.getClassLoader());
-        Objects.requireNonNull(docBuildTemplate, "doc build template is null");
-        List<ApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder).getApiDatas();
-        if (config.isAllInOne()) {
-            String docName = builderTemplate.allInOneDocName(config, INDEX_DOC, ".adoc");
-            apiDocList = docBuildTemplate.handleApiGroup(apiDocList, config);
-            builderTemplate.buildAllInOne(apiDocList, config, javaProjectBuilder, DocGlobalConstants.ALL_IN_ONE_ADOC_TPL, docName);
-        } else {
-            builderTemplate.buildApiDoc(apiDocList, config, DocGlobalConstants.API_DOC_ADOC_TPL, API_EXTENSION);
-            builderTemplate.buildErrorCodeDoc(config, DocGlobalConstants.ERROR_CODE_LIST_ADOC_TPL, DocGlobalConstants.ERROR_CODE_LIST_ADOC, javaProjectBuilder);
-            builderTemplate.buildDirectoryDataDoc(config, javaProjectBuilder, DocGlobalConstants.DICT_LIST_ADOC_TPL, DocGlobalConstants.DICT_LIST_ADOC);
-        }
-    }
+	/**
+	 * Only for smart-doc maven plugin and gradle plugin.
+	 * @param config ApiConfig
+	 * @param javaProjectBuilder ProjectDocConfigBuilder
+	 */
+	public static void buildApiDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
+		DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
+		builderTemplate.checkAndInit(config, Boolean.TRUE);
+		config.setParamsDataToTree(false);
+		config.setAdoc(true);
+		ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
+		IDocBuildTemplate<ApiDoc> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework(),
+				config.getClassLoader());
+		Objects.requireNonNull(docBuildTemplate, "doc build template is null");
+		List<ApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder).getApiDatas();
+		if (config.isAllInOne()) {
+			String docName = builderTemplate.allInOneDocName(config, INDEX_DOC, ".adoc");
+			apiDocList = docBuildTemplate.handleApiGroup(apiDocList, config);
+			builderTemplate.buildAllInOne(apiDocList, config, javaProjectBuilder,
+					DocGlobalConstants.ALL_IN_ONE_ADOC_TPL, docName);
+		}
+		else {
+			builderTemplate.buildApiDoc(apiDocList, config, DocGlobalConstants.API_DOC_ADOC_TPL, API_EXTENSION);
+			builderTemplate.buildErrorCodeDoc(config, DocGlobalConstants.ERROR_CODE_LIST_ADOC_TPL,
+					DocGlobalConstants.ERROR_CODE_LIST_ADOC, javaProjectBuilder);
+			builderTemplate.buildDirectoryDataDoc(config, javaProjectBuilder, DocGlobalConstants.DICT_LIST_ADOC_TPL,
+					DocGlobalConstants.DICT_LIST_ADOC);
+		}
+	}
+
 }

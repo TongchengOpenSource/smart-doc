@@ -28,143 +28,149 @@ import java.util.Objects;
  **/
 public class CustomField {
 
-    /**
-     * field name
-     */
-    private String name;
-    /**
-     * field description
-     */
-    private String desc;
-    /**
-     * owner class
-     */
-    private String ownerClassName;
-    /**
-     * default value
-     */
-    private Object value;
-    /**
-     * required
-     */
-    private boolean require;
+	/**
+	 * field name
+	 */
+	private String name;
 
-    private boolean ignore;
+	/**
+	 * field description
+	 */
+	private String desc;
 
-    private String replaceName;
+	/**
+	 * owner class
+	 */
+	private String ownerClassName;
 
-    public static CustomField builder() {
-        return new CustomField();
-    }
+	/**
+	 * default value
+	 */
+	private Object value;
 
-    public static CustomField nameEquals(Key key, Map<Key, CustomField> customFieldMap) {
-        for (Map.Entry<Key, CustomField> c : customFieldMap.entrySet()) {
-            if (key.equals(c.getKey())) {
-                return c.getValue();
-            }
-        }
-        return null;
-    }
+	/**
+	 * required
+	 */
+	private boolean require;
 
-    public String getReplaceName() {
-        return replaceName;
-    }
+	private boolean ignore;
 
-    public CustomField setReplaceName(String replaceName) {
-        this.replaceName = replaceName;
-        return this;
-    }
+	private String replaceName;
 
-    public boolean isRequire() {
-        return require;
-    }
+	public static CustomField builder() {
+		return new CustomField();
+	}
 
-    public CustomField setRequire(boolean require) {
-        this.require = require;
-        return this;
-    }
+	public static CustomField nameEquals(Key key, Map<Key, CustomField> customFieldMap) {
+		for (Map.Entry<Key, CustomField> c : customFieldMap.entrySet()) {
+			if (key.equals(c.getKey())) {
+				return c.getValue();
+			}
+		}
+		return null;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public String getReplaceName() {
+		return replaceName;
+	}
 
-    public CustomField setName(String name) {
-        this.name = name;
-        return this;
-    }
+	public CustomField setReplaceName(String replaceName) {
+		this.replaceName = replaceName;
+		return this;
+	}
 
-    public String getDesc() {
-        return desc;
-    }
+	public boolean isRequire() {
+		return require;
+	}
 
-    public CustomField setDesc(String desc) {
-        this.desc = desc;
-        return this;
-    }
+	public CustomField setRequire(boolean require) {
+		this.require = require;
+		return this;
+	}
 
-    public String getOwnerClassName() {
-        return ownerClassName;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public CustomField setOwnerClassName(String ownerClassName) {
-        this.ownerClassName = ownerClassName;
-        return this;
-    }
+	public CustomField setName(String name) {
+		this.name = name;
+		return this;
+	}
 
-    public Object getValue() {
-        return value;
-    }
+	public String getDesc() {
+		return desc;
+	}
 
-    public CustomField setValue(Object value) {
-        this.value = value;
-        return this;
-    }
+	public CustomField setDesc(String desc) {
+		this.desc = desc;
+		return this;
+	}
 
-    public boolean isIgnore() {
-        return ignore;
-    }
+	public String getOwnerClassName() {
+		return ownerClassName;
+	}
 
-    public CustomField setIgnore(boolean ignore) {
-        this.ignore = ignore;
-        return this;
-    }
+	public CustomField setOwnerClassName(String ownerClassName) {
+		this.ownerClassName = ownerClassName;
+		return this;
+	}
 
-    public static final class Key {
+	public Object getValue() {
+		return value;
+	}
 
-        /**
-         * owner class
-         */
-        private final String ownerClassName;
+	public CustomField setValue(Object value) {
+		this.value = value;
+		return this;
+	}
 
-        /**
-         * field name
-         */
-        private final String name;
+	public boolean isIgnore() {
+		return ignore;
+	}
 
-        private Key(String ownerClassName, String name) {
-            this.ownerClassName = ownerClassName;
-            this.name = name;
-        }
+	public CustomField setIgnore(boolean ignore) {
+		this.ignore = ignore;
+		return this;
+	}
 
-        public static Key create(String className, String fieldName) {
-            return new Key(className, fieldName);
-        }
+	public static final class Key {
 
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (o == null || getClass() != o.getClass()) {
-                return false;
-            }
-            Key key = (Key) o;
-            return Objects.equals(ownerClassName, key.ownerClassName) && Objects.equals(name, key.name);
-        }
+		/**
+		 * owner class
+		 */
+		private final String ownerClassName;
 
-        @Override
-        public int hashCode() {
-            return Objects.hash(ownerClassName, name);
-        }
-    }
+		/**
+		 * field name
+		 */
+		private final String name;
+
+		private Key(String ownerClassName, String name) {
+			this.ownerClassName = ownerClassName;
+			this.name = name;
+		}
+
+		public static Key create(String className, String fieldName) {
+			return new Key(className, fieldName);
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) {
+				return true;
+			}
+			if (o == null || getClass() != o.getClass()) {
+				return false;
+			}
+			Key key = (Key) o;
+			return Objects.equals(ownerClassName, key.ownerClassName) && Objects.equals(name, key.name);
+		}
+
+		@Override
+		public int hashCode() {
+			return Objects.hash(ownerClassName, name);
+		}
+
+	}
+
 }

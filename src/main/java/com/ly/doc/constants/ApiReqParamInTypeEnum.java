@@ -25,28 +25,29 @@ package com.ly.doc.constants;
  **/
 public enum ApiReqParamInTypeEnum {
 
-    /**
-     * header param
-     */
-    HEADER("header"),
+	/**
+	 * header param
+	 */
+	HEADER("header"),
 
-    /**
-     * query param
-     */
-    QUERY("query"),
+	/**
+	 * query param
+	 */
+	QUERY("query"),
 
-    /**
-     * path param
-     */
-    PATH("path");
+	/**
+	 * path param
+	 */
+	PATH("path");
 
-    private final String value;
+	private final String value;
 
-    ApiReqParamInTypeEnum(String value) {
-        this.value = value;
-    }
+	ApiReqParamInTypeEnum(String value) {
+		this.value = value;
+	}
 
-    public String getValue() {
-        return value;
-    }
+	public String getValue() {
+		return value;
+	}
+
 }

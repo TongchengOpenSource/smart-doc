@@ -34,40 +34,40 @@ import java.util.Objects;
  */
 public class JsonUtil {
 
-    /**
-     * Convert a JSON string to pretty print
-     *
-     * @param jsonString json string
-     * @return Format json string
-     */
-    public static String toPrettyFormat(String jsonString) {
-        if (Objects.isNull(jsonString)) {
-            return null;
-        }
-        if (!jsonString.startsWith("[") && !jsonString.startsWith("{")) {
-            return jsonString;
-        }
-        try {
-            JsonElement jsonElement = JsonParser.parseString(jsonString);
-            Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
-            return gson.toJson(jsonElement);
-        } catch (Exception e) {
-            return jsonString;
-        }
-    }
+	/**
+	 * Convert a JSON string to pretty print
+	 * @param jsonString json string
+	 * @return Format json string
+	 */
+	public static String toPrettyFormat(String jsonString) {
+		if (Objects.isNull(jsonString)) {
+			return null;
+		}
+		if (!jsonString.startsWith("[") && !jsonString.startsWith("{")) {
+			return jsonString;
+		}
+		try {
+			JsonElement jsonElement = JsonParser.parseString(jsonString);
+			Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
+			return gson.toJson(jsonElement);
+		}
+		catch (Exception e) {
+			return jsonString;
+		}
+	}
 
-    /**
-     * Convert a JSON to String and pretty print
-     *
-     * @param src Json
-     * @return Format json string
-     */
-    public static String toPrettyJson(Object src) {
-        Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
-        return gson.toJson(src);
-    }
+	/**
+	 * Convert a JSON to String and pretty print
+	 * @param src Json
+	 * @return Format json string
+	 */
+	public static String toPrettyJson(Object src) {
+		Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
+		return gson.toJson(src);
+	}
 
-    public static <T> T toObject(String json, Class<T> clazz) {
-        return new Gson().fromJson(json, clazz);
-    }
+	public static <T> T toObject(String json, Class<T> clazz) {
+		return new Gson().fromJson(json, clazz);
+	}
+
 }

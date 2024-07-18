@@ -33,49 +33,50 @@ import com.power.common.util.UrlUtil;
  */
 public class DocUrlUtil {
 
-    public static String getMvcUrls(String baseServer, String baseUrl, List<String> urls) {
-        StringBuilder sb = new StringBuilder();
-        List<String> baseUrls = DocUtil.split(baseUrl);
-        int size = urls.size();
-        int baseSize = baseUrls.size();
-        for (int j = 0; j < baseSize; j++) {
-            String base = baseUrls.get(j);
-            String trimBase = Optional.ofNullable(StringUtil.trimBlank(base)).orElse(StringUtil.EMPTY);
-            trimBase = trimBase.replace("[", "").replace("]", "");
-            for (int i = 0; i < size; i++) {
-                String trimUrl = Optional.ofNullable(StringUtil.trimBlank(urls.get(i))).orElse(StringUtil.EMPTY);
-                String url = baseServer;
-                if (StringUtil.isNotEmpty(trimBase)) {
-                    url = url + "/" + trimBase;
-                }
-                if (StringUtil.isNotEmpty(trimUrl)) {
-                    url = url + "/" + trimUrl;
-                }
-                sb.append(UrlUtil.simplifyUrl(url));
-                if (i < size - 1) {
-                    sb.append(DocGlobalConstants.MULTI_URL_SEPARATOR);
-                }
-            }
-            if (j < baseSize - 1) {
-                sb.append(DocGlobalConstants.MULTI_URL_SEPARATOR);
-            }
-        }
+	public static String getMvcUrls(String baseServer, String baseUrl, List<String> urls) {
+		StringBuilder sb = new StringBuilder();
+		List<String> baseUrls = DocUtil.split(baseUrl);
+		int size = urls.size();
+		int baseSize = baseUrls.size();
+		for (int j = 0; j < baseSize; j++) {
+			String base = baseUrls.get(j);
+			String trimBase = Optional.ofNullable(StringUtil.trimBlank(base)).orElse(StringUtil.EMPTY);
+			trimBase = trimBase.replace("[", "").replace("]", "");
+			for (int i = 0; i < size; i++) {
+				String trimUrl = Optional.ofNullable(StringUtil.trimBlank(urls.get(i))).orElse(StringUtil.EMPTY);
+				String url = baseServer;
+				if (StringUtil.isNotEmpty(trimBase)) {
+					url = url + "/" + trimBase;
+				}
+				if (StringUtil.isNotEmpty(trimUrl)) {
+					url = url + "/" + trimUrl;
+				}
+				sb.append(UrlUtil.simplifyUrl(url));
+				if (i < size - 1) {
+					sb.append(DocGlobalConstants.MULTI_URL_SEPARATOR);
+				}
+			}
+			if (j < baseSize - 1) {
+				sb.append(DocGlobalConstants.MULTI_URL_SEPARATOR);
+			}
+		}
 
-        return sb.toString();
-    }
+		return sb.toString();
+	}
 
-    public static String getMvcUrls(String baseServer, String baseUrl, String shortUrl) {
-        List<String> urls = DocUtil.split(shortUrl);
-        return getMvcUrls(baseServer, baseUrl, urls);
-    }
+	public static String getMvcUrls(String baseServer, String baseUrl, String shortUrl) {
+		List<String> urls = DocUtil.split(shortUrl);
+		return getMvcUrls(baseServer, baseUrl, urls);
+	}
 
-    public static String formatRequestUrl(Map<String, String> pathParamsMap, Map<String, String> queryParamsMap,
-                                    String serverUrl, String path) {
-        path = DocUtil.formatAndRemove(path, pathParamsMap);
-        String url = UrlUtil.urlJoin(path, queryParamsMap);
-        url = StringUtil.removeQuotes(url);
-        url = serverUrl + "/" + url;
-        url = UrlUtil.simplifyUrl(url);
-        return url;
-    }
+	public static String formatRequestUrl(Map<String, String> pathParamsMap, Map<String, String> queryParamsMap,
+			String serverUrl, String path) {
+		path = DocUtil.formatAndRemove(path, pathParamsMap);
+		String url = UrlUtil.urlJoin(path, queryParamsMap);
+		url = StringUtil.removeQuotes(url);
+		url = serverUrl + "/" + url;
+		url = UrlUtil.simplifyUrl(url);
+		return url;
+	}
+
 }

@@ -28,94 +28,95 @@ import java.util.List;
 
 public class JavadocApiAllData {
 
-    /**
-     * project name
-     */
-    private String projectName;
+	/**
+	 * project name
+	 */
+	private String projectName;
 
-    /**
-     * project id
-     */
-    private String projectId;
+	/**
+	 * project id
+	 */
+	private String projectId;
 
-    /**
-     * docLanguage
-     */
-    private String language;
+	/**
+	 * docLanguage
+	 */
+	private String language;
 
-    /**
-     * doc list
-     */
-    private List<JavadocApiDoc> apiDocList;
+	/**
+	 * doc list
+	 */
+	private List<JavadocApiDoc> apiDocList;
 
-    /**
-     *
-     */
-    private List<ApiDocDict> apiDocDictList;
+	/**
+	 *
+	 */
+	private List<ApiDocDict> apiDocDictList;
 
-    /**
-     * error code list
-     */
-    private List<ApiErrorCode> errorCodeList;
+	/**
+	 * error code list
+	 */
+	private List<ApiErrorCode> errorCodeList;
 
-    /**
-     * List of change log
-     */
-    private List<RevisionLog> revisionLogs;
+	/**
+	 * List of change log
+	 */
+	private List<RevisionLog> revisionLogs;
 
-    public String getProjectName() {
-        return projectName;
-    }
+	public String getProjectName() {
+		return projectName;
+	}
 
-    public void setProjectName(String projectName) {
-        this.projectName = projectName;
-    }
+	public void setProjectName(String projectName) {
+		this.projectName = projectName;
+	}
 
-    public String getProjectId() {
-        return projectId;
-    }
+	public String getProjectId() {
+		return projectId;
+	}
 
-    public void setProjectId(String projectId) {
-        this.projectId = projectId;
-    }
+	public void setProjectId(String projectId) {
+		this.projectId = projectId;
+	}
 
-    public String getLanguage() {
-        return language;
-    }
+	public String getLanguage() {
+		return language;
+	}
 
-    public void setLanguage(String language) {
-        this.language = language;
-    }
+	public void setLanguage(String language) {
+		this.language = language;
+	}
 
-    public List<JavadocApiDoc> getApiDocList() {
-        return apiDocList;
-    }
+	public List<JavadocApiDoc> getApiDocList() {
+		return apiDocList;
+	}
 
-    public void setApiDocList(List<JavadocApiDoc> apiDocList) {
-        this.apiDocList = apiDocList;
-    }
+	public void setApiDocList(List<JavadocApiDoc> apiDocList) {
+		this.apiDocList = apiDocList;
+	}
 
-    public List<ApiDocDict> getApiDocDictList() {
-        return apiDocDictList;
-    }
+	public List<ApiDocDict> getApiDocDictList() {
+		return apiDocDictList;
+	}
 
-    public void setApiDocDictList(List<ApiDocDict> apiDocDictList) {
-        this.apiDocDictList = apiDocDictList;
-    }
+	public void setApiDocDictList(List<ApiDocDict> apiDocDictList) {
+		this.apiDocDictList = apiDocDictList;
+	}
 
-    public List<ApiErrorCode> getErrorCodeList() {
-        return errorCodeList;
-    }
+	public List<ApiErrorCode> getErrorCodeList() {
+		return errorCodeList;
+	}
 
-    public void setErrorCodeList(List<ApiErrorCode> errorCodeList) {
-        this.errorCodeList = errorCodeList;
-    }
+	public void setErrorCodeList(List<ApiErrorCode> errorCodeList) {
+		this.errorCodeList = errorCodeList;
+	}
 
-    public List<RevisionLog> getRevisionLogs() {
-        return revisionLogs;
-    }
+	public List<RevisionLog> getRevisionLogs() {
+		return revisionLogs;
+	}
 
-    public void setRevisionLogs(List<RevisionLog> revisionLogs) {
-        this.revisionLogs = revisionLogs;
-    }
+	public void setRevisionLogs(List<RevisionLog> revisionLogs) {
+		this.revisionLogs = revisionLogs;
+	}
+
 }

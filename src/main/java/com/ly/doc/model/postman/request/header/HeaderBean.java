@@ -27,62 +27,68 @@ package com.ly.doc.model.postman.request.header;
  */
 public class HeaderBean {
 
-    private String key;
-    private String value;
-    private String type;
-    private boolean disabled;
-    private String name;
-    private String description;
+	private String key;
 
-    public HeaderBean() {
-        this.type = "text";
-    }
+	private String value;
 
-    public String getDescription() {
-        return description;
-    }
+	private String type;
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+	private boolean disabled;
 
-    public String getValue() {
-        return value;
-    }
+	private String name;
 
-    public void setValue(String value) {
-        this.value = value;
-    }
+	private String description;
 
-    public String getType() {
-        return type;
-    }
+	public HeaderBean() {
+		this.type = "text";
+	}
 
-    public void setType(String type) {
-        this.type = type;
-    }
+	public String getDescription() {
+		return description;
+	}
 
-    public boolean isDisabled() {
-        return disabled;
-    }
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
-    public void setDisabled(boolean disabled) {
-        this.disabled = disabled;
-    }
+	public String getValue() {
+		return value;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public void setValue(String value) {
+		this.value = value;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public String getType() {
+		return type;
+	}
 
-    public String getKey() {
-        return key;
-    }
+	public void setType(String type) {
+		this.type = type;
+	}
 
-    public void setKey(String key) {
-        this.key = key;
-    }
+	public boolean isDisabled() {
+		return disabled;
+	}
+
+	public void setDisabled(boolean disabled) {
+		this.disabled = disabled;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getKey() {
+		return key;
+	}
+
+	public void setKey(String key) {
+		this.key = key;
+	}
+
 }

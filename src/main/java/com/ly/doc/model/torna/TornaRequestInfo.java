@@ -33,79 +33,85 @@ import com.ly.doc.constants.TornaConstants;
  **/
 public class TornaRequestInfo {
 
-    private String code;
-    private String message;
-    private Object requestInfo;
-    private String responseInfo;
-    private String category;
+	private String code;
 
-    public String getCategory() {
-        return category;
-    }
+	private String message;
 
-    public TornaRequestInfo setCategory(String category) {
-        this.category = category;
-        return this;
-    }
+	private Object requestInfo;
 
-    public TornaRequestInfo of() {
-        return this;
-    }
+	private String responseInfo;
 
-    public String getCode() {
-        return code;
-    }
+	private String category;
 
-    public TornaRequestInfo setCode(String code) {
-        this.code = code;
-        return this;
-    }
+	public String getCategory() {
+		return category;
+	}
 
-    public String getMessage() {
-        return message;
-    }
+	public TornaRequestInfo setCategory(String category) {
+		this.category = category;
+		return this;
+	}
 
-    public TornaRequestInfo setMessage(String message) {
-        this.message = message;
-        return this;
-    }
+	public TornaRequestInfo of() {
+		return this;
+	}
 
-    public Object getRequestInfo() {
-        return requestInfo;
-    }
+	public String getCode() {
+		return code;
+	}
 
-    public TornaRequestInfo setRequestInfo(Object requestInfo) {
-        this.requestInfo = requestInfo;
-        return this;
-    }
+	public TornaRequestInfo setCode(String code) {
+		this.code = code;
+		return this;
+	}
 
-    public Object getResponseInfo() {
-        return responseInfo;
-    }
+	public String getMessage() {
+		return message;
+	}
 
-    public TornaRequestInfo setResponseInfo(String responseInfo) {
-        this.responseInfo = responseInfo;
-        return this;
-    }
+	public TornaRequestInfo setMessage(String message) {
+		this.message = message;
+		return this;
+	}
 
-    public String buildInfo() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("---------------------------PUSH START---------------------------\n")
-            .append("API: ")
-            .append(category)
-            .append("\n")
-            .append("Request Param: \n")
-            .append(TornaConstants.GSON.toJson(requestInfo))
-            .append("\n")
-            .append("Response: \n")
-            .append(TornaConstants.GSON.fromJson(responseInfo, HashMap.class))
-            .append("\n")
-            .append("---------------------------PUSH END---------------------------\n");
-        try {
-            return URLDecoder.decode(sb.toString(), "utf-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-            return "";
-        }
-    }
+	public Object getRequestInfo() {
+		return requestInfo;
+	}
+
+	public TornaRequestInfo setRequestInfo(Object requestInfo) {
+		this.requestInfo = requestInfo;
+		return this;
+	}
+
+	public Object getResponseInfo() {
+		return responseInfo;
+	}
+
+	public TornaRequestInfo setResponseInfo(String responseInfo) {
+		this.responseInfo = responseInfo;
+		return this;
+	}
+
+	public String buildInfo() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("---------------------------PUSH START---------------------------\n")
+			.append("API: ")
+			.append(category)
+			.append("\n")
+			.append("Request Param: \n")
+			.append(TornaConstants.GSON.toJson(requestInfo))
+			.append("\n")
+			.append("Response: \n")
+			.append(TornaConstants.GSON.fromJson(responseInfo, HashMap.class))
+			.append("\n")
+			.append("---------------------------PUSH END---------------------------\n");
+		try {
+			return URLDecoder.decode(sb.toString(), "utf-8");
+		}
+		catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+			return "";
+		}
+	}
+
 }

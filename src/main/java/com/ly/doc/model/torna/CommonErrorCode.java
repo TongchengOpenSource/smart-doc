@@ -25,33 +25,34 @@ package com.ly.doc.model.torna;
  **/
 public class CommonErrorCode {
 
-    private String code;
+	private String code;
 
-    private String msg;
+	private String msg;
 
-    private String solution;
+	private String solution;
 
-    public String getCode() {
-        return code;
-    }
+	public String getCode() {
+		return code;
+	}
 
-    public void setCode(String code) {
-        this.code = code;
-    }
+	public void setCode(String code) {
+		this.code = code;
+	}
 
-    public String getMsg() {
-        return msg;
-    }
+	public String getMsg() {
+		return msg;
+	}
 
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
+	public void setMsg(String msg) {
+		this.msg = msg;
+	}
 
-    public String getSolution() {
-        return solution;
-    }
+	public String getSolution() {
+		return solution;
+	}
 
-    public void setSolution(String solution) {
-        this.solution = solution;
-    }
+	public void setSolution(String solution) {
+		this.solution = solution;
+	}
+
 }

@@ -32,21 +32,21 @@ import com.thoughtworks.qdox.JavaProjectBuilder;
  */
 public class RpcApiDataBuilder {
 
-    /**
-     * Get list of ApiDoc
-     *
-     * @param config ApiConfig
-     * @return List of ApiDoc
-     */
-    public static RpcApiAllData getApiData(ApiConfig config) {
-        config.setShowJavaType(true);
-        if (StringUtil.isEmpty(config.getFramework())) {
-            config.setFramework(FrameworkEnum.DUBBO.getFramework());
-        }
-        RpcDocBuilderTemplate builderTemplate = new RpcDocBuilderTemplate();
-        builderTemplate.checkAndInitForGetApiData(config);
-        JavaProjectBuilder javaProjectBuilder = JavaProjectBuilderHelper.create();
-        builderTemplate.getApiData(config, javaProjectBuilder);
-        return builderTemplate.getApiData(config, javaProjectBuilder);
-    }
+	/**
+	 * Get list of ApiDoc
+	 * @param config ApiConfig
+	 * @return List of ApiDoc
+	 */
+	public static RpcApiAllData getApiData(ApiConfig config) {
+		config.setShowJavaType(true);
+		if (StringUtil.isEmpty(config.getFramework())) {
+			config.setFramework(FrameworkEnum.DUBBO.getFramework());
+		}
+		RpcDocBuilderTemplate builderTemplate = new RpcDocBuilderTemplate();
+		builderTemplate.checkAndInitForGetApiData(config);
+		JavaProjectBuilder javaProjectBuilder = JavaProjectBuilderHelper.create();
+		builderTemplate.getApiData(config, javaProjectBuilder);
+		return builderTemplate.getApiData(config, javaProjectBuilder);
+	}
+
 }

@@ -21,78 +21,78 @@
 package com.ly.doc.model;
 
 /**
- * @author xingzi  2019/12/21  20:20
+ * @author xingzi 2019/12/21 20:20
  */
 public class FormData {
 
-    private String key;
-    private String type;
-    private String description;
-    private Object src;
-    private String value;
-    /**
-     * openapi items
-     */
-    private boolean hasItems;
+	private String key;
 
-    public boolean isHasItems() {
-        return hasItems;
-    }
+	private String type;
 
-    public FormData setHasItems(boolean hasItems) {
-        this.hasItems = hasItems;
-        return this;
-    }
+	private String description;
 
-    public String getKey() {
-        return key;
-    }
+	private Object src;
 
-    public void setKey(String key) {
-        this.key = key;
-    }
+	private String value;
 
-    public String getType() {
-        return type;
-    }
+	/**
+	 * openapi items
+	 */
+	private boolean hasItems;
 
-    public void setType(String type) {
-        this.type = type;
-    }
+	public boolean isHasItems() {
+		return hasItems;
+	}
 
-    public Object getSrc() {
-        return src;
-    }
+	public FormData setHasItems(boolean hasItems) {
+		this.hasItems = hasItems;
+		return this;
+	}
 
-    public void setSrc(Object src) {
-        this.src = src;
-    }
+	public String getKey() {
+		return key;
+	}
 
-    public String getValue() {
-        return value;
-    }
+	public void setKey(String key) {
+		this.key = key;
+	}
 
-    public void setValue(String value) {
-        this.value = value;
-    }
+	public String getType() {
+		return type;
+	}
 
-    public String getDescription() {
-        return description;
-    }
+	public void setType(String type) {
+		this.type = type;
+	}
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+	public Object getSrc() {
+		return src;
+	}
 
-    @Override
-    public String toString() {
-        return "FormData{" +
-                "key='" + key + '\'' +
-                ", type='" + type + '\'' +
-                ", description='" + description + '\'' +
-                ", src=" + src +
-                ", value='" + value + '\'' +
-                ", hasItems=" + hasItems +
-                '}';
-    }
+	public void setSrc(Object src) {
+		this.src = src;
+	}
+
+	public String getValue() {
+		return value;
+	}
+
+	public void setValue(String value) {
+		this.value = value;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	@Override
+	public String toString() {
+		return "FormData{" + "key='" + key + '\'' + ", type='" + type + '\'' + ", description='" + description + '\''
+				+ ", src=" + src + ", value='" + value + '\'' + ", hasItems=" + hasItems + '}';
+	}
+
 }

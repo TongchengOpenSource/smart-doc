@@ -27,22 +27,24 @@ import java.util.List;
  */
 public class RequestItem {
 
-    private InfoBean info;
-    private List<ItemBean> item;
+	private InfoBean info;
 
-    public InfoBean getInfo() {
-        return info;
-    }
+	private List<ItemBean> item;
 
-    public void setInfo(InfoBean info) {
-        this.info = info;
-    }
+	public InfoBean getInfo() {
+		return info;
+	}
 
-    public List<ItemBean> getItem() {
-        return item;
-    }
+	public void setInfo(InfoBean info) {
+		this.info = info;
+	}
 
-    public void setItem(List<ItemBean> item) {
-        this.item = item;
-    }
+	public List<ItemBean> getItem() {
+		return item;
+	}
+
+	public void setItem(List<ItemBean> item) {
+		this.item = item;
+	}
+
 }

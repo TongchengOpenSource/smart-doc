@@ -28,43 +28,40 @@ package com.ly.doc.model.annotation;
  */
 public class ServerEndpointAnnotation {
 
-    /**
-     * the name of annotation
-     */
-    private String annotationName;
+	/**
+	 * the name of annotation
+	 */
+	private String annotationName;
 
-    /**
-     * the fullyName of annotation
-     */
-    private String annotationFullyName;
+	/**
+	 * the fullyName of annotation
+	 */
+	private String annotationFullyName;
 
-    /**
-     * builder ServerEndpointAnnotation
-     *
-     * @return ServerEndpointAnnotation
-     */
-    public static ServerEndpointAnnotation builder() {
-        return new ServerEndpointAnnotation();
-    }
+	/**
+	 * builder ServerEndpointAnnotation
+	 * @return ServerEndpointAnnotation
+	 */
+	public static ServerEndpointAnnotation builder() {
+		return new ServerEndpointAnnotation();
+	}
 
+	public String getAnnotationName() {
+		return annotationName;
+	}
 
-    public String getAnnotationName() {
-        return annotationName;
-    }
+	public String getAnnotationFullyName() {
+		return annotationFullyName;
+	}
 
-    public String getAnnotationFullyName() {
-        return annotationFullyName;
-    }
+	public ServerEndpointAnnotation setAnnotationName(String annotationName) {
+		this.annotationName = annotationName;
+		return this;
+	}
 
-
-    public ServerEndpointAnnotation setAnnotationName(String annotationName) {
-        this.annotationName = annotationName;
-        return this;
-    }
-
-    public ServerEndpointAnnotation setAnnotationFullyName(String annotationFullyName) {
-        this.annotationFullyName = annotationFullyName;
-        return this;
-    }
+	public ServerEndpointAnnotation setAnnotationFullyName(String annotationFullyName) {
+		this.annotationFullyName = annotationFullyName;
+		return this;
+	}
 
 }

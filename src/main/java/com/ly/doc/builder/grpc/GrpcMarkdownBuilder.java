@@ -38,38 +38,40 @@ import java.util.List;
  */
 public class GrpcMarkdownBuilder {
 
+	/**
+	 * build api doc.
+	 * @param config ApiConfig
+	 */
+	public static void buildApiDoc(ApiConfig config) {
+		JavaProjectBuilder javaProjectBuilder = JavaProjectBuilderHelper.create();
+		buildApiDoc(config, javaProjectBuilder);
+	}
 
-    /**
-     * build api doc.
-     *
-     * @param config ApiConfig
-     */
-    public static void buildApiDoc(ApiConfig config) {
-        JavaProjectBuilder javaProjectBuilder = JavaProjectBuilderHelper.create();
-        buildApiDoc(config, javaProjectBuilder);
-    }
+	/**
+	 * Only for smart-doc maven plugin and gradle plugin.
+	 * @param apiConfig ApiConfig
+	 * @param javaProjectBuilder ProjectDocConfigBuilder
+	 */
+	public static void buildApiDoc(ApiConfig apiConfig, JavaProjectBuilder javaProjectBuilder) {
+		apiConfig.setAdoc(Boolean.FALSE);
+		GrpcDocBuilderTemplate grpcDocBuilderTemplate = new GrpcDocBuilderTemplate();
+		grpcDocBuilderTemplate.checkAndInit(apiConfig, Boolean.TRUE);
+		List<RpcApiDoc> apiDocList = grpcDocBuilderTemplate.getRpcApiDoc(apiConfig, javaProjectBuilder);
+		if (apiConfig.isAllInOne()) {
+			String version = apiConfig.isCoverOld() ? "" : "-V" + DateTimeUtil.long2Str(System.currentTimeMillis(),
+					DocGlobalConstants.DATE_FORMAT_YYYY_MM_DD_HH_MM);
+			String docName = grpcDocBuilderTemplate.allInOneDocName(apiConfig, "grpc-all" + version,
+					DocGlobalConstants.MARKDOWN_EXTENSION);
+			grpcDocBuilderTemplate.buildAllInOne(apiDocList, apiConfig, javaProjectBuilder,
+					DocGlobalConstants.GRPC_ALL_IN_ONE_MD_TPL, docName);
+		}
+		else {
+			grpcDocBuilderTemplate.buildApiDoc(apiDocList, apiConfig, DocGlobalConstants.RPC_API_DOC_MD_TPL,
+					DocGlobalConstants.MARKDOWN_API_FILE_EXTENSION);
 
-    /**
-     * Only for smart-doc maven plugin and gradle plugin.
-     *
-     * @param apiConfig          ApiConfig
-     * @param javaProjectBuilder ProjectDocConfigBuilder
-     */
-    public static void buildApiDoc(ApiConfig apiConfig, JavaProjectBuilder javaProjectBuilder) {
-        apiConfig.setAdoc(Boolean.FALSE);
-        GrpcDocBuilderTemplate grpcDocBuilderTemplate = new GrpcDocBuilderTemplate();
-        grpcDocBuilderTemplate.checkAndInit(apiConfig, Boolean.TRUE);
-        List<RpcApiDoc> apiDocList = grpcDocBuilderTemplate.getRpcApiDoc(apiConfig, javaProjectBuilder);
-        if (apiConfig.isAllInOne()) {
-            String version = apiConfig.isCoverOld() ? "" : "-V" + DateTimeUtil.long2Str(System.currentTimeMillis(), DocGlobalConstants.DATE_FORMAT_YYYY_MM_DD_HH_MM);
-            String docName = grpcDocBuilderTemplate.allInOneDocName(apiConfig, "grpc-all" + version, DocGlobalConstants.MARKDOWN_EXTENSION);
-            grpcDocBuilderTemplate.buildAllInOne(apiDocList, apiConfig, javaProjectBuilder, DocGlobalConstants.GRPC_ALL_IN_ONE_MD_TPL, docName);
-        } else {
-            grpcDocBuilderTemplate.buildApiDoc(apiDocList, apiConfig, DocGlobalConstants.RPC_API_DOC_MD_TPL,
-                    DocGlobalConstants.MARKDOWN_API_FILE_EXTENSION);
+			grpcDocBuilderTemplate.buildErrorCodeDoc(apiConfig, DocGlobalConstants.ERROR_CODE_LIST_MD_TPL,
+					DocGlobalConstants.ERROR_CODE_LIST_MD, javaProjectBuilder);
+		}
+	}
 
-            grpcDocBuilderTemplate.buildErrorCodeDoc(apiConfig, DocGlobalConstants.ERROR_CODE_LIST_MD_TPL,
-                    DocGlobalConstants.ERROR_CODE_LIST_MD, javaProjectBuilder);
-        }
-    }
 }

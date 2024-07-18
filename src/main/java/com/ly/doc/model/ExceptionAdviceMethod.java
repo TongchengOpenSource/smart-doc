@@ -24,31 +24,32 @@ package com.ly.doc.model;
  * @author yu.sun on 2024/6/9
  * @since 3.0.5
  */
-public class ExceptionAdviceMethod{
+public class ExceptionAdviceMethod {
 
-    private String status;
+	private String status;
 
-    private boolean exceptionHandlerMethod;
+	private boolean exceptionHandlerMethod;
 
-    public static ExceptionAdviceMethod builder(){
-        return new ExceptionAdviceMethod();
-    }
+	public static ExceptionAdviceMethod builder() {
+		return new ExceptionAdviceMethod();
+	}
 
-    public String getStatus() {
-        return status;
-    }
+	public String getStatus() {
+		return status;
+	}
 
-    public ExceptionAdviceMethod setStatus(String status) {
-        this.status = status;
-        return this;
-    }
+	public ExceptionAdviceMethod setStatus(String status) {
+		this.status = status;
+		return this;
+	}
 
-    public boolean isExceptionHandlerMethod() {
-        return exceptionHandlerMethod;
-    }
+	public boolean isExceptionHandlerMethod() {
+		return exceptionHandlerMethod;
+	}
 
-    public ExceptionAdviceMethod setExceptionHandlerMethod(boolean exceptionHandlerMethod) {
-        this.exceptionHandlerMethod = exceptionHandlerMethod;
-        return this;
-    }
+	public ExceptionAdviceMethod setExceptionHandlerMethod(boolean exceptionHandlerMethod) {
+		this.exceptionHandlerMethod = exceptionHandlerMethod;
+		return this;
+	}
+
 }

@@ -32,172 +32,175 @@ import java.util.Objects;
  */
 public class MessageField implements Serializable {
 
-    private static final long serialVersionUID = 5659801848035252488L;
-    /**
-     * The name of the field.
-     */
-    private String name;
+	private static final long serialVersionUID = 5659801848035252488L;
 
-    /**
-     * Description or additional information about the field.
-     */
-    private String description;
+	/**
+	 * The name of the field.
+	 */
+	private String name;
 
-    /**
-     * The label of the field (optional, not used in current JSON structure).
-     */
-    private String label;
+	/**
+	 * Description or additional information about the field.
+	 */
+	private String description;
 
-    /**
-     * The type of the field.
-     */
-    private String type;
+	/**
+	 * The label of the field (optional, not used in current JSON structure).
+	 */
+	private String label;
 
-    /**
-     * The long type of the field.
-     */
-    private String longType;
+	/**
+	 * The type of the field.
+	 */
+	private String type;
 
-    /**
-     * The full type of the field.
-     */
-    private String fullType;
+	/**
+	 * The long type of the field.
+	 */
+	private String longType;
 
-    /**
-     * Indicates if the field is a map type.
-     */
-    @SerializedName("ismap")
-    private boolean isMap;
+	/**
+	 * The full type of the field.
+	 */
+	private String fullType;
 
-    /**
-     * Indicates if the field is part of a oneof declaration.
-     */
-    @SerializedName("isoneof")
-    private boolean isOneof;
+	/**
+	 * Indicates if the field is a map type.
+	 */
+	@SerializedName("ismap")
+	private boolean isMap;
 
-    /**
-     * The declaration of the oneof (optional, not used in current JSON structure).
-     */
-    @SerializedName("oneofdecl")
-    private String oneofDecl;
+	/**
+	 * Indicates if the field is part of a oneof declaration.
+	 */
+	@SerializedName("isoneof")
+	private boolean isOneof;
 
-    /**
-     * The default value of the field (optional, not used in current JSON structure).
-     */
-    private String defaultValue;
+	/**
+	 * The declaration of the oneof (optional, not used in current JSON structure).
+	 */
+	@SerializedName("oneofdecl")
+	private String oneofDecl;
 
-    public static MessageField builder() {
-        return new MessageField();
-    }
+	/**
+	 * The default value of the field (optional, not used in current JSON structure).
+	 */
+	private String defaultValue;
 
-    public String getName() {
-        return name;
-    }
+	public static MessageField builder() {
+		return new MessageField();
+	}
 
-    public MessageField setName(String name) {
-        this.name = name;
-        return this;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public String getDescription() {
-        return description;
-    }
+	public MessageField setName(String name) {
+		this.name = name;
+		return this;
+	}
 
-    public MessageField setDescription(String description) {
-        this.description = description;
-        return this;
-    }
+	public String getDescription() {
+		return description;
+	}
 
-    public String getLabel() {
-        return label;
-    }
+	public MessageField setDescription(String description) {
+		this.description = description;
+		return this;
+	}
 
-    public MessageField setLabel(String label) {
-        this.label = label;
-        return this;
-    }
+	public String getLabel() {
+		return label;
+	}
 
-    public String getType() {
-        return type;
-    }
+	public MessageField setLabel(String label) {
+		this.label = label;
+		return this;
+	}
 
-    public MessageField setType(String type) {
-        this.type = type;
-        return this;
-    }
+	public String getType() {
+		return type;
+	}
 
-    public String getLongType() {
-        return longType;
-    }
+	public MessageField setType(String type) {
+		this.type = type;
+		return this;
+	}
 
-    public MessageField setLongType(String longType) {
-        this.longType = longType;
-        return this;
-    }
+	public String getLongType() {
+		return longType;
+	}
 
-    public String getFullType() {
-        return fullType;
-    }
+	public MessageField setLongType(String longType) {
+		this.longType = longType;
+		return this;
+	}
 
-    public MessageField setFullType(String fullType) {
-        this.fullType = fullType;
-        return this;
-    }
+	public String getFullType() {
+		return fullType;
+	}
 
-    public boolean isMap() {
-        return isMap;
-    }
+	public MessageField setFullType(String fullType) {
+		this.fullType = fullType;
+		return this;
+	}
 
-    public MessageField setMap(boolean map) {
-        isMap = map;
-        return this;
-    }
+	public boolean isMap() {
+		return isMap;
+	}
 
-    public boolean isOneof() {
-        return isOneof;
-    }
+	public MessageField setMap(boolean map) {
+		isMap = map;
+		return this;
+	}
 
-    public MessageField setOneof(boolean oneof) {
-        isOneof = oneof;
-        return this;
-    }
+	public boolean isOneof() {
+		return isOneof;
+	}
 
-    public String getOneofDecl() {
-        return oneofDecl;
-    }
+	public MessageField setOneof(boolean oneof) {
+		isOneof = oneof;
+		return this;
+	}
 
-    public MessageField setOneofDecl(String oneofDecl) {
-        this.oneofDecl = oneofDecl;
-        return this;
-    }
+	public String getOneofDecl() {
+		return oneofDecl;
+	}
 
-    public String getDefaultValue() {
-        return defaultValue;
-    }
+	public MessageField setOneofDecl(String oneofDecl) {
+		this.oneofDecl = oneofDecl;
+		return this;
+	}
 
-    public MessageField setDefaultValue(String defaultValue) {
-        this.defaultValue = defaultValue;
-        return this;
-    }
+	public String getDefaultValue() {
+		return defaultValue;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        MessageField that = (MessageField) o;
-        return isMap == that.isMap && isOneof == that.isOneof && Objects.equals(name, that.name)
-                && Objects.equals(description, that.description) && Objects.equals(label, that.label)
-                && Objects.equals(type, that.type) && Objects.equals(longType, that.longType)
-                && Objects.equals(fullType, that.fullType) && Objects.equals(oneofDecl, that.oneofDecl)
-                && Objects.equals(defaultValue, that.defaultValue);
-    }
+	public MessageField setDefaultValue(String defaultValue) {
+		this.defaultValue = defaultValue;
+		return this;
+	}
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(name, description, label, type, longType, fullType, isMap, isOneof, oneofDecl, defaultValue);
-    }
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		MessageField that = (MessageField) o;
+		return isMap == that.isMap && isOneof == that.isOneof && Objects.equals(name, that.name)
+				&& Objects.equals(description, that.description) && Objects.equals(label, that.label)
+				&& Objects.equals(type, that.type) && Objects.equals(longType, that.longType)
+				&& Objects.equals(fullType, that.fullType) && Objects.equals(oneofDecl, that.oneofDecl)
+				&& Objects.equals(defaultValue, that.defaultValue);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(name, description, label, type, longType, fullType, isMap, isOneof, oneofDecl,
+				defaultValue);
+	}
+
 }

@@ -26,25 +26,27 @@ package com.ly.doc.constants;
  * @author yu 2019/9/21.
  */
 public enum DocLanguage {
-    /**
-     * English
-     */
-    ENGLISH("en-US"),
-    /**
-     * Chinese
-     */
-    CHINESE("zh-CN");
 
-    /**
-     * language code
-     */
-    public final String code;
+	/**
+	 * English
+	 */
+	ENGLISH("en-US"),
+	/**
+	 * Chinese
+	 */
+	CHINESE("zh-CN");
 
-    DocLanguage(String code) {
-        this.code = code;
-    }
+	/**
+	 * language code
+	 */
+	public final String code;
 
-    public String getCode() {
-        return this.code;
-    }
+	DocLanguage(String code) {
+		this.code = code;
+	}
+
+	public String getCode() {
+		return this.code;
+	}
+
 }

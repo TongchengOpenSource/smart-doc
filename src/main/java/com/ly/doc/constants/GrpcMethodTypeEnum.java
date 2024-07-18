@@ -27,81 +27,82 @@ package com.ly.doc.constants;
  * @since 3.0.7
  */
 public enum GrpcMethodTypeEnum {
-    /**
-     * Unary RPC: a single request followed by a single response.
-     */
-    UNARY("Unary RPC", false, false),
 
-    /**
-     * Server Streaming RPC: a single request followed by multiple server responses.
-     */
-    SERVER_STREAMING("Server Streaming RPC", false, true),
+	/**
+	 * Unary RPC: a single request followed by a single response.
+	 */
+	UNARY("Unary RPC", false, false),
 
-    /**
-     * Client Streaming RPC: multiple client requests followed by a single server response.
-     */
-    CLIENT_STREAMING("Client Streaming RPC", true, false),
+	/**
+	 * Server Streaming RPC: a single request followed by multiple server responses.
+	 */
+	SERVER_STREAMING("Server Streaming RPC", false, true),
 
-    /**
-     * Bidirectional Streaming RPC: multiple client requests and multiple server responses.
-     */
-    BIDIRECTIONAL_STREAMING("Bidirectional Streaming RPC", true, true);
+	/**
+	 * Client Streaming RPC: multiple client requests followed by a single server
+	 * response.
+	 */
+	CLIENT_STREAMING("Client Streaming RPC", true, false),
 
-    /**
-     * Type
-     */
-    private final String type;
+	/**
+	 * Bidirectional Streaming RPC: multiple client requests and multiple server
+	 * responses.
+	 */
+	BIDIRECTIONAL_STREAMING("Bidirectional Streaming RPC", true, true);
 
-    /**
-     * Request Streaming
-     */
-    private final boolean requestStreaming;
+	/**
+	 * Type
+	 */
+	private final String type;
 
-    /**
-     * Response Streaming
-     */
-    private final boolean responseStreaming;
+	/**
+	 * Request Streaming
+	 */
+	private final boolean requestStreaming;
 
-    /**
-     * Constructor
-     *
-     * @param type             type
-     * @param requestStreaming  Request Streaming
-     * @param responseStreaming Response Streaming
-     */
-    GrpcMethodTypeEnum(String type, boolean requestStreaming, boolean responseStreaming) {
-        this.type = type;
-        this.requestStreaming = requestStreaming;
-        this.responseStreaming = responseStreaming;
-    }
+	/**
+	 * Response Streaming
+	 */
+	private final boolean responseStreaming;
 
-    public String getType() {
-        return type;
-    }
+	/**
+	 * Constructor
+	 * @param type type
+	 * @param requestStreaming Request Streaming
+	 * @param responseStreaming Response Streaming
+	 */
+	GrpcMethodTypeEnum(String type, boolean requestStreaming, boolean responseStreaming) {
+		this.type = type;
+		this.requestStreaming = requestStreaming;
+		this.responseStreaming = responseStreaming;
+	}
 
-    public boolean isRequestStreaming() {
-        return requestStreaming;
-    }
+	public String getType() {
+		return type;
+	}
 
-    public boolean isResponseStreaming() {
-        return responseStreaming;
-    }
+	public boolean isRequestStreaming() {
+		return requestStreaming;
+	}
 
-    /**
-     * Get Type
-     *
-     * @param requestStreaming  Request Streaming
-     * @param responseStreaming Response Streaming
-     * @return Type
-     */
-    public static String fromStreaming(boolean requestStreaming,
-                                  boolean responseStreaming) {
-        for (GrpcMethodTypeEnum type : values()) {
-            if (type.requestStreaming == requestStreaming && type.responseStreaming == responseStreaming) {
-                return type.getType();
-            }
-        }
-        // default type
-        return UNARY.getType();
-    }
+	public boolean isResponseStreaming() {
+		return responseStreaming;
+	}
+
+	/**
+	 * Get Type
+	 * @param requestStreaming Request Streaming
+	 * @param responseStreaming Response Streaming
+	 * @return Type
+	 */
+	public static String fromStreaming(boolean requestStreaming, boolean responseStreaming) {
+		for (GrpcMethodTypeEnum type : values()) {
+			if (type.requestStreaming == requestStreaming && type.responseStreaming == responseStreaming) {
+				return type.getType();
+			}
+		}
+		// default type
+		return UNARY.getType();
+	}
+
 }

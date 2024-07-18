@@ -29,40 +29,44 @@ import com.ly.doc.model.postman.request.RequestBean;
  */
 public class ItemBean {
 
-    private String name;
-    private RequestBean request;
-    private List<ItemBean> item;
-    private String description;
+	private String name;
 
-    public String getDescription() {
-        return description;
-    }
+	private RequestBean request;
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+	private List<ItemBean> item;
 
-    public String getName() {
-        return name;
-    }
+	private String description;
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public String getDescription() {
+		return description;
+	}
 
-    public RequestBean getRequest() {
-        return request;
-    }
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
-    public void setRequest(RequestBean request) {
-        this.request = request;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public List<ItemBean> getItem() {
-        return item;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public void setItem(List<ItemBean> item) {
-        this.item = item;
-    }
+	public RequestBean getRequest() {
+		return request;
+	}
+
+	public void setRequest(RequestBean request) {
+		this.request = request;
+	}
+
+	public List<ItemBean> getItem() {
+		return item;
+	}
+
+	public void setItem(List<ItemBean> item) {
+		this.item = item;
+	}
+
 }

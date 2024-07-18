@@ -32,158 +32,159 @@ import java.util.Objects;
 
 public class JavadocApiDoc implements IDoc, Comparable<JavadocApiDoc> {
 
-    /**
-     * Order of controller
-     *
-     * @since 1.7+
-     */
-    public int order;
+	/**
+	 * Order of controller
+	 *
+	 * @since 1.7+
+	 */
+	public int order;
 
-    /**
-     * interface title
-     */
-    public String title;
+	/**
+	 * interface title
+	 */
+	public String title;
 
-    /**
-     * interface name
-     */
-    private String name;
+	/**
+	 * interface name
+	 */
+	private String name;
 
-    /**
-     * interface short name
-     */
-    private String shortName;
+	/**
+	 * interface short name
+	 */
+	private String shortName;
 
-    /**
-     * controller alias handled by md5
-     *
-     * @since 1.7+
-     */
-    private String alias;
+	/**
+	 * controller alias handled by md5
+	 *
+	 * @since 1.7+
+	 */
+	private String alias;
 
-    /**
-     * method description
-     */
-    private String desc;
+	/**
+	 * method description
+	 */
+	private String desc;
 
-    /**
-     * interface author
-     */
-    private String author;
+	/**
+	 * interface author
+	 */
+	private String author;
 
-    /**
-     * interface version
-     */
-    private String version;
+	/**
+	 * interface version
+	 */
+	private String version;
 
-    /**
-     * link
-     */
-    private String link;
+	/**
+	 * link
+	 */
+	private String link;
 
-    /**
-     * List of method doc
-     */
-    private List<JavadocJavaMethod> list;
+	/**
+	 * List of method doc
+	 */
+	private List<JavadocJavaMethod> list;
 
-    public int getOrder() {
-        return order;
-    }
+	public int getOrder() {
+		return order;
+	}
 
-    public void setOrder(int order) {
-        this.order = order;
-    }
+	public void setOrder(int order) {
+		this.order = order;
+	}
 
-    public String getTitle() {
-        return title;
-    }
+	public String getTitle() {
+		return title;
+	}
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+	public void setTitle(String title) {
+		this.title = title;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public String getAlias() {
-        return alias;
-    }
+	public String getAlias() {
+		return alias;
+	}
 
-    public void setAlias(String alias) {
-        this.alias = alias;
-    }
+	public void setAlias(String alias) {
+		this.alias = alias;
+	}
 
-    public String getDesc() {
-        return desc;
-    }
+	public String getDesc() {
+		return desc;
+	}
 
-    public void setDesc(String desc) {
-        this.desc = desc;
-    }
+	public void setDesc(String desc) {
+		this.desc = desc;
+	}
 
-    public String getVersion() {
-        return version;
-    }
+	public String getVersion() {
+		return version;
+	}
 
-    public void setVersion(String version) {
-        this.version = version;
-    }
+	public void setVersion(String version) {
+		this.version = version;
+	}
 
-    public List<JavadocJavaMethod> getList() {
-        return list;
-    }
+	public List<JavadocJavaMethod> getList() {
+		return list;
+	}
 
-    public void setList(List<JavadocJavaMethod> list) {
-        this.list = list;
-    }
+	public void setList(List<JavadocJavaMethod> list) {
+		this.list = list;
+	}
 
-    public String getShortName() {
-        return shortName;
-    }
+	public String getShortName() {
+		return shortName;
+	}
 
-    public void setShortName(String shortName) {
-        this.shortName = shortName;
-    }
+	public void setShortName(String shortName) {
+		this.shortName = shortName;
+	}
 
-    public String getAuthor() {
-        return author;
-    }
+	public String getAuthor() {
+		return author;
+	}
 
-    public void setAuthor(String author) {
-        this.author = author;
-    }
+	public void setAuthor(String author) {
+		this.author = author;
+	}
 
-    public String getLink() {
-        return desc.replace(" ", "_").toLowerCase();
-    }
+	public String getLink() {
+		return desc.replace(" ", "_").toLowerCase();
+	}
 
-    public void setLink(String link) {
-        this.link = link;
-    }
+	public void setLink(String link) {
+		this.link = link;
+	}
 
-    @Override
-    public int compareTo(JavadocApiDoc o) {
-        if (Objects.nonNull(o.getDesc())) {
-            return desc.compareTo(o.getDesc());
-        }
-        return name.compareTo(o.getName());
-    }
+	@Override
+	public int compareTo(JavadocApiDoc o) {
+		if (Objects.nonNull(o.getDesc())) {
+			return desc.compareTo(o.getDesc());
+		}
+		return name.compareTo(o.getName());
+	}
 
-    @Override
-    public String getDocClass() {
-        return this.name;
-    }
+	@Override
+	public String getDocClass() {
+		return this.name;
+	}
 
-    @Override
-    public List<IMethod> getMethods() {
-        if (CollectionUtil.isEmpty(this.list)) {
-            return Collections.emptyList();
-        }
-        return new ArrayList<>(this.list);
-    }
+	@Override
+	public List<IMethod> getMethods() {
+		if (CollectionUtil.isEmpty(this.list)) {
+			return Collections.emptyList();
+		}
+		return new ArrayList<>(this.list);
+	}
+
 }

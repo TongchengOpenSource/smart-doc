@@ -35,56 +35,55 @@ import java.util.List;
  */
 public class DocPathUtil {
 
-    /**
-     * Get the java class name
-     *
-     * @param parentDir parent dir
-     * @param className class name
-     * @return java file name
-     */
-    public static String javaFilePath(String parentDir, String className) {
-        if (StringUtil.isEmpty(parentDir)) {
-            parentDir = "java.io.tmpdir";
-        }
-        if (!StringUtils.endsWith(parentDir, File.separator)) {
-            parentDir += File.separator;
-        }
-        className = className.replaceAll("\\.", "\\" + File.separator);
-        return parentDir + className + ".java";
-    }
+	/**
+	 * Get the java class name
+	 * @param parentDir parent dir
+	 * @param className class name
+	 * @return java file name
+	 */
+	public static String javaFilePath(String parentDir, String className) {
+		if (StringUtil.isEmpty(parentDir)) {
+			parentDir = "java.io.tmpdir";
+		}
+		if (!StringUtils.endsWith(parentDir, File.separator)) {
+			parentDir += File.separator;
+		}
+		className = className.replaceAll("\\.", "\\" + File.separator);
+		return parentDir + className + ".java";
+	}
 
-    /**
-     * to postman path
-     *
-     * @param path path
-     * @return String
-     */
-    public static String toPostmanPath(String path) {
-        if (StringUtil.isNotEmpty(path)) {
-            path = path.replace("{", ":");
-            path = path.replace("}", "");
-            return path;
-        }
-        return null;
-    }
+	/**
+	 * to postman path
+	 * @param path path
+	 * @return String
+	 */
+	public static String toPostmanPath(String path) {
+		if (StringUtil.isNotEmpty(path)) {
+			path = path.replace("{", ":");
+			path = path.replace("}", "");
+			return path;
+		}
+		return null;
+	}
 
-    /**
-     * Determine a match for the given lookup path.
-     *
-     * @param lookupPath      the request path
-     * @param includePatterns the path patterns to map (empty for matching to all paths)
-     * @param excludePatterns the path patterns to exclude (empty for no specific excludes)
-     * @return {@code true} if matched the request path
-     */
-    public static boolean matches(String lookupPath, String includePatterns, String excludePatterns) {
-        List<String> includePatternList = null;
-        if (StringUtil.isNotEmpty(includePatterns)) {
-            includePatternList = Arrays.asList(includePatterns.split(",", 0));
-        }
-        List<String> excludePatternList = null;
-        if (StringUtil.isNotEmpty(excludePatterns)) {
-            excludePatternList = Arrays.asList(excludePatterns.split(",", 0));
-        }
-        return PathUtil.matches(lookupPath, includePatternList, excludePatternList);
-    }
+	/**
+	 * Determine a match for the given lookup path.
+	 * @param lookupPath the request path
+	 * @param includePatterns the path patterns to map (empty for matching to all paths)
+	 * @param excludePatterns the path patterns to exclude (empty for no specific
+	 * excludes)
+	 * @return {@code true} if matched the request path
+	 */
+	public static boolean matches(String lookupPath, String includePatterns, String excludePatterns) {
+		List<String> includePatternList = null;
+		if (StringUtil.isNotEmpty(includePatterns)) {
+			includePatternList = Arrays.asList(includePatterns.split(",", 0));
+		}
+		List<String> excludePatternList = null;
+		if (StringUtil.isNotEmpty(excludePatterns)) {
+			excludePatternList = Arrays.asList(excludePatterns.split(",", 0));
+		}
+		return PathUtil.matches(lookupPath, includePatternList, excludePatternList);
+	}
+
 }

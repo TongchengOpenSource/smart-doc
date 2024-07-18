@@ -30,32 +30,33 @@ import java.util.List;
  */
 public class ApiSchema<T> {
 
-    List<T> apiDatas;
+	List<T> apiDatas;
 
-    /**
-     * http exception response status
-     */
-    private List<ApiExceptionStatus> apiExceptionStatuses;
+	/**
+	 * http exception response status
+	 */
+	private List<ApiExceptionStatus> apiExceptionStatuses;
 
-    public List<T> getApiDatas() {
-        if (apiDatas == null) {
-            apiDatas = new ArrayList<>();
-        }
-        return apiDatas;
-    }
+	public List<T> getApiDatas() {
+		if (apiDatas == null) {
+			apiDatas = new ArrayList<>();
+		}
+		return apiDatas;
+	}
 
-    public void setApiDatas(List<T> apiDatas) {
-        this.apiDatas = apiDatas;
-    }
+	public void setApiDatas(List<T> apiDatas) {
+		this.apiDatas = apiDatas;
+	}
 
-    public List<ApiExceptionStatus> getApiExceptionStatuses() {
-        if (apiExceptionStatuses == null) {
-            apiExceptionStatuses = new ArrayList<>();
-        }
-        return apiExceptionStatuses;
-    }
+	public List<ApiExceptionStatus> getApiExceptionStatuses() {
+		if (apiExceptionStatuses == null) {
+			apiExceptionStatuses = new ArrayList<>();
+		}
+		return apiExceptionStatuses;
+	}
 
-    public void setApiExceptionStatuses(List<ApiExceptionStatus> apiExceptionStatuses) {
-        this.apiExceptionStatuses = apiExceptionStatuses;
-    }
+	public void setApiExceptionStatuses(List<ApiExceptionStatus> apiExceptionStatuses) {
+		this.apiExceptionStatuses = apiExceptionStatuses;
+	}
+
 }

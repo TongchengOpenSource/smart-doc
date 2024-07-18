@@ -46,68 +46,68 @@ import static com.ly.doc.constants.DocTags.IGNORE;
  */
 public class SpringMVCRequestMappingHandler implements IRequestMappingHandler, IWebSocketRequestHandler {
 
-    /**
-     * handle spring request mapping
-     *
-     * @param projectBuilder    projectBuilder
-     * @param controllerBaseUrl spring mvc controller base url
-     * @param method            JavaMethod
-     * @return RequestMapping
-     */
-    @Override
-    public RequestMapping handle(ProjectDocConfigBuilder projectBuilder, String controllerBaseUrl,
-                                 JavaMethod method, FrameworkAnnotations frameworkAnnotations,
-                                 RequestMappingFunc requestMappingFunc) {
+	/**
+	 * handle spring request mapping
+	 * @param projectBuilder projectBuilder
+	 * @param controllerBaseUrl spring mvc controller base url
+	 * @param method JavaMethod
+	 * @return RequestMapping
+	 */
+	@Override
+	public RequestMapping handle(ProjectDocConfigBuilder projectBuilder, String controllerBaseUrl, JavaMethod method,
+			FrameworkAnnotations frameworkAnnotations, RequestMappingFunc requestMappingFunc) {
 
-        if (Objects.nonNull(method.getTagByName(IGNORE))) {
-            return null;
-        }
-        List<JavaAnnotation> annotations = getAnnotations(method);
-        String methodType = null;
-        String shortUrl = null;
-        String mediaType = null;
-        boolean deprecated = Objects.nonNull(method.getTagByName(DEPRECATED));
-        Map<String, MappingAnnotation> mappingAnnotationMap = frameworkAnnotations.getMappingAnnotations();
-        for (JavaAnnotation annotation : annotations) {
-            String annotationName = annotation.getType().getName();
-            annotationName = JavaClassUtil.getClassSimpleName(annotationName);
-            if (DocAnnotationConstants.DEPRECATED.equals(annotationName)) {
-                deprecated = true;
-            }
-            MappingAnnotation mappingAnnotation = mappingAnnotationMap.get(annotationName);
-            if (Objects.isNull(mappingAnnotation)) {
-                continue;
-            }
-            // get consumes of annotation
-            Object consumes = annotation.getNamedParameter("consumes");
-            if (Objects.nonNull(consumes)) {
-                mediaType = consumes.toString();
-            }
-            if (CollectionUtil.isNotEmpty(mappingAnnotation.getPathProps())) {
-                ClassLoader classLoader = projectBuilder.getApiConfig().getClassLoader();
-                shortUrl = DocUtil.getPathUrl(classLoader, annotation, mappingAnnotation.getPathProps()
-                        .toArray(new String[0]));
-            }
-            if (StringUtil.isNotEmpty(mappingAnnotation.getMethodType())) {
-                methodType = mappingAnnotation.getMethodType();
-            } else {
-                Object nameParam = annotation.getNamedParameter(mappingAnnotation.getMethodProp());
-                if (Objects.nonNull(nameParam)) {
-                    methodType = nameParam.toString();
-                    methodType = DocUtil.handleHttpMethod(methodType);
-                } else {
-                    methodType = Methods.GET.getValue();
-                }
-            }
-        }
-        RequestMapping requestMapping = RequestMapping.builder()
-                .setMediaType(mediaType)
-                .setMethodType(methodType)
-                .setDeprecated(deprecated)
-                .setShortUrl(shortUrl);
-        requestMapping = formatMappingData(projectBuilder, controllerBaseUrl, requestMapping);
-        requestMappingFunc.process(method.getDeclaringClass(), requestMapping);
-        return requestMapping;
-    }
+		if (Objects.nonNull(method.getTagByName(IGNORE))) {
+			return null;
+		}
+		List<JavaAnnotation> annotations = getAnnotations(method);
+		String methodType = null;
+		String shortUrl = null;
+		String mediaType = null;
+		boolean deprecated = Objects.nonNull(method.getTagByName(DEPRECATED));
+		Map<String, MappingAnnotation> mappingAnnotationMap = frameworkAnnotations.getMappingAnnotations();
+		for (JavaAnnotation annotation : annotations) {
+			String annotationName = annotation.getType().getName();
+			annotationName = JavaClassUtil.getClassSimpleName(annotationName);
+			if (DocAnnotationConstants.DEPRECATED.equals(annotationName)) {
+				deprecated = true;
+			}
+			MappingAnnotation mappingAnnotation = mappingAnnotationMap.get(annotationName);
+			if (Objects.isNull(mappingAnnotation)) {
+				continue;
+			}
+			// get consumes of annotation
+			Object consumes = annotation.getNamedParameter("consumes");
+			if (Objects.nonNull(consumes)) {
+				mediaType = consumes.toString();
+			}
+			if (CollectionUtil.isNotEmpty(mappingAnnotation.getPathProps())) {
+				ClassLoader classLoader = projectBuilder.getApiConfig().getClassLoader();
+				shortUrl = DocUtil.getPathUrl(classLoader, annotation,
+						mappingAnnotation.getPathProps().toArray(new String[0]));
+			}
+			if (StringUtil.isNotEmpty(mappingAnnotation.getMethodType())) {
+				methodType = mappingAnnotation.getMethodType();
+			}
+			else {
+				Object nameParam = annotation.getNamedParameter(mappingAnnotation.getMethodProp());
+				if (Objects.nonNull(nameParam)) {
+					methodType = nameParam.toString();
+					methodType = DocUtil.handleHttpMethod(methodType);
+				}
+				else {
+					methodType = Methods.GET.getValue();
+				}
+			}
+		}
+		RequestMapping requestMapping = RequestMapping.builder()
+			.setMediaType(mediaType)
+			.setMethodType(methodType)
+			.setDeprecated(deprecated)
+			.setShortUrl(shortUrl);
+		requestMapping = formatMappingData(projectBuilder, controllerBaseUrl, requestMapping);
+		requestMappingFunc.process(method.getDeclaringClass(), requestMapping);
+		return requestMapping;
+	}
 
 }

@@ -28,70 +28,67 @@ import java.util.List;
 
 public class ApiDocDict {
 
-    /**
-     * order
-     */
-    private int order;
+	/**
+	 * order
+	 */
+	private int order;
 
-    /**
-     * dict title
-     */
-    private String title;
+	/**
+	 * dict title
+	 */
+	private String title;
 
-    /**
-     * dict description
-     */
-    private String description;
+	/**
+	 * dict description
+	 */
+	private String description;
 
-    /**
-     * data dict
-     */
-    private List<DataDict> dataDictList;
+	/**
+	 * data dict
+	 */
+	private List<DataDict> dataDictList;
 
-    public int getOrder() {
-        return order;
-    }
+	public int getOrder() {
+		return order;
+	}
 
-    public void setOrder(int order) {
-        this.order = order;
-    }
+	public void setOrder(int order) {
+		this.order = order;
+	}
 
-    public String getTitle() {
-        return title;
-    }
+	public String getTitle() {
+		return title;
+	}
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+	public void setTitle(String title) {
+		this.title = title;
+	}
 
-    public List<DataDict> getDataDictList() {
-        return dataDictList;
-    }
+	public List<DataDict> getDataDictList() {
+		return dataDictList;
+	}
 
-    public void setDataDictList(List<DataDict> dataDictList) {
-        this.dataDictList = dataDictList;
-    }
+	public void setDataDictList(List<DataDict> dataDictList) {
+		this.dataDictList = dataDictList;
+	}
 
-    public String getDescription() {
-        return description;
-    }
+	public String getDescription() {
+		return description;
+	}
 
-    public ApiDocDict setDescription(String description) {
-        this.description = description;
-        return this;
-    }
+	public ApiDocDict setDescription(String description) {
+		this.description = description;
+		return this;
+	}
 
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("{");
-        sb.append("\"order\":")
-            .append(order);
-        sb.append(",\"title\":\"")
-            .append(title).append('\"');
-        sb.append(",\"dataDictList\":")
-            .append(dataDictList);
-        sb.append('}');
-        return sb.toString();
-    }
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder("{");
+		sb.append("\"order\":").append(order);
+		sb.append(",\"title\":\"").append(title).append('\"');
+		sb.append(",\"dataDictList\":").append(dataDictList);
+		sb.append('}');
+		return sb.toString();
+	}
+
 }
-

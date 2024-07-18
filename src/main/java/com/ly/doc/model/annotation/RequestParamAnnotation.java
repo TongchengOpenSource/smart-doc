@@ -25,51 +25,52 @@ package com.ly.doc.model.annotation;
  */
 public class RequestParamAnnotation {
 
-    private String annotationName;
+	private String annotationName;
 
-    private String annotationFullyName;
+	private String annotationFullyName;
 
-    private String defaultValueProp;
+	private String defaultValueProp;
 
-    private String requiredProp;
+	private String requiredProp;
 
-    public static RequestParamAnnotation builder() {
-        return new RequestParamAnnotation();
-    }
+	public static RequestParamAnnotation builder() {
+		return new RequestParamAnnotation();
+	}
 
-    public String getAnnotationName() {
-        return annotationName;
-    }
+	public String getAnnotationName() {
+		return annotationName;
+	}
 
-    public RequestParamAnnotation setAnnotationName(String annotationName) {
-        this.annotationName = annotationName;
-        return this;
-    }
+	public RequestParamAnnotation setAnnotationName(String annotationName) {
+		this.annotationName = annotationName;
+		return this;
+	}
 
-    public String getAnnotationFullyName() {
-        return annotationFullyName;
-    }
+	public String getAnnotationFullyName() {
+		return annotationFullyName;
+	}
 
-    public RequestParamAnnotation setAnnotationFullyName(String annotationFullyName) {
-        this.annotationFullyName = annotationFullyName;
-        return this;
-    }
+	public RequestParamAnnotation setAnnotationFullyName(String annotationFullyName) {
+		this.annotationFullyName = annotationFullyName;
+		return this;
+	}
 
-    public String getDefaultValueProp() {
-        return defaultValueProp;
-    }
+	public String getDefaultValueProp() {
+		return defaultValueProp;
+	}
 
-    public RequestParamAnnotation setDefaultValueProp(String defaultValueProp) {
-        this.defaultValueProp = defaultValueProp;
-        return this;
-    }
+	public RequestParamAnnotation setDefaultValueProp(String defaultValueProp) {
+		this.defaultValueProp = defaultValueProp;
+		return this;
+	}
 
-    public String getRequiredProp() {
-        return requiredProp;
-    }
+	public String getRequiredProp() {
+		return requiredProp;
+	}
 
-    public RequestParamAnnotation setRequiredProp(String requiredProp) {
-        this.requiredProp = requiredProp;
-        return this;
-    }
+	public RequestParamAnnotation setRequiredProp(String requiredProp) {
+		this.requiredProp = requiredProp;
+		return this;
+	}
+
 }

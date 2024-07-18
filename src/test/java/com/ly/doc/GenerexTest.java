@@ -9,12 +9,13 @@ import org.junit.jupiter.api.Test;
  */
 public class GenerexTest {
 
-    @Test
-    public void testGenerateValue() {
-        Generex generex = new Generex("[a-zA-Z0-9]{3}");
-        // Generate random String
-        String randomStr = generex.random();
-        System.out.println(randomStr);
+	@Test
+	public void testGenerateValue() {
+		Generex generex = new Generex("[a-zA-Z0-9]{3}");
+		// Generate random String
+		String randomStr = generex.random();
+		System.out.println(randomStr);
 
-    }
+	}
+
 }

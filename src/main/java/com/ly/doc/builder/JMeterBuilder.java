@@ -41,40 +41,42 @@ import java.util.Objects;
  */
 public class JMeterBuilder {
 
-    private static final String JMETER_SCRIPT_EXTENSION = ".jmx";
+	private static final String JMETER_SCRIPT_EXTENSION = ".jmx";
 
-    /**
-     * @param config ApiConfig
-     */
-    public static void buildApiDoc(ApiConfig config) {
-        JavaProjectBuilder javaProjectBuilder = JavaProjectBuilderHelper.create();
-        buildApiDoc(config, javaProjectBuilder);
-    }
+	/**
+	 * @param config ApiConfig
+	 */
+	public static void buildApiDoc(ApiConfig config) {
+		JavaProjectBuilder javaProjectBuilder = JavaProjectBuilderHelper.create();
+		buildApiDoc(config, javaProjectBuilder);
+	}
 
-    /**
-     * Only for smart-doc maven plugin and gradle plugin.
-     *
-     * @param config             ApiConfig
-     * @param javaProjectBuilder ProjectDocConfigBuilder
-     */
-    public static void buildApiDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
-        DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
-        builderTemplate.checkAndInit(config, Boolean.TRUE);
-        config.setAdoc(false);
-        config.setShowJavaType(true);
-        config.setParamsDataToTree(Boolean.FALSE);
-        ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
-        IDocBuildTemplate<ApiDoc> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(
-                config.getFramework(), config.getClassLoader());
-        Objects.requireNonNull(docBuildTemplate, "doc build template is null");
-        List<ApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder).getApiDatas();
-        String version = config.isCoverOld() ? "" : "-V" + DateTimeUtil.long2Str(System.currentTimeMillis(), DocGlobalConstants.DATE_FORMAT_YYYY_MM_DD_HH_MM);
-        String docName;
-        if (StringUtil.isNotEmpty(config.getProjectName())) {
-            docName = config.getProjectName() + version + JMETER_SCRIPT_EXTENSION;
-        } else {
-            docName = "jmeter-script" + version + JMETER_SCRIPT_EXTENSION;
-        }
-        builderTemplate.buildAllInOne(apiDocList, config, javaProjectBuilder, DocGlobalConstants.JMETER_TPL, docName);
-    }
+	/**
+	 * Only for smart-doc maven plugin and gradle plugin.
+	 * @param config ApiConfig
+	 * @param javaProjectBuilder ProjectDocConfigBuilder
+	 */
+	public static void buildApiDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
+		DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
+		builderTemplate.checkAndInit(config, Boolean.TRUE);
+		config.setAdoc(false);
+		config.setShowJavaType(true);
+		config.setParamsDataToTree(Boolean.FALSE);
+		ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
+		IDocBuildTemplate<ApiDoc> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework(),
+				config.getClassLoader());
+		Objects.requireNonNull(docBuildTemplate, "doc build template is null");
+		List<ApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder).getApiDatas();
+		String version = config.isCoverOld() ? "" : "-V"
+				+ DateTimeUtil.long2Str(System.currentTimeMillis(), DocGlobalConstants.DATE_FORMAT_YYYY_MM_DD_HH_MM);
+		String docName;
+		if (StringUtil.isNotEmpty(config.getProjectName())) {
+			docName = config.getProjectName() + version + JMETER_SCRIPT_EXTENSION;
+		}
+		else {
+			docName = "jmeter-script" + version + JMETER_SCRIPT_EXTENSION;
+		}
+		builderTemplate.buildAllInOne(apiDocList, config, javaProjectBuilder, DocGlobalConstants.JMETER_TPL, docName);
+	}
+
 }

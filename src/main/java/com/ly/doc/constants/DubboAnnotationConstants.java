@@ -27,17 +27,18 @@ package com.ly.doc.constants;
  */
 public interface DubboAnnotationConstants {
 
-    String SERVICE = "org.apache.dubbo.config.annotation.Service";
+	String SERVICE = "org.apache.dubbo.config.annotation.Service";
 
-    /**
-     * @since dubbo 2.7.7
-     */
-    String DUBBO_SERVICE = "org.apache.dubbo.config.annotation.DubboService";
+	/**
+	 * @since dubbo 2.7.7
+	 */
+	String DUBBO_SERVICE = "org.apache.dubbo.config.annotation.DubboService";
 
-    /**
-     * support ali dubbo
-     */
-    String ALI_DUBBO_SERVICE = "com.alibaba.dubbo.config.annotation.Service";
+	/**
+	 * support ali dubbo
+	 */
+	String ALI_DUBBO_SERVICE = "com.alibaba.dubbo.config.annotation.Service";
 
-    String DUBBO_SWAGGER = "org.apache.dubbo.rpc.protocol.rest.integration.swagger.DubboSwaggerApiListingResource";
+	String DUBBO_SWAGGER = "org.apache.dubbo.rpc.protocol.rest.integration.swagger.DubboSwaggerApiListingResource";
+
 }

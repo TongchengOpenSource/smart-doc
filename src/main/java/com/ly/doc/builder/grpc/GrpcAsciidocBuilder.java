@@ -36,38 +36,40 @@ import java.util.List;
  */
 public class GrpcAsciidocBuilder {
 
-    private static final String API_EXTENSION = "gRpcApi.adoc";
+	private static final String API_EXTENSION = "gRpcApi.adoc";
 
-    private static final String INDEX_DOC = "grpc-index.adoc";
+	private static final String INDEX_DOC = "grpc-index.adoc";
 
-    /**
-     * build Asciidoc
-     *
-     * @param config ApiConfig
-     */
-    public static void buildApiDoc(ApiConfig config) {
-        JavaProjectBuilder javaProjectBuilder = JavaProjectBuilderHelper.create();
-        buildApiDoc(config, javaProjectBuilder);
-    }
+	/**
+	 * build Asciidoc
+	 * @param config ApiConfig
+	 */
+	public static void buildApiDoc(ApiConfig config) {
+		JavaProjectBuilder javaProjectBuilder = JavaProjectBuilderHelper.create();
+		buildApiDoc(config, javaProjectBuilder);
+	}
 
-    /**
-     * Only for smart-doc maven plugin and gradle plugin.
-     *
-     * @param config             ApiConfig
-     * @param javaProjectBuilder ProjectDocConfigBuilder
-     */
-    public static void buildApiDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
-        config.setAdoc(true);
-        GrpcDocBuilderTemplate grpcDocBuilderTemplate = new GrpcDocBuilderTemplate();
-        grpcDocBuilderTemplate.checkAndInit(config, Boolean.TRUE);
-        List<RpcApiDoc> apiDocList = grpcDocBuilderTemplate.getRpcApiDoc(config, javaProjectBuilder);
-        if (config.isAllInOne()) {
-            String docName = grpcDocBuilderTemplate.allInOneDocName(config, INDEX_DOC, ".adoc");
-            grpcDocBuilderTemplate.buildAllInOne(apiDocList, config, javaProjectBuilder, DocGlobalConstants.GRPC_ALL_IN_ONE_ADOC_TPL, docName);
-        } else {
-            grpcDocBuilderTemplate.buildApiDoc(apiDocList, config, DocGlobalConstants.GRPC_API_DOC_ADOC_TPL, API_EXTENSION);
-            grpcDocBuilderTemplate.buildErrorCodeDoc(config, DocGlobalConstants.ERROR_CODE_LIST_ADOC_TPL, DocGlobalConstants.ERROR_CODE_LIST_ADOC, javaProjectBuilder);
-        }
-    }
+	/**
+	 * Only for smart-doc maven plugin and gradle plugin.
+	 * @param config ApiConfig
+	 * @param javaProjectBuilder ProjectDocConfigBuilder
+	 */
+	public static void buildApiDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
+		config.setAdoc(true);
+		GrpcDocBuilderTemplate grpcDocBuilderTemplate = new GrpcDocBuilderTemplate();
+		grpcDocBuilderTemplate.checkAndInit(config, Boolean.TRUE);
+		List<RpcApiDoc> apiDocList = grpcDocBuilderTemplate.getRpcApiDoc(config, javaProjectBuilder);
+		if (config.isAllInOne()) {
+			String docName = grpcDocBuilderTemplate.allInOneDocName(config, INDEX_DOC, ".adoc");
+			grpcDocBuilderTemplate.buildAllInOne(apiDocList, config, javaProjectBuilder,
+					DocGlobalConstants.GRPC_ALL_IN_ONE_ADOC_TPL, docName);
+		}
+		else {
+			grpcDocBuilderTemplate.buildApiDoc(apiDocList, config, DocGlobalConstants.GRPC_API_DOC_ADOC_TPL,
+					API_EXTENSION);
+			grpcDocBuilderTemplate.buildErrorCodeDoc(config, DocGlobalConstants.ERROR_CODE_LIST_ADOC_TPL,
+					DocGlobalConstants.ERROR_CODE_LIST_ADOC, javaProjectBuilder);
+		}
+	}
 
 }

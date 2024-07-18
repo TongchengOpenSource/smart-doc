@@ -24,35 +24,33 @@ import com.ly.doc.constants.DocAnnotationConstants;
 import com.ly.doc.constants.SolonAnnotations;
 import com.ly.doc.model.annotation.HeaderAnnotation;
 
-
 /**
  * @author noear 2022/2/19 created
  */
 public class SolonRequestHeaderHandler implements IHeaderHandler {
 
-    @Override
-    public boolean isMapping(String annotationName) {
-        switch (annotationName) {
-            case "Mapping":
-            case "Get":
-            case "Post":
-            case "Put":
-            case "Patch":
-            case "Delete":
-                return true;
-            default:
-                return false;
-        }
-    }
+	@Override
+	public boolean isMapping(String annotationName) {
+		switch (annotationName) {
+			case "Mapping":
+			case "Get":
+			case "Post":
+			case "Put":
+			case "Patch":
+			case "Delete":
+				return true;
+			default:
+				return false;
+		}
+	}
 
-    @Override
-    public HeaderAnnotation getHeaderAnnotation() {
-        return HeaderAnnotation.builder()
-            .setAnnotationName(SolonAnnotations.REQUEST_HERDER)
-            .setValueProp(DocAnnotationConstants.VALUE_PROP)
-            .setDefaultValueProp(DocAnnotationConstants.DEFAULT_VALUE_PROP)
-            .setRequiredProp(DocAnnotationConstants.REQUIRED_PROP);
-    }
-
+	@Override
+	public HeaderAnnotation getHeaderAnnotation() {
+		return HeaderAnnotation.builder()
+			.setAnnotationName(SolonAnnotations.REQUEST_HERDER)
+			.setValueProp(DocAnnotationConstants.VALUE_PROP)
+			.setDefaultValueProp(DocAnnotationConstants.DEFAULT_VALUE_PROP)
+			.setRequiredProp(DocAnnotationConstants.REQUIRED_PROP);
+	}
 
 }

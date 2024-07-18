@@ -44,115 +44,116 @@ import java.util.Set;
  */
 public class GitHelper {
 
-    private Repository repository;
+	private Repository repository;
 
-    private GitHelper() {
-    }
+	private GitHelper() {
+	}
 
-    public static GitHelper create() {
-        GitHelper helper = new GitHelper();
-        helper.repository = helper.findRepo();
-        return helper;
-    }
+	public static GitHelper create() {
+		GitHelper helper = new GitHelper();
+		helper.repository = helper.findRepo();
+		return helper;
+	}
 
-    public List<DiffEntry> getDiff(String commitId) {
-        if (StringUtil.isEmpty(commitId) || notGitRepo()) {
-            return Collections.emptyList();
-        }
+	public List<DiffEntry> getDiff(String commitId) {
+		if (StringUtil.isEmpty(commitId) || notGitRepo()) {
+			return Collections.emptyList();
+		}
 
-        try (Git git = new Git(repository)) {
-            ObjectId commitObjectId = repository.resolve(commitId);
-            RevCommit commit = new RevWalk(repository).parseCommit(commitObjectId);
+		try (Git git = new Git(repository)) {
+			ObjectId commitObjectId = repository.resolve(commitId);
+			RevCommit commit = new RevWalk(repository).parseCommit(commitObjectId);
 
-            ObjectId treeId = commit.getTree().getId();
-            CanonicalTreeParser oldTreeIter = new CanonicalTreeParser();
-            try (ObjectReader reader = repository.newObjectReader()) {
-                oldTreeIter.reset(reader, treeId);
-            }
+			ObjectId treeId = commit.getTree().getId();
+			CanonicalTreeParser oldTreeIter = new CanonicalTreeParser();
+			try (ObjectReader reader = repository.newObjectReader()) {
+				oldTreeIter.reset(reader, treeId);
+			}
 
-            ObjectId currentTreeId = repository.resolve("HEAD^{tree}");
-            CanonicalTreeParser newTreeIter = new CanonicalTreeParser();
-            try (ObjectReader reader = repository.newObjectReader()) {
-                newTreeIter.reset(reader, currentTreeId);
-            }
+			ObjectId currentTreeId = repository.resolve("HEAD^{tree}");
+			CanonicalTreeParser newTreeIter = new CanonicalTreeParser();
+			try (ObjectReader reader = repository.newObjectReader()) {
+				newTreeIter.reset(reader, currentTreeId);
+			}
 
-            return git.diff()
-                    .setNewTree(newTreeIter)
-                    .setOldTree(oldTreeIter)
-                    .call();
-        } catch (IOException | GitAPIException e) {
-            throw new RuntimeException(e);
-        }
-    }
+			return git.diff().setNewTree(newTreeIter).setOldTree(oldTreeIter).call();
+		}
+		catch (IOException | GitAPIException e) {
+			throw new RuntimeException(e);
+		}
+	}
 
-    public Set<String> getUncommitted() {
-        if (notGitRepo()) {
-            return Collections.emptySet();
-        }
+	public Set<String> getUncommitted() {
+		if (notGitRepo()) {
+			return Collections.emptySet();
+		}
 
-        try (Git git = new Git(repository)) {
-            return git.status().call().getUncommittedChanges();
-        } catch (GitAPIException e) {
-            throw new RuntimeException(e);
-        }
-    }
+		try (Git git = new Git(repository)) {
+			return git.status().call().getUncommittedChanges();
+		}
+		catch (GitAPIException e) {
+			throw new RuntimeException(e);
+		}
+	}
 
-    public Set<String> getUntracked() {
-        if (notGitRepo()) {
-            return Collections.emptySet();
-        }
+	public Set<String> getUntracked() {
+		if (notGitRepo()) {
+			return Collections.emptySet();
+		}
 
-        try (Git git = new Git(repository)) {
-            return git.status().call().getUntracked();
-        } catch (GitAPIException e) {
-            throw new RuntimeException(e);
-        }
-    }
+		try (Git git = new Git(repository)) {
+			return git.status().call().getUntracked();
+		}
+		catch (GitAPIException e) {
+			throw new RuntimeException(e);
+		}
+	}
 
-    public String getLatestCommitId() {
-        if (notGitRepo()) {
-            return "";
-        }
+	public String getLatestCommitId() {
+		if (notGitRepo()) {
+			return "";
+		}
 
-        try {
-            ObjectId objectId = repository.resolve("HEAD");
-            // if not exist (the repository is init), return empty string
-            if (null == objectId) {
-                return "";
-            }
-            return objectId.getName();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
+		try {
+			ObjectId objectId = repository.resolve("HEAD");
+			// if not exist (the repository is init), return empty string
+			if (null == objectId) {
+				return "";
+			}
+			return objectId.getName();
+		}
+		catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
 
-    /**
-     * Check git repository, if not exist or io exception, return null
-     */
-    private Repository findRepo() {
-        try {
-            return new FileRepositoryBuilder()
-                    .readEnvironment()
-                    .findGitDir()
-                    .build();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (Exception e) {
-            System.err.println("WARN: When detecting git repository, got exception:" + e.getMessage() + " Ignore it if this is not a git repository");
-            return null;
-        }
-    }
+	/**
+	 * Check git repository, if not exist or io exception, return null
+	 */
+	private Repository findRepo() {
+		try {
+			return new FileRepositoryBuilder().readEnvironment().findGitDir().build();
+		}
+		catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+		catch (Exception e) {
+			System.err.println("WARN: When detecting git repository, got exception:" + e.getMessage()
+					+ " Ignore it if this is not a git repository");
+			return null;
+		}
+	}
 
-    public boolean notGitRepo() {
-        return repository == null;
-    }
+	public boolean notGitRepo() {
+		return repository == null;
+	}
 
-    public boolean isGitRepo() {
-        return !notGitRepo();
-    }
+	public boolean isGitRepo() {
+		return !notGitRepo();
+	}
 
-    public String getWorkDir() {
-        return repository.getWorkTree().getAbsolutePath();
-    }
+	public String getWorkDir() {
+		return repository.getWorkTree().getAbsolutePath();
+	}
 
 }

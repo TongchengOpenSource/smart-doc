@@ -29,49 +29,50 @@ package com.ly.doc.model;
  */
 public class ApiGroup {
 
-    /**
-     * group name
-     */
-    private String name;
-    /**
-     * package name
-     * support patten
-     */
-    private String apis;
-    /**
-     * url path
-     * support patten
-     */
-    private String paths;
+	/**
+	 * group name
+	 */
+	private String name;
 
-    public static ApiGroup builder() {
-        return new ApiGroup();
-    }
+	/**
+	 * package name support patten
+	 */
+	private String apis;
 
-    public String getName() {
-        return name;
-    }
+	/**
+	 * url path support patten
+	 */
+	private String paths;
 
-    public ApiGroup setName(String name) {
-        this.name = name;
-        return this;
-    }
+	public static ApiGroup builder() {
+		return new ApiGroup();
+	}
 
-    public String getApis() {
-        return apis;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public ApiGroup setApis(String apis) {
-        this.apis = apis;
-        return this;
-    }
+	public ApiGroup setName(String name) {
+		this.name = name;
+		return this;
+	}
 
-    public String getPaths() {
-        return paths;
-    }
+	public String getApis() {
+		return apis;
+	}
 
-    public ApiGroup setPaths(String paths) {
-        this.paths = paths;
-        return this;
-    }
+	public ApiGroup setApis(String apis) {
+		this.apis = apis;
+		return this;
+	}
+
+	public String getPaths() {
+		return paths;
+	}
+
+	public ApiGroup setPaths(String paths) {
+		this.paths = paths;
+		return this;
+	}
+
 }

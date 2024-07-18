@@ -27,13 +27,15 @@ import org.beetl.core.Function;
 
 /**
  * beetl template function
+ *
  * @author yu 2022/10/3.
  */
 public class LineBreaksToBr implements Function {
 
-    @Override
-    public String call(Object[] paras, Context ctx) {
-        String str = String.valueOf(paras[0]);
-        return HtmlUtil.lineBreaksToBr(str);
-    }
+	@Override
+	public String call(Object[] paras, Context ctx) {
+		String str = String.valueOf(paras[0]);
+		return HtmlUtil.lineBreaksToBr(str);
+	}
+
 }

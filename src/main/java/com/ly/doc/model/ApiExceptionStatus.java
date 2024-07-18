@@ -31,83 +31,86 @@ import java.util.Objects;
  * @since 3.0.5
  */
 public class ApiExceptionStatus implements Comparable<ApiExceptionStatus> {
-    private String status;
 
-    private String author;
+	private String status;
 
-    private String desc;
+	private String author;
 
-    private String detail;
+	private String desc;
 
-    private String responseUsage;
-    /**
-     * http exception response params
-     */
-    private List<ApiParam> exceptionResponseParams;
+	private String detail;
 
-    public static ApiExceptionStatus of() {
-        return new ApiExceptionStatus();
-    }
+	private String responseUsage;
 
-    public String getStatus() {
-        return status;
-    }
+	/**
+	 * http exception response params
+	 */
+	private List<ApiParam> exceptionResponseParams;
 
-    public ApiExceptionStatus setStatus(String status) {
-        this.status = status;
-        return this;
-    }
+	public static ApiExceptionStatus of() {
+		return new ApiExceptionStatus();
+	}
 
-    public List<ApiParam> getExceptionResponseParams() {
-        return exceptionResponseParams;
-    }
+	public String getStatus() {
+		return status;
+	}
 
-    public ApiExceptionStatus setExceptionResponseParams(List<ApiParam> exceptionResponseParams) {
-        this.exceptionResponseParams = exceptionResponseParams;
-        return this;
-    }
+	public ApiExceptionStatus setStatus(String status) {
+		this.status = status;
+		return this;
+	}
 
-    public String getAuthor() {
-        return author;
-    }
+	public List<ApiParam> getExceptionResponseParams() {
+		return exceptionResponseParams;
+	}
 
-    public ApiExceptionStatus setAuthor(String author) {
-        this.author = author;
-        return this;
-    }
+	public ApiExceptionStatus setExceptionResponseParams(List<ApiParam> exceptionResponseParams) {
+		this.exceptionResponseParams = exceptionResponseParams;
+		return this;
+	}
 
-    public String getDesc() {
-        return desc;
-    }
+	public String getAuthor() {
+		return author;
+	}
 
-    public ApiExceptionStatus setDesc(String desc) {
-        this.desc = desc;
-        return this;
-    }
+	public ApiExceptionStatus setAuthor(String author) {
+		this.author = author;
+		return this;
+	}
 
-    public String getDetail() {
-        return detail;
-    }
+	public String getDesc() {
+		return desc;
+	}
 
-    public ApiExceptionStatus setDetail(String detail) {
-        this.detail = detail;
-        return this;
-    }
+	public ApiExceptionStatus setDesc(String desc) {
+		this.desc = desc;
+		return this;
+	}
 
-    public String getResponseUsage() {
-        return responseUsage;
-    }
+	public String getDetail() {
+		return detail;
+	}
 
-    public ApiExceptionStatus setResponseUsage(String responseUsage) {
-        this.responseUsage = responseUsage;
-        return this;
-    }
+	public ApiExceptionStatus setDetail(String detail) {
+		this.detail = detail;
+		return this;
+	}
 
-    @Override
-    public int compareTo(@NotNull ApiExceptionStatus o) {
-        if (Objects.nonNull(o.getDesc())) {
-            return status.compareTo(o.status);
-        }
-        return 0;
-    }
+	public String getResponseUsage() {
+		return responseUsage;
+	}
+
+	public ApiExceptionStatus setResponseUsage(String responseUsage) {
+		this.responseUsage = responseUsage;
+		return this;
+	}
+
+	@Override
+	public int compareTo(@NotNull ApiExceptionStatus o) {
+		if (Objects.nonNull(o.getDesc())) {
+			return status.compareTo(o.status);
+		}
+		return 0;
+	}
+
 }

@@ -30,12 +30,12 @@ import com.thoughtworks.qdox.library.ClassLibraryBuilder;
  */
 public class JavaProjectBuilderHelper {
 
-    public static JavaProjectBuilder create() {
-        return new JavaProjectBuilder();
-    }
+	public static JavaProjectBuilder create() {
+		return new JavaProjectBuilder();
+	}
 
-    public static JavaProjectBuilder create(ClassLibraryBuilder classLibraryBuilder) {
-        return new JavaProjectBuilder(classLibraryBuilder);
-    }
+	public static JavaProjectBuilder create(ClassLibraryBuilder classLibraryBuilder) {
+		return new JavaProjectBuilder(classLibraryBuilder);
+	}
 
 }

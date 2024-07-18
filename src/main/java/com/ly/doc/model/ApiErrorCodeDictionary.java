@@ -28,112 +28,109 @@ import java.util.Set;
  */
 public class ApiErrorCodeDictionary {
 
-    /**
-     * enumClass
-     */
-    private Class<?> enumClass;
+	/**
+	 * enumClass
+	 */
+	private Class<?> enumClass;
 
-    /**
-     * enum implements
-     * when enumClass is interface
-     */
-    private Set<Class<? extends Enum>> enumImplementSet;
+	/**
+	 * enum implements when enumClass is interface
+	 */
+	private Set<Class<? extends Enum<?>>> enumImplementSet;
 
-    /**
-     * enum class name
-     */
-    private String enumClassName;
+	/**
+	 * enum class name
+	 */
+	private String enumClassName;
 
-    /**
-     * customized enum values resolver,
-     * class implement com.ly.doc.extension.dict.DictionaryValuesResolver
-     */
-    private String valuesResolverClass;
-    /**
-     * code field
-     */
-    private String codeField;
+	/**
+	 * customized enum values resolver, class implement
+	 * com.ly.doc.extension.dict.DictionaryValuesResolver
+	 */
+	private String valuesResolverClass;
 
-    /**
-     * description field
-     */
-    private String descField;
+	/**
+	 * code field
+	 */
+	private String codeField;
 
-    @Deprecated
-    public static ApiErrorCodeDictionary dict() {
-        return new ApiErrorCodeDictionary();
-    }
+	/**
+	 * description field
+	 */
+	private String descField;
 
-    public static ApiErrorCodeDictionary builder() {
-        return new ApiErrorCodeDictionary();
-    }
+	@Deprecated
+	public static ApiErrorCodeDictionary dict() {
+		return new ApiErrorCodeDictionary();
+	}
 
-    public Class getEnumClass() {
-        return enumClass;
-    }
+	public static ApiErrorCodeDictionary builder() {
+		return new ApiErrorCodeDictionary();
+	}
 
-    public ApiErrorCodeDictionary setEnumClass(Class enumClass) {
-        this.enumClass = enumClass;
-        return this;
-    }
+	public Class<?> getEnumClass() {
+		return enumClass;
+	}
 
-    public Set<Class<? extends Enum>> getEnumImplementSet() {
-        return enumImplementSet;
-    }
+	public ApiErrorCodeDictionary setEnumClass(Class<?> enumClass) {
+		this.enumClass = enumClass;
+		return this;
+	}
 
-    public ApiErrorCodeDictionary setEnumImplementSet(Set<Class<? extends Enum>> enumImplementSet) {
-        this.enumImplementSet = enumImplementSet;
-        return this;
-    }
+	public Set<Class<? extends Enum<?>>> getEnumImplementSet() {
+		return enumImplementSet;
+	}
 
-    public String getCodeField() {
-        return codeField;
-    }
+	public ApiErrorCodeDictionary setEnumImplementSet(Set<Class<? extends Enum<?>>> enumImplementSet) {
+		this.enumImplementSet = enumImplementSet;
+		return this;
+	}
 
-    public ApiErrorCodeDictionary setCodeField(String codeField) {
-        this.codeField = codeField;
-        return this;
-    }
+	public String getCodeField() {
+		return codeField;
+	}
 
-    public String getDescField() {
-        return descField;
-    }
+	public ApiErrorCodeDictionary setCodeField(String codeField) {
+		this.codeField = codeField;
+		return this;
+	}
 
-    public ApiErrorCodeDictionary setDescField(String descField) {
-        this.descField = descField;
-        return this;
-    }
+	public String getDescField() {
+		return descField;
+	}
 
-    public String getEnumClassName() {
-        return enumClassName;
-    }
+	public ApiErrorCodeDictionary setDescField(String descField) {
+		this.descField = descField;
+		return this;
+	}
 
-    public ApiErrorCodeDictionary setEnumClassName(String enumClassName) {
-        this.enumClassName = enumClassName;
-        return this;
-    }
+	public String getEnumClassName() {
+		return enumClassName;
+	}
 
-    public String getValuesResolverClass() {
-        return this.valuesResolverClass;
-    }
+	public ApiErrorCodeDictionary setEnumClassName(String enumClassName) {
+		this.enumClassName = enumClassName;
+		return this;
+	}
 
-    public ApiErrorCodeDictionary setValuesResolverClass(String valuesResolverClass) {
-        this.valuesResolverClass = valuesResolverClass;
-        return this;
-    }
+	public String getValuesResolverClass() {
+		return this.valuesResolverClass;
+	}
 
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("{");
-        sb.append("\"enumClass\":")
-            .append(enumClass);
-        sb.append(",\"enumClassName\":\"")
-            .append(enumClassName).append('\"');
-        sb.append(",\"codeField\":\"")
-            .append(codeField).append('\"');
-        sb.append(",\"descField\":\"")
-            .append(descField).append('\"');
-        sb.append('}');
-        return sb.toString();
-    }
+	public ApiErrorCodeDictionary setValuesResolverClass(String valuesResolverClass) {
+		this.valuesResolverClass = valuesResolverClass;
+		return this;
+	}
+
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder("{");
+		sb.append("\"enumClass\":").append(enumClass);
+		sb.append(",\"enumClassName\":\"").append(enumClassName).append('\"');
+		sb.append(",\"codeField\":\"").append(codeField).append('\"');
+		sb.append(",\"descField\":\"").append(descField).append('\"');
+		sb.append('}');
+		return sb.toString();
+	}
+
 }

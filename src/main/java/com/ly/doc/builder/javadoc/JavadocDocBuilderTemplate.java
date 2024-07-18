@@ -53,150 +53,148 @@ import java.util.Objects;
  */
 public class JavadocDocBuilderTemplate implements IBaseDocBuilderTemplate {
 
-    private static final String DEPENDENCY_TITLE = "Add dependency";
+	private static final String DEPENDENCY_TITLE = "Add dependency";
 
-    @Override
-    public void checkAndInit(ApiConfig config, boolean checkOutPath) {
-        config.setFramework(FrameworkEnum.JAVADOC.getFramework());
-        IBaseDocBuilderTemplate.super.checkAndInit(config, checkOutPath);
-        config.setOutPath(config.getOutPath() + DocGlobalConstants.FILE_SEPARATOR + DocGlobalConstants.JAVADOC_OUT_DIR);
-    }
+	@Override
+	public void checkAndInit(ApiConfig config, boolean checkOutPath) {
+		config.setFramework(FrameworkEnum.JAVADOC.getFramework());
+		IBaseDocBuilderTemplate.super.checkAndInit(config, checkOutPath);
+		config.setOutPath(config.getOutPath() + DocGlobalConstants.FILE_SEPARATOR + DocGlobalConstants.JAVADOC_OUT_DIR);
+	}
 
-    /**
-     * Generate api documentation for all controllers.
-     *
-     * @param apiDocList    list of api doc
-     * @param config        api config
-     * @param template      template
-     * @param fileExtension file extension
-     */
-    public void buildApiDoc(List<JavadocApiDoc> apiDocList, ApiConfig config, String template, String fileExtension) {
-        FileUtil.mkdirs(config.getOutPath());
-        for (JavadocApiDoc apiDoc : apiDocList) {
-            Template mapper = BeetlTemplateUtil.getByName(template);
-            mapper.binding(TemplateVariable.NAME.getVariable(), apiDoc.getName());
-            mapper.binding(TemplateVariable.DESC.getVariable(), apiDoc.getDesc());
-            mapper.binding(TemplateVariable.LIST.getVariable(), apiDoc.getList());
-            mapper.binding(TemplateVariable.AUTHOR.getVariable(), apiDoc.getAuthor());
-            mapper.binding(TemplateVariable.VERSION.getVariable(), apiDoc.getVersion());
-            FileUtil.nioWriteFile(mapper.render(), config.getOutPath() + DocGlobalConstants.FILE_SEPARATOR + apiDoc.getShortName() + fileExtension);
-        }
-    }
+	/**
+	 * Generate api documentation for all controllers.
+	 * @param apiDocList list of api doc
+	 * @param config api config
+	 * @param template template
+	 * @param fileExtension file extension
+	 */
+	public void buildApiDoc(List<JavadocApiDoc> apiDocList, ApiConfig config, String template, String fileExtension) {
+		FileUtil.mkdirs(config.getOutPath());
+		for (JavadocApiDoc apiDoc : apiDocList) {
+			Template mapper = BeetlTemplateUtil.getByName(template);
+			mapper.binding(TemplateVariable.NAME.getVariable(), apiDoc.getName());
+			mapper.binding(TemplateVariable.DESC.getVariable(), apiDoc.getDesc());
+			mapper.binding(TemplateVariable.LIST.getVariable(), apiDoc.getList());
+			mapper.binding(TemplateVariable.AUTHOR.getVariable(), apiDoc.getAuthor());
+			mapper.binding(TemplateVariable.VERSION.getVariable(), apiDoc.getVersion());
+			FileUtil.nioWriteFile(mapper.render(),
+					config.getOutPath() + DocGlobalConstants.FILE_SEPARATOR + apiDoc.getShortName() + fileExtension);
+		}
+	}
 
-    /**
-     * Merge all api doc into one document
-     *
-     * @param apiDocList         list  data of Api doc
-     * @param config             api config
-     * @param javaProjectBuilder JavaProjectBuilder
-     * @param template           template
-     * @param outPutFileName     output file
-     */
-    public void buildAllInOne(List<JavadocApiDoc> apiDocList, ApiConfig config, JavaProjectBuilder javaProjectBuilder, String template,
-                              String outPutFileName) {
-        String outPath = config.getOutPath();
-        FileUtil.mkdirs(outPath);
-        Template tpl = BeetlTemplateUtil.getByName(template);
-        tpl.binding(TemplateVariable.API_DOC_LIST.getVariable(), apiDocList);
-        // binding common variable
-        IBaseDocBuilderTemplate.super.bindingCommonVariable(config, javaProjectBuilder, tpl, apiDocList.isEmpty());
+	/**
+	 * Merge all api doc into one document
+	 * @param apiDocList list data of Api doc
+	 * @param config api config
+	 * @param javaProjectBuilder JavaProjectBuilder
+	 * @param template template
+	 * @param outPutFileName output file
+	 */
+	public void buildAllInOne(List<JavadocApiDoc> apiDocList, ApiConfig config, JavaProjectBuilder javaProjectBuilder,
+			String template, String outPutFileName) {
+		String outPath = config.getOutPath();
+		FileUtil.mkdirs(outPath);
+		Template tpl = BeetlTemplateUtil.getByName(template);
+		tpl.binding(TemplateVariable.API_DOC_LIST.getVariable(), apiDocList);
+		// binding common variable
+		IBaseDocBuilderTemplate.super.bindingCommonVariable(config, javaProjectBuilder, tpl, apiDocList.isEmpty());
 
-        FileUtil.nioWriteFile(tpl.render(), outPath + DocGlobalConstants.FILE_SEPARATOR + outPutFileName);
-    }
+		FileUtil.nioWriteFile(tpl.render(), outPath + DocGlobalConstants.FILE_SEPARATOR + outPutFileName);
+	}
 
-    /**
-     * Build search js
-     *
-     * @param apiDocList         list  data of Api doc
-     * @param config             api config
-     * @param javaProjectBuilder projectBuilder
-     * @param template           template
-     * @param outPutFileName     output file
-     */
-    public void buildSearchJs(List<JavadocApiDoc> apiDocList, ApiConfig config, JavaProjectBuilder javaProjectBuilder
-            , String template, String outPutFileName) {
-        List<ApiErrorCode> errorCodeList = DocUtil.errorCodeDictToList(config, javaProjectBuilder);
-        Template tpl = BeetlTemplateUtil.getByName(template);
-        // directory tree
-        List<JavadocApiDoc> apiDocs = new ArrayList<>();
-        JavadocApiDoc apiDoc = new JavadocApiDoc();
-        apiDoc.setAlias(DEPENDENCY_TITLE);
-        apiDoc.setOrder(1);
-        apiDoc.setDesc(DEPENDENCY_TITLE);
-        apiDoc.setList(new ArrayList<>(0));
-        apiDocs.add(apiDoc);
-        for (JavadocApiDoc apiDoc1 : apiDocList) {
-            apiDoc1.setOrder(apiDocs.size() + 1);
-            apiDocs.add(apiDoc1);
-        }
-        Map<String, String> titleMap = setDirectoryLanguageVariable(config, tpl);
-        if (CollectionUtil.isNotEmpty(errorCodeList)) {
-            JavadocApiDoc apiDoc1 = new JavadocApiDoc();
-            apiDoc1.setOrder(apiDocs.size() + 1);
-            apiDoc1.setDesc(titleMap.get(TemplateVariable.ERROR_LIST_TITLE.getVariable()));
-            apiDoc1.setList(new ArrayList<>(0));
-            apiDocs.add(apiDoc1);
-        }
+	/**
+	 * Build search js
+	 * @param apiDocList list data of Api doc
+	 * @param config api config
+	 * @param javaProjectBuilder projectBuilder
+	 * @param template template
+	 * @param outPutFileName output file
+	 */
+	public void buildSearchJs(List<JavadocApiDoc> apiDocList, ApiConfig config, JavaProjectBuilder javaProjectBuilder,
+			String template, String outPutFileName) {
+		List<ApiErrorCode> errorCodeList = DocUtil.errorCodeDictToList(config, javaProjectBuilder);
+		Template tpl = BeetlTemplateUtil.getByName(template);
+		// directory tree
+		List<JavadocApiDoc> apiDocs = new ArrayList<>();
+		JavadocApiDoc apiDoc = new JavadocApiDoc();
+		apiDoc.setAlias(DEPENDENCY_TITLE);
+		apiDoc.setOrder(1);
+		apiDoc.setDesc(DEPENDENCY_TITLE);
+		apiDoc.setList(new ArrayList<>(0));
+		apiDocs.add(apiDoc);
+		for (JavadocApiDoc apiDoc1 : apiDocList) {
+			apiDoc1.setOrder(apiDocs.size() + 1);
+			apiDocs.add(apiDoc1);
+		}
+		Map<String, String> titleMap = setDirectoryLanguageVariable(config, tpl);
+		if (CollectionUtil.isNotEmpty(errorCodeList)) {
+			JavadocApiDoc apiDoc1 = new JavadocApiDoc();
+			apiDoc1.setOrder(apiDocs.size() + 1);
+			apiDoc1.setDesc(titleMap.get(TemplateVariable.ERROR_LIST_TITLE.getVariable()));
+			apiDoc1.setList(new ArrayList<>(0));
+			apiDocs.add(apiDoc1);
+		}
 
-        // set dict list
-        List<ApiDocDict> apiDocDictList = DocUtil.buildDictionary(config, javaProjectBuilder);
-        tpl.binding(TemplateVariable.DICT_LIST.getVariable(), apiDocDictList);
-        tpl.binding(TemplateVariable.DIRECTORY_TREE.getVariable(), apiDocs);
-        FileUtil.nioWriteFile(tpl.render(), config.getOutPath() + DocGlobalConstants.FILE_SEPARATOR + outPutFileName);
-    }
+		// set dict list
+		List<ApiDocDict> apiDocDictList = DocUtil.buildDictionary(config, javaProjectBuilder);
+		tpl.binding(TemplateVariable.DICT_LIST.getVariable(), apiDocDictList);
+		tpl.binding(TemplateVariable.DIRECTORY_TREE.getVariable(), apiDocs);
+		FileUtil.nioWriteFile(tpl.render(), config.getOutPath() + DocGlobalConstants.FILE_SEPARATOR + outPutFileName);
+	}
 
-    /**
-     * build error_code adoc
-     *
-     * @param config             api config
-     * @param template           template
-     * @param outPutFileName     output file
-     * @param javaProjectBuilder javaProjectBuilder
-     */
-    public void buildErrorCodeDoc(ApiConfig config, String template, String outPutFileName, JavaProjectBuilder javaProjectBuilder) {
-        List<ApiErrorCode> errorCodeList = DocUtil.errorCodeDictToList(config, javaProjectBuilder);
-        Template mapper = BeetlTemplateUtil.getByName(template);
-        mapper.binding(TemplateVariable.LIST.getVariable(), errorCodeList);
-        FileUtil.nioWriteFile(mapper.render(), config.getOutPath() + DocGlobalConstants.FILE_SEPARATOR + outPutFileName);
-    }
+	/**
+	 * build error_code adoc
+	 * @param config api config
+	 * @param template template
+	 * @param outPutFileName output file
+	 * @param javaProjectBuilder javaProjectBuilder
+	 */
+	public void buildErrorCodeDoc(ApiConfig config, String template, String outPutFileName,
+			JavaProjectBuilder javaProjectBuilder) {
+		List<ApiErrorCode> errorCodeList = DocUtil.errorCodeDictToList(config, javaProjectBuilder);
+		Template mapper = BeetlTemplateUtil.getByName(template);
+		mapper.binding(TemplateVariable.LIST.getVariable(), errorCodeList);
+		FileUtil.nioWriteFile(mapper.render(),
+				config.getOutPath() + DocGlobalConstants.FILE_SEPARATOR + outPutFileName);
+	}
 
-    /**
-     * get all api data
-     *
-     * @param config             ApiConfig
-     * @param javaProjectBuilder JavaProjectBuilder
-     * @return ApiAllData
-     */
-    public JavadocApiAllData getApiData(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
-        JavadocApiAllData apiAllData = new JavadocApiAllData();
-        apiAllData.setLanguage(config.getLanguage().getCode());
-        apiAllData.setProjectName(config.getProjectName());
-        apiAllData.setProjectId(DocUtil.generateId(config.getProjectName()));
-        apiAllData.setApiDocList(listOfApiData(config, javaProjectBuilder));
-        apiAllData.setErrorCodeList(DocUtil.errorCodeDictToList(config, javaProjectBuilder));
-        apiAllData.setRevisionLogs(config.getRevisionLogs());
-        apiAllData.setApiDocDictList(DocUtil.buildDictionary(config, javaProjectBuilder));
-        return apiAllData;
-    }
+	/**
+	 * get all api data
+	 * @param config ApiConfig
+	 * @param javaProjectBuilder JavaProjectBuilder
+	 * @return ApiAllData
+	 */
+	public JavadocApiAllData getApiData(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
+		JavadocApiAllData apiAllData = new JavadocApiAllData();
+		apiAllData.setLanguage(config.getLanguage().getCode());
+		apiAllData.setProjectName(config.getProjectName());
+		apiAllData.setProjectId(DocUtil.generateId(config.getProjectName()));
+		apiAllData.setApiDocList(listOfApiData(config, javaProjectBuilder));
+		apiAllData.setErrorCodeList(DocUtil.errorCodeDictToList(config, javaProjectBuilder));
+		apiAllData.setRevisionLogs(config.getRevisionLogs());
+		apiAllData.setApiDocDictList(DocUtil.buildDictionary(config, javaProjectBuilder));
+		return apiAllData;
+	}
 
-    private List<JavadocApiDoc> listOfApiData(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
-        this.checkAndInitForGetApiData(config);
-        config.setMd5EncryptedHtmlName(true);
-        ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
-        IDocBuildTemplate<JavadocApiDoc> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(
-                config.getFramework(), config.getClassLoader());
-        Objects.requireNonNull(docBuildTemplate, "doc build template is null");
-        ApiSchema<JavadocApiDoc> apiSchema = docBuildTemplate.getApiData(configBuilder);
-        return apiSchema.getApiDatas();
-    }
+	private List<JavadocApiDoc> listOfApiData(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
+		this.checkAndInitForGetApiData(config);
+		config.setMd5EncryptedHtmlName(true);
+		ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
+		IDocBuildTemplate<JavadocApiDoc> docBuildTemplate = BuildTemplateFactory
+			.getDocBuildTemplate(config.getFramework(), config.getClassLoader());
+		Objects.requireNonNull(docBuildTemplate, "doc build template is null");
+		ApiSchema<JavadocApiDoc> apiSchema = docBuildTemplate.getApiData(configBuilder);
+		return apiSchema.getApiDatas();
+	}
 
-    public List<JavadocApiDoc> getJavadocApiDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
-        config.setShowJavaType(true);
-        ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
-        IDocBuildTemplate<JavadocApiDoc> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(
-                config.getFramework(), config.getClassLoader());
-        Objects.requireNonNull(docBuildTemplate, "doc build template is null");
-        return docBuildTemplate.getApiData(configBuilder).getApiDatas();
-    }
+	public List<JavadocApiDoc> getJavadocApiDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
+		config.setShowJavaType(true);
+		ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
+		IDocBuildTemplate<JavadocApiDoc> docBuildTemplate = BuildTemplateFactory
+			.getDocBuildTemplate(config.getFramework(), config.getClassLoader());
+		Objects.requireNonNull(docBuildTemplate, "doc build template is null");
+		return docBuildTemplate.getApiData(configBuilder).getApiDatas();
+	}
 
 }

@@ -29,63 +29,62 @@ import java.util.List;
  */
 public class WebSocketDoc extends ApiDoc {
 
-    /**
-     * the subProtocol list of webSocket
-     * <p>
-     * Sec-WebSocket-Protocol: soap, wamp
-     */
-    private String subProtocols;
+	/**
+	 * the subProtocol list of webSocket
+	 * <p>
+	 * Sec-WebSocket-Protocol: soap, wamp
+	 */
+	private String subProtocols;
 
-    /**
-     * path params
-     */
-    private List<ApiParam> pathParams;
+	/**
+	 * path params
+	 */
+	private List<ApiParam> pathParams;
 
-    /**
-     * webSocket url
-     */
-    private String url;
+	/**
+	 * webSocket url
+	 */
+	private String url;
 
-    /**
-     * webSocket deprecated
-     */
-    private Boolean deprecated;
+	/**
+	 * webSocket deprecated
+	 */
+	private Boolean deprecated;
 
+	public WebSocketDoc() {
+		this.deprecated = false;
+	}
 
-    public WebSocketDoc() {
-        this.deprecated = false;
-    }
+	public String getSubProtocols() {
+		return subProtocols;
+	}
 
+	public void setSubProtocols(String subProtocols) {
+		this.subProtocols = subProtocols;
+	}
 
-    public String getSubProtocols() {
-        return subProtocols;
-    }
+	public List<ApiParam> getPathParams() {
+		return pathParams;
+	}
 
-    public void setSubProtocols(String subProtocols) {
-        this.subProtocols = subProtocols;
-    }
+	public void setPathParams(List<ApiParam> pathParams) {
+		this.pathParams = pathParams;
+	}
 
-    public List<ApiParam> getPathParams() {
-        return pathParams;
-    }
+	public String getUrl() {
+		return url;
+	}
 
-    public void setPathParams(List<ApiParam> pathParams) {
-        this.pathParams = pathParams;
-    }
+	public void setUrl(String url) {
+		this.url = url;
+	}
 
-    public String getUrl() {
-        return url;
-    }
+	public Boolean getDeprecated() {
+		return deprecated;
+	}
 
-    public void setUrl(String url) {
-        this.url = url;
-    }
+	public void setDeprecated(Boolean deprecated) {
+		this.deprecated = deprecated;
+	}
 
-    public Boolean getDeprecated() {
-        return deprecated;
-    }
-
-    public void setDeprecated(Boolean deprecated) {
-        this.deprecated = deprecated;
-    }
 }

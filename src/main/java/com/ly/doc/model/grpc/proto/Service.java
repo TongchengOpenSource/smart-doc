@@ -31,97 +31,99 @@ import java.util.Objects;
  */
 public class Service implements Serializable {
 
-    private static final long serialVersionUID = -7186688057069473270L;
-    /**
-     * The name of the service.
-     */
-    private String name;
+	private static final long serialVersionUID = -7186688057069473270L;
 
-    /**
-     * The long name of the service.
-     */
-    private String longName;
+	/**
+	 * The name of the service.
+	 */
+	private String name;
 
-    /**
-     * The full name of the service.
-     */
-    private String fullName;
+	/**
+	 * The long name of the service.
+	 */
+	private String longName;
 
-    /**
-     * Description or additional information about the service.
-     */
-    private String description;
+	/**
+	 * The full name of the service.
+	 */
+	private String fullName;
 
-    /**
-     * List of methods defined within the service.
-     */
-    private List<ServiceMethod> methods;
+	/**
+	 * Description or additional information about the service.
+	 */
+	private String description;
 
-    public static Service builder() {
-        return new Service();
-    }
+	/**
+	 * List of methods defined within the service.
+	 */
+	private List<ServiceMethod> methods;
 
-    public String getName() {
-        return name;
-    }
+	public static Service builder() {
+		return new Service();
+	}
 
-    public Service setName(String name) {
-        this.name = name;
-        return this;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public String getLongName() {
-        return longName;
-    }
+	public Service setName(String name) {
+		this.name = name;
+		return this;
+	}
 
-    public Service setLongName(String longName) {
-        this.longName = longName;
-        return this;
-    }
+	public String getLongName() {
+		return longName;
+	}
 
-    public String getFullName() {
-        return fullName;
-    }
+	public Service setLongName(String longName) {
+		this.longName = longName;
+		return this;
+	}
 
-    public Service setFullName(String fullName) {
-        this.fullName = fullName;
-        return this;
-    }
+	public String getFullName() {
+		return fullName;
+	}
 
-    public String getDescription() {
-        return description;
-    }
+	public Service setFullName(String fullName) {
+		this.fullName = fullName;
+		return this;
+	}
 
-    public Service setDescription(String description) {
-        this.description = description;
-        return this;
-    }
+	public String getDescription() {
+		return description;
+	}
 
-    public List<ServiceMethod> getMethods() {
-        return methods;
-    }
+	public Service setDescription(String description) {
+		this.description = description;
+		return this;
+	}
 
-    public Service setMethods(List<ServiceMethod> methods) {
-        this.methods = methods;
-        return this;
-    }
+	public List<ServiceMethod> getMethods() {
+		return methods;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Service service = (Service) o;
-        return Objects.equals(name, service.name) && Objects.equals(longName, service.longName)
-                && Objects.equals(fullName, service.fullName) && Objects.equals(description, service.description)
-                && Objects.equals(methods, service.methods);
-    }
+	public Service setMethods(List<ServiceMethod> methods) {
+		this.methods = methods;
+		return this;
+	}
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(name, longName, fullName, description, methods);
-    }
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		Service service = (Service) o;
+		return Objects.equals(name, service.name) && Objects.equals(longName, service.longName)
+				&& Objects.equals(fullName, service.fullName) && Objects.equals(description, service.description)
+				&& Objects.equals(methods, service.methods);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(name, longName, fullName, description, methods);
+	}
+
 }

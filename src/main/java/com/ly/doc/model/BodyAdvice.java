@@ -26,51 +26,50 @@ package com.ly.doc.model;
  */
 public class BodyAdvice {
 
-    private String className;
+	private String className;
 
-    private Class wrapperClass;
+	private Class wrapperClass;
 
-    private String dataField;
+	private String dataField;
 
-    public static BodyAdvice builder() {
-        return new BodyAdvice();
-    }
+	public static BodyAdvice builder() {
+		return new BodyAdvice();
+	}
 
-    public String getClassName() {
-        return className;
-    }
+	public String getClassName() {
+		return className;
+	}
 
-    public BodyAdvice setClassName(String className) {
-        this.className = className;
-        return this;
-    }
+	public BodyAdvice setClassName(String className) {
+		this.className = className;
+		return this;
+	}
 
-    public String getDataField() {
-        return dataField;
-    }
+	public String getDataField() {
+		return dataField;
+	}
 
-    public BodyAdvice setDataField(String dataField) {
-        this.dataField = dataField;
-        return this;
-    }
+	public BodyAdvice setDataField(String dataField) {
+		this.dataField = dataField;
+		return this;
+	}
 
-    public Class getWrapperClass() {
-        return wrapperClass;
-    }
+	public Class getWrapperClass() {
+		return wrapperClass;
+	}
 
-    public BodyAdvice setWrapperClass(Class wrapperClass) {
-        this.wrapperClass = wrapperClass;
-        return this;
-    }
+	public BodyAdvice setWrapperClass(Class wrapperClass) {
+		this.wrapperClass = wrapperClass;
+		return this;
+	}
 
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("{");
-        sb.append("\"className\":\"")
-            .append(className).append('\"');
-        sb.append(",\"dataField\":\"")
-            .append(dataField).append('\"');
-        sb.append('}');
-        return sb.toString();
-    }
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder("{");
+		sb.append("\"className\":\"").append(className).append('\"');
+		sb.append(",\"dataField\":\"").append(dataField).append('\"');
+		sb.append('}');
+		return sb.toString();
+	}
+
 }

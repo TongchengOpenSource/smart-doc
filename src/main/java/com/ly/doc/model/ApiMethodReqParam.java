@@ -27,49 +27,50 @@ import java.util.List;
  */
 public class ApiMethodReqParam {
 
-    /**
-     * path params
-     */
-    private List<ApiParam> pathParams;
+	/**
+	 * path params
+	 */
+	private List<ApiParam> pathParams;
 
-    /**
-     * query params
-     */
-    private List<ApiParam> queryParams;
+	/**
+	 * query params
+	 */
+	private List<ApiParam> queryParams;
 
-    /**
-     * http request params
-     */
-    private List<ApiParam> requestParams;
+	/**
+	 * http request params
+	 */
+	private List<ApiParam> requestParams;
 
-    public static ApiMethodReqParam builder() {
-        return new ApiMethodReqParam();
-    }
+	public static ApiMethodReqParam builder() {
+		return new ApiMethodReqParam();
+	}
 
-    public List<ApiParam> getPathParams() {
-        return pathParams;
-    }
+	public List<ApiParam> getPathParams() {
+		return pathParams;
+	}
 
-    public ApiMethodReqParam setPathParams(List<ApiParam> pathParams) {
-        this.pathParams = pathParams;
-        return this;
-    }
+	public ApiMethodReqParam setPathParams(List<ApiParam> pathParams) {
+		this.pathParams = pathParams;
+		return this;
+	}
 
-    public List<ApiParam> getQueryParams() {
-        return queryParams;
-    }
+	public List<ApiParam> getQueryParams() {
+		return queryParams;
+	}
 
-    public ApiMethodReqParam setQueryParams(List<ApiParam> queryParams) {
-        this.queryParams = queryParams;
-        return this;
-    }
+	public ApiMethodReqParam setQueryParams(List<ApiParam> queryParams) {
+		this.queryParams = queryParams;
+		return this;
+	}
 
-    public List<ApiParam> getRequestParams() {
-        return requestParams;
-    }
+	public List<ApiParam> getRequestParams() {
+		return requestParams;
+	}
 
-    public ApiMethodReqParam setRequestParams(List<ApiParam> requestParams) {
-        this.requestParams = requestParams;
-        return this;
-    }
+	public ApiMethodReqParam setRequestParams(List<ApiParam> requestParams) {
+		this.requestParams = requestParams;
+		return this;
+	}
+
 }

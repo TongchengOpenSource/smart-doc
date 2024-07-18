@@ -25,43 +25,44 @@ package com.ly.doc.model.framework;
  */
 public class PageableAsQueryParam {
 
-    /**
-     * Page you want to retrieve (0..N)
-     */
-    private Integer page;
+	/**
+	 * Page you want to retrieve (0..N)
+	 */
+	private Integer page;
 
-    /**
-     * Number of records per page
-     */
-    private Integer size;
+	/**
+	 * Number of records per page
+	 */
+	private Integer size;
 
-    /**
-     * Sorting criteria in the format: property(,asc|desc),Default sort order is ascending.
-     * Multiple sort criteria are supported.
-     */
-    private String sort;
+	/**
+	 * Sorting criteria in the format: property(,asc|desc),Default sort order is
+	 * ascending. Multiple sort criteria are supported.
+	 */
+	private String sort;
 
-    public Integer getPage() {
-        return page;
-    }
+	public Integer getPage() {
+		return page;
+	}
 
-    public void setPage(Integer page) {
-        this.page = page;
-    }
+	public void setPage(Integer page) {
+		this.page = page;
+	}
 
-    public Integer getSize() {
-        return size;
-    }
+	public Integer getSize() {
+		return size;
+	}
 
-    public void setSize(Integer size) {
-        this.size = size;
-    }
+	public void setSize(Integer size) {
+		this.size = size;
+	}
 
-    public String getSort() {
-        return sort;
-    }
+	public String getSort() {
+		return sort;
+	}
 
-    public void setSort(String sort) {
-        this.sort = sort;
-    }
+	public void setSort(String sort) {
+		this.sort = sort;
+	}
+
 }

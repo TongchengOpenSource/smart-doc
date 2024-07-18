@@ -30,31 +30,30 @@ import java.util.List;
 
 public class JavadocHtmlBuilder {
 
+	/**
+	 * build controller api
+	 * @param config config
+	 */
+	public static void buildApiDoc(ApiConfig config) {
+		JavaProjectBuilder javaProjectBuilder = JavaProjectBuilderHelper.create();
+		buildApiDoc(config, javaProjectBuilder);
+	}
 
-    /**
-     * build controller api
-     *
-     * @param config config
-     */
-    public static void buildApiDoc(ApiConfig config) {
-        JavaProjectBuilder javaProjectBuilder = JavaProjectBuilderHelper.create();
-        buildApiDoc(config, javaProjectBuilder);
-    }
+	/**
+	 * Only for smart-doc maven plugin and gradle plugin.
+	 * @param config ApiConfig
+	 * @param javaProjectBuilder ProjectDocConfigBuilder
+	 */
+	public static void buildApiDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
+		JavadocDocBuilderTemplate builderTemplate = new JavadocDocBuilderTemplate();
+		builderTemplate.checkAndInit(config, Boolean.TRUE);
+		List<JavadocApiDoc> apiDocList = builderTemplate.getJavadocApiDoc(config, javaProjectBuilder);
+		builderTemplate.copyJQueryAndCss(config);
+		String INDEX_HTML = "javadoc-index.html";
+		builderTemplate.buildAllInOne(apiDocList, config, javaProjectBuilder,
+				DocGlobalConstants.JAVADOC_ALL_IN_ONE_HTML_TPL, INDEX_HTML);
+		builderTemplate.buildSearchJs(apiDocList, config, javaProjectBuilder,
+				DocGlobalConstants.JAVADOC_ALL_IN_ONE_SEARCH_TPL, DocGlobalConstants.SEARCH_JS_OUT);
+	}
 
-    /**
-     * Only for smart-doc maven plugin and gradle plugin.
-     *
-     * @param config             ApiConfig
-     * @param javaProjectBuilder ProjectDocConfigBuilder
-     */
-    public static void buildApiDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
-        JavadocDocBuilderTemplate builderTemplate = new JavadocDocBuilderTemplate();
-        builderTemplate.checkAndInit(config, Boolean.TRUE);
-        List<JavadocApiDoc> apiDocList = builderTemplate.getJavadocApiDoc(config, javaProjectBuilder);
-        builderTemplate.copyJQueryAndCss(config);
-        String INDEX_HTML = "javadoc-index.html";
-        builderTemplate.buildAllInOne(apiDocList, config, javaProjectBuilder, DocGlobalConstants.JAVADOC_ALL_IN_ONE_HTML_TPL, INDEX_HTML);
-        builderTemplate.buildSearchJs(apiDocList, config, javaProjectBuilder, DocGlobalConstants.JAVADOC_ALL_IN_ONE_SEARCH_TPL,
-                DocGlobalConstants.SEARCH_JS_OUT);
-    }
 }

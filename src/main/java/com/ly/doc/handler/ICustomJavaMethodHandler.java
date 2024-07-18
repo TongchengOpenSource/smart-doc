@@ -32,5 +32,7 @@ import java.util.List;
  */
 @FunctionalInterface
 public interface ICustomJavaMethodHandler {
-    List<DocJavaMethod> apply(JavaClass cls, List<DocJavaMethod> methodList);
+
+	List<DocJavaMethod> apply(JavaClass cls, List<DocJavaMethod> methodList);
+
 }

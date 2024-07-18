@@ -31,98 +31,99 @@ import java.util.Objects;
  */
 public class EnumDefinition implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    /**
-     * The name of the enum.
-     */
-    private String name;
+	/**
+	 * The name of the enum.
+	 */
+	private String name;
 
-    /**
-     * The long name of the enum.
-     */
-    private String longName;
+	/**
+	 * The long name of the enum.
+	 */
+	private String longName;
 
-    /**
-     * The full name of the enum.
-     */
-    private String fullName;
+	/**
+	 * The full name of the enum.
+	 */
+	private String fullName;
 
-    /**
-     * The description of the enum.
-     */
-    private String description;
+	/**
+	 * The description of the enum.
+	 */
+	private String description;
 
-    /**
-     * The values of the enum.
-     */
-    private List<EnumValue> values;
+	/**
+	 * The values of the enum.
+	 */
+	private List<EnumValue> values;
 
-    public static EnumDefinition builder() {
-        return new EnumDefinition();
-    }
+	public static EnumDefinition builder() {
+		return new EnumDefinition();
+	}
 
-    public String getName() {
-        return name;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public EnumDefinition setName(String name) {
-        this.name = name;
-        return this;
-    }
+	public EnumDefinition setName(String name) {
+		this.name = name;
+		return this;
+	}
 
-    public String getLongName() {
-        return longName;
-    }
+	public String getLongName() {
+		return longName;
+	}
 
-    public EnumDefinition setLongName(String longName) {
-        this.longName = longName;
-        return this;
-    }
+	public EnumDefinition setLongName(String longName) {
+		this.longName = longName;
+		return this;
+	}
 
-    public String getFullName() {
-        return fullName;
-    }
+	public String getFullName() {
+		return fullName;
+	}
 
-    public EnumDefinition setFullName(String fullName) {
-        this.fullName = fullName;
-        return this;
-    }
+	public EnumDefinition setFullName(String fullName) {
+		this.fullName = fullName;
+		return this;
+	}
 
-    public String getDescription() {
-        return description;
-    }
+	public String getDescription() {
+		return description;
+	}
 
-    public EnumDefinition setDescription(String description) {
-        this.description = description;
-        return this;
-    }
+	public EnumDefinition setDescription(String description) {
+		this.description = description;
+		return this;
+	}
 
-    public List<EnumValue> getValues() {
-        return values;
-    }
+	public List<EnumValue> getValues() {
+		return values;
+	}
 
-    public EnumDefinition setValues(List<EnumValue> values) {
-        this.values = values;
-        return this;
-    }
+	public EnumDefinition setValues(List<EnumValue> values) {
+		this.values = values;
+		return this;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        EnumDefinition that = (EnumDefinition) o;
-        return Objects.equals(name, that.name) && Objects.equals(longName, that.longName)
-                && Objects.equals(fullName, that.fullName) && Objects.equals(description, that.description)
-                && Objects.equals(values, that.values);
-    }
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		EnumDefinition that = (EnumDefinition) o;
+		return Objects.equals(name, that.name) && Objects.equals(longName, that.longName)
+				&& Objects.equals(fullName, that.fullName) && Objects.equals(description, that.description)
+				&& Objects.equals(values, that.values);
+	}
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(name, longName, fullName, description, values);
-    }
+	@Override
+	public int hashCode() {
+		return Objects.hash(name, longName, fullName, description, values);
+	}
+
 }
