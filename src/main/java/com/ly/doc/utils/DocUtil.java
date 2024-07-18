@@ -451,36 +451,36 @@ public class DocUtil {
         if (!str.contains(":")) {
             return str;
         }
-        if (str.contains(":")) {
-            List<String> pathList = splitPathBySlash(str);
-            List<String> finalPaths = new ArrayList<>(pathList.size());
-            for (String pathParam : pathList) {
-                if (pathParam.startsWith("http:") || pathParam.startsWith("https:")) {
-                    finalPaths.add(pathParam + "/");
-                    continue;
-                }
-                if (pathParam.startsWith("${")) {
-                    finalPaths.add(pathParam);
-                    continue;
-                }
-                if (pathParam.contains(":") && pathParam.startsWith("{")) {
-                    int length = pathParam.length();
-                    String reg = pathParam.substring(pathParam.indexOf(":") + 1, length - 1);
-                    Generex generex = new Generex(reg);
-                    // Generate random String
-                    String randomStr = generex.random();
-                    String key = pathParam.substring(1, pathParam.indexOf(":"));
-                    if (!values.containsKey(key)) {
-                        values.put(key, randomStr);
-                    }
-                    String path = pathParam.substring(0, pathParam.indexOf(":")) + "}";
-                    finalPaths.add(path);
-                    continue;
-                }
-                finalPaths.add(pathParam);
+
+        List<String> pathList = splitPathBySlash(str);
+        List<String> finalPaths = new ArrayList<>(pathList.size());
+        for (String pathParam : pathList) {
+            if (pathParam.startsWith("http:") || pathParam.startsWith("https:")) {
+                finalPaths.add(pathParam + "/");
+                continue;
             }
-            str = StringUtils.join(finalPaths, '/');
+            if (pathParam.startsWith("${")) {
+                finalPaths.add(pathParam);
+                continue;
+            }
+            if (pathParam.contains(":") && pathParam.startsWith("{")) {
+                int length = pathParam.length();
+                String reg = pathParam.substring(pathParam.indexOf(":") + 1, length - 1);
+                Generex generex = new Generex(reg);
+                // Generate random String
+                String randomStr = generex.random();
+                String key = pathParam.substring(1, pathParam.indexOf(":"));
+                if (!values.containsKey(key)) {
+                    values.put(key, randomStr);
+                }
+                String path = pathParam.substring(0, pathParam.indexOf(":")) + "}";
+                finalPaths.add(path);
+                continue;
+            }
+            finalPaths.add(pathParam);
         }
+        str = StringUtils.join(finalPaths, '/');
+
         StringBuilder builder = new StringBuilder(str);
         Set<Map.Entry<String, String>> entries = values.entrySet();
         Iterator<Map.Entry<String, String>> iteratorMap = entries.iterator();
@@ -1032,12 +1032,12 @@ public class DocUtil {
                         errorCodeList.addAll(resolver.resolve());
                         errorCodeList.addAll(resolver.resolve(clzz));
                     } else if (clzz.isInterface()) {
-                        Set<Class<? extends Enum>> enumImplementSet = dictionary.getEnumImplementSet();
+                        Set<Class<? extends Enum<?>>> enumImplementSet = dictionary.getEnumImplementSet();
                         if (CollectionUtil.isEmpty(enumImplementSet)) {
                             continue;
                         }
 
-                        for (Class<? extends Enum> enumClass : enumImplementSet) {
+                        for (Class<? extends Enum<?>> enumClass : enumImplementSet) {
                             JavaClass interfaceClass = javaProjectBuilder.getClassByName(enumClass.getCanonicalName());
                             if (Objects.nonNull(interfaceClass.getTagByName(DocTags.IGNORE))) {
                                 continue;
@@ -1093,12 +1093,12 @@ public class DocUtil {
                 }
 
                 if (clazz.isInterface()) {
-                    Set<Class<? extends Enum>> enumImplementSet = apiDataDictionary.getEnumImplementSet();
+                    Set<Class<? extends Enum<?>>> enumImplementSet = apiDataDictionary.getEnumImplementSet();
                     if (CollectionUtil.isEmpty(enumImplementSet)) {
                         continue;
                     }
 
-                    for (Class<? extends Enum> enumClass : enumImplementSet) {
+                    for (Class<? extends Enum<?>> enumClass : enumImplementSet) {
                         JavaClass javaClass = javaProjectBuilder.getClassByName(enumClass.getCanonicalName());
                         if (Objects.nonNull(javaClass.getTagByName(DocTags.IGNORE))) {
                             continue;

@@ -20,18 +20,18 @@
  */
 package com.ly.doc.utils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import com.ly.doc.constants.DocGlobalConstants;
 import com.ly.doc.constants.Methods;
 import com.ly.doc.model.ApiMethodReqParam;
 import com.ly.doc.model.ApiParam;
 import com.ly.doc.model.ApiReqParam;
 import com.power.common.util.CollectionUtil;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author yu 2020/8/8.
@@ -81,7 +81,7 @@ public class ApiParamTreeUtil {
         for (ApiParam param : childList) {
             param.setChildren(getChild(param.getId(), apiParamList, counter));
         }
-        if (childList.size() == 0) {
+        if (childList.isEmpty()) {
             return new ArrayList<>(0);
         }
         return childList;

@@ -37,7 +37,7 @@ public class ApiErrorCodeDictionary {
      * enum implements
      * when enumClass is interface
      */
-    private Set<Class<? extends Enum>> enumImplementSet;
+    private Set<Class<? extends Enum<?>>> enumImplementSet;
 
     /**
      * enum class name
@@ -68,20 +68,20 @@ public class ApiErrorCodeDictionary {
         return new ApiErrorCodeDictionary();
     }
 
-    public Class getEnumClass() {
+    public Class<?> getEnumClass() {
         return enumClass;
     }
 
-    public ApiErrorCodeDictionary setEnumClass(Class enumClass) {
+    public ApiErrorCodeDictionary setEnumClass(Class<?> enumClass) {
         this.enumClass = enumClass;
         return this;
     }
 
-    public Set<Class<? extends Enum>> getEnumImplementSet() {
+    public Set<Class<? extends Enum<?>>> getEnumImplementSet() {
         return enumImplementSet;
     }
 
-    public ApiErrorCodeDictionary setEnumImplementSet(Set<Class<? extends Enum>> enumImplementSet) {
+    public ApiErrorCodeDictionary setEnumImplementSet(Set<Class<? extends Enum<?>>> enumImplementSet) {
         this.enumImplementSet = enumImplementSet;
         return this;
     }

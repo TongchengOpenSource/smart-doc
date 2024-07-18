@@ -678,7 +678,7 @@ public class ApiConfig {
                 {
                     boolean equalsName = enumClassName.equalsIgnoreCase(apiDataDictionary.getEnumClassName());
 
-                    Set<Class<? extends Enum>> enumImplementSet = apiDataDictionary.getEnumImplementSet();
+                    Set<Class<? extends Enum<?>>> enumImplementSet = apiDataDictionary.getEnumImplementSet();
                     if (CollectionUtil.isEmpty(enumImplementSet)) {
                         return equalsName;
                     }

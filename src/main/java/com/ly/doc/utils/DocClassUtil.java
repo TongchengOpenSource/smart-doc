@@ -136,7 +136,7 @@ public class DocClassUtil {
         int globIndex = 0;
         int length = arr.length;
         for (int i = 0; i < length; i++) {
-            if (classes.size() > 0) {
+            if (!classes.isEmpty()) {
                 int index = classes.size() - 1;
                 if (!isClassName(classes.get(index))) {
                     globIndex = globIndex + 1;

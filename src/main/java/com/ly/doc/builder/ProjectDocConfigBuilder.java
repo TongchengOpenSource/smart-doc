@@ -57,7 +57,7 @@ public class ProjectDocConfigBuilder {
 
     private final Map<String, JavaClass> classFilesMap = new ConcurrentHashMap<>();
 
-    private final Map<String, Class<? extends Enum>> enumClassMap = new ConcurrentHashMap<>();
+    private final Map<String, Class<? extends Enum<?>>> enumClassMap = new ConcurrentHashMap<>();
 
     private final Map<CustomField.Key, CustomField> customRespFieldMap = new ConcurrentHashMap<>();
 
@@ -105,7 +105,7 @@ public class ProjectDocConfigBuilder {
     }
 
     private void initDict(ApiConfig apiConfig) {
-        if (enumClassMap.size() == 0) {
+        if (enumClassMap.isEmpty()) {
             return;
         }
         List<ApiDataDictionary> dataDictionaries = apiConfig.getDataDictionaries();
@@ -123,15 +123,15 @@ public class ProjectDocConfigBuilder {
         }
 
         for (ApiErrorCodeDictionary errorCodeDictionary : errorCodeDictionaries) {
-            errorCodeDictionary.setEnumImplementSet(getEnumImplementsByInterface(errorCodeDictionary.getEnumClass()));
+            errorCodeDictionary.setEnumImplementSet(this.getEnumImplementsByInterface(errorCodeDictionary.getEnumClass()));
         }
     }
 
-    private Set<Class<? extends Enum>> getEnumImplementsByInterface(Class<?> enumClass) {
+    private Set<Class<? extends Enum<?>>> getEnumImplementsByInterface(Class<?> enumClass) {
         if (!enumClass.isInterface()) {
             return Collections.emptySet();
         }
-        Set<Class<? extends Enum>> set = new HashSet<>();
+        Set<Class<? extends Enum<?>>> set = new HashSet<>();
         enumClassMap.forEach((k, v) -> {
             if (enumClass.isAssignableFrom(v)) {
                 set.add(v);
@@ -383,7 +383,7 @@ public class ProjectDocConfigBuilder {
         return replaceClassMap;
     }
 
-    public Map<String, Class<? extends Enum>> getEnumClassMap() {
+    public Map<String, Class<? extends Enum<?>>> getEnumClassMap() {
         return enumClassMap;
     }
 

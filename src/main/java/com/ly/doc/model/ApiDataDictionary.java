@@ -20,15 +20,14 @@
  */
 package com.ly.doc.model;
 
+import com.power.common.model.EnumDictionary;
+import com.power.common.util.EnumUtil;
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-
-import com.power.common.model.EnumDictionary;
-import com.power.common.util.EnumUtil;
-
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author yu 2019/10/31.
@@ -49,7 +48,7 @@ public class ApiDataDictionary {
      * enum implements
      * when enumClass is interface
      */
-    private Set<Class<? extends Enum>> enumImplementSet;
+    private Set<Class<? extends Enum<?>>> enumImplementSet;
 
     /**
      * enum class name
@@ -92,11 +91,11 @@ public class ApiDataDictionary {
         return this;
     }
 
-    public Set<Class<? extends Enum>> getEnumImplementSet() {
+    public Set<Class<? extends Enum<?>>> getEnumImplementSet() {
         return enumImplementSet;
     }
 
-    public ApiDataDictionary setEnumImplementSet(Set<Class<? extends Enum>> enumImplementSet) {
+    public ApiDataDictionary setEnumImplementSet(Set<Class<? extends Enum<?>>> enumImplementSet) {
         this.enumImplementSet = enumImplementSet;
         return this;
     }
