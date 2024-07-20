@@ -25,6 +25,7 @@ import com.ly.doc.builder.IRpcDocBuilderTemplate;
 import com.ly.doc.constants.DocGlobalConstants;
 import com.ly.doc.constants.FrameworkEnum;
 import com.ly.doc.model.ApiConfig;
+import com.ly.doc.model.rpc.RpcApiDoc;
 import com.power.common.util.StringUtil;
 
 /**
@@ -32,7 +33,7 @@ import com.power.common.util.StringUtil;
  *
  * @author yu 2020/5/16.
  */
-public class RpcDocBuilderTemplate implements IRpcDocBuilderTemplate {
+public class RpcDocBuilderTemplate implements IRpcDocBuilderTemplate<RpcApiDoc> {
 
 	@Override
 	public void checkAndInit(ApiConfig config, boolean checkOutPath) {
@@ -41,6 +42,11 @@ public class RpcDocBuilderTemplate implements IRpcDocBuilderTemplate {
 		}
 		IRpcDocBuilderTemplate.super.checkAndInit(config, checkOutPath);
 		config.setOutPath(config.getOutPath() + DocGlobalConstants.FILE_SEPARATOR + DocGlobalConstants.RPC_OUT_DIR);
+	}
+
+	@Override
+	public RpcApiDoc createEmptyApiDoc() {
+		return new RpcApiDoc();
 	}
 
 }

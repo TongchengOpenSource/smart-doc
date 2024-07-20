@@ -3,7 +3,6 @@ let api = [];
 api.push({
     alias: '${api.alias}',
     order: '${api.order}',
-    link: '${api.link}',
     desc: '${api.desc}',
     list: []
 })
@@ -29,7 +28,6 @@ function keyDownSearch(e) {
                 searchArr.push({
                     order: apiData.order,
                     desc: apiData.desc,
-                    link: apiData.link,
                     list: apiData.list
                 });
             } else {
@@ -47,7 +45,6 @@ function keyDownSearch(e) {
                     const data = {
                         order: apiData.order,
                         desc: apiData.desc,
-                        link: apiData.link,
                         list: methodListTemp
                     };
                     searchArr.push(data);
@@ -91,7 +88,7 @@ function buildAccordion(apiData, liClass, display) {
     if (apiData.length > 0) {
         for (let j = 0; j < apiData.length; j++) {
             html += '<li class="'+liClass+'">';
-            html += '<a class="dd" href="#_' + apiData[j].link + '">' + apiData[j].order + '.&nbsp;' + apiData[j].desc + '</a>';
+            html += '<a class="dd" href="#_' + apiData[j].desc + '">' + apiData[j].order + '.&nbsp;' + apiData[j].desc + '</a>';
             html += '<ul class="sectlevel2" style="'+display+'">';
             doc = apiData[j].list;
             for (let m = 0; m < doc.length; m++) {

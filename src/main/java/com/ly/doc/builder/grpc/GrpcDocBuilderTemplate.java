@@ -28,7 +28,7 @@ import com.ly.doc.constants.TemplateVariable;
 import com.ly.doc.model.ApiConfig;
 import com.ly.doc.model.ApiDocDict;
 import com.ly.doc.model.ApiErrorCode;
-import com.ly.doc.model.rpc.RpcApiDoc;
+import com.ly.doc.model.grpc.GrpcApiDoc;
 import com.ly.doc.utils.BeetlTemplateUtil;
 import com.ly.doc.utils.DocUtil;
 import com.power.common.util.CollectionUtil;
@@ -47,7 +47,7 @@ import java.util.Map;
  * @author linwumingshi
  * @since 3.0.7
  */
-public class GrpcDocBuilderTemplate implements IRpcDocBuilderTemplate {
+public class GrpcDocBuilderTemplate implements IRpcDocBuilderTemplate<GrpcApiDoc> {
 
 	@Override
 	public void checkAndInit(ApiConfig config, boolean checkOutPath) {
@@ -59,25 +59,30 @@ public class GrpcDocBuilderTemplate implements IRpcDocBuilderTemplate {
 	}
 
 	@Override
-	public void writeApiDocFile(Template mapper, ApiConfig config, RpcApiDoc rpcDoc, String fileExtension) {
+	public GrpcApiDoc createEmptyApiDoc() {
+		return new GrpcApiDoc();
+	}
+
+	@Override
+	public void writeApiDocFile(Template mapper, ApiConfig config, GrpcApiDoc rpcDoc, String fileExtension) {
 		FileUtil.nioWriteFile(mapper.render(),
 				config.getOutPath() + DocGlobalConstants.FILE_SEPARATOR + rpcDoc.getName() + fileExtension);
 	}
 
 	@Override
-	public void buildSearchJs(List<RpcApiDoc> apiDocList, ApiConfig config, JavaProjectBuilder javaProjectBuilder,
+	public void buildSearchJs(List<GrpcApiDoc> apiDocList, ApiConfig config, JavaProjectBuilder javaProjectBuilder,
 			String template, String outPutFileName) {
 		List<ApiErrorCode> errorCodeList = DocUtil.errorCodeDictToList(config, javaProjectBuilder);
 		Template tpl = BeetlTemplateUtil.getByName(template);
-		// directory tree
-		List<RpcApiDoc> apiDocs = new ArrayList<>();
-		for (RpcApiDoc apiDoc1 : apiDocList) {
+		// add order
+		List<GrpcApiDoc> apiDocs = new ArrayList<>();
+		for (GrpcApiDoc apiDoc1 : apiDocList) {
 			apiDoc1.setOrder(apiDocs.size());
 			apiDocs.add(apiDoc1);
 		}
-		Map<String, String> titleMap = setDirectoryLanguageVariable(config, tpl);
+		Map<String, String> titleMap = this.setDirectoryLanguageVariable(config, tpl);
 		if (CollectionUtil.isNotEmpty(errorCodeList)) {
-			RpcApiDoc apiDoc1 = new RpcApiDoc();
+			GrpcApiDoc apiDoc1 = new GrpcApiDoc();
 			apiDoc1.setOrder(apiDocs.size());
 			apiDoc1.setDesc(titleMap.get(TemplateVariable.ERROR_LIST_TITLE.getVariable()));
 			apiDoc1.setList(new ArrayList<>(0));

@@ -23,7 +23,7 @@ package com.ly.doc.builder.grpc;
 import com.ly.doc.constants.DocGlobalConstants;
 import com.ly.doc.helper.JavaProjectBuilderHelper;
 import com.ly.doc.model.ApiConfig;
-import com.ly.doc.model.rpc.RpcApiDoc;
+import com.ly.doc.model.grpc.GrpcApiDoc;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 
 import java.util.List;
@@ -35,6 +35,11 @@ import java.util.List;
  * @since 3.0.7
  */
 public class GrpcHtmlBuilder {
+
+	/**
+	 * index.html
+	 */
+	private final static String INDEX_HTML = "grpc-index.html";
 
 	/**
 	 * build grpc api
@@ -54,11 +59,10 @@ public class GrpcHtmlBuilder {
 		apiConfig.setAdoc(Boolean.FALSE);
 		GrpcDocBuilderTemplate builderTemplate = new GrpcDocBuilderTemplate();
 		builderTemplate.checkAndInit(apiConfig, Boolean.TRUE);
-		List<RpcApiDoc> apiDocList = builderTemplate.getRpcApiDoc(apiConfig, javaProjectBuilder);
+		List<GrpcApiDoc> apiDocList = builderTemplate.getRpcApiDoc(apiConfig, javaProjectBuilder);
 		builderTemplate.copyJQueryAndCss(apiConfig);
-		String indexHtml = "grpc-index.html";
 		builderTemplate.buildAllInOne(apiDocList, apiConfig, javaProjectBuilder,
-				DocGlobalConstants.GRPC_ALL_IN_ONE_HTML_TPL, indexHtml);
+				DocGlobalConstants.GRPC_ALL_IN_ONE_HTML_TPL, INDEX_HTML);
 		builderTemplate.buildSearchJs(apiDocList, apiConfig, javaProjectBuilder,
 				DocGlobalConstants.GRPC_ALL_IN_ONE_SEARCH_TPL, DocGlobalConstants.SEARCH_JS_OUT);
 	}

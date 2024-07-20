@@ -20,16 +20,17 @@
  */
 package com.ly.doc.model.rpc;
 
-import java.util.List;
-
-import com.ly.doc.model.ApiErrorCode;
+import com.ly.doc.model.AbstractRpcApiDoc;
 import com.ly.doc.model.ApiDocDict;
+import com.ly.doc.model.ApiErrorCode;
 import com.ly.doc.model.RevisionLog;
+
+import java.util.List;
 
 /**
  * @author yu 2020/5/24.
  */
-public class RpcApiAllData {
+public class RpcApiAllData<T extends AbstractRpcApiDoc<?>> {
 
 	/**
 	 * project name
@@ -49,7 +50,7 @@ public class RpcApiAllData {
 	/**
 	 * doc list
 	 */
-	private List<RpcApiDoc> apiDocList;
+	private List<T> apiDocList;
 
 	/**
 	 *
@@ -95,11 +96,11 @@ public class RpcApiAllData {
 		this.language = language;
 	}
 
-	public List<RpcApiDoc> getApiDocList() {
+	public List<T> getApiDocList() {
 		return apiDocList;
 	}
 
-	public void setApiDocList(List<RpcApiDoc> apiDocList) {
+	public void setApiDocList(List<T> apiDocList) {
 		this.apiDocList = apiDocList;
 	}
 

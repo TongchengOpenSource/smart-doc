@@ -23,11 +23,11 @@ package com.ly.doc.builder;
 import com.ly.doc.constants.DocGlobalConstants;
 import com.ly.doc.constants.TemplateVariable;
 import com.ly.doc.factory.BuildTemplateFactory;
+import com.ly.doc.model.AbstractRpcApiDoc;
 import com.ly.doc.model.ApiConfig;
 import com.ly.doc.model.ApiDocDict;
 import com.ly.doc.model.ApiErrorCode;
 import com.ly.doc.model.rpc.RpcApiAllData;
-import com.ly.doc.model.rpc.RpcApiDoc;
 import com.ly.doc.template.IDocBuildTemplate;
 import com.ly.doc.utils.BeetlTemplateUtil;
 import com.ly.doc.utils.DocUtil;
@@ -41,12 +41,25 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-public interface IRpcDocBuilderTemplate extends IBaseDocBuilderTemplate {
+/**
+ * rpc api doc builder template.
+ *
+ * @param <T> AbstractRpcApiDoc
+ * @author linwumingshi
+ * @since 3.0.7
+ */
+public interface IRpcDocBuilderTemplate<T extends AbstractRpcApiDoc<?>> extends IBaseDocBuilderTemplate {
 
 	/**
 	 * Add dependency title
 	 */
 	String DEPENDENCY_TITLE = "Add dependency";
+
+	/**
+	 * Create empty api doc.
+	 * @return empty api doc
+	 */
+	T createEmptyApiDoc();
 
 	/**
 	 * Generate api documentation for all controllers.
@@ -55,9 +68,9 @@ public interface IRpcDocBuilderTemplate extends IBaseDocBuilderTemplate {
 	 * @param template template
 	 * @param fileExtension file extension
 	 */
-	default void buildApiDoc(List<RpcApiDoc> apiDocList, ApiConfig config, String template, String fileExtension) {
+	default void buildApiDoc(List<T> apiDocList, ApiConfig config, String template, String fileExtension) {
 		FileUtil.mkdirs(config.getOutPath());
-		for (RpcApiDoc rpcDoc : apiDocList) {
+		for (T rpcDoc : apiDocList) {
 			Template mapper = BeetlTemplateUtil.getByName(template);
 			mapper.binding(TemplateVariable.DESC.getVariable(), rpcDoc.getDesc());
 			mapper.binding(TemplateVariable.NAME.getVariable(), rpcDoc.getName());
@@ -77,7 +90,7 @@ public interface IRpcDocBuilderTemplate extends IBaseDocBuilderTemplate {
 	 * @param rpcDoc api doc
 	 * @param fileExtension file extension
 	 */
-	default void writeApiDocFile(Template mapper, ApiConfig config, RpcApiDoc rpcDoc, String fileExtension) {
+	default void writeApiDocFile(Template mapper, ApiConfig config, T rpcDoc, String fileExtension) {
 		FileUtil.nioWriteFile(mapper.render(),
 				config.getOutPath() + DocGlobalConstants.FILE_SEPARATOR + rpcDoc.getShortName() + fileExtension);
 	}
@@ -90,7 +103,7 @@ public interface IRpcDocBuilderTemplate extends IBaseDocBuilderTemplate {
 	 * @param template template
 	 * @param outPutFileName output file
 	 */
-	default void buildAllInOne(List<RpcApiDoc> apiDocList, ApiConfig config, JavaProjectBuilder javaProjectBuilder,
+	default void buildAllInOne(List<T> apiDocList, ApiConfig config, JavaProjectBuilder javaProjectBuilder,
 			String template, String outPutFileName) {
 		String outPath = config.getOutPath();
 		String rpcConfig = config.getRpcConsumerConfig();
@@ -116,25 +129,25 @@ public interface IRpcDocBuilderTemplate extends IBaseDocBuilderTemplate {
 	 * @param template template
 	 * @param outPutFileName output file
 	 */
-	default void buildSearchJs(List<RpcApiDoc> apiDocList, ApiConfig config, JavaProjectBuilder javaProjectBuilder,
+	default void buildSearchJs(List<T> apiDocList, ApiConfig config, JavaProjectBuilder javaProjectBuilder,
 			String template, String outPutFileName) {
 		List<ApiErrorCode> errorCodeList = DocUtil.errorCodeDictToList(config, javaProjectBuilder);
 		Template tpl = BeetlTemplateUtil.getByName(template);
 		// directory tree
-		List<RpcApiDoc> apiDocs = new ArrayList<>();
-		RpcApiDoc apiDoc = new RpcApiDoc();
+		List<T> apiDocs = new ArrayList<>();
+		T apiDoc = this.createEmptyApiDoc();
 		apiDoc.setAlias(DEPENDENCY_TITLE);
 		apiDoc.setOrder(1);
 		apiDoc.setDesc(DEPENDENCY_TITLE);
 		apiDoc.setList(new ArrayList<>(0));
 		apiDocs.add(apiDoc);
-		for (RpcApiDoc apiDoc1 : apiDocList) {
+		for (T apiDoc1 : apiDocList) {
 			apiDoc1.setOrder(apiDocs.size() + 1);
 			apiDocs.add(apiDoc1);
 		}
-		Map<String, String> titleMap = setDirectoryLanguageVariable(config, tpl);
+		Map<String, String> titleMap = this.setDirectoryLanguageVariable(config, tpl);
 		if (CollectionUtil.isNotEmpty(errorCodeList)) {
-			RpcApiDoc apiDoc1 = new RpcApiDoc();
+			T apiDoc1 = this.createEmptyApiDoc();
 			apiDoc1.setOrder(apiDocs.size() + 1);
 			apiDoc1.setDesc(titleMap.get(TemplateVariable.ERROR_LIST_TITLE.getVariable()));
 			apiDoc1.setList(new ArrayList<>(0));
@@ -170,12 +183,12 @@ public interface IRpcDocBuilderTemplate extends IBaseDocBuilderTemplate {
 	 * @param javaProjectBuilder JavaProjectBuilder
 	 * @return ApiAllData
 	 */
-	default RpcApiAllData getApiData(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
-		RpcApiAllData apiAllData = new RpcApiAllData();
+	default RpcApiAllData<T> getApiData(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
+		RpcApiAllData<T> apiAllData = new RpcApiAllData<>();
 		apiAllData.setProjectId(DocUtil.generateId(config.getProjectName()));
 		apiAllData.setLanguage(config.getLanguage().getCode());
 		apiAllData.setProjectName(config.getProjectName());
-		apiAllData.setApiDocList(listOfApiData(config, javaProjectBuilder));
+		apiAllData.setApiDocList(this.listOfApiData(config, javaProjectBuilder));
 		apiAllData.setErrorCodeList(DocUtil.errorCodeDictToList(config, javaProjectBuilder));
 		apiAllData.setRevisionLogs(config.getRevisionLogs());
 		apiAllData.setApiDocDictList(DocUtil.buildDictionary(config, javaProjectBuilder));
@@ -189,11 +202,11 @@ public interface IRpcDocBuilderTemplate extends IBaseDocBuilderTemplate {
 	 * @param javaProjectBuilder JavaProjectBuilder
 	 * @return ApiAllData
 	 */
-	default List<RpcApiDoc> listOfApiData(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
+	default List<T> listOfApiData(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
 		this.checkAndInitForGetApiData(config);
 		config.setMd5EncryptedHtmlName(true);
 		ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
-		IDocBuildTemplate<RpcApiDoc> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework(),
+		IDocBuildTemplate<T> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework(),
 				config.getClassLoader());
 		Objects.requireNonNull(docBuildTemplate, "doc build template is null");
 		return docBuildTemplate.getApiData(configBuilder).getApiDatas();
@@ -205,10 +218,10 @@ public interface IRpcDocBuilderTemplate extends IBaseDocBuilderTemplate {
 	 * @param javaProjectBuilder JavaProjectBuilder
 	 * @return ApiAllData
 	 */
-	default List<RpcApiDoc> getRpcApiDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
+	default List<T> getRpcApiDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
 		config.setShowJavaType(true);
 		ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
-		IDocBuildTemplate<RpcApiDoc> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework(),
+		IDocBuildTemplate<T> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework(),
 				config.getClassLoader());
 		Objects.requireNonNull(docBuildTemplate, "doc build template is null");
 		return docBuildTemplate.getApiData(configBuilder).getApiDatas();
