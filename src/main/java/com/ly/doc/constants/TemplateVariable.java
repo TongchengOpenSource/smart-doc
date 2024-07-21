@@ -177,7 +177,22 @@ public enum TemplateVariable {
 	/**
 	 * jmeterPrometheusListener
 	 */
-	JMETER_PROMETHEUS_LISTENER("jmeterPrometheusListener"),;
+	JMETER_PROMETHEUS_LISTENER("jmeterPrometheusListener"),
+
+	/**
+	 * subProtocols
+	 */
+	SUB_PROTOCOLS("subProtocols"),
+
+	/**
+	 * deprecated
+	 */
+	DEPRECATED("deprecated"),
+
+	/**
+	 * webSocketPathParams
+	 */
+	WEBSOCKET_PATH_PARAMS("pathParams"),;
 
 	/**
 	 * variable

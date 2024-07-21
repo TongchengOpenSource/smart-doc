@@ -18,24 +18,32 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.ly.doc.builder.rpc;
+package com.ly.doc.builder.websocket;
 
 import com.ly.doc.constants.DocGlobalConstants;
 import com.ly.doc.helper.JavaProjectBuilderHelper;
 import com.ly.doc.model.ApiConfig;
-import com.ly.doc.model.rpc.RpcApiDoc;
+import com.ly.doc.model.WebSocketDoc;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 
 import java.util.List;
 
 /**
- * @author yu 2020/5/17.
+ * use to create websocket Html doc.
+ *
+ * @author linwumingshi
+ * @since 3.0.7
  */
-public class RpcHtmlBuilder {
+public class WebSocketHtmlBuilder {
 
 	/**
-	 * build controller api
-	 * @param config config
+	 * index.html
+	 */
+	private final static String INDEX_HTML = "websocket-index.html";
+
+	/**
+	 * build websocket html doc.
+	 * @param config ApiConfig
 	 */
 	public static void buildApiDoc(ApiConfig config) {
 		JavaProjectBuilder javaProjectBuilder = JavaProjectBuilderHelper.create();
@@ -48,14 +56,19 @@ public class RpcHtmlBuilder {
 	 * @param javaProjectBuilder ProjectDocConfigBuilder
 	 */
 	public static void buildApiDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
-		RpcDocBuilderTemplate builderTemplate = new RpcDocBuilderTemplate();
-		List<RpcApiDoc> apiDocList = builderTemplate.getApiDoc(false, true, false, config, javaProjectBuilder);
-		builderTemplate.copyJQueryAndCss(config);
-		String INDEX_HTML = "rpc-index.html";
-		builderTemplate.buildAllInOne(apiDocList, config, javaProjectBuilder,
-				DocGlobalConstants.RPC_ALL_IN_ONE_HTML_TPL, INDEX_HTML);
-		builderTemplate.buildSearchJs(apiDocList, config, javaProjectBuilder,
-				DocGlobalConstants.RPC_ALL_IN_ONE_SEARCH_TPL, DocGlobalConstants.SEARCH_JS_OUT);
+		WebSocketDocBuilderTemplate webSocketDocBuilderTemplate = new WebSocketDocBuilderTemplate();
+		List<WebSocketDoc> webSocketDocList = webSocketDocBuilderTemplate.getWebSocketApiDoc(Boolean.FALSE, config,
+				javaProjectBuilder);
+
+		if (null == webSocketDocList || webSocketDocList.isEmpty()) {
+			return;
+		}
+		webSocketDocBuilderTemplate.copyJQueryAndCss(config);
+		webSocketDocBuilderTemplate.buildWebSocketAllInOne(webSocketDocList, config, javaProjectBuilder,
+				DocGlobalConstants.WEBSOCKET_ALL_IN_ONE_HTML_TPL, INDEX_HTML);
+		webSocketDocBuilderTemplate.buildSearchJs(webSocketDocList, config, javaProjectBuilder,
+				DocGlobalConstants.WEBSOCKET_ALL_IN_ONE_SEARCH_TPL, DocGlobalConstants.SEARCH_JS_OUT);
+
 	}
 
 }

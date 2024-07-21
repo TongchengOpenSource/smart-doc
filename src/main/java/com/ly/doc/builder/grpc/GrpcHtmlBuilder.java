@@ -56,14 +56,13 @@ public class GrpcHtmlBuilder {
 	 * @param javaProjectBuilder ProjectDocConfigBuilder
 	 */
 	public static void buildApiDoc(ApiConfig apiConfig, JavaProjectBuilder javaProjectBuilder) {
-		apiConfig.setAdoc(Boolean.FALSE);
-		GrpcDocBuilderTemplate builderTemplate = new GrpcDocBuilderTemplate();
-		builderTemplate.checkAndInit(apiConfig, Boolean.TRUE);
-		List<GrpcApiDoc> apiDocList = builderTemplate.getRpcApiDoc(apiConfig, javaProjectBuilder);
-		builderTemplate.copyJQueryAndCss(apiConfig);
-		builderTemplate.buildAllInOne(apiDocList, apiConfig, javaProjectBuilder,
+		GrpcDocBuilderTemplate grpcDocBuilderTemplate = new GrpcDocBuilderTemplate();
+		List<GrpcApiDoc> apiDocList = grpcDocBuilderTemplate.getApiDoc(false, true, false, apiConfig,
+				javaProjectBuilder);
+		grpcDocBuilderTemplate.copyJQueryAndCss(apiConfig);
+		grpcDocBuilderTemplate.buildAllInOne(apiDocList, apiConfig, javaProjectBuilder,
 				DocGlobalConstants.GRPC_ALL_IN_ONE_HTML_TPL, INDEX_HTML);
-		builderTemplate.buildSearchJs(apiDocList, apiConfig, javaProjectBuilder,
+		grpcDocBuilderTemplate.buildSearchJs(apiDocList, apiConfig, javaProjectBuilder,
 				DocGlobalConstants.GRPC_ALL_IN_ONE_SEARCH_TPL, DocGlobalConstants.SEARCH_JS_OUT);
 	}
 

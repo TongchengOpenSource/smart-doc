@@ -28,7 +28,6 @@ import com.ly.doc.constants.JavaTypeConstants;
 import com.ly.doc.handler.DefaultWebSocketRequestHandler;
 import com.ly.doc.handler.IWebSocketRequestHandler;
 import com.ly.doc.model.ApiConfig;
-import com.ly.doc.model.ApiDoc;
 import com.ly.doc.model.ApiParam;
 import com.ly.doc.model.WebSocketDoc;
 import com.ly.doc.model.annotation.FrameworkAnnotations;
@@ -39,7 +38,10 @@ import com.ly.doc.utils.DocUtil;
 import com.ly.doc.utils.JavaClassUtil;
 import com.power.common.util.StringUtil;
 import com.power.common.util.ValidateUtil;
-import com.thoughtworks.qdox.model.*;
+import com.thoughtworks.qdox.model.JavaAnnotation;
+import com.thoughtworks.qdox.model.JavaClass;
+import com.thoughtworks.qdox.model.JavaMethod;
+import com.thoughtworks.qdox.model.JavaParameter;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -87,6 +89,12 @@ public interface IWebSocketTemplate {
 			if (Objects.nonNull(javaClass.getTagByName(DocTags.IGNORE))) {
 				continue;
 			}
+			// if the class is websocket
+			Optional<JavaAnnotation> optionalAnnotation = this.getOptionalWebSocketAnnotation(javaClass,
+					frameworkAnnotations);
+			if (!optionalAnnotation.isPresent()) {
+				continue;
+			}
 			String strOrder = JavaClassUtil.getClassTagsValue(javaClass, DocTags.ORDER, Boolean.TRUE);
 			int order = 0;
 			if (ValidateUtil.isNonNegativeInteger(strOrder)) {
@@ -95,7 +103,7 @@ public interface IWebSocketTemplate {
 				maxOrder = Math.max(maxOrder, order);
 			}
 			WebSocketDoc webSocketDoc = this.buildEntryPointWebSocketDoc(javaClass, apiConfig, webSocketRequestHandler,
-					frameworkAnnotations, order);
+					order, optionalAnnotation.get());
 			if (Objects.nonNull(webSocketDoc)) {
 				apiDocList.add(webSocketDoc);
 			}
@@ -115,6 +123,9 @@ public interface IWebSocketTemplate {
 			});
 			return tempList.stream().sorted(Comparator.comparing(WebSocketDoc::getOrder)).collect(Collectors.toList());
 		}
+		else {
+			apiDocList.forEach(p -> p.setOrder(ATOMIC_INTEGER.getAndAdd(1)));
+		}
 		return apiDocList;
 	}
 
@@ -123,23 +134,17 @@ public interface IWebSocketTemplate {
 	 * @param javaClass JavaClass
 	 * @param apiConfig ApiConfig
 	 * @param webSocketRequestHandler WebSocketRequestHandler
-	 * @param frameworkAnnotations FrameworkAnnotations
 	 * @param order order
+	 * @param serverEndpointAnnotation ServerEndpointAnnotation
 	 * @return WebSocketDoc
 	 */
 	default WebSocketDoc buildEntryPointWebSocketDoc(final JavaClass javaClass, ApiConfig apiConfig,
-			IWebSocketRequestHandler webSocketRequestHandler, FrameworkAnnotations frameworkAnnotations, int order) {
-		// if the class is websocket
-		Optional<JavaAnnotation> optionalAnnotation = this.getOptionalWebSocketAnnotation(javaClass,
-				frameworkAnnotations);
-		if (!optionalAnnotation.isPresent()) {
-			return null;
-		}
+			IWebSocketRequestHandler webSocketRequestHandler, int order, JavaAnnotation serverEndpointAnnotation) {
 
 		webSocketRequestHandler = webSocketRequestHandler == null ? DefaultWebSocketRequestHandler.getInstance()
 				: webSocketRequestHandler;
 		ServerEndpoint serverEndpoint = webSocketRequestHandler.handleServerEndpoint(javaClass,
-				optionalAnnotation.get());
+				serverEndpointAnnotation);
 
 		WebSocketDoc webSocketDoc = new WebSocketDoc();
 		// if it does not have subProtocols
@@ -153,7 +158,7 @@ public interface IWebSocketTemplate {
 		}
 		// build websocket doc
 		webSocketDoc.setName(javaClass.getName());
-		webSocketDoc.setUrl(replaceHttpPrefixToWebSocketPrefix(apiConfig.getServerUrl()) + serverEndpoint.getUrl());
+		webSocketDoc.setUri(replaceHttpPrefixToWebSocketPrefix(apiConfig.getServerUrl()) + serverEndpoint.getUrl());
 		webSocketDoc.setPackageName(javaClass.getPackage().getName());
 		webSocketDoc.setDesc(DocUtil.getEscapeAndCleanComment(javaClass.getComment()));
 		webSocketDoc.setAuthor(JavaClassUtil.getClassTagsValue(javaClass, DocTags.AUTHOR, Boolean.TRUE));

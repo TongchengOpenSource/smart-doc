@@ -18,32 +18,36 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.ly.doc.builder;
+package com.ly.doc.builder.websocket;
 
 import com.ly.doc.constants.DocGlobalConstants;
-import com.ly.doc.factory.BuildTemplateFactory;
 import com.ly.doc.helper.JavaProjectBuilderHelper;
 import com.ly.doc.model.ApiConfig;
-import com.ly.doc.model.ApiDoc;
-import com.ly.doc.template.IDocBuildTemplate;
+import com.ly.doc.model.WebSocketDoc;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 
 import java.util.List;
-import java.util.Objects;
 
 /**
- * Use to create Asciidoc
+ * use to create websocket ascii doc.
  *
- * @author yu 2019/9/26.
+ * @author linwumingshi
+ * @since 3.0.7
  */
-public class AdocDocBuilder {
-
-	private static final String API_EXTENSION = "Api.adoc";
-
-	private static final String INDEX_DOC = "index.adoc";
+public class WebSocketAsciidocBuilder {
 
 	/**
-	 * build adoc
+	 * websocket api extension.
+	 */
+	private static final String API_EXTENSION = "WebsocketApi.adoc";
+
+	/**
+	 * websocket index extension.
+	 */
+	private static final String INDEX_DOC = "websocket-index.adoc";
+
+	/**
+	 * build websocket ascii doc.
 	 * @param config ApiConfig
 	 */
 	public static void buildApiDoc(ApiConfig config) {
@@ -57,27 +61,26 @@ public class AdocDocBuilder {
 	 * @param javaProjectBuilder ProjectDocConfigBuilder
 	 */
 	public static void buildApiDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
-		DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
-		builderTemplate.checkAndInit(config, Boolean.TRUE);
-		config.setParamsDataToTree(false);
-		config.setAdoc(true);
-		ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
-		IDocBuildTemplate<ApiDoc> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework(),
-				config.getClassLoader());
-		Objects.requireNonNull(docBuildTemplate, "doc build template is null");
-		List<ApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder).getApiDatas();
+
+		WebSocketDocBuilderTemplate webSocketDocBuilderTemplate = new WebSocketDocBuilderTemplate();
+		List<WebSocketDoc> webSocketDocList = webSocketDocBuilderTemplate.getWebSocketApiDoc(Boolean.TRUE, config,
+				javaProjectBuilder);
+
+		if (null == webSocketDocList || webSocketDocList.isEmpty()) {
+			return;
+		}
+
 		if (config.isAllInOne()) {
-			String docName = builderTemplate.allInOneDocName(config, INDEX_DOC, DocGlobalConstants.ASCIIDOC_EXTENSION);
-			apiDocList = docBuildTemplate.handleApiGroup(apiDocList, config);
-			builderTemplate.buildAllInOne(apiDocList, config, javaProjectBuilder,
-					DocGlobalConstants.ALL_IN_ONE_ADOC_TPL, docName);
+			String docName = webSocketDocBuilderTemplate.allInOneDocName(config, INDEX_DOC,
+					DocGlobalConstants.ASCIIDOC_EXTENSION);
+			webSocketDocBuilderTemplate.buildWebSocketAllInOne(webSocketDocList, config, javaProjectBuilder,
+					DocGlobalConstants.WEBSOCKET_ALL_IN_ONE_ADOC_TPL, docName);
 		}
 		else {
-			builderTemplate.buildApiDoc(apiDocList, config, DocGlobalConstants.API_DOC_ADOC_TPL, API_EXTENSION);
-			builderTemplate.buildErrorCodeDoc(config, DocGlobalConstants.ERROR_CODE_LIST_ADOC_TPL,
+			webSocketDocBuilderTemplate.buildWebSocketApiDoc(webSocketDocList, config,
+					DocGlobalConstants.WEBSOCKET_API_DOC_ADOC_TPL, API_EXTENSION);
+			webSocketDocBuilderTemplate.buildErrorCodeDoc(config, DocGlobalConstants.ERROR_CODE_LIST_ADOC_TPL,
 					DocGlobalConstants.ERROR_CODE_LIST_ADOC, javaProjectBuilder);
-			builderTemplate.buildDirectoryDataDoc(config, javaProjectBuilder, DocGlobalConstants.DICT_LIST_ADOC_TPL,
-					DocGlobalConstants.DICT_LIST_ADOC);
 		}
 	}
 

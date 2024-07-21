@@ -45,10 +45,8 @@ public class JavadocMarkdownBuilder {
 	 * @param javaProjectBuilder ProjectDocConfigBuilder
 	 */
 	public static void buildApiDoc(ApiConfig apiConfig, JavaProjectBuilder javaProjectBuilder) {
-		apiConfig.setAdoc(Boolean.FALSE);
 		JavadocDocBuilderTemplate builderTemplate = new JavadocDocBuilderTemplate();
-		builderTemplate.checkAndInit(apiConfig, Boolean.TRUE);
-		List<JavadocApiDoc> apiDocList = builderTemplate.getJavadocApiDoc(apiConfig, javaProjectBuilder);
+		List<JavadocApiDoc> apiDocList = builderTemplate.getApiDoc(false, true, false, apiConfig, javaProjectBuilder);
 		if (apiConfig.isAllInOne()) {
 			String version = apiConfig.isCoverOld() ? "" : "-V" + DateTimeUtil.long2Str(System.currentTimeMillis(),
 					DocGlobalConstants.DATE_FORMAT_YYYY_MM_DD_HH_MM);

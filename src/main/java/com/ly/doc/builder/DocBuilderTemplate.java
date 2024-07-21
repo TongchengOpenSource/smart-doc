@@ -20,7 +20,10 @@
  */
 package com.ly.doc.builder;
 
-import com.ly.doc.constants.*;
+import com.ly.doc.constants.DocGlobalConstants;
+import com.ly.doc.constants.HighlightStyle;
+import com.ly.doc.constants.TemplateVariable;
+import com.ly.doc.constants.TornaConstants;
 import com.ly.doc.factory.BuildTemplateFactory;
 import com.ly.doc.model.*;
 import com.ly.doc.template.IDocBuildTemplate;
@@ -43,7 +46,7 @@ import java.util.Objects;
  *
  * @author yu 2019/9/26.
  */
-public class DocBuilderTemplate implements IBaseDocBuilderTemplate {
+public class DocBuilderTemplate implements IBaseDocBuilderTemplate<ApiDoc> {
 
 	/**
 	 * get all api data
@@ -73,7 +76,7 @@ public class DocBuilderTemplate implements IBaseDocBuilderTemplate {
 	public void buildApiDoc(List<ApiDoc> apiDocList, ApiConfig config, String template, String fileExtension) {
 		FileUtil.mkdirs(config.getOutPath());
 		for (ApiDoc doc : apiDocList) {
-			Template mapper = buildApiDocTemplate(doc, config, template);
+			Template mapper = this.buildApiDocTemplate(doc, config, template);
 			FileUtil.nioWriteFile(mapper.render(),
 					config.getOutPath() + DocGlobalConstants.FILE_SEPARATOR + doc.getName() + fileExtension);
 		}
@@ -106,16 +109,11 @@ public class DocBuilderTemplate implements IBaseDocBuilderTemplate {
 	 */
 	public void buildAllInOne(List<ApiDoc> apiDocList, ApiConfig config, JavaProjectBuilder javaProjectBuilder,
 			String template, String outPutFileName) {
-		buildDoc(apiDocList, config, javaProjectBuilder, template, outPutFileName, null, null);
-	}
-
-	public void buildWebSocket(List<WebSocketDoc> webSocketDocList, ApiConfig config,
-			JavaProjectBuilder javaProjectBuilder, String template, String outPutFileName) {
-		buildWebSocketDoc(webSocketDocList, config, javaProjectBuilder, template, outPutFileName, null);
+		this.buildDoc(apiDocList, config, javaProjectBuilder, template, outPutFileName, null, null);
 	}
 
 	/**
-	 * get render doc template
+	 * get render doc template.
 	 * @param apiDocList list data of Api doc
 	 * @param config api config
 	 * @param javaProjectBuilder JavaProjectBuilder
@@ -145,9 +143,9 @@ public class DocBuilderTemplate implements IBaseDocBuilderTemplate {
 		tpl.binding(TemplateVariable.RESPONSE_EXAMPLE.getVariable(), config.isResponseExample());
 		tpl.binding(TemplateVariable.DISPLAY_REQUEST_PARAMS.getVariable(), config.isRequestParamsTable());
 		tpl.binding(TemplateVariable.DISPLAY_RESPONSE_PARAMS.getVariable(), config.isResponseParamsTable());
-		setCssCDN(config, tpl);
+		this.setCssCDN(config, tpl);
 
-		setDirectoryLanguageVariable(config, tpl);
+		this.setDirectoryLanguageVariable(config, tpl);
 		List<ApiDocDict> apiDocDictList = DocUtil.buildDictionary(config, javaProjectBuilder);
 		tpl.binding(TemplateVariable.DICT_LIST.getVariable(), apiDocDictList);
 
@@ -189,34 +187,7 @@ public class DocBuilderTemplate implements IBaseDocBuilderTemplate {
 	}
 
 	/**
-	 * get render doc template
-	 * @param webSocketDocList list data of webSocket doc
-	 * @param config api config
-	 * @param javaProjectBuilder JavaProjectBuilder
-	 * @param template template
-	 * @param index index html
-	 * @return Template
-	 */
-	public Template buildAllWebSocketDocTemplate(List<WebSocketDoc> webSocketDocList, ApiConfig config,
-			JavaProjectBuilder javaProjectBuilder, String template, String index) {
-		String strTime = DateTimeUtil.long2Str(NOW, DateTimeUtil.DATE_FORMAT_SECOND);
-		Template tpl = BeetlTemplateUtil.getByName(template);
-		String style = config.getStyle();
-		tpl.binding(TemplateVariable.VERSION_LIST.getVariable(), config.getRevisionLogs());
-		tpl.binding(TemplateVariable.STYLE.getVariable(), style);
-		tpl.binding(TemplateVariable.HIGH_LIGHT_CSS_LINK.getVariable(), config.getHighlightStyleLink());
-		tpl.binding(TemplateVariable.BACKGROUND.getVariable(), HighlightStyle.getBackgroundColor(style));
-		tpl.binding(TemplateVariable.WEBSOCKET_DOC_LIST.getVariable(), webSocketDocList);
-		tpl.binding(TemplateVariable.LANGUAGE.getVariable(), config.getLanguage());
-		tpl.binding(TemplateVariable.VERSION.getVariable(), NOW);
-		tpl.binding(TemplateVariable.CREATE_TIME.getVariable(), strTime);
-		tpl.binding(TemplateVariable.PROJECT_NAME.getVariable(), config.getProjectName());
-		setCssCDN(config, tpl);
-		return tpl;
-	}
-
-	/**
-	 * Merge all api doc into one document
+	 * Merge all api doc into one document.
 	 * @param apiDocList list data of Api doc
 	 * @param config api config
 	 * @param javaProjectBuilder JavaProjectBuilder
@@ -229,18 +200,17 @@ public class DocBuilderTemplate implements IBaseDocBuilderTemplate {
 			String template, String outPutFileName, ApiDoc apiDoc, String index) {
 		String outPath = config.getOutPath();
 		FileUtil.mkdirs(outPath);
-		Template tpl = buildAllRenderDocTemplate(apiDocList, config, javaProjectBuilder, template, apiDoc, index);
+		Template tpl = this.buildAllRenderDocTemplate(apiDocList, config, javaProjectBuilder, template, apiDoc, index);
 		FileUtil.nioWriteFile(tpl.render(), outPath + DocGlobalConstants.FILE_SEPARATOR + outPutFileName);
 	}
 
-	public void buildWebSocketDoc(List<WebSocketDoc> webSocketDocList, ApiConfig config,
-			JavaProjectBuilder javaProjectBuilder, String template, String outPutFileName, String index) {
-		String outPath = config.getOutPath();
-		FileUtil.mkdirs(outPath);
-		Template tpl = buildAllWebSocketDocTemplate(webSocketDocList, config, javaProjectBuilder, template, index);
-		FileUtil.nioWriteFile(tpl.render(), outPath + DocGlobalConstants.FILE_SEPARATOR + outPutFileName);
-	}
-
+	/**
+	 * build search js.
+	 * @param config api config
+	 * @param javaProjectBuilder JavaProjectBuilder
+	 * @param apiDocList list data of Api doc
+	 * @param template template
+	 */
 	public void buildSearchJs(ApiConfig config, JavaProjectBuilder javaProjectBuilder, List<ApiDoc> apiDocList,
 			String template) {
 		List<ApiErrorCode> errorCodeList = DocUtil.errorCodeDictToList(config, javaProjectBuilder);
@@ -253,7 +223,7 @@ public class DocBuilderTemplate implements IBaseDocBuilderTemplate {
 		}
 
 		boolean isOnlyDefaultGroup = apiDocList.size() == 1;
-		Map<String, String> titleMap = setDirectoryLanguageVariable(config, tpl);
+		Map<String, String> titleMap = this.setDirectoryLanguageVariable(config, tpl);
 		// set error code
 		if (CollectionUtil.isNotEmpty(errorCodeList)) {
 			ApiDoc apiDoc1 = new ApiDoc();
@@ -333,38 +303,7 @@ public class DocBuilderTemplate implements IBaseDocBuilderTemplate {
 	}
 
 	/**
-	 * build error_code adoc
-	 * @param config api config
-	 * @param template template
-	 * @param outPutFileName output file
-	 * @param javaProjectBuilder javaProjectBuilder
-	 */
-	public void buildErrorCodeDoc(ApiConfig config, String template, String outPutFileName,
-			JavaProjectBuilder javaProjectBuilder) {
-		Template tpl = buildErrorCodeDocTemplate(config, template, javaProjectBuilder);
-		FileUtil.nioWriteFile(tpl.render(), config.getOutPath() + DocGlobalConstants.FILE_SEPARATOR + outPutFileName);
-	}
-
-	/**
-	 * build errorCode adoc template
-	 * @param config api config
-	 * @param template template
-	 * @param javaProjectBuilder javaProjectBuilder
-	 * @return template
-	 */
-	public Template buildErrorCodeDocTemplate(ApiConfig config, String template,
-			JavaProjectBuilder javaProjectBuilder) {
-		List<ApiErrorCode> errorCodeList = DocUtil.errorCodeDictToList(config, javaProjectBuilder);
-		String strTime = DateTimeUtil.long2Str(NOW, DateTimeUtil.DATE_FORMAT_SECOND);
-		Template tpl = BeetlTemplateUtil.getByName(template);
-		setCssCDN(config, tpl);
-		tpl.binding(TemplateVariable.CREATE_TIME.getVariable(), strTime);
-		tpl.binding(TemplateVariable.LIST.getVariable(), errorCodeList);
-		return tpl;
-	}
-
-	/**
-	 * build error_code html
+	 * build error_code html.
 	 * @param config api config
 	 * @param javaProjectBuilder javaProjectBuilder
 	 * @param apiDocList list data of Api doc
@@ -388,7 +327,7 @@ public class DocBuilderTemplate implements IBaseDocBuilderTemplate {
 			errorTemplate.binding(TemplateVariable.DICT_ORDER.getVariable(), apiDocList.size() + 2);
 		}
 		// set css cdn
-		setCssCDN(config, errorTemplate);
+		this.setCssCDN(config, errorTemplate);
 		List<ApiDocDict> apiDocDictList = DocUtil.buildDictionary(config, javaProjectBuilder);
 		errorTemplate.binding(TemplateVariable.CREATE_TIME.getVariable(), strTime);
 		errorTemplate.binding(TemplateVariable.VERSION.getVariable(), NOW);
@@ -404,7 +343,7 @@ public class DocBuilderTemplate implements IBaseDocBuilderTemplate {
 	}
 
 	/**
-	 * build common_data doc
+	 * build common_data doc.
 	 * @param config api config
 	 * @param javaProjectBuilder JavaProjectBuilder
 	 * @param apiDocList list data of Api doc
@@ -423,13 +362,7 @@ public class DocBuilderTemplate implements IBaseDocBuilderTemplate {
 		mapper.binding(TemplateVariable.STYLE.getVariable(), style);
 		List<ApiErrorCode> errorCodeList = DocUtil.errorCodeDictToList(config, javaProjectBuilder);
 		// set css cdn
-		setCssCDN(config, mapper);
-		if (DocLanguage.CHINESE.equals(config.getLanguage())) {
-			mapper.binding(TemplateVariable.CSS_CND.getVariable(), DocGlobalConstants.CSS_CDN_CH);
-		}
-		else {
-			mapper.binding(TemplateVariable.CSS_CND.getVariable(), DocGlobalConstants.CSS_CDN);
-		}
+		this.setCssCDN(config, mapper);
 		if (CollectionUtil.isNotEmpty(errorCodeList)) {
 			mapper.binding(TemplateVariable.DICT_ORDER.getVariable(), apiDocList.size() + 2);
 		}
@@ -443,14 +376,14 @@ public class DocBuilderTemplate implements IBaseDocBuilderTemplate {
 		mapper.binding(TemplateVariable.INDEX_ALIAS.getVariable(), indexAlias);
 		mapper.binding(TemplateVariable.BACKGROUND.getVariable(), HighlightStyle.getBackgroundColor(style));
 		mapper.binding(TemplateVariable.ERROR_CODE_LIST.getVariable(), errorCodeList);
-		setDirectoryLanguageVariable(config, mapper);
+		this.setDirectoryLanguageVariable(config, mapper);
 		mapper.binding(TemplateVariable.DICT_LIST.getVariable(), directoryList);
 		FileUtil.nioWriteFile(mapper.render(),
 				config.getOutPath() + DocGlobalConstants.FILE_SEPARATOR + outPutFileName);
 	}
 
 	/**
-	 * build common_data doc
+	 * build common_data doc.
 	 * @param config api config
 	 * @param javaProjectBuilder JavaProjectBuilder
 	 * @param template template
@@ -464,7 +397,7 @@ public class DocBuilderTemplate implements IBaseDocBuilderTemplate {
 	}
 
 	/**
-	 * build common_data doc Template
+	 * build common_data doc Template.
 	 * @param config api config
 	 * @param javaProjectBuilder JavaProjectBuilder
 	 * @param template template
@@ -474,15 +407,21 @@ public class DocBuilderTemplate implements IBaseDocBuilderTemplate {
 			String template) {
 		List<ApiDocDict> directoryList = DocUtil.buildDictionary(config, javaProjectBuilder);
 		Template mapper = BeetlTemplateUtil.getByName(template);
-		setDirectoryLanguageVariable(config, mapper);
+		this.setDirectoryLanguageVariable(config, mapper);
 		// set css cdn
-		setCssCDN(config, mapper);
+		this.setCssCDN(config, mapper);
 		String strTime = DateTimeUtil.long2Str(NOW, DateTimeUtil.DATE_FORMAT_SECOND);
 		mapper.binding(TemplateVariable.CREATE_TIME.getVariable(), strTime);
 		mapper.binding(TemplateVariable.DICT_LIST.getVariable(), directoryList);
 		return mapper;
 	}
 
+	/**
+	 * get api data.
+	 * @param config api config
+	 * @param javaProjectBuilder JavaProjectBuilder
+	 * @return ApiData list
+	 */
 	private List<ApiDoc> listOfApiData(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
 		this.checkAndInitForGetApiData(config);
 		config.setMd5EncryptedHtmlName(true);

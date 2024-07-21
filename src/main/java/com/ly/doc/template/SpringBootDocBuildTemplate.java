@@ -68,7 +68,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IW
 	public List<WebSocketDoc> renderWebSocketApi(ProjectDocConfigBuilder projectBuilder,
 			Collection<JavaClass> candidateClasses) {
 		FrameworkAnnotations frameworkAnnotations = registeredAnnotations();
-		return processWebSocketData(projectBuilder, frameworkAnnotations, new SpringMVCRequestMappingHandler(),
+		return this.processWebSocketData(projectBuilder, frameworkAnnotations, new SpringMVCRequestMappingHandler(),
 				candidateClasses);
 	}
 

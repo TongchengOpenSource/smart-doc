@@ -61,10 +61,8 @@ public class GrpcAsciidocBuilder {
 	 * @param javaProjectBuilder ProjectDocConfigBuilder
 	 */
 	public static void buildApiDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
-		config.setAdoc(true);
 		GrpcDocBuilderTemplate grpcDocBuilderTemplate = new GrpcDocBuilderTemplate();
-		grpcDocBuilderTemplate.checkAndInit(config, Boolean.TRUE);
-		List<GrpcApiDoc> apiDocList = grpcDocBuilderTemplate.getRpcApiDoc(config, javaProjectBuilder);
+		List<GrpcApiDoc> apiDocList = grpcDocBuilderTemplate.getApiDoc(true, true, false, config, javaProjectBuilder);
 		if (config.isAllInOne()) {
 			String docName = grpcDocBuilderTemplate.allInOneDocName(config, INDEX_DOC,
 					DocGlobalConstants.ASCIIDOC_EXTENSION);

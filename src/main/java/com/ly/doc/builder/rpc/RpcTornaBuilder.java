@@ -20,21 +20,20 @@
  */
 package com.ly.doc.builder.rpc;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.ly.doc.constants.TornaConstants;
+import com.ly.doc.helper.JavaProjectBuilderHelper;
 import com.ly.doc.model.ApiConfig;
 import com.ly.doc.model.rpc.RpcApiDoc;
 import com.ly.doc.model.torna.Apis;
 import com.ly.doc.model.torna.DubboInfo;
-import com.ly.doc.utils.TornaUtil;
-import com.ly.doc.helper.JavaProjectBuilderHelper;
 import com.ly.doc.model.torna.TornaApi;
+import com.ly.doc.utils.TornaUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
-
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author xingzi 2021/4/28 16:14
@@ -56,10 +55,8 @@ public class RpcTornaBuilder {
 	 * @param javaProjectBuilder ProjectDocConfigBuilder
 	 */
 	public static void buildApiDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
-		config.setParamsDataToTree(true);
 		RpcDocBuilderTemplate builderTemplate = new RpcDocBuilderTemplate();
-		builderTemplate.checkAndInit(config, Boolean.FALSE);
-		List<RpcApiDoc> apiDocList = builderTemplate.getRpcApiDoc(config, javaProjectBuilder);
+		List<RpcApiDoc> apiDocList = builderTemplate.getApiDoc(false, true, true, config, javaProjectBuilder);
 		buildTorna(apiDocList, config, javaProjectBuilder);
 	}
 

@@ -20,13 +20,13 @@
  */
 package com.ly.doc.builder.rpc;
 
-import java.util.List;
-
 import com.ly.doc.constants.DocGlobalConstants;
+import com.ly.doc.helper.JavaProjectBuilderHelper;
 import com.ly.doc.model.ApiConfig;
 import com.ly.doc.model.rpc.RpcApiDoc;
-import com.ly.doc.helper.JavaProjectBuilderHelper;
 import com.thoughtworks.qdox.JavaProjectBuilder;
+
+import java.util.List;
 
 /**
  * @author yu 2020/5/17.
@@ -52,12 +52,10 @@ public class RpcAdocBuilder {
 	 * @param javaProjectBuilder ProjectDocConfigBuilder
 	 */
 	public static void buildApiDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
-		config.setAdoc(true);
 		RpcDocBuilderTemplate builderTemplate = new RpcDocBuilderTemplate();
-		builderTemplate.checkAndInit(config, Boolean.TRUE);
-		List<RpcApiDoc> apiDocList = builderTemplate.getRpcApiDoc(config, javaProjectBuilder);
+		List<RpcApiDoc> apiDocList = builderTemplate.getApiDoc(true, true, false, config, javaProjectBuilder);
 		if (config.isAllInOne()) {
-			String docName = builderTemplate.allInOneDocName(config, INDEX_DOC, ".adoc");
+			String docName = builderTemplate.allInOneDocName(config, INDEX_DOC, DocGlobalConstants.ASCIIDOC_EXTENSION);
 			builderTemplate.buildAllInOne(apiDocList, config, javaProjectBuilder,
 					DocGlobalConstants.RPC_ALL_IN_ONE_ADOC_TPL, docName);
 		}
