@@ -24,10 +24,9 @@ import com.ly.doc.constants.DocGlobalConstants;
 import com.ly.doc.constants.DocLanguage;
 import com.ly.doc.constants.FrameworkEnum;
 import com.ly.doc.constants.TemplateVariable;
-import com.ly.doc.model.ApiConfig;
-import com.ly.doc.model.ApiDocDict;
-import com.ly.doc.model.ApiErrorCode;
-import com.ly.doc.model.RevisionLog;
+import com.ly.doc.factory.BuildTemplateFactory;
+import com.ly.doc.model.*;
+import com.ly.doc.template.IDocBuildTemplate;
 import com.ly.doc.utils.BeetlTemplateUtil;
 import com.ly.doc.utils.DocUtil;
 import com.power.common.util.CollectionUtil;
@@ -48,18 +47,43 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.logging.Logger;
 
 /**
  * doc builder template interface.
  *
  * @author yu 2020/5/16.
  */
-public interface IBaseDocBuilderTemplate {
+public interface IBaseDocBuilderTemplate<T extends IDoc> {
+
+	/**
+	 * Logger for the class.
+	 */
+	Logger log = Logger.getLogger(IBaseDocBuilderTemplate.class.getName());
 
 	/**
 	 * now currentTimeMillis.
 	 */
 	long NOW = System.currentTimeMillis();
+
+	/**
+	 * get all doc api data
+	 * @param config ApiConfig
+	 * @param javaProjectBuilder JavaProjectBuilder
+	 * @return ApiAllData
+	 */
+	default List<T> getApiDoc(boolean adoc, boolean showJavaType, boolean paramsDataToTree, ApiConfig config,
+			JavaProjectBuilder javaProjectBuilder) {
+		config.setAdoc(adoc);
+		config.setShowJavaType(showJavaType);
+		config.setParamsDataToTree(paramsDataToTree);
+		this.checkAndInit(config, Boolean.TRUE);
+		ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
+		IDocBuildTemplate<T> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework(),
+				config.getClassLoader());
+		Objects.requireNonNull(docBuildTemplate, "doc build template is null");
+		return docBuildTemplate.getApiData(configBuilder).getApiDatas();
+	}
 
 	/**
 	 * check condition and init
@@ -193,8 +217,8 @@ public interface IBaseDocBuilderTemplate {
 		if (CollectionUtil.isNotEmpty(apiDocDictList)) {
 			template.binding(TemplateVariable.DICT_ORDER.getVariable(), ++codeIndex);
 		}
-		setDirectoryLanguageVariable(config, template);
-		setCssCDN(config, template);
+		this.setDirectoryLanguageVariable(config, template);
+		this.setCssCDN(config, template);
 	}
 
 	/**
@@ -206,7 +230,7 @@ public interface IBaseDocBuilderTemplate {
 	 */
 	default String allInOneDocName(ApiConfig apiConfig, String fileName, String suffix) {
 		String allInOneName = apiConfig.getAllInOneDocFileName();
-		if (StringUtils.isNotEmpty(apiConfig.getAllInOneDocFileName())) {
+		if (StringUtils.isNotEmpty(allInOneName)) {
 			if (allInOneName.endsWith(suffix)) {
 				return allInOneName;
 			}
@@ -269,8 +293,39 @@ public interface IBaseDocBuilderTemplate {
 			bufferedWriter.close();
 		}
 		catch (IOException e) {
-			e.printStackTrace();
+			log.warning("copy jar file error:" + e.getMessage());
 		}
+	}
+
+	/**
+	 * build error_code adoc.
+	 * @param config api config
+	 * @param template template
+	 * @param outPutFileName output file
+	 * @param javaProjectBuilder javaProjectBuilder
+	 */
+	default void buildErrorCodeDoc(ApiConfig config, String template, String outPutFileName,
+			JavaProjectBuilder javaProjectBuilder) {
+		Template tpl = this.buildErrorCodeDocTemplate(config, template, javaProjectBuilder);
+		FileUtil.nioWriteFile(tpl.render(), config.getOutPath() + DocGlobalConstants.FILE_SEPARATOR + outPutFileName);
+	}
+
+	/**
+	 * build errorCode adoc template.
+	 * @param config api config
+	 * @param template template
+	 * @param javaProjectBuilder javaProjectBuilder
+	 * @return template
+	 */
+	default Template buildErrorCodeDocTemplate(ApiConfig config, String template,
+			JavaProjectBuilder javaProjectBuilder) {
+		List<ApiErrorCode> errorCodeList = DocUtil.errorCodeDictToList(config, javaProjectBuilder);
+		String strTime = DateTimeUtil.long2Str(NOW, DateTimeUtil.DATE_FORMAT_SECOND);
+		Template tpl = BeetlTemplateUtil.getByName(template);
+		this.setCssCDN(config, tpl);
+		tpl.binding(TemplateVariable.CREATE_TIME.getVariable(), strTime);
+		tpl.binding(TemplateVariable.LIST.getVariable(), errorCodeList);
+		return tpl;
 	}
 
 }

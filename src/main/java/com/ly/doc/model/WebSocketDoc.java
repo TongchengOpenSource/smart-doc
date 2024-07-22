@@ -44,7 +44,7 @@ public class WebSocketDoc extends ApiDoc {
 	/**
 	 * webSocket url
 	 */
-	private String url;
+	private String uri;
 
 	/**
 	 * webSocket deprecated
@@ -71,12 +71,12 @@ public class WebSocketDoc extends ApiDoc {
 		this.pathParams = pathParams;
 	}
 
-	public String getUrl() {
-		return url;
+	public String getUri() {
+		return uri;
 	}
 
-	public void setUrl(String url) {
-		this.url = url;
+	public void setUri(String uri) {
+		this.uri = uri;
 	}
 
 	public Boolean getDeprecated() {

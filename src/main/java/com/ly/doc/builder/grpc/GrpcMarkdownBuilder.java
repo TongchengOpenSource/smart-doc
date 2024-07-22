@@ -24,7 +24,7 @@ package com.ly.doc.builder.grpc;
 import com.ly.doc.constants.DocGlobalConstants;
 import com.ly.doc.helper.JavaProjectBuilderHelper;
 import com.ly.doc.model.ApiConfig;
-import com.ly.doc.model.rpc.RpcApiDoc;
+import com.ly.doc.model.grpc.GrpcApiDoc;
 import com.power.common.util.DateTimeUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 
@@ -53,10 +53,9 @@ public class GrpcMarkdownBuilder {
 	 * @param javaProjectBuilder ProjectDocConfigBuilder
 	 */
 	public static void buildApiDoc(ApiConfig apiConfig, JavaProjectBuilder javaProjectBuilder) {
-		apiConfig.setAdoc(Boolean.FALSE);
 		GrpcDocBuilderTemplate grpcDocBuilderTemplate = new GrpcDocBuilderTemplate();
-		grpcDocBuilderTemplate.checkAndInit(apiConfig, Boolean.TRUE);
-		List<RpcApiDoc> apiDocList = grpcDocBuilderTemplate.getRpcApiDoc(apiConfig, javaProjectBuilder);
+		List<GrpcApiDoc> apiDocList = grpcDocBuilderTemplate.getApiDoc(false, true, false, apiConfig,
+				javaProjectBuilder);
 		if (apiConfig.isAllInOne()) {
 			String version = apiConfig.isCoverOld() ? "" : "-V" + DateTimeUtil.long2Str(System.currentTimeMillis(),
 					DocGlobalConstants.DATE_FORMAT_YYYY_MM_DD_HH_MM);
@@ -66,7 +65,7 @@ public class GrpcMarkdownBuilder {
 					DocGlobalConstants.GRPC_ALL_IN_ONE_MD_TPL, docName);
 		}
 		else {
-			grpcDocBuilderTemplate.buildApiDoc(apiDocList, apiConfig, DocGlobalConstants.RPC_API_DOC_MD_TPL,
+			grpcDocBuilderTemplate.buildApiDoc(apiDocList, apiConfig, DocGlobalConstants.GRPC_API_MD_TPL,
 					DocGlobalConstants.MARKDOWN_API_FILE_EXTENSION);
 
 			grpcDocBuilderTemplate.buildErrorCodeDoc(apiConfig, DocGlobalConstants.ERROR_CODE_LIST_MD_TPL,

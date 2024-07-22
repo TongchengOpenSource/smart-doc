@@ -4,14 +4,8 @@ api.push({
     alias: '${api.alias}',
     order: '${api.order}',
     desc: '${api.desc}',
-    list: []
+    uri: '${api.uri}',
 })
-<%for(doc in api.list) {%>
-api[${apiLP.dataIndex}].list.push({
-    order: '${doc.order}',
-    desc: '${doc.desc}',
-});
-<%}%>
 <%}%>
 document.onkeydown = keyDownSearch;
 function keyDownSearch(e) {
@@ -28,7 +22,6 @@ function keyDownSearch(e) {
                 searchArr.push({
                     order: apiData.order,
                     desc: apiData.desc,
-                    list: apiData.list
                 });
             } else {
                 let methodList = apiData.list || [];
@@ -45,7 +38,6 @@ function keyDownSearch(e) {
                     const data = {
                         order: apiData.order,
                         desc: apiData.desc,
-                        list: methodListTemp
                     };
                     searchArr.push(data);
                 }

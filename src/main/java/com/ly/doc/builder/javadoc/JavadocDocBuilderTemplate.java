@@ -51,7 +51,7 @@ import java.util.Objects;
  *
  * @author chenchuxin
  */
-public class JavadocDocBuilderTemplate implements IBaseDocBuilderTemplate {
+public class JavadocDocBuilderTemplate implements IBaseDocBuilderTemplate<JavadocApiDoc> {
 
 	private static final String DEPENDENCY_TITLE = "Add dependency";
 
@@ -98,7 +98,7 @@ public class JavadocDocBuilderTemplate implements IBaseDocBuilderTemplate {
 		Template tpl = BeetlTemplateUtil.getByName(template);
 		tpl.binding(TemplateVariable.API_DOC_LIST.getVariable(), apiDocList);
 		// binding common variable
-		IBaseDocBuilderTemplate.super.bindingCommonVariable(config, javaProjectBuilder, tpl, apiDocList.isEmpty());
+		this.bindingCommonVariable(config, javaProjectBuilder, tpl, apiDocList.isEmpty());
 
 		FileUtil.nioWriteFile(tpl.render(), outPath + DocGlobalConstants.FILE_SEPARATOR + outPutFileName);
 	}
@@ -144,22 +144,6 @@ public class JavadocDocBuilderTemplate implements IBaseDocBuilderTemplate {
 	}
 
 	/**
-	 * build error_code adoc
-	 * @param config api config
-	 * @param template template
-	 * @param outPutFileName output file
-	 * @param javaProjectBuilder javaProjectBuilder
-	 */
-	public void buildErrorCodeDoc(ApiConfig config, String template, String outPutFileName,
-			JavaProjectBuilder javaProjectBuilder) {
-		List<ApiErrorCode> errorCodeList = DocUtil.errorCodeDictToList(config, javaProjectBuilder);
-		Template mapper = BeetlTemplateUtil.getByName(template);
-		mapper.binding(TemplateVariable.LIST.getVariable(), errorCodeList);
-		FileUtil.nioWriteFile(mapper.render(),
-				config.getOutPath() + DocGlobalConstants.FILE_SEPARATOR + outPutFileName);
-	}
-
-	/**
 	 * get all api data
 	 * @param config ApiConfig
 	 * @param javaProjectBuilder JavaProjectBuilder
@@ -188,6 +172,12 @@ public class JavadocDocBuilderTemplate implements IBaseDocBuilderTemplate {
 		return apiSchema.getApiDatas();
 	}
 
+	/**
+	 * get all java doc api data
+	 * @param config ApiConfig
+	 * @param javaProjectBuilder JavaProjectBuilder
+	 * @return ApiAllData
+	 */
 	public List<JavadocApiDoc> getJavadocApiDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
 		config.setShowJavaType(true);
 		ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);

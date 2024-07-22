@@ -46,8 +46,7 @@ public class JavadocHtmlBuilder {
 	 */
 	public static void buildApiDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
 		JavadocDocBuilderTemplate builderTemplate = new JavadocDocBuilderTemplate();
-		builderTemplate.checkAndInit(config, Boolean.TRUE);
-		List<JavadocApiDoc> apiDocList = builderTemplate.getJavadocApiDoc(config, javaProjectBuilder);
+		List<JavadocApiDoc> apiDocList = builderTemplate.getApiDoc(false, true, false, config, javaProjectBuilder);
 		builderTemplate.copyJQueryAndCss(config);
 		String INDEX_HTML = "javadoc-index.html";
 		builderTemplate.buildAllInOne(apiDocList, config, javaProjectBuilder,

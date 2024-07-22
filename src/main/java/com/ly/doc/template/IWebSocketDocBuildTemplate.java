@@ -49,9 +49,9 @@ public interface IWebSocketDocBuildTemplate<T extends WebSocketDoc> extends IDoc
 
 		preRender(docBuildHelper);
 
-		Collection<JavaClass> candidateClasses = getCandidateClasses(projectBuilder, docBuildHelper);
+		Collection<JavaClass> candidateClasses = this.getCandidateClasses(projectBuilder, docBuildHelper);
 
-		return renderWebSocketApi(projectBuilder, candidateClasses);
+		return this.renderWebSocketApi(projectBuilder, candidateClasses);
 	}
 
 	/**

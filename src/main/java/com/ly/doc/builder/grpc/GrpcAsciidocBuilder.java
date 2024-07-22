@@ -23,7 +23,7 @@ package com.ly.doc.builder.grpc;
 import com.ly.doc.constants.DocGlobalConstants;
 import com.ly.doc.helper.JavaProjectBuilderHelper;
 import com.ly.doc.model.ApiConfig;
-import com.ly.doc.model.rpc.RpcApiDoc;
+import com.ly.doc.model.grpc.GrpcApiDoc;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 
 import java.util.List;
@@ -36,8 +36,14 @@ import java.util.List;
  */
 public class GrpcAsciidocBuilder {
 
-	private static final String API_EXTENSION = "gRpcApi.adoc";
+	/**
+	 * grpc api extension.
+	 */
+	private static final String API_EXTENSION = "GRpcApi.adoc";
 
+	/**
+	 * grpc index extension.
+	 */
 	private static final String INDEX_DOC = "grpc-index.adoc";
 
 	/**
@@ -55,12 +61,11 @@ public class GrpcAsciidocBuilder {
 	 * @param javaProjectBuilder ProjectDocConfigBuilder
 	 */
 	public static void buildApiDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
-		config.setAdoc(true);
 		GrpcDocBuilderTemplate grpcDocBuilderTemplate = new GrpcDocBuilderTemplate();
-		grpcDocBuilderTemplate.checkAndInit(config, Boolean.TRUE);
-		List<RpcApiDoc> apiDocList = grpcDocBuilderTemplate.getRpcApiDoc(config, javaProjectBuilder);
+		List<GrpcApiDoc> apiDocList = grpcDocBuilderTemplate.getApiDoc(true, true, false, config, javaProjectBuilder);
 		if (config.isAllInOne()) {
-			String docName = grpcDocBuilderTemplate.allInOneDocName(config, INDEX_DOC, ".adoc");
+			String docName = grpcDocBuilderTemplate.allInOneDocName(config, INDEX_DOC,
+					DocGlobalConstants.ASCIIDOC_EXTENSION);
 			grpcDocBuilderTemplate.buildAllInOne(apiDocList, config, javaProjectBuilder,
 					DocGlobalConstants.GRPC_ALL_IN_ONE_ADOC_TPL, docName);
 		}

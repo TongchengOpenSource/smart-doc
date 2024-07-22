@@ -49,12 +49,10 @@ public class JavadocAdocBuilder {
 	 * @param javaProjectBuilder ProjectDocConfigBuilder
 	 */
 	public static void buildApiDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
-		config.setAdoc(true);
 		JavadocDocBuilderTemplate builderTemplate = new JavadocDocBuilderTemplate();
-		builderTemplate.checkAndInit(config, Boolean.TRUE);
-		List<JavadocApiDoc> apiDocList = builderTemplate.getJavadocApiDoc(config, javaProjectBuilder);
+		List<JavadocApiDoc> apiDocList = builderTemplate.getApiDoc(true, true, false, config, javaProjectBuilder);
 		if (config.isAllInOne()) {
-			String docName = builderTemplate.allInOneDocName(config, INDEX_DOC, ".adoc");
+			String docName = builderTemplate.allInOneDocName(config, INDEX_DOC, DocGlobalConstants.ASCIIDOC_EXTENSION);
 			builderTemplate.buildAllInOne(apiDocList, config, javaProjectBuilder,
 					DocGlobalConstants.JAVADOC_ALL_IN_ONE_ADOC_TPL, docName);
 		}

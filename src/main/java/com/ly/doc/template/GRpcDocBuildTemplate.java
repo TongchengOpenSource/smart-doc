@@ -28,6 +28,7 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -37,6 +38,11 @@ import java.util.stream.Stream;
  * @author linwumingshi
  */
 public class GRpcDocBuildTemplate implements IDocBuildTemplate<GrpcApiDoc>, IRpcDocTemplate {
+
+	/**
+	 * Logger for the class.
+	 */
+	Logger log = Logger.getLogger(GRpcDocBuildTemplate.class.getName());
 
 	/**
 	 * api index
@@ -241,7 +247,7 @@ public class GRpcDocBuildTemplate implements IDocBuildTemplate<GrpcApiDoc>, IRpc
 				.collect(Collectors.toSet());
 		}
 		catch (IOException e) {
-			System.err.println("Error walking directory: " + directoryPath + ", " + e.getMessage());
+			log.warning("Error walking directory: " + directoryPath + ", " + e.getMessage());
 			return Collections.emptySet();
 		}
 	}
@@ -271,7 +277,7 @@ public class GRpcDocBuildTemplate implements IDocBuildTemplate<GrpcApiDoc>, IRpc
 			FileUtil.copyInputStreamToFile(resourceAsStream, new File(targetPath), StandardCopyOption.REPLACE_EXISTING);
 		}
 		catch (IOException e) {
-			System.err.println("Error executing command error:" + e.getMessage());
+			log.warning("Error executing command error:" + e.getMessage());
 		}
 	}
 
@@ -301,7 +307,7 @@ public class GRpcDocBuildTemplate implements IDocBuildTemplate<GrpcApiDoc>, IRpc
 			}
 		}
 		catch (IOException e) {
-			System.err.println("Failed to grant execute permission: " + e.getMessage());
+			log.warning("Failed to grant execute permission: " + e.getMessage());
 			return;
 		}
 
@@ -311,7 +317,7 @@ public class GRpcDocBuildTemplate implements IDocBuildTemplate<GrpcApiDoc>, IRpc
 		try {
 			Process process = processBuilder.start();
 
-			StreamGobbler outputGobbler = new StreamGobbler(process.getInputStream(), System.err::println);
+			StreamGobbler outputGobbler = new StreamGobbler(process.getInputStream(), message -> log.warning(message));
 			Thread outputThread = new Thread(outputGobbler);
 			outputThread.start();
 
@@ -321,11 +327,11 @@ public class GRpcDocBuildTemplate implements IDocBuildTemplate<GrpcApiDoc>, IRpc
 			outputThread.join();
 
 			if (exitCode != 0) {
-				System.err.println("Error executing command for files");
+				log.warning("Error executing command for files");
 			}
 		}
 		catch (IOException | InterruptedException e) {
-			System.err.println("Error executing command: " + e.getMessage());
+			log.warning("Error executing command: " + e.getMessage());
 		}
 	}
 
