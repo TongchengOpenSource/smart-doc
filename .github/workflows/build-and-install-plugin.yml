@@ -32,6 +32,10 @@ jobs:
           path: ~/.m2/repository/com/ly/smart-doc
           if-no-files-found: error
 
+      - name: Get Artifact ID and URL
+        run: |
+          echo "artifact_id=${{ steps.upload-artifact.outputs.artifact-id }}" >> $GITHUB_ENV
+
       - name: Trigger Example Project Workflow
         run: |
           curl -X POST -H "Accept: application/vnd.github.v3+json" \
