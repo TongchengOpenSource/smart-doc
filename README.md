@@ -38,6 +38,7 @@ need to inject annotations into the code like `Swagger`.
 - Support for exporting error codes and data dictionary codes to API documentation.
 - The debug html5 page fully supports file upload and download testing.
 - Support `Apache Dubbo RPC`.
+- Support `GRPC`
 
 ## Best Practice
 
@@ -54,10 +55,6 @@ You could build with the following commands. (`JDK 1.8` is required to build the
 ```
 mvn clean install -Dmaven.test.skip=true
 ```
-
-## TODO
-
-- GRPC
 
 ## Who is using
 
