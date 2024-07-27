@@ -40,6 +40,7 @@ $\color{red}{你给我的star，胜过所有读过的诗—smart-doc}$
 - 支持`Java`类`Javadoc`文档生成。
 - 支持基于`Git`管理项目的变更增量文档生成。
 - `debug`接口调试`html5`页面完全支持文件上传，下载(`@download tag`标记下载方法)测试。
+- 支持`GRPC`
 
 ## Best Practice
 
@@ -60,10 +61,6 @@ $\color{red}{你给我的star，胜过所有读过的诗—smart-doc}$
 ```
 mvn clean install -Dmaven.test.skip=true
 ```
-
-## TODO
-
-- GRPC
 
 ## License
 
