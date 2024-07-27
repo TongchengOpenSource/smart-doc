@@ -880,6 +880,7 @@ public class DocUtil {
 			case "bigdecimal":
 			case "int64":
 			case "biginteger":
+			case "number":
 				return "number";
 			case "java.lang.boolean":
 			case "boolean":
