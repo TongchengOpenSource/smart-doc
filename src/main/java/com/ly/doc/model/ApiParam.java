@@ -56,6 +56,11 @@ public class ApiParam {
 	private String type;
 
 	/**
+	 * The format of the parameter.
+	 */
+	private String format;
+
+	/**
 	 * genericFullyQualifiedName of type name
 	 */
 	private String fullyTypeName;
@@ -326,15 +331,24 @@ public class ApiParam {
 		return this;
 	}
 
+	public String getFormat() {
+		return format;
+	}
+
+	public ApiParam setFormat(String format) {
+		this.format = format;
+		return this;
+	}
+
 	@Override
 	public String toString() {
 		return "ApiParam{" + "className='" + className + '\'' + ", id=" + id + ", field='" + field + '\'' + ", type='"
-				+ type + '\'' + ", fullyTypeName='" + fullyTypeName + '\'' + ", desc='" + desc + '\'' + ", required="
-				+ required + ", version='" + version + '\'' + ", pid=" + pid + ", pathParam=" + pathParam
-				+ ", queryParam=" + queryParam + ", value='" + value + '\'' + ", children=" + children + ", hasItems="
-				+ hasItems + ", enumValues=" + enumValues + ", enumInfo=" + enumInfo + ", maxLength='" + maxLength
-				+ '\'' + ", configParam=" + configParam + ", selfReferenceLoop=" + selfReferenceLoop + ", extensions="
-				+ extensions + '}';
+				+ type + '\'' + ", format='" + format + '\'' + ", fullyTypeName='" + fullyTypeName + '\'' + ", desc='"
+				+ desc + '\'' + ", required=" + required + ", version='" + version + '\'' + ", pid=" + pid
+				+ ", pathParam=" + pathParam + ", queryParam=" + queryParam + ", value='" + value + '\'' + ", children="
+				+ children + ", hasItems=" + hasItems + ", enumValues=" + enumValues + ", enumInfo=" + enumInfo
+				+ ", maxLength='" + maxLength + '\'' + ", configParam=" + configParam + ", selfReferenceLoop="
+				+ selfReferenceLoop + ", extensions=" + extensions + '}';
 	}
 
 }
