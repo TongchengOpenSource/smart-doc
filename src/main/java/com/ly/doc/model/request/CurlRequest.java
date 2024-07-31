@@ -20,26 +20,46 @@
  */
 package com.ly.doc.model.request;
 
-import java.util.List;
-
 import com.ly.doc.model.ApiReqParam;
 import com.ly.doc.model.FormData;
 
+import java.util.List;
+
 /**
+ * curl request
+ *
  * @author yu 2020/12/21.
  */
 public class CurlRequest {
 
+	/**
+	 * Http method
+	 */
 	private String type;
 
+	/**
+	 * Request headers
+	 */
 	private List<ApiReqParam> reqHeaders;
 
+	/**
+	 * Request file form data
+	 */
 	private List<FormData> fileFormDataList;
 
+	/**
+	 * Request url
+	 */
 	private String url;
 
+	/**
+	 * Request body
+	 */
 	private String body;
 
+	/**
+	 * Content-Type
+	 */
 	private String contentType;
 
 	public static CurlRequest builder() {

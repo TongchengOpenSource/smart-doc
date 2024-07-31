@@ -20,20 +20,45 @@
  */
 package com.ly.doc.model;
 
+import com.ly.doc.constants.FormDataContentTypeEnum;
+
 /**
+ * form data class
+ *
  * @author xingzi 2019/12/21 20:20
  */
 public class FormData {
 
+	/**
+	 * key
+	 */
 	private String key;
 
+	/**
+	 * type
+	 */
 	private String type;
 
+	/**
+	 * description
+	 */
 	private String description;
 
+	/**
+	 * source
+	 */
 	private Object src;
 
+	/**
+	 * value
+	 */
 	private String value;
+
+	/**
+	 * contentType eg: `application/json`,when the param has annotation `@RequestPart`
+	 * @see FormDataContentTypeEnum
+	 */
+	private String contentType;
 
 	/**
 	 * openapi items
@@ -87,6 +112,18 @@ public class FormData {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public String getContentType() {
+		return contentType;
+	}
+
+	public void setContentType(FormDataContentTypeEnum contentType) {
+		this.contentType = contentType.getValue();
+	}
+
+	public void setContentType(String contentType) {
+		this.contentType = contentType;
 	}
 
 	@Override

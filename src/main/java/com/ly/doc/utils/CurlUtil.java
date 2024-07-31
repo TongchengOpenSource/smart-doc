@@ -20,18 +20,19 @@
  */
 package com.ly.doc.utils;
 
-import java.util.List;
-import java.util.Objects;
-
-import com.ly.doc.constants.DocGlobalConstants;
 import com.ly.doc.constants.MediaType;
 import com.ly.doc.model.ApiReqParam;
 import com.ly.doc.model.FormData;
+import com.ly.doc.model.request.CurlRequest;
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.StringUtil;
-import com.ly.doc.model.request.CurlRequest;
+
+import java.util.List;
+import java.util.Objects;
 
 /**
+ * curl util
+ *
  * @author yu 2020/12/21.
  */
 public class CurlUtil {
@@ -70,7 +71,22 @@ public class CurlUtil {
 
 		List<FormData> fileFormDataList = request.getFileFormDataList();
 		if (CollectionUtil.isNotEmpty(fileFormDataList)) {
-			fileFormDataList.forEach(file -> sb.append(" -F '").append(file.getKey()).append("='"));
+			fileFormDataList.forEach(file -> {
+				sb.append(" -F '").append(file.getKey()).append("=");
+				// eg: -F 'user="{\"stuName\":\"test\"}";type=application/json'
+				if (StringUtil.isNotEmpty(file.getValue())) {
+					sb.append(file.getValue());
+					if (StringUtil.isNotEmpty(file.getContentType())) {
+						sb.append(";type=").append(file.getContentType()).append("'");
+					}
+					else {
+						sb.append("'");
+					}
+				}
+				else {
+					sb.append("'");
+				}
+			});
 		}
 
 		sb.append(" -i");

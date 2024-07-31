@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * spring mvc request annotation enum
+ *
  * @author yu 2019/12/20.
  */
 public enum SpringMvcRequestAnnotationsEnum {
@@ -66,7 +68,19 @@ public enum SpringMvcRequestAnnotationsEnum {
 	/**
 	 * SpringMvc RequestAnnotation RequestHeader fully
 	 */
-	REQUEST_HERDER_FULLY("org.springframework.web.bind.annotation.RequestHeader"),;
+	REQUEST_HERDER_FULLY("org.springframework.web.bind.annotation.RequestHeader"),
+
+	/**
+	 * SpringMvc RequestAnnotation RequestPart
+	 */
+	REQUEST_PART("RequestPart"),
+
+	/**
+	 * SpringMvc RequestAnnotation RequestPart fully
+	 */
+	REQUEST_PART_FULLY("org.springframework.web.bind.annotation.RequestPart"),
+
+	;
 
 	/**
 	 * SpringMvc RequestAnnotation value

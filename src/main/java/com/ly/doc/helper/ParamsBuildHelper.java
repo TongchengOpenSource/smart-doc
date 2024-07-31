@@ -45,6 +45,26 @@ import java.util.stream.Collectors;
  */
 public class ParamsBuildHelper extends BaseHelper {
 
+	/**
+	 * Builds a parameter list based on field information.
+	 * @param className The name of the generic type.
+	 * @param pre A prefix builder for nested fields.
+	 * @param level The next level of nesting.
+	 * @param isRequired Indicates whether the parameter is required.
+	 * @param isResp Indicates whether the parameter is a response parameter.
+	 * @param registryClasses A collection of registered classes.
+	 * @param projectBuilder A project builder instance.
+	 * @param groupClasses A collection of grouped classes.
+	 * @param pid The parent ID of the field.
+	 * @param jsonRequest The JSON request object.
+	 * @param atomicInteger An AtomicInteger for ID generation.
+	 * <p>
+	 * This method handles various types of fields and their values, including handling
+	 * self-referential loops, maps, arrays, objects, and primitive types. It adds
+	 * parameters to the paramList based on the type and structure of the given field,
+	 * recursively calling itself for nested or complex types.
+	 * @return A List of ApiParam instances representing the built parameters.
+	 */
 	public static List<ApiParam> buildParams(String className, String pre, int level, String isRequired, boolean isResp,
 			Map<String, String> registryClasses, ProjectDocConfigBuilder projectBuilder, Set<String> groupClasses,
 			int pid, boolean jsonRequest, AtomicInteger atomicInteger) {
@@ -384,7 +404,7 @@ public class ParamsBuildHelper extends BaseHelper {
 					for (int j = 0; j < level; j++) {
 						preBuilder.append(DocGlobalConstants.FIELD_SPACE);
 					}
-					preBuilder.append("└─");
+					preBuilder.append(DocGlobalConstants.PARAM_PREFIX);
 					int fieldPid;
 					ApiParam param = ApiParam.of()
 						.setField(pre + fieldName)
@@ -664,7 +684,7 @@ public class ParamsBuildHelper extends BaseHelper {
 		for (int j = 0; j < level; j++) {
 			preBuilder.append(DocGlobalConstants.FIELD_SPACE);
 		}
-		preBuilder.append("└─");
+		preBuilder.append(DocGlobalConstants.PARAM_PREFIX);
 		paramList.addAll(buildParams(globGicName[1], preBuilder.toString(), ++nextLevel, isRequired, isResp,
 				registryClasses, projectBuilder, groupClasses, pid, jsonRequest, atomicInteger));
 		return paramList;

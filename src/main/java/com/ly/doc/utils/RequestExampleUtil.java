@@ -46,7 +46,8 @@ public class RequestExampleUtil {
 		String url;
 		List<ApiReqParam> reqHeaderList = apiMethodDoc.getRequestHeaders();
 		Map<Boolean, List<FormData>> formDataGroupMap = formDataList.stream()
-			.collect(Collectors.groupingBy(e -> Objects.equals(e.getType(), ParamTypeConstants.PARAM_TYPE_FILE)));
+			.collect(Collectors.groupingBy(e -> Objects.equals(e.getType(), ParamTypeConstants.PARAM_TYPE_FILE)
+					|| Objects.nonNull(e.getContentType())));
 		List<FormData> fileFormDataList = formDataGroupMap.getOrDefault(Boolean.TRUE, new ArrayList<>());
 		// curl send file to convert
 		final Map<String, String> formDataToMap = DocUtil.formDataToMap(formDataList);

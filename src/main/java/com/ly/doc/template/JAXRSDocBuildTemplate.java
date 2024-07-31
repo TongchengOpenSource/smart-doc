@@ -436,9 +436,8 @@ public class JAXRSDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IWebSoc
 						.setId(id)
 						.setType(ParamTypeConstants.PARAM_TYPE_ARRAY);
 					paramList.add(param);
-					List<ApiParam> apiParamList = ParamsBuildHelper.buildParams(typeName, "└─", 1, "true",
-							Boolean.FALSE, new HashMap<>(16), builder, groupClasses, id, Boolean.FALSE, null);
-					paramList.addAll(apiParamList);
+					paramList.addAll(ParamsBuildHelper.buildParams(typeName, DocGlobalConstants.PARAM_PREFIX, 1, "true",
+							Boolean.FALSE, new HashMap<>(16), builder, groupClasses, id, Boolean.FALSE, null));
 				}
 			}
 			else if (JavaClassValidateUtil.isPrimitive(fullyQualifiedName)) {

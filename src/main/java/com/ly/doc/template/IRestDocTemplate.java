@@ -788,7 +788,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 				.collect(Collectors.toList());
 
 			// build request params
-			ApiMethodReqParam apiMethodReqParam = requestParams(docJavaMethod, projectBuilder, apiReqParamList,
+			ApiMethodReqParam apiMethodReqParam = this.requestParams(docJavaMethod, projectBuilder, apiReqParamList,
 					frameworkAnnotations);
 			apiMethodDoc.setPathParams(apiMethodReqParam.getPathParams());
 			apiMethodDoc.setQueryParams(apiMethodReqParam.getQueryParams());
@@ -826,7 +826,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 			}
 
 			// build request json
-			ApiRequestExample requestExample = buildReqJson(docJavaMethod, apiMethodDoc, projectBuilder,
+			ApiRequestExample requestExample = this.buildReqJson(docJavaMethod, apiMethodDoc, projectBuilder,
 					frameworkAnnotations);
 			String requestJson = requestExample.getExampleBody();
 			// set request example detail
@@ -852,12 +852,10 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 
 			// handle extension
 			Map<String, String> extensions = DocUtil.getCommentsByTag(method, DocTags.EXTENSION, null);
-			if (extensions != null) {
+			if (!extensions.isEmpty()) {
 				Map<String, Object> extensionParams = apiMethodDoc.getExtensions() != null
-						? apiMethodDoc.getExtensions() : new HashMap();
-				extensions.entrySet()
-					.stream()
-					.forEach(e -> extensionParams.put(e.getKey(), DocUtil.detectTagValue(e.getValue())));
+						? apiMethodDoc.getExtensions() : new HashMap<>();
+				extensions.forEach((key, value) -> extensionParams.put(key, DocUtil.detectTagValue(value)));
 				apiMethodDoc.setExtensions(extensionParams);
 			}
 
@@ -902,7 +900,8 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 					mappingParamToApiParam(paramsObjects.toString(), paramList, mappingParams);
 					continue;
 				}
-				List<String> headers = (LinkedList) paramsObjects;
+				@SuppressWarnings("unchecked")
+				List<String> headers = (LinkedList<String>) paramsObjects;
 				for (String str : headers) {
 					mappingParamToApiParam(str, paramList, mappingParams);
 				}
@@ -961,6 +960,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 			boolean isRequestBody = false;
 			boolean required = false;
 			boolean isRequestParam = false;
+			boolean isRequestPart = false;
 			if (annotations.isEmpty() && (Methods.GET.getValue().equals(docJavaMethod.getMethodType())
 					|| Methods.DELETE.getValue().equals(docJavaMethod.getMethodType()))) {
 				isRequestParam = true;
@@ -971,9 +971,8 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 					continue out;
 				}
 				if (frameworkAnnotations.getRequestParamAnnotation().getAnnotationName().equals(annotationName)
-						|| frameworkAnnotations.getPathVariableAnnotation()
-							.getAnnotationName()
-							.equals(annotationName)) {
+						|| frameworkAnnotations.getPathVariableAnnotation().getAnnotationName().equals(annotationName)
+						|| frameworkAnnotations.getRequestPartAnnotation().getAnnotationName().equals(annotationName)) {
 					String defaultValueProp = DocAnnotationConstants.DEFAULT_VALUE_PROP;
 					String requiredProp = DocAnnotationConstants.REQUIRED_PROP;
 					if (frameworkAnnotations.getRequestParamAnnotation().getAnnotationName().equals(annotationName)) {
@@ -985,6 +984,13 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 						defaultValueProp = frameworkAnnotations.getPathVariableAnnotation().getDefaultValueProp();
 						requiredProp = frameworkAnnotations.getPathVariableAnnotation().getRequiredProp();
 						isPathVariable = true;
+					}
+					if (frameworkAnnotations.getRequestPartAnnotation().getAnnotationName().equals(annotationName)) {
+						requiredProp = frameworkAnnotations.getRequestPartAnnotation().getRequiredProp();
+						isRequestPart = true;
+						mockValue = JsonBuildHelper.buildJson(fullyQualifiedName, typeName, Boolean.FALSE, 0,
+								new HashMap<>(16), groupClasses, builder);
+						requestBodyCounter++;
 					}
 					AnnotationValue annotationDefaultVal = annotation.getProperty(defaultValueProp);
 					if (Objects.nonNull(annotationDefaultVal)) {
@@ -1183,7 +1189,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 				String enumName = JavaClassUtil.getEnumParams(javaClass);
 				Object value = JavaClassUtil.getEnumValue(javaClass, isPathVariable || queryParam);
 				if (Boolean.TRUE.equals(builder.getApiConfig().getInlineEnum())) {
-					comment.append("<br/>[Enum: " + StringUtil.removeQuotes(enumName) + "]");
+					comment.append("<br/>[Enum: ").append(StringUtil.removeQuotes(enumName)).append("]");
 				}
 				ApiParam param = ApiParam.of()
 					.setField(paramName)
@@ -1198,6 +1204,24 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 					.setEnumInfo(JavaClassUtil.getEnumInfo(javaClass, builder))
 					.setEnumValues(JavaClassUtil.getEnumValues(javaClass));
 				paramList.add(param);
+			}
+			// if it has annotation @RequestPart
+			else if (isRequestPart) {
+				ApiParam param = ApiParam.of()
+					.setClassName(fullyQualifiedName)
+					.setField(paramName)
+					.setId(paramList.size() + 1)
+					.setPathParam(isPathVariable)
+					.setQueryParam(queryParam)
+					.setValue(mockValue)
+					.setType(ParamTypeConstants.PARAM_TYPE_OBJECT)
+					.setDesc(comment.toString())
+					.setRequired(required)
+					.setVersion(DocGlobalConstants.DEFAULT_VERSION);
+				paramList.add(param);
+				paramList.addAll(ParamsBuildHelper.buildParams(typeName, DocGlobalConstants.PARAM_PREFIX, 1,
+						String.valueOf(required), Boolean.FALSE, new HashMap<>(16), builder, groupClasses, 1,
+						Boolean.FALSE, null));
 			}
 			else {
 				paramList.addAll(
@@ -1249,7 +1273,8 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 					mappingParamProcess(paramsObjects.toString(), queryParamsMap);
 					continue;
 				}
-				List<String> headers = (LinkedList) paramsObjects;
+				@SuppressWarnings("unchecked")
+				List<String> headers = (LinkedList<String>) paramsObjects;
 				for (String str : headers) {
 					mappingParamProcess(str, queryParamsMap);
 				}
@@ -1298,10 +1323,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 			Set<String> groupClasses = JavaClassUtil.getParamGroupJavaClass(annotations,
 					configBuilder.getJavaProjectBuilder());
 			boolean paramAdded = false;
-			boolean requestParam = false;
-			if (annotations.isEmpty()) {
-				requestParam = true;
-			}
+			boolean requestParam = annotations.isEmpty();
 			for (JavaAnnotation annotation : annotations) {
 				String annotationName = annotation.getType().getValue();
 				String fullName = annotation.getType().getSimpleName();
@@ -1385,6 +1407,21 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 					requestParam = true;
 					paramAdded = true;
 				}
+				else if (frameworkAnnotations.getRequestPartAnnotation().getAnnotationName().contains(annotationName)) {
+					if (!JavaClassValidateUtil.isFile(gicTypeName)) {
+						apiMethodDoc.setContentType(MediaType.MULTIPART_FORM_DATA);
+						FormData formData = new FormData();
+						formData.setKey(paramName);
+						formData.setDescription(comment);
+						formData.setType(ParamTypeConstants.PARAM_TYPE_TEXT);
+						mockValue = JsonBuildHelper.buildJson(fullyQualifiedName, gicTypeName, Boolean.FALSE, 0,
+								new HashMap<>(16), groupClasses, configBuilder);
+						formData.setValue(mockValue);
+						formData.setContentType(FormDataContentTypeEnum.APPLICATION_JSON);
+						formDataList.add(formData);
+						paramAdded = true;
+					}
+				}
 			}
 			if (paramAdded) {
 				continue;
@@ -1461,7 +1498,8 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 
 		// set content-type to fromData
 		boolean hasFormDataUploadFile = formDataList.stream()
-			.anyMatch(form -> Objects.equals(form.getType(), ParamTypeConstants.PARAM_TYPE_FILE));
+			.anyMatch(form -> Objects.equals(form.getType(), ParamTypeConstants.PARAM_TYPE_FILE)
+					|| Objects.nonNull(form.getContentType()));
 		if (hasFormDataUploadFile) {
 			apiMethodDoc.setContentType(MediaType.MULTIPART_FORM_DATA_VALUE);
 		}

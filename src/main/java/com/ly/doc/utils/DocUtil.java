@@ -772,6 +772,9 @@ public class DocUtil {
 			if ("file".equals(formData.getType())) {
 				continue;
 			}
+			if (Objects.nonNull(formData.getContentType())) {
+				continue;
+			}
 			if (formData.getKey().contains("[]")) {
 				String key = formData.getKey().substring(0, formData.getKey().indexOf("["));
 				formDataMap.put(key, formData.getValue() + "&" + key + "=" + formData.getValue());
