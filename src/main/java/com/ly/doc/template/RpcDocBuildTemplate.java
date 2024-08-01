@@ -111,7 +111,7 @@ public class RpcDocBuildTemplate
 					tempList.stream().sorted(Comparator.comparing(RpcApiDoc::getOrder)).collect(Collectors.toList()));
 		}
 		else {
-			apiDocList.stream().peek(p -> p.setOrder(ATOMIC_INTEGER.getAndAdd(1))).collect(Collectors.toList());
+			apiDocList.forEach(p -> p.setOrder(ATOMIC_INTEGER.getAndAdd(1)));
 			apiSchema.setApiDatas(apiDocList);
 		}
 		return apiSchema;
