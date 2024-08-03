@@ -17,7 +17,7 @@ body:
   - type: textarea
     id: basic-example
     attributes:
-      label: Basic example(pr的用例，社区已开启国际化推广，请文心一言、讯飞星火等辅助翻译成英文，减少社区开发者的工作)
+      label: Basic example (pr的用例，社区已开启国际化推广，请文心一言、讯飞星火等辅助翻译成英文，减少社区开发者的工作)
       description: If the proposal involves a new or changed API, include a basic code example. Omit this section if it's not applicable.
     validations:
       required: true
@@ -25,7 +25,7 @@ body:
   - type: textarea
     id: suggested-solution
     attributes:
-      label: Describe the solution you'd like(描述您想要的解决方案，社区已开启国际化推广，请文心一言、讯飞星火等辅助翻译成英文，减少社区开发者的工作)
+      label: Describe the solution you'd like (描述您想要的解决方案，社区已开启国际化推广，请文心一言、讯飞星火等辅助翻译成英文，减少社区开发者的工作)
       description: A clear and concise description of what you want to happen.
     validations:
       required: true
@@ -33,24 +33,24 @@ body:
   - type: textarea
     id: alternative
     attributes:
-      label: Describe alternatives you've considered(描述你考虑过的替代方案，社区已开启国际化推广，请文心一言、讯飞星火等辅助翻译成英文，减少社区开发者的工作)
+      label: Describe alternatives you've considered (描述你考虑过的替代方案，社区已开启国际化推广，请文心一言、讯飞星火等辅助翻译成英文，减少社区开发者的工作)
       description: A clear and concise description of any alternative solutions or features you've considered.
 
   - type: textarea
     id: additional-context
     attributes:
-      label: Additional context(其他背景信息，社区已开启国际化推广，请文心一言、讯飞星火等辅助翻译成英文，减少社区开发者的工作)
+      label: Additional context (其他背景信息，社区已开启国际化推广，请文心一言、讯飞星火等辅助翻译成英文，减少社区开发者的工作)
       description: Add any other context or screenshots about the feature request here.
 
   - type: checkboxes
     id: checkboxes
     attributes:
       label: Validations
-      description: Before submitting the issue, please make sure you do the following(在提交问题之前，请确保执行以下操作)
+      description: Before submitting the issue, please make sure you do the following (在提交问题之前，请确保执行以下操作)
       options:
-        - label: Read the [docs](https://smart-doc-group.github.io/).
+        - label: Read the [docs](https://smart-doc-group.github.io/). (请先阅读官方文档)
           required: true
-        - label: Read the [Contributing Guidelines](https://smart-doc-group.github.io/guide/community/contributing).
+        - label: Read the [Contributing Guidelines](https://smart-doc-group.github.io/guide/community/contributing). (请先阅读官方文档·贡献指南)
           required: true
-        - label: Check that there isn't already an issue that reports the same bug to avoid creating a duplicate.
+        - label: Check that there isn't already an issue that reports the same bug to avoid creating a duplicate. (检查是否存在报告相同错误的问题，以避免产生重复)
           required: true
