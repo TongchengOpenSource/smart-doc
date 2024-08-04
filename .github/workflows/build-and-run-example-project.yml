@@ -67,72 +67,48 @@ jobs:
     - name: Build and Install Example Project Again
       run: mvn -DskipTests=true install
 
-    - name: Cache Maven Dependencies
-      uses: actions/cache@v4
-      with:
-        path: ~/.m2/repository
-        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-        restore-keys: |
-          ${{ runner.os }}-m2-
 
-    - name: Cache Project Files
-      uses: actions/cache@v4
-      with:
-        path: ./
-        key: ${{ runner.os }}-project-${{ hashFiles('**/pom.xml') }}
-        restore-keys: |
-          ${{ runner.os }}-project-
+    - name: Generate AsciiDoc Documentation
+      run: mvn -DskipTests=true smart-doc:adoc
 
-  generate-docs:
-    needs: build-smart-doc-example-demo
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        docType: [
-          'adoc',
-          'html',
-          'javadoc-adoc',
-          'javadoc-html',
-          'javadoc-markdown',
-          'jmeter',
-          'markdown',
-          'openapi',
-          'postman',
-          'rpc-adoc',
-          'rpc-html',
-          'rpc-markdown',
-          'swagger',
-          'websocket-markdown',
-          'word'
-        ]
-    steps:
-      - name: Restore Project Cache
-        uses: actions/cache@v4
-        with:
-          path: ./
-          key: ${{ runner.os }}-project-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-project-
+    - name: Generate HTML Documentation
+      run: mvn -DskipTests=true smart-doc:html
 
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'temurin'
+    - name: Generate Javadoc AsciiDoc Documentation
+      run: mvn -DskipTests=true smart-doc:javadoc-adoc
 
-      - name: Restore Maven Cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-m2-
+    - name: Generate Javadoc HTML Documentation
+      run: mvn -DskipTests=true smart-doc:javadoc-html
 
-      - name: Validate Maven Dependencies
-        run: |
-          echo "Validating smart-doc installation:"
-          ls -lh ~/.m2/repository/com/ly/smart-doc
-          mvn -DskipTests=true dependency:resolve
+    - name: Generate Javadoc Markdown Documentation
+      run: mvn -DskipTests=true smart-doc:javadoc-markdown
 
-      - name: Generate ${{ matrix.docType }} Documentation
-        run: mvn -DskipTests=true smart-doc:${{ matrix.docType }}
+    - name: Generate JMeter Documentation
+      run: mvn -DskipTests=true smart-doc:jmeter
+
+    - name: Generate Markdown Documentation
+      run: mvn -DskipTests=true smart-doc:markdown
+
+    - name: Generate OpenAPI Documentation
+      run: mvn -DskipTests=true smart-doc:openapi
+
+    - name: Generate Postman Documentation
+      run: mvn -DskipTests=true smart-doc:postman
+
+    - name: Generate RPC AsciiDoc Documentation
+      run: mvn -DskipTests=true smart-doc:rpc-adoc
+
+    - name: Generate RPC HTML Documentation
+      run: mvn -DskipTests=true smart-doc:rpc-html
+
+    - name: Generate RPC Markdown Documentation
+      run: mvn -DskipTests=true smart-doc:rpc-markdown
+
+    - name: Generate Swagger Documentation
+      run: mvn -DskipTests=true smart-doc:swagger
+
+    - name: Generate WebSocket Markdown Documentation
+      run: mvn -DskipTests=true smart-doc:websocket-markdown
+
+    - name: Generate Word Documentation
+      run: mvn -DskipTests=true smart-doc:word

@@ -57,6 +57,7 @@ public class AdocDocBuilder {
 	 * @param javaProjectBuilder ProjectDocConfigBuilder
 	 */
 	public static void buildApiDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
+		System.out.println("AdocDocBuilder OK!!!!!!!!!!!");
 		DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
 		builderTemplate.checkAndInit(config, Boolean.TRUE);
 		config.setParamsDataToTree(false);
