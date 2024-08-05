@@ -25,14 +25,13 @@ package com.ly.doc.builder.openapi;
 import com.ly.doc.constants.DocGlobalConstants;
 import com.ly.doc.constants.Methods;
 import com.ly.doc.constants.ParamTypeConstants;
+import com.ly.doc.helper.JavaProjectBuilderHelper;
 import com.ly.doc.model.*;
+import com.ly.doc.model.openapi.OpenApiTag;
+import com.ly.doc.utils.JsonUtil;
 import com.ly.doc.utils.OpenApiSchemaUtil;
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.FileUtil;
-import com.ly.doc.helper.JavaProjectBuilderHelper;
-import com.ly.doc.model.openapi.OpenApiTag;
-import com.ly.doc.utils.JsonUtil;
-import com.power.common.util.StringUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import org.apache.commons.lang3.StringUtils;
 
@@ -70,11 +69,6 @@ public class OpenApiBuilder extends AbstractOpenApiBuilder {
 		INSTANCE.openApiCreate(config, apiSchema);
 	}
 
-	/**
-	 * Build OpenApi
-	 * @param config Configuration of smart-doc
-	 * @param apiSchema List of API DOC
-	 */
 	@Override
 	public void openApiCreate(ApiConfig config, ApiSchema<ApiDoc> apiSchema) {
 		this.setComponentKey(getModuleName());
@@ -84,8 +78,8 @@ public class OpenApiBuilder extends AbstractOpenApiBuilder {
 		json.put("servers", buildServers(config));
 		Set<OpenApiTag> tags = new HashSet<>();
 		json.put("tags", tags);
-		json.put("paths", buildPaths(config, apiSchema, tags));
-		json.put("components", buildComponentsSchema(apiSchema));
+		json.put("paths", this.buildPaths(config, apiSchema, tags));
+		json.put("components", this.buildComponentsSchema(apiSchema));
 
 		String filePath = config.getOutPath();
 		filePath = filePath + DocGlobalConstants.OPEN_API_JSON;
@@ -96,6 +90,7 @@ public class OpenApiBuilder extends AbstractOpenApiBuilder {
 	/**
 	 * Build openapi info
 	 * @param apiConfig Configuration of smart-doc
+	 * @return Map
 	 */
 	private static Map<String, Object> buildInfo(ApiConfig apiConfig) {
 		Map<String, Object> infoMap = new HashMap<>(8);
@@ -107,6 +102,7 @@ public class OpenApiBuilder extends AbstractOpenApiBuilder {
 	/**
 	 * Build Servers
 	 * @param config Configuration of smart-doc
+	 * @return List of Map
 	 */
 	private static List<Map<String, Object>> buildServers(ApiConfig config) {
 		List<Map<String, Object>> serverList = new ArrayList<>();
@@ -116,12 +112,6 @@ public class OpenApiBuilder extends AbstractOpenApiBuilder {
 		return serverList;
 	}
 
-	/**
-	 * Build request
-	 * @param apiConfig Configuration of smart-doc
-	 * @param apiMethodDoc ApiMethodDoc
-	 * @param apiDoc apiDoc
-	 */
 	@Override
 	public Map<String, Object> buildPathUrlsRequest(ApiConfig apiConfig, ApiMethodDoc apiMethodDoc, ApiDoc apiDoc,
 			List<ApiExceptionStatus> apiExceptionStatuses) {
@@ -139,9 +129,9 @@ public class OpenApiBuilder extends AbstractOpenApiBuilder {
 		// request.put("tags", new String[]{tag});
 		// }
 		request.put("tags", apiMethodDoc.getTagRefs().stream().map(TagDoc::getTag).toArray());
-		request.put("requestBody", buildRequestBody(apiConfig, apiMethodDoc));
-		request.put("parameters", buildParameters(apiMethodDoc));
-		request.put("responses", buildResponses(apiConfig, apiMethodDoc, apiExceptionStatuses));
+		request.put("requestBody", this.buildRequestBody(apiConfig, apiMethodDoc));
+		request.put("parameters", this.buildParameters(apiMethodDoc));
+		request.put("responses", this.buildResponses(apiConfig, apiMethodDoc, apiExceptionStatuses));
 		request.put("deprecated", apiMethodDoc.isDeprecated());
 		List<String> paths = OpenApiSchemaUtil.getPatternResult("[A-Za-z0-9_{}]*", apiMethodDoc.getPath());
 		paths.add(apiMethodDoc.getType());
@@ -149,14 +139,16 @@ public class OpenApiBuilder extends AbstractOpenApiBuilder {
 		request.put("operationId", operationId);
 		// add extension attribution
 		if (apiMethodDoc.getExtensions() != null) {
-			apiMethodDoc.getExtensions().entrySet().forEach(e -> request.put("x-" + e.getKey(), e.getValue()));
+			apiMethodDoc.getExtensions().forEach((key, value) -> request.put("x-" + key, value));
 		}
 		return request;
 	}
 
 	/**
-	 * Build request body
+	 * Build requestBody
+	 * @param apiConfig Configuration of smart-doc
 	 * @param apiMethodDoc ApiMethodDoc
+	 * @return requestBody Map
 	 */
 	private Map<String, Object> buildRequestBody(ApiConfig apiConfig, ApiMethodDoc apiMethodDoc) {
 		Map<String, Object> requestBody = new HashMap<>(8);
@@ -165,22 +157,17 @@ public class OpenApiBuilder extends AbstractOpenApiBuilder {
 				|| apiMethodDoc.getType().equals(Methods.PATCH.getValue()));
 		// add content of post method
 		if (isPost) {
-			requestBody.put("content", buildContent(apiConfig, apiMethodDoc, false));
+			requestBody.put("content", this.buildContent(apiConfig, apiMethodDoc, false));
 			return requestBody;
 		}
 		return null;
 	}
 
-	/**
-	 * response body
-	 * @param apiMethodDoc ApiMethodDoc
-	 * @return response body
-	 */
 	@Override
 	public Map<String, Object> buildResponsesBody(ApiConfig apiConfig, ApiMethodDoc apiMethodDoc) {
 		Map<String, Object> responseBody = new HashMap<>(10);
 		responseBody.put("description", "OK");
-		responseBody.put("content", buildContent(apiConfig, apiMethodDoc, true));
+		responseBody.put("content", this.buildContent(apiConfig, apiMethodDoc, true));
 		return responseBody;
 	}
 
@@ -266,7 +253,7 @@ public class OpenApiBuilder extends AbstractOpenApiBuilder {
 			parameters.putAll(buildParametersSchema(apiParam));
 		}
 		if (apiParam.getExtensions() != null && !apiParam.getExtensions().isEmpty()) {
-			apiParam.getExtensions().entrySet().forEach(e -> parameters.put("x-" + e.getKey(), e.getValue()));
+			apiParam.getExtensions().forEach((key, value) -> parameters.put("x-" + key, value));
 		}
 
 		return parameters;
@@ -275,7 +262,7 @@ public class OpenApiBuilder extends AbstractOpenApiBuilder {
 	@Override
 	public Map<String, Object> buildComponentsSchema(ApiSchema<ApiDoc> apiSchema) {
 		Map<String, Object> schemas = new HashMap<>(4);
-		schemas.put("schemas", buildComponentData(apiSchema));
+		schemas.put("schemas", this.buildComponentData(apiSchema));
 		return schemas;
 	}
 

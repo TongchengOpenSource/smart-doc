@@ -24,15 +24,14 @@ package com.ly.doc.builder.openapi;
 import com.ly.doc.constants.DocGlobalConstants;
 import com.ly.doc.constants.MediaType;
 import com.ly.doc.constants.ParamTypeConstants;
+import com.ly.doc.helper.JavaProjectBuilderHelper;
 import com.ly.doc.model.*;
+import com.ly.doc.model.openapi.OpenApiTag;
 import com.ly.doc.utils.DocUtil;
-import com.ly.doc.utils.OpenApiSchemaUtil;
+import com.ly.doc.utils.JsonUtil;
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.FileUtil;
 import com.power.common.util.StringUtil;
-import com.ly.doc.helper.JavaProjectBuilderHelper;
-import com.ly.doc.model.openapi.OpenApiTag;
-import com.ly.doc.utils.JsonUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import org.apache.commons.lang3.StringUtils;
 
@@ -138,7 +137,7 @@ public class SwaggerBuilder extends AbstractOpenApiBuilder {
 					.stream()
 					.filter(StringUtil::isNotEmpty)
 					.toArray(n -> new String[n]));
-		List<Map<String, Object>> parameters = buildParameters(apiMethodDoc);
+		List<Map<String, Object>> parameters = this.buildParameters(apiMethodDoc);
 		// requestBody
 		if (CollectionUtil.isNotEmpty(apiMethodDoc.getRequestParams())) {
 			Map<String, Object> parameter = new HashMap<>();

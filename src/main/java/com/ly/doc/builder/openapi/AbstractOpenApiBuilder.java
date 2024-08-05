@@ -127,7 +127,7 @@ public abstract class AbstractOpenApiBuilder {
 				String[] paths = methodDoc.getPath().split(";");
 				for (String path : paths) {
 					path = path.trim();
-					Map<String, Object> request = buildPathUrls(apiConfig, methodDoc, methodDoc.getClazzDoc(),
+					Map<String, Object> request = this.buildPathUrls(apiConfig, methodDoc, methodDoc.getClazzDoc(),
 							apiSchema.getApiExceptionStatuses());
 					if (!pathMap.containsKey(path)) {
 						pathMap.put(path, request);
@@ -449,8 +449,11 @@ public abstract class AbstractOpenApiBuilder {
 	}
 
 	/**
-	 * component schema properties data
-	 * @param apiParam ApiParam
+	 * component schema properties
+	 * @param apiParam list of ApiParam
+	 * @param component component
+	 * @param isResp is response
+	 * @return properties
 	 */
 	private Map<String, Object> buildPropertiesData(ApiParam apiParam, Map<String, Object> component, boolean isResp) {
 		Map<String, Object> propertiesData = new HashMap<>();
@@ -540,12 +543,12 @@ public abstract class AbstractOpenApiBuilder {
 				// request components
 				String requestSchema = OpenApiSchemaUtil.getClassNameFromParams(method.getRequestParams());
 				List<ApiParam> requestParams = method.getRequestParams();
-				Map<String, Object> prop = buildProperties(requestParams, component, false);
+				Map<String, Object> prop = this.buildProperties(requestParams, component, false);
 				component.put(requestSchema, prop);
 				// response components
 				List<ApiParam> responseParams = method.getResponseParams();
 				String responseSchemaName = OpenApiSchemaUtil.getClassNameFromParams(method.getResponseParams());
-				component.put(responseSchemaName, buildProperties(responseParams, component, true));
+				component.put(responseSchemaName, this.buildProperties(responseParams, component, true));
 			});
 		});
 		// excption response components
