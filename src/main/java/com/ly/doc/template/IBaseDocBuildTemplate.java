@@ -20,32 +20,19 @@
  */
 package com.ly.doc.template;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-
-import com.ly.doc.model.*;
-import com.ly.doc.utils.*;
-import com.power.common.util.StringUtil;
-import com.power.common.util.UrlUtil;
 import com.ly.doc.builder.ProjectDocConfigBuilder;
 import com.ly.doc.constants.DocGlobalConstants;
 import com.ly.doc.constants.DocTags;
 import com.ly.doc.helper.ParamsBuildHelper;
+import com.ly.doc.model.*;
 import com.ly.doc.model.annotation.FrameworkAnnotations;
-import com.thoughtworks.qdox.model.DocletTag;
-import com.thoughtworks.qdox.model.JavaAnnotation;
-import com.thoughtworks.qdox.model.JavaMethod;
-import com.thoughtworks.qdox.model.JavaParameter;
-import com.thoughtworks.qdox.model.JavaType;
+import com.ly.doc.utils.*;
+import com.power.common.util.StringUtil;
+import com.thoughtworks.qdox.model.*;
+
+import java.util.*;
 
 import static com.ly.doc.constants.DocGlobalConstants.NO_COMMENTS_FOUND;
-import static com.ly.doc.constants.DocTags.*;
 
 /**
  * @author yu3.sun on 2022/10/2
@@ -78,11 +65,7 @@ public interface IBaseDocBuildTemplate {
 				&& Objects.isNull(method.getTagByName(DocTags.IGNORE_RESPONSE_BODY_ADVICE))) {
 			String responseBodyAdvice = projectBuilder.getApiConfig().getResponseBodyAdvice().getClassName();
 			if (!returnTypeGenericCanonicalName.startsWith(responseBodyAdvice)) {
-				returnTypeGenericCanonicalName = new StringBuffer().append(responseBodyAdvice)
-					.append("<")
-					.append(returnTypeGenericCanonicalName)
-					.append(">")
-					.toString();
+				returnTypeGenericCanonicalName = responseBodyAdvice + "<" + returnTypeGenericCanonicalName + ">";
 			}
 		}
 		Map<String, JavaType> actualTypesMap = docJavaMethod.getActualTypesMap();
@@ -161,7 +144,7 @@ public interface IBaseDocBuildTemplate {
 				javaType = actualTypesMap.get(javaType.getCanonicalName());
 			}
 			apiJavaParameter.setTypeValue(javaType.getValue());
-			String genericCanonicalName = javaType.getGenericCanonicalName();
+			StringBuilder genericCanonicalName = new StringBuilder(javaType.getGenericCanonicalName());
 			String fullyQualifiedName = javaType.getFullyQualifiedName();
 			apiJavaParameter.setFullyQualifiedName(fullyQualifiedName);
 			String genericFullyQualifiedName = javaType.getGenericFullyQualifiedName();
@@ -173,15 +156,15 @@ public interface IBaseDocBuildTemplate {
 			String rewriteClassName = getRewriteClassName(replacementMap, genericFullyQualifiedName, commentClass);
 			// rewrite class
 			if (JavaClassValidateUtil.isClassName(rewriteClassName)) {
-				genericCanonicalName = rewriteClassName;
+				genericCanonicalName = new StringBuilder(rewriteClassName);
 				genericFullyQualifiedName = DocClassUtil.getSimpleName(rewriteClassName);
 			}
-			if (JavaClassValidateUtil.isMvcIgnoreParams(genericCanonicalName,
+			if (JavaClassValidateUtil.isMvcIgnoreParams(genericCanonicalName.toString(),
 					builder.getApiConfig().getIgnoreRequestParams())) {
 				continue;
 			}
 			genericFullyQualifiedName = DocClassUtil.rewriteRequestParam(genericFullyQualifiedName);
-			genericCanonicalName = DocClassUtil.rewriteRequestParam(genericCanonicalName);
+			genericCanonicalName = new StringBuilder(DocClassUtil.rewriteRequestParam(genericCanonicalName.toString()));
 			List<JavaAnnotation> annotations = parameter.getAnnotations();
 			apiJavaParameter.setAnnotations(annotations);
 			for (JavaAnnotation annotation : annotations) {
@@ -192,17 +175,17 @@ public interface IBaseDocBuildTemplate {
 							&& Objects.isNull(javaMethod.getTagByName(DocTags.IGNORE_REQUEST_BODY_ADVICE))) {
 						String requestBodyAdvice = builder.getApiConfig().getRequestBodyAdvice().getClassName();
 						genericFullyQualifiedName = requestBodyAdvice;
-						genericCanonicalName = requestBodyAdvice + "<" + genericCanonicalName + ">";
+						genericCanonicalName = new StringBuilder(requestBodyAdvice + "<" + genericCanonicalName + ">");
 					}
 				}
 			}
 			if (JavaClassValidateUtil.isCollection(genericFullyQualifiedName)
 					|| JavaClassValidateUtil.isArray(genericFullyQualifiedName)) {
-				if (JavaClassValidateUtil.isCollection(genericCanonicalName)) {
-					genericCanonicalName = genericCanonicalName + "<T>";
+				if (JavaClassValidateUtil.isCollection(genericCanonicalName.toString())) {
+					genericCanonicalName.append("<T>");
 				}
 			}
-			apiJavaParameter.setGenericCanonicalName(genericCanonicalName);
+			apiJavaParameter.setGenericCanonicalName(genericCanonicalName.toString());
 			apiJavaParameter.setGenericFullyQualifiedName(genericFullyQualifiedName);
 			apiJavaParameterList.add(apiJavaParameter);
 		}
