@@ -26,6 +26,8 @@ import com.power.common.util.StringUtil;
 import java.util.*;
 
 /**
+ * ApiDoc
+ *
  * @author oppnfind
  */
 public class ApiDoc implements IDoc, Comparable<ApiDoc> {
@@ -85,6 +87,9 @@ public class ApiDoc implements IDoc, Comparable<ApiDoc> {
 	 */
 	private String link;
 
+	/**
+	 * author
+	 */
 	private String author;
 
 	/**

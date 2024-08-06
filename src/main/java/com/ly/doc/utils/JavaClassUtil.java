@@ -45,6 +45,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.lang.reflect.*;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Handle JavaClass
@@ -917,6 +918,175 @@ public class JavaClassUtil {
 		}
 		// Return originalName unchanged if no generics are found
 		return originalName;
+	}
+
+	/**
+	 * Extracts `@JsonView` value classes from a collection of annotations.
+	 * @param annotations the collection of Java annotations to process
+	 * @param builder the project documentation configuration builder, used to access
+	 * configuration details
+	 * @return a set containing all the JSON view classes extracted from the annotations.
+	 * If the input annotation collection is empty, an empty set is returned.
+	 */
+	public static Set<String> getParamJsonViewClasses(Collection<JavaAnnotation> annotations,
+			ProjectDocConfigBuilder builder) {
+		if (CollectionUtil.isEmpty(annotations)) {
+			return Collections.emptySet();
+		}
+		Set<String> result = new HashSet<>();
+		for (JavaAnnotation annotation : annotations) {
+			return getJsonViewClasses(annotation, builder, true);
+		}
+		return result;
+	}
+
+	/**
+	 * Retrieves a set of fully qualified class names associated with the JsonView.
+	 * @param javaAnnotation The Java annotation containing the JsonView information,
+	 * which
+	 * @param builder The project configuration builder used to retrieve class information
+	 * by name.
+	 * @param isParam if isParam,just return the type;if isParam is false, return the
+	 * super class and interface
+	 * @return A set of fully qualified class names related to the JsonView.
+	 */
+	public static Set<String> getJsonViewClasses(JavaAnnotation javaAnnotation, ProjectDocConfigBuilder builder,
+			boolean isParam) {
+
+		String annotationName = javaAnnotation.getType().getValue();
+		if (DocAnnotationConstants.SHORT_JSON_VIEW.equals(annotationName)) {
+			AnnotationValue annotationValue = javaAnnotation.getProperty(DocAnnotationConstants.VALUE_PROP);
+			return getJsonViewClasses(annotationValue, builder, isParam);
+		}
+		return Collections.emptySet();
+	}
+
+	/**
+	 * Retrieves a set of fully qualified class names associated with the JsonView.
+	 * @param annotationValue The annotation value, which can be a single type reference
+	 * or a list of type references.
+	 * @param builder The project configuration builder used to retrieve class information
+	 * by name.
+	 * @param isParam if isParam is true ,just return the type;else return the super class
+	 * and interface
+	 * @return A set of fully qualified class names related to the JsonView.
+	 */
+	public static Set<String> getJsonViewClasses(AnnotationValue annotationValue, ProjectDocConfigBuilder builder,
+			boolean isParam) {
+		if (Objects.isNull(annotationValue)) {
+			return Collections.emptySet();
+		}
+
+		Set<String> result = new HashSet<>();
+		// just one value
+		if (annotationValue instanceof TypeRef) {
+			JavaType type = ((TypeRef) annotationValue).getType();
+			if (isParam) {
+				result.add(type.getFullyQualifiedName());
+				return result;
+			}
+			JavaClass clazz = builder.getClassByName(type.getFullyQualifiedName());
+			result.addAll(getSuperJavaClassAndInterface(clazz));
+		}
+		else if (annotationValue instanceof AnnotationValueList) {
+			AnnotationValueList property = (AnnotationValueList) annotationValue;
+			Stream<String> stringStream = property.getValueList()
+				.stream()
+				.filter(i -> i instanceof TypeRef)
+				.map(i -> ((TypeRef) i).getType().getFullyQualifiedName());
+			if (isParam) {
+				result.addAll(stringStream.collect(Collectors.toSet()));
+				return result;
+			}
+			stringStream.forEach(type -> result.addAll(getSuperJavaClassAndInterface(builder.getClassByName(type))));
+		}
+		return result;
+
+	}
+
+	/**
+	 * Determines whether a field should be excluded from the JSON output based on the
+	 * {@code @JsonView} annotation present on the method.
+	 *
+	 * This method uses the {@code shouldIncludeFieldInJsonView} method to determine if
+	 * the field should be included and negates the result to determine if it should be
+	 * excluded.
+	 * @param annotation the annotation present on the field, typically {@code @JsonView}.
+	 * @param methodJsonViewClasses the set of {@code JsonView} classes specified on the
+	 * method.
+	 * @param isResp a boolean indicating whether the current context is a response.
+	 * @param projectBuilder the project configuration builder.
+	 * @return {@code true} if the field should be excluded from the JSON output,
+	 * otherwise {@code false}.
+	 */
+	public static boolean shouldExcludeFieldFromJsonView(JavaAnnotation annotation, Set<String> methodJsonViewClasses,
+			boolean isResp, ProjectDocConfigBuilder projectBuilder) {
+		return !shouldIncludeFieldInJsonView(annotation, methodJsonViewClasses, isResp, projectBuilder);
+	}
+
+	/**
+	 * Determines if a field should be included in the JSON response based on the presence
+	 * of {@code @JsonView} annotations on the method and field. This method checks if the
+	 * field's annotation matches any of the method's JsonView classes when the context is
+	 * a response.
+	 * @param annotation The annotation on the field being checked.
+	 * @param methodJsonViewClasses The set of JsonView classes associated with the
+	 * method.
+	 * @param isResponse Whether the current context is for a response (true) or a request
+	 * (false).
+	 * @param projectBuilder The project configuration builder used to resolve classes.
+	 * @return {@code true} if the field should be included in the JSON view;
+	 * {@code false} otherwise.
+	 */
+	public static boolean shouldIncludeFieldInJsonView(JavaAnnotation annotation, Set<String> methodJsonViewClasses,
+			boolean isResponse, ProjectDocConfigBuilder projectBuilder) {
+		String simpleAnnotationName = annotation.getType().getValue();
+
+		// If context is not a response or no JsonView classes are defined for the method,
+		// include the field
+		if (!isResponse || methodJsonViewClasses.isEmpty()) {
+			return true;
+		}
+
+		// If the annotation is not JsonView, exclude the field
+		if (!DocAnnotationConstants.SHORT_JSON_VIEW.equals(simpleAnnotationName)) {
+			return false;
+		}
+
+		// Check if the field's JsonView classes match any of the method's JsonView
+		// classes
+		Set<String> paramJsonViewClasses = getJsonViewClasses(annotation.getProperty(DocAnnotationConstants.VALUE_PROP),
+				projectBuilder, true);
+		return !Collections.disjoint(methodJsonViewClasses, paramJsonViewClasses);
+	}
+
+	/**
+	 * Recursively retrieves the fully qualified names of superclasses and interfaces of a
+	 * given Java class.
+	 * @param clazz The Java class to process.
+	 * @return A set of fully qualified names of superclasses and interfaces.
+	 */
+	public static Set<String> getSuperJavaClassAndInterface(JavaClass clazz) {
+		Set<String> superClassesAndInterfaces = new HashSet<>();
+		superClassesAndInterfaces.add(clazz.getFullyQualifiedName());
+		// Get and add the superclass, if it is not Object
+		JavaClass parentClass = clazz.getSuperJavaClass();
+		if (Objects.nonNull(parentClass) && !JavaTypeConstants.OBJECT_SIMPLE_NAME.equals(parentClass.getSimpleName())) {
+			superClassesAndInterfaces.add(parentClass.getFullyQualifiedName());
+
+			// Recursively get superclasses and interfaces for the parent class
+			superClassesAndInterfaces.addAll(getSuperJavaClassAndInterface(parentClass));
+		}
+
+		// Add all implemented interfaces
+		for (JavaClass anInterface : clazz.getInterfaces()) {
+			superClassesAndInterfaces.add(anInterface.getFullyQualifiedName());
+
+			// Recursively get interfaces for the interface itself
+			superClassesAndInterfaces.addAll(getSuperJavaClassAndInterface(anInterface));
+		}
+
+		return superClassesAndInterfaces;
 	}
 
 }

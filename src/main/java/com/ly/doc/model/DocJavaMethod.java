@@ -23,7 +23,9 @@ package com.ly.doc.model;
 import com.thoughtworks.qdox.model.JavaMethod;
 import com.thoughtworks.qdox.model.JavaType;
 
+import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author yu 2020/10/30.
@@ -31,16 +33,34 @@ import java.util.Map;
  */
 public class DocJavaMethod {
 
+	/**
+	 * JavaMethod
+	 */
 	private JavaMethod javaMethod;
 
+	/**
+	 * return schema map
+	 */
 	private Map<String, Object> returnSchema;
 
+	/**
+	 * request schema map
+	 */
 	private Map<String, Object> requestSchema;
 
+	/**
+	 * actualTypesMap
+	 */
 	private Map<String, JavaType> actualTypesMap;
 
+	/**
+	 * method type
+	 */
 	private String methodType;
 
+	/**
+	 * download
+	 */
 	private boolean download;
 
 	/**
@@ -53,6 +73,9 @@ public class DocJavaMethod {
 	 */
 	private String group;
 
+	/**
+	 * method author
+	 */
 	private String author;
 
 	/**
@@ -65,11 +88,37 @@ public class DocJavaMethod {
 	 */
 	private String detail;
 
-	Map<String, String> paramTagMap;
+	/**
+	 * param tag map
+	 */
+	private Map<String, String> paramTagMap;
 
-	Map<String, String> paramsComments;
+	/**
+	 * param tag map
+	 */
+	private Map<String, String> paramsComments;
 
+	/**
+	 * method api version
+	 */
 	private String version;
+
+	/**
+	 * jsonViewClasses
+	 */
+	private Set<String> jsonViewClasses;
+
+	public Set<String> getJsonViewClasses() {
+		if (jsonViewClasses == null) {
+			return Collections.emptySet();
+		}
+		return jsonViewClasses;
+	}
+
+	public DocJavaMethod setJsonViewClasses(Set<String> jsonViewClasses) {
+		this.jsonViewClasses = jsonViewClasses;
+		return this;
+	}
 
 	public String getVersion() {
 		return version;

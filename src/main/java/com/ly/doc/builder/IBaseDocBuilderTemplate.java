@@ -68,13 +68,16 @@ public interface IBaseDocBuilderTemplate<T extends IDoc> {
 
 	/**
 	 * get all doc api data
+	 * @param isAsciidoc is Asciidoc
+	 * @param showJavaType show java type
+	 * @param paramsDataToTree params data to tree
 	 * @param config ApiConfig
 	 * @param javaProjectBuilder JavaProjectBuilder
 	 * @return ApiAllData
 	 */
-	default List<T> getApiDoc(boolean adoc, boolean showJavaType, boolean paramsDataToTree, ApiConfig config,
+	default List<T> getApiDoc(boolean isAsciidoc, boolean showJavaType, boolean paramsDataToTree, ApiConfig config,
 			JavaProjectBuilder javaProjectBuilder) {
-		config.setAdoc(adoc);
+		config.setAdoc(isAsciidoc);
 		config.setShowJavaType(showJavaType);
 		config.setParamsDataToTree(paramsDataToTree);
 		this.checkAndInit(config, Boolean.TRUE);

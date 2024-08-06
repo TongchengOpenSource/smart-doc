@@ -355,6 +355,7 @@ public class JAXRSDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IWebSoc
 			List<JavaAnnotation> annotations = parameter.getAnnotations();
 			Set<String> groupClasses = JavaClassUtil.getParamGroupJavaClass(annotations,
 					builder.getJavaProjectBuilder());
+			Set<String> jsonViewClasses = JavaClassUtil.getParamJsonViewClasses(annotations, builder);
 
 			StringBuilder comment = new StringBuilder(this.paramCommentResolve(paramTagMap.get(paramName)));
 			boolean isPathVariable = false;
@@ -437,7 +438,8 @@ public class JAXRSDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IWebSoc
 						.setType(ParamTypeConstants.PARAM_TYPE_ARRAY);
 					paramList.add(param);
 					paramList.addAll(ParamsBuildHelper.buildParams(typeName, DocGlobalConstants.PARAM_PREFIX, 1, "true",
-							Boolean.FALSE, new HashMap<>(16), builder, groupClasses, id, Boolean.FALSE, null));
+							Boolean.FALSE, new HashMap<>(16), builder, groupClasses, jsonViewClasses, id, Boolean.FALSE,
+							null));
 				}
 			}
 			else if (JavaClassValidateUtil.isPrimitive(fullyQualifiedName)) {
@@ -484,7 +486,8 @@ public class JAXRSDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IWebSoc
 				}
 				else {
 					paramList.addAll(ParamsBuildHelper.buildParams(gicNameArr[1], DocGlobalConstants.EMPTY, 0, "true",
-							Boolean.FALSE, new HashMap<>(16), builder, groupClasses, 0, Boolean.FALSE, null));
+							Boolean.FALSE, new HashMap<>(16), builder, groupClasses, jsonViewClasses, 0, Boolean.FALSE,
+							null));
 				}
 
 			}
@@ -523,8 +526,9 @@ public class JAXRSDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IWebSoc
 				paramList.add(param);
 			}
 			else {
-				paramList.addAll(ParamsBuildHelper.buildParams(typeName, DocGlobalConstants.EMPTY, 0, "true",
-						Boolean.FALSE, new HashMap<>(16), builder, groupClasses, 0, Boolean.FALSE, null));
+				paramList
+					.addAll(ParamsBuildHelper.buildParams(typeName, DocGlobalConstants.EMPTY, 0, "true", Boolean.FALSE,
+							new HashMap<>(16), builder, groupClasses, jsonViewClasses, 0, Boolean.FALSE, null));
 			}
 		}
 		List<ApiParam> pathParams = new ArrayList<>();
@@ -602,6 +606,7 @@ public class JAXRSDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IWebSoc
 			List<JavaAnnotation> annotations = parameter.getAnnotations();
 			Set<String> groupClasses = JavaClassUtil.getParamGroupJavaClass(annotations,
 					configBuilder.getJavaProjectBuilder());
+			Set<String> jsonViewClasses = JavaClassUtil.getParamJsonViewClasses(annotations, configBuilder);
 			boolean paramAdded = false;
 			if (CollectionUtil.isNotEmpty(annotations)) {
 				for (JavaAnnotation annotation : annotations) {
@@ -682,7 +687,7 @@ public class JAXRSDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IWebSoc
 				}
 				else {
 					String json = JsonBuildHelper.buildJson(fullyQualifiedName, gicTypeName, Boolean.FALSE, 0,
-							new HashMap<>(16), groupClasses, configBuilder);
+							new HashMap<>(16), groupClasses, jsonViewClasses, configBuilder);
 					requestExample.setJsonBody(JsonUtil.toPrettyFormat(json)).setJson(true);
 				}
 			}

@@ -39,6 +39,11 @@ public interface DocAnnotationConstants {
 	String SHORT_JSON_IGNORE_PROPERTIES = "JsonIgnoreProperties";
 
 	/**
+	 * jackson JsonView annotation {@code com.fasterxml.jackson.annotation.JsonView}
+	 */
+	String SHORT_JSON_VIEW = "JsonView";
+
+	/**
 	 * jackson JsonProperty annotation
 	 * {@code com.fasterxml.jackson.annotation.JsonProperty}
 	 */

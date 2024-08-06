@@ -701,7 +701,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 				continue;
 			}
 			if (needAllMethods || filterMethods.contains(method.getName())) {
-				docJavaMethods.add(convertToDocJavaMethod(apiConfig, projectBuilder, method, null));
+				docJavaMethods.add(this.convertToDocJavaMethod(apiConfig, projectBuilder, method, null));
 			}
 		}
 		// add parent class methods
@@ -712,7 +712,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 			Map<String, JavaType> actualTypesMap = JavaClassUtil.getActualTypesMap(javaClass);
 			for (JavaMethod method : javaClass.getMethods()) {
 				if (method.isDefault()) {
-					docJavaMethods.add(convertToDocJavaMethod(apiConfig, projectBuilder, method, actualTypesMap));
+					docJavaMethods.add(this.convertToDocJavaMethod(apiConfig, projectBuilder, method, actualTypesMap));
 				}
 			}
 		}
@@ -842,7 +842,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 				apiMethodDoc.setResponseUsage(JsonBuildHelper.buildReturnJson(docJavaMethod, projectBuilder));
 			}
 			// build response params
-			List<ApiParam> responseParams = buildReturnApiParams(docJavaMethod, projectBuilder);
+			List<ApiParam> responseParams = this.buildReturnApiParams(docJavaMethod, projectBuilder);
 			if (paramsDataToTree) {
 				responseParams = ApiParamTreeUtil.apiParamToTree(responseParams);
 			}
@@ -989,7 +989,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 						requiredProp = frameworkAnnotations.getRequestPartAnnotation().getRequiredProp();
 						isRequestPart = true;
 						mockValue = JsonBuildHelper.buildJson(fullyQualifiedName, typeName, Boolean.FALSE, 0,
-								new HashMap<>(16), groupClasses, builder);
+								new HashMap<>(16), groupClasses, docJavaMethod.getJsonViewClasses(), builder);
 						requestBodyCounter++;
 					}
 					AnnotationValue annotationDefaultVal = annotation.getProperty(defaultValueProp);
@@ -1016,7 +1016,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 					// annotation could only bind one variables.");
 					// }
 					mockValue = JsonBuildHelper.buildJson(fullyQualifiedName, typeName, Boolean.FALSE, 0,
-							new HashMap<>(16), groupClasses, builder);
+							new HashMap<>(16), groupClasses, docJavaMethod.getJsonViewClasses(), builder);
 					requestBodyCounter++;
 					isRequestBody = true;
 				}
@@ -1117,8 +1117,8 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 					if (requestBodyCounter > 0 || !isRequestParam) {
 						// for json
 						paramList.addAll(ParamsBuildHelper.buildParams(gicNameArr[0], DocGlobalConstants.EMPTY, 0,
-								String.valueOf(required), Boolean.FALSE, new HashMap<>(16), builder, groupClasses, 0,
-								Boolean.TRUE, null));
+								String.valueOf(required), Boolean.FALSE, new HashMap<>(16), builder, groupClasses,
+								docJavaMethod.getJsonViewClasses(), 0, Boolean.TRUE, null));
 					}
 				}
 			}
@@ -1196,13 +1196,13 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 						paramList.add(apiParam);
 						paramList.addAll(ParamsBuildHelper.buildParams(gicNameArr[1], DocGlobalConstants.PARAM_PREFIX,
 								1, String.valueOf(required), Boolean.FALSE, new HashMap<>(16), builder, groupClasses,
-								apiParam.getId(), Boolean.FALSE, null));
+								docJavaMethod.getJsonViewClasses(), apiParam.getId(), Boolean.FALSE, null));
 					}
 				}
 				else {
 					paramList.addAll(ParamsBuildHelper.buildParams(gicNameArr[1], DocGlobalConstants.EMPTY, 0,
-							String.valueOf(required), Boolean.FALSE, new HashMap<>(16), builder, groupClasses, 0,
-							Boolean.FALSE, null));
+							String.valueOf(required), Boolean.FALSE, new HashMap<>(16), builder, groupClasses,
+							docJavaMethod.getJsonViewClasses(), 0, Boolean.FALSE, null));
 				}
 
 			}
@@ -1242,13 +1242,13 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 					.setVersion(DocGlobalConstants.DEFAULT_VERSION);
 				paramList.add(param);
 				paramList.addAll(ParamsBuildHelper.buildParams(typeName, DocGlobalConstants.PARAM_PREFIX, 1,
-						String.valueOf(required), Boolean.FALSE, new HashMap<>(16), builder, groupClasses, 1,
-						Boolean.FALSE, null));
+						String.valueOf(required), Boolean.FALSE, new HashMap<>(16), builder, groupClasses,
+						docJavaMethod.getJsonViewClasses(), 1, Boolean.FALSE, null));
 			}
 			else {
-				paramList.addAll(
-						ParamsBuildHelper.buildParams(typeName, DocGlobalConstants.EMPTY, 0, String.valueOf(required),
-								Boolean.FALSE, new HashMap<>(16), builder, groupClasses, 0, Boolean.FALSE, null));
+				paramList.addAll(ParamsBuildHelper.buildParams(typeName, DocGlobalConstants.EMPTY, 0,
+						String.valueOf(required), Boolean.FALSE, new HashMap<>(16), builder, groupClasses,
+						docJavaMethod.getJsonViewClasses(), 0, Boolean.FALSE, null));
 			}
 		}
 		return ApiParamTreeUtil.buildMethodReqParam(paramList, queryReqParamMap, pathReqParamMap,
@@ -1389,7 +1389,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 					}
 					else {
 						String json = JsonBuildHelper.buildJson(fullyQualifiedName, gicTypeName, Boolean.FALSE, 0,
-								new HashMap<>(16), groupClasses, configBuilder);
+								new HashMap<>(16), groupClasses, Collections.emptySet(), configBuilder);
 						requestExample.setJsonBody(JsonUtil.toPrettyFormat(json)).setJson(true);
 					}
 					queryParamsMap.remove(paramName);
@@ -1437,7 +1437,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 						formData.setDescription(comment);
 						formData.setType(ParamTypeConstants.PARAM_TYPE_TEXT);
 						mockValue = JsonBuildHelper.buildJson(fullyQualifiedName, gicTypeName, Boolean.FALSE, 0,
-								new HashMap<>(16), groupClasses, configBuilder);
+								new HashMap<>(16), groupClasses, Collections.emptySet(), configBuilder);
 						formData.setValue(mockValue);
 						formData.setContentType(FormDataContentTypeEnum.APPLICATION_JSON);
 						formDataList.add(formData);
@@ -1674,6 +1674,18 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 			apiNoteValue = method.getComment();
 		}
 		docJavaMethod.setDetail(apiNoteValue != null ? apiNoteValue : "");
+
+		// set jsonViewClasses
+		method.getAnnotations()
+			.stream()
+			.filter(annotation -> DocAnnotationConstants.SHORT_JSON_VIEW.equals(annotation.getType().getValue()))
+			.findFirst()
+			.ifPresent(annotation -> {
+				AnnotationValue annotationValue = annotation.getProperty(DocAnnotationConstants.VALUE_PROP);
+				docJavaMethod
+					.setJsonViewClasses(JavaClassUtil.getJsonViewClasses(annotationValue, projectBuilder, false));
+			});
+
 		return docJavaMethod;
 	}
 
