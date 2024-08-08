@@ -5,9 +5,32 @@ body:
   - type: markdown
     attributes:
       value: |
+        **Before You Start...**
+        
         Thanks for taking the time to fill out this bug report!
         
-        If you use the version is not the latest version, please upgrade to the latest version and try again!
+        Please make sure to follow the guidelines below. Issues that do not adhere to these guidelines or lack sufficient information may be closed. 
+        
+        This form is only for submitting bug reports. If you have a usage question
+        or are unsure if this is really a bug, make sure to:
+        
+        - Read the [docs](https://smart-doc-group.github.io/)
+        - Ask on [GitHub Discussions](https://github.com/TongchengOpenSource/smart-doc/discussions)
+        - If you use the version is not the latest version, please upgrade to the latest version and try again!
+
+
+        **在开始之前...**
+  
+        感谢您花时间填写这个问题报告！
+  
+        请确保遵循以下指南。不符合这些指南或缺乏足够信息的问题可能会被关闭。
+  
+        这个表单仅用于提交 bug 报告。如果您有使用问题或不确定这是否真的一个 bug，请确保：
+  
+        - 阅读 [文档](https://smart-doc-group.github.io/)
+        - 在 [GitHub Discussions](https://github.com/TongchengOpenSource/smart-doc/discussions) 上询问
+        - 如果您使用的版本不是最新版本，请升级到最新版本后再试！
+        
 
   - type: input
     id: contact
@@ -84,8 +107,7 @@ body:
     id: steps-to-reproduce
     attributes:
       label: Steps to Reproduce (Bug产生步骤，请尽量提供用例代码。社区已开启国际化推广，请用文心一言、讯飞星火等辅助翻译成英文，减少社区开发者的工作)
-      description: Provide a link to a live example, or an unambiguous set of
-        steps to.reproduce this bug. Include code to reproduce, if relevant
+      description: Provide a link to a live example, or an unambiguous set of steps to.reproduce this bug. Include code to reproduce, if relevant.  Note that you can use [Markdown](https://guides.github.com/features/mastering-markdown/) to format lists and code.
     validations:
       required: true
 
