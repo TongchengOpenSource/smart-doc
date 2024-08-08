@@ -4,9 +4,12 @@ on:
   pull_request:
     branches:
       - master
-
+    paths:
+      - 'src/**'          # Trigger workflow only if files in src directory change
+      - 'pom.xml'         # Trigger workflow only if pom.xml file changes
 jobs:
   build:
+    if: ${{ github.event.pull_request.changed_files > 0 }} # Run only if there are file changes
     runs-on: ubuntu-latest
 
     steps:
@@ -34,7 +37,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     concurrency:
-      group: generate-rest-api-doc
+      group: generate-rest-api-doc-${{ github.event.pull_request.number }}
       cancel-in-progress: true
 
     steps:
@@ -89,11 +92,17 @@ jobs:
     - name: Generate Word Documentation
       run: mvn -DskipTests=true smart-doc:word
 
+    - name: Upload REST API Documentation
+      uses: actions/upload-artifact@v4
+      with:
+        name: rest-api-docs
+        path: /home/runner/work/smart-doc/smart-doc/target/doc/
+
   gen-dubbo-api-doc:
     needs: build
     runs-on: ubuntu-latest
     concurrency:
-      group: generate-dubbo-api-doc
+      group: generate-dubbo-api-doc-${{ github.event.pull_request.number }}
       cancel-in-progress: true
 
     steps:
@@ -136,11 +145,17 @@ jobs:
       - name: Generate RPC Markdown Documentation
         run: mvn -DskipTests=true smart-doc:rpc-markdown
 
+      - name: Upload RPC API Documentation
+        uses: actions/upload-artifact@v4
+        with:
+          name: dubbo-api-docs
+          path: /home/runner/work/smart-doc/smart-doc/target/doc/
+
   gen-javadoc-api-doc:
     needs: build
     runs-on: ubuntu-latest
     concurrency:
-      group: generate-javadoc-api-doc
+      group: generate-javadoc-api-doc-${{ github.event.pull_request.number }}
       cancel-in-progress: true
 
     steps:
@@ -183,11 +198,17 @@ jobs:
       - name: Generate Javadoc Markdown Documentation
         run: mvn -DskipTests=true smart-doc:javadoc-markdown
 
+      - name: Upload Javadoc API Documentation
+        uses: actions/upload-artifact@v4
+        with:
+          name: javadoc-api-docs
+          path: /home/runner/work/smart-doc/smart-doc/target/doc/
+
   gen-websocket-api-doc:
     needs: build
     runs-on: ubuntu-latest
     concurrency:
-      group: generate-websocket-api-doc
+      group: generate-websocket-api-doc-${{ github.event.pull_request.number }}
       cancel-in-progress: true
 
     steps:
@@ -223,3 +244,10 @@ jobs:
 
       - name: Generate WebSocket Markdown Documentation
         run: mvn -DskipTests=true smart-doc:websocket-markdown
+
+
+      - name: Upload WebSocket API Documentation
+        uses: actions/upload-artifact@v4
+        with:
+          name: websocket-api-doc
+          path: /home/runner/work/smart-doc/smart-doc/target/doc/
