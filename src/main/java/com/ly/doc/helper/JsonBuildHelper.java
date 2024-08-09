@@ -207,8 +207,12 @@ public class JsonBuildHelper extends BaseHelper {
 				data.append("{\"mapKey\":{}}");
 				return data.toString();
 			}
-			if ((!JavaTypeConstants.JAVA_STRING_FULLY.equals(getKeyValType[0])) && apiConfig.isStrict()) {
-				throw new RuntimeException("Map's key can only use String for json,but you use " + getKeyValType[0]);
+			JavaClass mapKeyClass = builder.getJavaProjectBuilder().getClassByName(getKeyValType[0]);
+			boolean mapKeyIsEnum = mapKeyClass.isEnum();
+			if ((!JavaTypeConstants.JAVA_STRING_FULLY.equals(getKeyValType[0]) || !mapKeyIsEnum
+					|| mapKeyClass.getEnumConstants().isEmpty()) && apiConfig.isStrict()) {
+				throw new RuntimeException(
+						"Map's key can only use String or Enum for json,but you use " + getKeyValType[0]);
 			}
 			String gicName = genericCanonicalName.substring(genericCanonicalName.indexOf(",") + 1,
 					genericCanonicalName.lastIndexOf(">"));
@@ -228,11 +232,29 @@ public class JsonBuildHelper extends BaseHelper {
 				data.append("{").append("\"mapKey\":").append(json).append("}");
 			}
 			else {
-				data.append("{")
-					.append("\"mapKey\":")
-					.append(buildJson(gicName, genericCanonicalName, isResp, counter + 1, registryClasses, groupClasses,
-							builder))
-					.append("}");
+				if (mapKeyIsEnum) {
+					data.append("{");
+					for (JavaField field : mapKeyClass.getFields()) {
+						data.append("\"")
+							.append(field.getName())
+							.append("\":")
+							.append(buildJson(gicName, genericCanonicalName, isResp, counter + 1, registryClasses,
+									groupClasses, builder))
+							.append(",");
+					}
+					// Remove the trailing comma
+					if (data.charAt(data.length() - 1) == ',') {
+						data.deleteCharAt(data.length() - 1);
+					}
+					data.append("}");
+				}
+				else {
+					data.append("{")
+						.append("\"mapKey\":")
+						.append(buildJson(gicName, genericCanonicalName, isResp, counter + 1, registryClasses,
+								groupClasses, builder))
+						.append("}");
+				}
 			}
 			return data.toString();
 		}

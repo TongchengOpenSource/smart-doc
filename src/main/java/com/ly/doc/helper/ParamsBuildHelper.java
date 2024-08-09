@@ -110,7 +110,7 @@ public class ParamsBuildHelper extends BaseHelper {
 			fieldNameConvert = PropertyNameHelper.translate(clsAnnotation);
 		}
 		JavaClassUtil.genericParamMap(genericMap, cls, globGicName);
-		List<DocJavaField> fields = JavaClassUtil.getFields(cls, 0, new LinkedHashMap<>(), classLoader);
+
 		if (JavaClassValidateUtil.isPrimitive(simpleName)) {
 			String processedType = processFieldTypeName(isShowJavaType, simpleName);
 			paramList.addAll(primitiveReturnRespComment(processedType, atomicInteger, pid));
@@ -166,7 +166,7 @@ public class ParamsBuildHelper extends BaseHelper {
 		}
 		else {
 			Map<String, String> ignoreFields = JavaClassUtil.getClassJsonIgnoreFields(cls);
-
+			List<DocJavaField> fields = JavaClassUtil.getFields(cls, 0, new LinkedHashMap<>(), classLoader);
 			out: for (DocJavaField docField : fields) {
 				JavaField field = docField.getJavaField();
 				String maxLength = JavaFieldUtil.getParamMaxLength(field.getAnnotations());
@@ -649,6 +649,22 @@ public class ParamsBuildHelper extends BaseHelper {
 		return paramList;
 	}
 
+	/**
+	 * Builds a list of {@link ApiParam} objects for a map parameter.
+	 * @param globGicName the global generic name array
+	 * @param pre the prefix string
+	 * @param level the level of the parameter
+	 * @param isRequired the requirement status of the parameter
+	 * @param isResp the response flag
+	 * @param registryClasses the map of registry classes
+	 * @param projectBuilder the project configuration builder
+	 * @param groupClasses the set of group classes
+	 * @param pid the parent ID
+	 * @param jsonRequest the JSON request flag
+	 * @param nextLevel the next level of the parameter
+	 * @param atomicInteger the atomic integer for generating unique IDs
+	 * @return a list of {@link ApiParam} objects
+	 */
 	private static List<ApiParam> buildMapParam(String[] globGicName, String pre, int level, String isRequired,
 			boolean isResp, Map<String, String> registryClasses, ProjectDocConfigBuilder projectBuilder,
 			Set<String> groupClasses, int pid, boolean jsonRequest, int nextLevel, AtomicInteger atomicInteger) {
@@ -659,11 +675,13 @@ public class ParamsBuildHelper extends BaseHelper {
 		// mock map key param
 		String mapKeySimpleName = DocClassUtil.getSimpleName(globGicName[0]);
 		String valueSimpleName = DocClassUtil.getSimpleName(globGicName[1]);
+		// get map key class
+		JavaClass mapKeyClass = projectBuilder.getJavaProjectBuilder().getClassByName(mapKeySimpleName);
 
+		boolean isShowJavaType = projectBuilder.getApiConfig().getShowJavaType();
+		String valueSimpleNameType = processFieldTypeName(isShowJavaType, valueSimpleName);
 		List<ApiParam> paramList = new ArrayList<>();
 		if (JavaClassValidateUtil.isPrimitive(mapKeySimpleName)) {
-			boolean isShowJavaType = projectBuilder.getApiConfig().getShowJavaType();
-			String valueSimpleNameType = processFieldTypeName(isShowJavaType, valueSimpleName);
 			ApiParam apiParam = ApiParam.of()
 				.setField(pre + "mapKey")
 				.setType(valueSimpleNameType)
@@ -676,18 +694,66 @@ public class ParamsBuildHelper extends BaseHelper {
 				.setId(atomicOrDefault(atomicInteger, ++pid));
 			paramList.add(apiParam);
 		}
+		else if (Objects.nonNull(mapKeyClass) && mapKeyClass.isEnum() && !mapKeyClass.getEnumConstants().isEmpty()) {
+			Integer keyParentId = null;
+			for (JavaField enumConstant : mapKeyClass.getEnumConstants()) {
+				ApiParam apiParam = ApiParam.of()
+					.setField(pre + enumConstant.getName())
+					.setType(valueSimpleNameType)
+					.setClassName(valueSimpleName)
+					.setDesc(Optional.ofNullable(projectBuilder.getClassByName(valueSimpleName))
+						.map(JavaClass::getComment)
+						.orElse("A map key."))
+					.setVersion(DocGlobalConstants.DEFAULT_VERSION)
+					.setPid(null == keyParentId ? pid : keyParentId)
+					.setId(paramList.size() + 1);
+				if (null == keyParentId) {
+					keyParentId = apiParam.getPid();
+				}
+				paramList.add(apiParam);
+				List<ApiParam> apiParams = addValueParams(valueSimpleName, globGicName, level, isRequired, isResp,
+						registryClasses, projectBuilder, groupClasses, apiParam.getId(), jsonRequest, nextLevel,
+						atomicInteger);
+				paramList.addAll(apiParams);
+			}
+			return paramList;
+		}
+		paramList.addAll(addValueParams(valueSimpleName, globGicName, level, isRequired, isResp, registryClasses,
+				projectBuilder, groupClasses, pid, jsonRequest, nextLevel, atomicInteger));
+		return paramList;
+	}
+
+	/**
+	 * Adds parameters for the map value to the parameter list.
+	 * @param valueSimpleName the simple name of the value type
+	 * @param globGicName the global generic name array
+	 * @param level the level of the parameter
+	 * @param isRequired the requirement status of the parameter
+	 * @param isResp the response flag
+	 * @param registryClasses the map of registry classes
+	 * @param projectBuilder the project configuration builder
+	 * @param groupClasses the set of group classes
+	 * @param pid the parent ID
+	 * @param jsonRequest the JSON request flag
+	 * @param nextLevel the next level of the parameter
+	 * @param atomicInteger the atomic integer for generating unique IDs
+	 * @return the list of {@link ApiParam} objects
+	 */
+	private static List<ApiParam> addValueParams(String valueSimpleName, String[] globGicName, int level,
+			String isRequired, boolean isResp, Map<String, String> registryClasses,
+			ProjectDocConfigBuilder projectBuilder, Set<String> groupClasses, int pid, boolean jsonRequest,
+			int nextLevel, AtomicInteger atomicInteger) {
 		// build param when map value is not primitive
 		if (JavaClassValidateUtil.isPrimitive(valueSimpleName)) {
-			return paramList;
+			return Collections.emptyList();
 		}
 		StringBuilder preBuilder = new StringBuilder();
 		for (int j = 0; j < level; j++) {
 			preBuilder.append(DocGlobalConstants.FIELD_SPACE);
 		}
 		preBuilder.append(DocGlobalConstants.PARAM_PREFIX);
-		paramList.addAll(buildParams(globGicName[1], preBuilder.toString(), ++nextLevel, isRequired, isResp,
-				registryClasses, projectBuilder, groupClasses, pid, jsonRequest, atomicInteger));
-		return paramList;
+		return buildParams(globGicName[1], preBuilder.toString(), ++nextLevel, isRequired, isResp, registryClasses,
+				projectBuilder, groupClasses, pid, jsonRequest, atomicInteger);
 	}
 
 	public static String dictionaryListComment(List<EnumDictionary> enumDataDict) {

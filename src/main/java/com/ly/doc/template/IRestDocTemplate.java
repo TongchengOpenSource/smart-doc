@@ -1161,6 +1161,10 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 					continue;
 				}
 				String[] gicNameArr = DocClassUtil.getSimpleGicName(typeName);
+
+				// get map key class
+				JavaClass mapKeyClass = builder.getClassByName(gicNameArr[0]);
+
 				if (JavaClassValidateUtil.isPrimitive(gicNameArr[1])) {
 					ApiParam apiParam = ApiParam.of()
 						.setField(paramName)
@@ -1175,6 +1179,24 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 					if (requestBodyCounter > 0) {
 						Map<String, Object> map = OpenApiSchemaUtil.mapTypeSchema(gicNameArr[1]);
 						docJavaMethod.setRequestSchema(map);
+					}
+				}
+				else if (Objects.nonNull(mapKeyClass) && mapKeyClass.isEnum()
+						&& !mapKeyClass.getEnumConstants().isEmpty()) {
+					for (JavaField enumConstant : mapKeyClass.getEnumConstants()) {
+						ApiParam apiParam = ApiParam.of()
+							.setField(enumConstant.getName())
+							.setType(ParamTypeConstants.PARAM_TYPE_OBJECT)
+							.setClassName(gicNameArr[1])
+							.setDesc(Optional.ofNullable(builder.getClassByName(gicNameArr[1]))
+								.map(JavaClass::getComment)
+								.orElse("A map key."))
+							.setVersion(DocGlobalConstants.DEFAULT_VERSION)
+							.setId(paramList.size() + 1);
+						paramList.add(apiParam);
+						paramList.addAll(ParamsBuildHelper.buildParams(gicNameArr[1], DocGlobalConstants.PARAM_PREFIX,
+								1, String.valueOf(required), Boolean.FALSE, new HashMap<>(16), builder, groupClasses,
+								apiParam.getId(), Boolean.FALSE, null));
 					}
 				}
 				else {
