@@ -7,20 +7,27 @@ on:
     paths:
       - 'src/**'          # Trigger workflow only if files in src directory change
       - 'pom.xml'         # Trigger workflow only if pom.xml file changes
+
+env:
+  smart-doc-version: ${{ github.run_id }} # Use the current GitHub workflow run ID as a temporary version number
+
 jobs:
   build:
-    if: ${{ github.event.pull_request.changed_files > 0 }} # Run only if there are file changes
+    if: ${{ github.event.pull_request.changed_files > 0 }} # Run this job only if there are file changes
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Plugin Repository
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Set up JDK 11
+      - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
-          java-version: '11'
+          java-version: '17'
           distribution: 'temurin'
+
+      - name: Update Version in pom.xml
+        run: mvn versions:set -DnewVersion="${{ env.smart-doc-version }}" -DgenerateBackupPoms=false
 
       - name: Build and Install Plugin
         run: mvn install
@@ -33,83 +40,18 @@ jobs:
           path: ~/.m2/repository/com/ly/smart-doc
           if-no-files-found: error
 
-  gen-rest-api-doc:
+  maven-plugin-build:
     needs: build
     runs-on: ubuntu-latest
     concurrency:
-      group: generate-rest-api-doc-${{ github.event.pull_request.number }}
+      group: maven-plugin-build-${{ github.event.pull_request.number }}
       cancel-in-progress: true
 
     steps:
-    - name: Checkout Example Project
-      uses: actions/checkout@v4
-      with:
-        repository: smart-doc-group/smart-doc-example-cn
-        token: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: Set up JDK 17
-      uses: actions/setup-java@v4
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-
-    - name: Build and Install Example Project
-      run: mvn -DskipTests=true install
-
-    - name: Download Artifact
-      uses: actions/download-artifact@v4
-      with:
-        name: smart-doc-maven-jar
-        path: ./artifacts
-
-    - name: Move Files to Local Maven Repository
-      run: |
-        mkdir -p ~/.m2/repository/com/ly/smart-doc
-        echo "Overwriting target directory with new artifacts:"
-        rsync -av --delete ./artifacts/ ~/.m2/repository/com/ly/smart-doc/
-        echo "Listing files in target directory:"
-        ls -lh ~/.m2/repository/com/ly/smart-doc
-
-
-    - name: Generate AsciiDoc Documentation
-      run: mvn -DskipTests=true smart-doc:adoc
-
-    - name: Generate HTML Documentation
-      run: mvn -DskipTests=true smart-doc:html
-
-    - name: Generate JMeter Documentation
-      run: mvn -DskipTests=true smart-doc:jmeter
-
-    - name: Generate Markdown Documentation
-      run: mvn -DskipTests=true smart-doc:markdown
-
-    - name: Generate OpenAPI Documentation
-      run: mvn -DskipTests=true smart-doc:openapi
-
-    - name: Generate Postman Documentation
-      run: mvn -DskipTests=true smart-doc:postman
-
-    - name: Generate Word Documentation
-      run: mvn -DskipTests=true smart-doc:word
-
-    - name: Upload REST API Documentation
-      uses: actions/upload-artifact@v4
-      with:
-        name: rest-api-docs
-        path: /home/runner/work/smart-doc/smart-doc/target/doc/
-
-  gen-dubbo-api-doc:
-    needs: build
-    runs-on: ubuntu-latest
-    concurrency:
-      group: generate-dubbo-api-doc-${{ github.event.pull_request.number }}
-      cancel-in-progress: true
-
-    steps:
-      - name: Checkout Example Project
+      - name: Checkout Maven Plugin Repository
         uses: actions/checkout@v4
         with:
-          repository: smart-doc-group/smart-doc-example-cn
+          repository: TongchengOpenSource/smart-doc-maven-plugin
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up JDK 17
@@ -117,9 +59,6 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-
-      - name: Build and Install Example Project
-        run: mvn -DskipTests=true install
 
       - name: Download Artifact
         uses: actions/download-artifact@v4
@@ -135,27 +74,29 @@ jobs:
           echo "Listing files in target directory:"
           ls -lh ~/.m2/repository/com/ly/smart-doc
 
+      - name: Update Version in pom.xml
+        run: |
+          mvn versions:set-property -Dproperty="smart-doc.version" -DnewVersion="${{ env.smart-doc-version }}" -DgenerateBackupPoms=false
 
-      - name: Generate RPC AsciiDoc Documentation
-        run: mvn -DskipTests=true smart-doc:rpc-adoc
+      - name: Build and Install
+        run: mvn -DskipTests=true install
 
-      - name: Generate RPC HTML Documentation
-        run: mvn -DskipTests=true smart-doc:rpc-html
-
-      - name: Generate RPC Markdown Documentation
-        run: mvn -DskipTests=true smart-doc:rpc-markdown
-
-      - name: Upload RPC API Documentation
+      - name: Upload Plugin Artifact
+        id: upload-artifact
         uses: actions/upload-artifact@v4
         with:
-          name: dubbo-api-docs
-          path: /home/runner/work/smart-doc/smart-doc/target/doc/
+          name: smart-doc-maven-plugin-jar
+          path: ~/.m2/repository/com/ly/smart-doc
+          if-no-files-found: error
 
-  gen-javadoc-api-doc:
-    needs: build
+  generate-api-docs:
+    needs: maven-plugin-build
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        doc_type: [ rest, dubbo, javadoc, websocket ]
     concurrency:
-      group: generate-javadoc-api-doc-${{ github.event.pull_request.number }}
+      group: generate-${{ matrix.doc_type }}-api-doc-${{ github.event.pull_request.number }}
       cancel-in-progress: true
 
     steps:
@@ -171,13 +112,10 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Build and Install Example Project
-        run: mvn -DskipTests=true install
-
       - name: Download Artifact
         uses: actions/download-artifact@v4
         with:
-          name: smart-doc-maven-jar
+          name: smart-doc-maven-plugin-jar
           path: ./artifacts
 
       - name: Move Files to Local Maven Repository
@@ -188,27 +126,57 @@ jobs:
           echo "Listing files in target directory:"
           ls -lh ~/.m2/repository/com/ly/smart-doc
 
+      - name: Update Smart-Doc Version in pom.xml
+        run: |
+          mvn versions:set-property -Dproperty="smart-doc.version" -DnewVersion="${{ env.smart-doc-version }}" -DgenerateBackupPoms=false
 
-      - name: Generate Javadoc AsciiDoc Documentation
-        run: mvn -DskipTests=true smart-doc:javadoc-adoc
+      - name: Build and Install Example Project
+        run: mvn -DskipTests=true install
 
-      - name: Generate Javadoc HTML Documentation
-        run: mvn -DskipTests=true smart-doc:javadoc-html
+      - name: Generate ${{ matrix.doc_type }} API Documentation
+        run: |
+          case ${{ matrix.doc_type }} in
+            rest)
+              mvn -DskipTests=true smart-doc:adoc
+              mvn -DskipTests=true smart-doc:html
+              mvn -DskipTests=true smart-doc:jmeter
+              mvn -DskipTests=true smart-doc:markdown
+              mvn -DskipTests=true smart-doc:openapi
+              mvn -DskipTests=true smart-doc:postman
+              mvn -DskipTests=true smart-doc:word
+              ;;
+            dubbo)
+              mvn -DskipTests=true smart-doc:rpc-adoc
+              mvn -DskipTests=true smart-doc:rpc-html
+              mvn -DskipTests=true smart-doc:rpc-markdown
+              ;;
+            javadoc)
+              mvn -DskipTests=true smart-doc:javadoc-adoc
+              mvn -DskipTests=true smart-doc:javadoc-html
+              mvn -DskipTests=true smart-doc:javadoc-markdown
+              ;;
+            websocket)
+              mvn -DskipTests=true smart-doc:websocket-adoc
+              mvn -DskipTests=true smart-doc:websocket-html
+              mvn -DskipTests=true smart-doc:websocket-markdown
+              ;;
+          esac
 
-      - name: Generate Javadoc Markdown Documentation
-        run: mvn -DskipTests=true smart-doc:javadoc-markdown
-
-      - name: Upload Javadoc API Documentation
+      - name: Upload ${{ matrix.doc_type }} API Documentation
         uses: actions/upload-artifact@v4
         with:
-          name: javadoc-api-docs
-          path: /home/runner/work/smart-doc/smart-doc/target/doc/
+          name: ${{ matrix.doc_type }}-api-doc
+          path: ${{ github.workspace }}/target/doc/
+          if-no-files-found: error
 
-  gen-websocket-api-doc:
-    needs: build
-    runs-on: ubuntu-latest
+  generate-grpc-api-doc:
+    needs: maven-plugin-build
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
     concurrency:
-      group: generate-websocket-api-doc-${{ github.event.pull_request.number }}
+      group: generate-grpc-api-doc-${{ matrix.os }}-${{ github.event.pull_request.number }}
       cancel-in-progress: true
 
     steps:
@@ -224,30 +192,45 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Build and Install Example Project
-        run: mvn -DskipTests=true install
-
       - name: Download Artifact
         uses: actions/download-artifact@v4
         with:
-          name: smart-doc-maven-jar
+          name: smart-doc-maven-plugin-jar
           path: ./artifacts
 
       - name: Move Files to Local Maven Repository
         run: |
-          mkdir -p ~/.m2/repository/com/ly/smart-doc
-          echo "Overwriting target directory with new artifacts:"
-          rsync -av --delete ./artifacts/ ~/.m2/repository/com/ly/smart-doc/
-          echo "Listing files in target directory:"
-          ls -lh ~/.m2/repository/com/ly/smart-doc
+          if [[ "${{ matrix.os }}" == "ubuntu-latest" || "${{ matrix.os }}" == "macos-latest" ]]; then
+            TARGET_DIR=~/.m2/repository/com/ly/smart-doc/
+            mkdir -p "$TARGET_DIR" || echo "Directory already exists"
+            rsync -av --delete ./artifacts/ "$TARGET_DIR"
+          elif [[ "${{ matrix.os }}" == "windows-latest" ]]; then
+            TARGET_DIR="$USERPROFILE\\.m2\\repository\\com\\ly\\smart-doc\\"
+            mkdir -p "$TARGET_DIR" || echo "Directory already exists"
+            cp -r ./artifacts/* "$TARGET_DIR"
+          fi
+        shell: bash
 
 
-      - name: Generate WebSocket Markdown Documentation
-        run: mvn -DskipTests=true smart-doc:websocket-markdown
+      - name: Update Smart-Doc Version in pom.xml
+        run: |
+          mvn versions:set-property -Dproperty="smart-doc.version" -DnewVersion="${{ env.smart-doc-version }}" -DgenerateBackupPoms=false
 
+      - name: Build and Install Example Project
+        run: mvn -DskipTests=true install
 
-      - name: Upload WebSocket API Documentation
+      - name: Generate gRPC AsciiDoc Documentation
+        run: mvn -DskipTests=true smart-doc:grpc-adoc
+
+      - name: Generate gRPC HTML Documentation
+        run: mvn -DskipTests=true smart-doc:grpc-html
+
+      - name: Generate gRPC Markdown Documentation
+        run: mvn -DskipTests=true smart-doc:grpc-markdown
+
+      - name: Upload gRPC API Documentation
         uses: actions/upload-artifact@v4
         with:
-          name: websocket-api-doc
-          path: /home/runner/work/smart-doc/smart-doc/target/doc/
+          name: gRPC-api-doc-${{ runner.os }}
+          path: ${{ github.workspace }}/target/doc/
+          if-no-files-found: error
