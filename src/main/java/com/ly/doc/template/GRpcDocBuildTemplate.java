@@ -302,7 +302,7 @@ public class GRpcDocBuildTemplate implements IDocBuildTemplate<GrpcApiDoc>, IRpc
 				// Grant execute permissions
 				Files.setPosixFilePermissions(Paths.get(protoInfo.getProtocPath()),
 						PosixFilePermissions.fromString("rwxr-xr-x"));
-				Files.setPosixFilePermissions(Paths.get(protoInfo.getProtocPath()),
+				Files.setPosixFilePermissions(Paths.get(protoInfo.getProtocGenDocPath()),
 						PosixFilePermissions.fromString("rwxr-xr-x"));
 			}
 		}

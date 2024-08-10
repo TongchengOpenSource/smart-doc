@@ -23,6 +23,7 @@ package com.ly.doc.model.grpc;
 import com.ly.doc.constants.DocGlobalConstants;
 
 import java.io.Serializable;
+import java.util.logging.Logger;
 
 /**
  * proto info.
@@ -30,6 +31,8 @@ import java.io.Serializable;
  * @author linwumingshi
  */
 public class ProtoInfo implements Serializable {
+
+	private static final Logger log = Logger.getLogger(ProtoInfo.class.getName());
 
 	private static final long serialVersionUID = 4962891140273167418L;
 
@@ -84,6 +87,8 @@ public class ProtoInfo implements Serializable {
 		String os = System.getProperty("os.name").toLowerCase();
 		String arch = System.getProperty("os.arch").toLowerCase();
 
+		log.info("The os.name is:" + os + "and os.arch is: " + arch);
+
 		this.setTargetJsonDirectoryPath(targetJsonPath);
 		this.setJsonName("combined.json");
 		this.setTargetJsonFilePath(targetJsonPath + this.getJsonName());
@@ -93,7 +98,7 @@ public class ProtoInfo implements Serializable {
 			this.setSourcePaths("/protoc/win/protoc.exe", "/protoc/win/protoc-gen-doc.exe");
 		}
 		else if (os.contains("mac")) {
-			if (arch.contains("arm")) {
+			if (arch.contains("arm") || arch.contains("aarch")) {
 				this.setSourcePaths("/protoc/mac/arm/protoc", "/protoc/mac/arm/protoc-gen-doc");
 			}
 			else {
