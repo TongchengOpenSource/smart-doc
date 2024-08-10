@@ -27,6 +27,7 @@ import com.ly.doc.utils.*;
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.StringUtil;
 import com.thoughtworks.qdox.model.*;
+import com.thoughtworks.qdox.model.expression.AnnotationValue;
 
 import java.util.*;
 
@@ -95,8 +96,8 @@ public class JsonBuildHelper extends BaseHelper {
 			return StringUtil.removeQuotes(DocUtil.jsonValueByType(typeName));
 		}
 
-		return JsonUtil.toPrettyFormat(
-				buildJson(typeName, returnType, Boolean.TRUE, 0, new HashMap<>(16), new HashSet<>(0), builder));
+		return JsonUtil.toPrettyFormat(buildJson(typeName, returnType, Boolean.TRUE, 0, new HashMap<>(16),
+				Collections.emptySet(), docJavaMethod.getJsonViewClasses(), builder));
 	}
 
 	/**
@@ -107,11 +108,14 @@ public class JsonBuildHelper extends BaseHelper {
 	 * @param counter The recursion counter.
 	 * @param registryClasses A map to keep track of processed classes.
 	 * @param groupClasses A set of valid group classes.
+	 * @param methodJsonViewClasses A set of valid `@JsonView` classes on controller
+	 * method.
 	 * @param builder The project config builder.
 	 * @return The JSON string representation of the type.
 	 */
 	public static String buildJson(String typeName, String genericCanonicalName, boolean isResp, int counter,
-			Map<String, String> registryClasses, Set<String> groupClasses, ProjectDocConfigBuilder builder) {
+			Map<String, String> registryClasses, Set<String> groupClasses, Set<String> methodJsonViewClasses,
+			ProjectDocConfigBuilder builder) {
 
 		Map<String, String> genericMap = new HashMap<>(10);
 		JavaClass javaClass = builder.getJavaProjectBuilder().getClassByName(typeName);
@@ -187,14 +191,16 @@ public class JsonBuildHelper extends BaseHelper {
 			}
 			else if (gName.contains("<")) {
 				String simple = DocClassUtil.getSimpleName(gName);
-				String json = buildJson(simple, gName, isResp, nextLevel, registryClasses, groupClasses, builder);
+				String json = buildJson(simple, gName, isResp, nextLevel, registryClasses, groupClasses,
+						methodJsonViewClasses, builder);
 				data.append(json);
 			}
 			else if (JavaClassValidateUtil.isCollection(gName)) {
 				data.append("\"any object\"");
 			}
 			else {
-				String json = buildJson(gName, gName, isResp, nextLevel, registryClasses, groupClasses, builder);
+				String json = buildJson(gName, gName, isResp, nextLevel, registryClasses, groupClasses,
+						methodJsonViewClasses, builder);
 				data.append(json);
 			}
 			data.append("]");
@@ -228,7 +234,8 @@ public class JsonBuildHelper extends BaseHelper {
 			}
 			else if (gicName.contains("<")) {
 				String simple = DocClassUtil.getSimpleName(gicName);
-				String json = buildJson(simple, gicName, isResp, nextLevel, registryClasses, groupClasses, builder);
+				String json = buildJson(simple, gicName, isResp, nextLevel, registryClasses, groupClasses,
+						methodJsonViewClasses, builder);
 				data.append("{").append("\"mapKey\":").append(json).append("}");
 			}
 			else {
@@ -239,7 +246,7 @@ public class JsonBuildHelper extends BaseHelper {
 							.append(field.getName())
 							.append("\":")
 							.append(buildJson(gicName, genericCanonicalName, isResp, counter + 1, registryClasses,
-									groupClasses, builder))
+									groupClasses, methodJsonViewClasses, builder))
 							.append(",");
 					}
 					// Remove the trailing comma
@@ -252,7 +259,7 @@ public class JsonBuildHelper extends BaseHelper {
 					data.append("{")
 						.append("\"mapKey\":")
 						.append(buildJson(gicName, genericCanonicalName, isResp, counter + 1, registryClasses,
-								groupClasses, builder))
+								groupClasses, methodJsonViewClasses, builder))
 						.append("}");
 				}
 			}
@@ -266,7 +273,8 @@ public class JsonBuildHelper extends BaseHelper {
 		}
 		// Handle Reactor types
 		else if (JavaClassValidateUtil.isReactor(typeName)) {
-			data.append(buildJson(globGicName[0], typeName, isResp, nextLevel, registryClasses, groupClasses, builder));
+			data.append(buildJson(globGicName[0], typeName, isResp, nextLevel, registryClasses, groupClasses,
+					methodJsonViewClasses, builder));
 			return data.toString();
 		}
 		// Process fields of the class
@@ -306,8 +314,19 @@ public class JsonBuildHelper extends BaseHelper {
 				String jsonFormatString = null;
 				// has Annotation @JsonSerialize And using ToStringSerializer
 				boolean toStringSerializer = false;
+				// Handle @JsonView; if the field is not annotated with @JsonView, skip
+				// it.
+				if (!methodJsonViewClasses.isEmpty() && isResp && annotations.isEmpty()) {
+					continue;
+				}
 				// Handle annotations on the field
 				for (JavaAnnotation annotation : annotations) {
+					// Handle @JsonView
+					if (JavaClassUtil.shouldExcludeFieldFromJsonView(annotation, methodJsonViewClasses, isResp,
+							builder)) {
+						continue out;
+					}
+
 					String annotationName = annotation.getType().getValue();
 					// if the field is annotated with @JsonSerialize
 					if (DocAnnotationConstants.SHORT_JSON_SERIALIZE.equals(annotationName)
@@ -316,7 +335,7 @@ public class JsonBuildHelper extends BaseHelper {
 						toStringSerializer = true;
 						continue;
 					}
-
+					// if the field is annotated with @Null And isResp is false
 					if (JSRAnnotationConstants.NULL.equals(annotationName) && !isResp) {
 						if (CollectionUtil.isEmpty(groupClasses)) {
 							continue out;
@@ -346,9 +365,9 @@ public class JsonBuildHelper extends BaseHelper {
 					// Handle @JsonProperty
 					else if (DocAnnotationConstants.SHORT_JSON_PROPERTY.equals(annotationName)
 							|| DocAnnotationConstants.GSON_ALIAS_NAME.equals(annotationName)) {
-						if (null != annotation.getProperty(DocAnnotationConstants.VALUE_PROP)) {
-							fieldName = StringUtil
-								.removeQuotes(annotation.getProperty(DocAnnotationConstants.VALUE_PROP).toString());
+						AnnotationValue annotationValue = annotation.getProperty(DocAnnotationConstants.VALUE_PROP);
+						if (null != annotationValue) {
+							fieldName = StringUtil.removeQuotes(annotationValue.toString());
 						}
 					}
 					// Handle @JsonFormat
@@ -356,6 +375,7 @@ public class JsonBuildHelper extends BaseHelper {
 						jsonFormatString = DocUtil.getJsonFormatString(field, annotation);
 					}
 				}
+
 				String typeSimpleName = docField.getTypeSimpleName();
 				String fieldGicName = docField.getTypeGenericCanonicalName();
 				CustomField.Key key = CustomField.Key.create(docField.getDeclaringClassName(), fieldName);
@@ -450,7 +470,8 @@ public class JsonBuildHelper extends BaseHelper {
 								if (!typeName.equals(gicName1)) {
 									data0.append("[")
 										.append(buildJson(DocClassUtil.getSimpleName(gicName1), gicName1, isResp,
-												nextLevel, registryClasses, groupClasses, builder))
+												nextLevel, registryClasses, groupClasses, methodJsonViewClasses,
+												builder))
 										.append("]")
 										.append(",");
 								}
@@ -475,7 +496,7 @@ public class JsonBuildHelper extends BaseHelper {
 								fieldGicName = DocUtil.formatFieldTypeGicName(genericMap, fieldGicName);
 								data0.append("[")
 									.append(buildJson(gicName, fieldGicName, isResp, nextLevel, registryClasses,
-											groupClasses, builder))
+											groupClasses, methodJsonViewClasses, builder))
 									.append("]")
 									.append(",");
 							}
@@ -517,7 +538,8 @@ public class JsonBuildHelper extends BaseHelper {
 									data0.append("{")
 										.append("\"mapKey\":")
 										.append(buildJson(DocClassUtil.getSimpleName(gicName1), gicName1, isResp,
-												nextLevel, registryClasses, groupClasses, builder))
+												nextLevel, registryClasses, groupClasses, methodJsonViewClasses,
+												builder))
 										.append("},");
 								}
 								else {
@@ -529,7 +551,7 @@ public class JsonBuildHelper extends BaseHelper {
 							data0.append("{")
 								.append("\"mapKey\":")
 								.append(buildJson(gicName, fieldGicName, isResp, nextLevel, registryClasses,
-										groupClasses, builder))
+										groupClasses, methodJsonViewClasses, builder))
 								.append("},");
 						}
 					}
@@ -544,7 +566,7 @@ public class JsonBuildHelper extends BaseHelper {
 								String simple = DocClassUtil.getSimpleName(gicName);
 								data0
 									.append(buildJson(simple, gicName, isResp, nextLevel, registryClasses, groupClasses,
-											builder))
+											methodJsonViewClasses, builder))
 									.append(",");
 							}
 						}
@@ -601,7 +623,7 @@ public class JsonBuildHelper extends BaseHelper {
 								fieldGicName = DocUtil.formatFieldTypeGicName(genericMap, fieldGicName);
 								data0
 									.append(buildJson(subTypeName, fieldGicName, isResp, nextLevel, registryClasses,
-											groupClasses, builder))
+											groupClasses, methodJsonViewClasses, builder))
 									.append(",");
 							}
 						}

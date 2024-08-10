@@ -34,6 +34,7 @@ import com.power.common.util.StringUtil;
 import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaField;
+import com.thoughtworks.qdox.model.expression.AnnotationValue;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
@@ -54,7 +55,9 @@ public class ParamsBuildHelper extends BaseHelper {
 	 * @param isResp Indicates whether the parameter is a response parameter.
 	 * @param registryClasses A collection of registered classes.
 	 * @param projectBuilder A project builder instance.
-	 * @param groupClasses A collection of grouped classes.
+	 * @param groupClasses A collection of JSR303 grouped classes.
+	 * @param methodJsonViewClasses A set of valid `@JsonView` classes on controller
+	 * method.
 	 * @param pid The parent ID of the field.
 	 * @param jsonRequest The JSON request object.
 	 * @param atomicInteger An AtomicInteger for ID generation.
@@ -67,7 +70,7 @@ public class ParamsBuildHelper extends BaseHelper {
 	 */
 	public static List<ApiParam> buildParams(String className, String pre, int level, String isRequired, boolean isResp,
 			Map<String, String> registryClasses, ProjectDocConfigBuilder projectBuilder, Set<String> groupClasses,
-			int pid, boolean jsonRequest, AtomicInteger atomicInteger) {
+			Set<String> methodJsonViewClasses, int pid, boolean jsonRequest, AtomicInteger atomicInteger) {
 		Map<String, String> genericMap = new HashMap<>(10);
 
 		if (StringUtil.isEmpty(className)) {
@@ -105,6 +108,7 @@ public class ParamsBuildHelper extends BaseHelper {
 			}
 		}
 		PropertyNamingStrategies.NamingBase fieldNameConvert = null;
+		// ignore
 		if (Objects.nonNull(cls)) {
 			List<JavaAnnotation> clsAnnotation = cls.getAnnotations();
 			fieldNameConvert = PropertyNameHelper.translate(clsAnnotation);
@@ -138,13 +142,13 @@ public class ParamsBuildHelper extends BaseHelper {
 						gNameTemp = gNameTemp.substring(0, gNameTemp.indexOf("["));
 					}
 					paramList.addAll(buildParams(gNameTemp, pre, nextLevel, isRequired, isResp, registryClasses,
-							projectBuilder, groupClasses, pid, jsonRequest, atomicInteger));
+							projectBuilder, groupClasses, methodJsonViewClasses, pid, jsonRequest, atomicInteger));
 				}
 			}
 		}
 		else if (JavaClassValidateUtil.isMap(simpleName)) {
 			paramList.addAll(buildMapParam(globGicName, pre, level, isRequired, isResp, registryClasses, projectBuilder,
-					groupClasses, pid, jsonRequest, nextLevel, atomicInteger));
+					groupClasses, methodJsonViewClasses, pid, jsonRequest, nextLevel, atomicInteger));
 		}
 		else if (JavaTypeConstants.JAVA_OBJECT_FULLY.equals(className)) {
 			ApiParam param = ApiParam.of()
@@ -161,7 +165,7 @@ public class ParamsBuildHelper extends BaseHelper {
 		else if (JavaClassValidateUtil.isReactor(simpleName)) {
 			if (globGicName.length > 0) {
 				paramList.addAll(buildParams(globGicName[0], pre, nextLevel, isRequired, isResp, registryClasses,
-						projectBuilder, groupClasses, pid, jsonRequest, atomicInteger));
+						projectBuilder, groupClasses, methodJsonViewClasses, pid, jsonRequest, atomicInteger));
 			}
 		}
 		else {
@@ -228,7 +232,18 @@ public class ParamsBuildHelper extends BaseHelper {
 				String fieldJsonFormatValue = null;
 				// has Annotation @JsonSerialize And using ToStringSerializer
 				boolean toStringSerializer = false;
+				// Handle @JsonView; if the field is not annotated with @JsonView, skip
+				// it.
+				if (!methodJsonViewClasses.isEmpty() && isResp && javaAnnotations.isEmpty()) {
+					continue;
+				}
 				for (JavaAnnotation annotation : javaAnnotations) {
+					// Handle @JsonView
+					if (JavaClassUtil.shouldExcludeFieldFromJsonView(annotation, methodJsonViewClasses, isResp,
+							projectBuilder)) {
+						continue out;
+					}
+
 					if (DocAnnotationConstants.SHORT_JSON_SERIALIZE.equals(annotation.getType().getSimpleName())
 							&& DocAnnotationConstants.TO_STRING_SERIALIZER_USING
 								.equals(annotation.getNamedParameter("using"))) {
@@ -238,6 +253,7 @@ public class ParamsBuildHelper extends BaseHelper {
 					if (JavaClassValidateUtil.isIgnoreFieldJson(annotation, isResp)) {
 						continue out;
 					}
+
 					String simpleAnnotationName = annotation.getType().getValue();
 					if (DocAnnotationConstants.SHORT_JSON_FIELD.equals(simpleAnnotationName)) {
 						if (null != annotation.getProperty(DocAnnotationConstants.NAME_PROP)) {
@@ -245,49 +261,54 @@ public class ParamsBuildHelper extends BaseHelper {
 								.removeQuotes(annotation.getProperty(DocAnnotationConstants.NAME_PROP).toString());
 						}
 					}
-					else if (DocAnnotationConstants.SHORT_JSON_PROPERTY.equals(simpleAnnotationName)
-							|| DocAnnotationConstants.GSON_ALIAS_NAME.equals(simpleAnnotationName)) {
-						if (null != annotation.getProperty(DocAnnotationConstants.VALUE_PROP)) {
-							fieldName = StringUtil
-								.removeQuotes(annotation.getProperty(DocAnnotationConstants.VALUE_PROP).toString());
-						}
-					}
-					else if (JSRAnnotationConstants.NULL.equals(simpleAnnotationName) && !isResp) {
-						if (CollectionUtil.isEmpty(groupClasses)) {
-							continue out;
-						}
-						Set<String> groupClassList = JavaClassUtil.getParamGroupJavaClass(annotation);
-						for (String javaClass : groupClassList) {
-							if (groupClasses.contains(javaClass)) {
-								continue out;
+					else {
+
+						if (DocAnnotationConstants.SHORT_JSON_PROPERTY.equals(simpleAnnotationName)
+								|| DocAnnotationConstants.GSON_ALIAS_NAME.equals(simpleAnnotationName)) {
+							AnnotationValue annotationValue = annotation.getProperty(DocAnnotationConstants.VALUE_PROP);
+							if (null != annotationValue) {
+								fieldName = StringUtil.removeQuotes(annotationValue.toString());
 							}
 						}
-					}
-					else if (JavaClassValidateUtil.isJSR303Required(simpleAnnotationName) && !isResp) {
-						Set<String> groupClassList = JavaClassUtil.getParamGroupJavaClass(annotation);
-						// Check if groupClasses contains any element from groupClassList
-						boolean hasGroup = groupClassList.stream().anyMatch(groupClasses::contains);
+						else if (JSRAnnotationConstants.NULL.equals(simpleAnnotationName) && !isResp) {
+							if (CollectionUtil.isEmpty(groupClasses)) {
+								continue out;
+							}
+							Set<String> groupClassList = JavaClassUtil.getParamGroupJavaClass(annotation);
+							for (String javaClass : groupClassList) {
+								if (groupClasses.contains(javaClass)) {
+									continue out;
+								}
+							}
+						}
+						else if (JavaClassValidateUtil.isJSR303Required(simpleAnnotationName) && !isResp) {
+							Set<String> groupClassList = JavaClassUtil.getParamGroupJavaClass(annotation);
+							// Check if groupClasses contains any element from
+							// groupClassList
+							boolean hasGroup = groupClassList.stream().anyMatch(groupClasses::contains);
 
-						if (hasGroup) {
-							strRequired = true;
+							if (hasGroup) {
+								strRequired = true;
+							}
+							else if (CollectionUtil.isEmpty(groupClasses)) {
+								// If the annotation is @Valid or @Validated, the Default
+								// group is added by default and groupClasses will not be
+								// empty;
+								// In other cases, if groupClasses is still empty, then
+								// strRequired is false.
+								strRequired = false;
+							}
 						}
-						else if (CollectionUtil.isEmpty(groupClasses)) {
-							// If the annotation is @Valid or @Validated, the Default
-							// group is added by default and groupClasses will not be
-							// empty;
-							// In other cases, if groupClasses is still empty, then
-							// strRequired is false.
-							strRequired = false;
+						else if (DocAnnotationConstants.JSON_FORMAT.equals(simpleAnnotationName)) {
+							fieldJsonFormatType = DocUtil.processFieldTypeNameByJsonFormat(isShowJavaType, subTypeName,
+									annotation);
+							fieldJsonFormatValue = DocUtil.getJsonFormatString(field, annotation);
 						}
-					}
-					else if (DocAnnotationConstants.JSON_FORMAT.equals(simpleAnnotationName)) {
-						fieldJsonFormatType = DocUtil.processFieldTypeNameByJsonFormat(isShowJavaType, subTypeName,
-								annotation);
-						fieldJsonFormatValue = DocUtil.getJsonFormatString(field, annotation);
 					}
 				}
+
 				comment.append(JavaFieldUtil.getJsrComment(apiConfig.isShowValidation(), classLoader, javaAnnotations));
-				// fixme post form curl example error
+				// fix mock post form curl example error
 				String fieldValue = getFieldValueFromMock(tagsMap);
 
 				// cover response value
@@ -512,13 +533,13 @@ public class ParamsBuildHelper extends BaseHelper {
 									if (!JavaClassValidateUtil.isPrimitive(gicName) && !simpleName.equals(gicName)) {
 										paramList.addAll(buildParams(gicName, preBuilder.toString(), nextLevel,
 												isRequired, isResp, registryClasses, projectBuilder, groupClasses,
-												fieldPid, jsonRequest, atomicInteger));
+												methodJsonViewClasses, fieldPid, jsonRequest, atomicInteger));
 									}
 								}
 								else {
 									paramList.addAll(buildParams(gName, preBuilder.toString(), nextLevel, isRequired,
-											isResp, registryClasses, projectBuilder, groupClasses, fieldPid,
-											jsonRequest, atomicInteger));
+											isResp, registryClasses, projectBuilder, groupClasses,
+											methodJsonViewClasses, fieldPid, jsonRequest, atomicInteger));
 								}
 							}
 							else {
@@ -557,14 +578,14 @@ public class ParamsBuildHelper extends BaseHelper {
 								String gicName = genericMap.get(valType);
 								if (!JavaClassValidateUtil.isPrimitive(gicName) && !simpleName.equals(gicName)) {
 									paramList.addAll(buildParams(gicName, preBuilder.toString(), nextLevel, isRequired,
-											isResp, registryClasses, projectBuilder, groupClasses, fieldPid,
-											jsonRequest, atomicInteger));
+											isResp, registryClasses, projectBuilder, groupClasses,
+											methodJsonViewClasses, fieldPid, jsonRequest, atomicInteger));
 								}
 							}
 							else {
 								paramList.addAll(buildParams(valType, preBuilder.toString(), nextLevel, isRequired,
-										isResp, registryClasses, projectBuilder, groupClasses, fieldPid, jsonRequest,
-										atomicInteger));
+										isResp, registryClasses, projectBuilder, groupClasses, methodJsonViewClasses,
+										fieldPid, jsonRequest, atomicInteger));
 							}
 						}
 					}
@@ -598,25 +619,25 @@ public class ParamsBuildHelper extends BaseHelper {
 										if (!JavaClassValidateUtil.isPrimitive(gName)) {
 											paramList.addAll(buildParams(gName, preBuilder.toString(), nextLevel,
 													isRequired, isResp, registryClasses, projectBuilder, groupClasses,
-													fieldPid, jsonRequest, atomicInteger));
+													methodJsonViewClasses, fieldPid, jsonRequest, atomicInteger));
 										}
 									}
 									else {
 										paramList.addAll(buildParams(gicName, preBuilder.toString(), nextLevel,
 												isRequired, isResp, registryClasses, projectBuilder, groupClasses,
-												fieldPid, jsonRequest, atomicInteger));
+												methodJsonViewClasses, fieldPid, jsonRequest, atomicInteger));
 									}
 								}
 								else {
 									paramList.addAll(buildParams(gicName, preBuilder.toString(), nextLevel, isRequired,
-											isResp, registryClasses, projectBuilder, groupClasses, fieldPid,
-											jsonRequest, atomicInteger));
+											isResp, registryClasses, projectBuilder, groupClasses,
+											methodJsonViewClasses, fieldPid, jsonRequest, atomicInteger));
 								}
 							}
 							else {
 								paramList.addAll(buildParams(subTypeName, preBuilder.toString(), nextLevel, isRequired,
-										isResp, registryClasses, projectBuilder, groupClasses, fieldPid, jsonRequest,
-										atomicInteger));
+										isResp, registryClasses, projectBuilder, groupClasses, methodJsonViewClasses,
+										fieldPid, jsonRequest, atomicInteger));
 							}
 						}
 					}
@@ -640,7 +661,8 @@ public class ParamsBuildHelper extends BaseHelper {
 						fieldPid = Optional.ofNullable(atomicInteger).isPresent() ? param.getId()
 								: paramList.size() + pid;
 						paramList.addAll(buildParams(fieldGicName, preBuilder.toString(), nextLevel, isRequired, isResp,
-								registryClasses, projectBuilder, groupClasses, fieldPid, jsonRequest, atomicInteger));
+								registryClasses, projectBuilder, groupClasses, methodJsonViewClasses, fieldPid,
+								jsonRequest, atomicInteger));
 
 					}
 				}
@@ -659,6 +681,7 @@ public class ParamsBuildHelper extends BaseHelper {
 	 * @param registryClasses the map of registry classes
 	 * @param projectBuilder the project configuration builder
 	 * @param groupClasses the set of group classes
+	 * @param jsonViewClasses A set of valid `@JsonView` classes.
 	 * @param pid the parent ID
 	 * @param jsonRequest the JSON request flag
 	 * @param nextLevel the next level of the parameter
@@ -667,7 +690,8 @@ public class ParamsBuildHelper extends BaseHelper {
 	 */
 	private static List<ApiParam> buildMapParam(String[] globGicName, String pre, int level, String isRequired,
 			boolean isResp, Map<String, String> registryClasses, ProjectDocConfigBuilder projectBuilder,
-			Set<String> groupClasses, int pid, boolean jsonRequest, int nextLevel, AtomicInteger atomicInteger) {
+			Set<String> groupClasses, Set<String> jsonViewClasses, int pid, boolean jsonRequest, int nextLevel,
+			AtomicInteger atomicInteger) {
 		if (globGicName.length != 2) {
 			return Collections.emptyList();
 		}
@@ -712,14 +736,14 @@ public class ParamsBuildHelper extends BaseHelper {
 				}
 				paramList.add(apiParam);
 				List<ApiParam> apiParams = addValueParams(valueSimpleName, globGicName, level, isRequired, isResp,
-						registryClasses, projectBuilder, groupClasses, apiParam.getId(), jsonRequest, nextLevel,
-						atomicInteger);
+						registryClasses, projectBuilder, groupClasses, jsonViewClasses, apiParam.getId(), jsonRequest,
+						nextLevel, atomicInteger);
 				paramList.addAll(apiParams);
 			}
 			return paramList;
 		}
 		paramList.addAll(addValueParams(valueSimpleName, globGicName, level, isRequired, isResp, registryClasses,
-				projectBuilder, groupClasses, pid, jsonRequest, nextLevel, atomicInteger));
+				projectBuilder, groupClasses, jsonViewClasses, pid, jsonRequest, nextLevel, atomicInteger));
 		return paramList;
 	}
 
@@ -733,6 +757,7 @@ public class ParamsBuildHelper extends BaseHelper {
 	 * @param registryClasses the map of registry classes
 	 * @param projectBuilder the project configuration builder
 	 * @param groupClasses the set of group classes
+	 * @param jsonViewClasses A set of valid `@JsonView` classes.
 	 * @param pid the parent ID
 	 * @param jsonRequest the JSON request flag
 	 * @param nextLevel the next level of the parameter
@@ -741,8 +766,8 @@ public class ParamsBuildHelper extends BaseHelper {
 	 */
 	private static List<ApiParam> addValueParams(String valueSimpleName, String[] globGicName, int level,
 			String isRequired, boolean isResp, Map<String, String> registryClasses,
-			ProjectDocConfigBuilder projectBuilder, Set<String> groupClasses, int pid, boolean jsonRequest,
-			int nextLevel, AtomicInteger atomicInteger) {
+			ProjectDocConfigBuilder projectBuilder, Set<String> groupClasses, Set<String> jsonViewClasses, int pid,
+			boolean jsonRequest, int nextLevel, AtomicInteger atomicInteger) {
 		// build param when map value is not primitive
 		if (JavaClassValidateUtil.isPrimitive(valueSimpleName)) {
 			return Collections.emptyList();
@@ -753,7 +778,7 @@ public class ParamsBuildHelper extends BaseHelper {
 		}
 		preBuilder.append(DocGlobalConstants.PARAM_PREFIX);
 		return buildParams(globGicName[1], preBuilder.toString(), ++nextLevel, isRequired, isResp, registryClasses,
-				projectBuilder, groupClasses, pid, jsonRequest, atomicInteger);
+				projectBuilder, groupClasses, jsonViewClasses, pid, jsonRequest, atomicInteger);
 	}
 
 	public static String dictionaryListComment(List<EnumDictionary> enumDataDict) {

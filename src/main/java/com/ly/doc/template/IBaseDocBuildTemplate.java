@@ -51,6 +51,12 @@ public interface IBaseDocBuildTemplate {
 		return comment;
 	}
 
+	/**
+	 * Build return api params
+	 * @param docJavaMethod JavaMethod
+	 * @param projectBuilder ProjectDocConfigBuilder
+	 * @return List
+	 */
 	default List<ApiParam> buildReturnApiParams(DocJavaMethod docJavaMethod, ProjectDocConfigBuilder projectBuilder) {
 		JavaMethod method = docJavaMethod.getJavaMethod();
 		if (method.getReturns().isVoid() && Objects.isNull(projectBuilder.getApiConfig().getResponseBodyAdvice())) {
@@ -93,7 +99,7 @@ public interface IBaseDocBuildTemplate {
 					return new ArrayList<>(0);
 				}
 				return ParamsBuildHelper.buildParams(gicName, "", 0, null, Boolean.TRUE, new HashMap<>(16),
-						projectBuilder, null, 0, Boolean.FALSE, null);
+						projectBuilder, null, docJavaMethod.getJsonViewClasses(), 0, Boolean.FALSE, null);
 			}
 			else {
 				return new ArrayList<>(0);
@@ -105,15 +111,19 @@ public interface IBaseDocBuildTemplate {
 				return new ArrayList<>(0);
 			}
 			return ParamsBuildHelper.buildParams(returnType, "", 0, null, Boolean.TRUE, new HashMap<>(16),
-					projectBuilder, null, 0, Boolean.FALSE, null);
+					projectBuilder, null, docJavaMethod.getJsonViewClasses(), 0, Boolean.FALSE, null);
 		}
 		if (StringUtil.isNotEmpty(returnType)) {
 			return ParamsBuildHelper.buildParams(returnType, "", 0, null, Boolean.TRUE, new HashMap<>(16),
-					projectBuilder, null, 0, Boolean.FALSE, null);
+					projectBuilder, null, docJavaMethod.getJsonViewClasses(), 0, Boolean.FALSE, null);
 		}
 		return new ArrayList<>(0);
 	}
 
+	/**
+	 * Convert params data to tree
+	 * @param apiMethodDoc ApiMethodDoc
+	 */
 	default void convertParamsDataToTree(ApiMethodDoc apiMethodDoc) {
 		apiMethodDoc.setPathParams(ApiParamTreeUtil.apiParamToTree(apiMethodDoc.getPathParams()));
 		apiMethodDoc.setQueryParams(ApiParamTreeUtil.apiParamToTree(apiMethodDoc.getQueryParams()));

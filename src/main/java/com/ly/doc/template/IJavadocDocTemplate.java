@@ -214,6 +214,7 @@ public interface IJavadocDocTemplate extends IBaseDocBuildTemplate {
 			comment.append(JavaFieldUtil.getJsrComment(isShowValidation, classLoader, annotations));
 			Set<String> groupClasses = JavaClassUtil.getParamGroupJavaClass(annotations,
 					builder.getJavaProjectBuilder());
+			Set<String> paramJsonViewClasses = JavaClassUtil.getParamJsonViewClasses(annotations, builder);
 			if (JavaClassValidateUtil.isCollection(fullTypeName) || JavaClassValidateUtil.isArray(fullTypeName)) {
 				if (JavaClassValidateUtil.isCollection(typeName)) {
 					typeName = typeName + "<T>";
@@ -236,7 +237,8 @@ public interface IJavadocDocTemplate extends IBaseDocBuildTemplate {
 				}
 				else {
 					paramList.addAll(ParamsBuildHelper.buildParams(gicNameArr[0], paramPre, 0, "true", Boolean.FALSE,
-							new HashMap<>(16), builder, groupClasses, 0, Boolean.FALSE, atomicInteger));
+							new HashMap<>(16), builder, groupClasses, paramJsonViewClasses, 0, Boolean.FALSE,
+							atomicInteger));
 				}
 			}
 			else if (JavaClassValidateUtil.isPrimitive(fullTypeName)) {
@@ -265,7 +267,8 @@ public interface IJavadocDocTemplate extends IBaseDocBuildTemplate {
 				}
 				String[] gicNameArr = DocClassUtil.getSimpleGicName(typeName);
 				paramList.addAll(ParamsBuildHelper.buildParams(gicNameArr[1], paramPre, 0, "true", Boolean.FALSE,
-						new HashMap<>(16), builder, groupClasses, 0, Boolean.FALSE, atomicInteger));
+						new HashMap<>(16), builder, groupClasses, paramJsonViewClasses, 0, Boolean.FALSE,
+						atomicInteger));
 			}
 			else if (javaClass.isEnum()) {
 				ApiParam param = ApiParam.of()
@@ -278,8 +281,9 @@ public interface IJavadocDocTemplate extends IBaseDocBuildTemplate {
 				paramList.add(param);
 			}
 			else {
-				paramList.addAll(ParamsBuildHelper.buildParams(typeName, paramPre, 0, "true", Boolean.FALSE,
-						new HashMap<>(16), builder, groupClasses, 0, Boolean.FALSE, atomicInteger));
+				paramList.addAll(
+						ParamsBuildHelper.buildParams(typeName, paramPre, 0, "true", Boolean.FALSE, new HashMap<>(16),
+								builder, groupClasses, paramJsonViewClasses, 0, Boolean.FALSE, atomicInteger));
 			}
 		}
 		return paramList;

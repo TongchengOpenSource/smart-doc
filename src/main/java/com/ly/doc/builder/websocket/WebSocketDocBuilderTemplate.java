@@ -54,14 +54,14 @@ public class WebSocketDocBuilderTemplate implements IBaseDocBuilderTemplate<WebS
 
 	/**
 	 * get all websocket api data.
-	 * @param adoc is adoc
+	 * @param isAsciidoc is Asciidoc
 	 * @param config ApiConfig
 	 * @param javaProjectBuilder JavaProjectBuilder
 	 * @return ApiAllData
 	 */
-	public List<WebSocketDoc> getWebSocketApiDoc(boolean adoc, ApiConfig config,
+	public List<WebSocketDoc> getWebSocketApiDoc(boolean isAsciidoc, ApiConfig config,
 			JavaProjectBuilder javaProjectBuilder) {
-		config.setAdoc(adoc);
+		config.setAdoc(isAsciidoc);
 		this.checkAndInit(config, Boolean.TRUE);
 		config.setParamsDataToTree(false);
 		config
@@ -89,6 +89,7 @@ public class WebSocketDocBuilderTemplate implements IBaseDocBuilderTemplate<WebS
 	 * Merge all websocket api doc into one document.
 	 * @param webSocketDocList list data of Api doc
 	 * @param config api config
+	 * @param javaProjectBuilder JavaProjectBuilder
 	 * @param template template
 	 * @param outPutFileName output file
 	 */

@@ -32,7 +32,7 @@ class JsonBuildHelperTest {
 		Assertions.assertNotNull(builder.getClassByName(Task.class.getName()));
 		Assertions.assertFalse(builder.getClassByName(Task.class.getName()).getMethods().isEmpty());
 		String json = JsonBuildHelper.buildJson(Task.class.getName(), Task.class.getCanonicalName(), false, 0,
-				new HashMap<>(16), new HashSet<>(), builder);
+				new HashMap<>(16), new HashSet<>(), new HashSet<>(), builder);
 		System.out.println(json);
 	}
 
