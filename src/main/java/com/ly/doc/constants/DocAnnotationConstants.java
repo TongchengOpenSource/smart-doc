@@ -198,6 +198,12 @@ public interface DocAnnotationConstants {
 	String ON_OPEN = "OnOpen";
 
 	/**
+	 * `@javax.websocket.OnMessage` or `@jakarta.websocket.OnMessage` annotation name
+	 * {@code javax.websocket.OnMessage} {@code jakarta.websocket.OnMessage}
+	 */
+	String ON_MESSAGE = "OnMessage";
+
+	/**
 	 * `@javax.websocket.server.PathParam` or `@jakarta.websocket.PathParam` annotation
 	 * name {@code javax.websocket.server.PathParam}
 	 * {@code jakarta.websocket.server.PathParam}

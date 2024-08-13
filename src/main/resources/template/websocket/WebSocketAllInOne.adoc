@@ -39,8 +39,50 @@ for(param in doc.pathParams){
 |${param.field} |${param.type} |${param.required}|${htmlEscape(param.desc)}|${param.version}
 <%}%>
 |====================
+<%}%>
 
-<%}%> <%}%>
+
+
+<%if(isNotEmpty(doc.messageParams)){%>
+*Message-parameters:*
+
+[width="100%",options="header"]
+[stripes=even]
+|====================
+|Parameter | Type  |Required|Description |Since
+<%
+for(param in doc.messageParams){
+%>
+|${param.field} |${param.type} |${param.required}|${htmlEscape(param.desc)}|${param.version}
+<%}%>
+|====================
+<%}%>
+
+
+
+<%if(isNotEmpty(doc.responseParams)){%>
+*Response-parameters:*
+
+<%
+for(param in doc.responseParams){
+%>
+[width="100%",options="header"]
+[stripes=even]
+|====================
+|Parameter | Type |Description |Since
+<% for(paramItem in param){
+%>
+|${paramItem.field} |${paramItem.type}|${htmlEscape(paramItem.desc)}|${paramItem.version}
+<%}%>
+|====================
+<%}%>
+<%}%>
+
+
+
+
+
+<%}%>
 <%if(isNotEmpty(errorCodeList)){%>
 ${errorListTitle}
 

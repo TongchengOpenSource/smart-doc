@@ -142,6 +142,8 @@ public class WebSocketDocBuilderTemplate implements IBaseDocBuilderTemplate<WebS
 		mapper.binding(TemplateVariable.AUTHOR.getVariable(), webSocketDoc.getAuthor());
 		mapper.binding(TemplateVariable.SUB_PROTOCOLS.getVariable(), webSocketDoc.getSubProtocols());
 		mapper.binding(TemplateVariable.WEBSOCKET_PATH_PARAMS.getVariable(), webSocketDoc.getPathParams());
+		mapper.binding(TemplateVariable.WEBSOCKET_MESSAGE_PARAMS.getVariable(), webSocketDoc.getMessageParams());
+		mapper.binding(TemplateVariable.WEBSOCKET_RESPONSE_PARAMS.getVariable(), webSocketDoc.getResponseParams());
 		return mapper;
 	}
 

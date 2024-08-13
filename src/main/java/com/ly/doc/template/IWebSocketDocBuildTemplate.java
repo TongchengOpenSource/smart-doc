@@ -33,6 +33,7 @@ import java.util.List;
  * websocket doc build template
  *
  * @author linwumingshi
+ * @since 3.0.3
  */
 public interface IWebSocketDocBuildTemplate<T extends WebSocketDoc> extends IDocBuildBaseTemplate {
 
@@ -47,7 +48,7 @@ public interface IWebSocketDocBuildTemplate<T extends WebSocketDoc> extends IDoc
 		DocMapping.init();
 		DocBuildHelper docBuildHelper = DocBuildHelper.create(projectBuilder);
 
-		preRender(docBuildHelper);
+		this.preRender(docBuildHelper);
 
 		Collection<JavaClass> candidateClasses = this.getCandidateClasses(projectBuilder, docBuildHelper);
 

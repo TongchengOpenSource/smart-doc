@@ -28,6 +28,7 @@ import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.expression.AnnotationValue;
 import com.thoughtworks.qdox.model.expression.AnnotationValueList;
+import com.thoughtworks.qdox.model.expression.TypeRef;
 
 import java.util.List;
 import java.util.Objects;
@@ -64,6 +65,29 @@ public interface IWebSocketRequestHandler {
 			List<String> subProtocols = valueList.stream().map(Object::toString).collect(Collectors.toList());
 			builder.setSubProtocols(subProtocols);
 		}
+
+		// get decoders of annotation
+		AnnotationValue decodersOfAnnotation = javaAnnotation.getProperty("decoders");
+		if (Objects.nonNull(decodersOfAnnotation) && decodersOfAnnotation instanceof AnnotationValueList) {
+			List<AnnotationValue> valueList = ((AnnotationValueList) decodersOfAnnotation).getValueList();
+			List<String> decoders = valueList.stream()
+				.filter(i -> i instanceof TypeRef)
+				.map(i -> ((TypeRef) i).getType().getFullyQualifiedName())
+				.collect(Collectors.toList());
+			builder.setDecoders(decoders);
+		}
+
+		// get encoders of annotation
+		AnnotationValue encodersOfAnnotation = javaAnnotation.getProperty("encoders");
+		if (Objects.nonNull(encodersOfAnnotation) && encodersOfAnnotation instanceof AnnotationValueList) {
+			List<AnnotationValue> valueList = ((AnnotationValueList) encodersOfAnnotation).getValueList();
+			List<String> encoders = valueList.stream()
+				.filter(i -> i instanceof TypeRef)
+				.map(i -> ((TypeRef) i).getType().getFullyQualifiedName())
+				.collect(Collectors.toList());
+			builder.setEncoders(encoders);
+		}
+
 		return builder;
 	}
 
