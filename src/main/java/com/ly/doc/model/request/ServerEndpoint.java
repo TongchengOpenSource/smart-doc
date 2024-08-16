@@ -40,8 +40,17 @@ public class ServerEndpoint {
 	 */
 	private List<String> subProtocols;
 
+	/**
+	 * the decoders class list of annotation
+	 */
+	private List<String> decoders;
+
+	/**
+	 * the encoders class list of annotation
+	 */
+	private List<String> encoders;
+
 	public ServerEndpoint() {
-		this.subProtocols = Collections.emptyList();
 	}
 
 	/**
@@ -56,17 +65,44 @@ public class ServerEndpoint {
 		return url;
 	}
 
-	public List<String> getSubProtocols() {
-		return subProtocols;
-	}
-
 	public ServerEndpoint setUrl(String url) {
 		this.url = url;
 		return this;
 	}
 
+	public List<String> getSubProtocols() {
+		if (subProtocols == null) {
+			subProtocols = Collections.emptyList();
+		}
+		return subProtocols;
+	}
+
 	public ServerEndpoint setSubProtocols(List<String> subProtocols) {
 		this.subProtocols = subProtocols;
+		return this;
+	}
+
+	public List<String> getDecoders() {
+		if (decoders == null) {
+			decoders = Collections.emptyList();
+		}
+		return decoders;
+	}
+
+	public ServerEndpoint setDecoders(List<String> decoders) {
+		this.decoders = decoders;
+		return this;
+	}
+
+	public List<String> getEncoders() {
+		if (encoders == null) {
+			encoders = Collections.emptyList();
+		}
+		return encoders;
+	}
+
+	public ServerEndpoint setEncoders(List<String> encoders) {
+		this.encoders = encoders;
 		return this;
 	}
 

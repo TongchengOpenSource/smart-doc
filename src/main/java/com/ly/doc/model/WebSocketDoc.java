@@ -20,12 +20,14 @@
  */
 package com.ly.doc.model;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
  * the webSocket doc
  *
- * @author Lin222
+ * @author linwumingshi
+ * @since 3.0.3
  */
 public class WebSocketDoc extends ApiDoc {
 
@@ -40,6 +42,16 @@ public class WebSocketDoc extends ApiDoc {
 	 * path params
 	 */
 	private List<ApiParam> pathParams;
+
+	/**
+	 * message param
+	 */
+	private List<ApiParam> messageParams;
+
+	/**
+	 * response param
+	 */
+	private List<List<ApiParam>> responseParams;
 
 	/**
 	 * webSocket url
@@ -64,11 +76,35 @@ public class WebSocketDoc extends ApiDoc {
 	}
 
 	public List<ApiParam> getPathParams() {
+		if (pathParams == null) {
+			return Collections.emptyList();
+		}
 		return pathParams;
 	}
 
 	public void setPathParams(List<ApiParam> pathParams) {
 		this.pathParams = pathParams;
+	}
+
+	public List<ApiParam> getMessageParams() {
+		if (messageParams == null) {
+			return Collections.emptyList();
+		}
+		return messageParams;
+	}
+
+	public WebSocketDoc setMessageParams(List<ApiParam> messageParams) {
+		this.messageParams = messageParams;
+		return this;
+	}
+
+	public List<List<ApiParam>> getResponseParams() {
+		return responseParams;
+	}
+
+	public WebSocketDoc setResponseParams(List<List<ApiParam>> responseParams) {
+		this.responseParams = responseParams;
+		return this;
 	}
 
 	public String getUri() {

@@ -192,7 +192,19 @@ public enum TemplateVariable {
 	/**
 	 * webSocketPathParams
 	 */
-	WEBSOCKET_PATH_PARAMS("pathParams"),;
+	WEBSOCKET_PATH_PARAMS("pathParams"),
+
+	/**
+	 * webSocketMessageParams
+	 */
+	WEBSOCKET_MESSAGE_PARAMS("messageParams"),
+
+	/**
+	 * webSocketResponseParams
+	 */
+	WEBSOCKET_RESPONSE_PARAMS("responseParams"),
+
+	;
 
 	/**
 	 * variable

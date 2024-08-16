@@ -40,6 +40,37 @@ for(param in doc.pathParams){
 |${param.field}|${param.type}|${param.required}|${lineBreaksToBr(param.desc)}|${param.version}|
 <%}%>
 <%}%>
+
+<%if(isNotEmpty(doc.messageParams)){%>
+
+**Message-parameters:**
+
+| Parameter | Type | Required | Description | Since |
+|-----------|------|----------|-------------|-------|
+<%
+for(param in doc.messageParams){
+%>
+|${param.field}|${param.type}|${param.required}|${lineBreaksToBr(param.desc)}|${param.version}|
+<%}%>
+<%}%>
+
+<%if(isNotEmpty(doc.responseParams)){%>
+
+**Response-parameters:**
+<%
+for(param in doc.responseParams){
+%>
+
+| Parameter | Type | Description | Since |
+|-----------|------|-------------|-------|
+<%
+for(paramItem in param){
+%>
+|${paramItem.field}|${paramItem.type}|${lineBreaksToBr(paramItem.desc)}|${paramItem.version}|
+<%}%>
+<%}%>
+<%}%>
+
 <%}%>
 <%if(isNotEmpty(errorCodeList)){%>
 

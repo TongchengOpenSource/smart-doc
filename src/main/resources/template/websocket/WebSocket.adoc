@@ -22,3 +22,38 @@ for(param in pathParams){
 |====================
 
 <%}%>
+
+
+<%if(isNotEmpty(messageParams)){%>
+*Message-parameters:*
+[width="100%",options="header"]
+[stripes=even]
+|====================
+|Parameter | Type  |Required|Description |Since
+<%
+for(param in messageParams){
+%>
+|${param.field} |${param.type} |${param.required}|${htmlEscape(param.desc)}|${param.version}
+<%}%>
+|====================
+
+<%}%>
+
+
+<%if(isNotEmpty(responseParams)){%>
+*Response-parameters:*
+
+<%
+for(param in responseParams){
+%>
+[width="100%",options="header"]
+[stripes=even]
+|====================
+|Parameter | Type |Description |Since
+<% for(paramItem in param){
+%>
+|${paramItem.field} |${paramItem.type}|${htmlEscape(paramItem.desc)}|${paramItem.version}
+<%}%>
+|====================
+<%}%>
+<%}%>

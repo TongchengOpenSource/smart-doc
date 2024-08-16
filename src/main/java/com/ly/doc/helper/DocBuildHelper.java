@@ -262,7 +262,7 @@ public class DocBuildHelper {
 	 */
 	private String toQualifiedName(String relativePath) {
 		// /dev/null is git default path when a file is added or deleted
-		if ("/dev/null".equals(relativePath)) {
+		if (DiffEntry.DEV_NULL.equals(relativePath)) {
 			return relativePath;
 		}
 
