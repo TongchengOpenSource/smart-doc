@@ -66,6 +66,11 @@ public class JavadocDocBuildTemplate
 	}
 
 	@Override
+	public JavadocJavaMethod createEmptyJavadocJavaMethod() {
+		return new JavadocJavaMethod();
+	}
+
+	@Override
 	@SuppressWarnings("unchecked")
 	public ApiSchema<JavadocApiDoc> renderApi(ProjectDocConfigBuilder projectBuilder,
 			Collection<JavaClass> candidateClasses) {
