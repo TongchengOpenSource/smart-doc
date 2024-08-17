@@ -21,13 +21,3 @@ jobs:
         run: |
           echo "Executing Spring code format validation"
           mvn spring-javaformat:validate
-        continue-on-error: true
-
-      - name: Check format validation result
-        if: always()
-        run: |
-          echo "Checking format validation result"
-          if [ ${{ steps.format-validation.outcome }} == 'failure' ]; then
-            echo "Spring code format validation failed, please run `spring-javaformat:apply` to fix and resubmit"
-            exit 1
-          fi
