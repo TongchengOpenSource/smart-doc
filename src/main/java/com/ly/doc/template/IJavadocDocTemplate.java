@@ -39,7 +39,14 @@ import java.util.stream.Collectors;
 import static com.ly.doc.constants.DocTags.DEPRECATED;
 import static com.ly.doc.constants.DocTags.IGNORE;
 
-public interface IJavadocDocTemplate extends IBaseDocBuildTemplate {
+/**
+ * java doc template
+ *
+ * @param <T> extends JavadocJavaMethod
+ * @author shalousun
+ * @since 3.0.5
+ */
+public interface IJavadocDocTemplate<T extends JavadocJavaMethod> extends IBaseDocBuildTemplate {
 
 	/**
 	 * Add method modifiers
@@ -48,16 +55,21 @@ public interface IJavadocDocTemplate extends IBaseDocBuildTemplate {
 	boolean addMethodModifiers();
 
 	/**
+	 * Create empty JavadocJavaMethod.
+	 * @return empty JavadocJavaMethod
+	 */
+	T createEmptyJavadocJavaMethod();
+
+	/**
 	 * Convert JavaMethod to JavadocJavaMethod
 	 * @param apiConfig ApiConfig
 	 * @param method JavaMethod
 	 * @param actualTypesMap Map
 	 * @return JavadocJavaMethod
 	 */
-	default JavadocJavaMethod convertToJavadocJavaMethod(ApiConfig apiConfig, JavaMethod method,
-			Map<String, JavaType> actualTypesMap) {
+	default T convertToJavadocJavaMethod(ApiConfig apiConfig, JavaMethod method, Map<String, JavaType> actualTypesMap) {
 		JavaClass cls = method.getDeclaringClass();
-		JavadocJavaMethod javadocJavaMethod = new JavadocJavaMethod();
+		T javadocJavaMethod = this.createEmptyJavadocJavaMethod();
 		javadocJavaMethod.setJavaMethod(method);
 		javadocJavaMethod.setName(method.getName());
 		javadocJavaMethod.setActualTypesMap(actualTypesMap);
@@ -108,7 +120,7 @@ public interface IJavadocDocTemplate extends IBaseDocBuildTemplate {
 			// append method modifiers
 			method.getModifiers().forEach(item -> methodBuilder.append(item).append(" "));
 		}
-		String returnType = getMethodReturnType(method, actualTypesMap);
+		String returnType = this.getMethodReturnType(method, actualTypesMap);
 		// append method return type
 		methodBuilder.append(returnType).append(" ");
 		List<String> params = new ArrayList<>();
@@ -122,47 +134,54 @@ public interface IJavadocDocTemplate extends IBaseDocBuildTemplate {
 	}
 
 	/**
-	 * Get parent class methods
-	 * @param apiConfig ApiConfig
+	 * Processes methods of a given class and its parent or interfaces.
 	 * @param cls JavaClass
-	 * @return List
+	 * @param methodProcessor Function to process methods from a class
+	 * @return List of documented Java methods
 	 */
-	default List<? extends JavadocJavaMethod> getParentsClassMethods(ApiConfig apiConfig, JavaClass cls) {
-		List<JavadocJavaMethod> docJavaMethods = new ArrayList<>();
-		JavaClass parentClass = cls.getSuperJavaClass();
-		// if parent class is not null and not Object
-		if (Objects.nonNull(parentClass) && !JavaTypeConstants.OBJECT_SIMPLE_NAME.equals(parentClass.getSimpleName())) {
-			Map<String, JavaType> actualTypesMap = JavaClassUtil.getActualTypesMap(parentClass);
-			List<JavaMethod> parentMethodList = parentClass.getMethods();
-			for (JavaMethod method : parentMethodList) {
-				docJavaMethods.add(this.convertToJavadocJavaMethod(apiConfig, method, actualTypesMap));
+	default List<T> processClassHierarchy(JavaClass cls, Function<JavaClass, List<T>> methodProcessor) {
+		List<T> docJavaMethods = new ArrayList<>();
+		Set<JavaClass> classesToProcess = new LinkedHashSet<>();
+		classesToProcess.add(cls);
+
+		while (!classesToProcess.isEmpty()) {
+			JavaClass currentClass = classesToProcess.iterator().next();
+			classesToProcess.remove(currentClass);
+
+			// Process methods
+			docJavaMethods.addAll(methodProcessor.apply(currentClass));
+
+			// Add parent class if not Object
+			JavaClass parentClass = currentClass.getSuperJavaClass();
+			if (Objects.nonNull(parentClass)
+					&& !JavaTypeConstants.OBJECT_SIMPLE_NAME.equals(parentClass.getSimpleName())) {
+				classesToProcess.add(parentClass);
 			}
-			// add interface methods
-			docJavaMethods.addAll(this.getInterfaceMethods(apiConfig, parentClass));
-			// add parent class methods
-			docJavaMethods.addAll(this.getParentsClassMethods(apiConfig, parentClass));
+
+			// Add interfaces
+			classesToProcess.addAll(currentClass.getInterfaces());
 		}
+
 		return docJavaMethods;
 	}
 
 	/**
-	 * Get interface methods
+	 * Get parent class and interface methods
 	 * @param apiConfig ApiConfig
 	 * @param cls JavaClass
 	 * @return List
 	 */
-	default List<? extends JavadocJavaMethod> getInterfaceMethods(ApiConfig apiConfig, JavaClass cls) {
-		List<JavadocJavaMethod> docJavaMethods = new ArrayList<>();
-		for (JavaClass javaInterface : cls.getInterfaces()) {
-			Map<String, JavaType> actualTypesMap = JavaClassUtil.getActualTypesMap(javaInterface);
-			List<JavaMethod> interfaceMethodList = javaInterface.getMethods();
-			for (JavaMethod method : interfaceMethodList) {
+	default List<T> getParentsClassAndInterfaceMethods(ApiConfig apiConfig, JavaClass cls) {
+		return this.processClassHierarchy(cls, currentClass -> {
+			List<T> docJavaMethods = new ArrayList<>();
+			Map<String, JavaType> actualTypesMap = JavaClassUtil.getActualTypesMap(currentClass);
+			List<JavaMethod> methodList = currentClass.getMethods();
+			for (JavaMethod method : methodList) {
 				docJavaMethods.add(this.convertToJavadocJavaMethod(apiConfig, method, actualTypesMap));
 			}
-			// add interface methods
-			docJavaMethods.addAll(this.getInterfaceMethods(apiConfig, javaInterface));
-		}
-		return docJavaMethods;
+			return docJavaMethods;
+		});
+
 	}
 
 	/**
@@ -301,11 +320,11 @@ public interface IJavadocDocTemplate extends IBaseDocBuildTemplate {
 	 * @return A list containing documented methods represented as JavadocJavaMethod
 	 * objects.
 	 */
-	default List<? extends JavadocJavaMethod> buildServiceMethod(final JavaClass cls, ApiConfig apiConfig,
+	default List<T> buildServiceMethod(final JavaClass cls, ApiConfig apiConfig,
 			ProjectDocConfigBuilder projectBuilder) {
 		String clsCanonicalName = cls.getCanonicalName();
 		List<JavaMethod> methods = cls.getMethods();
-		List<JavadocJavaMethod> methodDocList = new ArrayList<>(methods.size());
+		List<T> methodDocList = new ArrayList<>(methods.size());
 
 		Set<String> filterMethods = DocUtil.findFilterMethods(clsCanonicalName);
 		boolean needAllMethods = filterMethods.contains(DocGlobalConstants.DEFAULT_FILTER_METHOD);
@@ -322,21 +341,19 @@ public interface IJavadocDocTemplate extends IBaseDocBuildTemplate {
 						"Unable to find comment for method " + method.getName() + " in " + cls.getCanonicalName());
 			}
 			if (needAllMethods || filterMethods.contains(method.getName())) {
-				JavadocJavaMethod apiMethodDoc = this.convertToJavadocJavaMethod(apiConfig, method, null);
+				T apiMethodDoc = this.convertToJavadocJavaMethod(apiConfig, method, null);
 				methodDocList.add(apiMethodDoc);
 			}
 
 		}
-		// Add parent class methods
-		methodDocList.addAll(this.getParentsClassMethods(apiConfig, cls));
-		// Add interface methods
-		methodDocList.addAll(this.getInterfaceMethods(apiConfig, cls));
+		// Add parent class And interface methods
+		methodDocList.addAll(this.getParentsClassAndInterfaceMethods(apiConfig, cls));
 
-		Map<JavadocJavaMethod, List<ApiParam>> methodRequestParams = new HashMap<>(16);
-		Map<JavadocJavaMethod, List<ApiParam>> methodResponseParams = new HashMap<>(16);
+		Map<T, List<ApiParam>> methodRequestParams = new HashMap<>(16);
+		Map<T, List<ApiParam>> methodResponseParams = new HashMap<>(16);
 
 		// Construct the method map
-		Map<String, JavadocJavaMethod> methodMap = methodDocList.stream().collect(Collectors.toMap(method -> {
+		Map<String, T> methodMap = methodDocList.stream().collect(Collectors.toMap(method -> {
 			// Build request params
 			List<ApiParam> requestParams = this.requestParams(method.getJavaMethod(), projectBuilder,
 					new AtomicInteger(0), method.getActualTypesMap());
@@ -357,8 +374,8 @@ public interface IJavadocDocTemplate extends IBaseDocBuildTemplate {
 				Function.identity(), this::mergeJavadocMethods, LinkedHashMap::new));
 
 		int methodOrder = 0;
-		List<JavadocJavaMethod> javadocJavaMethods = new ArrayList<>(methodMap.values().size());
-		for (JavadocJavaMethod method : methodMap.values()) {
+		List<T> javadocJavaMethods = new ArrayList<>(methodMap.values().size());
+		for (T method : methodMap.values()) {
 			methodOrder++;
 			method.setOrder(methodOrder);
 			String methodUid = DocUtil.generateId(clsCanonicalName + method.getName() + methodOrder);
@@ -389,7 +406,7 @@ public interface IJavadocDocTemplate extends IBaseDocBuildTemplate {
 	 * @return The merged JavadocJavaMethod object, with details filled in from the
 	 * replacement method if necessary.
 	 */
-	default JavadocJavaMethod mergeJavadocMethods(JavadocJavaMethod existing, JavadocJavaMethod replacement) {
+	default T mergeJavadocMethods(T existing, T replacement) {
 		// if existing info is empty and replacement info has desc,replace the info
 		if (StringUtil.isEmpty(existing.getDesc()) && StringUtil.isNotEmpty(replacement.getDesc())) {
 			existing.setDesc(replacement.getDesc());

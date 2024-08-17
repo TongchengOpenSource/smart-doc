@@ -24,14 +24,20 @@ import com.ly.doc.builder.ProjectDocConfigBuilder;
 import com.ly.doc.constants.DocTags;
 import com.ly.doc.constants.DubboAnnotationConstants;
 import com.ly.doc.constants.FrameworkEnum;
-import com.ly.doc.model.*;
+import com.ly.doc.model.ApiConfig;
+import com.ly.doc.model.ApiSchema;
+import com.ly.doc.model.RpcJavaMethod;
+import com.ly.doc.model.WebSocketDoc;
 import com.ly.doc.model.annotation.FrameworkAnnotations;
 import com.ly.doc.model.rpc.RpcApiDoc;
 import com.ly.doc.utils.DocUtil;
 import com.ly.doc.utils.JavaClassUtil;
 import com.power.common.util.StringUtil;
 import com.power.common.util.ValidateUtil;
-import com.thoughtworks.qdox.model.*;
+import com.thoughtworks.qdox.model.DocletTag;
+import com.thoughtworks.qdox.model.JavaAnnotation;
+import com.thoughtworks.qdox.model.JavaClass;
+import com.thoughtworks.qdox.model.JavaType;
 import com.thoughtworks.qdox.model.expression.AnnotationValue;
 
 import java.util.*;
@@ -43,8 +49,8 @@ import java.util.stream.Collectors;
  *
  * @author yu 2020/1/29.
  */
-public class RpcDocBuildTemplate
-		implements IDocBuildTemplate<RpcApiDoc>, IWebSocketDocBuildTemplate<WebSocketDoc>, IRpcDocTemplate {
+public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc>, IWebSocketDocBuildTemplate<WebSocketDoc>,
+		IJavadocDocTemplate<RpcJavaMethod> {
 
 	/**
 	 * api index
@@ -62,7 +68,11 @@ public class RpcDocBuildTemplate
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
+	public RpcJavaMethod createEmptyJavadocJavaMethod() {
+		return new RpcJavaMethod();
+	}
+
+	@Override
 	public ApiSchema<RpcApiDoc> renderApi(ProjectDocConfigBuilder projectBuilder,
 			Collection<JavaClass> candidateClasses) {
 		ApiConfig apiConfig = projectBuilder.getApiConfig();
@@ -81,8 +91,7 @@ public class RpcDocBuildTemplate
 				setCustomOrder = true;
 				maxOrder = Math.max(maxOrder, order);
 			}
-			List<RpcJavaMethod> apiMethodDocs = (List<RpcJavaMethod>) this.buildServiceMethod(cls, apiConfig,
-					projectBuilder);
+			List<RpcJavaMethod> apiMethodDocs = this.buildServiceMethod(cls, apiConfig, projectBuilder);
 			this.handleJavaApiDoc(cls, apiDocList, apiMethodDocs, order, projectBuilder);
 		}
 		ApiSchema<RpcApiDoc> apiSchema = new ApiSchema<>();
@@ -220,27 +229,6 @@ public class RpcDocBuildTemplate
 		}
 		apiDoc.setAuthor(String.join(", ", authorList));
 		apiDocList.add(apiDoc);
-	}
-
-	@Override
-	public JavadocJavaMethod convertToJavadocJavaMethod(ApiConfig apiConfig, JavaMethod method,
-			Map<String, JavaType> actualTypesMap) {
-		JavadocJavaMethod javaMethod = IRpcDocTemplate.super.convertToJavadocJavaMethod(apiConfig, method,
-				actualTypesMap);
-		return new RpcJavaMethod().setDetail(javaMethod.getDetail())
-			.setAuthor(javaMethod.getAuthor())
-			.setMethodDefinition(javaMethod.getMethodDefinition())
-			.setOrder(javaMethod.getOrder())
-			.setRequestParams(javaMethod.getRequestParams())
-			.setResponseParams(javaMethod.getResponseParams())
-			.setDeprecated((javaMethod.isDeprecated()))
-			.setVersion((javaMethod.getVersion()))
-			.setActualTypesMap(javaMethod.getActualTypesMap())
-			.setName(javaMethod.getName())
-			.setEscapeMethodDefinition(javaMethod.getEscapeMethodDefinition())
-			.setMethodId(javaMethod.getMethodId())
-			.setJavaMethod(javaMethod.getJavaMethod())
-			.setReturnClassInfo(javaMethod.getReturnClassInfo());
 	}
 
 }
