@@ -17,8 +17,10 @@ updates:
     ignore:
       # Ignore JGit dependency(work not on jdk 8)
       - dependency-name: "org.eclipse.jgit:org.eclipse.jgit"
-        version: "^5.13.0.202109080827-r"
+        versions:
+          - "6.x"
 
       # Ignore Data faker dependency(work not on jdk 8)
       - dependency-name: "net.datafaker:datafaker"
-        version: ["2.x"]
+        versions:
+          - "2.x"
