@@ -37,6 +37,7 @@ import com.thoughtworks.qdox.JavaProjectBuilder;
 import com.thoughtworks.qdox.model.*;
 import com.thoughtworks.qdox.model.expression.AnnotationValue;
 import com.thoughtworks.qdox.model.expression.AnnotationValueList;
+import com.thoughtworks.qdox.model.expression.Constant;
 import com.thoughtworks.qdox.model.expression.TypeRef;
 import com.thoughtworks.qdox.model.impl.DefaultJavaField;
 import com.thoughtworks.qdox.model.impl.DefaultJavaParameterizedType;
@@ -44,8 +45,8 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.*;
 import java.util.*;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Handle JavaClass
@@ -53,6 +54,11 @@ import java.util.stream.Stream;
  * @author yu 2019/12/21.
  */
 public class JavaClassUtil {
+
+	/**
+	 * logger
+	 */
+	private static final Logger logger = Logger.getLogger(JavaClassUtil.class.getName());
 
 	/**
 	 * Get fields
@@ -574,7 +580,7 @@ public class JavaClassUtil {
 		Set<String> javaClassList = new HashSet<>();
 		List<String> validates = DocValidatorAnnotationEnum.listValidatorAnnotations();
 		for (JavaAnnotation javaAnnotation : annotations) {
-			List<AnnotationValue> annotationValueList = getAnnotationValues(validates, javaAnnotation);
+			List<AnnotationValue> annotationValueList = getValidatedAnnotationValues(validates, javaAnnotation);
 			addGroupClass(annotationValueList, javaClassList, builder);
 			// When using @Validated and group class is empty, add the Default group
 			// class;
@@ -600,7 +606,7 @@ public class JavaClassUtil {
 		}
 		Set<String> javaClassList = new HashSet<>();
 		List<String> validates = DocValidatorAnnotationEnum.listValidatorAnnotations();
-		List<AnnotationValue> annotationValueList = getAnnotationValues(validates, javaAnnotation);
+		List<AnnotationValue> annotationValueList = getValidatedAnnotationValues(validates, javaAnnotation);
 		addGroupClass(annotationValueList, javaClassList);
 		String simpleAnnotationName = javaAnnotation.getType().getValue();
 		// add default group
@@ -702,32 +708,42 @@ public class JavaClassUtil {
 		}
 	}
 
-	private static List<AnnotationValue> getAnnotationValues(List<String> validates, JavaAnnotation javaAnnotation) {
-		List<AnnotationValue> annotationValueList = new ArrayList<>();
+	/**
+	 * Retrieves a list of validated annotation values.
+	 * <p>
+	 * This method processes and extracts validation-related information from a given
+	 * annotation object, based on the list of validation annotation names provided. It
+	 * first determines the annotation type, then identifies the property name to extract
+	 * based on the annotation type, and finally retrieves the corresponding annotation
+	 * values according to that property name.
+	 * </p>
+	 * @param validates A list containing the names of annotations that need validation,
+	 * used to identify valid annotations.
+	 * @param javaAnnotation A JavaAnnotation object representing the annotation being
+	 * processed.
+	 * @return Returns a list of AnnotationValue objects containing valid validation
+	 * annotation values. If the property name cannot be determined or the annotation does
+	 * not contain valid validation information, an empty list is returned.
+	 */
+	private static List<AnnotationValue> getValidatedAnnotationValues(List<String> validates,
+			JavaAnnotation javaAnnotation) {
 		String simpleName = javaAnnotation.getType().getValue();
-		if (simpleName.equalsIgnoreCase(JSRAnnotationConstants.VALIDATED)) {
-			if (Objects.nonNull(javaAnnotation.getProperty(DocAnnotationConstants.VALUE_PROP))) {
-				AnnotationValue v = javaAnnotation.getProperty(DocAnnotationConstants.VALUE_PROP);
-				if (v instanceof AnnotationValueList) {
-					annotationValueList = ((AnnotationValueList) v).getValueList();
-				}
-				if (v instanceof TypeRef) {
-					annotationValueList.add(v);
-				}
-			}
+
+		// Determine the property name based on the annotation type
+		String propertyName = null;
+		if (JSRAnnotationConstants.VALIDATED.equalsIgnoreCase(simpleName)) {
+			propertyName = DocAnnotationConstants.VALUE_PROP;
 		}
 		else if (validates.contains(simpleName)) {
-			if (Objects.nonNull(javaAnnotation.getProperty(DocAnnotationConstants.GROUP_PROP))) {
-				AnnotationValue v = javaAnnotation.getProperty(DocAnnotationConstants.GROUP_PROP);
-				if (v instanceof AnnotationValueList) {
-					annotationValueList = ((AnnotationValueList) v).getValueList();
-				}
-				if (v instanceof TypeRef) {
-					annotationValueList.add(v);
-				}
-			}
+			propertyName = DocAnnotationConstants.GROUP_PROP;
 		}
-		return annotationValueList;
+
+		// If propertyName is determined, extract the annotation values
+		if (propertyName != null) {
+			return getAnnotationValues(javaAnnotation, propertyName);
+		}
+
+		return Collections.emptyList();
 	}
 
 	public static void genericParamMap(Map<String, String> genericMap, JavaClass cls, String[] globGicName) {
@@ -753,39 +769,84 @@ public class JavaClassUtil {
 		}
 	}
 
+	/**
+	 * Formats a Java type string. This method processes and formats the return type
+	 * string, removing generic uncertainty indicators and spaces.
+	 * @param returnType The original return type string, which may contain generic
+	 * uncertainty indicators.
+	 * @return The formatted return type string, with '?', ' ', and 'extends' characters
+	 * removed.
+	 */
 	public static String javaTypeFormat(String returnType) {
+		// Check if the return type string contains '?'. If it does, format the string.
 		if (returnType.contains("?")) {
+			// Use regex to remove '?', spaces, and 'extends' from the string and return
+			// the formatted string.
 			return returnType.replaceAll("[?\\s]", "").replaceAll("extends", "");
 		}
+		// If the return type string does not contain '?', return the original string.
 		return returnType;
 	}
 
+	/**
+	 * Determines if one class is a child of another class.
+	 * <p>
+	 * This method checks whether the class represented by `sourceClass` is a subclass of
+	 * the class represented by `targetClass`. It returns true if `sourceClass` is a
+	 * subclass or identical to `targetClass`, and false otherwise. If either
+	 * `sourceClass` or `targetClass` cannot be found, it returns false and logs a warning
+	 * message.
+	 * </p>
+	 * @param sourceClass The name of the class to check.
+	 * @param targetClass The name of the target class to determine if `sourceClass` is a
+	 * subclass of.
+	 * @return true if `sourceClass` is a subclass or identical to `targetClass`; false
+	 * otherwise.
+	 */
 	public static boolean isTargetChildClass(String sourceClass, String targetClass) {
 		try {
+			// If the sourceClass is the same as the targetClass, return true.
 			if (sourceClass.equals(targetClass)) {
 				return true;
 			}
+			// Obtain the Class object for the sourceClass.
 			Class<?> c = Class.forName(sourceClass);
+			// Loop through the inheritance hierarchy until a match is found or the top of
+			// the hierarchy is reached.
 			while (c != null) {
+				// If the current class matches the targetClass, return true.
 				if (c.getName().equals(targetClass)) {
 					return true;
 				}
+				// Get the superclass of the current class.
 				c = c.getSuperclass();
 			}
 		}
+		// Catch the exception when the class cannot be found.
 		catch (ClassNotFoundException e) {
-			e.getMessage();
+			// Log a warning message.
+			logger.warning("JavaClass.isTargetChildClass() Unable to find class " + sourceClass);
 			return false;
 		}
+		// Return false if no match was found or an exception occurred.
 		return false;
 	}
 
+	/**
+	 * Retrieves all fields marked for JSON serialization ignoring from a given class.
+	 * This method inspects the annotations of the class to find field names that are
+	 * marked as ignored for JSON serialization.
+	 * @param cls The JavaClass object representing the class to inspect its annotations.
+	 * @return A map containing field names and their ignore properties. Returns an empty
+	 * map if not found or if input is null.
+	 */
 	public static Map<String, String> getClassJsonIgnoreFields(JavaClass cls) {
 		if (Objects.isNull(cls)) {
 			return Collections.emptyMap();
 		}
 		List<JavaAnnotation> classAnnotation = cls.getAnnotations();
 		Map<String, String> ignoreFields = new HashMap<>(16);
+
 		for (JavaAnnotation annotation : classAnnotation) {
 			String simpleAnnotationName = annotation.getType().getValue();
 			if (DocAnnotationConstants.SHORT_JSON_IGNORE_PROPERTIES.equalsIgnoreCase(simpleAnnotationName)) {
@@ -798,6 +859,16 @@ public class JavaClassUtil {
 		return ignoreFields;
 	}
 
+	/**
+	 * Retrieves specified ignored properties from a Java annotation in JSON format. This
+	 * method parses a specific parameter from an annotation and converts it into a map
+	 * format for further processing. It handles three scenarios: the parameter does not
+	 * exist, is a single value, or is multiple values.
+	 * @param annotation The input Java annotation.
+	 * @param propName The name of the parameter in the annotation that indicates which
+	 * properties should be ignored.
+	 * @return A Map where keys are property names to be ignored and values are null.
+	 */
 	@SuppressWarnings({ "unchecked" })
 	public static Map<String, String> getJsonIgnoresProp(JavaAnnotation annotation, String propName) {
 		Map<String, String> ignoreFields = new HashMap<>(16);
@@ -848,6 +919,15 @@ public class JavaClassUtil {
 		}
 	}
 
+	/**
+	 * Retrieves the generic return type name of a Java method.
+	 * @param javaMethod The Java method object from which to extract the return type
+	 * information.
+	 * @param classLoader The class loader used to load the class. If null, uses
+	 * Class.forName to load the class.
+	 * @return The string representation of the generic return type name, or null if the
+	 * generic type cannot be determined.
+	 */
 	private static String getReturnGenericType(JavaMethod javaMethod, ClassLoader classLoader) {
 		String methodName = javaMethod.getName();
 		// `BinaryName` is the correct name for inner classes required by
@@ -954,52 +1034,30 @@ public class JavaClassUtil {
 			boolean isParam) {
 
 		String annotationName = javaAnnotation.getType().getValue();
-		if (DocAnnotationConstants.SHORT_JSON_VIEW.equals(annotationName)) {
-			AnnotationValue annotationValue = javaAnnotation.getProperty(DocAnnotationConstants.VALUE_PROP);
-			return getJsonViewClasses(annotationValue, builder, isParam);
-		}
-		return Collections.emptySet();
-	}
-
-	/**
-	 * Retrieves a set of fully qualified class names associated with the JsonView.
-	 * @param annotationValue The annotation value, which can be a single type reference
-	 * or a list of type references.
-	 * @param builder The project configuration builder used to retrieve class information
-	 * by name.
-	 * @param isParam if isParam is true ,just return the type;else return the super class
-	 * and interface
-	 * @return A set of fully qualified class names related to the JsonView.
-	 */
-	public static Set<String> getJsonViewClasses(AnnotationValue annotationValue, ProjectDocConfigBuilder builder,
-			boolean isParam) {
-		if (Objects.isNull(annotationValue)) {
+		if (!DocAnnotationConstants.SHORT_JSON_VIEW.equals(annotationName)) {
 			return Collections.emptySet();
 		}
 
+		// Retrieve fully qualified class names from the annotation property
+		List<String> classNames = getAnnotationValueClassNames(javaAnnotation, DocAnnotationConstants.VALUE_PROP);
+
+		// If class names are present, process them to get class and its super
+		// classes/interfaces
 		Set<String> result = new HashSet<>();
-		// just one value
-		if (annotationValue instanceof TypeRef) {
-			JavaType type = ((TypeRef) annotationValue).getType();
+		if (CollectionUtil.isNotEmpty(classNames)) {
 			if (isParam) {
-				result.add(type.getFullyQualifiedName());
-				return result;
+				result.addAll(classNames);
 			}
-			JavaClass clazz = builder.getClassByName(type.getFullyQualifiedName());
-			result.addAll(getSuperJavaClassAndInterface(clazz));
-		}
-		else if (annotationValue instanceof AnnotationValueList) {
-			AnnotationValueList property = (AnnotationValueList) annotationValue;
-			Stream<String> stringStream = property.getValueList()
-				.stream()
-				.filter(i -> i instanceof TypeRef)
-				.map(i -> ((TypeRef) i).getType().getFullyQualifiedName());
-			if (isParam) {
-				result.addAll(stringStream.collect(Collectors.toSet()));
-				return result;
+			else {
+				classNames.forEach(typeName -> {
+					JavaClass clazz = builder.getClassByName(typeName);
+					if (clazz != null) {
+						result.addAll(getSuperJavaClassAndInterface(clazz));
+					}
+				});
 			}
-			stringStream.forEach(type -> result.addAll(getSuperJavaClassAndInterface(builder.getClassByName(type))));
 		}
+
 		return result;
 
 	}
@@ -1007,7 +1065,7 @@ public class JavaClassUtil {
 	/**
 	 * Determines whether a field should be excluded from the JSON output based on the
 	 * {@code @JsonView} annotation present on the method.
-	 *
+	 * <p>
 	 * This method uses the {@code shouldIncludeFieldInJsonView} method to determine if
 	 * the field should be included and negates the result to determine if it should be
 	 * excluded.
@@ -1055,8 +1113,7 @@ public class JavaClassUtil {
 
 		// Check if the field's JsonView classes match any of the method's JsonView
 		// classes
-		Set<String> paramJsonViewClasses = getJsonViewClasses(annotation.getProperty(DocAnnotationConstants.VALUE_PROP),
-				projectBuilder, true);
+		Set<String> paramJsonViewClasses = getJsonViewClasses(annotation, projectBuilder, true);
 		return !Collections.disjoint(methodJsonViewClasses, paramJsonViewClasses);
 	}
 
@@ -1087,6 +1144,90 @@ public class JavaClassUtil {
 		}
 
 		return superClassesAndInterfaces;
+	}
+
+	/**
+	 * Retrieves a list of fully qualified class names from a specified annotation
+	 * property.
+	 * <p>
+	 * This method extracts the fully qualified names of classes referenced by a specific
+	 * property within a Java annotation. It handles both single class references and
+	 * lists of class references. If the property is not found or has no valid class
+	 * references, an empty list is returned.
+	 * </p>
+	 * @param javaAnnotation the annotation containing the property
+	 * @param propertyName the name of the property to retrieve
+	 * @return a list of fully qualified class names or an empty list if not present
+	 */
+	public static List<String> getAnnotationValueClassNames(JavaAnnotation javaAnnotation, String propertyName) {
+		AnnotationValue propertyValue = javaAnnotation.getProperty(propertyName);
+		if (propertyValue != null) {
+			if (propertyValue instanceof AnnotationValueList) {
+				return ((AnnotationValueList) propertyValue).getValueList()
+					.stream()
+					.filter(v -> v instanceof TypeRef)
+					.map(v -> ((TypeRef) v).getType().getFullyQualifiedName())
+					.collect(Collectors.toList());
+			}
+			if (propertyValue instanceof TypeRef) {
+				return Collections.singletonList(((TypeRef) propertyValue).getType().getFullyQualifiedName());
+			}
+		}
+		return Collections.emptyList();
+	}
+
+	/**
+	 * Retrieves a list of string values from a specified annotation property.
+	 * <p>
+	 * This method extracts string values referenced by a specific property within a Java
+	 * annotation. It handles both single string values and lists of string values. If the
+	 * property is not found or has no valid string values, an empty list is returned.
+	 * </p>
+	 * @param javaAnnotation the annotation containing the property
+	 * @param propertyName the name of the property to retrieve
+	 * @return a list of string values or an empty list if not present
+	 */
+	public static List<String> getAnnotationValueStrings(JavaAnnotation javaAnnotation, String propertyName) {
+		AnnotationValue propertyValue = javaAnnotation.getProperty(propertyName);
+		if (propertyValue != null) {
+			if (propertyValue instanceof AnnotationValueList) {
+				return ((AnnotationValueList) propertyValue).getValueList()
+					.stream()
+					.filter(temp -> Objects.nonNull(temp) && temp instanceof Constant)
+					.map(temp -> ((Constant) temp).getValue().toString())
+					.filter(StringUtil::isNotEmpty)
+					.collect(Collectors.toList());
+			}
+			if (propertyValue instanceof Constant) {
+				return Collections.singletonList(((Constant) propertyValue).getValue().toString());
+			}
+		}
+		return Collections.emptyList();
+	}
+
+	/**
+	 * Retrieves a list of AnnotationValue objects from a specified annotation property.
+	 * <p>
+	 * This method extracts the AnnotationValue objects referenced by a specific property
+	 * within a Java annotation. It handles both single value references and lists of
+	 * value references.
+	 * </p>
+	 * @param javaAnnotation the annotation containing the property
+	 * @param propertyName the name of the property to retrieve
+	 * @return a list of AnnotationValue objects if present, otherwise an empty list
+	 */
+	public static List<AnnotationValue> getAnnotationValues(JavaAnnotation javaAnnotation, String propertyName) {
+		AnnotationValue annotationValue = javaAnnotation.getProperty(propertyName);
+		if (Objects.isNull(annotationValue)) {
+			return Collections.emptyList();
+		}
+		if (annotationValue instanceof AnnotationValueList) {
+			return ((AnnotationValueList) annotationValue).getValueList();
+		}
+		if (annotationValue instanceof TypeRef) {
+			return Collections.singletonList(annotationValue);
+		}
+		return Collections.emptyList();
 	}
 
 }

@@ -21,12 +21,10 @@
 package com.ly.doc.handler;
 
 import com.ly.doc.builder.ProjectDocConfigBuilder;
-import com.ly.doc.constants.DocAnnotationConstants;
 import com.ly.doc.constants.DocGlobalConstants;
 import com.ly.doc.function.RequestMappingFunc;
 import com.ly.doc.model.annotation.FrameworkAnnotations;
 import com.ly.doc.model.request.RequestMapping;
-import com.ly.doc.model.request.ServerEndpoint;
 import com.ly.doc.utils.DocUrlUtil;
 import com.ly.doc.utils.DocUtil;
 import com.power.common.util.CollectionUtil;
@@ -35,15 +33,10 @@ import com.power.common.util.UrlUtil;
 import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaMethod;
-import com.thoughtworks.qdox.model.expression.AnnotationValue;
-import com.thoughtworks.qdox.model.expression.AnnotationValueList;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
-
-import static com.ly.doc.constants.DocTags.IGNORE;
 
 /**
  * @author yu3.sun on 2022/10/1

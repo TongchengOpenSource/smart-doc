@@ -23,19 +23,13 @@ package com.ly.doc.handler;
 import com.ly.doc.constants.DocAnnotationConstants;
 import com.ly.doc.constants.DocTags;
 import com.ly.doc.model.request.ServerEndpoint;
+import com.ly.doc.utils.JavaClassUtil;
 import com.power.common.util.StringUtil;
 import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaClass;
-import com.thoughtworks.qdox.model.expression.AnnotationValue;
-import com.thoughtworks.qdox.model.expression.AnnotationValueList;
-import com.thoughtworks.qdox.model.expression.Constant;
-import com.thoughtworks.qdox.model.expression.TypeRef;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * websocket handler
@@ -62,62 +56,14 @@ public interface IWebSocketRequestHandler {
 			.ifPresent(builder::setUrl);
 
 		// get subProtocols of annotation
-		builder.setSubProtocols(this.extractStringList(javaAnnotation, "subprotocols"));
+		builder.setSubProtocols(JavaClassUtil.getAnnotationValueStrings(javaAnnotation, "subprotocols"));
 
 		// Handle 'decoders' property
-		this.getTypeList(javaAnnotation, "decoders").ifPresent(builder::setDecoders);
+		builder.setDecoders(JavaClassUtil.getAnnotationValueClassNames(javaAnnotation, "decoders"));
 
 		// Handle 'encoders' property
-		this.getTypeList(javaAnnotation, "encoders").ifPresent(builder::setEncoders);
+		builder.setEncoders(JavaClassUtil.getAnnotationValueClassNames(javaAnnotation, "encoders"));
 		return builder;
-	}
-
-	/**
-	 * Extracts a list of strings from an annotation property.
-	 * @param javaAnnotation the annotation containing the property
-	 * @param propertyName the name of the property
-	 * @return a list of strings
-	 */
-	default List<String> extractStringList(JavaAnnotation javaAnnotation, String propertyName) {
-		return Optional.ofNullable(javaAnnotation.getProperty(propertyName)).map(value -> {
-			if (value instanceof AnnotationValueList) {
-				return ((AnnotationValueList) value).getValueList()
-					.stream()
-					.map(Object::toString)
-					.filter(StringUtil::isNotEmpty)
-					.collect(Collectors.toList());
-			}
-			if (value instanceof Constant) {
-				return Collections.singletonList(((Constant) value).getValue().toString());
-			}
-			return Collections.<String>emptyList();
-		}).orElse(Collections.emptyList());
-	}
-
-	/**
-	 * Retrieves a list of fully qualified type names from an annotation property.
-	 * @param javaAnnotation the annotation containing the property
-	 * @param propertyName the name of the property to retrieve
-	 * @return a containing the list of type names if present
-	 */
-	default Optional<List<String>> getTypeList(JavaAnnotation javaAnnotation, String propertyName) {
-		AnnotationValue annotationValue = javaAnnotation.getProperty(propertyName);
-		if (Objects.isNull(annotationValue)) {
-			return Optional.empty();
-		}
-		if (annotationValue instanceof AnnotationValueList) {
-			List<String> valueList = ((AnnotationValueList) annotationValue).getValueList()
-				.stream()
-				.filter(i -> i instanceof TypeRef)
-				.map(i -> ((TypeRef) i).getType().getFullyQualifiedName())
-				.collect(Collectors.toList());
-			return Optional.of(valueList);
-		}
-		if (annotationValue instanceof TypeRef) {
-			return Optional
-				.of(Collections.singletonList(((TypeRef) annotationValue).getType().getFullyQualifiedName()));
-		}
-		return Optional.empty();
 	}
 
 }

@@ -20,7 +20,6 @@
  */
 package com.ly.doc.model;
 
-import com.ly.doc.constants.DocGlobalConstants;
 import com.ly.doc.constants.MediaType;
 import com.ly.doc.model.request.ApiRequestExample;
 import com.ly.doc.utils.ParamUtil;
