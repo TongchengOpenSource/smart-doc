@@ -28,10 +28,13 @@ import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.expression.AnnotationValue;
 import com.thoughtworks.qdox.model.expression.AnnotationValueList;
+import com.thoughtworks.qdox.model.expression.Constant;
 import com.thoughtworks.qdox.model.expression.TypeRef;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -53,42 +56,68 @@ public interface IWebSocketRequestHandler {
 		}
 		ServerEndpoint builder = ServerEndpoint.builder();
 		// get the value of JavaAnnotation
-		AnnotationValue property = javaAnnotation.getProperty(DocAnnotationConstants.VALUE_PROP);
-		// if value is not null
-		if (Objects.nonNull(property)) {
-			builder.setUrl(StringUtil.removeQuotes(property.toString()));
-		}
+		Optional.ofNullable(javaAnnotation.getProperty(DocAnnotationConstants.VALUE_PROP))
+			.map(Object::toString)
+			.map(StringUtil::removeQuotes)
+			.ifPresent(builder::setUrl);
+
 		// get subProtocols of annotation
-		AnnotationValue subProtocolsOfAnnotation = javaAnnotation.getProperty("subprotocols");
-		if (Objects.nonNull(subProtocolsOfAnnotation) && subProtocolsOfAnnotation instanceof AnnotationValueList) {
-			List<AnnotationValue> valueList = ((AnnotationValueList) subProtocolsOfAnnotation).getValueList();
-			List<String> subProtocols = valueList.stream().map(Object::toString).collect(Collectors.toList());
-			builder.setSubProtocols(subProtocols);
-		}
+		builder.setSubProtocols(this.extractStringList(javaAnnotation, "subprotocols"));
 
-		// get decoders of annotation
-		AnnotationValue decodersOfAnnotation = javaAnnotation.getProperty("decoders");
-		if (Objects.nonNull(decodersOfAnnotation) && decodersOfAnnotation instanceof AnnotationValueList) {
-			List<AnnotationValue> valueList = ((AnnotationValueList) decodersOfAnnotation).getValueList();
-			List<String> decoders = valueList.stream()
-				.filter(i -> i instanceof TypeRef)
-				.map(i -> ((TypeRef) i).getType().getFullyQualifiedName())
-				.collect(Collectors.toList());
-			builder.setDecoders(decoders);
-		}
+		// Handle 'decoders' property
+		this.getTypeList(javaAnnotation, "decoders").ifPresent(builder::setDecoders);
 
-		// get encoders of annotation
-		AnnotationValue encodersOfAnnotation = javaAnnotation.getProperty("encoders");
-		if (Objects.nonNull(encodersOfAnnotation) && encodersOfAnnotation instanceof AnnotationValueList) {
-			List<AnnotationValue> valueList = ((AnnotationValueList) encodersOfAnnotation).getValueList();
-			List<String> encoders = valueList.stream()
-				.filter(i -> i instanceof TypeRef)
-				.map(i -> ((TypeRef) i).getType().getFullyQualifiedName())
-				.collect(Collectors.toList());
-			builder.setEncoders(encoders);
-		}
-
+		// Handle 'encoders' property
+		this.getTypeList(javaAnnotation, "encoders").ifPresent(builder::setEncoders);
 		return builder;
+	}
+
+	/**
+	 * Extracts a list of strings from an annotation property.
+	 * @param javaAnnotation the annotation containing the property
+	 * @param propertyName the name of the property
+	 * @return a list of strings
+	 */
+	default List<String> extractStringList(JavaAnnotation javaAnnotation, String propertyName) {
+		return Optional.ofNullable(javaAnnotation.getProperty(propertyName)).map(value -> {
+			if (value instanceof AnnotationValueList) {
+				return ((AnnotationValueList) value).getValueList()
+					.stream()
+					.map(Object::toString)
+					.filter(StringUtil::isNotEmpty)
+					.collect(Collectors.toList());
+			}
+			if (value instanceof Constant) {
+				return Collections.singletonList(((Constant) value).getValue().toString());
+			}
+			return Collections.<String>emptyList();
+		}).orElse(Collections.emptyList());
+	}
+
+	/**
+	 * Retrieves a list of fully qualified type names from an annotation property.
+	 * @param javaAnnotation the annotation containing the property
+	 * @param propertyName the name of the property to retrieve
+	 * @return a containing the list of type names if present
+	 */
+	default Optional<List<String>> getTypeList(JavaAnnotation javaAnnotation, String propertyName) {
+		AnnotationValue annotationValue = javaAnnotation.getProperty(propertyName);
+		if (Objects.isNull(annotationValue)) {
+			return Optional.empty();
+		}
+		if (annotationValue instanceof AnnotationValueList) {
+			List<String> valueList = ((AnnotationValueList) annotationValue).getValueList()
+				.stream()
+				.filter(i -> i instanceof TypeRef)
+				.map(i -> ((TypeRef) i).getType().getFullyQualifiedName())
+				.collect(Collectors.toList());
+			return Optional.of(valueList);
+		}
+		if (annotationValue instanceof TypeRef) {
+			return Optional
+				.of(Collections.singletonList(((TypeRef) annotationValue).getType().getFullyQualifiedName()));
+		}
+		return Optional.empty();
 	}
 
 }
