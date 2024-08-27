@@ -1680,11 +1680,8 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 			.stream()
 			.filter(annotation -> DocAnnotationConstants.SHORT_JSON_VIEW.equals(annotation.getType().getValue()))
 			.findFirst()
-			.ifPresent(annotation -> {
-				AnnotationValue annotationValue = annotation.getProperty(DocAnnotationConstants.VALUE_PROP);
-				docJavaMethod
-					.setJsonViewClasses(JavaClassUtil.getJsonViewClasses(annotationValue, projectBuilder, false));
-			});
+			.ifPresent(annotation -> docJavaMethod
+				.setJsonViewClasses(JavaClassUtil.getJsonViewClasses(annotation, projectBuilder, false)));
 
 		return docJavaMethod;
 	}

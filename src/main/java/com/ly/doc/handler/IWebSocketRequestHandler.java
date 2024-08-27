@@ -23,16 +23,13 @@ package com.ly.doc.handler;
 import com.ly.doc.constants.DocAnnotationConstants;
 import com.ly.doc.constants.DocTags;
 import com.ly.doc.model.request.ServerEndpoint;
+import com.ly.doc.utils.JavaClassUtil;
 import com.power.common.util.StringUtil;
 import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaClass;
-import com.thoughtworks.qdox.model.expression.AnnotationValue;
-import com.thoughtworks.qdox.model.expression.AnnotationValueList;
-import com.thoughtworks.qdox.model.expression.TypeRef;
 
-import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 /**
  * websocket handler
@@ -53,41 +50,19 @@ public interface IWebSocketRequestHandler {
 		}
 		ServerEndpoint builder = ServerEndpoint.builder();
 		// get the value of JavaAnnotation
-		AnnotationValue property = javaAnnotation.getProperty(DocAnnotationConstants.VALUE_PROP);
-		// if value is not null
-		if (Objects.nonNull(property)) {
-			builder.setUrl(StringUtil.removeQuotes(property.toString()));
-		}
+		Optional.ofNullable(javaAnnotation.getProperty(DocAnnotationConstants.VALUE_PROP))
+			.map(Object::toString)
+			.map(StringUtil::removeQuotes)
+			.ifPresent(builder::setUrl);
+
 		// get subProtocols of annotation
-		AnnotationValue subProtocolsOfAnnotation = javaAnnotation.getProperty("subprotocols");
-		if (Objects.nonNull(subProtocolsOfAnnotation) && subProtocolsOfAnnotation instanceof AnnotationValueList) {
-			List<AnnotationValue> valueList = ((AnnotationValueList) subProtocolsOfAnnotation).getValueList();
-			List<String> subProtocols = valueList.stream().map(Object::toString).collect(Collectors.toList());
-			builder.setSubProtocols(subProtocols);
-		}
+		builder.setSubProtocols(JavaClassUtil.getAnnotationValueStrings(javaAnnotation, "subprotocols"));
 
-		// get decoders of annotation
-		AnnotationValue decodersOfAnnotation = javaAnnotation.getProperty("decoders");
-		if (Objects.nonNull(decodersOfAnnotation) && decodersOfAnnotation instanceof AnnotationValueList) {
-			List<AnnotationValue> valueList = ((AnnotationValueList) decodersOfAnnotation).getValueList();
-			List<String> decoders = valueList.stream()
-				.filter(i -> i instanceof TypeRef)
-				.map(i -> ((TypeRef) i).getType().getFullyQualifiedName())
-				.collect(Collectors.toList());
-			builder.setDecoders(decoders);
-		}
+		// Handle 'decoders' property
+		builder.setDecoders(JavaClassUtil.getAnnotationValueClassNames(javaAnnotation, "decoders"));
 
-		// get encoders of annotation
-		AnnotationValue encodersOfAnnotation = javaAnnotation.getProperty("encoders");
-		if (Objects.nonNull(encodersOfAnnotation) && encodersOfAnnotation instanceof AnnotationValueList) {
-			List<AnnotationValue> valueList = ((AnnotationValueList) encodersOfAnnotation).getValueList();
-			List<String> encoders = valueList.stream()
-				.filter(i -> i instanceof TypeRef)
-				.map(i -> ((TypeRef) i).getType().getFullyQualifiedName())
-				.collect(Collectors.toList());
-			builder.setEncoders(encoders);
-		}
-
+		// Handle 'encoders' property
+		builder.setEncoders(JavaClassUtil.getAnnotationValueClassNames(javaAnnotation, "encoders"));
 		return builder;
 	}
 
