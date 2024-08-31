@@ -23,6 +23,8 @@ package com.ly.doc.model.torna;
 import java.util.List;
 
 /**
+ * TornaApi
+ *
  * @author xingzi 2021/2/25 1:09
  **/
 public class TornaApi {
@@ -31,18 +33,27 @@ public class TornaApi {
 	 * "debugEnvs": [ { "name": "Test environment", "url": "http://10.1.30.165:2222" } ],
 	 * "apis": [
 	 */
-	List<DebugEnv> debugEnvs;
+	private List<DebugEnv> debugEnvs;
 
-	List<Apis> apis;
+	/**
+	 * Torna api List
+	 */
+	private List<Apis> apis;
 
-	String author;
+	/**
+	 * Author
+	 */
+	private String author;
 
-	List<CommonErrorCode> commonErrorCodes;
+	/**
+	 * Common error code list
+	 */
+	private List<CommonErrorCode> commonErrorCodes;
 
 	/**
 	 * Whether to replace the document. 1: Replace, 0: Do not replace (append). Default: 1
 	 */
-	Integer isReplace;
+	private Integer isReplace;
 
 	public Integer getIsReplace() {
 		return isReplace;

@@ -36,8 +36,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Dubbo RPC Torna Builder.
+ *
  * @author xingzi 2021/4/28 16:14
- **/
+ */
 public class RpcTornaBuilder {
 
 	/**
@@ -60,33 +62,75 @@ public class RpcTornaBuilder {
 		buildTorna(apiDocList, config, javaProjectBuilder);
 	}
 
+	/**
+	 * Build Torna data and push it to the Torna server.
+	 * @param apiDocs List of RpcApiDoc
+	 * @param apiConfig ApiConfig
+	 * @param builder JavaProjectBuilder
+	 */
 	public static void buildTorna(List<RpcApiDoc> apiDocs, ApiConfig apiConfig, JavaProjectBuilder builder) {
+		TornaApi tornaApi = convertToTornaApi(apiDocs, apiConfig, builder);
+		// Push to torna
+		TornaUtil.pushToTorna(tornaApi, apiConfig, builder);
+	}
+
+	/**
+	 * Get Torna API documentation.
+	 * @param config ApiConfig
+	 * @return TornaApi
+	 */
+	public static TornaApi getTornaApi(ApiConfig config) {
+		RpcDocBuilderTemplate builderTemplate = new RpcDocBuilderTemplate();
+		JavaProjectBuilder javaProjectBuilder = JavaProjectBuilderHelper.create();
+		List<RpcApiDoc> apiDocList = builderTemplate.getApiDoc(false, true, true, config, javaProjectBuilder);
+		return convertToTornaApi(apiDocList, config, javaProjectBuilder);
+	}
+
+	/**
+	 * Convert a list of RpcApiDoc to TornaApi.
+	 * @param apiDocs List of RpcApiDoc
+	 * @param apiConfig ApiConfig
+	 * @param builder JavaProjectBuilder
+	 * @return TornaApi
+	 */
+	public static TornaApi convertToTornaApi(List<RpcApiDoc> apiDocs, ApiConfig apiConfig, JavaProjectBuilder builder) {
 		TornaApi tornaApi = new TornaApi();
 		tornaApi.setAuthor(apiConfig.getAuthor());
 		tornaApi.setIsReplace(BooleanUtils.toInteger(apiConfig.getReplace()));
-		Apis api;
+
 		List<Apis> apisList = new ArrayList<>();
 		// Add data
-		for (RpcApiDoc a : apiDocs) {
-			api = new Apis();
-			api.setName(StringUtils.isBlank(a.getDesc()) ? a.getName() : a.getDesc());
-			TornaUtil.setDebugEnv(apiConfig, tornaApi);
-			api.setItems(TornaUtil.buildDubboApis(a.getList()));
-			api.setIsFolder(TornaConstants.YES);
-			api.setAuthor(a.getAuthor());
-			api.setDubboInfo(new DubboInfo().builder()
-				.setAuthor(a.getAuthor())
-				.setProtocol(a.getProtocol())
-				.setVersion(a.getVersion())
-				.setDependency(TornaUtil.buildDependencies(apiConfig.getRpcApiDependencies()))
-				.setInterfaceName(a.getName()));
-			api.setOrderIndex(a.getOrder());
+		for (RpcApiDoc rpcApiDoc : apiDocs) {
+			Apis api = createApi(rpcApiDoc, apiConfig, tornaApi);
 			apisList.add(api);
 		}
+
 		tornaApi.setCommonErrorCodes(TornaUtil.buildErrorCode(apiConfig, builder));
 		tornaApi.setApis(apisList);
-		// Push to torna
-		TornaUtil.pushToTorna(tornaApi, apiConfig, builder);
+		return tornaApi;
+	}
+
+	/**
+	 * Helper method to create Apis object from RpcApiDoc.
+	 * @param rpcApiDoc RpcApiDoc
+	 * @param apiConfig ApiConfig
+	 * @param tornaApi TornaApi
+	 * @return Apis
+	 */
+	private static Apis createApi(RpcApiDoc rpcApiDoc, ApiConfig apiConfig, TornaApi tornaApi) {
+		Apis api = new Apis();
+		api.setName(StringUtils.isBlank(rpcApiDoc.getDesc()) ? rpcApiDoc.getName() : rpcApiDoc.getDesc());
+		TornaUtil.setDebugEnv(apiConfig, tornaApi);
+		api.setItems(TornaUtil.buildDubboApis(rpcApiDoc.getList()));
+		api.setIsFolder(TornaConstants.YES);
+		api.setAuthor(rpcApiDoc.getAuthor());
+		api.setDubboInfo(new DubboInfo().setAuthor(rpcApiDoc.getAuthor())
+			.setProtocol(rpcApiDoc.getProtocol())
+			.setVersion(rpcApiDoc.getVersion())
+			.setDependency(TornaUtil.buildDependencies(apiConfig.getRpcApiDependencies()))
+			.setInterfaceName(rpcApiDoc.getName()));
+		api.setOrderIndex(rpcApiDoc.getOrder());
+		return api;
 	}
 
 }

@@ -41,6 +41,8 @@ import java.util.Objects;
 import static com.ly.doc.constants.TornaConstants.DEFAULT_GROUP_CODE;
 
 /**
+ * Rest Api Torna Builder
+ *
  * @author xingzi 2021/2/2 18:05
  **/
 public class TornaBuilder {
@@ -55,20 +57,13 @@ public class TornaBuilder {
 	}
 
 	/**
-	 * Only for smart-doc maven plugin and gradle plugin.
+	 * Only for smart-doc Maven plugin and Gradle plugin.
 	 * @param config ApiConfig
-	 * @param javaProjectBuilder ProjectDocConfigBuilder
+	 * @param javaProjectBuilder JavaProjectBuilder
 	 */
 	public static void buildApiDoc(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
 		config.setParamsDataToTree(true);
-		DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
-		builderTemplate.checkAndInit(config, Boolean.FALSE);
-		ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
-		IDocBuildTemplate<ApiDoc> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework(),
-				config.getClassLoader());
-		Objects.requireNonNull(docBuildTemplate, "doc build template is null");
-		ApiSchema<ApiDoc> apiSchema = docBuildTemplate.getApiData(configBuilder);
-		List<ApiDoc> apiDocList = docBuildTemplate.handleApiGroup(apiSchema.getApiDatas(), config);
+		List<ApiDoc> apiDocList = generateApiDocs(config, javaProjectBuilder);
 		buildTorna(apiDocList, config, javaProjectBuilder);
 	}
 
@@ -79,6 +74,31 @@ public class TornaBuilder {
 	 * @param builder JavaProjectBuilder
 	 */
 	public static void buildTorna(List<ApiDoc> apiDocs, ApiConfig apiConfig, JavaProjectBuilder builder) {
+		// Convert ApiDoc to TornaApi
+		TornaApi tornaApi = convertToTornaApi(apiDocs, apiConfig, builder);
+		// Push to torna
+		TornaUtil.pushToTorna(tornaApi, apiConfig, builder);
+	}
+
+	/**
+	 * Generate Torna API.
+	 * @param config ApiConfig
+	 * @return TornaApi
+	 */
+	public static TornaApi getTornaApi(ApiConfig config) {
+		JavaProjectBuilder javaProjectBuilder = JavaProjectBuilderHelper.create();
+		List<ApiDoc> apiDocs = generateApiDocs(config, javaProjectBuilder);
+		return convertToTornaApi(apiDocs, config, javaProjectBuilder);
+	}
+
+	/**
+	 * Convert List of ApiDoc to TornaApi
+	 * @param apiDocs apiData
+	 * @param apiConfig ApiConfig
+	 * @param builder JavaProjectBuilder
+	 * @return TornaApi
+	 */
+	private static TornaApi convertToTornaApi(List<ApiDoc> apiDocs, ApiConfig apiConfig, JavaProjectBuilder builder) {
 		TornaApi tornaApi = new TornaApi();
 		tornaApi.setAuthor(apiConfig.getAuthor());
 		tornaApi.setIsReplace(BooleanUtils.toInteger(apiConfig.getReplace()));
@@ -110,8 +130,24 @@ public class TornaBuilder {
 		// delete default group when only default group
 		tornaApi.setApis(groupApiList.size() == 1 && DEFAULT_GROUP_CODE.equals(groupApiList.get(0).getName())
 				? groupApiList.get(0).getItems() : groupApiList);
-		// Push to torna
-		TornaUtil.pushToTorna(tornaApi, apiConfig, builder);
+		return tornaApi;
+	}
+
+	/**
+	 * Generate API docs using the provided configuration and builder.
+	 * @param config ApiConfig
+	 * @param javaProjectBuilder JavaProjectBuilder
+	 * @return List of ApiDoc
+	 */
+	private static List<ApiDoc> generateApiDocs(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
+		DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
+		builderTemplate.checkAndInit(config, Boolean.FALSE);
+		ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
+		IDocBuildTemplate<ApiDoc> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework(),
+				config.getClassLoader());
+		Objects.requireNonNull(docBuildTemplate, "doc build template is null");
+		ApiSchema<ApiDoc> apiSchema = docBuildTemplate.getApiData(configBuilder);
+		return docBuildTemplate.handleApiGroup(apiSchema.getApiDatas(), config);
 	}
 
 }
