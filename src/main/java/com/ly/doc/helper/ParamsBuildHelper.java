@@ -89,7 +89,6 @@ public class ParamsBuildHelper extends BaseHelper {
 		if (registryClasses.containsKey(className) && level > registryClasses.size()) {
 			return paramList;
 		}
-		boolean skipTransientField = apiConfig.isSkipTransientField();
 		boolean isShowJavaType = projectBuilder.getApiConfig().getShowJavaType();
 		boolean requestFieldToUnderline = projectBuilder.getApiConfig().isRequestFieldToUnderline();
 		boolean responseFieldToUnderline = projectBuilder.getApiConfig().isResponseFieldToUnderline();
@@ -176,9 +175,14 @@ public class ParamsBuildHelper extends BaseHelper {
 				String maxLength = JavaFieldUtil.getParamMaxLength(field.getAnnotations());
 				StringBuilder comment = new StringBuilder();
 				comment.append(docField.getComment());
-				if (field.isTransient() && skipTransientField) {
-					continue;
+				if (field.isTransient()) {
+					boolean passBuild = (apiConfig.isSerializeRequestTransients() && !isResp)
+							|| (apiConfig.isSerializeResponseTransients() && isResp);
+					if (passBuild) {
+						continue;
+					}
 				}
+
 				String fieldName = docField.getFieldName();
 				if (Objects.nonNull(fieldNameConvert)) {
 					fieldName = fieldNameConvert.translate(fieldName);

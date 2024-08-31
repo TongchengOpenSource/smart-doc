@@ -193,9 +193,14 @@ public class ApiConfig {
 	private String projectCName;
 
 	/**
-	 * Skip Transient Field
+	 * serialize request transients;default false
 	 */
-	private boolean skipTransientField = true;
+	private boolean serializeRequestTransients = false;
+
+	/**
+	 * serialize response transients;default false
+	 */
+	private boolean serializeResponseTransients = false;
 
 	/**
 	 * @since 1.7.10 default show author
@@ -800,12 +805,22 @@ public class ApiConfig {
 		this.group = group;
 	}
 
-	public boolean isSkipTransientField() {
-		return skipTransientField;
+	public boolean isSerializeRequestTransients() {
+		return serializeRequestTransients;
 	}
 
-	public void setSkipTransientField(boolean skipTransientField) {
-		this.skipTransientField = skipTransientField;
+	public ApiConfig setSerializeRequestTransients(boolean serializeRequestTransients) {
+		this.serializeRequestTransients = serializeRequestTransients;
+		return this;
+	}
+
+	public boolean isSerializeResponseTransients() {
+		return serializeResponseTransients;
+	}
+
+	public ApiConfig setSerializeResponseTransients(boolean serializeResponseTransients) {
+		this.serializeResponseTransients = serializeResponseTransients;
+		return this;
 	}
 
 	public boolean isShowAuthor() {
