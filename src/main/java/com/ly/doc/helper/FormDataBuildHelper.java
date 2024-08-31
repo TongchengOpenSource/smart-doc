@@ -20,9 +20,10 @@
  */
 package com.ly.doc.helper;
 
-import java.util.*;
-
-import com.ly.doc.constants.*;
+import com.ly.doc.builder.ProjectDocConfigBuilder;
+import com.ly.doc.constants.DocTags;
+import com.ly.doc.constants.JSRAnnotationConstants;
+import com.ly.doc.constants.ParamTypeConstants;
 import com.ly.doc.model.ApiConfig;
 import com.ly.doc.model.CustomField;
 import com.ly.doc.model.DocJavaField;
@@ -31,10 +32,11 @@ import com.ly.doc.utils.*;
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.RandomUtil;
 import com.power.common.util.StringUtil;
-import com.ly.doc.builder.ProjectDocConfigBuilder;
 import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaField;
+
+import java.util.*;
 
 /**
  * @author yu 2019/12/25.
@@ -72,7 +74,6 @@ public class FormDataBuildHelper extends BaseHelper {
 		// Registry class
 		registryClasses.put(className, className);
 		counter++;
-		boolean skipTransientField = apiConfig.isSkipTransientField();
 		boolean requestFieldToUnderline = apiConfig.isRequestFieldToUnderline();
 		boolean responseFieldToUnderline = apiConfig.isResponseFieldToUnderline();
 		String simpleName = DocClassUtil.getSimpleName(className);
@@ -109,9 +110,10 @@ public class FormDataBuildHelper extends BaseHelper {
 					|| JavaClassValidateUtil.isIgnoreFieldTypes(subTypeName)) {
 				continue;
 			}
-			if (field.isTransient() && skipTransientField) {
+			if (field.isTransient() && apiConfig.isSerializeRequestTransients()) {
 				continue;
 			}
+
 			List<JavaAnnotation> javaAnnotations = docField.getAnnotations();
 			for (JavaAnnotation annotation : javaAnnotations) {
 				String simpleAnnotationName = annotation.getType().getValue();

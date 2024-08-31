@@ -152,7 +152,7 @@ public class JsonBuildHelper extends BaseHelper {
 		if (javaClass.isEnum()) {
 			return StringUtil.removeQuotes(String.valueOf(JavaClassUtil.getEnumValue(javaClass, Boolean.FALSE)));
 		}
-		boolean skipTransientField = apiConfig.isSkipTransientField();
+
 		StringBuilder data0 = new StringBuilder();
 		JavaClass cls = builder.getClassByName(typeName);
 
@@ -290,9 +290,14 @@ public class JsonBuildHelper extends BaseHelper {
 			// Process each field of the class
 			out: for (DocJavaField docField : fields) {
 				JavaField field = docField.getJavaField();
-				if (field.isTransient() && skipTransientField) {
-					continue;
+				if (field.isTransient()) {
+					boolean passBuild = (apiConfig.isSerializeRequestTransients() && !isResp)
+							|| (apiConfig.isSerializeResponseTransients() && isResp);
+					if (passBuild) {
+						continue;
+					}
 				}
+
 				String fieldName = docField.getFieldName();
 
 				// if ignore fields contains the field name, then skip this field
