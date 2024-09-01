@@ -144,6 +144,7 @@ jobs:
               mvn -DskipTests=true smart-doc:openapi
               mvn -DskipTests=true smart-doc:postman
               mvn -DskipTests=true smart-doc:word
+              mvn test -Dtest=com.power.doc.torna.TornaApiTest
               ;;
             dubbo)
               mvn -DskipTests=true smart-doc:rpc-adoc
