@@ -32,7 +32,7 @@
         <%
         for(doc in api.list){
         %>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="${@com.ly.doc.utils.DocUtil.getEscapeAndCleanComment(doc.desc)}" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="${htmlEscape(doc.desc)}" enabled="true">
           <%if(isNotEmpty(doc.requestExample.jsonBody)){%>
 		  <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
