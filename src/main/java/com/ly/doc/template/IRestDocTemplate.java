@@ -1190,7 +1190,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 							.setClassName(gicNameArr[1])
 							.setDesc(Optional.ofNullable(builder.getClassByName(gicNameArr[1]))
 								.map(JavaClass::getComment)
-								.orElse("A map key."))
+								.orElse(DocGlobalConstants.DEFAULT_MAP_KEY_DESC))
 							.setVersion(DocGlobalConstants.DEFAULT_VERSION)
 							.setId(paramList.size() + 1);
 						paramList.add(apiParam);

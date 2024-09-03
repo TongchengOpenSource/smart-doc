@@ -375,6 +375,29 @@ public class ParamsBuildHelper extends BaseHelper {
 					paramList.add(param);
 					continue;
 				}
+				// Analyzing Map Type Field
+				if (JavaClassValidateUtil.isMap(subTypeName)) {
+					ApiParam param = ApiParam.of()
+						.setField(pre + fieldName)
+						.setType(ParamTypeConstants.PARAM_TYPE_OBJECT)
+						.setClassName(className)
+						.setPid(pid)
+						.setId(atomicOrDefault(atomicInteger, paramList.size() + pid + 1))
+						.setMaxLength(maxLength)
+						.setDesc(comment.toString())
+						.setRequired(strRequired)
+						.setVersion(since)
+						.setExtensions(extensionParams);
+					paramList.add(param);
+
+					List<ApiParam> apiParams = buildMapParam(DocClassUtil.getSimpleGicName(fieldGicName),
+							DocUtil.getIndentByLevel(level), level + 1, isRequired, isResp, registryClasses,
+							projectBuilder, groupClasses, methodJsonViewClasses, param.getId(), jsonRequest, nextLevel,
+							atomicInteger);
+					paramList.addAll(apiParams);
+					continue;
+				}
+
 				if (JavaClassValidateUtil.isPrimitive(subTypeName)) {
 					if (StringUtil.isEmpty(fieldValue)) {
 						fieldValue = StringUtil.isNotEmpty(fieldJsonFormatValue) ? fieldJsonFormatValue : StringUtil
@@ -425,11 +448,7 @@ public class ParamsBuildHelper extends BaseHelper {
 						}
 					}
 
-					StringBuilder preBuilder = new StringBuilder();
-					for (int j = 0; j < level; j++) {
-						preBuilder.append(DocGlobalConstants.FIELD_SPACE);
-					}
-					preBuilder.append(DocGlobalConstants.PARAM_PREFIX);
+					StringBuilder preBuilder = DocUtil.getStringBuilderByLevel(level);
 					int fieldPid;
 					ApiParam param = ApiParam.of()
 						.setField(pre + fieldName)
@@ -710,29 +729,19 @@ public class ParamsBuildHelper extends BaseHelper {
 		boolean isShowJavaType = projectBuilder.getApiConfig().getShowJavaType();
 		String valueSimpleNameType = processFieldTypeName(isShowJavaType, valueSimpleName);
 		List<ApiParam> paramList = new ArrayList<>();
-		if (JavaClassValidateUtil.isPrimitive(mapKeySimpleName)) {
-			ApiParam apiParam = ApiParam.of()
-				.setField(pre + "mapKey")
-				.setType(valueSimpleNameType)
-				.setClassName(valueSimpleName)
-				.setDesc(Optional.ofNullable(projectBuilder.getClassByName(valueSimpleName))
-					.map(JavaClass::getComment)
-					.orElse("A map key."))
-				.setVersion(DocGlobalConstants.DEFAULT_VERSION)
-				.setPid(pid)
-				.setId(atomicOrDefault(atomicInteger, ++pid));
-			paramList.add(apiParam);
-		}
-		else if (Objects.nonNull(mapKeyClass) && mapKeyClass.isEnum() && !mapKeyClass.getEnumConstants().isEmpty()) {
+		// map key is enum
+		if (Objects.nonNull(mapKeyClass) && mapKeyClass.isEnum() && !mapKeyClass.getEnumConstants().isEmpty()) {
 			Integer keyParentId = null;
 			for (JavaField enumConstant : mapKeyClass.getEnumConstants()) {
 				ApiParam apiParam = ApiParam.of()
 					.setField(pre + enumConstant.getName())
 					.setType(valueSimpleNameType)
 					.setClassName(valueSimpleName)
-					.setDesc(Optional.ofNullable(projectBuilder.getClassByName(valueSimpleName))
-						.map(JavaClass::getComment)
-						.orElse("A map key."))
+					.setDesc(StringUtil.isEmpty(enumConstant.getComment()) ? enumConstant.getName()
+							: enumConstant.getComment() + " "
+									+ Optional.ofNullable(projectBuilder.getClassByName(valueSimpleName))
+										.map(JavaClass::getComment)
+										.orElse(DocGlobalConstants.DEFAULT_MAP_KEY_DESC))
 					.setVersion(DocGlobalConstants.DEFAULT_VERSION)
 					.setPid(null == keyParentId ? pid : keyParentId)
 					.setId(paramList.size() + 1);
@@ -740,6 +749,8 @@ public class ParamsBuildHelper extends BaseHelper {
 					keyParentId = apiParam.getPid();
 				}
 				paramList.add(apiParam);
+				// in foreach, need remove enum class in registry
+				registryClasses.remove(valueSimpleName);
 				List<ApiParam> apiParams = addValueParams(valueSimpleName, globGicName, level, isRequired, isResp,
 						registryClasses, projectBuilder, groupClasses, jsonViewClasses, apiParam.getId(), jsonRequest,
 						nextLevel, atomicInteger);
@@ -747,6 +758,21 @@ public class ParamsBuildHelper extends BaseHelper {
 			}
 			return paramList;
 		}
+		// map key is primitive
+		if (JavaClassValidateUtil.isPrimitive(mapKeySimpleName)) {
+			ApiParam apiParam = ApiParam.of()
+				.setField(pre + "mapKey")
+				.setType(valueSimpleNameType)
+				.setClassName(valueSimpleName)
+				.setDesc(Optional.ofNullable(projectBuilder.getClassByName(valueSimpleName))
+					.map(JavaClass::getComment)
+					.orElse(DocGlobalConstants.DEFAULT_MAP_KEY_DESC))
+				.setVersion(DocGlobalConstants.DEFAULT_VERSION)
+				.setPid(pid)
+				.setId(atomicOrDefault(atomicInteger, ++pid));
+			paramList.add(apiParam);
+		}
+
 		paramList.addAll(addValueParams(valueSimpleName, globGicName, level, isRequired, isResp, registryClasses,
 				projectBuilder, groupClasses, jsonViewClasses, pid, jsonRequest, nextLevel, atomicInteger));
 		return paramList;
@@ -777,13 +803,8 @@ public class ParamsBuildHelper extends BaseHelper {
 		if (JavaClassValidateUtil.isPrimitive(valueSimpleName)) {
 			return Collections.emptyList();
 		}
-		StringBuilder preBuilder = new StringBuilder();
-		for (int j = 0; j < level; j++) {
-			preBuilder.append(DocGlobalConstants.FIELD_SPACE);
-		}
-		preBuilder.append(DocGlobalConstants.PARAM_PREFIX);
-		return buildParams(globGicName[1], preBuilder.toString(), ++nextLevel, isRequired, isResp, registryClasses,
-				projectBuilder, groupClasses, jsonViewClasses, pid, jsonRequest, atomicInteger);
+		return buildParams(globGicName[1], DocUtil.getIndentByLevel(level), ++nextLevel, isRequired, isResp,
+				registryClasses, projectBuilder, groupClasses, jsonViewClasses, pid, jsonRequest, atomicInteger);
 	}
 
 	public static String dictionaryListComment(List<EnumDictionary> enumDataDict) {

@@ -29,6 +29,9 @@ import java.nio.file.FileSystems;
  */
 public interface DocGlobalConstants {
 
+	/**
+	 * api order.
+	 */
 	int API_ORDER = 0;
 
 	/**
@@ -605,5 +608,10 @@ public interface DocGlobalConstants {
 	 * asciidoc extension.
 	 */
 	String ASCIIDOC_EXTENSION = ".adoc";
+
+	/**
+	 * default map key desc.
+	 */
+	String DEFAULT_MAP_KEY_DESC = "A map key.";
 
 }
