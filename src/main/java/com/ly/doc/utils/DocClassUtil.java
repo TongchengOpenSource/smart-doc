@@ -191,18 +191,94 @@ public class DocClassUtil {
 		if (StringUtil.isEmpty(gName)) {
 			return new String[0];
 		}
-		if (gName.contains("<")) {
-			String[] arr = new String[2];
-			String key = gName.substring(gName.indexOf("<") + 1, gName.indexOf(","));
-			String value = gName.substring(gName.indexOf(",") + 1, gName.lastIndexOf(">"));
-			arr[0] = key;
-			arr[1] = value;
-			return arr;
+		// Find the positions of the outermost '<' and '>' characters
+		int leftAngleBracket = gName.indexOf('<');
+		// If no matching angle brackets are found, return new String[0]
+		if (leftAngleBracket == -1) {
+			return new String[0];
 		}
-		else {
+		int rightAngleBracket = findMatchingAngleBracket(gName, leftAngleBracket);
+
+		// If no matching angle brackets are found, return new String[0]
+		if (rightAngleBracket == -1) {
+			return new String[0];
+		}
+		// Extract the content inside "Map<...>"
+		String insideMap = gName.substring(leftAngleBracket + 1, rightAngleBracket);
+
+		// Split the content into the key and value parts
+		return splitKeyValue(insideMap);
+	}
+
+	/**
+	 * Splits the content inside a generic Map declaration into key and value parts. This
+	 * method identifies the position of the comma that separates the key and value types,
+	 * ensuring that it is outside any nested angle brackets.
+	 * @param insideMap The string inside the angle brackets of the Map declaration, e.g.,
+	 * "A, Map<B, C>".
+	 * @return An array of two elements: the key type and the value type, or {@code null}
+	 * if the format is invalid.
+	 */
+	private static String[] splitKeyValue(String insideMap) {
+		int commaIndex = findCommaOutsideBrackets(insideMap);
+		if (commaIndex == -1) {
 			return new String[0];
 		}
 
+		String key = insideMap.substring(0, commaIndex).trim();
+		String value = insideMap.substring(commaIndex + 1).trim();
+		return new String[] { key, value };
+	}
+
+	/**
+	 * Finds the position of the closing '>' that matches the opening '<' at the given
+	 * position. This method scans the string starting from the position of the first '<'
+	 * and tracks the depth of nested angle brackets to find the correct closing '>'.
+	 * @param str The string to search in.
+	 * @param start The position of the first '<'.
+	 * @return The index of the matching '>', or -1 if no matching bracket is found.
+	 */
+	private static int findMatchingAngleBracket(String str, int start) {
+		int depth = 0;
+		for (int i = start; i < str.length(); i++) {
+			char ch = str.charAt(i);
+			if (ch == '<') {
+				depth++;
+			}
+			else if (ch == '>') {
+				depth--;
+				if (depth == 0) {
+					return i;
+				}
+			}
+		}
+		// No matching closing angle bracket found
+		return -1;
+	}
+
+	/**
+	 * Finds the position of the comma that separates the key and value types in a generic
+	 * declaration. This method ensures that the comma is not inside any nested angle
+	 * brackets.
+	 * @param str The string to search in, e.g., "A, Map<B, C>".
+	 * @return The index of the comma, or -1 if no suitable comma is found.
+	 */
+	private static int findCommaOutsideBrackets(String str) {
+		int depth = 0;
+		for (int i = 0; i < str.length(); i++) {
+			char ch = str.charAt(i);
+			if (ch == '<') {
+				depth++;
+			}
+			else if (ch == '>') {
+				depth--;
+			}
+			else if (ch == ',' && depth == 0) {
+				return i;
+			}
+		}
+		// No comma found outside nested angle brackets
+		return -1;
 	}
 
 	/**

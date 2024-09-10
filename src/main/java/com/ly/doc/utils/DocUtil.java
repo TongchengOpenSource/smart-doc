@@ -1712,4 +1712,27 @@ public class DocUtil {
 		return null;
 	}
 
+	/**
+	 * Generate indent string based on level.
+	 * @param level the nesting level
+	 * @return the indent string
+	 */
+	public static StringBuilder getStringBuilderByLevel(int level) {
+		StringBuilder indentBuilder = new StringBuilder();
+		for (int i = 0; i < level; i++) {
+			indentBuilder.append(DocGlobalConstants.FIELD_SPACE);
+		}
+		indentBuilder.append(DocGlobalConstants.PARAM_PREFIX);
+		return indentBuilder;
+	}
+
+	/**
+	 * Generate indent string based on level.
+	 * @param level the nesting level
+	 * @return the indent string
+	 */
+	public static String getIndentByLevel(int level) {
+		return getStringBuilderByLevel(level).toString();
+	}
+
 }

@@ -72,9 +72,7 @@ public class JsonBuildHelper extends BaseHelper {
 		String returnTypeGenericCanonicalName = method.getReturnType().getGenericCanonicalName();
 		if (Objects.nonNull(responseBodyAdvice) && Objects.isNull(method.getTagByName(IGNORE_RESPONSE_BODY_ADVICE))) {
 			if (!returnTypeGenericCanonicalName.startsWith(responseBodyAdvice)) {
-				StringBuilder sb = new StringBuilder();
-				sb.append(responseBodyAdvice).append("<").append(returnTypeGenericCanonicalName).append(">");
-				returnTypeGenericCanonicalName = sb.toString();
+				returnTypeGenericCanonicalName = responseBodyAdvice + "<" + returnTypeGenericCanonicalName + ">";
 			}
 		}
 		ApiReturn apiReturn = DocClassUtil.processReturnType(returnTypeGenericCanonicalName);
@@ -154,10 +152,10 @@ public class JsonBuildHelper extends BaseHelper {
 				.removeQuotes(String.valueOf(JavaClassUtil.getEnumValue(javaClass, builder, Boolean.FALSE)));
 		}
 
-		StringBuilder data0 = new StringBuilder();
+		StringBuilder result = new StringBuilder();
 		JavaClass cls = builder.getClassByName(typeName);
 
-		data0.append("{");
+		result.append("{");
 		String[] globGicName = DocClassUtil.getSimpleGicName(genericCanonicalName);
 
 		// Obtain generics from parent class if not found
@@ -208,66 +206,13 @@ public class JsonBuildHelper extends BaseHelper {
 			return data.toString();
 		}
 		// Handle map types
-		else if (JavaClassValidateUtil.isMap(typeName)) {
-			String[] getKeyValType = DocClassUtil.getMapKeyValueType(genericCanonicalName);
-			if (getKeyValType.length == 0) {
-				data.append("{\"mapKey\":{}}");
-				return data.toString();
-			}
-			JavaClass mapKeyClass = builder.getJavaProjectBuilder().getClassByName(getKeyValType[0]);
-			boolean mapKeyIsEnum = mapKeyClass.isEnum();
-			if ((!JavaTypeConstants.JAVA_STRING_FULLY.equals(getKeyValType[0]) || !mapKeyIsEnum
-					|| mapKeyClass.getEnumConstants().isEmpty()) && apiConfig.isStrict()) {
-				throw new RuntimeException(
-						"Map's key can only use String or Enum for json,but you use " + getKeyValType[0]);
-			}
-			String gicName = genericCanonicalName.substring(genericCanonicalName.indexOf(",") + 1,
-					genericCanonicalName.lastIndexOf(">"));
-			if (JavaTypeConstants.JAVA_OBJECT_FULLY.equals(gicName)) {
-				data.append("{")
-					.append("\"mapKey\":")
-					.append("{\"waring\":\"You may use java.util.Object for Map value; smart-doc can't be handle.\"}")
-					.append("}");
-			}
-			else if (JavaClassValidateUtil.isPrimitive(gicName)) {
-				data.append("{").append("\"mapKey1\":").append(DocUtil.jsonValueByType(gicName)).append(",");
-				data.append("\"mapKey2\":").append(DocUtil.jsonValueByType(gicName)).append("}");
-			}
-			else if (gicName.contains("<")) {
-				String simple = DocClassUtil.getSimpleName(gicName);
-				String json = buildJson(simple, gicName, isResp, nextLevel, registryClasses, groupClasses,
-						methodJsonViewClasses, builder);
-				data.append("{").append("\"mapKey\":").append(json).append("}");
-			}
-			else {
-				if (mapKeyIsEnum) {
-					data.append("{");
-					for (JavaField field : mapKeyClass.getFields()) {
-						data.append("\"")
-							.append(field.getName())
-							.append("\":")
-							.append(buildJson(gicName, genericCanonicalName, isResp, counter + 1, registryClasses,
-									groupClasses, methodJsonViewClasses, builder))
-							.append(",");
-					}
-					// Remove the trailing comma
-					if (data.charAt(data.length() - 1) == ',') {
-						data.deleteCharAt(data.length() - 1);
-					}
-					data.append("}");
-				}
-				else {
-					data.append("{")
-						.append("\"mapKey\":")
-						.append(buildJson(gicName, genericCanonicalName, isResp, counter + 1, registryClasses,
-								groupClasses, methodJsonViewClasses, builder))
-						.append("}");
-				}
-			}
+		if (JavaClassValidateUtil.isMap(typeName)) {
+			buildMapJson(genericCanonicalName, isResp, counter, registryClasses, groupClasses, methodJsonViewClasses,
+					builder, data, nextLevel);
 			return data.toString();
 		}
 		// Handle generic object types
-		else if (JavaTypeConstants.JAVA_OBJECT_FULLY.equals(typeName)) {
+		if (JavaTypeConstants.JAVA_OBJECT_FULLY.equals(typeName)) {
 			data.append("{\"object\":\" any object\"},");
 			// throw new RuntimeException("Please do not return java.lang.Object directly
 			// in api interface.");
@@ -409,12 +354,12 @@ public class JsonBuildHelper extends BaseHelper {
 					}
 				}
 				fieldName = fieldName.trim();
-				data0.append("\"").append(fieldName).append("\":");
+				result.append("\"").append(fieldName).append("\":");
 				// get mock value from tag @mock
 				String fieldValue = getFieldValueFromMockForJson(subTypeName, tagsMap, typeSimpleName);
 				// if the field is primitive type, then get the default value
 				if (JavaClassValidateUtil.isPrimitive(subTypeName)) {
-					int data0Length = data0.length();
+					int data0Length = result.length();
 					if (StringUtil.isEmpty(fieldValue)) {
 						String valueByTypeAndFieldName = DocUtil.getValByTypeAndFieldName(typeSimpleName,
 								field.getName());
@@ -430,21 +375,21 @@ public class JsonBuildHelper extends BaseHelper {
 					}
 					if (Objects.nonNull(customRequestField) && !isResp
 							&& typeName.equals(customRequestField.getOwnerClassName())) {
-						JavaFieldUtil.buildCustomField(data0, typeSimpleName, customRequestField);
+						JavaFieldUtil.buildCustomField(result, typeSimpleName, customRequestField);
 					}
 					if (Objects.nonNull(customResponseField) && isResp
 							&& typeName.equals(customResponseField.getOwnerClassName())) {
-						JavaFieldUtil.buildCustomField(data0, typeSimpleName, customResponseField);
+						JavaFieldUtil.buildCustomField(result, typeSimpleName, customResponseField);
 					}
-					if (data0.length() == data0Length) {
-						data0.append(fieldValue).append(",");
+					if (result.length() == data0Length) {
+						result.append(fieldValue).append(",");
 					}
 				}
 				else {
 					// collection or array
 					if (JavaClassValidateUtil.isCollection(subTypeName) || JavaClassValidateUtil.isArray(subTypeName)) {
 						if (StringUtil.isNotEmpty(fieldValue)) {
-							data0.append(fieldValue).append(",");
+							result.append(fieldValue).append(",");
 							continue;
 						}
 						if (globGicName.length > 0 && "java.util.List".equals(fieldGicName)) {
@@ -457,24 +402,24 @@ public class JsonBuildHelper extends BaseHelper {
 						String[] gicNameArray = DocClassUtil.getSimpleGicName(fieldGicName);
 						String gicName = gicNameArray[0];
 						if (JavaTypeConstants.JAVA_STRING_FULLY.equals(gicName)) {
-							data0.append("[").append(DocUtil.jsonValueByType(gicName)).append("]").append(",");
+							result.append("[").append(DocUtil.jsonValueByType(gicName)).append("]").append(",");
 						}
 						else if (JavaTypeConstants.JAVA_LIST_FULLY.equals(gicName)) {
-							data0.append("[{\"object\":\"any object\"}],");
+							result.append("[{\"object\":\"any object\"}],");
 						}
 						else if (gicName.length() == 1) {
 							if (globGicName.length == 0) {
-								data0.append("[{\"object\":\"any object\"}],");
+								result.append("[{\"object\":\"any object\"}],");
 								continue;
 							}
 							String gicName1 = genericMap.get(gicName) == null ? globGicName[0]
 									: genericMap.get(gicName);
 							if (JavaTypeConstants.JAVA_STRING_FULLY.equals(gicName1)) {
-								data0.append("[").append(DocUtil.jsonValueByType(gicName1)).append("]").append(",");
+								result.append("[").append(DocUtil.jsonValueByType(gicName1)).append("]").append(",");
 							}
 							else {
 								if (!typeName.equals(gicName1)) {
-									data0.append("[")
+									result.append("[")
 										.append(buildJson(DocClassUtil.getSimpleName(gicName1), gicName1, isResp,
 												nextLevel, registryClasses, groupClasses, methodJsonViewClasses,
 												builder))
@@ -482,116 +427,79 @@ public class JsonBuildHelper extends BaseHelper {
 										.append(",");
 								}
 								else {
-									data0.append("[{\"$ref\":\"..\"}]").append(",");
+									result.append("[{\"$ref\":\"..\"}]").append(",");
 								}
 							}
 						}
 						else {
 							if (!typeName.equals(gicName)) {
 								if (JavaClassValidateUtil.isMap(gicName)) {
-									data0.append("[{\"mapKey\":{}}],");
+									result.append("[{\"mapKey\":{}}],");
 									continue;
 								}
 								JavaClass arraySubClass = builder.getJavaProjectBuilder().getClassByName(gicName);
 								if (arraySubClass.isEnum()) {
 									Object value = JavaClassUtil.getEnumValue(arraySubClass, builder, Boolean.FALSE);
-									data0.append("[").append(value).append("],");
+									result.append("[").append(value).append("],");
 									continue;
 								}
 								gicName = DocClassUtil.getSimpleName(gicName);
 								fieldGicName = DocUtil.formatFieldTypeGicName(genericMap, fieldGicName);
-								data0.append("[")
+								result.append("[")
 									.append(buildJson(gicName, fieldGicName, isResp, nextLevel, registryClasses,
 											groupClasses, methodJsonViewClasses, builder))
 									.append("]")
 									.append(",");
 							}
 							else {
-								data0.append("[{\"$ref\":\"..\"}]").append(",");
+								result.append("[{\"$ref\":\"..\"}]").append(",");
 							}
 						}
 					}
-					// map
+					// when the field is map
 					else if (JavaClassValidateUtil.isMap(subTypeName)) {
 						if (StringUtil.isNotEmpty(fieldValue)) {
-							data0.append(fieldValue).append(",");
+							result.append(fieldValue).append(",");
 							continue;
 						}
 						if (JavaClassValidateUtil.isMap(fieldGicName)) {
-							data0.append("{").append("\"mapKey\":{}},");
+							result.append("{").append("\"mapKey\":{}},");
 							continue;
 						}
-						String gicName = fieldGicName.substring(fieldGicName.indexOf(",") + 1,
-								fieldGicName.indexOf(">"));
-						if (gicName.length() == 1) {
-							String gicName1 = "";
-							if (Objects.nonNull(genericMap.get(gicName))) {
-								gicName1 = genericMap.get(gicName);
-							}
-							else {
-								if (Objects.nonNull(globGicName) && globGicName.length > 0) {
-									gicName1 = globGicName[0];
-								}
-							}
-							if (JavaTypeConstants.JAVA_STRING_FULLY.equals(gicName1)) {
-								data0.append("{")
-									.append("\"mapKey\":")
-									.append(DocUtil.jsonValueByType(gicName1))
-									.append("},");
-							}
-							else {
-								if (!typeName.equals(gicName1)) {
-									data0.append("{")
-										.append("\"mapKey\":")
-										.append(buildJson(DocClassUtil.getSimpleName(gicName1), gicName1, isResp,
-												nextLevel, registryClasses, groupClasses, methodJsonViewClasses,
-												builder))
-										.append("},");
-								}
-								else {
-									data0.append("{\"mapKey\":{}},");
-								}
-							}
-						}
-						else {
-							data0.append("{")
-								.append("\"mapKey\":")
-								.append(buildJson(gicName, fieldGicName, isResp, nextLevel, registryClasses,
-										groupClasses, methodJsonViewClasses, builder))
-								.append("},");
-						}
+						buildMapJson(fieldGicName, isResp, nextLevel, registryClasses, groupClasses,
+								methodJsonViewClasses, builder, result, nextLevel);
 					}
 					else if (fieldGicName.length() == 1) {
 						if (!typeName.equals(genericCanonicalName)) {
 							String gicName = genericMap.get(subTypeName) == null ? globGicName[0]
 									: genericMap.get(subTypeName);
 							if (JavaClassValidateUtil.isPrimitive(gicName)) {
-								data0.append(DocUtil.jsonValueByType(gicName)).append(",");
+								result.append(DocUtil.jsonValueByType(gicName)).append(",");
 							}
 							else {
 								String simple = DocClassUtil.getSimpleName(gicName);
-								data0
+								result
 									.append(buildJson(simple, gicName, isResp, nextLevel, registryClasses, groupClasses,
 											methodJsonViewClasses, builder))
 									.append(",");
 							}
 						}
 						else {
-							data0.append("{},");
+							result.append("{},");
 						}
 					}
 					// Object
 					else if (JavaTypeConstants.JAVA_OBJECT_FULLY.equals(fieldGicName)) {
 						if (StringUtil.isNotEmpty(field.getComment())) {
 							// from source code
-							data0.append("{\"object\":\"any object\"},");
+							result.append("{\"object\":\"any object\"},");
 						}
 						else {
-							data0.append("{},");
+							result.append("{},");
 						}
 					}
 					else if (typeName.equals(fieldGicName)) {
-						data0.append("{\"$ref\":\"...\"}").append(",");
+						result.append("{\"$ref\":\"...\"}").append(",");
 					}
 					else {
 						javaClass = field.getType();
@@ -599,35 +507,35 @@ public class JsonBuildHelper extends BaseHelper {
 						if (javaClass.isEnum()) {
 							// Override old value
 							if (tagsMap.containsKey(DocTags.MOCK) && StringUtil.isNotEmpty(tagsMap.get(DocTags.MOCK))) {
-								data0.append(tagsMap.get(DocTags.MOCK)).append(",");
+								result.append(tagsMap.get(DocTags.MOCK)).append(",");
 							}
 							// if has Annotation @JsonSerialize And using
 							// ToStringSerializer && isResp
 							else if (toStringSerializer && isResp) {
 								Object value = JavaClassUtil.getEnumValue(javaClass, builder, Boolean.FALSE);
-								data0.append(value).append(",");
+								result.append(value).append(",");
 							}
 							// if has @JsonFormat
 							else if (StringUtil.isNotEmpty(jsonFormatString)) {
-								data0.append(jsonFormatString).append(",");
+								result.append(jsonFormatString).append(",");
 							}
 							else {
 								Object value = JavaClassUtil.getEnumValue(javaClass, builder, Boolean.FALSE);
-								data0.append(value).append(",");
+								result.append(value).append(",");
 							}
 						}
 						else {
 							// if has Annotation @JsonSerialize And using
 							// ToStringSerializer && isResp
 							if (toStringSerializer && isResp) {
-								data0.append(" ").append(",");
+								result.append(" ").append(",");
 							}
 							else if (StringUtil.isNotEmpty(jsonFormatString)) {
-								data0.append(jsonFormatString).append(",");
+								result.append(jsonFormatString).append(",");
 							}
 							else {
 								fieldGicName = DocUtil.formatFieldTypeGicName(genericMap, fieldGicName);
-								data0
+								result
 									.append(buildJson(subTypeName, fieldGicName, isResp, nextLevel, registryClasses,
 											groupClasses, methodJsonViewClasses, builder))
 									.append(",");
@@ -637,11 +545,91 @@ public class JsonBuildHelper extends BaseHelper {
 				}
 			}
 		}
-		if (data0.toString().contains(",")) {
-			data0.deleteCharAt(data0.lastIndexOf(","));
+		// Remove the trailing comma
+		if (result.charAt(result.length() - 1) == ',') {
+			result.deleteCharAt(result.length() - 1);
 		}
-		data0.append("}");
-		return data0.toString();
+		result.append("}");
+		return result.toString();
+	}
+
+	/**
+	 * build map json
+	 * @param genericCanonicalName genericCanonicalName
+	 * @param isResp isResp
+	 * @param counter counter
+	 * @param registryClasses registryClasses
+	 * @param groupClasses groupClasses
+	 * @param methodJsonViewClasses methodJsonViewClasses
+	 * @param builder builder
+	 * @param data StringBuilder data
+	 * @param nextLevel nextLevel
+	 */
+	public static void buildMapJson(String genericCanonicalName, boolean isResp, int counter,
+			Map<String, String> registryClasses, Set<String> groupClasses, Set<String> methodJsonViewClasses,
+			ProjectDocConfigBuilder builder, StringBuilder data, int nextLevel) {
+		String[] getKeyValType = DocClassUtil.getMapKeyValueType(genericCanonicalName);
+		if (getKeyValType.length == 0) {
+			data.append("{\"mapKey\":{}}");
+			return;
+		}
+		JavaClass mapKeyClass = builder.getJavaProjectBuilder().getClassByName(getKeyValType[0]);
+		boolean mapKeyIsEnum = mapKeyClass.isEnum();
+		if ((!JavaTypeConstants.JAVA_STRING_FULLY.equals(getKeyValType[0]) || !mapKeyIsEnum
+				|| mapKeyClass.getEnumConstants().isEmpty()) && builder.getApiConfig().isStrict()) {
+			throw new RuntimeException(
+					"Map's key can only use String or Enum for json,but you use " + getKeyValType[0]);
+		}
+		String gicName = getKeyValType[1];
+		// when map key is enum
+		if (mapKeyIsEnum) {
+			data.append("{");
+			for (JavaField field : mapKeyClass.getFields()) {
+				data.append("\"")
+					.append(field.getName())
+					.append("\":")
+					.append(buildJson(DocClassUtil.getSimpleName(gicName), gicName, isResp, counter + 1,
+							registryClasses, groupClasses, methodJsonViewClasses, builder))
+					.append(",");
+			}
+			// Remove the trailing comma
+			if (data.charAt(data.length() - 1) == ',') {
+				data.deleteCharAt(data.length() - 1);
+			}
+			data.append("}");
+			return;
+		}
+
+		// when map value is Object
+		if (JavaTypeConstants.JAVA_OBJECT_FULLY.equals(gicName)) {
+			data.append("{")
+				.append("\"mapKey\":")
+				.append("{\"waring\":\"You may use java.util.Object for Map value; smart-doc can't be handle.\"}")
+				.append("}");
+			return;
+		}
+
+		// when map value is primitive
+		if (JavaClassValidateUtil.isPrimitive(gicName)) {
+			data.append("{").append("\"mapKey1\":").append(DocUtil.jsonValueByType(gicName)).append(",");
+			data.append("\"mapKey2\":").append(DocUtil.jsonValueByType(gicName)).append("}");
+			return;
+		}
+
+		if (gicName.contains("<")) {
+			String simple = DocClassUtil.getSimpleName(gicName);
+			String json = buildJson(simple, gicName, isResp, nextLevel, registryClasses, groupClasses,
+					methodJsonViewClasses, builder);
+			data.append("{").append("\"mapKey\":").append(json).append("}");
+			return;
+		}
+
+		data.append("{")
+			.append("\"mapKey\":")
+			.append(buildJson(gicName, genericCanonicalName, isResp, counter + 1, registryClasses, groupClasses,
+					methodJsonViewClasses, builder))
+			.append("}");
+
 	}
 
 }

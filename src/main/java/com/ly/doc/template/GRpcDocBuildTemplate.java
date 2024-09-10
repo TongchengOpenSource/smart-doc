@@ -35,6 +35,7 @@ import com.ly.doc.model.grpc.GrpcApiDoc;
 import com.ly.doc.model.grpc.GrpcJavaMethod;
 import com.ly.doc.model.grpc.ProtoInfo;
 import com.ly.doc.model.grpc.proto.*;
+import com.ly.doc.utils.DocUtil;
 import com.power.common.util.FileUtil;
 import com.thoughtworks.qdox.model.JavaClass;
 
@@ -415,8 +416,7 @@ public class GRpcDocBuildTemplate implements IDocBuildTemplate<GrpcApiDoc>, IJav
 			}
 			// field name; if level is 0, it's the root message; otherwise, it's a nested
 			// message
-			String fieldName = level <= 0 ? field.getName()
-					: this.getIndent(level) + DocGlobalConstants.PARAM_PREFIX + field.getName();
+			String fieldName = level <= 0 ? field.getName() : DocUtil.getIndentByLevel(level) + field.getName();
 			ApiParam apiParam = ApiParam.of()
 				.setField(fieldName)
 				.setType(fieldType)
@@ -440,19 +440,6 @@ public class GRpcDocBuildTemplate implements IDocBuildTemplate<GrpcApiDoc>, IJav
 			}
 		}
 		return apiParams;
-	}
-
-	/**
-	 * Generate indent string based on level.
-	 * @param level the nesting level
-	 * @return the indent string
-	 */
-	private String getIndent(int level) {
-		StringBuilder indentBuilder = new StringBuilder();
-		for (int i = 0; i < level; i++) {
-			indentBuilder.append(DocGlobalConstants.FIELD_SPACE);
-		}
-		return indentBuilder.toString();
 	}
 
 	/**

@@ -47,8 +47,8 @@ import java.util.stream.Collectors;
  * @author chenchuxin
  * @since 3.0.5
  */
-public class JavadocDocBuildTemplate
-		implements IDocBuildTemplate<JavadocApiDoc>, IWebSocketDocBuildTemplate<WebSocketDoc>, IJavadocDocTemplate {
+public class JavadocDocBuildTemplate implements IDocBuildTemplate<JavadocApiDoc>,
+		IWebSocketDocBuildTemplate<WebSocketDoc>, IJavadocDocTemplate<JavadocJavaMethod> {
 
 	/**
 	 * api index
@@ -71,7 +71,6 @@ public class JavadocDocBuildTemplate
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public ApiSchema<JavadocApiDoc> renderApi(ProjectDocConfigBuilder projectBuilder,
 			Collection<JavaClass> candidateClasses) {
 		ApiConfig apiConfig = projectBuilder.getApiConfig();
@@ -89,8 +88,7 @@ public class JavadocDocBuildTemplate
 				maxOrder = Math.max(maxOrder, order);
 				setCustomOrder = true;
 			}
-			List<JavadocJavaMethod> apiMethodDocs = (List<JavadocJavaMethod>) buildServiceMethod(cls, apiConfig,
-					projectBuilder);
+			List<JavadocJavaMethod> apiMethodDocs = this.buildServiceMethod(cls, apiConfig, projectBuilder);
 			this.handleJavaApiDoc(cls, apiDocList, apiMethodDocs, order, projectBuilder);
 		}
 		ApiSchema<JavadocApiDoc> apiSchema = new ApiSchema<>();
