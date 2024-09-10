@@ -42,6 +42,13 @@ public class GrpcHtmlBuilder {
 	private final static String INDEX_HTML = "grpc-index.html";
 
 	/**
+	 * private constructor
+	 */
+	private GrpcHtmlBuilder() {
+		throw new IllegalStateException("Utility class");
+	}
+
+	/**
 	 * build grpc api
 	 * @param config config
 	 */

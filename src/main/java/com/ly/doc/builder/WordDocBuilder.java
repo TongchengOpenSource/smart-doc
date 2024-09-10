@@ -57,6 +57,13 @@ public class WordDocBuilder {
 	private static final String BUILD_DICT_DOCX = "dict.docx";
 
 	/**
+	 * private constructor
+	 */
+	private WordDocBuilder() {
+		throw new IllegalStateException("Utility class");
+	}
+
+	/**
 	 * build controller api
 	 * @param config config
 	 * @throws Exception exception

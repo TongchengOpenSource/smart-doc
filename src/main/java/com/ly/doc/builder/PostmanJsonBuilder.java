@@ -52,6 +52,13 @@ public class PostmanJsonBuilder {
 	private static final String MSG = "Interface name is not set.";
 
 	/**
+	 * private constructor
+	 */
+	private PostmanJsonBuilder() {
+		throw new IllegalStateException("Utility class");
+	}
+
+	/**
 	 * build postman json
 	 * @param config Smart-doc ApiConfig
 	 */

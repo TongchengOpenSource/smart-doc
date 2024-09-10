@@ -65,7 +65,7 @@ public class SwaggerBuilder extends AbstractOpenApiBuilder {
 	}
 
 	@Override
-	String getModuleName() {
+	public String getModuleName() {
 		return DocGlobalConstants.OPENAPI_2_COMPONENT_KRY;
 	}
 
@@ -191,7 +191,7 @@ public class SwaggerBuilder extends AbstractOpenApiBuilder {
 	}
 
 	@Override
-	List<Map<String, Object>> buildParameters(ApiMethodDoc apiMethodDoc) {
+	public List<Map<String, Object>> buildParameters(ApiMethodDoc apiMethodDoc) {
 		{
 			Map<String, Object> parameters;
 			List<Map<String, Object>> parametersList = new ArrayList<>();
@@ -234,7 +234,7 @@ public class SwaggerBuilder extends AbstractOpenApiBuilder {
 	}
 
 	@Override
-	Map<String, Object> getStringParams(ApiParam apiParam, boolean hasItems) {
+	public Map<String, Object> getStringParams(ApiParam apiParam, boolean hasItems) {
 		Map<String, Object> parameters;
 		parameters = new HashMap<>(20);
 		if (!hasItems) {

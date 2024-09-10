@@ -48,6 +48,13 @@ import static com.ly.doc.constants.TornaConstants.DEFAULT_GROUP_CODE;
 public class TornaBuilder {
 
 	/**
+	 * private constructor
+	 */
+	private TornaBuilder() {
+		throw new IllegalStateException("Utility class");
+	}
+
+	/**
 	 * build controller api,for unit testing
 	 * @param config config
 	 */

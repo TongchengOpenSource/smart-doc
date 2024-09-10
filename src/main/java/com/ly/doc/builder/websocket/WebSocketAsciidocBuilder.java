@@ -47,6 +47,13 @@ public class WebSocketAsciidocBuilder {
 	private static final String INDEX_DOC = "websocket-index.adoc";
 
 	/**
+	 * private constructor
+	 */
+	private WebSocketAsciidocBuilder() {
+		throw new IllegalStateException("Utility class");
+	}
+
+	/**
 	 * build websocket ascii doc.
 	 * @param config ApiConfig
 	 */

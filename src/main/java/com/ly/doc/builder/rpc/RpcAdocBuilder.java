@@ -38,6 +38,13 @@ public class RpcAdocBuilder {
 	private static final String INDEX_DOC = "rpc-index.adoc";
 
 	/**
+	 * private constructor
+	 */
+	private RpcAdocBuilder() {
+		throw new IllegalStateException("Utility class");
+	}
+
+	/**
 	 * build adoc
 	 * @param config ApiConfig
 	 */

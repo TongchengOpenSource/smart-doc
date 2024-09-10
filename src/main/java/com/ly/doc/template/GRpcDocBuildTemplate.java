@@ -64,7 +64,7 @@ public class GRpcDocBuildTemplate implements IDocBuildTemplate<GrpcApiDoc>, IJav
 	/**
 	 * Logger for the class.
 	 */
-	Logger log = Logger.getLogger(GRpcDocBuildTemplate.class.getName());
+	private final static Logger log = Logger.getLogger(GRpcDocBuildTemplate.class.getName());
 
 	/**
 	 * api index

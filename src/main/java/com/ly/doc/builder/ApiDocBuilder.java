@@ -40,6 +40,13 @@ import java.util.Objects;
 public class ApiDocBuilder {
 
 	/**
+	 * private constructor
+	 */
+	private ApiDocBuilder() {
+		throw new IllegalStateException("Utility class");
+	}
+
+	/**
 	 * @param config ApiConfig
 	 */
 	public static void buildApiDoc(ApiConfig config) {

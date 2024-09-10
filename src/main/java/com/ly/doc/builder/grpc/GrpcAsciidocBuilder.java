@@ -47,6 +47,13 @@ public class GrpcAsciidocBuilder {
 	private static final String INDEX_DOC = "grpc-index.adoc";
 
 	/**
+	 * private constructor
+	 */
+	private GrpcAsciidocBuilder() {
+		throw new IllegalStateException("Utility class");
+	}
+
+	/**
 	 * build Asciidoc
 	 * @param config ApiConfig
 	 */

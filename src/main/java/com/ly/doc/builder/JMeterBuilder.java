@@ -44,6 +44,13 @@ public class JMeterBuilder {
 	private static final String JMETER_SCRIPT_EXTENSION = ".jmx";
 
 	/**
+	 * private constructor
+	 */
+	private JMeterBuilder() {
+		throw new IllegalStateException("Utility class");
+	}
+
+	/**
 	 * @param config ApiConfig
 	 */
 	public static void buildApiDoc(ApiConfig config) {
