@@ -43,6 +43,13 @@ import java.util.List;
 public class RpcTornaBuilder {
 
 	/**
+	 * private constructor
+	 */
+	private RpcTornaBuilder() {
+		throw new IllegalStateException("Utility class");
+	}
+
+	/**
 	 * build controller api
 	 * @param config config
 	 */

@@ -29,6 +29,13 @@ import com.thoughtworks.qdox.JavaProjectBuilder;
 public class JavadocApiDataBuilder {
 
 	/**
+	 * private constructor
+	 */
+	private JavadocApiDataBuilder() {
+		throw new IllegalStateException("Utility class");
+	}
+
+	/**
 	 * Get list of ApiDoc
 	 * @param config JavadocApiAllData
 	 * @return List of ApiDoc

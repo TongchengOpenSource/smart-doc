@@ -34,6 +34,13 @@ import java.util.List;
 public class RpcHtmlBuilder {
 
 	/**
+	 * private constructor
+	 */
+	private RpcHtmlBuilder() {
+		throw new IllegalStateException("Utility class");
+	}
+
+	/**
 	 * build controller api
 	 * @param config config
 	 */

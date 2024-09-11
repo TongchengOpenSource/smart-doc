@@ -42,6 +42,13 @@ public class WebSocketHtmlBuilder {
 	private final static String INDEX_HTML = "websocket-index.html";
 
 	/**
+	 * private constructor
+	 */
+	private WebSocketHtmlBuilder() {
+		throw new IllegalStateException("Utility class");
+	}
+
+	/**
 	 * build websocket html doc.
 	 * @param config ApiConfig
 	 */

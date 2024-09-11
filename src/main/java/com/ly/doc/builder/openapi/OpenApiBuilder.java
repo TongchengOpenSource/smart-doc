@@ -44,7 +44,7 @@ import java.util.stream.Collectors;
 public class OpenApiBuilder extends AbstractOpenApiBuilder {
 
 	@Override
-	String getModuleName() {
+	public String getModuleName() {
 		return DocGlobalConstants.OPENAPI_3_COMPONENT_KRY;
 	}
 
@@ -172,7 +172,7 @@ public class OpenApiBuilder extends AbstractOpenApiBuilder {
 	}
 
 	@Override
-	List<Map<String, Object>> buildParameters(ApiMethodDoc apiMethodDoc) {
+	public List<Map<String, Object>> buildParameters(ApiMethodDoc apiMethodDoc) {
 		Map<String, Object> parameters;
 		List<Map<String, Object>> parametersList = new ArrayList<>();
 		// Handling path parameters
@@ -218,7 +218,7 @@ public class OpenApiBuilder extends AbstractOpenApiBuilder {
 	}
 
 	@Override
-	Map<String, Object> getStringParams(ApiParam apiParam, boolean hasItems) {
+	public Map<String, Object> getStringParams(ApiParam apiParam, boolean hasItems) {
 		Map<String, Object> parameters;
 		parameters = new HashMap<>(20);
 		// add mock value for parameters

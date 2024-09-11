@@ -36,6 +36,13 @@ import com.thoughtworks.qdox.JavaProjectBuilder;
 public class RpcApiDataBuilder {
 
 	/**
+	 * private constructor
+	 */
+	private RpcApiDataBuilder() {
+		throw new IllegalStateException("Utility class");
+	}
+
+	/**
 	 * Get list of ApiDoc
 	 * @param config ApiConfig
 	 * @return List of ApiDoc

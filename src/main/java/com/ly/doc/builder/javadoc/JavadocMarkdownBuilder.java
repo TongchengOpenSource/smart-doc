@@ -32,6 +32,13 @@ import java.util.List;
 public class JavadocMarkdownBuilder {
 
 	/**
+	 * private constructor
+	 */
+	private JavadocMarkdownBuilder() {
+		throw new IllegalStateException("Utility class");
+	}
+
+	/**
 	 * @param config ApiConfig
 	 */
 	public static void buildApiDoc(ApiConfig config) {

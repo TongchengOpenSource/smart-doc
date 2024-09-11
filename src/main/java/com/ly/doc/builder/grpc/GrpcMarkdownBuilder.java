@@ -39,6 +39,13 @@ import java.util.List;
 public class GrpcMarkdownBuilder {
 
 	/**
+	 * private constructor
+	 */
+	private GrpcMarkdownBuilder() {
+		throw new IllegalStateException("Utility class");
+	}
+
+	/**
 	 * build api doc.
 	 * @param config ApiConfig
 	 */

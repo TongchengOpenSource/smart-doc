@@ -35,6 +35,13 @@ import java.util.List;
 public class RpcMarkdownBuilder {
 
 	/**
+	 * private constructor
+	 */
+	private RpcMarkdownBuilder() {
+		throw new IllegalStateException("Utility class");
+	}
+
+	/**
 	 * @param config ApiConfig
 	 */
 	public static void buildApiDoc(ApiConfig config) {

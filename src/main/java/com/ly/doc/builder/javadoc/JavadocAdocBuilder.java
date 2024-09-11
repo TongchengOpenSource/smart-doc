@@ -35,6 +35,13 @@ public class JavadocAdocBuilder {
 	private static final String INDEX_DOC = "javadoc-index.adoc";
 
 	/**
+	 * private constructor
+	 */
+	private JavadocAdocBuilder() {
+		throw new IllegalStateException("Utility class");
+	}
+
+	/**
 	 * build adoc
 	 * @param config ApiConfig
 	 */

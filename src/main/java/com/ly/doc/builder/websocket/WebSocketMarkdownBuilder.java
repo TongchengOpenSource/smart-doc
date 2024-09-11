@@ -38,6 +38,13 @@ import java.util.List;
 public class WebSocketMarkdownBuilder {
 
 	/**
+	 * private constructor
+	 */
+	private WebSocketMarkdownBuilder() {
+		throw new IllegalStateException("Utility class");
+	}
+
+	/**
 	 * build websocket Markdown doc.
 	 * @param config ApiConfig
 	 */

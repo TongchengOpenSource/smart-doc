@@ -48,6 +48,13 @@ public class HtmlApiDocBuilder {
 	private static String INDEX_HTML = "index.html";
 
 	/**
+	 * private constructor
+	 */
+	private HtmlApiDocBuilder() {
+		throw new IllegalStateException("Utility class");
+	}
+
+	/**
 	 * build controller api
 	 * @param config config
 	 */

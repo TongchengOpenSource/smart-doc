@@ -31,6 +31,13 @@ import java.util.List;
 public class JavadocHtmlBuilder {
 
 	/**
+	 * private constructor
+	 */
+	private JavadocHtmlBuilder() {
+		throw new IllegalStateException("Utility class");
+	}
+
+	/**
 	 * build controller api
 	 * @param config config
 	 */

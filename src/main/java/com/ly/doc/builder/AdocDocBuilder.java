@@ -43,6 +43,13 @@ public class AdocDocBuilder {
 	private static final String INDEX_DOC = "index.adoc";
 
 	/**
+	 * private constructor
+	 */
+	private AdocDocBuilder() {
+		throw new IllegalStateException("Utility class");
+	}
+
+	/**
 	 * build adoc
 	 * @param config ApiConfig
 	 */
