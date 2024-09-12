@@ -308,10 +308,10 @@ public class JavaClassUtil {
 
 	/**
 	 * Get the value of an enum
-	 *
+	 * <p>
 	 * This method retrieves the value of an enum based on its fields or methods. It
 	 * supports loading the enum class via reflection and determines the enum value based
-	 * on the presence of specific annotations such as JsonValue and JsonCreator.
+	 * on the presence of specific annotations such as {@code JsonValue}
 	 * @param javaClass The JavaClass object representing the enum class
 	 * @param builder A ProjectDocConfigBuilder object used to retrieve API configuration
 	 * and the class loader
@@ -325,37 +325,102 @@ public class JavaClassUtil {
 		if (Objects.isNull(javaFields)) {
 			throw new RuntimeException(javaClass.getName() + " enum not existed");
 		}
-		List<JavaMethod> methodList = javaClass.getMethods();
-		String methodName = null;
-		for (JavaMethod method : methodList) {
-			List<JavaAnnotation> annotations = method.getAnnotations();
-			for (JavaAnnotation annotation : annotations) {
-				String annotationName = annotation.getType().getValue();
-				// enum serialize while use JsonValue and JsonCreator annotation
-				if (DocAnnotationConstants.JSON_VALUE.equals(annotationName)
-						|| DocAnnotationConstants.JSON_CREATOR.equals(annotationName)) {
-					methodName = method.getName();
-					break;
-				}
-			}
-		}
+
+		// Try getting value from method with JsonValue annotation
+		String methodName = findMethodWithJsonValue(javaClass);
 		if (Objects.nonNull(methodName) && !formDataEnum) {
-			ApiConfig apiConfig = builder.getApiConfig();
-			ClassLoader classLoader = apiConfig.getClassLoader();
-			Class<?> enumClass = null;
-			try {
-				if (Objects.nonNull(classLoader)) {
-					enumClass = classLoader.loadClass(javaClass.getFullyQualifiedName());
-				}
-				else {
-					enumClass = Class.forName(javaClass.getFullyQualifiedName());
-				}
+			Class<?> enumClass = loadEnumClass(javaClass, builder);
+			if (Objects.nonNull(enumClass)) {
+				return EnumUtil.getFieldValueByMethod(enumClass, methodName);
 			}
-			catch (ClassNotFoundException e) {
-				e.printStackTrace();
-			}
-			return EnumUtil.getFieldValueByMethod(enumClass, methodName);
+			return null;
 		}
+
+		// Try getting value from field with JsonValue annotation
+		Optional<JavaField> fieldWithJsonValue = findFieldWithJsonValue(javaClass);
+		if (fieldWithJsonValue.isPresent()) {
+			Class<?> enumClass = loadEnumClass(javaClass, builder);
+			if (Objects.nonNull(enumClass)) {
+				return EnumUtil.getFieldValue(enumClass, fieldWithJsonValue.get().getName());
+			}
+			return null;
+		}
+
+		// Default handling for enum values
+		return processDefaultEnumFields(javaFields, formDataEnum);
+	}
+
+	/**
+	 * Loads the enum class using the specified class loader from the builder.
+	 * @param javaClass The JavaClass representing the enum
+	 * @param builder The configuration builder
+	 * @return The loaded Class object for the enum
+	 */
+	private static Class<?> loadEnumClass(JavaClass javaClass, ProjectDocConfigBuilder builder) {
+		ApiConfig apiConfig = builder.getApiConfig();
+		ClassLoader classLoader = apiConfig.getClassLoader();
+		try {
+			if (Objects.nonNull(classLoader)) {
+				return classLoader.loadClass(javaClass.getFullyQualifiedName());
+			}
+			else {
+				return Class.forName(javaClass.getFullyQualifiedName());
+			}
+		}
+		catch (ClassNotFoundException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	/**
+	 * Finds the method in the class that has {@code JsonValue} annotation.
+	 * @param javaClass The JavaClass to search in
+	 * @return The method name if found, null otherwise
+	 */
+	private static String findMethodWithJsonValue(JavaClass javaClass) {
+		for (JavaMethod method : javaClass.getMethods()) {
+			for (JavaAnnotation annotation : method.getAnnotations()) {
+				String annotationName = annotation.getType().getValue();
+				// Handle JsonValue annotation
+				if (DocAnnotationConstants.JSON_VALUE.equals(annotationName)) {
+					AnnotationValue property = annotation.getProperty(DocAnnotationConstants.VALUE_PROP);
+					// If property is null or its value is true, return the method name
+					if (property == null || Objects.equals(property.getParameterValue(), true)) {
+						return method.getName();
+					}
+				}
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Finds the field in the class that has {@code JsonValue} annotation.
+	 * @param javaClass The JavaClass to search in
+	 * @return An Optional containing the field if found
+	 */
+	private static Optional<JavaField> findFieldWithJsonValue(JavaClass javaClass) {
+		return javaClass.getFields()
+			.stream()
+			.filter(field -> field.getAnnotations().stream().anyMatch(javaAnnotation -> {
+				if (DocAnnotationConstants.JSON_VALUE.equals(javaAnnotation.getType().getValue())) {
+					// Check if the property is null, if so, consider it as "true"
+					AnnotationValue property = javaAnnotation.getProperty(DocAnnotationConstants.VALUE_PROP);
+					return property == null || Objects.equals(property.getParameterValue(), true);
+				}
+				return false;
+			}))
+			.findFirst();
+	}
+
+	/**
+	 * Handles the default logic for processing enum fields.
+	 * @param javaFields The list of JavaField objects representing enum fields
+	 * @param formDataEnum A boolean indicating if the enum is a form data enum
+	 * @return The value based on the enum field processing logic
+	 */
+	private static Object processDefaultEnumFields(List<JavaField> javaFields, boolean formDataEnum) {
 		Object value = null;
 		int index = 0;
 		for (JavaField javaField : javaFields) {
