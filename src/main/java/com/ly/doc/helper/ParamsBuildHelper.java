@@ -743,8 +743,8 @@ public class ParamsBuildHelper extends BaseHelper {
 										.map(JavaClass::getComment)
 										.orElse(DocGlobalConstants.DEFAULT_MAP_KEY_DESC))
 					.setVersion(DocGlobalConstants.DEFAULT_VERSION)
-					.setPid(null == keyParentId ? pid : keyParentId)
-					.setId(paramList.size() + 1);
+					.setPid(null == keyParentId ? pid : keyParentId);
+				apiParam.setId(apiParam.getPid() + paramList.size() + 1);
 				if (null == keyParentId) {
 					keyParentId = apiParam.getPid();
 				}
