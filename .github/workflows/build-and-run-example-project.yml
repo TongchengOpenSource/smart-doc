@@ -26,11 +26,19 @@ jobs:
           java-version: '8'
           distribution: 'temurin'
 
+      - name: Create Logs Directory
+        run: mkdir -p logs
+
       - name: Update Version in pom.xml
         run: mvn versions:set -DnewVersion="${{ env.smart-doc-version }}" -DgenerateBackupPoms=false
 
       - name: Build and Install Plugin
-        run: mvn install
+        run: |
+          mvn install 2>&1 | tee logs/build.log
+          if grep -E "\[ERROR\]" logs/build.log; then
+            cat logs/build.log
+            exit 1
+          fi
 
       - name: Upload Plugin Artifact
         id: upload-artifact
@@ -39,6 +47,13 @@ jobs:
           name: smart-doc-maven-jar
           path: ~/.m2/repository/com/ly/smart-doc
           if-no-files-found: error
+
+      - name: Upload Build Log
+        if: failure()  # Only run if previous steps fail
+        uses: actions/upload-artifact@v4
+        with:
+          name: error-log-smart-doc-build
+          path: logs/build.log
 
   maven-plugin-build:
     needs: build
@@ -60,6 +75,9 @@ jobs:
           java-version: '8'
           distribution: 'temurin'
 
+      - name: Create Logs Directory
+        run: mkdir -p logs
+
       - name: Download Artifact
         uses: actions/download-artifact@v4
         with:
@@ -79,7 +97,12 @@ jobs:
           mvn versions:set-property -Dproperty="smart-doc.version" -DnewVersion="${{ env.smart-doc-version }}" -DgenerateBackupPoms=false
 
       - name: Build and Install
-        run: mvn -DskipTests=true install
+        run: |
+          mvn -DskipTests=true install 2>&1 | tee logs/install-plugin.log
+          if grep -E "\[ERROR\]" logs/install-plugin.log; then
+            cat logs/install-plugin.log
+            exit 1
+          fi
 
       - name: Upload Plugin Artifact
         id: upload-artifact
@@ -88,6 +111,13 @@ jobs:
           name: smart-doc-maven-plugin-jar
           path: ~/.m2/repository/com/ly/smart-doc
           if-no-files-found: error
+
+      - name: Upload Plugin Build Log
+        if: failure() # Only run if previous steps fail
+        uses: actions/upload-artifact@v4
+        with:
+          name: error-log-maven-plugin-build
+          path: logs/install-plugin.log
 
   generate-api-docs:
     needs: maven-plugin-build
@@ -112,6 +142,9 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: Create Logs Directory
+        run: mkdir -p logs
+
       - name: Download Artifact
         uses: actions/download-artifact@v4
         with:
@@ -131,35 +164,73 @@ jobs:
           mvn versions:set-property -Dproperty="smart-doc.version" -DnewVersion="${{ env.smart-doc-version }}" -DgenerateBackupPoms=false
 
       - name: Build and Install Example Project
-        run: mvn -DskipTests=true install
+        run: |
+          mvn -DskipTests=true install 2>&1 | tee logs/build-example-project.log
+          if grep -E "\[ERROR\]" logs/build-example-project.log; then
+            cat logs/build-example-project.log
+            exit 1
+          fi
 
       - name: Generate ${{ matrix.doc_type }} API Documentation
         run: |
           case ${{ matrix.doc_type }} in
             rest)
-              mvn -DskipTests=true smart-doc:adoc
-              mvn -DskipTests=true smart-doc:html
-              mvn -DskipTests=true smart-doc:jmeter
-              mvn -DskipTests=true smart-doc:markdown
-              mvn -DskipTests=true smart-doc:openapi
-              mvn -DskipTests=true smart-doc:postman
-              mvn -DskipTests=true smart-doc:word
-              mvn test -Dtest=com.power.doc.torna.TornaApiTest
+              mvn -DskipTests=true smart-doc:adoc 2>&1 | tee logs/rest-adoc.log
+              if grep -E "\[ERROR\]" logs/rest-adoc.log; then cat logs/rest-adoc.log; exit 1; fi
+          
+              mvn -DskipTests=true smart-doc:html 2>&1 | tee logs/rest-html.log
+              if grep -E "\[ERROR\]" logs/rest-html.log; then cat logs/rest-html.log; exit 1; fi
+          
+              mvn -DskipTests=true smart-doc:jmeter 2>&1 | tee logs/rest-jmeter.log
+              if grep -E "\[ERROR\]" logs/rest-jmeter.log; then cat logs/rest-jmeter.log; exit 1; fi
+          
+              mvn -DskipTests=true smart-doc:markdown 2>&1 | tee logs/rest-markdown.log
+              if grep -E "\[ERROR\]" logs/rest-markdown.log; then cat logs/rest-markdown.log; exit 1; fi
+          
+              mvn -DskipTests=true smart-doc:openapi 2>&1 | tee logs/rest-openapi.log
+              if grep -E "\[ERROR\]" logs/rest-openapi.log; then cat logs/rest-openapi.log; exit 1; fi
+          
+              mvn -DskipTests=true smart-doc:postman 2>&1 | tee logs/rest-postman.log
+              if grep -E "\[ERROR\]" logs/rest-postman.log; then cat logs/rest-postman.log; exit 1; fi 
+          
+              mvn -DskipTests=true smart-doc:swagger 2>&1 | tee logs/rest-swagger.log
+              if grep -E "\[ERROR\]" logs/rest-swagger.log; then cat logs/rest-swagger.log; exit 1; fi   
+          
+              mvn -DskipTests=true smart-doc:word 2>&1 | tee logs/rest-word.log
+              if grep -E "\[ERROR\]" logs/rest-word.log; then cat logs/rest-word.log; exit 1; fi   
+          
+              mvn test -Dtest=com.power.doc.torna.TornaApiTest 2>&1 | tee logs/rest-TornaApiTest.log
+              if grep -E "\[ERROR\]" logs/rest-TornaApiTest.log; then cat logs/rest-TornaApiTest.log; exit 1; fi
               ;;
             dubbo)
-              mvn -DskipTests=true smart-doc:rpc-adoc
-              mvn -DskipTests=true smart-doc:rpc-html
-              mvn -DskipTests=true smart-doc:rpc-markdown
+              mvn -DskipTests=true smart-doc:rpc-adoc 2>&1 | tee logs/rpc-adoc.log
+              if grep -E "\[ERROR\]" logs/rpc-adoc.log; then cat logs/rpc-adoc.log; exit 1; fi
+          
+              mvn -DskipTests=true smart-doc:rpc-html 2>&1 | tee logs/rpc-html.log
+              if grep -E "\[ERROR\]" logs/rpc-html.log; then cat logs/rpc-html.log; exit 1; fi
+
+              mvn -DskipTests=true smart-doc:rpc-markdown 2>&1 | tee logs/rpc-markdown.log
+              if grep -E "\[ERROR\]" logs/rpc-markdown.log; then cat logs/rpc-markdown.log; exit 1; fi
               ;;
             javadoc)
-              mvn -DskipTests=true smart-doc:javadoc-adoc
-              mvn -DskipTests=true smart-doc:javadoc-html
-              mvn -DskipTests=true smart-doc:javadoc-markdown
+              mvn -DskipTests=true smart-doc:javadoc-adoc 2>&1 | tee logs/javadoc-adoc.log
+              if grep -E "\[ERROR\]" logs/javadoc-adoc.log; then cat logs/javadoc-adoc.log; exit 1; fi
+          
+              mvn -DskipTests=true smart-doc:javadoc-html 2>&1 | tee logs/javadoc-html.log
+              if grep -E "\[ERROR\]" logs/javadoc-html.log; then cat logs/javadoc-html.log; exit 1; fi
+
+              mvn -DskipTests=true smart-doc:javadoc-markdown 2>&1 | tee logs/javadoc-markdown.log
+              if grep -E "\[ERROR\]" logs/javadoc-markdown.log; then cat logs/javadoc-markdown.log; exit 1; fi
               ;;
             websocket)
-              mvn -DskipTests=true smart-doc:websocket-adoc
-              mvn -DskipTests=true smart-doc:websocket-html
-              mvn -DskipTests=true smart-doc:websocket-markdown
+              mvn -DskipTests=true smart-doc:websocket-adoc 2>&1 | tee logs/websocket-adoc.log
+              if grep -E "\[ERROR\]" logs/websocket-adoc.log; then cat logs/websocket-adoc.log; exit 1; fi
+          
+              mvn -DskipTests=true smart-doc:websocket-html 2>&1 | tee logs/websocket-html.log
+              if grep -E "\[ERROR\]" logs/websocket-html.log; then cat logs/websocket-html.log; exit 1; fi
+
+              mvn -DskipTests=true smart-doc:websocket-markdown 2>&1 | tee logs/websocket-markdown.log
+              if grep -E "\[ERROR\]" logs/websocket-markdown.log; then cat logs/websocket-markdown.log; exit 1; fi
               ;;
           esac
 
@@ -169,6 +240,13 @@ jobs:
           name: ${{ matrix.doc_type }}-api-doc
           path: ${{ github.workspace }}/target/doc/
           if-no-files-found: error
+
+      - name: Upload ${{ matrix.doc_type }} API Documentation Logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: error-log-${{ matrix.doc_type }}-api-docs
+          path: logs
 
   generate-grpc-api-doc:
     needs: maven-plugin-build
@@ -192,6 +270,10 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
+
+      - name: Create Logs Directory
+        run: mkdir -p logs
+        shell: bash
 
       - name: Download Artifact
         uses: actions/download-artifact@v4
@@ -218,16 +300,31 @@ jobs:
           mvn versions:set-property -Dproperty="smart-doc.version" -DnewVersion="${{ env.smart-doc-version }}" -DgenerateBackupPoms=false
 
       - name: Build and Install Example Project
-        run: mvn -DskipTests=true install
+        run: |
+          mvn -DskipTests=true install 2>&1 | tee logs/build-example-project.log
+          if grep -E "\[ERROR\]" logs/build-example-project.log; then
+            cat logs/build-example-project.log
+            exit 1
+          fi
+        shell: bash
 
       - name: Generate gRPC AsciiDoc Documentation
-        run: mvn -DskipTests=true smart-doc:grpc-adoc
+        run: |
+          mvn -DskipTests=true smart-doc:grpc-adoc 2>&1 | tee logs/grpc-adoc.log
+          if grep -E "\[ERROR\]" logs/grpc-adoc.log; then cat logs/grpc-adoc.log; exit 1; fi
+        shell: bash
 
       - name: Generate gRPC HTML Documentation
-        run: mvn -DskipTests=true smart-doc:grpc-html
+        run: |
+          mvn -DskipTests=true smart-doc:grpc-html 2>&1 | tee logs/grpc-html.log
+          if grep -E "\[ERROR\]" logs/grpc-html.log; then cat logs/grpc-html.log; exit 1; fi
+        shell: bash
 
       - name: Generate gRPC Markdown Documentation
-        run: mvn -DskipTests=true smart-doc:grpc-markdown
+        run: |
+          mvn -DskipTests=true smart-doc:grpc-markdown 2>&1 | tee logs/grpc-markdown.log
+          if grep -E "\[ERROR\]" logs/grpc-markdown.log; then cat logs/grpc-markdown.log; exit 1; fi
+        shell: bash
 
       - name: Upload gRPC API Documentation
         uses: actions/upload-artifact@v4
@@ -235,3 +332,10 @@ jobs:
           name: gRPC-api-doc-${{ runner.os }}
           path: ${{ github.workspace }}/target/doc/
           if-no-files-found: error
+
+      - name: Upload ${{ runner.os }} gRPC API Documentation Log
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: error-log-${{ runner.os }}-grpc-api-doc
+          path: logs
