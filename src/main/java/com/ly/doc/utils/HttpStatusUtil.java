@@ -23,10 +23,19 @@ package com.ly.doc.utils;
 import com.ly.doc.constants.HttpStatusEnum;
 
 /**
+ * HttpStatusUtil
+ *
  * @author yu.sun on 2024/6/9
  * @since 3.0.5
  */
 public class HttpStatusUtil {
+
+	/**
+	 * private constructor
+	 */
+	private HttpStatusUtil() {
+		throw new IllegalStateException("Utility class");
+	}
 
 	/**
 	 * Retrieves the corresponding HTTP status code as a string based on the input status

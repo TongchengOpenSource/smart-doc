@@ -24,6 +24,8 @@ import com.ly.doc.model.ApiMethodDoc;
 import org.apache.commons.lang3.StringUtils;
 
 /**
+ * ComponentTypeEnum
+ *
  * @author xingzi Date 2023/9/10 14:47
  */
 public enum ComponentTypeEnum {
@@ -46,6 +48,12 @@ public enum ComponentTypeEnum {
 	 */
 	private final String componentType;
 
+	/**
+	 * get random name
+	 * @param componentTypeEnum componentTypeEnum
+	 * @param apiMethodDoc apiMethodDoc
+	 * @return random name
+	 */
 	public static String getRandomName(ComponentTypeEnum componentTypeEnum, ApiMethodDoc apiMethodDoc) {
 		if (componentTypeEnum.equals(RANDOM)) {
 			return apiMethodDoc.getUrl();
@@ -53,6 +61,10 @@ public enum ComponentTypeEnum {
 		return StringUtils.EMPTY;
 	}
 
+	/**
+	 * get componentType
+	 * @return componentType
+	 */
 	public String getComponentType() {
 		return componentType;
 	}

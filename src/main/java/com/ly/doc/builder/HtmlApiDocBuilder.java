@@ -36,15 +36,26 @@ import java.util.List;
 import java.util.Objects;
 
 /**
+ * HTML API Doc Builder
+ *
  * @author yu 2019/9/20.
  * @since 1.7+
  */
 public class HtmlApiDocBuilder {
 
+	/**
+	 * error code html
+	 */
 	private static final String ERROR_CODE_HTML = "error.html";
 
+	/**
+	 * dict html
+	 */
 	private static final String DICT_HTML = "dict.html";
 
+	/**
+	 * index html
+	 */
 	private static String INDEX_HTML = "index.html";
 
 	/**

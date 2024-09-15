@@ -29,12 +29,21 @@ import com.thoughtworks.qdox.JavaProjectBuilder;
 import java.util.List;
 
 /**
+ * Build Rpc Asciidoc
+ *
  * @author yu 2020/5/17.
+ * @since 1.8.7
  */
 public class RpcAdocBuilder {
 
+	/**
+	 * RpcApi.adoc
+	 */
 	private static final String API_EXTENSION = "RpcApi.adoc";
 
+	/**
+	 * rpc-index.adoc
+	 */
 	private static final String INDEX_DOC = "rpc-index.adoc";
 
 	/**

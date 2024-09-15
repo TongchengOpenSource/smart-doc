@@ -22,14 +22,25 @@
 package com.ly.doc.constants;
 
 /**
+ * JSR annotation property constants
+ *
  * @author yu 2024/6/7
  */
 public interface JSRAnnotationPropConstants {
 
+	/**
+	 * max property
+	 */
 	String MAX_PROP = "max";
 
+	/**
+	 * min property
+	 */
 	String MIN_PROP = "min";
 
+	/**
+	 * value property
+	 */
 	String VALUE = "value";
 
 }

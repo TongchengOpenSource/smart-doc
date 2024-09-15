@@ -34,10 +34,24 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
+ * ApiParam Tree Util {@link ApiParam}
+ *
  * @author yu 2020/8/8.
  */
 public class ApiParamTreeUtil {
 
+	/**
+	 * private constructor
+	 */
+	private ApiParamTreeUtil() {
+		throw new IllegalStateException("Utility class");
+	}
+
+	/**
+	 * Converts a list of ApiParam objects into a tree structure.
+	 * @param apiParamList The list of ApiParam objects to be converted.
+	 * @return A list of ApiParam objects representing the tree structure.
+	 */
 	public static List<ApiParam> apiParamToTree(List<ApiParam> apiParamList) {
 		if (CollectionUtil.isEmpty(apiParamList)) {
 			return new ArrayList<>(0);

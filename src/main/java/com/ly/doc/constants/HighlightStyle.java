@@ -20,52 +20,68 @@
  */
 package com.ly.doc.constants;
 
-import java.util.Arrays;
+import com.power.common.util.StringUtil;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-
-import com.power.common.util.StringUtil;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
+ * Highlight style
+ *
  * @author jitmit 2020/11/16
  */
 public class HighlightStyle {
 
+	/**
+	 * Default style
+	 */
 	public static final String DEFAULT_STYLE = "github";
 
+	/**
+	 * Dark style
+	 */
 	private static final List<String> DARK_STYLE;
 
+	/**
+	 * Light style
+	 */
 	private static final List<String> LIGHT_STYLE;
 
 	/**
 	 * key is style,value is color
 	 */
-	private static final Map<String, String> BACKGROUND = new HashMap<>();
+	private static final Map<String, String> BACKGROUND = new HashMap<>(76);
 
 	static {
-		LIGHT_STYLE = Arrays.asList(DEFAULT_STYLE, "a11y-light", "arduino-light", "ascetic", "atelier-cave-light",
-				"atelier-dune-light", "atelier-estuary-light", "atelier-forest-light", "atelier-heath-light",
-				"atelier-lakeside-light", "atelier-plateau-light", "atelier-savanna-light", "atelier-seaside-light",
-				"atelier-sulphurpool-light", "atom-one-light", "color-brewer", "docco", "github-gist", "googlecode",
-				"grayscale", "gruvbox-light", "idea", "isbl-editor-light", "kimbie.light", "lightfair", "magula",
-				"mono-blue", "nnfx", "paraiso-light", "purebasic", "qtcreator_light", "routeros", "school-book",
-				"solarized-light", "tomorrow", "vs", "xcode");
+		LIGHT_STYLE = Stream
+			.of(DEFAULT_STYLE, "a11y-light", "arduino-light", "ascetic", "atelier-cave-light", "atelier-dune-light",
+					"atelier-estuary-light", "atelier-forest-light", "atelier-heath-light", "atelier-lakeside-light",
+					"atelier-plateau-light", "atelier-savanna-light", "atelier-seaside-light",
+					"atelier-sulphurpool-light", "atom-one-light", "color-brewer", "docco", "github-gist", "googlecode",
+					"grayscale", "gruvbox-light", "idea", "isbl-editor-light", "kimbie.light", "lightfair", "magula",
+					"mono-blue", "nnfx", "paraiso-light", "purebasic", "qtcreator_light", "routeros", "school-book",
+					"solarized-light", "tomorrow", "vs", "xcode")
+			.collect(Collectors.toList());
 
 	}
 
 	static {
-		DARK_STYLE = Arrays.asList("a11y-dark", "agate", "an-old-hope", "androidstudio", "arta", "atelier-cave-dark",
-				"atelier-dune-dark", "atelier-estuary-dark", "atelier-forest-dark", "atelier-heath-dark",
-				"atelier-lakeside-dark", "atelier-plateau-dark", "atelier-savanna-dark", "atelier-seaside-dark",
-				"atelier-sulphurpool-dark", "atom-one-dark-reasonable", "atom-one-dark", "brown-paper", "codepen-embed",
-				"darcula", "dark", "default", "dracula", "far", "foundation", "gml", "gradient-dark", "gruvbox-dark",
-				"hopscotch", "hybrid", "ir-black", "isbl-editor-dark", "kimbie.dark", "lioshi", "monokai",
-				"monokai-sublime", "night-owl", "nnfx-dark", "nord", "obsidian", "ocean", "paraiso-dark", "pojoaque",
-				"qtcreator_dark", "railscasts", "rainbow", "shades-of-purple", "solarized-dark", "srcery", "sunburst",
-				"tomorrow-night", "tomorrow-night-blue", "tomorrow-night-bright", "tomorrow-night-eighties", "vs2015",
-				"xt256", "zenburn");
+		DARK_STYLE = Stream
+			.of("a11y-dark", "agate", "an-old-hope", "androidstudio", "arta", "atelier-cave-dark", "atelier-dune-dark",
+					"atelier-estuary-dark", "atelier-forest-dark", "atelier-heath-dark", "atelier-lakeside-dark",
+					"atelier-plateau-dark", "atelier-savanna-dark", "atelier-seaside-dark", "atelier-sulphurpool-dark",
+					"atom-one-dark-reasonable", "atom-one-dark", "brown-paper", "codepen-embed", "darcula", "dark",
+					"default", "dracula", "far", "foundation", "gml", "gradient-dark", "gruvbox-dark", "hopscotch",
+					"hybrid", "ir-black", "isbl-editor-dark", "kimbie.dark", "lioshi", "monokai", "monokai-sublime",
+					"night-owl", "nnfx-dark", "nord", "obsidian", "ocean", "paraiso-dark", "pojoaque", "qtcreator_dark",
+					"railscasts", "rainbow", "shades-of-purple", "solarized-dark", "srcery", "sunburst",
+					"tomorrow-night", "tomorrow-night-blue", "tomorrow-night-bright", "tomorrow-night-eighties",
+					"vs2015", "xt256", "zenburn")
+			.collect(Collectors.toList());
 	}
 
 	static {
@@ -180,6 +196,11 @@ public class HighlightStyle {
 		}
 	}
 
+	/**
+	 * Get background color
+	 * @param style Highlight style
+	 * @return String of background color
+	 */
 	public static String getBackgroundColor(String style) {
 		String color = BACKGROUND.get(style);
 		if (StringUtil.isNotEmpty(color)) {

@@ -21,6 +21,8 @@
 package com.ly.doc.constants;
 
 /**
+ * Template Variable.
+ *
  * @author yu 2019/9/21.
  */
 public enum TemplateVariable {
@@ -211,10 +213,18 @@ public enum TemplateVariable {
 	 */
 	private final String variable;
 
+	/**
+	 * constructor
+	 * @param variable variable
+	 */
 	TemplateVariable(String variable) {
 		this.variable = variable;
 	}
 
+	/**
+	 * get variable
+	 * @return variable
+	 */
 	public String getVariable() {
 		return this.variable;
 	}

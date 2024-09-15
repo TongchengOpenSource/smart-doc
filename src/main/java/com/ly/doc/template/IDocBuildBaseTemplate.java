@@ -199,7 +199,7 @@ public interface IDocBuildBaseTemplate {
 			return false;
 		}
 
-		return isEntryPoint(javaClass, registeredAnnotations());
+		return this.isEntryPoint(javaClass, this.registeredAnnotations());
 	}
 
 	/**
@@ -229,7 +229,7 @@ public interface IDocBuildBaseTemplate {
 		}
 		// from tag
 		DocletTag ignoreTag = javaClass.getTagByName(DocTags.IGNORE);
-		return !isEntryPoint(javaClass, frameworkAnnotations) || Objects.nonNull(ignoreTag);
+		return !this.isEntryPoint(javaClass, frameworkAnnotations) || Objects.nonNull(ignoreTag);
 	}
 
 	/**

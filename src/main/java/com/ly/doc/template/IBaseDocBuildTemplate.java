@@ -35,10 +35,17 @@ import java.util.*;
 import static com.ly.doc.constants.DocGlobalConstants.NO_COMMENTS_FOUND;
 
 /**
+ * Base Doc Build Template
+ *
  * @author yu3.sun on 2022/10/2
  */
 public interface IBaseDocBuildTemplate {
 
+	/**
+	 * Comment Resolve
+	 * @param comment comment
+	 * @return String
+	 */
 	default String paramCommentResolve(String comment) {
 		if (StringUtil.isEmpty(comment)) {
 			comment = NO_COMMENTS_FOUND;
@@ -130,6 +137,15 @@ public interface IBaseDocBuildTemplate {
 		apiMethodDoc.setRequestParams(ApiParamTreeUtil.apiParamToTree(apiMethodDoc.getRequestParams()));
 	}
 
+	/**
+	 * Retrieves and processes the list of parameters for a given Java method, applying
+	 * various transformations and ignoring specified parameters.
+	 * @param builder The project documentation configuration builder.
+	 * @param docJavaMethod The documented Java method.
+	 * @param frameworkAnnotations The framework annotations used to identify specific
+	 * annotations.
+	 * @return A list of processed {@link DocJavaParameter} objects.
+	 */
 	default List<DocJavaParameter> getJavaParameterList(ProjectDocConfigBuilder builder,
 			final DocJavaMethod docJavaMethod, FrameworkAnnotations frameworkAnnotations) {
 		JavaMethod javaMethod = docJavaMethod.getJavaMethod();
@@ -202,6 +218,15 @@ public interface IBaseDocBuildTemplate {
 		return apiJavaParameterList;
 	}
 
+	/**
+	 * Retrieves the rewritten class name based on the provided map, full type name, and
+	 * comment class.
+	 * @param replacementMap The map containing replacements for class names.
+	 * @param fullTypeName The fully qualified type name.
+	 * @param commentClass The comment associated with the class, if any.
+	 * @return The rewritten class name or the original class name if no valid rewrite is
+	 * found.
+	 */
 	default String getRewriteClassName(Map<String, String> replacementMap, String fullTypeName, String commentClass) {
 		String rewriteClassName;
 		if (Objects.nonNull(commentClass) && !DocGlobalConstants.NO_COMMENTS_FOUND.equals(commentClass)) {
@@ -217,6 +242,12 @@ public interface IBaseDocBuildTemplate {
 		return replacementMap.get(fullTypeName);
 	}
 
+	/**
+	 * Retrieves a set of parameter names to be ignored based on the `@ignoreParams` tag
+	 * in the method's documentation.
+	 * @param method The Java method to inspect for the ignore parameters tag.
+	 * @return A set of parameter names that should be ignored.
+	 */
 	default Set<String> ignoreParamsSets(JavaMethod method) {
 		Set<String> ignoreSets = new HashSet<>();
 		DocletTag ignoreParam = method.getTagByName(DocTags.IGNORE_PARAMS);
@@ -227,10 +258,17 @@ public interface IBaseDocBuildTemplate {
 		return ignoreSets;
 	}
 
+	/**
+	 * Retrieves the simplified return type of a Java method, handling generic types and
+	 * array notations.
+	 * @param javaMethod The Java method whose return type needs to be processed.
+	 * @param actualTypesMap A map containing actual type mappings.
+	 * @return The simplified return type as a string.
+	 */
 	default String getMethodReturnType(JavaMethod javaMethod, Map<String, JavaType> actualTypesMap) {
 		JavaType returnType = javaMethod.getReturnType();
-		String simpleReturn = replaceTypeName(returnType.getCanonicalName(), actualTypesMap, Boolean.TRUE);
-		String returnClass = replaceTypeName(returnType.getGenericCanonicalName(), actualTypesMap, Boolean.TRUE);
+		String simpleReturn = this.replaceTypeName(returnType.getCanonicalName(), actualTypesMap, Boolean.TRUE);
+		String returnClass = this.replaceTypeName(returnType.getGenericCanonicalName(), actualTypesMap, Boolean.TRUE);
 		returnClass = returnClass.replace(simpleReturn, JavaClassUtil.getClassSimpleName(simpleReturn));
 		String[] arrays = DocClassUtil.getSimpleGicName(returnClass);
 		for (String str : arrays) {
@@ -252,6 +290,13 @@ public interface IBaseDocBuildTemplate {
 		return returnClass;
 	}
 
+	/**
+	 * Replaces type names in the given string based on the provided map of actual types.
+	 * @param type The type name to be replaced.
+	 * @param actualTypesMap A map containing the actual types to be used for replacement.
+	 * @param simple A flag indicating whether to use simple names for replacement.
+	 * @return The type name after replacement.
+	 */
 	default String replaceTypeName(String type, Map<String, JavaType> actualTypesMap, boolean simple) {
 		if (Objects.isNull(actualTypesMap)) {
 			return type;
@@ -269,6 +314,13 @@ public interface IBaseDocBuildTemplate {
 		return type;
 	}
 
+	/**
+	 * Determines whether the return object should be ignored based on its type name and a
+	 * list of ignored parameters.
+	 * @param typeName The name of the type to check.
+	 * @param ignoreParams A list of parameter names that should be ignored.
+	 * @return true if the return object should be ignored; false otherwise.
+	 */
 	boolean ignoreReturnObject(String typeName, List<String> ignoreParams);
 
 }

@@ -42,17 +42,12 @@ import static com.ly.doc.constants.DocTags.DEPRECATED;
 import static com.ly.doc.constants.DocTags.IGNORE;
 
 /**
+ * Spring MVC RequestMapping Handler
+ *
  * @author yu 2019/12/22.
  */
 public class SpringMVCRequestMappingHandler implements IRequestMappingHandler, IWebSocketRequestHandler {
 
-	/**
-	 * handle spring request mapping
-	 * @param projectBuilder projectBuilder
-	 * @param controllerBaseUrl spring mvc controller base url
-	 * @param method JavaMethod
-	 * @return RequestMapping
-	 */
 	@Override
 	public RequestMapping handle(ProjectDocConfigBuilder projectBuilder, String controllerBaseUrl, JavaMethod method,
 			FrameworkAnnotations frameworkAnnotations, RequestMappingFunc requestMappingFunc) {

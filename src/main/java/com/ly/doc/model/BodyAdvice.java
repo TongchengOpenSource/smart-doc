@@ -28,7 +28,7 @@ public class BodyAdvice {
 
 	private String className;
 
-	private Class wrapperClass;
+	private Class<?> wrapperClass;
 
 	private String dataField;
 
@@ -54,22 +54,18 @@ public class BodyAdvice {
 		return this;
 	}
 
-	public Class getWrapperClass() {
+	public Class<?> getWrapperClass() {
 		return wrapperClass;
 	}
 
-	public BodyAdvice setWrapperClass(Class wrapperClass) {
+	public BodyAdvice setWrapperClass(Class<?> wrapperClass) {
 		this.wrapperClass = wrapperClass;
 		return this;
 	}
 
 	@Override
 	public String toString() {
-		final StringBuilder sb = new StringBuilder("{");
-		sb.append("\"className\":\"").append(className).append('\"');
-		sb.append(",\"dataField\":\"").append(dataField).append('\"');
-		sb.append('}');
-		return sb.toString();
+		return "{" + "\"className\":\"" + className + '\"' + ",\"dataField\":\"" + dataField + '\"' + '}';
 	}
 
 }

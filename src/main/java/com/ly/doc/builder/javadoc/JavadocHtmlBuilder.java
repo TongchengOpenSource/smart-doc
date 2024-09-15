@@ -28,6 +28,12 @@ import com.thoughtworks.qdox.JavaProjectBuilder;
 
 import java.util.List;
 
+/**
+ * Javadoc Html Builder
+ *
+ * @author chenchuxin
+ * @since 3.0.5
+ */
 public class JavadocHtmlBuilder {
 
 	/**

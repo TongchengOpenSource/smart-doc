@@ -30,9 +30,18 @@ import com.google.gson.JsonParser;
 import java.util.Objects;
 
 /**
+ * Json Util
+ *
  * @author yu 2021/6/26.
  */
 public class JsonUtil {
+
+	/**
+	 * private constructor
+	 */
+	private JsonUtil() {
+		throw new IllegalStateException("Utility class");
+	}
 
 	/**
 	 * Convert a JSON string to pretty print
@@ -66,6 +75,13 @@ public class JsonUtil {
 		return gson.toJson(src);
 	}
 
+	/**
+	 * Convert a JSON string to object
+	 * @param <T> type
+	 * @param json json string
+	 * @param clazz class
+	 * @return Object
+	 */
 	public static <T> T toObject(String json, Class<T> clazz) {
 		return new Gson().fromJson(json, clazz);
 	}

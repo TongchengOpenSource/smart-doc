@@ -38,6 +38,8 @@ import static com.ly.doc.constants.DocTags.DEPRECATED;
 import static com.ly.doc.constants.DocTags.IGNORE;
 
 /**
+ * Solon RequestMapping Handler
+ *
  * @author noear 2022/2/19 created
  */
 public class SolonRequestMappingHandler implements IRequestMappingHandler, IWebSocketRequestHandler {

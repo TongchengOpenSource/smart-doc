@@ -18,11 +18,18 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
- * write on a plane
+ * RequestExampleUtil (write on a plane)
  *
  * @author yu 2024/05/27.
  */
 public class RequestExampleUtil {
+
+	/**
+	 * private constructor
+	 */
+	private RequestExampleUtil() {
+		throw new IllegalStateException("Utility class");
+	}
 
 	/**
 	 * Sets example data into the API method documentation.

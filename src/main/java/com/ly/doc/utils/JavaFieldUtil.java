@@ -22,7 +22,10 @@
  */
 package com.ly.doc.utils;
 
-import com.ly.doc.constants.*;
+import com.ly.doc.constants.DocGlobalConstants;
+import com.ly.doc.constants.DocValidatorAnnotationEnum;
+import com.ly.doc.constants.JSRAnnotationConstants;
+import com.ly.doc.constants.JSRAnnotationPropConstants;
 import com.ly.doc.model.CustomField;
 import com.ly.doc.model.DocJavaField;
 import com.power.common.util.StringUtil;
@@ -37,9 +40,18 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
+ * JavaFieldUtil
+ *
  * @author yu 2019/12/21.
  */
 public class JavaFieldUtil {
+
+	/**
+	 * private constructor
+	 */
+	private JavaFieldUtil() {
+		throw new IllegalStateException("Utility class");
+	}
 
 	/**
 	 * public static final
@@ -47,6 +59,7 @@ public class JavaFieldUtil {
 	private static final int PUBLIC_STATIC_FINAL = Modifier.PUBLIC | Modifier.STATIC | Modifier.FINAL;
 
 	/**
+	 * check generics
 	 * @param fields list of fields
 	 * @return boolean
 	 */
@@ -60,6 +73,7 @@ public class JavaFieldUtil {
 	}
 
 	/**
+	 * build custom field
 	 * @param data0 data0
 	 * @param typeSimpleName typeName
 	 * @param customField config field
@@ -77,6 +91,7 @@ public class JavaFieldUtil {
 	}
 
 	/**
+	 * create mock value
 	 * @param paramsComments param comments
 	 * @param paramName param name
 	 * @param typeName param type
@@ -102,6 +117,7 @@ public class JavaFieldUtil {
 	}
 
 	/**
+	 * get param max length
 	 * @param annotations annotation
 	 * @return max length
 	 */
@@ -167,6 +183,11 @@ public class JavaFieldUtil {
 		return "\nValidation[" + sb + "]";
 	}
 
+	/**
+	 * convert to simple type name
+	 * @param str str
+	 * @return simple type name
+	 */
 	public static String convertToSimpleTypeName(String str) {
 		String regex = "\\b\\w+\\.(?=\\w+\\b)";
 		return str.replaceAll(regex, "");

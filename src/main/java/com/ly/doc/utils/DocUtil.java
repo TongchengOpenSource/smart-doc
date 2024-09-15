@@ -40,6 +40,7 @@ import java.text.DecimalFormat;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -50,11 +51,32 @@ import java.util.stream.Collectors;
  */
 public class DocUtil {
 
+	/**
+	 * private constructor
+	 */
+	private DocUtil() {
+		throw new IllegalStateException("Utility class");
+	}
+
+	/**
+	 * logger
+	 */
+	private static final Logger logger = Logger.getLogger(DocUtil.class.getName());
+
+	/**
+	 * Faker
+	 */
 	private static final Faker FAKER = new Faker(new Locale("en-US"));
 
+	/**
+	 * En-Faker
+	 */
 	private static final Faker EN_FAKER = new Faker(new Locale("en-US"));
 
-	private static final Map<String, String> FIELD_VALUE = new LinkedHashMap<>();
+	/**
+	 * Field value map
+	 */
+	private static final Map<String, String> FIELD_VALUE = new LinkedHashMap<>(64);
 
 	static {
 		FIELD_VALUE.put("uuid-string", UUID.randomUUID().toString());
@@ -225,13 +247,8 @@ public class DocUtil {
 		}
 		String randomMock = System.getProperty(DocGlobalConstants.RANDOM_MOCK);
 		boolean randomMockFlag = Boolean.parseBoolean(randomMock);
-		String value = "";
-		if (randomMockFlag) {
-			value = RandomUtil.randomValueByType(type);
-		}
-		else {
-			value = RandomUtil.generateDefaultValueByType(type);
-		}
+		String value = randomMockFlag ? RandomUtil.randomValueByType(type)
+				: RandomUtil.generateDefaultValueByType(type);
 		if (javaPrimaryType(type)) {
 			return value;
 		}
@@ -1067,7 +1084,7 @@ public class DocUtil {
 				}
 			}
 			catch (ClassNotFoundException e) {
-				e.printStackTrace();
+				logger.warning(e.getMessage());
 			}
 			return new ArrayList<>(errorCodeList);
 		}
@@ -1149,7 +1166,7 @@ public class DocUtil {
 			}
 		}
 		catch (ClassNotFoundException e) {
-			e.printStackTrace();
+			logger.warning(e.getMessage());
 		}
 		return apiDocDictList;
 	}

@@ -44,17 +44,32 @@ import java.util.Set;
  */
 public class GitHelper {
 
+	/**
+	 * Repository
+	 */
 	private Repository repository;
 
+	/**
+	 * Private constructor
+	 */
 	private GitHelper() {
 	}
 
+	/**
+	 * Create a new instance
+	 * @return GitHelper
+	 */
 	public static GitHelper create() {
 		GitHelper helper = new GitHelper();
 		helper.repository = helper.findRepo();
 		return helper;
 	}
 
+	/**
+	 * Get diff between current commit and the commit with commitId
+	 * @param commitId commitId
+	 * @return {@code List<DiffEntry>}
+	 */
 	public List<DiffEntry> getDiff(String commitId) {
 		if (StringUtil.isEmpty(commitId) || notGitRepo()) {
 			return Collections.emptyList();
@@ -83,6 +98,10 @@ public class GitHelper {
 		}
 	}
 
+	/**
+	 * Get uncommitted changes
+	 * @return {@code Set<String> }
+	 */
 	public Set<String> getUncommitted() {
 		if (notGitRepo()) {
 			return Collections.emptySet();
@@ -96,6 +115,10 @@ public class GitHelper {
 		}
 	}
 
+	/**
+	 * Get untracked files
+	 * @return {@code Set<String> }
+	 */
 	public Set<String> getUntracked() {
 		if (notGitRepo()) {
 			return Collections.emptySet();
@@ -109,6 +132,10 @@ public class GitHelper {
 		}
 	}
 
+	/**
+	 * Get latest commit id
+	 * @return latest commit id
+	 */
 	public String getLatestCommitId() {
 		if (notGitRepo()) {
 			return "";
@@ -129,6 +156,7 @@ public class GitHelper {
 
 	/**
 	 * Check git repository, if not exist or io exception, return null
+	 * @return Repository
 	 */
 	private Repository findRepo() {
 		try {
@@ -144,14 +172,26 @@ public class GitHelper {
 		}
 	}
 
+	/**
+	 * Check if not git repository
+	 * @return boolean
+	 */
 	public boolean notGitRepo() {
 		return repository == null;
 	}
 
+	/**
+	 * Check if git repository
+	 * @return boolean
+	 */
 	public boolean isGitRepo() {
 		return !notGitRepo();
 	}
 
+	/**
+	 * Get work directory
+	 * @return work directory
+	 */
 	public String getWorkDir() {
 		return repository.getWorkTree().getAbsolutePath();
 	}

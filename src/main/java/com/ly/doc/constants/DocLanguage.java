@@ -41,10 +41,18 @@ public enum DocLanguage {
 	 */
 	public final String code;
 
+	/**
+	 * constructor
+	 * @param code language code
+	 */
 	DocLanguage(String code) {
 		this.code = code;
 	}
 
+	/**
+	 * get language code
+	 * @return language code
+	 */
 	public String getCode() {
 		return this.code;
 	}

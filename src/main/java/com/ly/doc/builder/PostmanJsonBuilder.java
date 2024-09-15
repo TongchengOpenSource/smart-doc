@@ -45,10 +45,16 @@ import com.thoughtworks.qdox.JavaProjectBuilder;
 import java.util.*;
 
 /**
+ * Postman Json Builder
+ *
  * @author yu 2019/11/21.
+ * @since 1.7.8
  */
 public class PostmanJsonBuilder {
 
+	/**
+	 * Message
+	 */
 	private static final String MSG = "Interface name is not set.";
 
 	/**

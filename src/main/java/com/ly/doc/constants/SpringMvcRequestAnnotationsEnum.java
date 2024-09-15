@@ -87,10 +87,18 @@ public enum SpringMvcRequestAnnotationsEnum {
 	 */
 	private final String value;
 
+	/**
+	 * SpringMvc RequestAnnotation constructor
+	 * @param value SpringMvc RequestAnnotation value
+	 */
 	SpringMvcRequestAnnotationsEnum(String value) {
 		this.value = value;
 	}
 
+	/**
+	 * get SpringMvc RequestAnnotation list
+	 * @return SpringMvc RequestAnnotation list
+	 */
 	public static List<String> listSpringMvcRequestAnnotations() {
 		List<String> annotations = new ArrayList<>();
 		for (SpringMvcRequestAnnotationsEnum annotation : SpringMvcRequestAnnotationsEnum.values()) {
