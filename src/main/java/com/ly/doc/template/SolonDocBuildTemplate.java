@@ -57,7 +57,7 @@ public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IWebSoc
 			.filter(Objects::nonNull)
 			.flatMap(Collection::stream)
 			.collect(Collectors.toList());
-		FrameworkAnnotations frameworkAnnotations = registeredAnnotations();
+		FrameworkAnnotations frameworkAnnotations = this.registeredAnnotations();
 		return this.processApiData(projectBuilder, frameworkAnnotations, configApiReqParams,
 				new SolonRequestMappingHandler(), new SolonRequestHeaderHandler(), candidateClasses);
 	}

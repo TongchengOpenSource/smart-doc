@@ -21,14 +21,19 @@
 
 package com.ly.doc.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Api Schema
+ *
  * @author yu.sun on 2024/6/9
  * @since 3.0.5
  */
-public class ApiSchema<T> {
+public class ApiSchema<T extends IDoc> implements Serializable {
+
+	private static final long serialVersionUID = -8712793142951321786L;
 
 	List<T> apiDatas;
 

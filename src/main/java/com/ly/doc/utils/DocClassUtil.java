@@ -37,6 +37,13 @@ import java.util.*;
 public class DocClassUtil {
 
 	/**
+	 * private constructor
+	 */
+	private DocClassUtil() {
+		throw new IllegalStateException("Utility class");
+	}
+
+	/**
 	 * get class names by generic class name
 	 * @param typeName generic class name
 	 * @return array of string
@@ -395,14 +402,17 @@ public class DocClassUtil {
 	 * @return String
 	 */
 	public static String rewriteRequestParam(String typeName) {
-		switch (typeName) {
-			case "org.springframework.data.domain.Pageable":
-				return "com.ly.doc.model.framework.PageableAsQueryParam";
-			default:
-				return typeName;
+		if (typeName.equals("org.springframework.data.domain.Pageable")) {
+			return "com.ly.doc.model.framework.PageableAsQueryParam";
 		}
+		return typeName;
 	}
 
+	/**
+	 * Check if the given string is a valid class name.
+	 * @param className The string to check.
+	 * @return True if the string is a valid class name, false otherwise.
+	 */
 	private static boolean isClassName(String className) {
 		className = className.replaceAll("[^<>]", "");
 		Stack<Character> stack = new Stack<>();
@@ -438,6 +448,12 @@ public class DocClassUtil {
 		return classAnnotations;
 	}
 
+	/**
+	 * Create an instance of the given class using its default constructor.
+	 * @param <T> The type of the class to create an instance of.
+	 * @param classWithNoArgsConstructor The class to create an instance of.
+	 * @return An instance of the given class.
+	 */
 	public static <T> T newInstance(Class<T> classWithNoArgsConstructor) {
 		try {
 			return classWithNoArgsConstructor.getConstructor().newInstance();

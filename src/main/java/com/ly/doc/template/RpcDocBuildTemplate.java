@@ -160,6 +160,18 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc>, IWebSo
 		return null;
 	}
 
+	/**
+	 * Handles the generation of Java API documentation. This method is responsible for
+	 * processing a Java class to generate API documentation details, including setting up
+	 * the API documentation list and method details.
+	 * @param cls The JavaClass object representing the class being documented.
+	 * @param apiDocList The list to store generated RpcApiDoc objects.
+	 * @param apiMethodDocs The list containing documentation for methods within the
+	 * class.
+	 * @param order The order or priority of the API documentation.
+	 * @param builder The ProjectDocConfigBuilder used to configure and retrieve class
+	 * information.
+	 */
 	private void handleJavaApiDoc(JavaClass cls, List<RpcApiDoc> apiDocList, List<RpcJavaMethod> apiMethodDocs,
 			int order, ProjectDocConfigBuilder builder) {
 		String className = cls.getCanonicalName();

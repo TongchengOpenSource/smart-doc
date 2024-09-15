@@ -20,19 +20,27 @@
  */
 package com.ly.doc.filter;
 
+import com.ly.doc.model.ApiReturn;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import com.ly.doc.model.ApiReturn;
-
 /**
+ * Return Type Processor
+ *
  * @author yu 2020/4/17.
  */
 public class ReturnTypeProcessor {
 
-	private List<ReturnTypeFilter> filters = new ArrayList<>();
+	/**
+	 * return type filter
+	 */
+	private final List<ReturnTypeFilter> filters = new ArrayList<>();
 
+	/**
+	 * return type
+	 */
 	private String typeName;
 
 	public String getTypeName() {
@@ -43,6 +51,10 @@ public class ReturnTypeProcessor {
 		this.typeName = typeName;
 	}
 
+	/**
+	 * process return type
+	 * @return ApiReturn
+	 */
 	public ApiReturn process() {
 		filters.add(new WebFluxReturnFilter());
 		filters.add(new BoxReturnFilter());

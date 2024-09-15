@@ -36,6 +36,13 @@ import java.util.List;
 public class DocPathUtil {
 
 	/**
+	 * private constructor
+	 */
+	private DocPathUtil() {
+		throw new IllegalStateException("Utility class");
+	}
+
+	/**
 	 * Get the java class name
 	 * @param parentDir parent dir
 	 * @param className class name

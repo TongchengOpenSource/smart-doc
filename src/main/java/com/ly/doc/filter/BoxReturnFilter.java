@@ -20,19 +20,23 @@
  */
 package com.ly.doc.filter;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import com.ly.doc.constants.DocGlobalConstants;
 import com.ly.doc.constants.JavaTypeConstants;
 import com.ly.doc.model.ApiReturn;
 import com.ly.doc.utils.DocClassUtil;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
+ * Box Return Filter
+ *
  * @author yu 2020/4/17.
  */
 public class BoxReturnFilter implements ReturnTypeFilter {
 
+	/**
+	 * Box Return Type
+	 */
 	private static final Set<String> TYPE_SET = new HashSet<>();
 
 	static {

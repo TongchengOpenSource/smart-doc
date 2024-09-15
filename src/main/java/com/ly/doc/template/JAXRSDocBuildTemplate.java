@@ -54,6 +54,9 @@ import java.util.stream.Stream;
 public class JAXRSDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IWebSocketDocBuildTemplate<WebSocketDoc>,
 		IRestDocTemplate, IWebSocketTemplate {
 
+	/**
+	 * logger
+	 */
 	private static final Logger log = Logger.getLogger(JAXRSDocBuildTemplate.class.getName());
 
 	/**
@@ -84,15 +87,15 @@ public class JAXRSDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IWebSoc
 			ProjectDocConfigBuilder projectBuilder, FrameworkAnnotations frameworkAnnotations,
 			List<ApiReqParam> configApiReqParams, IRequestMappingHandler baseMappingHandler,
 			IHeaderHandler headerHandler) {
-		return buildControllerMethod(cls, apiConfig, projectBuilder, frameworkAnnotations);
+		return this.buildControllerMethod(cls, apiConfig, projectBuilder, frameworkAnnotations);
 	}
 
 	@Override
 	public List<WebSocketDoc> renderWebSocketApi(ProjectDocConfigBuilder projectBuilder,
 			Collection<JavaClass> candidateClasses) {
-		FrameworkAnnotations frameworkAnnotations = registeredAnnotations();
-		return processWebSocketData(projectBuilder, frameworkAnnotations, DefaultWebSocketRequestHandler.getInstance(),
-				candidateClasses);
+		FrameworkAnnotations frameworkAnnotations = this.registeredAnnotations();
+		return this.processWebSocketData(projectBuilder, frameworkAnnotations,
+				DefaultWebSocketRequestHandler.getInstance(), candidateClasses);
 	}
 
 	/**

@@ -47,30 +47,68 @@ import java.util.jar.JarFile;
 import java.util.logging.Logger;
 
 /**
+ * ProjectDocConfigBuilder
+ *
  * @author yu 2019/12/21.
+ * @since 1.8.0
  */
 public class ProjectDocConfigBuilder {
 
+	/**
+	 * Logger
+	 */
 	private static final Logger log = Logger.getLogger(ProjectDocConfigBuilder.class.getName());
 
+	/**
+	 * JavaProjectBuilder
+	 */
 	private final JavaProjectBuilder javaProjectBuilder;
 
+	/**
+	 * classFilesMap
+	 */
 	private final Map<String, JavaClass> classFilesMap = new ConcurrentHashMap<>();
 
+	/**
+	 * enumClassMap
+	 */
 	private final Map<String, Class<? extends Enum<?>>> enumClassMap = new ConcurrentHashMap<>();
 
+	/**
+	 * customRespFieldMap
+	 */
 	private final Map<CustomField.Key, CustomField> customRespFieldMap = new ConcurrentHashMap<>();
 
+	/**
+	 * customReqFieldMap
+	 */
 	private final Map<CustomField.Key, CustomField> customReqFieldMap = new ConcurrentHashMap<>();
 
+	/**
+	 * replaceClassMap
+	 */
 	private final Map<String, String> replaceClassMap = new ConcurrentHashMap<>();
 
+	/**
+	 * constantsMap
+	 */
 	private final Map<String, String> constantsMap = new ConcurrentHashMap<>();
 
+	/**
+	 * serverUrl
+	 */
 	private final String serverUrl;
 
+	/**
+	 * ApiConfig
+	 */
 	private final ApiConfig apiConfig;
 
+	/**
+	 * Constructor
+	 * @param apiConfig ApiConfig
+	 * @param javaProjectBuilder JavaProjectBuilder
+	 */
 	public ProjectDocConfigBuilder(ApiConfig apiConfig, JavaProjectBuilder javaProjectBuilder) {
 		if (null == apiConfig) {
 			throw new NullPointerException("ApiConfig can't be null.");
@@ -105,6 +143,10 @@ public class ProjectDocConfigBuilder {
 		this.checkBodyAdvice(apiConfig.getResponseBodyAdvice());
 	}
 
+	/**
+	 * Init data dictionary.
+	 * @param apiConfig apiConfig
+	 */
 	private void initDict(ApiConfig apiConfig) {
 		if (enumClassMap.isEmpty()) {
 			return;
@@ -129,6 +171,11 @@ public class ProjectDocConfigBuilder {
 		}
 	}
 
+	/**
+	 * Get enum implements by interface.
+	 * @param enumClass enumClass
+	 * @return enum implements
+	 */
 	private Set<Class<? extends Enum<?>>> getEnumImplementsByInterface(Class<?> enumClass) {
 		if (!enumClass.isInterface()) {
 			return Collections.emptySet();
@@ -142,6 +189,11 @@ public class ProjectDocConfigBuilder {
 		return set;
 	}
 
+	/**
+	 * Get class by name.
+	 * @param simpleName simpleName
+	 * @return JavaClass
+	 */
 	public JavaClass getClassByName(String simpleName) {
 		JavaClass cls = javaProjectBuilder.getClassByName(simpleName);
 		List<DocJavaField> fieldList = JavaClassUtil.getFields(cls, 0, new LinkedHashMap<>(), null);
@@ -158,6 +210,11 @@ public class ProjectDocConfigBuilder {
 		return cls;
 	}
 
+	/**
+	 * Load java source.
+	 * @param config ApiConfig
+	 * @param builder JavaProjectBuilder
+	 */
 	private void loadJavaSource(ApiConfig config, JavaProjectBuilder builder) {
 		if (CollectionUtil.isNotEmpty(config.getJarSourcePaths())) {
 			for (SourceCodePath path : config.getJarSourcePaths()) {
@@ -181,6 +238,11 @@ public class ProjectDocConfigBuilder {
 		}
 	}
 
+	/**
+	 * Load jar java source.
+	 * @param strPath path
+	 * @param builder builder
+	 */
 	private void loadJavaSource(String strPath, JavaProjectBuilder builder) {
 		DirectoryScanner scanner = new DirectoryScanner(new File(strPath));
 		scanner.addFilter(new SuffixFilter(".java"));
@@ -194,6 +256,11 @@ public class ProjectDocConfigBuilder {
 		});
 	}
 
+	/**
+	 * Load jar java source.
+	 * @param path path
+	 * @param builder builder
+	 */
 	public void loadJarJavaSource(String path, JavaProjectBuilder builder) {
 		OutputStream out;
 		if (!path.endsWith(".jar")) {
@@ -228,6 +295,10 @@ public class ProjectDocConfigBuilder {
 		}
 	}
 
+	/**
+	 * Delete dir.
+	 * @param file file
+	 */
 	public static void deleteDir(File file) {
 		File[] files = file.listFiles();
 		if (file.isFile() || Objects.isNull(files) || files.length == 0) {
@@ -241,6 +312,10 @@ public class ProjectDocConfigBuilder {
 		file.delete();
 	}
 
+	/**
+	 * Init class files map.
+	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void initClassFilesMap() {
 		Collection<JavaClass> javaClasses = javaProjectBuilder.getClasses();
 		for (JavaClass cls : javaClasses) {
@@ -264,6 +339,10 @@ public class ProjectDocConfigBuilder {
 		}
 	}
 
+	/**
+	 * Init custom response fields map.
+	 * @param config config
+	 */
 	private void initCustomResponseFieldsMap(ApiConfig config) {
 		if (CollectionUtil.isNotEmpty(config.getCustomResponseFields())) {
 			for (CustomField field : config.getCustomResponseFields()) {
@@ -273,6 +352,10 @@ public class ProjectDocConfigBuilder {
 		}
 	}
 
+	/**
+	 * Init custom request fields map.
+	 * @param config config
+	 */
 	private void initCustomRequestFieldsMap(ApiConfig config) {
 		if (CollectionUtil.isNotEmpty(config.getCustomRequestFields())) {
 			for (CustomField field : config.getCustomRequestFields()) {
@@ -282,6 +365,10 @@ public class ProjectDocConfigBuilder {
 		}
 	}
 
+	/**
+	 * Init replace class map.
+	 * @param config config
+	 */
 	private void initReplaceClassMap(ApiConfig config) {
 		if (CollectionUtil.isNotEmpty(config.getApiObjectReplacements())) {
 			for (ApiObjectReplacement replace : config.getApiObjectReplacements()) {
@@ -290,6 +377,10 @@ public class ProjectDocConfigBuilder {
 		}
 	}
 
+	/**
+	 * Init constants.
+	 * @param config config
+	 */
 	private void initConstants(ApiConfig config) {
 		List<ApiConstant> apiConstants;
 		if (CollectionUtil.isEmpty(config.getApiConstants())) {
@@ -311,10 +402,14 @@ public class ProjectDocConfigBuilder {
 			}
 		}
 		catch (ClassNotFoundException | IllegalAccessException e) {
-			e.printStackTrace();
+			log.warning(e.getMessage());
 		}
 	}
 
+	/**
+	 * Check body advice.
+	 * @param bodyAdvice body advice
+	 */
 	private void checkBodyAdvice(BodyAdvice bodyAdvice) {
 		if (Objects.nonNull(bodyAdvice) && StringUtil.isNotEmpty(bodyAdvice.getClassName())) {
 			if (Objects.nonNull(bodyAdvice.getWrapperClass())) {
@@ -330,6 +425,9 @@ public class ProjectDocConfigBuilder {
 		}
 	}
 
+	/**
+	 * Set highlight style.
+	 */
 	private void setHighlightStyle() {
 		String style = apiConfig.getStyle();
 		if (HighLightJsConstants.HIGH_LIGHT_DEFAULT_STYLE.equals(style)) {

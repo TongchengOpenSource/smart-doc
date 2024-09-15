@@ -91,6 +91,9 @@ public final class JAXRSAnnotations {
 	 */
 	public static final String JAXB_HEAD_FULLY = "javax.ws.rs.HEAD";
 
+	/**
+	 * private constructor
+	 */
 	private JAXRSAnnotations() {
 		throw new IllegalStateException("Utility class");
 	}

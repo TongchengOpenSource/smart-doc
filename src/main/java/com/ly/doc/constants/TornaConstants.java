@@ -20,57 +20,98 @@
  */
 package com.ly.doc.constants;
 
-import java.io.IOException;
-import java.net.URLEncoder;
-import java.security.MessageDigest;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.ly.doc.model.ApiConfig;
 import com.power.common.util.DateTimeUtil;
-
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.security.MessageDigest;
+import java.util.*;
+import java.util.logging.Logger;
+
 /**
+ * Torna Constants
+ *
  * @author xingzi 2020/2/2
  */
 public class TornaConstants {
 
+	/**
+	 * logger
+	 */
+	private static final Logger logger = Logger.getLogger(TornaConstants.class.getName());
+
+	/**
+	 * id
+	 */
 	public static final String ID = "id";
 
+	/**
+	 * code
+	 */
 	public static final String CODE = "code";
 
+	/**
+	 * message
+	 */
 	public static final String MESSAGE = "msg";
 
+	/**
+	 * data
+	 */
 	public static final String DATA = "data";
 
+	/**
+	 * success code
+	 */
 	public static final String SUCCESS_CODE = "0";
 
+	/**
+	 * default group code
+	 */
 	public static final String DEFAULT_GROUP_CODE = "default";
 
+	/**
+	 * yes
+	 */
 	public static final String YES = "1";
 
+	/**
+	 * no
+	 */
 	public static final String NO = "0";
 
+	/**
+	 * array
+	 */
 	public static final String ARRAY = "array";
 
+	/**
+	 * create category
+	 */
 	public static final String CATEGORY_CREATE = "doc.category.create";
 
+	/**
+	 * push
+	 */
 	public static final String PUSH = "doc.push";
 
+	/**
+	 * enum push
+	 */
 	public static final String ENUM_PUSH = "enum.batch.push";
 
 	/**
-	 * torna文件数组类型
+	 * torna file array type
 	 */
 	public static final String PARAM_TYPE_FILE_ARRAY = "file[]";
 
+	/**
+	 * Gson
+	 */
 	public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
 	/**
@@ -98,7 +139,7 @@ public class TornaConstants {
 			return param;
 		}
 		catch (IOException e) {
-			e.printStackTrace();
+			logger.warning(e.getMessage());
 		}
 		return param;
 	}

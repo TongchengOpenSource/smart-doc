@@ -39,16 +39,24 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
+ *
+ * OpenApi Builder
+ *
  * @author xingzi
+ * @since 2.6.2
  */
 public class OpenApiBuilder extends AbstractOpenApiBuilder {
 
-	@Override
-	public String getModuleName() {
-		return DocGlobalConstants.OPENAPI_3_COMPONENT_KRY;
-	}
-
+	/**
+	 * Instance
+	 */
 	private static final OpenApiBuilder INSTANCE = new OpenApiBuilder();
+
+	/**
+	 * private constructor
+	 */
+	private OpenApiBuilder() {
+	}
 
 	/**
 	 * For unit testing
@@ -67,6 +75,11 @@ public class OpenApiBuilder extends AbstractOpenApiBuilder {
 	public static void buildOpenApi(ApiConfig config, JavaProjectBuilder projectBuilder) {
 		ApiSchema<ApiDoc> apiSchema = INSTANCE.getOpenApiDocs(config, projectBuilder);
 		INSTANCE.openApiCreate(config, apiSchema);
+	}
+
+	@Override
+	public String getModuleName() {
+		return DocGlobalConstants.OPENAPI_3_COMPONENT_KRY;
 	}
 
 	@Override
@@ -177,7 +190,7 @@ public class OpenApiBuilder extends AbstractOpenApiBuilder {
 		List<Map<String, Object>> parametersList = new ArrayList<>();
 		// Handling path parameters
 		for (ApiParam apiParam : apiMethodDoc.getPathParams()) {
-			parameters = getStringParams(apiParam, apiParam.isHasItems());
+			parameters = this.getStringParams(apiParam, apiParam.isHasItems());
 			parameters.put("in", "path");
 			List<ApiParam> children = apiParam.getChildren();
 			if (CollectionUtil.isEmpty(children)) {
@@ -186,15 +199,15 @@ public class OpenApiBuilder extends AbstractOpenApiBuilder {
 		}
 		for (ApiParam apiParam : apiMethodDoc.getQueryParams()) {
 			if (apiParam.isHasItems()) {
-				parameters = getStringParams(apiParam, false);
+				parameters = this.getStringParams(apiParam, false);
 				Map<String, Object> arrayMap = new HashMap<>(16);
 				arrayMap.put("type", ParamTypeConstants.PARAM_TYPE_ARRAY);
-				arrayMap.put("items", getStringParams(apiParam, apiParam.isHasItems()));
+				arrayMap.put("items", this.getStringParams(apiParam, apiParam.isHasItems()));
 				parameters.put("schema", arrayMap);
 				parametersList.add(parameters);
 			}
 			else {
-				parameters = getStringParams(apiParam, false);
+				parameters = this.getStringParams(apiParam, false);
 				List<ApiParam> children = apiParam.getChildren();
 				if (CollectionUtil.isEmpty(children)) {
 					parametersList.add(parameters);
@@ -230,7 +243,7 @@ public class OpenApiBuilder extends AbstractOpenApiBuilder {
 			parameters.put("description", apiParam.getDesc());
 			parameters.put("required", apiParam.isRequired());
 			parameters.put("in", "query");
-			parameters.put("schema", buildParametersSchema(apiParam));
+			parameters.put("schema", this.buildParametersSchema(apiParam));
 		}
 		else {
 			if (ParamTypeConstants.PARAM_TYPE_OBJECT.equals(apiParam.getType())
@@ -250,7 +263,7 @@ public class OpenApiBuilder extends AbstractOpenApiBuilder {
 					parameters.put("type", "integer");
 				}
 			}
-			parameters.putAll(buildParametersSchema(apiParam));
+			parameters.putAll(this.buildParametersSchema(apiParam));
 		}
 		if (apiParam.getExtensions() != null && !apiParam.getExtensions().isEmpty()) {
 			apiParam.getExtensions().forEach((key, value) -> parameters.put("x-" + key, value));

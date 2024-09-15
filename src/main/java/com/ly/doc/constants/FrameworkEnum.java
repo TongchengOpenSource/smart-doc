@@ -74,11 +74,21 @@ public enum FrameworkEnum {
 	 */
 	private final String className;
 
+	/**
+	 * Constructor
+	 * @param framework framework name
+	 * @param className class name
+	 */
 	FrameworkEnum(String framework, String className) {
 		this.framework = framework;
 		this.className = className;
 	}
 
+	/**
+	 * Get class name by framework.
+	 * @param framework framework name
+	 * @return class name
+	 */
 	public static String getClassNameByFramework(String framework) {
 		String className = "";
 		if (StringUtil.isEmpty(framework)) {
@@ -101,10 +111,18 @@ public enum FrameworkEnum {
 		return Arrays.stream(FrameworkEnum.values()).map(FrameworkEnum::getFramework).collect(Collectors.joining(","));
 	}
 
+	/**
+	 * Get framework name.
+	 * @return framework name
+	 */
 	public String getFramework() {
 		return framework;
 	}
 
+	/**
+	 * Get class name.
+	 * @return class name
+	 */
 	public String getClassName() {
 		return className;
 	}

@@ -146,6 +146,17 @@ public class JavadocDocBuildTemplate implements IDocBuildTemplate<JavadocApiDoc>
 		return null;
 	}
 
+	/**
+	 * Handles the generation of Java API documentation. This method is responsible for
+	 * creating an API documentation object based on the provided Java class information
+	 * and populating its properties.
+	 * @param cls The Java class from which to extract documentation information.
+	 * @param apiDocList A list where the generated API documentation objects will be
+	 * added.
+	 * @param apiMethodDocs A list containing documentation for methods within the class.
+	 * @param order The order in which the API documentation should be listed.
+	 * @param builder A builder used to retrieve class information and configurations.
+	 */
 	private void handleJavaApiDoc(JavaClass cls, List<JavadocApiDoc> apiDocList, List<JavadocJavaMethod> apiMethodDocs,
 			int order, ProjectDocConfigBuilder builder) {
 		String className = cls.getCanonicalName();

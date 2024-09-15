@@ -37,6 +37,18 @@ import java.util.Objects;
  */
 public class CurlUtil {
 
+	/**
+	 * private constructor
+	 */
+	private CurlUtil() {
+		throw new IllegalStateException("Utility class");
+	}
+
+	/**
+	 * convert curl request to curl string
+	 * @param request CurlRequest
+	 * @return String
+	 */
 	public static String toCurl(CurlRequest request) {
 		if (Objects.isNull(request)) {
 			return "";

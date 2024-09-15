@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Solon Request Annotation Enum
+ *
  * @author yu 2019/12/20.
  */
 public enum SolonRequestAnnotationsEnum {

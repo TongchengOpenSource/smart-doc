@@ -43,21 +43,38 @@ import static com.ly.doc.constants.DocGlobalConstants.OPENAPI_2_COMPONENT_KRY;
 import static com.ly.doc.constants.DocGlobalConstants.OPENAPI_3_COMPONENT_KRY;
 
 /**
+ * abstract openapi builder
+ *
  * @author xingzi Date 2022/10/12 18:49
+ * @since 2.6.2
  */
-@SuppressWarnings("all")
 public abstract class AbstractOpenApiBuilder {
 
+	/**
+	 * Component key
+	 */
 	private String componentKey;
 
+	/**
+	 * Get component key
+	 * @return component key
+	 */
 	public String getComponentKey() {
 		return componentKey;
 	}
 
+	/**
+	 * Set component key
+	 * @param componentKey component key
+	 */
 	public void setComponentKey(String componentKey) {
 		this.componentKey = componentKey;
 	}
 
+	/**
+	 * Get module name
+	 * @return module name
+	 */
 	abstract String getModuleName();
 
 	/**
@@ -89,9 +106,16 @@ public abstract class AbstractOpenApiBuilder {
 	/**
 	 * Build request parameters
 	 * @param apiMethodDoc API data for the method
+	 * @return List of parameters
 	 */
 	abstract List<Map<String, Object>> buildParameters(ApiMethodDoc apiMethodDoc);
 
+	/**
+	 * Build request parameters
+	 * @param apiParam ApiParam
+	 * @param hasItems has items
+	 * @return Map of request parameters
+	 */
 	abstract Map<String, Object> getStringParams(ApiParam apiParam, boolean hasItems);
 
 	/**
@@ -101,6 +125,9 @@ public abstract class AbstractOpenApiBuilder {
 	 */
 	abstract public Map<String, Object> buildComponentsSchema(ApiSchema<ApiDoc> apiSchema);
 
+	/**
+	 * String component
+	 */
 	protected static final Map<String, String> STRING_COMPONENT = new HashMap<>();
 
 	static {
@@ -115,6 +142,7 @@ public abstract class AbstractOpenApiBuilder {
 	 * @param tags tags
 	 * @return Map of paths
 	 */
+	@SuppressWarnings("unchecked")
 	public Map<String, Object> buildPaths(ApiConfig apiConfig, ApiSchema<ApiDoc> apiSchema, Set<OpenApiTag> tags) {
 		Map<String, Object> pathMap = new LinkedHashMap<>(500);
 
@@ -161,9 +189,9 @@ public abstract class AbstractOpenApiBuilder {
 	 */
 	public Map<String, Object> buildPathUrls(ApiConfig apiConfig, ApiMethodDoc apiMethodDoc, ApiDoc apiDoc,
 			List<ApiExceptionStatus> apiExceptionStatuses) {
-		Map<String, Object> request = new HashMap<>(4);
+		Map<String, Object> request = new HashMap<>(16);
 		request.put(apiMethodDoc.getType().toLowerCase(),
-				buildPathUrlsRequest(apiConfig, apiMethodDoc, apiDoc, apiExceptionStatuses));
+				this.buildPathUrlsRequest(apiConfig, apiMethodDoc, apiDoc, apiExceptionStatuses));
 		return request;
 	}
 
@@ -175,12 +203,12 @@ public abstract class AbstractOpenApiBuilder {
 	 * @return Map of content
 	 */
 	public Map<String, Object> buildContent(ApiConfig apiConfig, ApiMethodDoc apiMethodDoc, boolean isRep) {
-		Map<String, Object> content = new HashMap<>(8);
+		Map<String, Object> content = new HashMap<>(16);
 		String contentType = apiMethodDoc.getContentType();
 		if (isRep) {
 			contentType = "*/*";
 		}
-		content.put(contentType, buildContentBody(apiConfig, apiMethodDoc, isRep));
+		content.put(contentType, this.buildContentBody(apiConfig, apiMethodDoc, isRep));
 		return content;
 
 	}
@@ -193,7 +221,7 @@ public abstract class AbstractOpenApiBuilder {
 	 * @return Map of content
 	 */
 	public Map<String, Object> buildContentBody(ApiConfig apiConfig, ApiMethodDoc apiMethodDoc, boolean isRep) {
-		Map<String, Object> content = new HashMap<>(8);
+		Map<String, Object> content = new HashMap<>(16);
 		if (Objects.nonNull(apiMethodDoc.getReturnSchema()) && isRep) {
 			content.put("schema", apiMethodDoc.getReturnSchema());
 		}
@@ -201,7 +229,7 @@ public abstract class AbstractOpenApiBuilder {
 			content.put("schema", apiMethodDoc.getRequestSchema());
 		}
 		else {
-			content.put("schema", buildBodySchema(apiMethodDoc, isRep));
+			content.put("schema", this.buildBodySchema(apiMethodDoc, isRep));
 		}
 
 		if (OPENAPI_2_COMPONENT_KRY.equals(componentKey) && !isRep) {
@@ -246,10 +274,10 @@ public abstract class AbstractOpenApiBuilder {
 				&& (apiMethodDoc.getContentType().equals(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
 						|| apiMethodDoc.getContentType().equals(MediaType.MULTIPART_FORM_DATA_VALUE))) {
 			schema.put("type", ParamTypeConstants.PARAM_TYPE_OBJECT);
-			Map<String, Object> propertiesAndRequirments = buildProperties(apiMethodDoc.getRequestParams(),
+			Map<String, Object> propertiesAndRequiredMap = this.buildProperties(apiMethodDoc.getRequestParams(),
 					new HashMap<>(), Boolean.FALSE);
-			schema.put("properties", propertiesAndRequirments.get("properties"));
-			schema.put("required", propertiesAndRequirments.get("required"));
+			schema.put("properties", propertiesAndRequiredMap.get("properties"));
+			schema.put("required", propertiesAndRequiredMap.get("required"));
 			return schema;
 		}
 		else if (apiMethodDoc.getContentType().equals(MediaType.APPLICATION_FORM_URLENCODED_VALUE)) {
@@ -318,34 +346,36 @@ public abstract class AbstractOpenApiBuilder {
 		// The values of openApiType are "file", "object", "array","string",
 		// "integer","number"
 		schema.put("type", openApiType);
-		if ("file".equals(openApiType)) {
-			schema.put("format", "binary");
-			schema.put("type", "string");
-		}
-		else if ("object".equals(openApiType)) {
-			if ("enum".equals(apiParam.getType())) {
-				schema.put("enum", apiParam.getEnumValues());
-			}
-		}
-		else if (ParamTypeConstants.PARAM_TYPE_ARRAY.equals(openApiType)) {
-			if (CollectionUtil.isNotEmpty(apiParam.getEnumValues())) {
+		switch (openApiType) {
+			case ParamTypeConstants.PARAM_TYPE_FILE:
+				schema.put("format", "binary");
 				schema.put("type", "string");
-				schema.put("items", apiParam.getEnumValues());
-			}
-			else {
-				schema.put("type", ParamTypeConstants.PARAM_TYPE_ARRAY);
-				Map<String, String> map = new HashMap<>(4);
-				map.put("type", "string");
-				map.put("format", "string");
-				schema.put("items", map);
-			}
-		}
-		else {
-			// "string", "integer", "number"
-			schema.put("format", apiParam.getType());
-			if ("enum".equals(apiParam.getType())) {
-				schema.put("enum", apiParam.getEnumValues());
-			}
+				break;
+			case ParamTypeConstants.PARAM_TYPE_OBJECT:
+				if ("enum".equals(apiParam.getType())) {
+					schema.put("enum", apiParam.getEnumValues());
+				}
+				break;
+			case ParamTypeConstants.PARAM_TYPE_ARRAY:
+				if (CollectionUtil.isNotEmpty(apiParam.getEnumValues())) {
+					schema.put("type", "string");
+					schema.put("items", apiParam.getEnumValues());
+				}
+				else {
+					schema.put("type", ParamTypeConstants.PARAM_TYPE_ARRAY);
+					Map<String, String> map = new HashMap<>(4);
+					map.put("type", "string");
+					map.put("format", "string");
+					schema.put("items", map);
+				}
+				break;
+			default:
+				// "string", "integer", "number"
+				schema.put("format", apiParam.getType());
+				if ("enum".equals(apiParam.getType())) {
+					schema.put("enum", apiParam.getEnumValues());
+				}
+				break;
 		}
 		return schema;
 	}
@@ -373,17 +403,23 @@ public abstract class AbstractOpenApiBuilder {
 	public Map<String, Object> buildResponses(ApiConfig apiConfig, ApiMethodDoc apiMethodDoc,
 			List<ApiExceptionStatus> apiExceptionStatuses) {
 		Map<String, Object> response = new LinkedHashMap<>(8);
-		response.put("200", buildResponsesBody(apiConfig, apiMethodDoc));
+		response.put("200", this.buildResponsesBody(apiConfig, apiMethodDoc));
 		if (CollectionUtil.isNotEmpty(apiExceptionStatuses)) {
 			for (ApiExceptionStatus apiExceptionStatus : apiExceptionStatuses) {
 				response.put(apiExceptionStatus.getStatus(),
-						buildEexcetionResponsesBody(apiConfig, apiExceptionStatus));
+						this.buildExceptionResponsesBody(apiConfig, apiExceptionStatus));
 			}
 		}
 		return response;
 	}
 
-	public Map<String, Object> buildEexcetionResponsesBody(ApiConfig apiConfig, ApiExceptionStatus apiExceptionStatus) {
+	/**
+	 * Build exception response body
+	 * @param apiConfig ApiConfig
+	 * @param apiExceptionStatus ApiExceptionStatus
+	 * @return Map of content
+	 */
+	public Map<String, Object> buildExceptionResponsesBody(ApiConfig apiConfig, ApiExceptionStatus apiExceptionStatus) {
 		Map<String, Object> responseBody = new HashMap<>(8);
 		responseBody.put("description", apiExceptionStatus.getDesc());
 		Map<String, Object> content = new HashMap<>(8);
@@ -432,7 +468,7 @@ public abstract class AbstractOpenApiBuilder {
 					continue;
 				}
 				String field = param.getField();
-				propertiesData.put(field, buildPropertiesData(param, component, isResp));
+				propertiesData.put(field, this.buildPropertiesData(param, component, isResp));
 			}
 			if (!propertiesData.isEmpty()) {
 				properties.put("properties", propertiesData);
@@ -456,7 +492,7 @@ public abstract class AbstractOpenApiBuilder {
 	 * @return properties
 	 */
 	private Map<String, Object> buildPropertiesData(ApiParam apiParam, Map<String, Object> component, boolean isResp) {
-		Map<String, Object> propertiesData = new HashMap<>();
+		Map<String, Object> propertiesData = new HashMap<>(16);
 		String openApiType = DocUtil.javaTypeToOpenApiTypeConvert(apiParam.getType());
 		// array object file map
 		propertiesData.put("description", apiParam.getDesc());
@@ -486,7 +522,7 @@ public abstract class AbstractOpenApiBuilder {
 						propertiesData.put("description", apiParam.getDesc() + "(object)");
 					}
 					else {
-						component.put(childSchemaName, buildProperties(apiParam.getChildren(), component, isResp));
+						component.put(childSchemaName, this.buildProperties(apiParam.getChildren(), component, isResp));
 						arrayRef.put("$ref", componentKey + childSchemaName);
 						propertiesData.put("items", arrayRef);
 					}
@@ -511,7 +547,7 @@ public abstract class AbstractOpenApiBuilder {
 						propertiesData.put("type", "object");
 					}
 					else {
-						component.put(childSchemaName, buildProperties(apiParam.getChildren(), component, isResp));
+						component.put(childSchemaName, this.buildProperties(apiParam.getChildren(), component, isResp));
 						propertiesData.put("$ref", componentKey + childSchemaName);
 					}
 				}
@@ -521,7 +557,7 @@ public abstract class AbstractOpenApiBuilder {
 			}
 		}
 		if (apiParam.getExtensions() != null && !apiParam.getExtensions().isEmpty()) {
-			apiParam.getExtensions().entrySet().forEach(e -> propertiesData.put("x-" + e.getKey(), e.getValue()));
+			apiParam.getExtensions().forEach((key, value) -> propertiesData.put("x-" + key, value));
 		}
 
 		return propertiesData;
@@ -551,12 +587,12 @@ public abstract class AbstractOpenApiBuilder {
 				component.put(responseSchemaName, this.buildProperties(responseParams, component, true));
 			});
 		});
-		// excption response components
+		// Exception response components
 		if (Objects.nonNull(apiSchema.getApiExceptionStatuses())) {
 			apiSchema.getApiExceptionStatuses().forEach(e -> {
 				List<ApiParam> responseParams = e.getExceptionResponseParams();
 				String responseSchemaName = OpenApiSchemaUtil.getClassNameFromParams(e.getExceptionResponseParams());
-				component.put(responseSchemaName, buildProperties(responseParams, component, true));
+				component.put(responseSchemaName, this.buildProperties(responseParams, component, true));
 			});
 		}
 		component.remove(OpenApiSchemaUtil.NO_BODY_PARAM);
@@ -575,7 +611,7 @@ public abstract class AbstractOpenApiBuilder {
 		builderTemplate.checkAndInit(config, Boolean.TRUE);
 		ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, projectBuilder);
 		config.setParamsDataToTree(true);
-		IDocBuildTemplate docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework(),
+		IDocBuildTemplate<ApiDoc> docBuildTemplate = BuildTemplateFactory.getDocBuildTemplate(config.getFramework(),
 				config.getClassLoader());
 		Objects.requireNonNull(docBuildTemplate, "doc build template is null");
 		return docBuildTemplate.getApiData(configBuilder);

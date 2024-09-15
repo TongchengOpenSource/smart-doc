@@ -69,9 +69,8 @@ public class FormData {
 		return hasItems;
 	}
 
-	public FormData setHasItems(boolean hasItems) {
+	public void setHasItems(boolean hasItems) {
 		this.hasItems = hasItems;
-		return this;
 	}
 
 	public String getKey() {

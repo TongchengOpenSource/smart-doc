@@ -29,7 +29,10 @@ import com.thoughtworks.qdox.JavaProjectBuilder;
 import java.util.List;
 
 /**
+ * RPC HTML builder
+ *
  * @author yu 2020/5/17.
+ * @since 1.8.7
  */
 public class RpcHtmlBuilder {
 

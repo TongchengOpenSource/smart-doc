@@ -32,6 +32,9 @@ import java.util.List;
 import java.util.Objects;
 
 /**
+ * Defines the contract for a document build template that processes API schemas.
+ *
+ * @param <T> The type of document being built.
  * @author yu 2019/12/21.
  */
 public interface IDocBuildTemplate<T extends IDoc> extends IDocBuildBaseTemplate {

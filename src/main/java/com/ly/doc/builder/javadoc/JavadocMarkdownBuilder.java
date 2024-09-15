@@ -29,6 +29,12 @@ import com.thoughtworks.qdox.JavaProjectBuilder;
 
 import java.util.List;
 
+/**
+ * Javadoc Markdown Builder
+ *
+ * @author chenchuxin
+ * @since 3.0.5
+ */
 public class JavadocMarkdownBuilder {
 
 	/**

@@ -20,15 +20,19 @@
  */
 package com.ly.doc.filter;
 
-import com.ly.doc.constants.DocGlobalConstants;
 import com.ly.doc.constants.JavaTypeConstants;
 import com.ly.doc.model.ApiReturn;
 
 /**
+ * WebFlux Return Filter
+ *
  * @author yu 2020/4/17.
  */
 public class WebFluxReturnFilter implements ReturnTypeFilter {
 
+	/**
+	 * Flux
+	 */
 	private static final String FLUX = "reactor.core.publisher.Flux";
 
 	@Override

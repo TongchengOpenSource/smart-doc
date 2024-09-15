@@ -20,33 +20,37 @@
  */
 package com.ly.doc.handler;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import com.ly.doc.model.ApiReqParam;
-import com.ly.doc.utils.DocUtil;
-import com.power.common.util.StringUtil;
 import com.ly.doc.builder.ProjectDocConfigBuilder;
 import com.ly.doc.constants.DocTags;
+import com.ly.doc.model.ApiReqParam;
 import com.ly.doc.model.annotation.HeaderAnnotation;
 import com.ly.doc.utils.DocClassUtil;
+import com.ly.doc.utils.DocUtil;
 import com.ly.doc.utils.JavaFieldUtil;
+import com.power.common.util.StringUtil;
 import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaMethod;
 import com.thoughtworks.qdox.model.JavaParameter;
 import com.thoughtworks.qdox.model.JavaType;
 
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 /**
+ * Header Handler
+ *
  * @author yu3.sun on 2022/8/30
  */
 public interface IHeaderHandler {
 
+	/**
+	 * Handle header
+	 * @param method JavaMethod
+	 * @param projectBuilder ProjectDocConfigBuilder
+	 * @return {@code List<ApiReqParam>}
+	 */
+	@SuppressWarnings("unchecked")
 	default List<ApiReqParam> handle(JavaMethod method, ProjectDocConfigBuilder projectBuilder) {
 		Map<String, String> constantsMap = projectBuilder.getConstantsMap();
 		List<ApiReqParam> mappingHeaders = new ArrayList<>();
@@ -63,7 +67,7 @@ public interface IHeaderHandler {
 				processMappingHeaders(mappingHeader, mappingHeaders);
 				continue;
 			}
-			List<String> headers = (LinkedList) headersObject;
+			List<String> headers = (LinkedList<String>) headersObject;
 			for (String str : headers) {
 				String header = StringUtil.removeQuotes(str);
 				if (header.startsWith("!")) {
@@ -144,6 +148,11 @@ public interface IHeaderHandler {
 			.collect(Collectors.toList());
 	}
 
+	/**
+	 * process mapping headers
+	 * @param header header
+	 * @param mappingHeaders mapping headers
+	 */
 	default void processMappingHeaders(String header, List<ApiReqParam> mappingHeaders) {
 		if (header.contains("!=")) {
 			String headerName = header.substring(0, header.indexOf("!"));

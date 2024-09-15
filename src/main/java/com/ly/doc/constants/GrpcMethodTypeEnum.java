@@ -81,10 +81,18 @@ public enum GrpcMethodTypeEnum {
 		return type;
 	}
 
+	/**
+	 * Request Streaming
+	 * @return Request Streaming
+	 */
 	public boolean isRequestStreaming() {
 		return requestStreaming;
 	}
 
+	/**
+	 * Response Streaming
+	 * @return Response Streaming
+	 */
 	public boolean isResponseStreaming() {
 		return responseStreaming;
 	}

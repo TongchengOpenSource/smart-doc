@@ -21,6 +21,8 @@
 package com.ly.doc.constants;
 
 /**
+ * Validator Annotations.
+ *
  * @author yu 2019/12/22.
  * @see JSRAnnotationConstants
  */

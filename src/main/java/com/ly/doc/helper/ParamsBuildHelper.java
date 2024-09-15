@@ -42,6 +42,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 /**
+ * ApiParam Builder {@link ApiParam }
+ *
  * @author yu 2019/12/21.
  */
 public class ParamsBuildHelper extends BaseHelper {

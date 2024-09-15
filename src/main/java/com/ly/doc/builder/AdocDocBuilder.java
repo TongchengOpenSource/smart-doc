@@ -38,8 +38,14 @@ import java.util.Objects;
  */
 public class AdocDocBuilder {
 
+	/**
+	 * api doc file name
+	 */
 	private static final String API_EXTENSION = "Api.adoc";
 
+	/**
+	 * index.adoc
+	 */
 	private static final String INDEX_DOC = "index.adoc";
 
 	/**

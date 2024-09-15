@@ -36,10 +36,22 @@ import static com.ly.doc.constants.JsonPropertyAnnotationAccessConstants.JSON_PR
 import static com.ly.doc.constants.JsonPropertyAnnotationAccessConstants.JSON_PROPERTY_WRITE_ONLY;
 
 /**
+ * Java Class Validate Util
+ *
  * @author yu 2019/12/25.
  */
 public class JavaClassValidateUtil {
 
+	/**
+	 * private constructor
+	 */
+	private JavaClassValidateUtil() {
+		throw new IllegalStateException("Utility class");
+	}
+
+	/**
+	 * class pattern
+	 */
 	private static final String CLASS_PATTERN = "^([A-Za-z]{1}[A-Za-z\\d_]*\\.)+[A-Za-z][A-Za-z\\d_]*$";
 
 	/**
@@ -215,12 +227,7 @@ public class JavaClassValidateUtil {
 	 * @return boolean
 	 */
 	public static boolean isIgnoreTag(String tagName) {
-		switch (tagName) {
-			case "ignore":
-				return true;
-			default:
-				return false;
-		}
+		return tagName.equals("ignore");
 	}
 
 	/**
@@ -355,6 +362,11 @@ public class JavaClassValidateUtil {
 		}
 	}
 
+	/**
+	 * ignore param with annotation
+	 * @param annotation Solon Mvc annotation
+	 * @return boolean
+	 */
 	public static boolean ignoreSolonMvcParamWithAnnotation(String annotation) {
 		switch (annotation) {
 			case SolonAnnotations.REQUEST_HERDER:
@@ -387,12 +399,18 @@ public class JavaClassValidateUtil {
 		if (className.contains("<") && !className.contains(">")) {
 			return false;
 		}
-		else if (className.contains(">") && !className.contains("<")) {
-			return false;
+		else {
+			return !className.contains(">") || className.contains("<");
 		}
-		return true;
+
 	}
 
+	/**
+	 * is ignore field json
+	 * @param annotation annotation
+	 * @param isResp isResp
+	 * @return true or false
+	 */
 	public static boolean isIgnoreFieldJson(JavaAnnotation annotation, Boolean isResp) {
 		String simpleAnnotationName = annotation.getType().getValue();
 		if (DocAnnotationConstants.SHORT_JSON_IGNORE.equals(simpleAnnotationName)) {
@@ -415,9 +433,7 @@ public class JavaClassValidateUtil {
 			if (!isResp && Objects.nonNull(deserialize) && Boolean.FALSE.toString().equals(deserialize.toString())) {
 				return true;
 			}
-			if (isResp && Objects.nonNull(serialize) && Boolean.FALSE.toString().equals(serialize.toString())) {
-				return true;
-			}
+			return isResp && Objects.nonNull(serialize) && Boolean.FALSE.toString().equals(serialize.toString());
 		}
 		return false;
 	}

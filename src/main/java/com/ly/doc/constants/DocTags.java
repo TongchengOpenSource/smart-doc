@@ -21,6 +21,8 @@
 package com.ly.doc.constants;
 
 /**
+ * Doc tags
+ *
  * @author yu 2019/9/13.
  */
 public interface DocTags {
@@ -110,6 +112,9 @@ public interface DocTags {
 	 */
 	String IGNORE_RESPONSE_BODY_ADVICE = "ignoreResponseBodyAdvice";
 
+	/**
+	 * ignore RequestBodyAdvice
+	 */
 	String IGNORE_REQUEST_BODY_ADVICE = "ignoreRequestBodyAdvice";
 
 	/**

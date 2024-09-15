@@ -14,10 +14,19 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 /**
+ * ParamUtil
+ *
  * @author <a href="mailto:cqmike0315@gmail.com">chenqi</a>
  * @version 1.0
  */
 public class ParamUtil {
+
+	/**
+	 * private constructor
+	 */
+	private ParamUtil() {
+		throw new IllegalStateException("Utility class");
+	}
 
 	/**
 	 * Handles enum types in API parameters.
@@ -73,6 +82,11 @@ public class ParamUtil {
 		return seeEnum;
 	}
 
+	/**
+	 * Format mock value
+	 * @param mock mock value
+	 * @return formatted mock value
+	 */
 	public static String formatMockValue(String mock) {
 		if (StringUtil.isEmpty(mock)) {
 			return mock;
@@ -80,6 +94,11 @@ public class ParamUtil {
 		return mock.replaceAll("\\\\", "");
 	}
 
+	/**
+	 * Extract qualified name from param list
+	 * @param paramList param list
+	 * @return qualified name list
+	 */
 	public static List<String> extractQualifiedName(List<ApiParam> paramList) {
 		if (CollectionUtil.isEmpty(paramList)) {
 			return Collections.emptyList();

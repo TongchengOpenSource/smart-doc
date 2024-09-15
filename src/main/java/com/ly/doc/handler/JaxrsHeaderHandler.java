@@ -20,37 +20,40 @@
  */
 package com.ly.doc.handler;
 
+import com.ly.doc.builder.ProjectDocConfigBuilder;
+import com.ly.doc.constants.DocTags;
+import com.ly.doc.constants.JAXRSAnnotations;
+import com.ly.doc.constants.JakartaJaxrsAnnotations;
+import com.ly.doc.model.ApiReqParam;
+import com.ly.doc.utils.DocClassUtil;
+import com.ly.doc.utils.DocUtil;
+import com.power.common.util.StringUtil;
+import com.thoughtworks.qdox.model.JavaAnnotation;
+import com.thoughtworks.qdox.model.JavaMethod;
+import com.thoughtworks.qdox.model.JavaParameter;
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import com.ly.doc.constants.JAXRSAnnotations;
-import com.ly.doc.constants.JakartaJaxrsAnnotations;
-import com.ly.doc.model.ApiReqParam;
-import com.ly.doc.utils.DocUtil;
-import com.power.common.util.StringUtil;
-import com.ly.doc.builder.ProjectDocConfigBuilder;
-import com.ly.doc.constants.DocTags;
-import com.ly.doc.utils.DocClassUtil;
-import com.thoughtworks.qdox.model.JavaAnnotation;
-import com.thoughtworks.qdox.model.JavaMethod;
-import com.thoughtworks.qdox.model.JavaParameter;
-
-import org.apache.commons.lang3.StringUtils;
-
 /**
- * Jaxrs Header Handler
+ * Jaxrs Header Handler This class is responsible for handling JAX-RS HTTP header
+ * parameter annotations. It parses the parameters and their annotations within a method
+ * to extract header information.
  *
  * @author Zxq
  */
 public class JaxrsHeaderHandler {
 
 	/**
-	 * Handle JAX RS Header
-	 * @param method method
-	 * @param projectBuilder ProjectDocConfigBuilder
-	 * @return list of ApiReqParam
+	 * Handles JAX-RS headers for a given method.
+	 * @param method The JavaMethod object representing the method whose headers are to be
+	 * handled.
+	 * @param projectBuilder The ProjectDocConfigBuilder object used to build project
+	 * documentation configurations.
+	 * @return A list of ApiReqParam objects representing the parsed header parameters.
 	 */
 	public List<ApiReqParam> handle(JavaMethod method, ProjectDocConfigBuilder projectBuilder) {
 		Map<String, String> constantsMap = projectBuilder.getConstantsMap();
@@ -97,6 +100,13 @@ public class JaxrsHeaderHandler {
 		return apiReqHeaders;
 	}
 
+	/**
+	 * Generates a description string for a header parameter including its default value
+	 * if provided.
+	 * @param defaultValue The default value of the parameter.
+	 * @param paramComments Any comments or descriptions associated with the parameter.
+	 * @return A string containing the parameter description and default value.
+	 */
 	private String getComments(String defaultValue, String paramComments) {
 		if (Objects.nonNull(paramComments)) {
 			StringBuilder desc = new StringBuilder();

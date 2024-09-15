@@ -26,6 +26,12 @@ import com.ly.doc.model.ApiConfig;
 import com.ly.doc.model.javadoc.JavadocApiAllData;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 
+/**
+ * Javadoc Api Data Builder
+ *
+ * @author chenchuxin
+ * @since 3.0.5
+ */
 public class JavadocApiDataBuilder {
 
 	/**
