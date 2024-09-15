@@ -40,10 +40,16 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
+ *
+ * Git Dependency Tree Helper
+ *
  * @author Fio
  */
 public class DocBuildHelper {
 
+	/**
+	 * JavaProjectBuilder
+	 */
 	private JavaProjectBuilder projectBuilder;
 
 	/**
@@ -51,20 +57,33 @@ public class DocBuildHelper {
 	 */
 	private String codePath;
 
+	/**
+	 * DependencyTree {@link DependencyTree}
+	 */
 	private DependencyTree dependencyTree;
 
+	/**
+	 * GitHelper {@link GitHelper}
+	 */
 	private final GitHelper gitHelper = GitHelper.create();
 
 	/**
 	 * changed file list value set within {@link #getChangedFilesFromVCS(Predicate)} value
 	 * get within {@link #mergeDependencyTree(List)}
 	 */
-	private Set<FileDiff> fileDiffList = Collections.emptySet();
+	private Set<FileDiff> fileDiffList;
 
+	/**
+	 * private constructor
+	 */
 	private DocBuildHelper() {
-
 	}
 
+	/**
+	 * Create a new {@link DocBuildHelper} object
+	 * @param configBuilder {@link ProjectDocConfigBuilder}
+	 * @return {@link DocBuildHelper}
+	 */
 	public static DocBuildHelper create(ProjectDocConfigBuilder configBuilder) {
 		ApiConfig apiConfig = configBuilder.getApiConfig();
 
@@ -97,6 +116,10 @@ public class DocBuildHelper {
 		return dependencyTree;
 	}
 
+	/**
+	 * Write the dependency-tree-file to baseDir
+	 * @param dependencyTree dependency tree
+	 */
 	private void writeDependencyTree(List<ApiDependency> dependencyTree) {
 		if (gitHelper.notGitRepo()) {
 			return;
@@ -114,6 +137,12 @@ public class DocBuildHelper {
 		DependencyTree.write(this.dependencyTree);
 	}
 
+	/**
+	 * Merge dependency trees This method merges a new dependency tree into the existing
+	 * one, removing any deleted or deprecated dependencies.
+	 * @param newDependencyTree The new list of dependencies to be merged
+	 * @return The merged list of dependencies after updates and removals
+	 */
 	private List<ApiDependency> mergeDependencyTree(List<ApiDependency> newDependencyTree) {
 		if (Objects.isNull(this.dependencyTree.getDependencyTree())) {
 			return new ArrayList<>();
@@ -123,7 +152,7 @@ public class DocBuildHelper {
 		// remove the deleted or deprecated dependencies
 		List<String> deletedClazz = this.fileDiffList.stream()
 			// newQualifiedName equals /dev/null means the class is deleted
-			.filter(item -> "/dev/null".equals(item.getNewQualifiedName()))
+			.filter(item -> DiffEntry.DEV_NULL.equals(item.getNewQualifiedName()))
 			.map(FileDiff::getOldQualifiedName)
 			.distinct()
 			.collect(Collectors.toList());
@@ -215,6 +244,14 @@ public class DocBuildHelper {
 		return fileDiffList;
 	}
 
+	/**
+	 * Gets the set of changed files. This method identifies changes in committed,
+	 * uncommitted, and untracked files in the Git repository.
+	 * @param diff A list of DiffEntry objects representing changes in the Git tree.
+	 * @param uncommitted A set of strings representing paths to uncommitted changes.
+	 * @param untracked A set of strings representing paths to untracked files.
+	 * @return A Set of FileDiff objects representing all the changed files.
+	 */
 	private Set<FileDiff> getChangedFiles(List<DiffEntry> diff, Set<String> uncommitted, Set<String> untracked) {
 		diff.removeIf(item -> !isSupportedSourceCodeType(item.getNewPath()));
 		uncommitted.removeIf(item -> !isSupportedSourceCodeType(item));
@@ -258,7 +295,9 @@ public class DocBuildHelper {
 	}
 
 	/**
-	 * convert the relative path from git to package
+	 * Convert the relative path to qualified name.
+	 * @param relativePath the relative path
+	 * @return the qualified name
 	 */
 	private String toQualifiedName(String relativePath) {
 		// /dev/null is git default path when a file is added or deleted
@@ -284,11 +323,21 @@ public class DocBuildHelper {
 		return filePath.replace(File.separator, ".");
 	}
 
+	/**
+	 * Check whether the file is supported source code type.
+	 * @param path the path
+	 * @return the boolean
+	 */
 	private boolean isSupportedSourceCodeType(String path) {
 		// maybe there's a better way...
 		return path.endsWith(".java") || path.endsWith(".kt") || path.endsWith(".groovy") || path.endsWith(".scala");
 	}
 
+	/**
+	 * Populate the related clazz and mark the entry point.
+	 * @param diffList the diff list
+	 * @param isEntryPoint the entry point predicate
+	 */
 	private void populateRelatedClazzAndMarkEntryPoint(Set<FileDiff> diffList, Predicate<String> isEntryPoint) {
 		List<ApiDependency> oldDependencyTree = this.dependencyTree.getDependencyTree();
 
@@ -348,11 +397,23 @@ public class DocBuildHelper {
 		});
 	}
 
+	/**
+	 * Rebuilds the dependency tree.
+	 * @param <T> the type parameter representing the kind of document, which must extend
+	 * the IDoc interface
+	 * @param apiList a list of documents that implement the IDoc interface
+	 */
 	public <T extends IDoc> void rebuildDependencyTree(List<T> apiList) {
 		List<ApiDependency> dependencyTree = buildDependencyTree(apiList);
 		writeDependencyTree(dependencyTree);
 	}
 
+	/**
+	 * Builds a dependency tree.
+	 * @param <T> the generic type of the document, must be a subclass of IDoc
+	 * @param apiList a list containing API documents
+	 * @return a list of ApiDependency objects representing the built dependency tree
+	 */
 	private <T extends IDoc> List<ApiDependency> buildDependencyTree(List<T> apiList) {
 		if (CollectionUtil.isEmpty(apiList)) {
 			return Collections.emptyList();
@@ -389,6 +450,10 @@ public class DocBuildHelper {
 		return dependencyTree;
 	}
 
+	/**
+	 * Determines if the current project is not a Git repository.
+	 * @return true if the current project is not a Git repository, false otherwise.
+	 */
 	public boolean notGitRepo() {
 		return gitHelper.notGitRepo();
 	}

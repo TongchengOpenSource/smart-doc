@@ -39,10 +39,22 @@ import java.util.List;
 import java.util.Objects;
 
 /**
+ * RequestMapping Handler Interface Responsible for handling and formatting controller
+ * request mapping information.
+ *
  * @author yu3.sun on 2022/10/1
  */
 public interface IRequestMappingHandler {
 
+	/**
+	 * Formats the request mapping data. Generates and formats the URL and short URL for
+	 * the given request mapping object.
+	 * @param projectBuilder Project documentation configuration builder containing
+	 * project-related configurations
+	 * @param controllerBaseUrl Base URL of the controller
+	 * @param requestMapping RequestMapping object to be formatted
+	 * @return Formatted RequestMapping object
+	 */
 	default RequestMapping formatMappingData(ProjectDocConfigBuilder projectBuilder, String controllerBaseUrl,
 			RequestMapping requestMapping) {
 		String shortUrl = requestMapping.getShortUrl();
@@ -66,16 +78,21 @@ public interface IRequestMappingHandler {
 		return requestMapping;
 	}
 
+	/**
+	 * Retrieves all annotations from a method, including those inherited from interfaces.
+	 * @param method The JavaMethod object for which annotations are to be retrieved
+	 * @return A list of JavaAnnotation objects representing the annotations on the method
+	 */
 	default List<JavaAnnotation> getAnnotations(JavaMethod method) {
 		List<JavaAnnotation> annotations = new ArrayList<>();
-		// add interface method annotations
+		// Add interface method annotations
 		List<JavaClass> interfaces = method.getDeclaringClass().getInterfaces();
 		if (CollectionUtil.isNotEmpty(interfaces)) {
 			for (JavaClass interfaceClass : interfaces) {
 				JavaMethod interfaceMethod = interfaceClass.getMethod(method.getName(), method.getParameterTypes(),
 						method.isVarArgs());
 				if (interfaceMethod != null) {
-					// can be overridden by implement class
+					// Can be overridden by implement class
 					annotations.addAll(interfaceMethod.getAnnotations());
 				}
 			}
@@ -84,6 +101,15 @@ public interface IRequestMappingHandler {
 		return annotations;
 	}
 
+	/**
+	 * Handles the request mapping for a given method.
+	 * @param projectBuilder Project documentation configuration builder
+	 * @param controllerBaseUrl Base URL of the controller
+	 * @param method The JavaMethod object representing the method to handle
+	 * @param frameworkAnnotations Framework annotations related to the method
+	 * @param requestMappingFunc Function to process request mappings
+	 * @return The processed RequestMapping object
+	 */
 	RequestMapping handle(ProjectDocConfigBuilder projectBuilder, String controllerBaseUrl, JavaMethod method,
 			FrameworkAnnotations frameworkAnnotations, RequestMappingFunc requestMappingFunc);
 

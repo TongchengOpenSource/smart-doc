@@ -126,7 +126,7 @@ public interface IJavadocDocTemplate<T extends JavadocJavaMethod> extends IBaseD
 		List<String> params = new ArrayList<>();
 		List<JavaParameter> parameters = method.getParameters();
 		for (JavaParameter parameter : parameters) {
-			String typeName = replaceTypeName(parameter.getType().getGenericValue(), actualTypesMap, Boolean.TRUE);
+			String typeName = this.replaceTypeName(parameter.getType().getGenericValue(), actualTypesMap, Boolean.TRUE);
 			params.add(typeName + " " + parameter.getName());
 		}
 		methodBuilder.append(method.getName()).append("(").append(String.join(", ", params)).append(")");
@@ -210,11 +210,11 @@ public interface IJavadocDocTemplate<T extends JavadocJavaMethod> extends IBaseD
 		for (JavaParameter parameter : parameterList) {
 			boolean required = false;
 			String paramName = parameter.getName();
-			String typeName = replaceTypeName(parameter.getType().getGenericCanonicalName(), actualTypesMap,
+			String typeName = this.replaceTypeName(parameter.getType().getGenericCanonicalName(), actualTypesMap,
 					Boolean.FALSE);
-			String simpleName = replaceTypeName(parameter.getType().getValue(), actualTypesMap, Boolean.FALSE)
+			String simpleName = this.replaceTypeName(parameter.getType().getValue(), actualTypesMap, Boolean.FALSE)
 				.toLowerCase();
-			String fullTypeName = replaceTypeName(parameter.getType().getFullyQualifiedName(), actualTypesMap,
+			String fullTypeName = this.replaceTypeName(parameter.getType().getFullyQualifiedName(), actualTypesMap,
 					Boolean.FALSE);
 			String paramPre = paramName + ".";
 			if (!paramTagMap.containsKey(paramName) && JavaClassValidateUtil.isPrimitive(fullTypeName) && isStrict) {

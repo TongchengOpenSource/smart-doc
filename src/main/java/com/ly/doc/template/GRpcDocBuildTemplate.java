@@ -344,7 +344,7 @@ public class GRpcDocBuildTemplate implements IDocBuildTemplate<GrpcApiDoc>, IJav
 		try {
 			Process process = processBuilder.start();
 
-			StreamGobbler outputGobbler = new StreamGobbler(process.getInputStream(), message -> log.warning(message));
+			StreamGobbler outputGobbler = new StreamGobbler(process.getInputStream(), log::warning);
 			Thread outputThread = new Thread(outputGobbler);
 			outputThread.start();
 
@@ -423,7 +423,7 @@ public class GRpcDocBuildTemplate implements IDocBuildTemplate<GrpcApiDoc>, IJav
 				.setDesc(fieldDesc)
 				.setRequired(!"optional".equals(field.getLabel()) || "required".equals(field.getLabel())
 						|| "".equals(field.getLabel()))
-				.setVersion("-")
+				.setVersion(DocGlobalConstants.DEFAULT_VERSION)
 				.setValue(field.getDefaultValue())
 				.setClassName(field.getFullType())
 				.setId(level)

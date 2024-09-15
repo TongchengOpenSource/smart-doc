@@ -43,17 +43,31 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 /**
+ * Word doc builder
+ *
  * @author <a href="mailto:cqmike0315@gmail.com">chenqi</a>
- * @version 1.0
+ * @since 3.0.1
  */
 public class WordDocBuilder {
 
+	/**
+	 * template docx
+	 */
 	private static final String TEMPLATE_DOCX = "template/word/template.docx";
 
+	/**
+	 * build docx file name
+	 */
 	private static final String BUILD_DOCX = "index.docx";
 
+	/**
+	 * build error code docx file name
+	 */
 	private static final String BUILD_ERROR_DOCX = "error.docx";
 
+	/**
+	 * build directory data docx file name
+	 */
 	private static final String BUILD_DICT_DOCX = "dict.docx";
 
 	/**

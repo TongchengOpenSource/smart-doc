@@ -28,10 +28,22 @@ import com.thoughtworks.qdox.JavaProjectBuilder;
 
 import java.util.List;
 
+/**
+ * Javadoc Asciidoc Builder
+ *
+ * @author chenchuxin
+ * @since 3.0.5
+ */
 public class JavadocAdocBuilder {
 
+	/**
+	 * api extension
+	 */
 	private static final String API_EXTENSION = "JavadocApi.adoc";
 
+	/**
+	 * index extension
+	 */
 	private static final String INDEX_DOC = "javadoc-index.adoc";
 
 	/**

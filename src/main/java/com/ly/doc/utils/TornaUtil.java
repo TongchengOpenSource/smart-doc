@@ -52,6 +52,13 @@ import static com.ly.doc.constants.TornaConstants.PUSH;
 public class TornaUtil {
 
 	/**
+	 * private constructor
+	 */
+	private TornaUtil() {
+		throw new IllegalStateException("Utility class");
+	}
+
+	/**
 	 * Pushes documentation to the Torna API documentation platform.
 	 * <p>
 	 * This method decides whether to push all or part of the documentation based on the

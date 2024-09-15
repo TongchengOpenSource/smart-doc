@@ -53,6 +53,9 @@ import java.util.Objects;
  */
 public class JavadocDocBuilderTemplate implements IBaseDocBuilderTemplate<JavadocApiDoc> {
 
+	/**
+	 * dependency title
+	 */
 	private static final String DEPENDENCY_TITLE = "Add dependency";
 
 	@Override

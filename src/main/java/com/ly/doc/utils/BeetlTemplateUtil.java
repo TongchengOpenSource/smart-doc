@@ -20,18 +20,17 @@
  */
 package com.ly.doc.utils;
 
+import com.power.common.util.FileUtil;
+import org.beetl.core.Configuration;
+import org.beetl.core.GroupTemplate;
+import org.beetl.core.Template;
+import org.beetl.core.resource.ClasspathResourceLoader;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-
-import com.power.common.util.FileUtil;
-
-import org.beetl.core.Configuration;
-import org.beetl.core.GroupTemplate;
-import org.beetl.core.Template;
-import org.beetl.core.resource.ClasspathResourceLoader;
 
 /**
  * Beetl template handle util
@@ -39,6 +38,13 @@ import org.beetl.core.resource.ClasspathResourceLoader;
  * @author sunyu on 2016/12/6.
  */
 public class BeetlTemplateUtil {
+
+	/**
+	 * private constructor
+	 */
+	private BeetlTemplateUtil() {
+		throw new IllegalStateException("Utility class");
+	}
 
 	/**
 	 * Get Beetl template by file name

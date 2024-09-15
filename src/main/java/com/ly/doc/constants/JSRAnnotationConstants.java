@@ -21,6 +21,8 @@
 package com.ly.doc.constants;
 
 /**
+ * JSR303 Annotation Constants
+ *
  * @author yu 2024/6/7
  */
 public interface JSRAnnotationConstants {

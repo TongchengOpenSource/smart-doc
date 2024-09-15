@@ -20,41 +20,56 @@
  */
 package com.ly.doc.handler;
 
-import com.ly.doc.constants.*;
-import com.power.common.util.StringUtil;
-import com.power.common.util.UrlUtil;
 import com.ly.doc.builder.ProjectDocConfigBuilder;
+import com.ly.doc.constants.*;
 import com.ly.doc.model.request.JaxrsPathMapping;
 import com.ly.doc.utils.DocUrlUtil;
 import com.ly.doc.utils.DocUtil;
+import com.power.common.util.StringUtil;
+import com.power.common.util.UrlUtil;
 import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaMethod;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.ly.doc.constants.DocTags.DEPRECATED;
 import static com.ly.doc.constants.DocTags.IGNORE;
 
 /**
- * Jaxrs Path Handler
+ * JAX-RS Path Handler This class is responsible for processing JAX-RS annotations on Java
+ * methods and generating corresponding path mapping information.
  *
  * @author Zxq
  */
 public class JaxrsPathHandler {
 
 	/**
-	 * ANNOTATION_NAMES
+	 * Set of annotation names related to JAX-RS path handling.
 	 */
-	private static final Set<String> ANNOTATION_NAMES = Collections
-		.unmodifiableSet(new HashSet<>(Arrays.asList(JakartaJaxrsAnnotations.JAXB_DELETE_FULLY,
-				JakartaJaxrsAnnotations.JAX_PUT_FULLY, JakartaJaxrsAnnotations.JAX_GET_FULLY,
-				JakartaJaxrsAnnotations.JAX_POST_FULLY, JakartaJaxrsAnnotations.JAX_PATCH_FULLY,
-				JakartaJaxrsAnnotations.JAX_HEAD_FULLY, JAXRSAnnotations.JAXB_DELETE_FULLY,
-				JAXRSAnnotations.JAX_PUT_FULLY, JAXRSAnnotations.JAX_GET_FULLY, JAXRSAnnotations.JAX_POST_FULLY,
-				JAXRSAnnotations.JAXB_PATCH_FULLY, JAXRSAnnotations.JAXB_HEAD_FULLY)));
+	private static final Set<String> ANNOTATION_NAMES = Collections.unmodifiableSet(Stream
+		.of(JakartaJaxrsAnnotations.JAXB_DELETE_FULLY, JakartaJaxrsAnnotations.JAX_PUT_FULLY,
+				JakartaJaxrsAnnotations.JAX_GET_FULLY, JakartaJaxrsAnnotations.JAX_POST_FULLY,
+				JakartaJaxrsAnnotations.JAX_PATCH_FULLY, JakartaJaxrsAnnotations.JAX_HEAD_FULLY,
+				JAXRSAnnotations.JAXB_DELETE_FULLY, JAXRSAnnotations.JAX_PUT_FULLY, JAXRSAnnotations.JAX_GET_FULLY,
+				JAXRSAnnotations.JAX_POST_FULLY, JAXRSAnnotations.JAXB_PATCH_FULLY, JAXRSAnnotations.JAXB_HEAD_FULLY)
+		.collect(Collectors.toSet()));
 
-	Map<String, String> constantsMap;
+	/**
+	 * Map of constants used in the project.
+	 */
+	private Map<String, String> constantsMap;
 
+	/**
+	 * Handles JAX-RS annotations on a given method and generates path mapping
+	 * information.
+	 * @param projectBuilder The project documentation configuration builder
+	 * @param baseUrl The base URL
+	 * @param method The Java method object
+	 * @param mediaType The media type
+	 * @return A JaxrsPathMapping object containing the processed path information
+	 */
 	public JaxrsPathMapping handle(ProjectDocConfigBuilder projectBuilder, String baseUrl, JavaMethod method,
 			String mediaType) {
 
@@ -105,6 +120,16 @@ public class JaxrsPathHandler {
 		return null;
 	}
 
+	/**
+	 * Generates JAX-RS path mapping based on provided parameters.
+	 * @param projectBuilder The project documentation configuration builder
+	 * @param baseUrl The base URL
+	 * @param method The Java method object
+	 * @param shortUrl The short URL
+	 * @param serverUrl The server URL
+	 * @param contextPath The context path
+	 * @return A JaxrsPathMapping object containing the processed path information
+	 */
 	private JaxrsPathMapping getJaxbPathMapping(ProjectDocConfigBuilder projectBuilder, String baseUrl,
 			JavaMethod method, String shortUrl, String serverUrl, String contextPath) {
 		String url;

@@ -41,6 +41,9 @@ import java.util.Objects;
  */
 public class JMeterBuilder {
 
+	/**
+	 * Jmeter script extension
+	 */
 	private static final String JMETER_SCRIPT_EXTENSION = ".jmx";
 
 	/**

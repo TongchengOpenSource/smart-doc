@@ -28,7 +28,7 @@ public class ApiConstant {
 	/**
 	 * Constants class
 	 */
-	private Class constantsClass;
+	private Class<?> constantsClass;
 
 	/**
 	 * Constants class name
@@ -44,11 +44,11 @@ public class ApiConstant {
 		return new ApiConstant();
 	}
 
-	public Class getConstantsClass() {
+	public Class<?> getConstantsClass() {
 		return constantsClass;
 	}
 
-	public ApiConstant setConstantsClass(Class constantsClass) {
+	public ApiConstant setConstantsClass(Class<?> constantsClass) {
 		this.constantsClass = constantsClass;
 		return this;
 	}
@@ -73,12 +73,8 @@ public class ApiConstant {
 
 	@Override
 	public String toString() {
-		final StringBuilder sb = new StringBuilder("{");
-		sb.append("\"constantsClass\":").append(constantsClass);
-		sb.append(",\"constantsClassName\":\"").append(constantsClassName).append('\"');
-		sb.append(",\"description\":\"").append(description).append('\"');
-		sb.append('}');
-		return sb.toString();
+		return "{" + "\"constantsClass\":" + constantsClass + ",\"constantsClassName\":\"" + constantsClassName + '\"'
+				+ ",\"description\":\"" + description + '\"' + '}';
 	}
 
 }

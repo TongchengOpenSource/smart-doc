@@ -569,7 +569,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 		for (JavaClass cls : javaClasses) {
 			// from tag
 			DocletTag ignoreTag = cls.getTagByName(DocTags.IGNORE);
-			if (!isExceptionAdviceEntryPoint(cls, frameworkAnnotations) || Objects.nonNull(ignoreTag)) {
+			if (!this.isExceptionAdviceEntryPoint(cls, frameworkAnnotations) || Objects.nonNull(ignoreTag)) {
 				continue;
 			}
 			boolean paramsDataToTree = projectBuilder.getApiConfig().isParamsDataToTree();

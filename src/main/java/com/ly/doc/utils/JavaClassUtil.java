@@ -61,6 +61,13 @@ public class JavaClassUtil {
 	private static final Logger logger = Logger.getLogger(JavaClassUtil.class.getName());
 
 	/**
+	 * private constructor
+	 */
+	private JavaClassUtil() {
+		throw new IllegalStateException("Utility class");
+	}
+
+	/**
 	 * Get fields
 	 * @param cls1 The JavaClass object
 	 * @param counter Recursive counter
@@ -368,7 +375,7 @@ public class JavaClassUtil {
 			}
 		}
 		catch (ClassNotFoundException e) {
-			e.printStackTrace();
+			logger.warning(e.getMessage());
 			return null;
 		}
 	}
@@ -439,6 +446,11 @@ public class JavaClassUtil {
 		return value;
 	}
 
+	/**
+	 * Gets the enum parameters for the given JavaClass.
+	 * @param javaClass The JavaClass representing the enum
+	 * @return A String containing the enum parameters
+	 */
 	public static String getEnumParams(JavaClass javaClass) {
 		List<JavaField> javaFields = javaClass.getEnumConstants();
 		StringBuilder stringBuilder = new StringBuilder();
@@ -466,6 +478,16 @@ public class JavaClassUtil {
 		return enums;
 	}
 
+	/**
+	 * Retrieves the associated enum class for a given Java field.
+	 * <p>
+	 * This method aims to obtain the enum type (JavaClass) associated with the provided
+	 * Java field object (JavaField). If the field does not associate with an enum type or
+	 * if there is no appropriate @see tag providing enum information, it returns null.
+	 * @param javaField The Java field object to inspect
+	 * @param builder The builder used to retrieve project documentation configuration
+	 * @return The enum class object associated with the field, or null if not found
+	 */
 	public static JavaClass getSeeEnum(JavaField javaField, ProjectDocConfigBuilder builder) {
 		if (Objects.isNull(javaField)) {
 			return null;
@@ -701,6 +723,17 @@ public class JavaClassUtil {
 		return javaClassList;
 	}
 
+	/**
+	 * Retrieves the Javadoc tag values for a specified tag name in a given Java class.
+	 * @param cls The Java class to inspect.
+	 * @param tagName The name of the tag to search for.
+	 * @param checkComments Indicates whether to validate the presence of comments for
+	 * empty tag values.
+	 * @return A comma-separated string of all values found for the specified tag, or an
+	 * empty string if the tag name is empty.
+	 * @throws RuntimeException If the tag is used without comments and checkComments is
+	 * true.
+	 */
 	public static String getClassTagsValue(final JavaClass cls, final String tagName, boolean checkComments) {
 		if (StringUtil.isNotEmpty(tagName)) {
 			StringBuilder result = new StringBuilder();
@@ -748,6 +781,11 @@ public class JavaClassUtil {
 		return constants;
 	}
 
+	/**
+	 * Add group class
+	 * @param annotationValueList annotation value list
+	 * @param javaClassList java class list
+	 */
 	private static void addGroupClass(List<AnnotationValue> annotationValueList, Set<String> javaClassList) {
 		if (CollectionUtil.isEmpty(annotationValueList)) {
 			return;
@@ -759,6 +797,12 @@ public class JavaClassUtil {
 		}
 	}
 
+	/**
+	 * Add group class
+	 * @param annotationValueList annotation value list
+	 * @param javaClassList java class list
+	 * @param builder JavaProjectBuilder
+	 */
 	private static void addGroupClass(List<AnnotationValue> annotationValueList, Set<String> javaClassList,
 			JavaProjectBuilder builder) {
 		if (CollectionUtil.isEmpty(annotationValueList)) {
@@ -774,6 +818,12 @@ public class JavaClassUtil {
 		}
 	}
 
+	/**
+	 * Recursively adds all valid interfaces to the provided set.
+	 * @param classByName The Java class to start the recursion from.
+	 * @param javaClassSet The set to which valid interfaces will be added.
+	 * @param builder The JavaProjectBuilder instance used for class lookup.
+	 */
 	private static void recursionGetAllValidInterface(JavaClass classByName, Set<String> javaClassSet,
 			JavaProjectBuilder builder) {
 		List<JavaType> anImplements = classByName.getImplements();
@@ -830,6 +880,12 @@ public class JavaClassUtil {
 		return Collections.emptyList();
 	}
 
+	/**
+	 * Generic parameter map.
+	 * @param genericMap generic map
+	 * @param cls Java class
+	 * @param globGicName generic name array
+	 */
 	public static void genericParamMap(Map<String, String> genericMap, JavaClass cls, String[] globGicName) {
 		if (Objects.isNull(cls) || Objects.isNull(cls.getTypeParameters())) {
 			return;

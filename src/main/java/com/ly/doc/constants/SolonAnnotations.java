@@ -22,6 +22,8 @@
 package com.ly.doc.constants;
 
 /**
+ * Solon Annotations
+ *
  * @author noear 2022/2/19 created
  */
 public interface SolonAnnotations {

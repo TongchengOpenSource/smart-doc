@@ -59,7 +59,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IW
 			.filter(Objects::nonNull)
 			.flatMap(Collection::stream)
 			.collect(Collectors.toList());
-		FrameworkAnnotations frameworkAnnotations = registeredAnnotations();
+		FrameworkAnnotations frameworkAnnotations = this.registeredAnnotations();
 		return this.processApiData(projectBuilder, frameworkAnnotations, configApiReqParams,
 				new SpringMVCRequestMappingHandler(), new SpringMVCRequestHeaderHandler(), candidateClasses);
 	}
@@ -67,7 +67,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IW
 	@Override
 	public List<WebSocketDoc> renderWebSocketApi(ProjectDocConfigBuilder projectBuilder,
 			Collection<JavaClass> candidateClasses) {
-		FrameworkAnnotations frameworkAnnotations = registeredAnnotations();
+		FrameworkAnnotations frameworkAnnotations = this.registeredAnnotations();
 		return this.processWebSocketData(projectBuilder, frameworkAnnotations, new SpringMVCRequestMappingHandler(),
 				candidateClasses);
 	}

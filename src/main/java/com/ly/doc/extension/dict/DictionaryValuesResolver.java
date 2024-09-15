@@ -26,6 +26,8 @@ import java.util.Collection;
 import java.util.Collections;
 
 /**
+ * dictionary values resolver
+ *
  * @author 吴垚
  * @see <a href="https://github.com/smart-doc-group/smart-doc/issues/338">issues-338</a>
  */

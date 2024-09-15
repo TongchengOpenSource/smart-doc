@@ -26,6 +26,8 @@ import com.ly.doc.model.ApiConfig;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 
 /**
+ * Build Api Data
+ *
  * @author yu 2019/12/7.
  * @since 1.7.9
  */
@@ -56,6 +58,14 @@ public class ApiDataBuilder {
 		return getApiData(config, Boolean.TRUE);
 	}
 
+	/**
+	 * Retrieves API data based on the given configuration.
+	 * @param config The API configuration object containing request parameters and data
+	 * source information.
+	 * @param toTree A flag indicating whether to convert the parameter data into a tree
+	 * structure.
+	 * @return An ApiAllData object containing all the API data information.
+	 */
 	private static ApiAllData getApiData(ApiConfig config, boolean toTree) {
 		config.setParamsDataToTree(toTree);
 		DocBuilderTemplate builderTemplate = new DocBuilderTemplate();
