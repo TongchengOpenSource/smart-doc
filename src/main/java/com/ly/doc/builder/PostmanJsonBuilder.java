@@ -92,16 +92,26 @@ public class PostmanJsonBuilder {
 	 * @return First layer of Postman Item
 	 */
 	private static ItemBean buildItemBean(ApiDoc apiDoc) {
-		ItemBean itemBean = new ItemBean();
-		itemBean.setName(StringUtil.isEmpty(apiDoc.getDesc()) ? MSG : apiDoc.getDesc());
-		List<ItemBean> itemBeans = new ArrayList<>();
-		List<ApiMethodDoc> apiMethodDocs = apiDoc.getList();
-		apiMethodDocs.forEach(apiMethodDoc -> {
-			ItemBean itemBean1 = buildItem(apiMethodDoc);
-			itemBeans.add(itemBean1);
-		});
-		itemBean.setItem(itemBeans);
-		return itemBean;
+		ItemBean parentItemBean = new ItemBean();
+		parentItemBean.setName(StringUtil.isEmpty(apiDoc.getDesc()) ? MSG : apiDoc.getDesc());
+		List<ItemBean> childItemBeans = new ArrayList<>();
+
+		if (CollectionUtil.isNotEmpty(apiDoc.getChildrenApiDocs())) {
+			apiDoc.getChildrenApiDocs().forEach(childApiDoc -> {
+				ItemBean childItemBean = buildItemBean(childApiDoc);
+				childItemBeans.add(childItemBean);
+			});
+		}
+		else {
+			List<ApiMethodDoc> apiMethodDocs = apiDoc.getList();
+			apiMethodDocs.forEach(apiMethodDoc -> {
+				ItemBean methodItemBean = buildItem(apiMethodDoc);
+				childItemBeans.add(methodItemBean);
+			});
+		}
+
+		parentItemBean.setItem(childItemBeans);
+		return parentItemBean;
 	}
 
 	/**
@@ -256,6 +266,7 @@ public class PostmanJsonBuilder {
 		Objects.requireNonNull(docBuildTemplate, "doc build template is null");
 		config.setShowJavaType(true);
 		List<ApiDoc> apiDocList = docBuildTemplate.getApiData(configBuilder).getApiDatas();
+		apiDocList = docBuildTemplate.handleApiGroup(apiDocList, config);
 		RequestItem requestItem = new RequestItem();
 		requestItem.setInfo(new InfoBean(config.getProjectName()));
 		List<ItemBean> itemBeans = new ArrayList<>();
