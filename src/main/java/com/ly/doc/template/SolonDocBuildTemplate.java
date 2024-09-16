@@ -75,7 +75,7 @@ public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IWebSoc
 
 	@Override
 	public boolean isEntryPoint(JavaClass cls, FrameworkAnnotations frameworkAnnotations) {
-		boolean isDefaultEntryPoint = defaultEntryPoint(cls, frameworkAnnotations);
+		boolean isDefaultEntryPoint = this.defaultEntryPoint(cls, frameworkAnnotations);
 		if (isDefaultEntryPoint) {
 			return true;
 		}

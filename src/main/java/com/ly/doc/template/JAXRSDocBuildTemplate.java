@@ -142,11 +142,11 @@ public class JAXRSDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IWebSoc
 				continue;
 			}
 			if (needAllMethods || filterMethods.contains(method.getName())) {
-				docJavaMethods.add(convertToDocJavaMethod(apiConfig, projectBuilder, method, null));
+				docJavaMethods.add(this.convertToDocJavaMethod(apiConfig, projectBuilder, method, null));
 			}
 		}
 		// add parent class methods
-		docJavaMethods.addAll(getParentsClassMethods(apiConfig, projectBuilder, cls));
+		docJavaMethods.addAll(this.getParentsClassMethods(apiConfig, projectBuilder, cls));
 		List<ApiMethodDoc> methodDocList = new ArrayList<>(methods.size());
 		int methodOrder = 0;
 		for (DocJavaMethod docJavaMethod : docJavaMethods) {
@@ -274,7 +274,7 @@ public class JAXRSDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IWebSoc
 	@Override
 	@SuppressWarnings("deprecation")
 	public boolean isEntryPoint(JavaClass cls, FrameworkAnnotations frameworkAnnotations) {
-		boolean isDefaultEntryPoint = defaultEntryPoint(cls, frameworkAnnotations);
+		boolean isDefaultEntryPoint = this.defaultEntryPoint(cls, frameworkAnnotations);
 		if (isDefaultEntryPoint) {
 			return true;
 		}

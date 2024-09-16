@@ -106,7 +106,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 			}
 			// from tag
 			DocletTag ignoreTag = cls.getTagByName(DocTags.IGNORE);
-			if (!isEntryPoint(cls, frameworkAnnotations) || Objects.nonNull(ignoreTag)) {
+			if (!this.isEntryPoint(cls, frameworkAnnotations) || Objects.nonNull(ignoreTag)) {
 				continue;
 			}
 			int order = 0;
@@ -583,10 +583,10 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 				if (Objects.nonNull(method.getTagByName(IGNORE))) {
 					continue;
 				}
-				docJavaMethods.add(convertToDocJavaMethod(apiConfig, projectBuilder, method, null));
+				docJavaMethods.add(this.convertToDocJavaMethod(apiConfig, projectBuilder, method, null));
 			}
 			// add parent class methods
-			docJavaMethods.addAll(getParentsClassMethods(apiConfig, projectBuilder, cls));
+			docJavaMethods.addAll(this.getParentsClassMethods(apiConfig, projectBuilder, cls));
 
 			for (DocJavaMethod docJavaMethod : docJavaMethods) {
 				JavaMethod method = docJavaMethod.getJavaMethod();
@@ -607,7 +607,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 				apiExceptionStatus.setDetail(docJavaMethod.getDetail());
 
 				// build response params
-				List<ApiParam> responseParams = buildReturnApiParams(docJavaMethod, projectBuilder);
+				List<ApiParam> responseParams = this.buildReturnApiParams(docJavaMethod, projectBuilder);
 				if (paramsDataToTree) {
 					responseParams = ApiParamTreeUtil.apiParamToTree(responseParams);
 				}
@@ -626,7 +626,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 			}
 		}
 		if (apiConfig.isAddDefaultHttpStatuses() && exceptionStatusList.isEmpty()) {
-			exceptionStatusList.addAll(defaultHttpErrorStatuses());
+			exceptionStatusList.addAll(this.defaultHttpErrorStatuses());
 		}
 		Collections.sort(exceptionStatusList);
 		return exceptionStatusList;
@@ -654,7 +654,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 			ProjectDocConfigBuilder projectBuilder, FrameworkAnnotations frameworkAnnotations,
 			List<ApiReqParam> configApiReqParams, IRequestMappingHandler baseMappingHandler,
 			IHeaderHandler headerHandler) {
-		String clazName = cls.getCanonicalName();
+		String clazzName = cls.getCanonicalName();
 		boolean paramsDataToTree = projectBuilder.getApiConfig().isParamsDataToTree();
 		ClassLoader classLoader = projectBuilder.getApiConfig().getClassLoader();
 		String group = JavaClassUtil.getClassTagsValue(cls, DocTags.GROUP, Boolean.TRUE);
@@ -687,14 +687,14 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 			}
 		}
 
-		Set<String> filterMethods = DocUtil.findFilterMethods(clazName);
+		Set<String> filterMethods = DocUtil.findFilterMethods(clazzName);
 		boolean needAllMethods = filterMethods.contains(DocGlobalConstants.DEFAULT_FILTER_METHOD);
 
 		List<JavaMethod> methods = cls.getMethods();
 		List<DocJavaMethod> docJavaMethods = new ArrayList<>(methods.size());
 		for (JavaMethod method : methods) {
 			if (method.isPrivate()
-					|| DocUtil.isMatch(apiConfig.getPackageExcludeFilters(), clazName + "." + method.getName())) {
+					|| DocUtil.isMatch(apiConfig.getPackageExcludeFilters(), clazzName + "." + method.getName())) {
 				continue;
 			}
 			if (Objects.nonNull(method.getTagByName(IGNORE))) {
@@ -705,7 +705,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 			}
 		}
 		// add parent class methods
-		docJavaMethods.addAll(getParentsClassMethods(apiConfig, projectBuilder, cls));
+		docJavaMethods.addAll(this.getParentsClassMethods(apiConfig, projectBuilder, cls));
 		List<JavaType> implClasses = cls.getImplements();
 		for (JavaType type : implClasses) {
 			JavaClass javaClass = (JavaClass) type;
@@ -769,7 +769,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 			apiMethodDoc.setDesc(common);
 			apiMethodDoc.setAuthor(docJavaMethod.getAuthor());
 			apiMethodDoc.setDetail(docJavaMethod.getDetail());
-			String methodUid = DocUtil.generateId(clazName + method.getName() + methodOrder);
+			String methodUid = DocUtil.generateId(clazzName + method.getName() + methodOrder);
 			apiMethodDoc.setMethodId(methodUid);
 			// handle headers
 			List<ApiReqParam> apiReqHeaders = headerHandler.handle(method, projectBuilder);
@@ -897,13 +897,13 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 				}
 				String params = StringUtil.removeQuotes(paramsObjects.toString());
 				if (!params.startsWith("[")) {
-					mappingParamToApiParam(paramsObjects.toString(), paramList, mappingParams);
+					this.mappingParamToApiParam(paramsObjects.toString(), paramList, mappingParams);
 					continue;
 				}
 				@SuppressWarnings("unchecked")
 				List<String> headers = (LinkedList<String>) paramsObjects;
 				for (String str : headers) {
-					mappingParamToApiParam(str, paramList, mappingParams);
+					this.mappingParamToApiParam(str, paramList, mappingParams);
 				}
 			}
 		}
@@ -914,7 +914,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 				Collections.emptyMap());
 		final Map<String, ApiReqParam> queryReqParamMap = collect.getOrDefault(ApiReqParamInTypeEnum.QUERY.getValue(),
 				Collections.emptyMap());
-		List<DocJavaParameter> parameterList = getJavaParameterList(builder, docJavaMethod, frameworkAnnotations);
+		List<DocJavaParameter> parameterList = this.getJavaParameterList(builder, docJavaMethod, frameworkAnnotations);
 		if (parameterList.isEmpty()) {
 			AtomicInteger querySize = new AtomicInteger(paramList.size() + 1);
 			paramList.addAll(queryReqParamMap.values()
@@ -967,7 +967,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 			}
 			for (JavaAnnotation annotation : annotations) {
 				String annotationName = annotation.getType().getValue();
-				if (ignoreMvcParamWithAnnotation(annotationName)) {
+				if (this.ignoreMvcParamWithAnnotation(annotationName)) {
 					continue out;
 				}
 				if (frameworkAnnotations.getRequestParamAnnotation().getAnnotationName().equals(annotationName)
@@ -1026,7 +1026,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 			if (requestFieldToUnderline && !isPathVariable) {
 				paramName = StringUtil.camelToUnderline(paramName);
 			}
-			// file upload
+			// Handle if it is file upload
 			if (JavaClassValidateUtil.isFile(typeName)) {
 				ApiParam param = ApiParam.of()
 					.setField(paramName)
@@ -1049,9 +1049,12 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 			boolean queryParam = Methods.GET.getValue().equals(docJavaMethod.getMethodType())
 					&& Methods.DELETE.getValue().equals(docJavaMethod.getMethodType()) && !isRequestBody
 					&& !isPathVariable;
+
+			String[] gicNameArr = DocClassUtil.getSimpleGicName(typeName);
+			// Handle if it is collection types
 			if (JavaClassValidateUtil.isCollection(fullyQualifiedName)
 					|| JavaClassValidateUtil.isArray(fullyQualifiedName)) {
-				String[] gicNameArr = DocClassUtil.getSimpleGicName(typeName);
+
 				String gicName = gicNameArr[0];
 				if (JavaClassValidateUtil.isArray(gicName)) {
 					gicName = gicName.substring(0, gicName.indexOf("["));
@@ -1122,6 +1125,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 					}
 				}
 			}
+			// Handle if it is primitive types
 			else if (JavaClassValidateUtil.isPrimitive(fullyQualifiedName)) {
 				ApiParam param = ApiParam.of()
 					.setField(paramName)
@@ -1139,74 +1143,32 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 					docJavaMethod.setRequestSchema(map);
 				}
 			}
+			// Handle if it is map types
 			else if (JavaClassValidateUtil.isMap(fullyQualifiedName)) {
 				log.warning("When using smart-doc, it is not recommended to use Map to receive parameters, Check it in "
 						+ javaMethod.getDeclaringClass().getCanonicalName() + "#" + javaMethod.getName());
+
+				paramList.addAll(ParamsBuildHelper.buildMapParam(gicNameArr, DocGlobalConstants.EMPTY, 0,
+						String.valueOf(required), Boolean.FALSE, new HashMap<>(16), builder, groupClasses,
+						docJavaMethod.getJsonViewClasses(), 0, Boolean.FALSE, 1, null));
+
 				// is map without Gic
 				if (JavaClassValidateUtil.isMap(typeName)) {
-					ApiParam apiParam = ApiParam.of()
-						.setField(paramName)
-						.setType(ParamTypeConstants.PARAM_TYPE_MAP)
-						.setId(paramList.size() + 1)
-						.setPathParam(isPathVariable)
-						.setQueryParam(queryParam)
-						.setDesc(comment.toString())
-						.setRequired(required)
-						.setVersion(DocGlobalConstants.DEFAULT_VERSION);
-					paramList.add(apiParam);
 					if (requestBodyCounter > 0) {
 						Map<String, Object> map = OpenApiSchemaUtil.mapTypeSchema("object");
 						docJavaMethod.setRequestSchema(map);
 					}
 					continue;
 				}
-				String[] gicNameArr = DocClassUtil.getSimpleGicName(typeName);
-
-				// get map key class
-				JavaClass mapKeyClass = builder.getClassByName(gicNameArr[0]);
-
+				// if map value is primitive
 				if (JavaClassValidateUtil.isPrimitive(gicNameArr[1])) {
-					ApiParam apiParam = ApiParam.of()
-						.setField(paramName)
-						.setType(ParamTypeConstants.PARAM_TYPE_MAP)
-						.setId(paramList.size() + 1)
-						.setPathParam(isPathVariable)
-						.setQueryParam(queryParam)
-						.setDesc(comment.toString())
-						.setRequired(required)
-						.setVersion(DocGlobalConstants.DEFAULT_VERSION);
-					paramList.add(apiParam);
 					if (requestBodyCounter > 0) {
 						Map<String, Object> map = OpenApiSchemaUtil.mapTypeSchema(gicNameArr[1]);
 						docJavaMethod.setRequestSchema(map);
 					}
 				}
-				else if (Objects.nonNull(mapKeyClass) && mapKeyClass.isEnum()
-						&& !mapKeyClass.getEnumConstants().isEmpty()) {
-					for (JavaField enumConstant : mapKeyClass.getEnumConstants()) {
-						ApiParam apiParam = ApiParam.of()
-							.setField(enumConstant.getName())
-							.setType(ParamTypeConstants.PARAM_TYPE_OBJECT)
-							.setClassName(gicNameArr[1])
-							.setDesc(Optional.ofNullable(builder.getClassByName(gicNameArr[1]))
-								.map(JavaClass::getComment)
-								.orElse(DocGlobalConstants.DEFAULT_MAP_KEY_DESC))
-							.setVersion(DocGlobalConstants.DEFAULT_VERSION)
-							.setId(paramList.size() + 1);
-						paramList.add(apiParam);
-						paramList.addAll(ParamsBuildHelper.buildParams(gicNameArr[1], DocGlobalConstants.PARAM_PREFIX,
-								1, String.valueOf(required), Boolean.FALSE, new HashMap<>(16), builder, groupClasses,
-								docJavaMethod.getJsonViewClasses(), apiParam.getId(), Boolean.FALSE, null));
-					}
-				}
-				else {
-					paramList.addAll(ParamsBuildHelper.buildParams(gicNameArr[1], DocGlobalConstants.EMPTY, 0,
-							String.valueOf(required), Boolean.FALSE, new HashMap<>(16), builder, groupClasses,
-							docJavaMethod.getJsonViewClasses(), 0, Boolean.FALSE, null));
-				}
-
 			}
-			// param is enum
+			// Handle if it is enum types
 			else if (javaClass.isEnum()) {
 				String enumName = JavaClassUtil.getEnumParams(javaClass);
 				Object value = JavaClassUtil.getEnumValue(javaClass, builder, isPathVariable || queryParam);
@@ -1227,7 +1189,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 					.setEnumValues(JavaClassUtil.getEnumValues(javaClass));
 				paramList.add(param);
 			}
-			// if it has annotation @RequestPart
+			// Handle if it has annotation @RequestPart
 			else if (isRequestPart) {
 				ApiParam param = ApiParam.of()
 					.setClassName(fullyQualifiedName)
@@ -1352,7 +1314,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 				if (!mvcRequestAnnotations.contains(fullName) || paramAdded) {
 					continue;
 				}
-				if (ignoreMvcParamWithAnnotation(annotationName)) {
+				if (this.ignoreMvcParamWithAnnotation(annotationName)) {
 					continue out;
 				}
 
@@ -1614,9 +1576,9 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 			Map<String, JavaType> actualTypesMap = JavaClassUtil.getActualTypesMap(parentClass);
 			List<JavaMethod> parentMethodList = parentClass.getMethods();
 			for (JavaMethod method : parentMethodList) {
-				docJavaMethods.add(convertToDocJavaMethod(apiConfig, projectBuilder, method, actualTypesMap));
+				docJavaMethods.add(this.convertToDocJavaMethod(apiConfig, projectBuilder, method, actualTypesMap));
 			}
-			docJavaMethods.addAll(getParentsClassMethods(apiConfig, projectBuilder, parentClass));
+			docJavaMethods.addAll(this.getParentsClassMethods(apiConfig, projectBuilder, parentClass));
 		}
 		return docJavaMethods;
 	}

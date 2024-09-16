@@ -20,13 +20,14 @@
  */
 package com.ly.doc.extension.json;
 
+// @formatter:off
 /**
  * copy from jackson and singleton instances.
- *
- * @see <a href=
- * "https://github.com/FasterXML/jackson-databind/blob/2.18/src/main/java/com/fasterxml/jackson/databind/PropertyNamingStrategies.java">PropertyNamingStrategies</a>.
+ * <p>
+ * <a href="https://github.com/FasterXML/jackson-databind/blob/2.18/src/main/java/com/fasterxml/jackson/databind/PropertyNamingStrategies.java">PropertyNamingStrategies</a>.
  * @author xingzi
  */
+// @formatter:on
 public abstract class PropertyNamingStrategies implements java.io.Serializable {
 
 	/**

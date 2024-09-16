@@ -220,7 +220,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IW
 
 	@Override
 	public boolean isEntryPoint(JavaClass javaClass, FrameworkAnnotations frameworkAnnotations) {
-		boolean isDefaultEntryPoint = defaultEntryPoint(javaClass, frameworkAnnotations);
+		boolean isDefaultEntryPoint = this.defaultEntryPoint(javaClass, frameworkAnnotations);
 		if (isDefaultEntryPoint) {
 			return true;
 		}
@@ -256,7 +256,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IW
 
 	@Override
 	public boolean isExceptionAdviceEntryPoint(JavaClass javaClass, FrameworkAnnotations frameworkAnnotations) {
-		return defaultExceptionAdviceEntryPoint(javaClass, frameworkAnnotations);
+		return this.defaultExceptionAdviceEntryPoint(javaClass, frameworkAnnotations);
 	}
 
 	@Override
