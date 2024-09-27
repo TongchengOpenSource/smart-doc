@@ -192,7 +192,7 @@ public class JsonBuildHelper extends BaseHelper {
 			String gName = JavaClassValidateUtil.isArray(gNameTemp) ? gNameTemp.substring(0, gNameTemp.indexOf("["))
 					: globGicName[0];
 			if (JavaTypeConstants.JAVA_OBJECT_FULLY.equals(gName)) {
-				data.append("{\"waring\":\"You may use java.util.Object instead of display generics in the List\"}");
+				data.append(DocGlobalConstants.GENERIC_LIST_WARNING);
 			}
 			else if (JavaClassValidateUtil.isPrimitive(gName)) {
 				data.append(DocUtil.jsonValueByType(gName)).append(",");
@@ -557,10 +557,7 @@ public class JsonBuildHelper extends BaseHelper {
 
 		// when map value is Object
 		if (JavaTypeConstants.JAVA_OBJECT_FULLY.equals(gicName)) {
-			data.append("{")
-				.append("\"mapKey\":")
-				.append("{\"waring\":\"You may use java.util.Object for Map value; smart-doc can't be handle.\"}")
-				.append("}");
+			data.append("{").append("\"mapKey\":").append(DocGlobalConstants.OBJECT_MAP_VALUE_WARNING).append("}");
 			return;
 		}
 
