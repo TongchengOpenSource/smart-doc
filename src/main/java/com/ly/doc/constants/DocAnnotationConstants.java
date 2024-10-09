@@ -98,6 +98,11 @@ public interface DocAnnotationConstants {
 	String VALUE_PROP = "value";
 
 	/**
+	 * annotation using prop
+	 */
+	String USING_PROP = "using";
+
+	/**
 	 * annotation path prop
 	 */
 	String PATH_PROP = "path";

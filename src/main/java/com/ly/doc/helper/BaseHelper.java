@@ -20,13 +20,27 @@
  */
 package com.ly.doc.helper;
 
+import com.ly.doc.builder.ProjectDocConfigBuilder;
+import com.ly.doc.constants.DocAnnotationConstants;
 import com.ly.doc.constants.DocTags;
+import com.ly.doc.constants.JSRAnnotationConstants;
+import com.ly.doc.model.CustomField;
+import com.ly.doc.model.CustomFieldInfo;
+import com.ly.doc.model.DocJavaField;
+import com.ly.doc.model.FieldJsonAnnotationInfo;
 import com.ly.doc.utils.DocUtil;
+import com.ly.doc.utils.JavaClassUtil;
 import com.ly.doc.utils.JavaClassValidateUtil;
+import com.power.common.util.CollectionUtil;
 import com.power.common.util.StringEscapeUtil;
 import com.power.common.util.StringUtil;
+import com.thoughtworks.qdox.model.JavaAnnotation;
+import com.thoughtworks.qdox.model.JavaField;
+import com.thoughtworks.qdox.model.expression.AnnotationValue;
 
 import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 /**
  * Abstract Base helper
@@ -68,6 +82,209 @@ public abstract class BaseHelper {
 			fieldValue = StringEscapeUtil.unescapeJava(tagsMap.get(DocTags.MOCK));
 		}
 		return fieldValue;
+	}
+
+	/**
+	 * check custom field is ignored
+	 * @param docField doc field
+	 * @param isResp is resp
+	 * @param customRequestField custom request field
+	 * @param customResponseField custom response field
+	 * @return boolean
+	 */
+	protected static boolean isIgnoreCustomField(DocJavaField docField, boolean isResp, CustomField customRequestField,
+			CustomField customResponseField) {
+		if (Objects.nonNull(customRequestField) && JavaClassUtil.isTargetChildClass(docField.getDeclaringClassName(),
+				customRequestField.getOwnerClassName()) && (customRequestField.isIgnore()) && !isResp) {
+			return true;
+		}
+		return Objects.nonNull(customResponseField) && JavaClassUtil
+			.isTargetChildClass(docField.getDeclaringClassName(), customResponseField.getOwnerClassName())
+				&& (customResponseField.isIgnore()) && isResp;
+	}
+
+	/**
+	 * check field is transient
+	 * @param field field
+	 * @param projectBuilder project builder
+	 * @param isResp is resp
+	 * @return boolean
+	 */
+	protected static boolean isTransientField(JavaField field, ProjectDocConfigBuilder projectBuilder, boolean isResp) {
+		if (field.isTransient()) {
+			return (projectBuilder.getApiConfig().isSerializeRequestTransients() && !isResp)
+					|| (projectBuilder.getApiConfig().isSerializeResponseTransients() && isResp);
+		}
+		return false;
+	}
+
+	/**
+	 * Get a field JSON annotation information for a given field.
+	 * @param projectBuilder the project builder
+	 * @param docField the doc of java field
+	 * @param isResp the response flag for the parameter
+	 * @param groupClasses the group classes
+	 * @param methodJsonViewClasses the method JSON view classes
+	 * @return the field JSON annotation information {@link FieldJsonAnnotationInfo}
+	 *
+	 */
+	protected static FieldJsonAnnotationInfo getFieldJsonAnnotationInfo(ProjectDocConfigBuilder projectBuilder,
+			DocJavaField docField, boolean isResp, Set<String> groupClasses, Set<String> methodJsonViewClasses) {
+		FieldJsonAnnotationInfo fieldJsonAnnotationInfo = new FieldJsonAnnotationInfo();
+		// Handle @JsonView; if the field is not annotated with @JsonView, skip
+		if (!methodJsonViewClasses.isEmpty() && isResp && docField.getAnnotations().isEmpty()) {
+			return fieldJsonAnnotationInfo;
+		}
+
+		for (JavaAnnotation annotation : docField.getAnnotations()) {
+			// if the field is annotated with @JsonIgnore || @JsonProperty, then
+			// check if it belongs to the groupClasses
+			if (JavaClassValidateUtil.isIgnoreFieldJson(annotation, isResp)) {
+				fieldJsonAnnotationInfo.setIgnore(true);
+				continue;
+			}
+			// Handle @JsonView
+			if (JavaClassUtil.shouldExcludeFieldFromJsonView(annotation, methodJsonViewClasses, isResp,
+					projectBuilder)) {
+				fieldJsonAnnotationInfo.setIgnore(true);
+				return fieldJsonAnnotationInfo;
+			}
+
+			String annotationName = annotation.getType().getValue();
+			// if the field is annotated with @JsonSerialize
+			if (DocAnnotationConstants.SHORT_JSON_SERIALIZE.equals(annotationName)
+					&& DocAnnotationConstants.TO_STRING_SERIALIZER_USING
+						.equals(annotation.getNamedParameter(DocAnnotationConstants.USING_PROP))) {
+				fieldJsonAnnotationInfo.setToStringSerializer(true);
+				continue;
+			}
+			// if the field is annotated with @Null And isResp is false
+			if (JSRAnnotationConstants.NULL.equals(annotationName) && !isResp) {
+				if (CollectionUtil.isEmpty(groupClasses)) {
+					fieldJsonAnnotationInfo.setIgnore(true);
+					return fieldJsonAnnotationInfo;
+				}
+				Set<String> groupClassList = JavaClassUtil.getParamGroupJavaClass(annotation);
+				for (String javaClass : groupClassList) {
+					if (groupClasses.contains(javaClass)) {
+						fieldJsonAnnotationInfo.setIgnore(true);
+						return fieldJsonAnnotationInfo;
+					}
+				}
+			}
+
+			// Handle @JSONField
+			if (DocAnnotationConstants.SHORT_JSON_FIELD.equals(annotationName)) {
+				if (null != annotation.getProperty(DocAnnotationConstants.NAME_PROP)) {
+					fieldJsonAnnotationInfo.setFieldName(StringUtil
+						.removeQuotes(annotation.getProperty(DocAnnotationConstants.NAME_PROP).toString()));
+				}
+			}
+
+			// Handle @JsonProperty
+			else if (DocAnnotationConstants.SHORT_JSON_PROPERTY.equals(annotationName)
+					|| DocAnnotationConstants.GSON_ALIAS_NAME.equals(annotationName)) {
+				AnnotationValue annotationValue = annotation.getProperty(DocAnnotationConstants.VALUE_PROP);
+				if (null != annotationValue) {
+					fieldJsonAnnotationInfo.setFieldName(StringUtil.removeQuotes(annotationValue.toString()));
+				}
+			}
+			// Handle JSR303 required
+			if (JavaClassValidateUtil.isJSR303Required(annotationName) && !isResp) {
+				Set<String> groupClassList = JavaClassUtil.getParamGroupJavaClass(annotation);
+				// Check if groupClasses contains any element from
+				// groupClassList
+				boolean hasGroup = groupClassList.stream().anyMatch(groupClasses::contains);
+
+				if (hasGroup) {
+					fieldJsonAnnotationInfo.setStrRequired(true);
+				}
+				else if (CollectionUtil.isEmpty(groupClasses)) {
+					// If the annotation is @Valid or @Validated, the Default
+					// group is added by default and groupClasses will not be
+					// empty;
+					// In other cases, if groupClasses is still empty, then
+					// strRequired is false.
+					fieldJsonAnnotationInfo.setStrRequired(false);
+				}
+			}
+			// Handle @JsonFormat
+			if (DocAnnotationConstants.JSON_FORMAT.equals(annotationName)) {
+				fieldJsonAnnotationInfo.setFieldJsonFormatType(
+						DocUtil.processFieldTypeNameByJsonFormat(projectBuilder.getApiConfig().getShowJavaType(),
+								docField.getTypeFullyQualifiedName(), annotation));
+				fieldJsonAnnotationInfo
+					.setFieldJsonFormatValue(DocUtil.getJsonFormatString(docField.getJavaField(), annotation));
+			}
+
+		}
+		return fieldJsonAnnotationInfo;
+	}
+
+	/**
+	 * Get the custom field information for a given field.
+	 * @param projectBuilder the project builder
+	 * @param docField the doc of java field
+	 * @param customResponseField the custom response field
+	 * @param customRequestField the custom request field
+	 * @param isResp the response flag for the parameter
+	 * @param simpleName the simple name of the field
+	 * @return the custom field information {@link CustomFieldInfo}
+	 *
+	 */
+	protected static CustomFieldInfo getCustomFieldInfo(ProjectDocConfigBuilder projectBuilder, DocJavaField docField,
+			CustomField customResponseField, CustomField customRequestField, boolean isResp, String simpleName) {
+		CustomFieldInfo customFieldInfo = new CustomFieldInfo();
+
+		// ignore custom field, if true return quickly
+		if (isIgnoreCustomField(docField, isResp, customRequestField, customResponseField)) {
+			customFieldInfo.setIgnore(true);
+			return customFieldInfo;
+		}
+
+		// cover response value
+		if (Objects.nonNull(customResponseField) && isResp && Objects.nonNull(customResponseField.getValue())
+				&& JavaClassUtil.isTargetChildClass(simpleName, customResponseField.getOwnerClassName())) {
+
+			customFieldInfo.setFieldValue(String.valueOf(customResponseField.getValue()));
+		}
+
+		// cover request value
+		if (Objects.nonNull(customRequestField) && !isResp && Objects.nonNull(customRequestField.getValue())
+				&& JavaClassUtil.isTargetChildClass(simpleName, customRequestField.getOwnerClassName())) {
+
+			customFieldInfo.setFieldValue(String.valueOf(customRequestField.getValue()));
+		}
+
+		// cover required
+		if (Objects.nonNull(customRequestField) && !isResp
+				&& JavaClassUtil.isTargetChildClass(simpleName, customRequestField.getOwnerClassName())
+				&& customRequestField.isRequire()) {
+
+			customFieldInfo.setStrRequired(true);
+		}
+
+		// cover comment
+		if (Objects.nonNull(customRequestField) && StringUtil.isNotEmpty(customRequestField.getDesc())
+				&& JavaClassUtil.isTargetChildClass(simpleName, customRequestField.getOwnerClassName()) && !isResp) {
+			customFieldInfo.setComment(customRequestField.getDesc());
+		}
+		if (Objects.nonNull(customResponseField) && StringUtil.isNotEmpty(customResponseField.getDesc())
+				&& JavaClassUtil.isTargetChildClass(simpleName, customResponseField.getOwnerClassName()) && isResp) {
+			customFieldInfo.setComment(customResponseField.getDesc());
+		}
+
+		// cover fieldName
+		if (Objects.nonNull(customRequestField) && StringUtil.isNotEmpty(customRequestField.getReplaceName())
+				&& JavaClassUtil.isTargetChildClass(simpleName, customRequestField.getOwnerClassName()) && !isResp) {
+			customFieldInfo.setFieldName(customRequestField.getReplaceName());
+		}
+		if (Objects.nonNull(customResponseField) && StringUtil.isNotEmpty(customResponseField.getReplaceName())
+				&& JavaClassUtil.isTargetChildClass(simpleName, customResponseField.getOwnerClassName()) && isResp) {
+
+			customFieldInfo.setFieldName(customResponseField.getReplaceName());
+		}
+		return customFieldInfo;
 	}
 
 }

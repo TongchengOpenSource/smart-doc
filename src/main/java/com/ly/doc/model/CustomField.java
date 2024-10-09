@@ -24,6 +24,8 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
+ * Custom field
+ *
  * @author xingzi
  **/
 public class CustomField {
@@ -53,14 +55,30 @@ public class CustomField {
 	 */
 	private boolean require;
 
+	/**
+	 * ignore
+	 */
 	private boolean ignore;
 
+	/**
+	 * replace name
+	 */
 	private String replaceName;
 
+	/**
+	 * Builder
+	 * @return CustomField
+	 */
 	public static CustomField builder() {
 		return new CustomField();
 	}
 
+	/**
+	 * get custom field by key
+	 * @param key key
+	 * @param customFieldMap custom field map
+	 * @return CustomField
+	 */
 	public static CustomField nameEquals(Key key, Map<Key, CustomField> customFieldMap) {
 		for (Map.Entry<Key, CustomField> c : customFieldMap.entrySet()) {
 			if (key.equals(c.getKey())) {

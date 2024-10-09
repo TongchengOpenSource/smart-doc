@@ -20,14 +20,16 @@
  */
 package com.ly.doc.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.thoughtworks.qdox.model.DocletTag;
 import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaField;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
+ * The doc of java field
+ *
  * @author yu 2020/3/19.
  */
 public class DocJavaField {

@@ -21,13 +21,13 @@
 package com.ly.doc.helper;
 
 import com.ly.doc.builder.ProjectDocConfigBuilder;
-import com.ly.doc.constants.*;
+import com.ly.doc.constants.DocGlobalConstants;
+import com.ly.doc.constants.DocTags;
+import com.ly.doc.constants.JavaTypeConstants;
 import com.ly.doc.model.*;
 import com.ly.doc.utils.*;
-import com.power.common.util.CollectionUtil;
 import com.power.common.util.StringUtil;
 import com.thoughtworks.qdox.model.*;
-import com.thoughtworks.qdox.model.expression.AnnotationValue;
 
 import java.util.*;
 
@@ -110,31 +110,39 @@ public class JsonBuildHelper extends BaseHelper {
 	 * @param groupClasses A set of valid group classes.
 	 * @param methodJsonViewClasses A set of valid `@JsonView` classes on controller
 	 * method.
-	 * @param builder The project config builder.
+	 * @param projectBuilder The project config projectBuilder.
 	 * @return The JSON string representation of the type.
 	 */
 	public static String buildJson(String typeName, String genericCanonicalName, boolean isResp, int counter,
 			Map<String, String> registryClasses, Set<String> groupClasses, Set<String> methodJsonViewClasses,
-			ProjectDocConfigBuilder builder) {
+			ProjectDocConfigBuilder projectBuilder) {
 
-		Map<String, String> genericMap = new HashMap<>(10);
-		JavaClass javaClass = builder.getJavaProjectBuilder().getClassByName(typeName);
-		ApiConfig apiConfig = builder.getApiConfig();
+		if (StringUtil.isEmpty(typeName)) {
+			throw new RuntimeException("Class name can't be null or empty.");
+		}
+
 		// Check for recursion limit to avoid infinite loops
-		if (counter > apiConfig.getRecursionLimit()) {
+		int recursionLimit = projectBuilder.getApiConfig().getRecursionLimit();
+
+		// Early exit when recursion limit is hit
+		if (counter > recursionLimit) {
 			return "{\"$ref\":\"...\"}";
 		}
 
+		int nextLevel = counter + 1;
 		// Avoid processing the same class multiple times
 		if (registryClasses.containsKey(typeName) && counter > registryClasses.size()) {
 			return "{\"$ref\":\"...\"}";
 		}
 
-		int nextLevel = counter + 1;
+		// Registry class
 		registryClasses.put(typeName, typeName);
 
+		Map<String, String> genericMap = new HashMap<>(10);
+		JavaClass javaClass = projectBuilder.getJavaProjectBuilder().getClassByName(typeName);
+
 		// Check if the class should be ignored based on MVC parameters
-		if (JavaClassValidateUtil.isMvcIgnoreParams(typeName, builder.getApiConfig().getIgnoreRequestParams())) {
+		if (JavaClassValidateUtil.isMvcIgnoreParams(typeName, projectBuilder.getApiConfig().getIgnoreRequestParams())) {
 			if (DocGlobalConstants.MODE_AND_VIEW_FULLY.equals(typeName)) {
 				return "Forward or redirect to a page view.";
 			}
@@ -151,11 +159,11 @@ public class JsonBuildHelper extends BaseHelper {
 		// Handle enum types
 		if (javaClass.isEnum()) {
 			return StringUtil
-				.removeQuotes(String.valueOf(JavaClassUtil.getEnumValue(javaClass, builder, Boolean.FALSE)));
+				.removeQuotes(String.valueOf(JavaClassUtil.getEnumValue(javaClass, projectBuilder, Boolean.FALSE)));
 		}
 
 		StringBuilder result = new StringBuilder();
-		JavaClass cls = builder.getClassByName(typeName);
+		JavaClass cls = projectBuilder.getClassByName(typeName);
 
 		result.append("{");
 		String[] globGicName = DocClassUtil.getSimpleGicName(genericCanonicalName);
@@ -184,7 +192,7 @@ public class JsonBuildHelper extends BaseHelper {
 			String gName = JavaClassValidateUtil.isArray(gNameTemp) ? gNameTemp.substring(0, gNameTemp.indexOf("["))
 					: globGicName[0];
 			if (JavaTypeConstants.JAVA_OBJECT_FULLY.equals(gName)) {
-				data.append("{\"waring\":\"You may use java.util.Object instead of display generics in the List\"}");
+				data.append(DocGlobalConstants.GENERIC_LIST_WARNING);
 			}
 			else if (JavaClassValidateUtil.isPrimitive(gName)) {
 				data.append(DocUtil.jsonValueByType(gName)).append(",");
@@ -193,7 +201,7 @@ public class JsonBuildHelper extends BaseHelper {
 			else if (gName.contains("<")) {
 				String simple = DocClassUtil.getSimpleName(gName);
 				String json = buildJson(simple, gName, isResp, nextLevel, registryClasses, groupClasses,
-						methodJsonViewClasses, builder);
+						methodJsonViewClasses, projectBuilder);
 				data.append(json);
 			}
 			else if (JavaClassValidateUtil.isCollection(gName)) {
@@ -201,7 +209,7 @@ public class JsonBuildHelper extends BaseHelper {
 			}
 			else {
 				String json = buildJson(gName, gName, isResp, nextLevel, registryClasses, groupClasses,
-						methodJsonViewClasses, builder);
+						methodJsonViewClasses, projectBuilder);
 				data.append(json);
 			}
 			data.append("]");
@@ -210,7 +218,7 @@ public class JsonBuildHelper extends BaseHelper {
 		// Handle map types
 		if (JavaClassValidateUtil.isMap(typeName)) {
 			buildMapJson(genericCanonicalName, isResp, counter, registryClasses, groupClasses, methodJsonViewClasses,
-					builder, data, nextLevel);
+					projectBuilder, data, nextLevel);
 			return data.toString();
 		}
 		// Handle generic object types
@@ -222,28 +230,25 @@ public class JsonBuildHelper extends BaseHelper {
 		// Handle Reactor types
 		else if (JavaClassValidateUtil.isReactor(typeName)) {
 			data.append(buildJson(globGicName[0], typeName, isResp, nextLevel, registryClasses, groupClasses,
-					methodJsonViewClasses, builder));
+					methodJsonViewClasses, projectBuilder));
 			return data.toString();
 		}
 		// Process fields of the class
 		else {
-			boolean requestFieldToUnderline = builder.getApiConfig().isRequestFieldToUnderline();
-			boolean responseFieldToUnderline = builder.getApiConfig().isResponseFieldToUnderline();
+			boolean requestFieldToUnderline = projectBuilder.getApiConfig().isRequestFieldToUnderline();
+			boolean responseFieldToUnderline = projectBuilder.getApiConfig().isResponseFieldToUnderline();
 			List<DocJavaField> fields = JavaClassUtil.getFields(cls, 0, new LinkedHashMap<>(),
-					builder.getApiConfig().getClassLoader());
+					projectBuilder.getApiConfig().getClassLoader());
 
 			// get ignore fields from class
 			Map<String, String> ignoreFields = JavaClassUtil.getClassJsonIgnoreFields(cls);
 
 			// Process each field of the class
-			out: for (DocJavaField docField : fields) {
+			for (DocJavaField docField : fields) {
 				JavaField field = docField.getJavaField();
-				if (field.isTransient()) {
-					boolean passBuild = (apiConfig.isSerializeRequestTransients() && !isResp)
-							|| (apiConfig.isSerializeResponseTransients() && isResp);
-					if (passBuild) {
-						continue;
-					}
+				// ignore transient field
+				if (isTransientField(field, projectBuilder, isResp)) {
+					continue;
 				}
 
 				String fieldName = docField.getFieldName();
@@ -264,97 +269,39 @@ public class JsonBuildHelper extends BaseHelper {
 				// get annotations on the field
 				List<JavaAnnotation> annotations = docField.getAnnotations();
 
-				String jsonFormatString = null;
-				// has Annotation @JsonSerialize And using ToStringSerializer
-				boolean toStringSerializer = false;
-				// Handle @JsonView; if the field is not annotated with @JsonView, skip
-				// it.
-				if (!methodJsonViewClasses.isEmpty() && isResp && annotations.isEmpty()) {
+				// field json annotation
+				FieldJsonAnnotationInfo annotationInfo = getFieldJsonAnnotationInfo(projectBuilder, docField, isResp,
+						groupClasses, methodJsonViewClasses);
+
+				if (Boolean.TRUE.equals(annotationInfo.getIgnore())) {
 					continue;
 				}
-				// Handle annotations on the field
-				for (JavaAnnotation annotation : annotations) {
-					// Handle @JsonView
-					if (JavaClassUtil.shouldExcludeFieldFromJsonView(annotation, methodJsonViewClasses, isResp,
-							builder)) {
-						continue out;
-					}
-
-					String annotationName = annotation.getType().getValue();
-					// if the field is annotated with @JsonSerialize
-					if (DocAnnotationConstants.SHORT_JSON_SERIALIZE.equals(annotationName)
-							&& DocAnnotationConstants.TO_STRING_SERIALIZER_USING
-								.equals(annotation.getNamedParameter("using"))) {
-						toStringSerializer = true;
-						continue;
-					}
-					// if the field is annotated with @Null And isResp is false
-					if (JSRAnnotationConstants.NULL.equals(annotationName) && !isResp) {
-						if (CollectionUtil.isEmpty(groupClasses)) {
-							continue out;
-						}
-						Set<String> groupClassList = JavaClassUtil.getParamGroupJavaClass(annotation);
-						for (String groupClass : groupClassList) {
-							if (groupClasses.contains(groupClass)) {
-								continue out;
-							}
-						}
-					}
-
-					// if the field is annotated with @JsonIgnore || @JsonProperty, then
-					// check if it belongs to the groupClasses
-					if (JavaClassValidateUtil.isIgnoreFieldJson(annotation, isResp)) {
-						continue out;
-					}
-
-					// Handle @JSONField
-					if (DocAnnotationConstants.SHORT_JSON_FIELD.equals(annotationName)) {
-						if (null != annotation.getProperty(DocAnnotationConstants.NAME_PROP)) {
-							fieldName = StringUtil
-								.removeQuotes(annotation.getProperty(DocAnnotationConstants.NAME_PROP).toString());
-						}
-					}
-
-					// Handle @JsonProperty
-					else if (DocAnnotationConstants.SHORT_JSON_PROPERTY.equals(annotationName)
-							|| DocAnnotationConstants.GSON_ALIAS_NAME.equals(annotationName)) {
-						AnnotationValue annotationValue = annotation.getProperty(DocAnnotationConstants.VALUE_PROP);
-						if (null != annotationValue) {
-							fieldName = StringUtil.removeQuotes(annotationValue.toString());
-						}
-					}
-					// Handle @JsonFormat
-					else if (DocAnnotationConstants.JSON_FORMAT.equals(annotationName)) {
-						jsonFormatString = DocUtil.getJsonFormatString(field, annotation);
-					}
+				// the param type from @JsonFormat
+				String fieldJsonFormatType = annotationInfo.getFieldJsonFormatType();
+				// the param value from @JsonFormat
+				String fieldJsonFormatValue = annotationInfo.getFieldJsonFormatValue();
+				// has Annotation @JsonSerialize And using ToStringSerializer
+				boolean toStringSerializer = Boolean.TRUE.equals(annotationInfo.getToStringSerializer());
+				if (Objects.nonNull(annotationInfo.getFieldName())) {
+					fieldName = annotationInfo.getFieldName();
 				}
 
 				String typeSimpleName = docField.getTypeSimpleName();
 				String fieldGicName = docField.getTypeGenericCanonicalName();
 				CustomField.Key key = CustomField.Key.create(docField.getDeclaringClassName(), fieldName);
 
-				CustomField customResponseField = CustomField.nameEquals(key, builder.getCustomRespFieldMap());
-				CustomField customRequestField = CustomField.nameEquals(key, builder.getCustomReqFieldMap());
-				if (Objects.nonNull(customRequestField)) {
-					if (JavaClassUtil.isTargetChildClass(docField.getDeclaringClassName(),
-							customRequestField.getOwnerClassName()) && (customRequestField.isIgnore()) && !isResp) {
-						continue;
-					}
-					else {
-						fieldName = StringUtil.isEmpty(customRequestField.getReplaceName()) ? fieldName
-								: customRequestField.getReplaceName();
-					}
+				CustomField customResponseField = CustomField.nameEquals(key, projectBuilder.getCustomRespFieldMap());
+				CustomField customRequestField = CustomField.nameEquals(key, projectBuilder.getCustomReqFieldMap());
+				CustomFieldInfo customFieldInfo = getCustomFieldInfo(projectBuilder, docField, customResponseField,
+						customRequestField, isResp, typeSimpleName);
+				// ignore custom field
+				if (Boolean.TRUE.equals(customFieldInfo.getIgnore())) {
+					continue;
 				}
-				if (Objects.nonNull(customResponseField)) {
-					if (JavaClassUtil.isTargetChildClass(docField.getDeclaringClassName(),
-							customResponseField.getOwnerClassName()) && (customResponseField.isIgnore()) && isResp) {
-						continue;
-					}
-					else {
-						fieldName = StringUtil.isEmpty(customResponseField.getReplaceName()) ? fieldName
-								: customResponseField.getReplaceName();
-					}
+				if (StringUtil.isNotEmpty(customFieldInfo.getFieldName())) {
+					fieldName = customFieldInfo.getFieldName();
 				}
+
 				fieldName = fieldName.trim();
 				result.append("\"").append(fieldName).append("\":");
 				// get mock value from tag @mock
@@ -371,7 +318,7 @@ public class JsonBuildHelper extends BaseHelper {
 											: DocUtil.handleJsonStr(valueByTypeAndFieldName);
 						}
 						else {
-							fieldValue = StringUtil.isNotEmpty(jsonFormatString) ? jsonFormatString
+							fieldValue = StringUtil.isNotEmpty(fieldJsonFormatValue) ? fieldJsonFormatValue
 									: valueByTypeAndFieldName;
 						}
 					}
@@ -394,7 +341,7 @@ public class JsonBuildHelper extends BaseHelper {
 							result.append(fieldValue).append(",");
 							continue;
 						}
-						if (globGicName.length > 0 && "java.util.List".equals(fieldGicName)) {
+						if (globGicName.length > 0 && JavaTypeConstants.JAVA_LIST_FULLY.equals(fieldGicName)) {
 							fieldGicName = fieldGicName + "<T>";
 						}
 						if (JavaClassValidateUtil.isArray(subTypeName)) {
@@ -424,7 +371,7 @@ public class JsonBuildHelper extends BaseHelper {
 									result.append("[")
 										.append(buildJson(DocClassUtil.getSimpleName(gicName1), gicName1, isResp,
 												nextLevel, registryClasses, groupClasses, methodJsonViewClasses,
-												builder))
+												projectBuilder))
 										.append("]")
 										.append(",");
 								}
@@ -439,9 +386,11 @@ public class JsonBuildHelper extends BaseHelper {
 									result.append("[{\"mapKey\":{}}],");
 									continue;
 								}
-								JavaClass arraySubClass = builder.getJavaProjectBuilder().getClassByName(gicName);
+								JavaClass arraySubClass = projectBuilder.getJavaProjectBuilder()
+									.getClassByName(gicName);
 								if (arraySubClass.isEnum()) {
-									Object value = JavaClassUtil.getEnumValue(arraySubClass, builder, Boolean.FALSE);
+									Object value = JavaClassUtil.getEnumValue(arraySubClass, projectBuilder,
+											Boolean.FALSE);
 									result.append("[").append(value).append("],");
 									continue;
 								}
@@ -449,7 +398,7 @@ public class JsonBuildHelper extends BaseHelper {
 								fieldGicName = DocUtil.formatFieldTypeGicName(genericMap, fieldGicName);
 								result.append("[")
 									.append(buildJson(gicName, fieldGicName, isResp, nextLevel, registryClasses,
-											groupClasses, methodJsonViewClasses, builder))
+											groupClasses, methodJsonViewClasses, projectBuilder))
 									.append("]")
 									.append(",");
 							}
@@ -469,7 +418,7 @@ public class JsonBuildHelper extends BaseHelper {
 							continue;
 						}
 						buildMapJson(fieldGicName, isResp, nextLevel, registryClasses, groupClasses,
-								methodJsonViewClasses, builder, result, nextLevel);
+								methodJsonViewClasses, projectBuilder, result, nextLevel);
 					}
 					else if (fieldGicName.length() == 1) {
 						if (!typeName.equals(genericCanonicalName)) {
@@ -482,7 +431,7 @@ public class JsonBuildHelper extends BaseHelper {
 								String simple = DocClassUtil.getSimpleName(gicName);
 								result
 									.append(buildJson(simple, gicName, isResp, nextLevel, registryClasses, groupClasses,
-											methodJsonViewClasses, builder))
+											methodJsonViewClasses, projectBuilder))
 									.append(",");
 							}
 						}
@@ -514,15 +463,15 @@ public class JsonBuildHelper extends BaseHelper {
 							// if has Annotation @JsonSerialize And using
 							// ToStringSerializer && isResp
 							else if (toStringSerializer && isResp) {
-								Object value = JavaClassUtil.getEnumValue(javaClass, builder, Boolean.FALSE);
+								Object value = JavaClassUtil.getEnumValue(javaClass, projectBuilder, Boolean.FALSE);
 								result.append(value).append(",");
 							}
 							// if has @JsonFormat
-							else if (StringUtil.isNotEmpty(jsonFormatString)) {
-								result.append(jsonFormatString).append(",");
+							else if (StringUtil.isNotEmpty(fieldJsonFormatValue)) {
+								result.append(fieldJsonFormatValue).append(",");
 							}
 							else {
-								Object value = JavaClassUtil.getEnumValue(javaClass, builder, Boolean.FALSE);
+								Object value = JavaClassUtil.getEnumValue(javaClass, projectBuilder, Boolean.FALSE);
 								result.append(value).append(",");
 							}
 						}
@@ -532,14 +481,14 @@ public class JsonBuildHelper extends BaseHelper {
 							if (toStringSerializer && isResp) {
 								result.append(" ").append(",");
 							}
-							else if (StringUtil.isNotEmpty(jsonFormatString)) {
-								result.append(jsonFormatString).append(",");
+							else if (StringUtil.isNotEmpty(fieldJsonFormatValue)) {
+								result.append(fieldJsonFormatValue).append(",");
 							}
 							else {
 								fieldGicName = DocUtil.formatFieldTypeGicName(genericMap, fieldGicName);
 								result
 									.append(buildJson(subTypeName, fieldGicName, isResp, nextLevel, registryClasses,
-											groupClasses, methodJsonViewClasses, builder))
+											groupClasses, methodJsonViewClasses, projectBuilder))
 									.append(",");
 							}
 						}
@@ -585,13 +534,17 @@ public class JsonBuildHelper extends BaseHelper {
 		String gicName = getKeyValType[1];
 		// when map key is enum
 		if (mapKeyIsEnum) {
+			String mapValueSimpleName = DocClassUtil.getSimpleName(gicName);
+			// Handle primitive types
 			data.append("{");
 			for (JavaField field : mapKeyClass.getFields()) {
 				data.append("\"")
 					.append(field.getName())
 					.append("\":")
-					.append(buildJson(DocClassUtil.getSimpleName(gicName), gicName, isResp, counter + 1,
-							registryClasses, groupClasses, methodJsonViewClasses, builder))
+					.append(JavaClassValidateUtil.isPrimitive(mapValueSimpleName)
+							? DocUtil.jsonValueByType(mapValueSimpleName)
+							: buildJson(mapValueSimpleName, gicName, isResp, counter + 1, registryClasses, groupClasses,
+									methodJsonViewClasses, builder))
 					.append(",");
 			}
 			// Remove the trailing comma
@@ -604,10 +557,7 @@ public class JsonBuildHelper extends BaseHelper {
 
 		// when map value is Object
 		if (JavaTypeConstants.JAVA_OBJECT_FULLY.equals(gicName)) {
-			data.append("{")
-				.append("\"mapKey\":")
-				.append("{\"waring\":\"You may use java.util.Object for Map value; smart-doc can't be handle.\"}")
-				.append("}");
+			data.append("{").append("\"mapKey\":").append(DocGlobalConstants.OBJECT_MAP_VALUE_WARNING).append("}");
 			return;
 		}
 

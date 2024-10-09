@@ -614,4 +614,16 @@ public interface DocGlobalConstants {
 	 */
 	String DEFAULT_MAP_KEY_DESC = "A map key.";
 
+	/**
+	 * object map value warning.
+	 */
+	String OBJECT_MAP_VALUE_WARNING = "{\"warning\":\"Using java.util.Object as a Map value is not recommended. "
+			+ "Smart-doc cannot process it properly. Please use a specific type for better documentation generation.\"}";
+
+	/**
+	 * object list warning.
+	 */
+	String GENERIC_LIST_WARNING = "{\"warning\":\"Using java.util.Object in a List instead of a specific generic type is not recommended. "
+			+ "Smart-doc cannot display the correct generics. Please specify the generic type for better documentation generation.\"}";
+
 }
