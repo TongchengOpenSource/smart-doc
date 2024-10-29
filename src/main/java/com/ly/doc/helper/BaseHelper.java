@@ -176,8 +176,10 @@ public abstract class BaseHelper {
 			// Handle @JSONField
 			if (DocAnnotationConstants.SHORT_JSON_FIELD.equals(annotationName)) {
 				if (null != annotation.getProperty(DocAnnotationConstants.NAME_PROP)) {
-					fieldJsonAnnotationInfo.setFieldName(StringUtil
-						.removeQuotes(annotation.getProperty(DocAnnotationConstants.NAME_PROP).toString()));
+					AnnotationValue annotationValue = annotation.getProperty(DocAnnotationConstants.NAME_PROP);
+					String fieldName = DocUtil.resolveAnnotationValue(projectBuilder.getApiConfig().getClassLoader(),
+							annotationValue);
+					fieldJsonAnnotationInfo.setFieldName(fieldName);
 				}
 			}
 
@@ -185,9 +187,9 @@ public abstract class BaseHelper {
 			else if (DocAnnotationConstants.SHORT_JSON_PROPERTY.equals(annotationName)
 					|| DocAnnotationConstants.GSON_ALIAS_NAME.equals(annotationName)) {
 				AnnotationValue annotationValue = annotation.getProperty(DocAnnotationConstants.VALUE_PROP);
-				if (null != annotationValue) {
-					fieldJsonAnnotationInfo.setFieldName(StringUtil.removeQuotes(annotationValue.toString()));
-				}
+				String fieldName = DocUtil.resolveAnnotationValue(projectBuilder.getApiConfig().getClassLoader(),
+						annotationValue);
+				fieldJsonAnnotationInfo.setFieldName(fieldName);
 			}
 			// Handle JSR303 required
 			if (JavaClassValidateUtil.isJSR303Required(annotationName) && !isResp) {

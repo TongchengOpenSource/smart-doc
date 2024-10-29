@@ -20,16 +20,42 @@
  */
 package com.ly.doc.utils;
 
-import com.ly.doc.constants.*;
+import com.ly.doc.constants.DocAnnotationConstants;
+import com.ly.doc.constants.DocGlobalConstants;
+import com.ly.doc.constants.DocTags;
+import com.ly.doc.constants.JAXRSAnnotations;
+import com.ly.doc.constants.JakartaJaxrsAnnotations;
+import com.ly.doc.constants.JavaTypeConstants;
+import com.ly.doc.constants.MediaType;
 import com.ly.doc.extension.dict.DictionaryValuesResolver;
-import com.ly.doc.model.*;
+import com.ly.doc.model.ApiConfig;
+import com.ly.doc.model.ApiDataDictionary;
+import com.ly.doc.model.ApiDocDict;
+import com.ly.doc.model.ApiErrorCode;
+import com.ly.doc.model.ApiErrorCodeDictionary;
+import com.ly.doc.model.ApiReqParam;
+import com.ly.doc.model.DataDict;
+import com.ly.doc.model.DocJavaField;
+import com.ly.doc.model.FormData;
+import com.ly.doc.model.SystemPlaceholders;
 import com.ly.doc.model.request.RequestMapping;
 import com.mifmif.common.regex.Generex;
-import com.power.common.util.*;
+import com.power.common.util.CollectionUtil;
+import com.power.common.util.DateTimeUtil;
+import com.power.common.util.EnumUtil;
+import com.power.common.util.IDCardUtil;
+import com.power.common.util.RandomUtil;
+import com.power.common.util.StringUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
-import com.thoughtworks.qdox.model.*;
+import com.thoughtworks.qdox.model.DocletTag;
+import com.thoughtworks.qdox.model.JavaAnnotation;
+import com.thoughtworks.qdox.model.JavaClass;
+import com.thoughtworks.qdox.model.JavaField;
+import com.thoughtworks.qdox.model.JavaMember;
+import com.thoughtworks.qdox.model.JavaMethod;
 import com.thoughtworks.qdox.model.expression.Add;
 import com.thoughtworks.qdox.model.expression.AnnotationValue;
+import com.thoughtworks.qdox.model.expression.Constant;
 import com.thoughtworks.qdox.model.expression.Expression;
 import com.thoughtworks.qdox.model.expression.FieldRef;
 import net.datafaker.Faker;
@@ -37,9 +63,35 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.text.DecimalFormat;
-import java.time.*;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.MonthDay;
+import java.time.OffsetDateTime;
+import java.time.Year;
+import java.time.YearMonth;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.IdentityHashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.Stack;
+import java.util.TimeZone;
+import java.util.UUID;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -969,30 +1021,36 @@ public class DocUtil {
 	 * @return annotation value
 	 */
 	public static String resolveAnnotationValue(ClassLoader classLoader, AnnotationValue annotationValue) {
+		// if it is a constant, return its value directly
+		if (annotationValue instanceof Constant) {
+			return ((Constant) annotationValue).getValue().toString();
+		}
+		// if it is an add operation, return the result directly
 		if (annotationValue instanceof Add) {
 			Add add = (Add) annotationValue;
 			String leftValue = resolveAnnotationValue(classLoader, add.getLeft());
 			String rightValue = resolveAnnotationValue(classLoader, add.getRight());
 			return StringUtil.removeQuotes(leftValue + rightValue);
 		}
-		else {
-			if (annotationValue instanceof FieldRef) {
-				FieldRef fieldRef = (FieldRef) annotationValue;
-				JavaField javaField = fieldRef.getField();
-				if (javaField != null) {
-					String fieldValue = JavaFieldUtil.getConstantsFieldValue(classLoader, javaField.getDeclaringClass(),
-							javaField.getName());
-					if (StringUtil.isNotEmpty(fieldValue)) {
-						return StringUtil.removeQuotes(fieldValue);
-					}
-					return StringUtil.removeQuotes(javaField.getInitializationExpression());
+		// if it is a field reference, return its value directly
+		if (annotationValue instanceof FieldRef) {
+			FieldRef fieldRef = (FieldRef) annotationValue;
+			JavaField javaField = fieldRef.getField();
+			if (javaField != null) {
+				String fieldValue = JavaFieldUtil.getConstantsFieldValue(classLoader, javaField.getDeclaringClass(),
+						javaField.getName());
+				if (StringUtil.isNotEmpty(fieldValue)) {
+					return StringUtil.removeQuotes(fieldValue);
 				}
+				return StringUtil.removeQuotes(javaField.getInitializationExpression());
 			}
-			return Optional.ofNullable(annotationValue)
-				.map(Expression::getParameterValue)
-				.map(Object::toString)
-				.orElse(StringUtil.EMPTY);
 		}
+		// default return
+		return Optional.ofNullable(annotationValue)
+			.map(Expression::getParameterValue)
+			.map(Object::toString)
+			.orElse(StringUtil.EMPTY);
+
 	}
 
 	/**

@@ -39,10 +39,25 @@ import com.ly.doc.utils.DocUtil;
 import com.ly.doc.utils.JavaClassUtil;
 import com.power.common.util.StringUtil;
 import com.power.common.util.ValidateUtil;
-import com.thoughtworks.qdox.model.*;
+import com.thoughtworks.qdox.model.JavaAnnotation;
+import com.thoughtworks.qdox.model.JavaClass;
+import com.thoughtworks.qdox.model.JavaMethod;
+import com.thoughtworks.qdox.model.JavaParameter;
+import com.thoughtworks.qdox.model.JavaType;
 import com.thoughtworks.qdox.model.impl.DefaultJavaParameterizedType;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -157,7 +172,7 @@ public interface IWebSocketTemplate {
 
 		webSocketRequestHandler = Objects.isNull(webSocketRequestHandler) ? DefaultWebSocketRequestHandler.getInstance()
 				: webSocketRequestHandler;
-		ServerEndpoint serverEndpoint = webSocketRequestHandler.handleServerEndpoint(javaClass,
+		ServerEndpoint serverEndpoint = webSocketRequestHandler.handleServerEndpoint(projectBuilder, javaClass,
 				serverEndpointAnnotation);
 
 		WebSocketDoc webSocketDoc = new WebSocketDoc();

@@ -20,6 +20,7 @@
  */
 package com.ly.doc.handler;
 
+import com.ly.doc.builder.ProjectDocConfigBuilder;
 import com.ly.doc.constants.DocAnnotationConstants;
 import com.ly.doc.constants.DocTags;
 import com.ly.doc.model.request.ServerEndpoint;
@@ -28,6 +29,7 @@ import com.power.common.util.StringUtil;
 import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaClass;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -40,11 +42,13 @@ public interface IWebSocketRequestHandler {
 
 	/**
 	 * handle class annotation `@ServerEndpoint`
+	 * @param projectBuilder the project configuration builder
 	 * @param javaAnnotation javaAnnotation @ServerEndpoint
 	 * @param cls JavaClass
 	 * @return ServerEndpoint
 	 */
-	default ServerEndpoint handleServerEndpoint(JavaClass cls, JavaAnnotation javaAnnotation) {
+	default ServerEndpoint handleServerEndpoint(ProjectDocConfigBuilder projectBuilder, JavaClass cls,
+			JavaAnnotation javaAnnotation) {
 		if (Objects.nonNull(cls.getTagByName(DocTags.IGNORE))) {
 			return null;
 		}
@@ -56,7 +60,9 @@ public interface IWebSocketRequestHandler {
 			.ifPresent(builder::setUrl);
 
 		// get subProtocols of annotation
-		builder.setSubProtocols(JavaClassUtil.getAnnotationValueStrings(javaAnnotation, "subprotocols"));
+		List<String> subProtocols = JavaClassUtil.getAnnotationValueStrings(projectBuilder, javaAnnotation,
+				"subprotocols");
+		builder.setSubProtocols(subProtocols);
 
 		// Handle 'decoders' property
 		builder.setDecoders(JavaClassUtil.getAnnotationValueClassNames(javaAnnotation, "decoders"));
