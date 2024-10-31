@@ -1175,6 +1175,12 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 				if (Boolean.TRUE.equals(builder.getApiConfig().getInlineEnum())) {
 					comment.append("<br/>[Enum: ").append(StringUtil.removeQuotes(enumName)).append("]");
 				}
+				else {
+					String enumComments = javaClass.getComment();
+					if (StringUtil.isNotEmpty(enumComments)) {
+						comment.append("<br/>(See: ").append(enumComments).append(")");
+					}
+				}
 				ApiParam param = ApiParam.of()
 					.setField(paramName)
 					.setId(paramList.size() + 1)
