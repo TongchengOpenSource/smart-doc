@@ -23,7 +23,13 @@
 package com.ly.doc.utils;
 
 import com.ly.doc.builder.ProjectDocConfigBuilder;
-import com.ly.doc.constants.*;
+import com.ly.doc.constants.DefaultClassConstants;
+import com.ly.doc.constants.DocAnnotationConstants;
+import com.ly.doc.constants.DocGlobalConstants;
+import com.ly.doc.constants.DocTags;
+import com.ly.doc.constants.DocValidatorAnnotationEnum;
+import com.ly.doc.constants.JSRAnnotationConstants;
+import com.ly.doc.constants.JavaTypeConstants;
 import com.ly.doc.model.ApiConfig;
 import com.ly.doc.model.ApiDataDictionary;
 import com.ly.doc.model.DocJavaField;
@@ -34,7 +40,15 @@ import com.power.common.util.CollectionUtil;
 import com.power.common.util.EnumUtil;
 import com.power.common.util.StringUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
-import com.thoughtworks.qdox.model.*;
+import com.thoughtworks.qdox.model.DocletTag;
+import com.thoughtworks.qdox.model.JavaAnnotation;
+import com.thoughtworks.qdox.model.JavaClass;
+import com.thoughtworks.qdox.model.JavaField;
+import com.thoughtworks.qdox.model.JavaGenericDeclaration;
+import com.thoughtworks.qdox.model.JavaMethod;
+import com.thoughtworks.qdox.model.JavaParameterizedType;
+import com.thoughtworks.qdox.model.JavaType;
+import com.thoughtworks.qdox.model.JavaTypeVariable;
 import com.thoughtworks.qdox.model.expression.AnnotationValue;
 import com.thoughtworks.qdox.model.expression.AnnotationValueList;
 import com.thoughtworks.qdox.model.expression.Constant;
@@ -43,8 +57,22 @@ import com.thoughtworks.qdox.model.impl.DefaultJavaField;
 import com.thoughtworks.qdox.model.impl.DefaultJavaParameterizedType;
 import org.apache.commons.lang3.StringUtils;
 
-import java.lang.reflect.*;
-import java.util.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -1323,11 +1351,13 @@ public class JavaClassUtil {
 	 * annotation. It handles both single string values and lists of string values. If the
 	 * property is not found or has no valid string values, an empty list is returned.
 	 * </p>
+	 * @param projectBuilder the project configuration builder
 	 * @param javaAnnotation the annotation containing the property
 	 * @param propertyName the name of the property to retrieve
 	 * @return a list of string values or an empty list if not present
 	 */
-	public static List<String> getAnnotationValueStrings(JavaAnnotation javaAnnotation, String propertyName) {
+	public static List<String> getAnnotationValueStrings(ProjectDocConfigBuilder projectBuilder,
+			JavaAnnotation javaAnnotation, String propertyName) {
 		AnnotationValue propertyValue = javaAnnotation.getProperty(propertyName);
 		if (propertyValue != null) {
 			if (propertyValue instanceof AnnotationValueList) {
@@ -1338,9 +1368,9 @@ public class JavaClassUtil {
 					.filter(StringUtil::isNotEmpty)
 					.collect(Collectors.toList());
 			}
-			if (propertyValue instanceof Constant) {
-				return Collections.singletonList(((Constant) propertyValue).getValue().toString());
-			}
+			String value = DocUtil.resolveAnnotationValue(projectBuilder.getApiConfig().getClassLoader(),
+					propertyValue);
+			return Collections.singletonList(value);
 		}
 		return Collections.emptyList();
 	}
