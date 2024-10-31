@@ -1,16 +1,14 @@
 package com.ly.doc.model;
 
-import com.power.common.util.CollectionUtil;
-
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
 /**
  * Abstract API Doc.
  *
+ * @author linwumingshi
  * @param <T> the type of method doc
  */
 public abstract class AbstractRpcApiDoc<T extends IMethod>
@@ -180,8 +178,8 @@ public abstract class AbstractRpcApiDoc<T extends IMethod>
 
 	@Override
 	public List<IMethod> getMethods() {
-		if (CollectionUtil.isEmpty(this.list)) {
-			return Collections.emptyList();
+		if (Objects.isNull(this.list)) {
+			return new ArrayList<>();
 		}
 		return new ArrayList<>(this.list);
 	}
