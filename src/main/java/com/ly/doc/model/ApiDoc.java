@@ -23,7 +23,12 @@ package com.ly.doc.model;
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.StringUtil;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 /**
  * ApiDoc
@@ -58,6 +63,9 @@ public class ApiDoc implements IDoc, Comparable<ApiDoc> {
 	 */
 	private String[] tags;
 
+	/**
+	 * tag reference
+	 */
 	private final Set<TagDoc> tagRefs = Collections.synchronizedSet(new LinkedHashSet<>());
 
 	/**
@@ -145,6 +153,9 @@ public class ApiDoc implements IDoc, Comparable<ApiDoc> {
 	}
 
 	public List<ApiMethodDoc> getList() {
+		if (CollectionUtil.isEmpty(this.list)) {
+			return Collections.emptyList();
+		}
 		return list;
 	}
 
@@ -241,14 +252,8 @@ public class ApiDoc implements IDoc, Comparable<ApiDoc> {
 
 	@Override
 	public String toString() {
-		final StringBuilder sb = new StringBuilder("{");
-		sb.append("\"order\":").append(order);
-		sb.append(",\"name\":\"").append(name).append('\"');
-		sb.append(",\"alias\":\"").append(alias).append('\"');
-		sb.append(",\"list\":").append(list);
-		sb.append(",\"desc\":\"").append(desc).append('\"');
-		sb.append('}');
-		return sb.toString();
+		return "{" + "\"order\":" + order + ",\"name\":\"" + name + '\"' + ",\"alias\":\"" + alias + '\"' + ",\"list\":"
+				+ list + ",\"desc\":\"" + desc + '\"' + '}';
 	}
 
 	@Override
