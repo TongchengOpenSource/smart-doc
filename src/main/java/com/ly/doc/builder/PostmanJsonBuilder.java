@@ -25,7 +25,12 @@ import com.ly.doc.constants.MediaType;
 import com.ly.doc.constants.Methods;
 import com.ly.doc.factory.BuildTemplateFactory;
 import com.ly.doc.helper.JavaProjectBuilderHelper;
-import com.ly.doc.model.*;
+import com.ly.doc.model.ApiConfig;
+import com.ly.doc.model.ApiDoc;
+import com.ly.doc.model.ApiMethodDoc;
+import com.ly.doc.model.ApiParam;
+import com.ly.doc.model.ApiReqParam;
+import com.ly.doc.model.FormData;
 import com.ly.doc.model.postman.InfoBean;
 import com.ly.doc.model.postman.ItemBean;
 import com.ly.doc.model.postman.RequestItem;
@@ -42,7 +47,11 @@ import com.power.common.util.FileUtil;
 import com.power.common.util.StringUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Postman Json Builder
@@ -151,7 +160,7 @@ public class PostmanJsonBuilder {
 		String shortUrl = DocPathUtil.toPostmanPath(apiMethodDoc.getPath());
 		String[] paths;
 		if (StringUtil.isNotEmpty(shortUrl)) {
-			paths = shortUrl.split("/");
+			paths = shortUrl.split(DocGlobalConstants.PATH_DELIMITER);
 		}
 		else {
 			paths = new String[0];
@@ -161,7 +170,7 @@ public class PostmanJsonBuilder {
 		// Add server path
 		if (CollectionUtil.isNotEmpty(urlBean.getPath()) && StringUtil.isNotEmpty(shortUrl)
 				&& !shortUrl.contains(serverPath)) {
-			String[] serverPaths = serverPath.split("/");
+			String[] serverPaths = serverPath.split(DocGlobalConstants.PATH_DELIMITER);
 			pathList.addAll(Arrays.asList(serverPaths));
 		}
 		// Add mapping path
@@ -170,7 +179,7 @@ public class PostmanJsonBuilder {
 				pathList.add(str);
 			}
 		}
-		if (StringUtil.isNotEmpty(shortUrl) && shortUrl.endsWith("/")) {
+		if (StringUtil.isNotEmpty(shortUrl) && shortUrl.endsWith(DocGlobalConstants.PATH_DELIMITER)) {
 			pathList.add("");
 		}
 

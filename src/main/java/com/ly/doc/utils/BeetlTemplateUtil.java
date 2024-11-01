@@ -20,6 +20,7 @@
  */
 package com.ly.doc.utils;
 
+import com.ly.doc.constants.DocGlobalConstants;
 import com.power.common.util.FileUtil;
 import org.beetl.core.Configuration;
 import org.beetl.core.GroupTemplate;
@@ -94,7 +95,8 @@ public class BeetlTemplateUtil {
 	 */
 	private static GroupTemplate getGroupTemplate(String path) {
 		try {
-			ClasspathResourceLoader resourceLoader = new ClasspathResourceLoader("/" + path + "/");
+			ClasspathResourceLoader resourceLoader = new ClasspathResourceLoader(
+					DocGlobalConstants.PATH_DELIMITER + path + DocGlobalConstants.PATH_DELIMITER);
 			Configuration cfg = Configuration.defaultConfiguration();
 			return new GroupTemplate(resourceLoader, cfg);
 		}

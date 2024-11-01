@@ -22,6 +22,7 @@ package com.ly.doc.handler;
 
 import com.ly.doc.builder.ProjectDocConfigBuilder;
 import com.ly.doc.constants.DocAnnotationConstants;
+import com.ly.doc.constants.DocGlobalConstants;
 import com.ly.doc.constants.Methods;
 import com.ly.doc.constants.SolonAnnotations;
 import com.ly.doc.function.RequestMappingFunc;
@@ -71,8 +72,8 @@ public class SolonRequestMappingHandler implements IRequestMappingHandler, IWebS
 					|| SolonAnnotations.REQUEST_MAPPING_FULLY.equals(annotationName)) {
 				ClassLoader classLoader = projectBuilder.getApiConfig().getClassLoader();
 				shortUrl = DocUtil.handleMappingValue(classLoader, annotation);
-				shortUrl = shortUrl.equals("/") ? "" : shortUrl; // There is no need to
-																	// add '/' to the end
+				// There is no need to add '/' to the end
+				shortUrl = shortUrl.equals(DocGlobalConstants.PATH_DELIMITER) ? "" : shortUrl;
 				Object produces = annotation.getNamedParameter("produces");
 				if (Objects.nonNull(produces)) {
 					mediaType = produces.toString();
