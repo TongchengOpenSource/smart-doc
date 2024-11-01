@@ -21,7 +21,11 @@
 package com.ly.doc.handler;
 
 import com.ly.doc.builder.ProjectDocConfigBuilder;
-import com.ly.doc.constants.*;
+import com.ly.doc.constants.DocGlobalConstants;
+import com.ly.doc.constants.JAXRSAnnotations;
+import com.ly.doc.constants.JakartaJaxrsAnnotations;
+import com.ly.doc.constants.JavaTypeConstants;
+import com.ly.doc.constants.MediaType;
 import com.ly.doc.model.request.JaxrsPathMapping;
 import com.ly.doc.utils.DocUrlUtil;
 import com.ly.doc.utils.DocUtil;
@@ -30,7 +34,11 @@ import com.power.common.util.UrlUtil;
 import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaMethod;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -143,8 +151,9 @@ public class JaxrsPathHandler {
 			shortUrl = String.join(DocGlobalConstants.PATH_DELIMITER, DocGlobalConstants.PATH_DELIMITER, contextPath,
 					baseUrl, shortUrl);
 			if (urls.size() > 1) {
-				url = DocUrlUtil.getMvcUrls(serverUrl, contextPath + "/" + baseUrl, urls);
-				shortUrl = DocUrlUtil.getMvcUrls(DocGlobalConstants.EMPTY, contextPath + "/" + baseUrl, urls);
+				url = DocUrlUtil.getMvcUrls(serverUrl, contextPath + DocGlobalConstants.PATH_DELIMITER + baseUrl, urls);
+				shortUrl = DocUrlUtil.getMvcUrls(DocGlobalConstants.EMPTY,
+						contextPath + DocGlobalConstants.PATH_DELIMITER + baseUrl, urls);
 			}
 			for (Map.Entry<String, String> entry : constantsMap.entrySet()) {
 				String key = entry.getKey();

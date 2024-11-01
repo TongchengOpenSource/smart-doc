@@ -67,10 +67,10 @@ public class DocUrlUtil {
 				String trimUrl = Optional.ofNullable(StringUtil.trimBlank(urls.get(i))).orElse(StringUtil.EMPTY);
 				String url = baseServer;
 				if (StringUtil.isNotEmpty(trimBase)) {
-					url = url + "/" + trimBase;
+					url = url + DocGlobalConstants.PATH_DELIMITER + trimBase;
 				}
 				if (StringUtil.isNotEmpty(trimUrl)) {
-					url = url + "/" + trimUrl;
+					url = url + DocGlobalConstants.PATH_DELIMITER + trimUrl;
 				}
 				sb.append(UrlUtil.simplifyUrl(url));
 				if (i < size - 1) {
@@ -111,7 +111,7 @@ public class DocUrlUtil {
 		path = DocUtil.formatAndRemove(path, pathParamsMap);
 		String url = UrlUtil.urlJoin(path, queryParamsMap);
 		url = StringUtil.removeQuotes(url);
-		url = serverUrl + "/" + url;
+		url = serverUrl + DocGlobalConstants.PATH_DELIMITER + url;
 		url = UrlUtil.simplifyUrl(url);
 		return url;
 	}

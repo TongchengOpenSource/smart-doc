@@ -21,6 +21,7 @@
 package com.ly.doc.template;
 
 import com.ly.doc.builder.ProjectDocConfigBuilder;
+import com.ly.doc.constants.DocGlobalConstants;
 import com.ly.doc.constants.DocTags;
 import com.ly.doc.constants.DubboAnnotationConstants;
 import com.ly.doc.constants.FrameworkEnum;
@@ -40,7 +41,12 @@ import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaType;
 import com.thoughtworks.qdox.model.expression.AnnotationValue;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -192,7 +198,7 @@ public class RpcDocBuildTemplate implements IDocBuildTemplate<RpcApiDoc>, IWebSo
 		apiDoc.setName(className);
 		apiDoc.setShortName(shortName);
 		apiDoc.setAlias(className);
-		apiDoc.setUri(builder.getServerUrl() + "/" + className);
+		apiDoc.setUri(builder.getServerUrl() + DocGlobalConstants.PATH_DELIMITER + className);
 		apiDoc.setProtocol(FrameworkEnum.DUBBO.getFramework());
 		if (builder.getApiConfig().isMd5EncryptedHtmlName()) {
 			String name = DocUtil.generateId(apiDoc.getName());

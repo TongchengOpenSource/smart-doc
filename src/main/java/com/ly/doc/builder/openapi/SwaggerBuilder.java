@@ -25,7 +25,14 @@ import com.ly.doc.constants.DocGlobalConstants;
 import com.ly.doc.constants.MediaType;
 import com.ly.doc.constants.ParamTypeConstants;
 import com.ly.doc.helper.JavaProjectBuilderHelper;
-import com.ly.doc.model.*;
+import com.ly.doc.model.ApiConfig;
+import com.ly.doc.model.ApiDoc;
+import com.ly.doc.model.ApiExceptionStatus;
+import com.ly.doc.model.ApiGroup;
+import com.ly.doc.model.ApiMethodDoc;
+import com.ly.doc.model.ApiParam;
+import com.ly.doc.model.ApiReqParam;
+import com.ly.doc.model.ApiSchema;
 import com.ly.doc.model.openapi.OpenApiTag;
 import com.ly.doc.utils.DocUtil;
 import com.ly.doc.utils.JsonUtil;
@@ -35,7 +42,13 @@ import com.power.common.util.StringUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Stream;
 
 /**
@@ -92,7 +105,8 @@ public class SwaggerBuilder extends AbstractOpenApiBuilder {
 		json.put("swagger", "2.0");
 		json.put("info", buildInfo(config));
 		json.put("host", config.getServerUrl() == null ? "127.0.0.1" : config.getServerUrl());
-		json.put("basePath", StringUtils.isNotBlank(config.getPathPrefix()) ? config.getPathPrefix() : "/");
+		json.put("basePath", StringUtils.isNotBlank(config.getPathPrefix()) ? config.getPathPrefix()
+				: DocGlobalConstants.PATH_DELIMITER);
 		Set<OpenApiTag> tags = new HashSet<>();
 		json.put("tags", tags);
 		json.put("paths", buildPaths(config, apiSchema, tags));

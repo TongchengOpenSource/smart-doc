@@ -531,7 +531,7 @@ public class DocUtil {
 		List<String> finalPaths = new ArrayList<>(pathList.size());
 		for (String pathParam : pathList) {
 			if (pathParam.startsWith("http:") || pathParam.startsWith("https:")) {
-				finalPaths.add(pathParam + "/");
+				finalPaths.add(pathParam + DocGlobalConstants.PATH_DELIMITER);
 				continue;
 			}
 			if (pathParam.startsWith("${")) {
@@ -593,7 +593,7 @@ public class DocUtil {
 		String[] urls = str.split(";");
 		int index = 0;
 		for (String url : urls) {
-			String[] strArr = url.split("/");
+			String[] strArr = url.split(DocGlobalConstants.PATH_DELIMITER);
 			for (int i = 0; i < strArr.length; i++) {
 				String pathParam = strArr[i];
 				if (pathParam.startsWith("http:") || pathParam.startsWith("https:") || pathParam.startsWith("{{")) {
@@ -652,7 +652,7 @@ public class DocUtil {
 	public static String handleMappingValue(ClassLoader classLoader, JavaAnnotation annotation) {
 		String url = getRequestMappingUrl(classLoader, annotation);
 		if (StringUtil.isEmpty(url)) {
-			return "/";
+			return DocGlobalConstants.PATH_DELIMITER;
 		}
 		else {
 			return StringUtil.trimBlank(url);
@@ -1415,7 +1415,7 @@ public class DocUtil {
 		if (StringUtil.isEmpty(url)) {
 			return new ArrayList<>(0);
 		}
-		String[] result = url.split("/");
+		String[] result = url.split(DocGlobalConstants.PATH_DELIMITER);
 		List<String> path = new ArrayList<>();
 		for (int i = 0; i < result.length; i++) {
 			if (StringUtil.isEmpty(result[i])) {
@@ -1424,7 +1424,7 @@ public class DocUtil {
 			if (i < result.length - 1) {
 				if ((result[i].startsWith("${") && !result[i].endsWith("}"))
 						&& (!result[i + 1].startsWith("${") && result[i + 1].endsWith("}"))) {
-					String merged = result[i] + "/" + result[i + 1];
+					String merged = result[i] + DocGlobalConstants.PATH_DELIMITER + result[i + 1];
 					path.add(merged);
 					i++;
 				}

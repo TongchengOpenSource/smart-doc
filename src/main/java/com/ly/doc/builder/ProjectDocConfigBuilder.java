@@ -24,7 +24,15 @@ import com.ly.doc.constants.DocGlobalConstants;
 import com.ly.doc.constants.HighLightJsConstants;
 import com.ly.doc.constants.HighlightStyle;
 import com.ly.doc.helper.JavaProjectBuilderHelper;
-import com.ly.doc.model.*;
+import com.ly.doc.model.ApiConfig;
+import com.ly.doc.model.ApiConstant;
+import com.ly.doc.model.ApiDataDictionary;
+import com.ly.doc.model.ApiErrorCodeDictionary;
+import com.ly.doc.model.ApiObjectReplacement;
+import com.ly.doc.model.BodyAdvice;
+import com.ly.doc.model.CustomField;
+import com.ly.doc.model.DocJavaField;
+import com.ly.doc.model.SourceCodePath;
 import com.ly.doc.utils.JavaClassUtil;
 import com.power.common.constants.Charset;
 import com.power.common.util.CollectionUtil;
@@ -40,7 +48,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Random;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -231,7 +249,7 @@ public class ProjectDocConfigBuilder {
 				}
 				String strPath = path.getPath();
 				if (StringUtil.isNotEmpty(strPath)) {
-					strPath = strPath.replace("\\", "/");
+					strPath = strPath.replace("\\", DocGlobalConstants.PATH_DELIMITER);
 					loadJavaSource(strPath, builder);
 				}
 			}
