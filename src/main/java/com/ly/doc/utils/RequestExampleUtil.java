@@ -64,7 +64,7 @@ public class RequestExampleUtil {
 			// for post put
 			path = DocUtil.formatAndRemove(path, pathParamsMap);
 			body = UrlUtil.urlJoin(DocGlobalConstants.EMPTY, queryParamsMap).replace("?", DocGlobalConstants.EMPTY);
-			url = apiMethodDoc.getServerUrl() + "/" + path;
+			url = apiMethodDoc.getServerUrl() + DocGlobalConstants.PATH_DELIMITER + path;
 			url = UrlUtil.simplifyUrl(url);
 
 			if (requestExample.isJson()) {

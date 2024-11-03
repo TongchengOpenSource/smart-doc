@@ -62,8 +62,10 @@ public interface IRequestMappingHandler {
 			String serverUrl = projectBuilder.getServerUrl();
 			String contextPath = projectBuilder.getApiConfig().getPathPrefix();
 			shortUrl = StringUtil.removeQuotes(shortUrl);
-			String url = DocUrlUtil.getMvcUrls(serverUrl, contextPath + "/" + controllerBaseUrl, shortUrl);
-			shortUrl = DocUrlUtil.getMvcUrls(DocGlobalConstants.EMPTY, contextPath + "/" + controllerBaseUrl, shortUrl);
+			String url = DocUrlUtil.getMvcUrls(serverUrl,
+					contextPath + DocGlobalConstants.PATH_DELIMITER + controllerBaseUrl, shortUrl);
+			shortUrl = DocUrlUtil.getMvcUrls(DocGlobalConstants.EMPTY,
+					contextPath + DocGlobalConstants.PATH_DELIMITER + controllerBaseUrl, shortUrl);
 			String urlSuffix = projectBuilder.getApiConfig().getUrlSuffix();
 			if (StringUtil.isEmpty(urlSuffix)) {
 				urlSuffix = StringUtil.EMPTY;
