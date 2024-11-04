@@ -1223,11 +1223,8 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 			}
 			// Handle if it is enum types
 			else if (javaClass.isEnum()) {
-				String enumName = JavaClassUtil.getEnumParams(javaClass);
 				Object value = JavaClassUtil.getEnumValue(javaClass, builder, isPathVariable || queryParam);
-				if (Boolean.TRUE.equals(builder.getApiConfig().getInlineEnum())) {
-					comment.append("<br/>[Enum: ").append(StringUtil.removeQuotes(enumName)).append("]");
-				}
+				comment.append(ParamsBuildHelper.handleEnumComment(javaClass, builder));
 				ApiParam param = ApiParam.of()
 					.setField(paramName)
 					.setId(paramList.size() + 1)
