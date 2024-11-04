@@ -782,7 +782,7 @@ public class ParamsBuildHelper extends BaseHelper {
 		paramList.add(param);
 	}
 
-	private static String handleEnumComment(JavaClass javaClass, ProjectDocConfigBuilder projectBuilder) {
+	public static String handleEnumComment(JavaClass javaClass, ProjectDocConfigBuilder projectBuilder) {
 		String comment = "";
 		if (!javaClass.isEnum()) {
 			return comment;
