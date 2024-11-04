@@ -23,13 +23,17 @@ package com.ly.doc.model.javadoc;
 import com.ly.doc.model.IDoc;
 import com.ly.doc.model.IMethod;
 import com.ly.doc.model.JavadocJavaMethod;
-import com.power.common.util.CollectionUtil;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Java Doc ApiDoc
+ *
+ * @author chenchuxin
+ * @since 3.0.5
+ */
 public class JavadocApiDoc implements IDoc, Comparable<JavadocApiDoc> {
 
 	/**
@@ -181,8 +185,8 @@ public class JavadocApiDoc implements IDoc, Comparable<JavadocApiDoc> {
 
 	@Override
 	public List<IMethod> getMethods() {
-		if (CollectionUtil.isEmpty(this.list)) {
-			return Collections.emptyList();
+		if (Objects.isNull(this.list)) {
+			return new ArrayList<>();
 		}
 		return new ArrayList<>(this.list);
 	}

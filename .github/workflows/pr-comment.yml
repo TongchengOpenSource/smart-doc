@@ -1,0 +1,35 @@
+name: "Comment on PR"
+
+on:
+  pull_request_target:
+    types: [opened, reopened]
+
+jobs:
+  thanks-and-hint-to-document:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    name: Say thanks for the PR and hint to document
+    steps:
+      - name: comment on the pull request
+        uses: hasura/comment-progress@v2.3.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          number: ${{ github.event.number }}
+          id: thanks-and-hint-to-document
+          recreate: true
+          message: |
+            Thanks for your this PR.  :pray: 
+            Please check again for your PR changes whether contains any usage configuration change such as `Add new configuration`, `Change default value of configuration`.
+            If so, please add or update documents(markdown type) in `docs/` for repository [smart-doc-group/smart-doc-group.github.io](https://github.com/smart-doc-group/smart-doc-group.github.io/tree/master/docs)
+            
+            In addition, if you have added new features, please provide example code in the repository [smart-doc-group/smart-doc-example-cn](https://github.com/smart-doc-group/smart-doc-example-cn). This will help other users understand how to use the new features.
+            
+            ---
+            
+            感谢您提交的PR。 :pray: 
+            请再次查看您的PR内容，确认是否包含任何使用方式 配置参数的变更，如：`新增配置参数`、`修改默认配置`等操作。
+            如果是，请确保在提交之前，在仓库[smart-doc-group/smart-doc-group.github.io](https://github.com/smart-doc-group/smart-doc-group.github.io/tree/master/docs)中的`docs/`目录下添加或更新文档（markdown格式）。
+            
+            另外，如果您添加了新功能，请在仓库[smart-doc-group/smart-doc-example-cn](https://github.com/smart-doc-group/smart-doc-example-cn)中提供示例代码。这将帮助其他用户了解如何使用新功能。

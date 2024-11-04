@@ -21,13 +21,33 @@
 package com.ly.doc.template;
 
 import com.ly.doc.builder.ProjectDocConfigBuilder;
-import com.ly.doc.constants.*;
+import com.ly.doc.constants.ApiReqParamInTypeEnum;
+import com.ly.doc.constants.DocAnnotationConstants;
+import com.ly.doc.constants.DocGlobalConstants;
+import com.ly.doc.constants.DocTags;
+import com.ly.doc.constants.FormDataContentTypeEnum;
+import com.ly.doc.constants.JavaTypeConstants;
+import com.ly.doc.constants.MediaType;
+import com.ly.doc.constants.Methods;
+import com.ly.doc.constants.ParamTypeConstants;
 import com.ly.doc.handler.IHeaderHandler;
 import com.ly.doc.handler.IRequestMappingHandler;
 import com.ly.doc.helper.FormDataBuildHelper;
 import com.ly.doc.helper.JsonBuildHelper;
 import com.ly.doc.helper.ParamsBuildHelper;
-import com.ly.doc.model.*;
+import com.ly.doc.model.ApiConfig;
+import com.ly.doc.model.ApiDoc;
+import com.ly.doc.model.ApiExceptionStatus;
+import com.ly.doc.model.ApiMethodDoc;
+import com.ly.doc.model.ApiMethodReqParam;
+import com.ly.doc.model.ApiParam;
+import com.ly.doc.model.ApiReqParam;
+import com.ly.doc.model.ApiSchema;
+import com.ly.doc.model.DocJavaMethod;
+import com.ly.doc.model.DocJavaParameter;
+import com.ly.doc.model.DocMapping;
+import com.ly.doc.model.ExceptionAdviceMethod;
+import com.ly.doc.model.FormData;
 import com.ly.doc.model.annotation.EntryAnnotation;
 import com.ly.doc.model.annotation.ExceptionAdviceAnnotation;
 import com.ly.doc.model.annotation.FrameworkAnnotations;
@@ -35,14 +55,47 @@ import com.ly.doc.model.annotation.MappingAnnotation;
 import com.ly.doc.model.request.ApiRequestExample;
 import com.ly.doc.model.request.CurlRequest;
 import com.ly.doc.model.request.RequestMapping;
-import com.ly.doc.utils.*;
-import com.power.common.util.*;
-import com.thoughtworks.qdox.model.*;
+import com.ly.doc.utils.ApiParamTreeUtil;
+import com.ly.doc.utils.CurlUtil;
+import com.ly.doc.utils.DocClassUtil;
+import com.ly.doc.utils.DocUtil;
+import com.ly.doc.utils.HttpStatusUtil;
+import com.ly.doc.utils.JavaClassUtil;
+import com.ly.doc.utils.JavaClassValidateUtil;
+import com.ly.doc.utils.JavaFieldUtil;
+import com.ly.doc.utils.JsonUtil;
+import com.ly.doc.utils.OpenApiSchemaUtil;
+import com.ly.doc.utils.RequestExampleUtil;
+import com.ly.doc.utils.TornaUtil;
+import com.power.common.util.CollectionUtil;
+import com.power.common.util.RandomUtil;
+import com.power.common.util.StringUtil;
+import com.power.common.util.UrlUtil;
+import com.power.common.util.ValidateUtil;
+import com.thoughtworks.qdox.model.DocletTag;
+import com.thoughtworks.qdox.model.JavaAnnotation;
+import com.thoughtworks.qdox.model.JavaClass;
+import com.thoughtworks.qdox.model.JavaMethod;
+import com.thoughtworks.qdox.model.JavaParameter;
+import com.thoughtworks.qdox.model.JavaType;
 import com.thoughtworks.qdox.model.expression.AnnotationValue;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -1277,7 +1330,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 			path = DocUtil.formatAndRemove(path, pathParamsMap);
 			String url = UrlUtil.urlJoin(path, queryParamsMap);
 			url = StringUtil.removeQuotes(url);
-			url = apiMethodDoc.getServerUrl() + "/" + url;
+			url = apiMethodDoc.getServerUrl() + DocGlobalConstants.PATH_DELIMITER + url;
 			url = UrlUtil.simplifyUrl(url);
 			CurlRequest curlRequest = CurlRequest.builder()
 				.setContentType(apiMethodDoc.getContentType())
@@ -1612,7 +1665,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 		}
 		DocletTag pageTag = method.getTagByName(DocTags.PAGE);
 		if (Objects.nonNull(method.getTagByName(DocTags.PAGE))) {
-			String pageUrl = projectBuilder.getServerUrl() + "/" + pageTag.getValue();
+			String pageUrl = projectBuilder.getServerUrl() + DocGlobalConstants.PATH_DELIMITER + pageTag.getValue();
 			docJavaMethod.setPage(UrlUtil.simplifyUrl(pageUrl));
 		}
 

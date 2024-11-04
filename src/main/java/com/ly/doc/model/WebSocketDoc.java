@@ -20,8 +20,9 @@
  */
 package com.ly.doc.model;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * the webSocket doc
@@ -76,8 +77,8 @@ public class WebSocketDoc extends ApiDoc {
 	}
 
 	public List<ApiParam> getPathParams() {
-		if (pathParams == null) {
-			return Collections.emptyList();
+		if (Objects.isNull(this.pathParams)) {
+			return new ArrayList<>();
 		}
 		return pathParams;
 	}
@@ -88,7 +89,7 @@ public class WebSocketDoc extends ApiDoc {
 
 	public List<ApiParam> getMessageParams() {
 		if (messageParams == null) {
-			return Collections.emptyList();
+			return new ArrayList<>();
 		}
 		return messageParams;
 	}

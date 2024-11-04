@@ -20,7 +20,6 @@
  */
 package com.ly.doc.model;
 
-import com.power.common.util.CollectionUtil;
 import com.power.common.util.StringUtil;
 
 import java.util.ArrayList;
@@ -153,8 +152,8 @@ public class ApiDoc implements IDoc, Comparable<ApiDoc> {
 	}
 
 	public List<ApiMethodDoc> getList() {
-		if (CollectionUtil.isEmpty(this.list)) {
-			return Collections.emptyList();
+		if (Objects.isNull(this.list)) {
+			return new ArrayList<>();
 		}
 		return list;
 	}
@@ -263,8 +262,8 @@ public class ApiDoc implements IDoc, Comparable<ApiDoc> {
 
 	@Override
 	public List<IMethod> getMethods() {
-		if (CollectionUtil.isEmpty(this.list)) {
-			return Collections.emptyList();
+		if (Objects.isNull(this.list)) {
+			return new ArrayList<>();
 		}
 
 		return new ArrayList<>(this.list);
