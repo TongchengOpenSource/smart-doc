@@ -1,0 +1,36 @@
+name: Docker Build Torna
+
+on:
+  workflow_dispatch:
+
+
+jobs:
+  docker-build-torna:
+    runs-on: ubuntu-latest
+    name: Docker Compose Build Torna
+    steps:
+      - name: Checkout Torna Project
+        uses: actions/checkout@v4
+        with:
+          repository: thc75/torna
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v2
+
+      - name: Install Docker Compose
+        run: |
+          sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+          sudo chmod +x /usr/local/bin/docker-compose
+
+      - name: Build and start containers with Docker Compose
+        run: |
+          docker-compose -f torna-docker-compose/docker-compose.yml up -d
+
+      - name: Check containers status
+        run: |
+          docker-compose ps
+
+      - name: Shut down containers
+        run: |
+          docker-compose down
