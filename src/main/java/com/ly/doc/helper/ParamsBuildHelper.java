@@ -348,8 +348,8 @@ public class ParamsBuildHelper extends BaseHelper {
 			// Analyzing Primitive Type Field
 			if (JavaClassValidateUtil.isPrimitive(subTypeName)) {
 				if (StringUtil.isEmpty(fieldValue)) {
-					fieldValue = StringUtil.isNotEmpty(fieldJsonFormatValue) ? fieldJsonFormatValue
-							: StringUtil.removeQuotes(DocUtil.getValByTypeAndFieldName(subTypeName, field.getName()));
+					fieldValue = StringUtil.isNotEmpty(fieldJsonFormatValue) ? fieldJsonFormatValue : StringUtil
+						.removeQuotes(DocUtil.getValByTypeAndFieldName(typeSimpleName, field.getName()));
 				}
 
 				ApiParam param = ApiParam.of()

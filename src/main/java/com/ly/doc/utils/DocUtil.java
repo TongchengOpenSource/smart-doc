@@ -168,8 +168,8 @@ public class DocUtil {
 		FIELD_VALUE.put("message-string", "success,fail".split(",")[RandomUtil.randomInt(0, 1)]);
 		FIELD_VALUE.put("date-string", DateTimeUtil.dateToStr(new Date(), DateTimeUtil.DATE_FORMAT_DAY));
 		FIELD_VALUE.put("date-date", DateTimeUtil.dateToStr(new Date(), DateTimeUtil.DATE_FORMAT_DAY));
-		FIELD_VALUE.put("begintime-date", DateTimeUtil.dateToStr(new Date(), DateTimeUtil.DATE_FORMAT_DAY));
-		FIELD_VALUE.put("endtime-date", DateTimeUtil.dateToStr(new Date(), DateTimeUtil.DATE_FORMAT_DAY));
+		FIELD_VALUE.put("begintime-date", DateTimeUtil.dateToStr(new Date(), DateTimeUtil.DATE_FORMAT_SECOND));
+		FIELD_VALUE.put("endtime-date", DateTimeUtil.dateToStr(new Date(), DateTimeUtil.DATE_FORMAT_SECOND));
 		FIELD_VALUE.put("time-localtime",
 				LocalDateTime.now().toLocalTime().format(DateTimeFormatter.ofPattern("HH:mm:ss")));
 		FIELD_VALUE.put("state-int", String.valueOf(RandomUtil.randomInt(0, 10)));
