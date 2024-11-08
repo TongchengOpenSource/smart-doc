@@ -1255,12 +1255,12 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 				paramList.add(param);
 				paramList.addAll(ParamsBuildHelper.buildParams(typeName, DocGlobalConstants.PARAM_PREFIX, 1,
 						String.valueOf(required), Boolean.FALSE, new HashMap<>(16), builder, groupClasses,
-						docJavaMethod.getJsonViewClasses(), 1, Boolean.FALSE, null));
+						docJavaMethod.getJsonViewClasses(), 1, isRequestBody, null));
 			}
 			else {
 				paramList.addAll(ParamsBuildHelper.buildParams(typeName, DocGlobalConstants.EMPTY, 0,
 						String.valueOf(required), Boolean.FALSE, new HashMap<>(16), builder, groupClasses,
-						docJavaMethod.getJsonViewClasses(), 0, Boolean.FALSE, null));
+						docJavaMethod.getJsonViewClasses(), 0, isRequestBody, null));
 			}
 		}
 		return ApiParamTreeUtil.buildMethodReqParam(paramList, queryReqParamMap, pathReqParamMap,
