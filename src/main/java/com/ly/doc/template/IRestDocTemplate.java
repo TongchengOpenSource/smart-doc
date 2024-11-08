@@ -55,6 +55,7 @@ import com.ly.doc.model.annotation.MappingAnnotation;
 import com.ly.doc.model.request.ApiRequestExample;
 import com.ly.doc.model.request.CurlRequest;
 import com.ly.doc.model.request.RequestMapping;
+import com.ly.doc.model.torna.EnumInfoAndValues;
 import com.ly.doc.utils.ApiParamTreeUtil;
 import com.ly.doc.utils.CurlUtil;
 import com.ly.doc.utils.DocClassUtil;
@@ -1120,7 +1121,6 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 				}
 				JavaClass gicJavaClass = builder.getJavaProjectBuilder().getClassByName(gicName);
 				if (gicJavaClass.isEnum()) {
-					Object value = JavaClassUtil.getEnumValue(gicJavaClass, builder, Boolean.TRUE);
 					ApiParam param = ApiParam.of()
 						.setField(paramName)
 						.setDesc(comment + ",[array of enum]")
@@ -1128,10 +1128,12 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 						.setPathParam(isPathVariable)
 						.setQueryParam(queryParam)
 						.setId(paramList.size() + 1)
-						.setEnumValues(JavaClassUtil.getEnumValues(gicJavaClass))
-						.setEnumInfo(JavaClassUtil.getEnumInfo(gicJavaClass, builder))
-						.setType(ParamTypeConstants.PARAM_TYPE_ARRAY)
-						.setValue(String.valueOf(value));
+						.setType(ParamTypeConstants.PARAM_TYPE_ARRAY);
+					EnumInfoAndValues enumInfoAndValue = JavaClassUtil.getEnumInfoAndValue(gicJavaClass, builder,
+							Boolean.TRUE);
+					param.setValue(StringUtil.removeDoubleQuotes(String.valueOf(enumInfoAndValue.getValue())))
+						.setEnumInfoAndValues(enumInfoAndValue);
+
 					paramList.add(param);
 					if (requestBodyCounter > 0) {
 						Map<String, Object> map = OpenApiSchemaUtil.arrayTypeSchema(gicName);
@@ -1223,20 +1225,22 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 			}
 			// Handle if it is enum types
 			else if (javaClass.isEnum()) {
-				Object value = JavaClassUtil.getEnumValue(javaClass, builder, isPathVariable || queryParam);
 				comment.append(ParamsBuildHelper.handleEnumComment(javaClass, builder));
 				ApiParam param = ApiParam.of()
 					.setField(paramName)
 					.setId(paramList.size() + 1)
 					.setPathParam(isPathVariable)
 					.setQueryParam(queryParam)
-					.setValue(StringUtil.removeDoubleQuotes(String.valueOf(value)))
 					.setType(ParamTypeConstants.PARAM_TYPE_ENUM)
 					.setDesc(comment.toString())
 					.setRequired(required)
-					.setVersion(DocGlobalConstants.DEFAULT_VERSION)
-					.setEnumInfo(JavaClassUtil.getEnumInfo(javaClass, builder))
-					.setEnumValues(JavaClassUtil.getEnumValues(javaClass));
+					.setVersion(DocGlobalConstants.DEFAULT_VERSION);
+
+				EnumInfoAndValues enumInfoAndValue = JavaClassUtil.getEnumInfoAndValue(javaClass, builder,
+						isPathVariable || queryParam);
+				param.setValue(StringUtil.removeDoubleQuotes(String.valueOf(enumInfoAndValue.getValue())))
+					.setEnumInfoAndValues(enumInfoAndValue);
+
 				paramList.add(param);
 			}
 			// Handle if it has annotation @RequestPart
@@ -1255,12 +1259,12 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 				paramList.add(param);
 				paramList.addAll(ParamsBuildHelper.buildParams(typeName, DocGlobalConstants.PARAM_PREFIX, 1,
 						String.valueOf(required), Boolean.FALSE, new HashMap<>(16), builder, groupClasses,
-						docJavaMethod.getJsonViewClasses(), 1, Boolean.FALSE, null));
+						docJavaMethod.getJsonViewClasses(), 1, isRequestBody, null));
 			}
 			else {
 				paramList.addAll(ParamsBuildHelper.buildParams(typeName, DocGlobalConstants.EMPTY, 0,
 						String.valueOf(required), Boolean.FALSE, new HashMap<>(16), builder, groupClasses,
-						docJavaMethod.getJsonViewClasses(), 0, Boolean.FALSE, null));
+						docJavaMethod.getJsonViewClasses(), 0, isRequestBody, null));
 			}
 		}
 		return ApiParamTreeUtil.buildMethodReqParam(paramList, queryReqParamMap, pathReqParamMap,

@@ -20,10 +20,20 @@
  */
 package com.ly.doc.model.torna;
 
+import java.io.Serializable;
+
 /**
+ * Torna Enum Item.
+ *
  * @author xingzi 2021/2/25 12:29
+ * @since 2.0.9
  **/
-public class Item {
+public class Item implements Serializable {
+
+	/**
+	 * serialVersionUID
+	 */
+	private static final long serialVersionUID = -1517636497626246584L;
 
 	/**
 	 * { * "name": "WAIT_PAY", * "type": "string", * "value": "0", * "description": "未支付"
@@ -31,10 +41,19 @@ public class Item {
 	 */
 	private String name;
 
+	/**
+	 * string, number, boolean, object, array
+	 */
 	private String type;
 
+	/**
+	 * value
+	 */
 	private String value;
 
+	/**
+	 * description
+	 */
 	private String description;
 
 	public Item() {

@@ -728,7 +728,7 @@ public class DocUtil {
 
 	private static Map<String, String> getCommentsByTag(List<DocletTag> paramTags, final String tagName,
 			String className, String tagValNullMsg, String tagValErrorMsg) {
-		Map<String, String> paramTagMap = new HashMap<>(16);
+		Map<String, String> paramTagMap = new HashMap<>(paramTags.size());
 		for (DocletTag docletTag : paramTags) {
 			String value = docletTag.getValue();
 			if (StringUtil.isEmpty(value) && StringUtil.isNotEmpty(className)) {

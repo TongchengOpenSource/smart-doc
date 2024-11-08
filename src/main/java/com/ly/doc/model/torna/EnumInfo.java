@@ -20,17 +20,35 @@
  */
 package com.ly.doc.model.torna;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
+ * Torna Enum Info
+ *
  * @author xingzi 2021/2/25 12:13
+ * @since 2.0.9
  **/
-public class EnumInfo {
+public class EnumInfo implements Serializable {
 
+	/**
+	 * serialVersionUID
+	 */
+	private static final long serialVersionUID = -4902969363646799679L;
+
+	/**
+	 * enum name
+	 */
 	private String name;
 
+	/**
+	 * enum description
+	 */
 	private String description;
 
+	/**
+	 * enum items
+	 */
 	private List<Item> items;
 
 	public String getName() {
