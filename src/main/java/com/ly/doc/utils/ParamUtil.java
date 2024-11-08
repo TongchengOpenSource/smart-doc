@@ -4,12 +4,19 @@ import com.ly.doc.builder.ProjectDocConfigBuilder;
 import com.ly.doc.constants.DocTags;
 import com.ly.doc.constants.ParamTypeConstants;
 import com.ly.doc.model.ApiParam;
+import com.ly.doc.model.torna.EnumInfoAndValues;
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.StringUtil;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaField;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -61,10 +68,11 @@ public class ParamUtil {
 				javaField.getType().getGenericFullyQualifiedName())) {
 			param.setType(ParamTypeConstants.PARAM_TYPE_ENUM);
 		}
-		Object value = JavaClassUtil.getEnumValue(seeEnum, builder, !jsonRequest);
-		param.setValue(StringUtil.removeDoubleQuotes(String.valueOf(value)));
-		param.setEnumValues(JavaClassUtil.getEnumValues(seeEnum));
-		param.setEnumInfo(JavaClassUtil.getEnumInfo(seeEnum, builder));
+		EnumInfoAndValues enumInfoAndValue = JavaClassUtil.getEnumInfoAndValue(seeEnum, builder, !jsonRequest);
+		if (Objects.nonNull(enumInfoAndValue)) {
+			param.setValue(StringUtil.removeDoubleQuotes(String.valueOf(enumInfoAndValue.getValue())))
+				.setEnumInfoAndValues(enumInfoAndValue);
+		}
 		// If the @JsonFormat annotation's shape attribute value is specified, use it as
 		// the parameter value
 		if (StringUtil.isNotEmpty(jsonFormatValue)) {

@@ -20,13 +20,13 @@
  */
 package com.ly.doc.model;
 
+import com.ly.doc.model.torna.EnumInfo;
+import com.ly.doc.model.torna.EnumInfoAndValues;
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-
-import com.ly.doc.model.torna.EnumInfo;
-
-import org.apache.commons.lang3.StringUtils;
 
 import static com.ly.doc.constants.DocGlobalConstants.PARAM_PREFIX;
 
@@ -111,12 +111,14 @@ public class ApiParam {
 	private boolean hasItems;
 
 	/**
-	 * enum values
+	 * enum values<br>
+	 * Use in openapi api document
 	 */
 	private List<String> enumValues;
 
 	/**
-	 * enum
+	 * enum Info<br>
+	 * Use in torna api document
 	 */
 	private EnumInfo enumInfo;
 
@@ -337,6 +339,15 @@ public class ApiParam {
 
 	public ApiParam setFormat(String format) {
 		this.format = format;
+		return this;
+	}
+
+	public ApiParam setEnumInfoAndValues(EnumInfoAndValues enumInfoAndValues) {
+		if (Objects.isNull(enumInfoAndValues)) {
+			return this;
+		}
+		this.enumInfo = enumInfoAndValues.getEnumInfo();
+		this.enumValues = enumInfoAndValues.getEnumValues();
 		return this;
 	}
 
