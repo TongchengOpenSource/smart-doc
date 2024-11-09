@@ -29,8 +29,20 @@ import com.ly.doc.constants.JavaTypeConstants;
 import com.ly.doc.constants.ParamTypeConstants;
 import com.ly.doc.extension.json.PropertyNameHelper;
 import com.ly.doc.extension.json.PropertyNamingStrategies;
-import com.ly.doc.model.*;
-import com.ly.doc.utils.*;
+import com.ly.doc.model.ApiConfig;
+import com.ly.doc.model.ApiDataDictionary;
+import com.ly.doc.model.ApiParam;
+import com.ly.doc.model.CustomField;
+import com.ly.doc.model.CustomFieldInfo;
+import com.ly.doc.model.DocJavaField;
+import com.ly.doc.model.FieldJsonAnnotationInfo;
+import com.ly.doc.model.torna.EnumInfoAndValues;
+import com.ly.doc.utils.DocClassUtil;
+import com.ly.doc.utils.DocUtil;
+import com.ly.doc.utils.JavaClassUtil;
+import com.ly.doc.utils.JavaClassValidateUtil;
+import com.ly.doc.utils.JavaFieldUtil;
+import com.ly.doc.utils.ParamUtil;
 import com.power.common.model.EnumDictionary;
 import com.power.common.util.StringUtil;
 import com.thoughtworks.qdox.model.JavaAnnotation;
@@ -38,7 +50,15 @@ import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaField;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -245,8 +265,8 @@ public class ParamsBuildHelper extends BaseHelper {
 			// handle extension
 			Map<String, String> extensions = DocUtil.getCommentsByTag(field.getTagsByName(DocTags.EXTENSION),
 					DocTags.EXTENSION);
-			Map<String, Object> extensionParams = new HashMap<>();
-			if (extensions != null && !extensions.isEmpty()) {
+			Map<String, Object> extensionParams = new HashMap<>(extensions.size());
+			if (!extensions.isEmpty()) {
 				extensions.forEach((k, v) -> extensionParams.put(k, DocUtil.detectTagValue(v)));
 			}
 
@@ -367,8 +387,8 @@ public class ParamsBuildHelper extends BaseHelper {
 				// handle param
 				commonHandleParam(paramList, param, isRequired, comment.toString(), since, strRequired);
 
-				JavaClass enumClass = ParamUtil.handleSeeEnum(param, field, projectBuilder, jsonRequest, tagsMap,
-						fieldJsonFormatValue);
+				JavaClass enumClass = ParamUtil.handleSeeEnum(param, field, projectBuilder, isResp || jsonRequest,
+						tagsMap, fieldJsonFormatValue);
 				if (Objects.nonNull(enumClass)) {
 					String enumClassComment = DocGlobalConstants.EMPTY;
 					if (StringUtil.isNotEmpty(enumClass.getComment())) {
@@ -431,7 +451,8 @@ public class ParamsBuildHelper extends BaseHelper {
 				JavaClass javaClass = field.getType();
 				if (javaClass.isEnum()) {
 					comment.append(handleEnumComment(javaClass, projectBuilder));
-					ParamUtil.handleSeeEnum(param, field, projectBuilder, jsonRequest, tagsMap, fieldJsonFormatValue);
+					ParamUtil.handleSeeEnum(param, field, projectBuilder, isResp || jsonRequest, tagsMap,
+							fieldJsonFormatValue);
 					// hand Param
 					commonHandleParam(paramList, param, isRequired, comment + appendComment, since, strRequired);
 				}
@@ -484,10 +505,12 @@ public class ParamsBuildHelper extends BaseHelper {
 						if (!simpleName.equals(gName)) {
 							JavaClass arraySubClass = projectBuilder.getJavaProjectBuilder().getClassByName(gName);
 							if (arraySubClass.isEnum()) {
-								Object value = JavaClassUtil.getEnumValue(arraySubClass, projectBuilder, Boolean.FALSE);
-								param.setValue("[\"" + value + "\"]")
-									.setEnumInfo(JavaClassUtil.getEnumInfo(arraySubClass, projectBuilder))
-									.setEnumValues(JavaClassUtil.getEnumValues(arraySubClass));
+								EnumInfoAndValues enumInfoAndValue = JavaClassUtil.getEnumInfoAndValue(arraySubClass,
+										projectBuilder, Boolean.FALSE);
+								if (Objects.nonNull(enumInfoAndValue)) {
+									param.setValue("[\"" + enumInfoAndValue.getValue() + "\"]")
+										.setEnumInfoAndValues(enumInfoAndValue);
+								}
 							}
 							else if (gName.length() == 1) {
 								// handle generic
@@ -782,6 +805,15 @@ public class ParamsBuildHelper extends BaseHelper {
 		paramList.add(param);
 	}
 
+	/**
+	 * Handles the generation of comments for enum types in a Java class. If the class is
+	 * an enum, it generates the corresponding enum comment based on the project
+	 * configuration; otherwise, it returns an empty comment string.
+	 * @param javaClass The JavaClass object containing class information.
+	 * @param projectBuilder The ProjectDocConfigBuilder object containing project
+	 * configuration information.
+	 * @return The generated enum comment string.
+	 */
 	public static String handleEnumComment(JavaClass javaClass, ProjectDocConfigBuilder projectBuilder) {
 		String comment = "";
 		if (!javaClass.isEnum()) {

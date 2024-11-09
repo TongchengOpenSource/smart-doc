@@ -26,10 +26,29 @@ package com.ly.doc.utils;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import com.ly.doc.constants.*;
-import com.ly.doc.model.*;
+import com.ly.doc.constants.DocAnnotationConstants;
+import com.ly.doc.constants.DocGlobalConstants;
+import com.ly.doc.constants.MediaType;
+import com.ly.doc.constants.ParamTypeConstants;
+import com.ly.doc.constants.TornaConstants;
+import com.ly.doc.model.ApiConfig;
+import com.ly.doc.model.ApiDocDict;
+import com.ly.doc.model.ApiErrorCode;
+import com.ly.doc.model.ApiMethodDoc;
+import com.ly.doc.model.ApiParam;
+import com.ly.doc.model.ApiReqParam;
+import com.ly.doc.model.BodyAdvice;
+import com.ly.doc.model.DataDict;
+import com.ly.doc.model.RpcJavaMethod;
 import com.ly.doc.model.rpc.RpcApiDependency;
-import com.ly.doc.model.torna.*;
+import com.ly.doc.model.torna.Apis;
+import com.ly.doc.model.torna.CommonErrorCode;
+import com.ly.doc.model.torna.DebugEnv;
+import com.ly.doc.model.torna.HttpParam;
+import com.ly.doc.model.torna.Item;
+import com.ly.doc.model.torna.TornaApi;
+import com.ly.doc.model.torna.TornaDic;
+import com.ly.doc.model.torna.TornaRequestInfo;
 import com.power.common.model.EnumDictionary;
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.OkHttp3Util;
@@ -39,7 +58,12 @@ import com.thoughtworks.qdox.model.JavaMethod;
 import com.thoughtworks.qdox.model.JavaParameter;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 
 import static com.ly.doc.constants.TornaConstants.ENUM_PUSH;
 import static com.ly.doc.constants.TornaConstants.PUSH;
@@ -315,6 +339,14 @@ public class TornaUtil {
 			if (Objects.equals(type, ParamTypeConstants.PARAM_TYPE_FILE) && apiParam.isHasItems()) {
 				type = TornaConstants.PARAM_TYPE_FILE_ARRAY;
 			}
+			if (Objects.nonNull(apiParam.getEnumInfo())) {
+				// Get type from enum items if available, with null check for items
+				List<Item> items = apiParam.getEnumInfo().getItems();
+				if (Objects.nonNull(items) && !items.isEmpty()) {
+					type = items.stream().map(Item::getType).findFirst().orElse(type);
+				}
+			}
+
 			httpParam.setType(type);
 			httpParam.setVersion(apiParam.getVersion());
 			httpParam.setRequired(apiParam.isRequired() ? TornaConstants.YES : TornaConstants.NO);
