@@ -45,7 +45,6 @@ import com.ly.doc.model.torna.Apis;
 import com.ly.doc.model.torna.CommonErrorCode;
 import com.ly.doc.model.torna.DebugEnv;
 import com.ly.doc.model.torna.HttpParam;
-import com.ly.doc.model.torna.Item;
 import com.ly.doc.model.torna.TornaApi;
 import com.ly.doc.model.torna.TornaDic;
 import com.ly.doc.model.torna.TornaRequestInfo;
@@ -338,13 +337,6 @@ public class TornaUtil {
 			String type = apiParam.getType();
 			if (Objects.equals(type, ParamTypeConstants.PARAM_TYPE_FILE) && apiParam.isHasItems()) {
 				type = TornaConstants.PARAM_TYPE_FILE_ARRAY;
-			}
-			if (Objects.nonNull(apiParam.getEnumInfo())) {
-				// Get type from enum items if available, with null check for items
-				List<Item> items = apiParam.getEnumInfo().getItems();
-				if (Objects.nonNull(items) && !items.isEmpty()) {
-					type = items.stream().map(Item::getType).findFirst().orElse(type);
-				}
 			}
 
 			httpParam.setType(type);

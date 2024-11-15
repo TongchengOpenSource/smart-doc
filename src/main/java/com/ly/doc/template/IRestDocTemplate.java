@@ -252,11 +252,11 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 	 * @param apiMethodDocs A list of method documentation objects corresponding to the
 	 * methods within the class.
 	 * @param order The sorting order for the generated API documentation entry.
-	 * @param isUseMD5 Flag indicating whether to use MD5 hashing to generate a unique
+	 * @param isUseMd5 Flag indicating whether to use MD5 hashing to generate a unique
 	 * alias for the documented class.
 	 */
 	default void handleApiDoc(JavaClass cls, List<ApiDoc> apiDocList, List<ApiMethodDoc> apiMethodDocs, int order,
-			boolean isUseMD5) {
+			boolean isUseMd5) {
 		String controllerName = cls.getName();
 		ApiDoc apiDoc = new ApiDoc();
 		String classAuthor = JavaClassUtil.getClassTagsValue(cls, DocTags.AUTHOR, Boolean.TRUE);
@@ -277,7 +277,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 		String[] tags = tagSet.toArray(new String[] {});
 		apiDoc.setTags(tags);
 
-		if (isUseMD5) {
+		if (isUseMd5) {
 			String name = DocUtil.generateId(apiDoc.getName());
 			apiDoc.setAlias(name);
 		}
@@ -1131,8 +1131,11 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 						.setType(ParamTypeConstants.PARAM_TYPE_ARRAY);
 					EnumInfoAndValues enumInfoAndValue = JavaClassUtil.getEnumInfoAndValue(gicJavaClass, builder,
 							Boolean.TRUE);
-					param.setValue(StringUtil.removeDoubleQuotes(String.valueOf(enumInfoAndValue.getValue())))
-						.setEnumInfoAndValues(enumInfoAndValue);
+					if (Objects.nonNull(enumInfoAndValue)) {
+						param.setValue(StringUtil.removeDoubleQuotes(String.valueOf(enumInfoAndValue.getValue())))
+							.setEnumInfoAndValues(enumInfoAndValue)
+							.setType(enumInfoAndValue.getType());
+					}
 
 					paramList.add(param);
 					if (requestBodyCounter > 0) {
@@ -1237,9 +1240,12 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 					.setVersion(DocGlobalConstants.DEFAULT_VERSION);
 
 				EnumInfoAndValues enumInfoAndValue = JavaClassUtil.getEnumInfoAndValue(javaClass, builder,
-						isPathVariable || queryParam);
-				param.setValue(StringUtil.removeDoubleQuotes(String.valueOf(enumInfoAndValue.getValue())))
-					.setEnumInfoAndValues(enumInfoAndValue);
+						isPathVariable || queryParam || isRequestParam);
+				if (Objects.nonNull(enumInfoAndValue)) {
+					param.setValue(StringUtil.removeDoubleQuotes(String.valueOf(enumInfoAndValue.getValue())))
+						.setEnumInfoAndValues(enumInfoAndValue)
+						.setType(enumInfoAndValue.getType());
+				}
 
 				paramList.add(param);
 			}

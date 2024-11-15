@@ -71,7 +71,8 @@ public class ParamUtil {
 		EnumInfoAndValues enumInfoAndValue = JavaClassUtil.getEnumInfoAndValue(seeEnum, builder, !jsonRequest);
 		if (Objects.nonNull(enumInfoAndValue)) {
 			param.setValue(StringUtil.removeDoubleQuotes(String.valueOf(enumInfoAndValue.getValue())))
-				.setEnumInfoAndValues(enumInfoAndValue);
+				.setEnumInfoAndValues(enumInfoAndValue)
+				.setType(enumInfoAndValue.getType());
 		}
 		// If the @JsonFormat annotation's shape attribute value is specified, use it as
 		// the parameter value

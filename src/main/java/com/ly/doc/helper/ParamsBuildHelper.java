@@ -509,7 +509,8 @@ public class ParamsBuildHelper extends BaseHelper {
 										projectBuilder, Boolean.FALSE);
 								if (Objects.nonNull(enumInfoAndValue)) {
 									param.setValue("[\"" + enumInfoAndValue.getValue() + "\"]")
-										.setEnumInfoAndValues(enumInfoAndValue);
+										.setEnumInfoAndValues(enumInfoAndValue)
+										.setType(enumInfoAndValue.getType());
 								}
 							}
 							else if (gName.length() == 1) {
