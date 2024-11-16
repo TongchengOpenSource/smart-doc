@@ -36,6 +36,12 @@ public class EnumInfoAndValues implements Serializable {
 	 */
 	private Object value;
 
+	/**
+	 * ApiParam value default enum; when type is not enum type, will set this type to
+	 * {@link ApiParam#setType(String)}
+	 */
+	private String type;
+
 	public static EnumInfoAndValues builder() {
 		return new EnumInfoAndValues();
 	}
@@ -64,6 +70,15 @@ public class EnumInfoAndValues implements Serializable {
 
 	public EnumInfoAndValues setValue(Object value) {
 		this.value = value;
+		return this;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public EnumInfoAndValues setType(String type) {
+		this.type = type;
 		return this;
 	}
 

@@ -20,6 +20,8 @@
  */
 package com.ly.doc.model.torna;
 
+import com.google.gson.annotations.Expose;
+
 import java.io.Serializable;
 
 /**
@@ -56,6 +58,13 @@ public class Item implements Serializable {
 	 */
 	private String description;
 
+	/**
+	 * valueObject; A temporary variable used to store the object form of the value. This
+	 * field will not be serialized or deserialized.
+	 */
+	@Expose(serialize = false, deserialize = false)
+	private Object valueObject;
+
 	public Item() {
 	}
 
@@ -64,6 +73,7 @@ public class Item implements Serializable {
 		this.type = type;
 		this.value = value;
 		this.description = description;
+		this.valueObject = name;
 	}
 
 	public String getName() {
@@ -96,6 +106,14 @@ public class Item implements Serializable {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public Object getValueObject() {
+		return valueObject;
+	}
+
+	public void setValueObject(Object valueObject) {
+		this.valueObject = valueObject;
 	}
 
 }

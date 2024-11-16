@@ -30,6 +30,7 @@ import com.ly.doc.constants.DocTags;
 import com.ly.doc.constants.DocValidatorAnnotationEnum;
 import com.ly.doc.constants.JSRAnnotationConstants;
 import com.ly.doc.constants.JavaTypeConstants;
+import com.ly.doc.constants.ParamTypeConstants;
 import com.ly.doc.model.ApiConfig;
 import com.ly.doc.model.ApiDataDictionary;
 import com.ly.doc.model.DocJavaField;
@@ -404,7 +405,7 @@ public class JavaClassUtil {
 		}
 
 		// Default handling for enum values
-		return processDefaultEnumFields(javaClass.getEnumConstants(), formDataEnum);
+		return processDefaultEnumFields(javaClass.getEnumConstants(), formDataEnum, enumConstant);
 	}
 
 	/**
@@ -475,12 +476,17 @@ public class JavaClassUtil {
 	 * Handles the default logic for processing enum fields.
 	 * @param javaFields The list of JavaField objects representing enum fields
 	 * @param formDataEnum A boolean indicating if the enum is a form data enum
+	 * @param enumConstant The JavaField object representing the enum constant
 	 * @return The value based on the enum field processing logic
 	 */
-	private static Object processDefaultEnumFields(List<JavaField> javaFields, boolean formDataEnum) {
+	private static Object processDefaultEnumFields(List<JavaField> javaFields, boolean formDataEnum,
+			JavaField enumConstant) {
 		Object value = null;
 		int index = 0;
 		for (JavaField javaField : javaFields) {
+			if (!javaField.equals(enumConstant)) {
+				continue;
+			}
 			String simpleName = javaField.getType().getSimpleName();
 			StringBuilder valueBuilder = new StringBuilder();
 			valueBuilder.append("\"").append(javaField.getName()).append("\"");
@@ -638,15 +644,19 @@ public class JavaClassUtil {
 			String name = cons.getName();
 			String enumComment = cons.getComment();
 			item.setName(name);
-			if (formDataEnum) {
-				item.setValue(name);
-				item.setType("string");
-			}
-			else {
+
+			item.setValue(StringUtil.removeDoubleQuotes(name));
+			item.setType("string");
+			if (!formDataEnum) {
 				Object enumValue = getEnumValue(javaClass, builder, false, cons);
-				item.setValue(Objects.isNull(enumValue) ? null : String.valueOf(enumValue));
-				item.setType(Objects.isNull(enumValue) ? null
-						: DocClassUtil.processTypeNameForParams(enumValue.getClass().getCanonicalName()));
+				String stringValue = StringUtil.removeQuotes(String.valueOf(enumValue));
+				if (!StringUtils.equals(name, stringValue)) {
+					item.setValueObject(enumValue);
+					item.setValue(stringValue);
+					if (Objects.nonNull(enumValue)) {
+						item.setType(DocClassUtil.processTypeNameForParams(enumValue.getClass().getCanonicalName()));
+					}
+				}
 			}
 			item.setDescription(enumComment);
 			return item;
@@ -1465,12 +1475,22 @@ public class JavaClassUtil {
 		// Step 2: Get the enum values based on whether it's formDataEnum or not
 		List<String> enumValues = enumInfo.getItems().stream().map(Item::getValue).collect(Collectors.toList());
 
+		Item item = enumInfo.getItems().get(0);
 		// Step 3: Create the EnumInfoAndValues result
-		return EnumInfoAndValues.builder()
-			.setEnumInfo(enumInfo)
+		Object valueObject = item.getValueObject();
+		EnumInfoAndValues result = EnumInfoAndValues.builder()
 			.setEnumValues(enumValues)
 			// Using the same method to get default value
-			.setValue(getEnumValue(javaClass, builder, formDataEnum));
+			.setValue(Objects.isNull(valueObject) ? item.getValue() : valueObject);
+
+		result.setType(ParamTypeConstants.PARAM_TYPE_ENUM);
+		if (!formDataEnum) {
+			if (Objects.nonNull(valueObject)) {
+				result.setType(DocClassUtil.processTypeNameForParams(valueObject.getClass().getCanonicalName()));
+				enumInfo.setName(enumInfo.getName() + " To " + result.getType());
+			}
+		}
+		return result.setEnumInfo(enumInfo);
 	}
 
 }
