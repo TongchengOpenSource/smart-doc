@@ -11,15 +11,13 @@ jobs:
       pull-requests: write
     name: Say thanks for the PR and hint to document
     steps:
-      - name: comment on the pull request
-        uses: hasura/comment-progress@v2.3.0
+      - name: Comment on the pull request
+        uses: peter-evans/create-or-update-comment@v4
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           repository: ${{ github.repository }}
-          number: ${{ github.event.number }}
-          id: thanks-and-hint-to-document
-          recreate: true
-          message: |
+          issue-number: ${{ github.event.number }}
+          body: |
             Thanks for your this PR.  :pray: 
             Please check again for your PR changes whether contains any usage configuration change such as `Add new configuration`, `Change default value of configuration`.
             If so, please add or update documents(markdown type) in `docs/` for repository [smart-doc-group/smart-doc-group.github.io](https://github.com/smart-doc-group/smart-doc-group.github.io/tree/master/docs)
