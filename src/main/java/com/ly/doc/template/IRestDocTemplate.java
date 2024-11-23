@@ -1100,9 +1100,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 				continue;
 			}
 
-			boolean queryParam = Methods.GET.getValue().equals(docJavaMethod.getMethodType())
-					&& Methods.DELETE.getValue().equals(docJavaMethod.getMethodType()) && !isRequestBody
-					&& !isPathVariable;
+			boolean queryParam = !isRequestBody && !isPathVariable;
 
 			String[] gicNameArr = DocClassUtil.getSimpleGicName(typeName);
 			// Handle if it is collection types
