@@ -18,6 +18,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package com.ly.doc.model;
 
 import com.ly.doc.constants.MediaType;
@@ -27,7 +28,13 @@ import com.power.common.util.StringUtil;
 import com.thoughtworks.qdox.model.JavaClass;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 /**
  * java api method info model.
@@ -340,6 +347,9 @@ public class ApiMethodDoc implements IMethod, Serializable, Cloneable {
 	}
 
 	public List<ApiParam> getRequestParams() {
+		if (Objects.isNull(this.requestParams)) {
+			return new ArrayList<>();
+		}
 		return requestParams;
 	}
 
@@ -412,6 +422,9 @@ public class ApiMethodDoc implements IMethod, Serializable, Cloneable {
 	}
 
 	public List<ApiParam> getPathParams() {
+		if (Objects.isNull(this.pathParams)) {
+			return new ArrayList<>();
+		}
 		return pathParams;
 	}
 
@@ -420,6 +433,9 @@ public class ApiMethodDoc implements IMethod, Serializable, Cloneable {
 	}
 
 	public List<ApiParam> getQueryParams() {
+		if (Objects.isNull(this.queryParams)) {
+			return new ArrayList<>();
+		}
 		return queryParams;
 	}
 

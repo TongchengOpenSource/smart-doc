@@ -18,14 +18,20 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package com.ly.doc.model;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
+ * Api request params
+ *
  * @author yu 2020/11/26.
  */
-public class ApiMethodReqParam {
+public class ApiMethodReqParam implements Serializable {
+
+	private static final long serialVersionUID = 1140834362473560188L;
 
 	/**
 	 * path params
@@ -38,7 +44,7 @@ public class ApiMethodReqParam {
 	private List<ApiParam> queryParams;
 
 	/**
-	 * http request params
+	 * http request params(body param)
 	 */
 	private List<ApiParam> requestParams;
 
