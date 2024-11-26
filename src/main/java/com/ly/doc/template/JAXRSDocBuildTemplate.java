@@ -21,12 +21,37 @@
 package com.ly.doc.template;
 
 import com.ly.doc.builder.ProjectDocConfigBuilder;
-import com.ly.doc.constants.*;
-import com.ly.doc.handler.*;
+import com.ly.doc.constants.DocAnnotationConstants;
+import com.ly.doc.constants.DocGlobalConstants;
+import com.ly.doc.constants.DocTags;
+import com.ly.doc.constants.FrameworkEnum;
+import com.ly.doc.constants.JAXRSAnnotations;
+import com.ly.doc.constants.JakartaJaxrsAnnotations;
+import com.ly.doc.constants.MediaType;
+import com.ly.doc.constants.ParamTypeConstants;
+import com.ly.doc.handler.DefaultWebSocketRequestHandler;
+import com.ly.doc.handler.IHeaderHandler;
+import com.ly.doc.handler.IRequestMappingHandler;
+import com.ly.doc.handler.JaxrsHeaderHandler;
+import com.ly.doc.handler.JaxrsPathHandler;
+import com.ly.doc.handler.SpringMVCRequestHeaderHandler;
+import com.ly.doc.handler.SpringMVCRequestMappingHandler;
 import com.ly.doc.helper.FormDataBuildHelper;
 import com.ly.doc.helper.JsonBuildHelper;
 import com.ly.doc.helper.ParamsBuildHelper;
-import com.ly.doc.model.*;
+import com.ly.doc.model.ApiConfig;
+import com.ly.doc.model.ApiDoc;
+import com.ly.doc.model.ApiExceptionStatus;
+import com.ly.doc.model.ApiMethodDoc;
+import com.ly.doc.model.ApiMethodReqParam;
+import com.ly.doc.model.ApiParam;
+import com.ly.doc.model.ApiReqParam;
+import com.ly.doc.model.ApiSchema;
+import com.ly.doc.model.DocJavaMethod;
+import com.ly.doc.model.DocJavaParameter;
+import com.ly.doc.model.ExceptionAdviceMethod;
+import com.ly.doc.model.FormData;
+import com.ly.doc.model.WebSocketDoc;
 import com.ly.doc.model.annotation.EntryAnnotation;
 import com.ly.doc.model.annotation.FrameworkAnnotations;
 import com.ly.doc.model.annotation.HeaderAnnotation;
@@ -34,13 +59,34 @@ import com.ly.doc.model.request.ApiRequestExample;
 import com.ly.doc.model.request.CurlRequest;
 import com.ly.doc.model.request.JaxrsPathMapping;
 import com.ly.doc.model.request.RequestMapping;
-import com.ly.doc.utils.*;
+import com.ly.doc.utils.ApiParamTreeUtil;
+import com.ly.doc.utils.CurlUtil;
+import com.ly.doc.utils.DocClassUtil;
+import com.ly.doc.utils.DocPathUtil;
+import com.ly.doc.utils.DocUtil;
+import com.ly.doc.utils.JavaClassUtil;
+import com.ly.doc.utils.JavaClassValidateUtil;
+import com.ly.doc.utils.JavaFieldUtil;
+import com.ly.doc.utils.JsonUtil;
+import com.ly.doc.utils.RequestExampleUtil;
+import com.ly.doc.utils.TornaUtil;
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.RandomUtil;
 import com.power.common.util.StringUtil;
-import com.thoughtworks.qdox.model.*;
+import com.thoughtworks.qdox.model.DocletTag;
+import com.thoughtworks.qdox.model.JavaAnnotation;
+import com.thoughtworks.qdox.model.JavaClass;
+import com.thoughtworks.qdox.model.JavaMethod;
+import com.thoughtworks.qdox.model.JavaParameter;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -696,8 +742,8 @@ public class JAXRSDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IWebSoc
 			}
 		}
 		requestExample.setFormDataList(formDataList);
-		RequestExampleUtil.setExampleBody(apiMethodDoc, requestExample, formDataList, pathParamsMap, pathParamsMap);
-		return requestExample;
+		// set example body
+		return RequestExampleUtil.setExampleBody(apiMethodDoc, requestExample, pathParamsMap, pathParamsMap);
 	}
 
 	/**

@@ -1341,12 +1341,14 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 		apiMethodDoc.getPathParams()
 			.stream()
 			.filter(Objects::nonNull)
-			.filter(p -> StringUtil.isNotEmpty(p.getValue()) || p.isConfigParam())
+			// filter out null value params Fix String Param value is ""
+			.filter(p -> Objects.nonNull(p.getValue()) || p.isConfigParam())
 			.forEach(param -> pathParamsMap.put(param.getSourceField(), param.getValue()));
 		apiMethodDoc.getQueryParams()
 			.stream()
 			.filter(Objects::nonNull)
-			.filter(p -> StringUtil.isNotEmpty(p.getValue()) || p.isConfigParam())
+			// filter out null value params Fix String Param value is ""
+			.filter(param -> Objects.nonNull(param.getValue()) || param.isConfigParam())
 			.forEach(param -> queryParamsMap.put(param.getSourceField(), param.getValue()));
 		List<JavaAnnotation> methodAnnotations = method.getAnnotations();
 		Map<String, MappingAnnotation> mappingAnnotationMap = frameworkAnnotations.getMappingAnnotations();
@@ -1360,18 +1362,20 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 				}
 				String params = StringUtil.removeQuotes(paramsObjects.toString());
 				if (!params.startsWith("[")) {
-					mappingParamProcess(paramsObjects.toString(), queryParamsMap);
+					this.mappingParamProcess(paramsObjects.toString(), queryParamsMap);
 					continue;
 				}
 				@SuppressWarnings("unchecked")
 				List<String> headers = (LinkedList<String>) paramsObjects;
 				for (String str : headers) {
-					mappingParamProcess(str, queryParamsMap);
+					this.mappingParamProcess(str, queryParamsMap);
 				}
 			}
 		}
-		List<DocJavaParameter> parameterList = getJavaParameterList(configBuilder, javaMethod, frameworkAnnotations);
+		List<DocJavaParameter> parameterList = this.getJavaParameterList(configBuilder, javaMethod,
+				frameworkAnnotations);
 		List<ApiReqParam> reqHeaderList = apiMethodDoc.getRequestHeaders();
+		// if no parameter, return curl request
 		if (parameterList.isEmpty()) {
 			String path = apiMethodDoc.getPath().split(";")[0];
 			path = DocUtil.formatAndRemove(path, pathParamsMap);
@@ -1430,7 +1434,8 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 				if (Objects.nonNull(annotationDefaultVal)) {
 					mockValue = DocUtil.resolveAnnotationValue(classLoader, annotationDefaultVal);
 				}
-				paramName = getParamName(classLoader, paramName, annotation);
+				paramName = this.getParamName(classLoader, paramName, annotation);
+				// RequestBody annotation
 				if (frameworkAnnotations.getRequestBodyAnnotation().getAnnotationName().equals(annotationName)) {
 					// priority use mapping annotation's consumer value
 					if (apiMethodDoc.getContentType().equals(MediaType.APPLICATION_FORM_URLENCODED_VALUE)) {
@@ -1463,6 +1468,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 					queryParamsMap.remove(paramName);
 					paramAdded = true;
 				}
+				// PathVariable annotation
 				else if (frameworkAnnotations.getPathVariableAnnotation()
 					.getAnnotationName()
 					.contains(annotationName)) {
@@ -1476,6 +1482,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 					pathParamsMap.put(paramName, mockValue);
 					paramAdded = true;
 				}
+				// RequestParam annotation
 				else if (frameworkAnnotations.getRequestParamAnnotation()
 					.getAnnotationName()
 					.contains(annotationName)) {
@@ -1497,6 +1504,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 					requestParam = true;
 					paramAdded = true;
 				}
+				// RequestPart annotation
 				else if (frameworkAnnotations.getRequestPartAnnotation().getAnnotationName().contains(annotationName)) {
 					if (!JavaClassValidateUtil.isFile(gicTypeName)) {
 						apiMethodDoc.setContentType(MediaType.MULTIPART_FORM_DATA);
@@ -1532,6 +1540,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 				formData.setSrc(new ArrayList<>(0));
 				formDataList.add(formData);
 			}
+			// primitive type
 			else if (JavaClassValidateUtil.isPrimitive(fullyQualifiedName) && !requestParam) {
 				FormData formData = new FormData();
 				formData.setKey(paramName);
@@ -1540,6 +1549,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 				formData.setValue(mockValue);
 				formDataList.add(formData);
 			}
+			// array or collection
 			else if (JavaClassValidateUtil.isArray(fullyQualifiedName)
 					|| JavaClassValidateUtil.isCollection(fullyQualifiedName)) {
 				String gicName = globGicName[0];
@@ -1569,6 +1579,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 				formData.setValue(value);
 				formDataList.add(formData);
 			}
+			// enum type
 			else if (javaClass.isEnum()) {
 				// do nothing
 				Object value = JavaClassUtil.getEnumValue(javaClass, configBuilder, Boolean.TRUE);
@@ -1594,13 +1605,8 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 			apiMethodDoc.setContentType(MediaType.MULTIPART_FORM_DATA_VALUE);
 		}
 		requestExample.setFormDataList(formDataList);
-		// curl send file to convert
-		final Map<String, String> formDataToMap = DocUtil.formDataToMap(formDataList);
-		// formData add to params '--data'
-		queryParamsMap.putAll(formDataToMap);
 		// set example body
-		RequestExampleUtil.setExampleBody(apiMethodDoc, requestExample, formDataList, pathParamsMap, queryParamsMap);
-		return requestExample;
+		return RequestExampleUtil.setExampleBody(apiMethodDoc, requestExample, pathParamsMap, queryParamsMap);
 	}
 
 	/**

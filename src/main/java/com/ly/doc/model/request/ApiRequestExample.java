@@ -20,12 +20,13 @@
  */
 package com.ly.doc.model.request;
 
-import java.util.List;
-
 import com.ly.doc.model.FormData;
 import com.power.common.util.StringUtil;
-
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * @author yu 2019/12/22.
@@ -88,6 +89,9 @@ public class ApiRequestExample {
 	}
 
 	public List<FormData> getFormDataList() {
+		if (Objects.isNull(formDataList)) {
+			return new ArrayList<>();
+		}
 		return formDataList;
 	}
 
