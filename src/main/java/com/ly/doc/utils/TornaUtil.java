@@ -28,7 +28,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.ly.doc.constants.DocAnnotationConstants;
 import com.ly.doc.constants.DocGlobalConstants;
-import com.ly.doc.constants.MediaType;
 import com.ly.doc.constants.ParamTypeConstants;
 import com.ly.doc.constants.TornaConstants;
 import com.ly.doc.model.ApiConfig;
@@ -244,20 +243,15 @@ public class TornaUtil {
 			methodApi.setRequestArrayType(apiMethodDoc.getRequestArrayType());
 			methodApi.setResponseArrayType(apiMethodDoc.getResponseArrayType());
 			methodApi.setDeprecated(apiMethodDoc.isDeprecated() ? DocAnnotationConstants.DEPRECATED : null);
-			// Path
+			// Path Param
 			if (CollectionUtil.isNotEmpty(apiMethodDoc.getPathParams())) {
 				methodApi.setPathParams(buildParams(apiMethodDoc.getPathParams()));
 			}
-
-			if (CollectionUtil.isNotEmpty(apiMethodDoc.getQueryParams())
-					&& MediaType.MULTIPART_FORM_DATA.equals(apiMethodDoc.getContentType())) {
-				// file upload
-				methodApi.setRequestParams(buildParams(apiMethodDoc.getQueryParams()));
-			}
-			else if (CollectionUtil.isNotEmpty(apiMethodDoc.getQueryParams())) {
+			// Query Param
+			if (CollectionUtil.isNotEmpty(apiMethodDoc.getQueryParams())) {
 				methodApi.setQueryParams(buildParams(apiMethodDoc.getQueryParams()));
 			}
-			// Json
+			// Body Param
 			if (CollectionUtil.isNotEmpty(apiMethodDoc.getRequestParams())) {
 				methodApi.setRequestParams(buildParams(apiMethodDoc.getRequestParams()));
 			}

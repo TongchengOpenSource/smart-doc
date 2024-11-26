@@ -18,61 +18,151 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package com.ly.doc.model.torna;
 
+import com.ly.doc.model.ApiMethodDoc;
+
+import java.io.Serializable;
 import java.util.List;
 
 /**
+ * Torna Api DocItem(cn.torna.sdk.param.DocItem)
+ *
  * @author xingzi 2021/2/8 10:07
+ * @since 2.0.9
  **/
-public class Apis {
+public class Apis implements Serializable {
 
+	private static final long serialVersionUID = 603355518657235962L;
+
+	/**
+	 * api doc name
+	 */
 	private String name;
 
+	/**
+	 * api doc description
+	 */
 	private String description;
 
+	/**
+	 * api doc url
+	 */
 	private String url;
 
+	/**
+	 * http method
+	 */
 	private String httpMethod;
 
+	/**
+	 * content type
+	 */
 	private String contentType;
 
+	/**
+	 * is folder
+	 * @see com.ly.doc.constants.TornaConstants#YES
+	 * @see com.ly.doc.constants.TornaConstants#NO
+	 */
 	private String isFolder;
 
+	/**
+	 * parent id
+	 */
 	private String parentId;
 
+	/**
+	 * is show
+	 * @see com.ly.doc.constants.TornaConstants#YES
+	 * @see com.ly.doc.constants.TornaConstants#NO
+	 */
 	private String isShow;
 
+	/**
+	 * author
+	 */
 	private String author;
 
+	/**
+	 * order index
+	 */
 	private Integer orderIndex;
 
+	/**
+	 * dubbo info
+	 */
 	private DubboInfo dubboInfo;
 
+	/**
+	 * header params
+	 * @see ApiMethodDoc#getRequestHeaders()
+	 */
 	private List<HttpParam> headerParams;
 
+	/**
+	 * path params
+	 * @see ApiMethodDoc#getPathParams()
+	 */
 	private List<HttpParam> pathParams;
 
+	/**
+	 * query params
+	 * @see ApiMethodDoc#getQueryParams()
+	 */
 	private List<HttpParam> queryParams;
 
+	/**
+	 * request params; body params
+	 * @see ApiMethodDoc#getRequestParams()
+	 */
 	private List<HttpParam> requestParams;
 
+	/**
+	 * response params
+	 * @see ApiMethodDoc#getResponseParams()
+	 */
 	private List<HttpParam> responseParams;
 
+	/**
+	 * error code params
+	 */
 	private String errorCodeParams;
 
+	/**
+	 * items
+	 */
 	private List<Apis> items;
 
+	/**
+	 * is request array
+	 */
 	private Integer isRequestArray;
 
+	/**
+	 * request array type object/number/string/boolean
+	 */
 	private String requestArrayType;
 
+	/**
+	 * is response array
+	 */
 	private Integer isResponseArray;
 
+	/**
+	 * response array type object/number/string/boolean
+	 */
 	private String responseArrayType;
 
+	/**
+	 * deprecated
+	 */
 	private String deprecated;
 
+	/**
+	 * version
+	 */
 	private String version;
 
 	public String getVersion() {

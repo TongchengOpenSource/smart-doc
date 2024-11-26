@@ -21,19 +21,44 @@
 
 package com.ly.doc.model.torna;
 
-/**
- * @author xingzi 2021/4/28 12:54
- **/
-public class DubboInfo {
+import java.io.Serializable;
 
+/**
+ * Torna Dubbo Info
+ *
+ * @author xingzi 2021/4/28 12:54
+ * @since 2.1.5
+ **/
+public class DubboInfo implements Serializable {
+
+	/**
+	 * serialVersionUID
+	 */
+	private static final long serialVersionUID = 1556292473952962536L;
+
+	/**
+	 * dubbo interface name
+	 */
 	private String interfaceName;
 
+	/**
+	 * author
+	 */
 	private String author;
 
+	/**
+	 * dubbo interface version
+	 */
 	private String version;
 
+	/**
+	 * dubbo protocol
+	 */
 	private String protocol;
 
+	/**
+	 * dubbo maven dependency
+	 */
 	private String dependency;
 
 	public DubboInfo builder() {
