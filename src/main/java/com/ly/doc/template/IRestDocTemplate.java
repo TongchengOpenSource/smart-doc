@@ -18,9 +18,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package com.ly.doc.template;
 
 import com.ly.doc.builder.ProjectDocConfigBuilder;
+import com.ly.doc.constants.ApiParamEnum;
 import com.ly.doc.constants.ApiReqParamInTypeEnum;
 import com.ly.doc.constants.DocAnnotationConstants;
 import com.ly.doc.constants.DocGlobalConstants;
@@ -941,10 +943,21 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 		Map<String, String> mappingParams = new HashMap<>(16);
 		List<JavaAnnotation> methodAnnotations = javaMethod.getAnnotations();
 		Map<String, MappingAnnotation> mappingAnnotationMap = frameworkAnnotations.getMappingAnnotations();
+		String methodMediaType = null;
 		for (JavaAnnotation annotation : methodAnnotations) {
 			String annotationName = annotation.getType().getName();
 			MappingAnnotation mappingAnnotation = mappingAnnotationMap.get(annotationName);
-			if (Objects.nonNull(mappingAnnotation) && StringUtil.isNotEmpty(mappingAnnotation.getParamsProp())) {
+			if (Objects.nonNull(mappingAnnotation)) {
+				if (Objects.nonNull(mappingAnnotation.getConsumesProp())) {
+					List<String> consumes = JavaClassUtil.getAnnotationValueStrings(builder, annotation,
+							mappingAnnotation.getConsumesProp());
+					if (CollectionUtil.isNotEmpty(consumes)) {
+						methodMediaType = consumes.get(0);
+					}
+				}
+				if (StringUtil.isEmpty(mappingAnnotation.getParamsProp())) {
+					continue;
+				}
 				Object paramsObjects = annotation.getNamedParameter(mappingAnnotation.getParamsProp());
 				if (Objects.isNull(paramsObjects)) {
 					continue;
@@ -986,6 +999,14 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 		}
 		boolean requestFieldToUnderline = builder.getApiConfig().isRequestFieldToUnderline();
 		int requestBodyCounter = 0;
+		// requestBodyParam Collection
+		Set<DocJavaParameter> requestBodyParam = parameterList.stream()
+			.filter(parameter -> parameter.getAnnotations()
+				.stream()
+				.anyMatch(annotation -> frameworkAnnotations.getRequestBodyAnnotation()
+					.getAnnotationName()
+					.equals(annotation.getType().getValue())))
+			.collect(Collectors.toSet());
 		out: for (DocJavaParameter apiParameter : parameterList) {
 			JavaParameter parameter = apiParameter.getJavaParameter();
 			String paramName = parameter.getName();
@@ -1006,20 +1027,18 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 
 			JavaClass javaClass = builder.getJavaProjectBuilder().getClassByName(genericFullyQualifiedName);
 			String mockValue = JavaFieldUtil.createMockValue(paramsComments, paramName, typeName, simpleTypeName);
-			List<JavaAnnotation> annotations = parameter.getAnnotations();
-			Set<String> groupClasses = JavaClassUtil.getParamGroupJavaClass(annotations,
+			List<JavaAnnotation> paramAnnotations = parameter.getAnnotations();
+			Set<String> groupClasses = JavaClassUtil.getParamGroupJavaClass(paramAnnotations,
 					builder.getJavaProjectBuilder());
 			String strRequired = "false";
-			boolean isPathVariable = false;
-			boolean isRequestBody = false;
 			boolean required = false;
-			boolean isRequestParam = false;
 			boolean isRequestPart = false;
-			if (annotations.isEmpty() && (Methods.GET.getValue().equals(docJavaMethod.getMethodType())
+			ApiParamEnum apiParamEnum = null;
+			if (paramAnnotations.isEmpty() && (Methods.GET.getValue().equals(docJavaMethod.getMethodType())
 					|| Methods.DELETE.getValue().equals(docJavaMethod.getMethodType()))) {
-				isRequestParam = true;
+				apiParamEnum = ApiParamEnum.QUERY;
 			}
-			for (JavaAnnotation annotation : annotations) {
+			for (JavaAnnotation annotation : paramAnnotations) {
 				String annotationName = annotation.getType().getValue();
 				if (this.ignoreMvcParamWithAnnotation(annotationName)) {
 					continue out;
@@ -1029,28 +1048,36 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 						|| frameworkAnnotations.getRequestPartAnnotation().getAnnotationName().equals(annotationName)) {
 					String defaultValueProp = DocAnnotationConstants.DEFAULT_VALUE_PROP;
 					String requiredProp = DocAnnotationConstants.REQUIRED_PROP;
+					// RequestParam annotation
 					if (frameworkAnnotations.getRequestParamAnnotation().getAnnotationName().equals(annotationName)) {
 						defaultValueProp = frameworkAnnotations.getRequestParamAnnotation().getDefaultValueProp();
 						requiredProp = frameworkAnnotations.getRequestParamAnnotation().getRequiredProp();
-						isRequestParam = true;
+						apiParamEnum = ApiParamEnum.QUERY;
 					}
-					if (frameworkAnnotations.getPathVariableAnnotation().getAnnotationName().equals(annotationName)) {
+					// PathVariable annotation
+					else if (frameworkAnnotations.getPathVariableAnnotation()
+						.getAnnotationName()
+						.equals(annotationName)) {
 						defaultValueProp = frameworkAnnotations.getPathVariableAnnotation().getDefaultValueProp();
 						requiredProp = frameworkAnnotations.getPathVariableAnnotation().getRequiredProp();
-						isPathVariable = true;
+						apiParamEnum = ApiParamEnum.PATH;
 					}
-					if (frameworkAnnotations.getRequestPartAnnotation().getAnnotationName().equals(annotationName)) {
+					// RequestPart annotation
+					else if (frameworkAnnotations.getRequestPartAnnotation()
+						.getAnnotationName()
+						.equals(annotationName)) {
 						requiredProp = frameworkAnnotations.getRequestPartAnnotation().getRequiredProp();
 						isRequestPart = true;
 						mockValue = JsonBuildHelper.buildJson(fullyQualifiedName, typeName, Boolean.FALSE, 0,
 								new HashMap<>(16), groupClasses, docJavaMethod.getJsonViewClasses(), builder);
 						requestBodyCounter++;
+						apiParamEnum = ApiParamEnum.BODY;
 					}
 					AnnotationValue annotationDefaultVal = annotation.getProperty(defaultValueProp);
 					if (Objects.nonNull(annotationDefaultVal)) {
 						mockValue = DocUtil.resolveAnnotationValue(classLoader, annotationDefaultVal);
 					}
-					paramName = getParamName(classLoader, paramName, annotation);
+					paramName = this.getParamName(classLoader, paramName, annotation);
 					AnnotationValue annotationRequired = annotation.getProperty(requiredProp);
 					if (Objects.nonNull(annotationRequired)) {
 						strRequired = annotationRequired.toString();
@@ -1059,24 +1086,37 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 						strRequired = "true";
 					}
 				}
+				// when annotation is Jsr303 required annotation
 				if (JavaClassValidateUtil.isJSR303Required(annotationName)) {
 					strRequired = "true";
 				}
+				// RequestBody annotation
 				if (frameworkAnnotations.getRequestBodyAnnotation().getAnnotationName().equals(annotationName)) {
-					// if (requestBodyCounter > 0) {
-					// throw new RuntimeException("You have use @RequestBody Passing
-					// multiple variables for method "
-					// + javaMethod.getName() + " in " + className + ",@RequestBody
-					// annotation could only bind one variables.");
-					// }
 					mockValue = JsonBuildHelper.buildJson(fullyQualifiedName, typeName, Boolean.FALSE, 0,
 							new HashMap<>(16), groupClasses, docJavaMethod.getJsonViewClasses(), builder);
 					requestBodyCounter++;
-					isRequestBody = true;
+					apiParamEnum = ApiParamEnum.BODY;
 				}
 				required = Boolean.parseBoolean(strRequired);
 			}
-			comment.append(JavaFieldUtil.getJsrComment(isShowValidation, classLoader, annotations));
+			// not get and delete method and has MediaType
+			boolean bodyMediaType = !(Methods.GET.getValue().equals(docJavaMethod.getMethodType())
+					|| Methods.DELETE.getValue().equals(docJavaMethod.getMethodType()))
+					&& StringUtil.isNotEmpty(methodMediaType)
+					&& (MediaType.APPLICATION_FORM_URLENCODED_VALUE.equals(methodMediaType)
+							|| MediaType.APPLICATION_JSON_VALUE.equals(methodMediaType)
+							|| MediaType.MULTIPART_FORM_DATA_VALUE.equals(methodMediaType));
+			if (bodyMediaType) {
+				apiParamEnum = ApiParamEnum.BODY;
+			}
+			// If the parameter is not in the request body, it is a query parameter
+			// Fixed issue #965
+			if (apiParamEnum == null && (!requestBodyParam.isEmpty() && !requestBodyParam.contains(apiParameter))) {
+				apiParamEnum = ApiParamEnum.QUERY;
+			}
+			boolean isQueryParam = ApiParamEnum.QUERY.equals(apiParamEnum);
+			boolean isPathVariable = ApiParamEnum.PATH.equals(apiParamEnum);
+			comment.append(JavaFieldUtil.getJsrComment(isShowValidation, classLoader, paramAnnotations));
 			if (requestFieldToUnderline && !isPathVariable) {
 				paramName = StringUtil.camelToUnderline(paramName);
 			}
@@ -1100,8 +1140,6 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 				continue;
 			}
 
-			boolean queryParam = !isRequestBody && !isPathVariable;
-
 			String[] gicNameArr = DocClassUtil.getSimpleGicName(typeName);
 			// Handle if it is collection types
 			if (JavaClassValidateUtil.isCollection(fullyQualifiedName)
@@ -1124,7 +1162,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 						.setDesc(comment + ",[array of enum]")
 						.setRequired(required)
 						.setPathParam(isPathVariable)
-						.setQueryParam(queryParam)
+						.setQueryParam(isQueryParam)
 						.setId(paramList.size() + 1)
 						.setType(ParamTypeConstants.PARAM_TYPE_ARRAY);
 					EnumInfoAndValues enumInfoAndValue = JavaClassUtil.getEnumInfoAndValue(gicJavaClass, builder,
@@ -1148,7 +1186,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 						.setDesc(comment + ",[array of " + shortSimple + "]")
 						.setRequired(required)
 						.setPathParam(isPathVariable)
-						.setQueryParam(queryParam)
+						.setQueryParam(isQueryParam)
 						.setId(paramList.size() + 1)
 						.setType(ParamTypeConstants.PARAM_TYPE_ARRAY)
 						.setVersion(DocGlobalConstants.DEFAULT_VERSION)
@@ -1173,7 +1211,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 					paramList.add(param);
 				}
 				else {
-					if (requestBodyCounter > 0 || !isRequestParam) {
+					if (requestBodyCounter > 0 || !ApiParamEnum.QUERY.equals(apiParamEnum)) {
 						// for json
 						paramList.addAll(ParamsBuildHelper.buildParams(gicNameArr[0], DocGlobalConstants.EMPTY, 0,
 								String.valueOf(required), Boolean.FALSE, new HashMap<>(16), builder, groupClasses,
@@ -1188,7 +1226,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 					.setType(DocClassUtil.processTypeNameForParams(simpleName))
 					.setId(paramList.size() + 1)
 					.setPathParam(isPathVariable)
-					.setQueryParam(queryParam)
+					.setQueryParam(isQueryParam)
 					.setValue(mockValue)
 					.setDesc(comment.toString())
 					.setRequired(required)
@@ -1231,14 +1269,14 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 					.setField(paramName)
 					.setId(paramList.size() + 1)
 					.setPathParam(isPathVariable)
-					.setQueryParam(queryParam)
+					.setQueryParam(isQueryParam)
 					.setType(ParamTypeConstants.PARAM_TYPE_ENUM)
 					.setDesc(comment.toString())
 					.setRequired(required)
 					.setVersion(DocGlobalConstants.DEFAULT_VERSION);
 
 				EnumInfoAndValues enumInfoAndValue = JavaClassUtil.getEnumInfoAndValue(javaClass, builder,
-						isPathVariable || queryParam || isRequestParam);
+						isPathVariable || isQueryParam);
 				if (Objects.nonNull(enumInfoAndValue)) {
 					param.setValue(StringUtil.removeDoubleQuotes(String.valueOf(enumInfoAndValue.getValue())))
 						.setEnumInfoAndValues(enumInfoAndValue)
@@ -1254,7 +1292,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 					.setField(paramName)
 					.setId(paramList.size() + 1)
 					.setPathParam(isPathVariable)
-					.setQueryParam(queryParam)
+					.setQueryParam(isQueryParam)
 					.setValue(mockValue)
 					.setType(ParamTypeConstants.PARAM_TYPE_OBJECT)
 					.setDesc(comment.toString())
@@ -1263,12 +1301,22 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 				paramList.add(param);
 				paramList.addAll(ParamsBuildHelper.buildParams(typeName, DocGlobalConstants.PARAM_PREFIX, 1,
 						String.valueOf(required), Boolean.FALSE, new HashMap<>(16), builder, groupClasses,
-						docJavaMethod.getJsonViewClasses(), 1, isRequestBody, null));
+						docJavaMethod.getJsonViewClasses(), 1, ApiParamEnum.BODY.equals(apiParamEnum), null));
 			}
 			else {
-				paramList.addAll(ParamsBuildHelper.buildParams(typeName, DocGlobalConstants.EMPTY, 0,
+				List<ApiParam> apiParams = ParamsBuildHelper.buildParams(typeName, DocGlobalConstants.EMPTY, 0,
 						String.valueOf(required), Boolean.FALSE, new HashMap<>(16), builder, groupClasses,
-						docJavaMethod.getJsonViewClasses(), 0, isRequestBody, null));
+						docJavaMethod.getJsonViewClasses(), 0, ApiParamEnum.BODY.equals(apiParamEnum), null);
+
+				boolean hasFile = apiParams.stream()
+					.anyMatch(param -> ParamTypeConstants.PARAM_TYPE_FILE.equals(param.getType()));
+				// if it does not have file and query param, set query param true
+				if (!hasFile && ApiParamEnum.QUERY.equals(apiParamEnum)) {
+					for (ApiParam apiParam : apiParams) {
+						apiParam.traverseAndConsume(ApiParam::setQueryParamTrue);
+					}
+				}
+				paramList.addAll(apiParams);
 			}
 		}
 		return ApiParamTreeUtil.buildMethodReqParam(paramList, queryReqParamMap, pathReqParamMap,
