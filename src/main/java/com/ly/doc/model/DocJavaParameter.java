@@ -18,17 +18,23 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.ly.doc.model;
 
-import java.util.List;
+package com.ly.doc.model;
 
 import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaParameter;
 
+import java.io.Serializable;
+import java.util.List;
+import java.util.Objects;
+
 /**
+ * Doc Java Parameter
+ *
  * @author yu3.sun on 2022/10/15
+ * @since 2.6.0
  */
-public class DocJavaParameter {
+public class DocJavaParameter implements Serializable {
 
 	private JavaParameter javaParameter;
 
@@ -40,7 +46,7 @@ public class DocJavaParameter {
 
 	private String typeValue;
 
-	List<JavaAnnotation> annotations;
+	private List<JavaAnnotation> annotations;
 
 	public JavaParameter getJavaParameter() {
 		return javaParameter;
@@ -88,6 +94,41 @@ public class DocJavaParameter {
 
 	public void setAnnotations(List<JavaAnnotation> annotations) {
 		this.annotations = annotations;
+	}
+
+	@Override
+	public String toString() {
+		return "DocJavaParameter{" + "javaParameter=" + javaParameter + ", genericCanonicalName='"
+				+ genericCanonicalName + '\'' + ", genericFullyQualifiedName='" + genericFullyQualifiedName + '\''
+				+ ", fullyQualifiedName='" + fullyQualifiedName + '\'' + ", typeValue='" + typeValue + '\''
+				+ ", annotations=" + annotations + '}';
+	}
+
+	@Override
+	public int hashCode() {
+		int result = javaParameter != null ? javaParameter.hashCode() : 0;
+		result = 31 * result + (genericCanonicalName != null ? genericCanonicalName.hashCode() : 0);
+		result = 31 * result + (genericFullyQualifiedName != null ? genericFullyQualifiedName.hashCode() : 0);
+		result = 31 * result + (fullyQualifiedName != null ? fullyQualifiedName.hashCode() : 0);
+		result = 31 * result + (typeValue != null ? typeValue.hashCode() : 0);
+		result = 31 * result + (annotations != null ? annotations.hashCode() : 0);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null || getClass() != obj.getClass()) {
+			return false;
+		}
+		DocJavaParameter that = (DocJavaParameter) obj;
+		return (Objects.equals(javaParameter, that.javaParameter))
+				&& (Objects.equals(genericCanonicalName, that.genericCanonicalName))
+				&& (Objects.equals(genericFullyQualifiedName, that.genericFullyQualifiedName))
+				&& (Objects.equals(fullyQualifiedName, that.fullyQualifiedName))
+				&& (Objects.equals(typeValue, that.typeValue)) && (Objects.equals(annotations, that.annotations));
 	}
 
 }

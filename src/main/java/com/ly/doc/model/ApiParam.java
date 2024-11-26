@@ -18,22 +18,36 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package com.ly.doc.model;
 
 import com.ly.doc.model.torna.EnumInfo;
 import com.ly.doc.model.torna.EnumInfoAndValues;
+import com.power.common.util.CollectionUtil;
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Stack;
+import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 import static com.ly.doc.constants.DocGlobalConstants.PARAM_PREFIX;
 
 /**
+ * Api Parameter
+ *
  * @author yu 2019/9/27.
+ * @since 1.7.2
  */
-public class ApiParam {
+public class ApiParam implements Serializable {
+
+	/**
+	 * serialVersionUID
+	 */
+	private static final long serialVersionUID = -714676579813604423L;
 
 	/**
 	 * param class name
@@ -249,6 +263,11 @@ public class ApiParam {
 		return this;
 	}
 
+	public ApiParam setQueryParamTrue() {
+		this.queryParam = true;
+		return this;
+	}
+
 	public String getValue() {
 		return value;
 	}
@@ -349,6 +368,43 @@ public class ApiParam {
 		this.enumInfo = enumInfoAndValues.getEnumInfo();
 		this.enumValues = enumInfoAndValues.getEnumValues();
 		return this;
+	}
+
+	/**
+	 * Returns a stream containing the current parameter and all its child parameters.
+	 * @return a stream of the current parameter and all its descendants
+	 */
+	public Stream<ApiParam> flattenStream() {
+		Stream<ApiParam> selfStream = Stream.of(this);
+		Stream<ApiParam> childrenStream = (this.children == null) ? Stream.empty()
+				: this.children.stream().flatMap(ApiParam::flattenStream);
+		return Stream.concat(selfStream, childrenStream);
+	}
+
+	/**
+	 * Traverses this {@link ApiParam} and all its child parameters using a stack-based
+	 * depth-first traversal, applying the given consumer to each parameter.
+	 * @param consumer the operation to be performed on each {@link ApiParam}
+	 */
+	public void traverseAndConsume(Consumer<ApiParam> consumer) {
+		// Initialize a stack with the current instance
+		Stack<ApiParam> stack = new Stack<>();
+		stack.push(this);
+
+		// Traverse the parameter tree
+		while (!stack.isEmpty()) {
+			// Pop the current parameter from the stack
+			ApiParam current = stack.pop();
+			// Apply the provided consumer to the current parameter
+			consumer.accept(current);
+
+			// If the current parameter has children, push them onto the stack
+			if (CollectionUtil.isNotEmpty(current.getChildren())) {
+				for (ApiParam child : current.getChildren()) {
+					stack.push(child);
+				}
+			}
+		}
 	}
 
 	@Override
