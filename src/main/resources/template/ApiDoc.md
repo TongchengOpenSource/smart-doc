@@ -21,47 +21,51 @@ for(doc in list){
 
 **Description:** ${doc.detail}
 
-<%if(isNotEmpty(doc.headers)){%>
+<%if(isNotEmpty(doc.requestHeaders)){%>
 **Request-headers:**
 
-| Header | Type | Required | Description | Since |
-|--------|------|----------|-------------|-------|
-${doc.headers}
+| Header | Type | Required | Description | Since | Example |
+|--------|------|----------|-------------|-------|---------|
+<%
+for(param in doc.requestHeaders){
+%>
+|${param.name}|${param.type}|${param.required}|${lineBreaksToBr(param.desc)}|${param.since}|${param.value}|
+<%}%>
 <%}%>
 
 <%if(isNotEmpty(doc.pathParams)){%>
 **Path-parameters:**
 
-| Parameter | Type | Required | Description | Since |
-|-----------|------|----------|-------------|-------|
+| Parameter | Type | Required | Description | Since | Example |
+|-----------|------|----------|-------------|-------|---------|
 <%
 for(param in doc.pathParams){
 %>
-|${param.field}|${param.type}|${param.required}|${lineBreaksToBr(param.desc)}|${param.version}|
+|${param.field}|${param.type}|${param.required}|${lineBreaksToBr(param.desc)}|${param.version}|${param.value}|
 <%}%>
 <%}%>
 
 <%if(isNotEmpty(doc.queryParams)){%>
 **Query-parameters:**
 
-| Parameter | Type | Required | Description | Since |
-|-----------|------|----------|-------------|-------|
+| Parameter | Type | Required | Description | Since | Example |
+|-----------|------|----------|-------------|-------|---------|
 <%
 for(param in doc.queryParams){
 %>
-|${param.field}|${param.type}|${param.required}|${lineBreaksToBr(param.desc)}|${param.version}|
+|${param.field}|${param.type}|${param.required}|${lineBreaksToBr(param.desc)}|${param.version}|${param.value}|
 <%}%>
 <%}%>
 
 <%if(isNotEmpty(doc.requestParams)){%>
 **Body-parameters:**
 
-| Parameter | Type | Required | Description | Since |
-|-----------|------|----------|-------------|-------|
+| Parameter | Type | Required | Description | Since | Example |
+|-----------|------|----------|-------------|-------|---------|
 <%
 for(param in doc.requestParams){
 %>
-|${param.field}|${param.type}|${param.required}|${lineBreaksToBr(param.desc)}|${param.version}|
+|${param.field}|${param.type}|${param.required}|${lineBreaksToBr(param.desc)}|${param.version}|${param.value}|
 <%}%>
 <%}%>
 
@@ -75,12 +79,12 @@ ${doc.requestUsage}
 
 **Response-fields:**
 
-| Field | Type | Description | Since |
-|-------|------|-------------|-------|
+| Field | Type | Description | Since | Example |
+|-------|------|-------------|-------|---------|
 <%
 for(param in doc.responseParams){
 %>
-|${param.field}|${param.type}|${lineBreaksToBr(param.desc)}|${param.version}|
+|${param.field}|${param.type}|${lineBreaksToBr(param.desc)}|${param.version}|${param.value}|
 <%}%>
 <%}%>
 
