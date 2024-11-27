@@ -342,10 +342,10 @@ public class ProjectDocConfigBuilder {
 				ClassLoader classLoader = apiConfig.getClassLoader();
 				try {
 					if (Objects.isNull(classLoader)) {
-						enumClass = Class.forName(cls.getFullyQualifiedName());
+						enumClass = Class.forName(cls.getBinaryName());
 					}
 					else {
-						enumClass = classLoader.loadClass(cls.getFullyQualifiedName());
+						enumClass = classLoader.loadClass(cls.getBinaryName());
 					}
 					enumClassMap.put(cls.getFullyQualifiedName(), enumClass);
 				}

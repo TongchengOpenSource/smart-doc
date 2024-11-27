@@ -823,7 +823,7 @@ public class ParamsBuildHelper extends BaseHelper {
 		String enumComments = javaClass.getComment();
 		if (Boolean.TRUE.equals(projectBuilder.getApiConfig().getInlineEnum())) {
 			ApiDataDictionary dataDictionary = projectBuilder.getApiConfig()
-				.getDataDictionary(javaClass.getCanonicalName());
+				.getDataDictionary(javaClass.getBinaryName());
 			if (Objects.isNull(dataDictionary)) {
 				// the output format should be unified ( as same as the "else" output)
 				comment = comment + "<br/>[Enum: " + JavaClassUtil.getEnumParams(javaClass) + "]";
@@ -833,7 +833,7 @@ public class ParamsBuildHelper extends BaseHelper {
 				if (enumClass.isInterface()) {
 					ClassLoader classLoader = projectBuilder.getApiConfig().getClassLoader();
 					try {
-						enumClass = classLoader.loadClass(javaClass.getFullyQualifiedName());
+						enumClass = classLoader.loadClass(javaClass.getBinaryName());
 					}
 					catch (ClassNotFoundException e) {
 						return comment;
