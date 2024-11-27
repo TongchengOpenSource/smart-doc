@@ -419,10 +419,10 @@ public class JavaClassUtil {
 		ClassLoader classLoader = apiConfig.getClassLoader();
 		try {
 			if (Objects.nonNull(classLoader)) {
-				return classLoader.loadClass(javaClass.getFullyQualifiedName());
+				return classLoader.loadClass(javaClass.getBinaryName());
 			}
 			else {
-				return Class.forName(javaClass.getFullyQualifiedName());
+				return Class.forName(javaClass.getBinaryName());
 			}
 		}
 		catch (ClassNotFoundException e) {
@@ -605,7 +605,7 @@ public class JavaClassUtil {
 
 		ApiConfig apiConfig = builder.getApiConfig();
 		ClassLoader classLoader = apiConfig.getClassLoader();
-		ApiDataDictionary dataDictionary = apiConfig.getDataDictionary(javaClass.getFullyQualifiedName());
+		ApiDataDictionary dataDictionary = apiConfig.getDataDictionary(javaClass.getBinaryName());
 
 		EnumInfo enumInfo = new EnumInfo();
 		String comment = javaClass.getComment();
@@ -620,7 +620,7 @@ public class JavaClassUtil {
 			Class<?> enumClass = dataDictionary.getEnumClass();
 			if (enumClass.isInterface()) {
 				try {
-					enumClass = classLoader.loadClass(javaClass.getFullyQualifiedName());
+					enumClass = classLoader.loadClass(javaClass.getBinaryName());
 				}
 				catch (ClassNotFoundException e) {
 					return enumInfo;
@@ -1120,10 +1120,10 @@ public class JavaClassUtil {
 		try {
 			Class<?> c;
 			if (Objects.nonNull(classLoader)) {
-				c = classLoader.loadClass(javaField.getDeclaringClass().getCanonicalName());
+				c = classLoader.loadClass(javaField.getDeclaringClass().getBinaryName());
 			}
 			else {
-				c = Class.forName(javaField.getDeclaringClass().getCanonicalName());
+				c = Class.forName(javaField.getDeclaringClass().getBinaryName());
 			}
 			Field f = c.getDeclaredField(name);
 			f.setAccessible(true);

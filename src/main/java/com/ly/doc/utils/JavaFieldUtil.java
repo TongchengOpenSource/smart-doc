@@ -204,10 +204,10 @@ public class JavaFieldUtil {
 		try {
 			Class<?> c;
 			if (Objects.nonNull(classLoader)) {
-				c = classLoader.loadClass(javaClass.getFullyQualifiedName());
+				c = classLoader.loadClass(javaClass.getBinaryName());
 			}
 			else {
-				c = Class.forName(javaClass.getFullyQualifiedName());
+				c = Class.forName(javaClass.getBinaryName());
 			}
 			Field[] fields = c.getDeclaredFields();
 			for (Field f : fields) {

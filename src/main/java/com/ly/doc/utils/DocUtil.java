@@ -1181,7 +1181,7 @@ public class DocUtil {
 					}
 
 					for (Class<? extends Enum<?>> enumClass : enumImplementSet) {
-						JavaClass javaClass = javaProjectBuilder.getClassByName(enumClass.getCanonicalName());
+						JavaClass javaClass = javaProjectBuilder.getClassByName(enumClass.getName());
 						if (Objects.nonNull(javaClass.getTagByName(DocTags.IGNORE))) {
 							continue;
 						}
