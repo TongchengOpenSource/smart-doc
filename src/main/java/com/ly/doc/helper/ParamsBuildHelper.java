@@ -454,7 +454,7 @@ public class ParamsBuildHelper extends BaseHelper {
 					ParamUtil.handleSeeEnum(param, field, projectBuilder, isResp || jsonRequest, tagsMap,
 							fieldJsonFormatValue);
 					// hand Param
-					commonHandleParam(paramList, param, isRequired, comment + appendComment, since, strRequired);
+					commonHandleParam(paramList, param, isRequired, comment.toString(), since, strRequired);
 				}
 				else if (JavaClassValidateUtil.isCollection(subTypeName)
 						|| JavaClassValidateUtil.isArray(subTypeName)) {
@@ -481,11 +481,6 @@ public class ParamsBuildHelper extends BaseHelper {
 					if (gNameArr.length == 0) {
 						continue;
 					}
-					else {
-						String gName = DocClassUtil.getSimpleGicName(fieldGicName)[0];
-						JavaClass javaClass1 = projectBuilder.getJavaProjectBuilder().getClassByName(gName);
-						comment.append(handleEnumComment(javaClass1, projectBuilder));
-					}
 					String gName = gNameArr[0];
 					if (JavaClassValidateUtil.isPrimitive(gName)) {
 						String builder = DocUtil.jsonValueByType(gName) + "," + DocUtil.jsonValueByType(gName);
@@ -505,6 +500,8 @@ public class ParamsBuildHelper extends BaseHelper {
 						if (!simpleName.equals(gName)) {
 							JavaClass arraySubClass = projectBuilder.getJavaProjectBuilder().getClassByName(gName);
 							if (arraySubClass.isEnum()) {
+								comment.append(handleEnumComment(arraySubClass, projectBuilder));
+								param.setDesc(comment.toString());
 								EnumInfoAndValues enumInfoAndValue = JavaClassUtil.getEnumInfoAndValue(arraySubClass,
 										projectBuilder, Boolean.FALSE);
 								if (Objects.nonNull(enumInfoAndValue)) {
@@ -849,6 +846,11 @@ public class ParamsBuildHelper extends BaseHelper {
 			}
 			comment = StringUtil.removeQuotes(comment);
 		}
+
+		if (Boolean.TRUE.equals(projectBuilder.getApiConfig().isDisplayActualType())) {
+			comment = comment + " (ActualType: " + javaClass.getSimpleName() + ")";
+		}
+
 		return comment;
 	}
 
