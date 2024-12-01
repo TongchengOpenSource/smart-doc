@@ -1140,7 +1140,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 				continue;
 			}
 
-			String[] gicNameArr = DocClassUtil.getSimpleGicName(typeName);
+			String[] gicNameArr = DocClassUtil.getSimpleGicName(genericFullyQualifiedName);
 			// Handle if it is collection types
 			if (JavaClassValidateUtil.isCollection(fullyQualifiedName)
 					|| JavaClassValidateUtil.isArray(fullyQualifiedName)) {
@@ -1157,9 +1157,11 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 				}
 				JavaClass gicJavaClass = builder.getJavaProjectBuilder().getClassByName(gicName);
 				if (gicJavaClass.isEnum()) {
+					comment.append(ParamsBuildHelper.handleEnumComment(gicJavaClass, builder));
+
 					ApiParam param = ApiParam.of()
 						.setField(paramName)
-						.setDesc(comment + ",[array of enum]")
+						.setDesc(comment.toString())
 						.setRequired(required)
 						.setPathParam(isPathVariable)
 						.setQueryParam(isQueryParam)
@@ -1169,8 +1171,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 							Boolean.TRUE);
 					if (Objects.nonNull(enumInfoAndValue)) {
 						param.setValue(StringUtil.removeDoubleQuotes(String.valueOf(enumInfoAndValue.getValue())))
-							.setEnumInfoAndValues(enumInfoAndValue)
-							.setType(enumInfoAndValue.getType());
+							.setEnumInfoAndValues(enumInfoAndValue);
 					}
 
 					paramList.add(param);
