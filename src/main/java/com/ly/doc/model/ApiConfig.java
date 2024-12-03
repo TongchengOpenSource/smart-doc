@@ -457,6 +457,13 @@ public class ApiConfig {
 	 */
 	private boolean addDefaultHttpStatuses;
 
+	/**
+	 * Show enum name for example
+	 *
+	 * @since 3.1.0
+	 */
+	private boolean enumNameExample = Boolean.FALSE;
+
 	public static ApiConfig getInstance() {
 		return instance;
 	}
@@ -1136,6 +1143,14 @@ public class ApiConfig {
 
 	public void setAddDefaultHttpStatuses(boolean addDefaultHttpStatuses) {
 		this.addDefaultHttpStatuses = addDefaultHttpStatuses;
+	}
+
+	public boolean isEnumNameExample() {
+		return enumNameExample;
+	}
+
+	public void setEnumNameExample(boolean enumNameExample) {
+		this.enumNameExample = enumNameExample;
 	}
 
 }
