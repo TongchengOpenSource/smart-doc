@@ -450,7 +450,7 @@ public class JAXRSDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IWebSoc
 				}
 				JavaClass gicJavaClass = builder.getJavaProjectBuilder().getClassByName(gicName);
 				if (gicJavaClass.isEnum()) {
-					Object value = JavaClassUtil.getEnumValue(gicJavaClass, builder, Boolean.TRUE);
+					Object value = JavaClassUtil.getEnumValue(gicJavaClass, builder);
 					ApiParam param = ApiParam.of()
 						.setField(paramName)
 						.setDesc(comment + ",[array of enum]")
@@ -560,7 +560,7 @@ public class JAXRSDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IWebSoc
 			// param is enum
 			else if (javaClass.isEnum()) {
 				String o = JavaClassUtil.getEnumParams(javaClass);
-				Object value = JavaClassUtil.getEnumValue(javaClass, builder, true);
+				Object value = JavaClassUtil.getEnumValue(javaClass, builder);
 				ApiParam param = ApiParam.of()
 					.setField(paramName)
 					.setId(paramList.size() + 1)
@@ -664,7 +664,7 @@ public class JAXRSDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IWebSoc
 							|| JakartaJaxrsAnnotations.JAXB_REST_PATH_FULLY.equals(annotationName)
 							|| JAXRSAnnotations.JAX_PATH_PARAM_FULLY.equals(annotationName)) {
 						if (javaClass.isEnum()) {
-							Object value = JavaClassUtil.getEnumValue(javaClass, configBuilder, Boolean.TRUE);
+							Object value = JavaClassUtil.getEnumValue(javaClass, configBuilder);
 							mockValue = StringUtil.removeQuotes(String.valueOf(value));
 						}
 						pathParamsMap.put(paramName, mockValue);
@@ -715,7 +715,7 @@ public class JAXRSDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IWebSoc
 					}
 					else if (javaClass.isEnum()) {
 						// do nothing
-						Object value = JavaClassUtil.getEnumValue(javaClass, configBuilder, Boolean.TRUE);
+						Object value = JavaClassUtil.getEnumValue(javaClass, configBuilder);
 						String strVal = StringUtil.removeQuotes(String.valueOf(value));
 						FormData formData = new FormData();
 						formData.setDescription(comment);

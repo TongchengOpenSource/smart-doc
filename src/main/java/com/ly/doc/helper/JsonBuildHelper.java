@@ -60,8 +60,7 @@ public class JsonBuildHelper extends BaseHelper {
 			return "File download.";
 		}
 		if (method.getReturns().isEnum() && Objects.isNull(responseBodyAdvice)) {
-			return StringUtil
-				.removeQuotes(String.valueOf(JavaClassUtil.getEnumValue(method.getReturns(), builder, Boolean.FALSE)));
+			return StringUtil.removeQuotes(String.valueOf(JavaClassUtil.getEnumValue(method.getReturns(), builder)));
 		}
 		if (method.getReturns().isPrimitive() && Objects.isNull(responseBodyAdvice)) {
 			String typeName = method.getReturnType().getCanonicalName();
@@ -158,8 +157,7 @@ public class JsonBuildHelper extends BaseHelper {
 
 		// Handle enum types
 		if (javaClass.isEnum()) {
-			return StringUtil
-				.removeQuotes(String.valueOf(JavaClassUtil.getEnumValue(javaClass, projectBuilder, Boolean.FALSE)));
+			return StringUtil.removeQuotes(String.valueOf(JavaClassUtil.getEnumValue(javaClass, projectBuilder)));
 		}
 
 		StringBuilder result = new StringBuilder();
@@ -389,8 +387,7 @@ public class JsonBuildHelper extends BaseHelper {
 								JavaClass arraySubClass = projectBuilder.getJavaProjectBuilder()
 									.getClassByName(gicName);
 								if (arraySubClass.isEnum()) {
-									Object value = JavaClassUtil.getEnumValue(arraySubClass, projectBuilder,
-											Boolean.FALSE);
+									Object value = JavaClassUtil.getEnumValue(arraySubClass, projectBuilder);
 									result.append("[").append(value).append("],");
 									continue;
 								}
@@ -463,7 +460,7 @@ public class JsonBuildHelper extends BaseHelper {
 							// if has Annotation @JsonSerialize And using
 							// ToStringSerializer && isResp
 							else if (toStringSerializer && isResp) {
-								Object value = JavaClassUtil.getEnumValue(javaClass, projectBuilder, Boolean.FALSE);
+								Object value = JavaClassUtil.getEnumValue(javaClass, projectBuilder);
 								result.append(value).append(",");
 							}
 							// if has @JsonFormat
@@ -471,7 +468,7 @@ public class JsonBuildHelper extends BaseHelper {
 								result.append(fieldJsonFormatValue).append(",");
 							}
 							else {
-								Object value = JavaClassUtil.getEnumValue(javaClass, projectBuilder, Boolean.FALSE);
+								Object value = JavaClassUtil.getEnumValue(javaClass, projectBuilder);
 								result.append(value).append(",");
 							}
 						}

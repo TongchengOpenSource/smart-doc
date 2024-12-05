@@ -1167,8 +1167,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 						.setQueryParam(isQueryParam)
 						.setId(paramList.size() + 1)
 						.setType(ParamTypeConstants.PARAM_TYPE_ARRAY);
-					EnumInfoAndValues enumInfoAndValue = JavaClassUtil.getEnumInfoAndValue(gicJavaClass, builder,
-							Boolean.TRUE);
+					EnumInfoAndValues enumInfoAndValue = JavaClassUtil.getEnumInfoAndValue(gicJavaClass, builder);
 					if (Objects.nonNull(enumInfoAndValue)) {
 						param.setValue(StringUtil.removeDoubleQuotes(String.valueOf(enumInfoAndValue.getValue())))
 							.setEnumInfoAndValues(enumInfoAndValue);
@@ -1276,8 +1275,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 					.setRequired(required)
 					.setVersion(DocGlobalConstants.DEFAULT_VERSION);
 
-				EnumInfoAndValues enumInfoAndValue = JavaClassUtil.getEnumInfoAndValue(javaClass, builder,
-						isPathVariable || isQueryParam);
+				EnumInfoAndValues enumInfoAndValue = JavaClassUtil.getEnumInfoAndValue(javaClass, builder);
 				if (Objects.nonNull(enumInfoAndValue)) {
 					param.setValue(StringUtil.removeDoubleQuotes(String.valueOf(enumInfoAndValue.getValue())))
 						.setEnumInfoAndValues(enumInfoAndValue)
@@ -1474,7 +1472,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 					.getAnnotationName()
 					.contains(annotationName)) {
 					if (javaClass.isEnum()) {
-						Object value = JavaClassUtil.getEnumValue(javaClass, configBuilder, Boolean.TRUE);
+						Object value = JavaClassUtil.getEnumValue(javaClass, configBuilder);
 						mockValue = StringUtil.removeQuotes(String.valueOf(value));
 					}
 					if (pathParamsMap.containsKey(paramName)) {
@@ -1488,7 +1486,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 					.getAnnotationName()
 					.contains(annotationName)) {
 					if (javaClass.isEnum()) {
-						Object value = JavaClassUtil.getEnumValue(javaClass, configBuilder, Boolean.TRUE);
+						Object value = JavaClassUtil.getEnumValue(javaClass, configBuilder);
 						mockValue = StringUtil.removeQuotes(String.valueOf(value));
 					}
 					if (queryParamsMap.containsKey(paramName)) {
@@ -1565,7 +1563,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 				String value;
 				JavaClass javaClass1 = configBuilder.getClassByName(gicName);
 				if (Objects.nonNull(javaClass1) && javaClass1.isEnum()) {
-					value = String.valueOf(JavaClassUtil.getEnumValue(javaClass1, configBuilder, Boolean.TRUE));
+					value = String.valueOf(JavaClassUtil.getEnumValue(javaClass1, configBuilder));
 				}
 				else {
 					value = RandomUtil.randomValueByType(gicName);
@@ -1583,7 +1581,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 			// enum type
 			else if (javaClass.isEnum()) {
 				// do nothing
-				Object value = JavaClassUtil.getEnumValue(javaClass, configBuilder, Boolean.TRUE);
+				Object value = JavaClassUtil.getEnumValue(javaClass, configBuilder);
 				String strVal = StringUtil.removeQuotes(String.valueOf(value));
 				FormData formData = new FormData();
 				formData.setKey(paramName);

@@ -91,7 +91,7 @@ public class ParamUtil {
 				javaField.getType().getGenericFullyQualifiedName())) {
 			param.setType(ParamTypeConstants.PARAM_TYPE_ENUM);
 		}
-		EnumInfoAndValues enumInfoAndValue = JavaClassUtil.getEnumInfoAndValue(seeEnum, builder, !jsonRequest);
+		EnumInfoAndValues enumInfoAndValue = JavaClassUtil.getEnumInfoAndValue(seeEnum, builder);
 		if (Objects.nonNull(enumInfoAndValue)) {
 			param.setValue(StringUtil.removeDoubleQuotes(String.valueOf(enumInfoAndValue.getValue())))
 				.setEnumInfoAndValues(enumInfoAndValue)

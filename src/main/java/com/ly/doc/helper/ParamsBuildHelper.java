@@ -502,12 +502,13 @@ public class ParamsBuildHelper extends BaseHelper {
 							if (arraySubClass.isEnum()) {
 								comment.append(handleEnumComment(arraySubClass, projectBuilder));
 								param.setDesc(comment.toString());
+								param.setType(ParamTypeConstants.PARAM_TYPE_ARRAY);
+
 								EnumInfoAndValues enumInfoAndValue = JavaClassUtil.getEnumInfoAndValue(arraySubClass,
-										projectBuilder, Boolean.FALSE);
+										projectBuilder);
 								if (Objects.nonNull(enumInfoAndValue)) {
 									param.setValue("[\"" + enumInfoAndValue.getValue() + "\"]")
-										.setEnumInfoAndValues(enumInfoAndValue)
-										.setType(enumInfoAndValue.getType());
+										.setEnumInfoAndValues(enumInfoAndValue);
 								}
 							}
 							else if (gName.length() == 1) {
