@@ -507,7 +507,7 @@ public class ParamsBuildHelper extends BaseHelper {
 								EnumInfoAndValues enumInfoAndValue = JavaClassUtil.getEnumInfoAndValue(arraySubClass,
 										projectBuilder);
 								if (Objects.nonNull(enumInfoAndValue)) {
-									param.setValue("[\"" + enumInfoAndValue.getValue() + "\"]")
+									param.setValue("[" + enumInfoAndValue.getValue() + "]")
 										.setEnumInfoAndValues(enumInfoAndValue);
 								}
 							}
