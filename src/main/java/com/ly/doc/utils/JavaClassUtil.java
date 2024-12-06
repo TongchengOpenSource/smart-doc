@@ -564,7 +564,7 @@ public class JavaClassUtil {
 			return null;
 		}
 
-		JavaClass enumClass = builder.getJavaProjectBuilder().getClassByName(value);
+		JavaClass enumClass = builder.getClassByName(value);
 		if (enumClass.isEnum()) {
 			return enumClass;
 		}
