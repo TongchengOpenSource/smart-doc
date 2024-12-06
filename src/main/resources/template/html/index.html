@@ -93,6 +93,7 @@
                         <th class="tableblock halign-left valign-top">Description</th>
                         <th class="tableblock halign-left valign-top">Required</th>
                         <th class="tableblock halign-left valign-top">Since</th>
+                        <th class="tableblock halign-left valign-top">Example</th>
                     </tr>
                     </thead>
                     <tbody><%for(header in doc.requestHeaders){%>
@@ -102,6 +103,7 @@
                         <td class="tableblock halign-left valign-top"><p class="tableblock">${htmlEscape(header.desc)}</p></td>
                         <td class="tableblock halign-left valign-top"><p class="tableblock">${header.required}</p></td>
                         <td class="tableblock halign-left valign-top"><p class="tableblock">${header.since}</p></td>
+                        <td class="tableblock halign-left valign-top"><p class="tableblock">${header.value}</p></td>
                     </tr>
                     <%}%>
                     </tbody>
@@ -123,6 +125,7 @@
                         <th class="tableblock halign-left valign-top">Description</th>
                         <th class="tableblock halign-left valign-top">Required</th>
                         <th class="tableblock halign-left valign-top">Since</th>
+                        <th class="tableblock halign-left valign-top">Example</th>
                     </tr>
                     </thead>
                     <tbody><%for(param in doc.pathParams){%>
@@ -132,6 +135,7 @@
                         <td class="tableblock halign-left valign-top"><p class="tableblock">${htmlEscape(param.desc)}</p></td>
                         <td class="tableblock halign-left valign-top"><p class="tableblock">${param.required}</p></td>
                         <td class="tableblock halign-left valign-top"><p class="tableblock">${param.version}</p></td>
+                        <td class="tableblock halign-left valign-top"><p class="tableblock">${param.value}</p></td>
                     </tr>
                     <%}%>
                     </tbody>
@@ -153,6 +157,7 @@
                         <th class="tableblock halign-left valign-top">Description</th>
                         <th class="tableblock halign-left valign-top">Required</th>
                         <th class="tableblock halign-left valign-top">Since</th>
+                        <th class="tableblock halign-left valign-top">Example</th>
                     </tr>
                     </thead>
                     <tbody><%for(param in doc.queryParams){%>
@@ -162,6 +167,7 @@
                         <td class="tableblock halign-left valign-top"><p class="tableblock">${htmlEscape(param.desc)}</p></td>
                         <td class="tableblock halign-left valign-top"><p class="tableblock">${param.required}</p></td>
                         <td class="tableblock halign-left valign-top"><p class="tableblock">${param.version}</p></td>
+                        <td class="tableblock halign-left valign-top"><p class="tableblock">${param.value}</p></td>
                     </tr>
                     <%}%>
                     </tbody>
@@ -183,6 +189,7 @@
                         <th class="tableblock halign-left valign-top">Description</th>
                         <th class="tableblock halign-left valign-top">Required</th>
                         <th class="tableblock halign-left valign-top">Since</th>
+                        <th class="tableblock halign-left valign-top">Example</th>
                     </tr>
                     </thead>
                     <tbody><%for(param in doc.requestParams){%>
@@ -192,6 +199,7 @@
                         <td class="tableblock halign-left valign-top"><p class="tableblock">${htmlEscape(param.desc)}</p></td>
                         <td class="tableblock halign-left valign-top"><p class="tableblock">${param.required}</p></td>
                         <td class="tableblock halign-left valign-top"><p class="tableblock">${param.version}</p></td>
+                        <td class="tableblock halign-left valign-top"><p class="tableblock">${param.value}</p></td>
                     </tr>
                     <%}%>
                     </tbody>
@@ -218,6 +226,7 @@
                         <th class="tableblock halign-left valign-top">Type</th>
                         <th class="tableblock halign-left valign-top">Description</th>
                         <th class="tableblock halign-left valign-top">Since</th>
+                        <th class="tableblock halign-left valign-top">Example</th>
                     </tr>
                     </thead>
                     <tbody><%for(param in doc.responseParams){%>
@@ -226,6 +235,7 @@
                         <td class="tableblock halign-left valign-top"><p class="tableblock">${param.type}</p></td>
                         <td class="tableblock halign-left valign-top"><p class="tableblock">${htmlEscape(param.desc)}</p></td>
                         <td class="tableblock halign-left valign-top"><p class="tableblock">${param.version}</p></td>
+                        <td class="tableblock halign-left valign-top"><p class="tableblock">${param.value}</p></td>
                     </tr>
                     <%}%>
                     </tbody>
