@@ -301,8 +301,10 @@ public class TornaUtil {
 		for (ApiReqParam header : apiReqParams) {
 			httpParam = new HttpParam();
 			httpParam.setName(header.getName());
+			httpParam.setType(header.getType());
 			httpParam.setRequired(header.isRequired() ? TornaConstants.YES : TornaConstants.NO);
 			httpParam.setExample(StringUtil.removeQuotes(header.getValue()));
+			httpParam.setEnumInfo(header.getEnumInfo());
 			if (StringUtil.isNotEmpty(header.getSince())
 					&& !DocGlobalConstants.DEFAULT_VERSION.equals(header.getSince())) {
 				httpParam.setDescription(header.getDesc() + "@since " + header.getSince());

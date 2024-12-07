@@ -22,6 +22,9 @@ package com.ly.doc.model;
 
 import com.ly.doc.constants.ApiReqParamInTypeEnum;
 import com.ly.doc.constants.DocGlobalConstants;
+import com.ly.doc.model.torna.EnumInfo;
+import com.ly.doc.model.torna.EnumInfoAndValues;
+import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Objects;
@@ -84,6 +87,18 @@ public class ApiReqParam {
 	 * @since 2.2.2 Regular expression ignore request param
 	 */
 	private String excludePathPatterns;
+
+	/**
+	 * enum values<br>
+	 * Use in openapi api document
+	 */
+	private List<String> enumValues;
+
+	/**
+	 * enum Info<br>
+	 * Use in torna api document
+	 */
+	private EnumInfo enumInfo;
 
 	public static ApiReqParam builder() {
 		return new ApiReqParam();
@@ -181,6 +196,24 @@ public class ApiReqParam {
 
 	public ApiReqParam setParamIn(String paramIn) {
 		this.paramIn = paramIn;
+		return this;
+	}
+
+	public EnumInfo getEnumInfo() {
+		return enumInfo;
+	}
+
+	public ApiReqParam setEnumInfo(EnumInfo enumInfo) {
+		this.enumInfo = enumInfo;
+		return this;
+	}
+
+	public ApiReqParam setEnumInfoAndValues(EnumInfoAndValues enumInfoAndValues) {
+		if (Objects.isNull(enumInfoAndValues)) {
+			return this;
+		}
+		this.enumInfo = enumInfoAndValues.getEnumInfo();
+		this.enumValues = enumInfoAndValues.getEnumValues();
 		return this;
 	}
 
