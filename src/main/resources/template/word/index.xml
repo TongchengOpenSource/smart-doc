@@ -173,7 +173,7 @@
         </w:p>
 
         <!--    请求头    -->
-        <%if(isNotEmpty(doc.headers)){%>
+        <%if(isNotEmpty(doc.requestHeaders)){%>
         <w:p>
             <w:pPr>
                 <w:pStyle w:val="29"/>
@@ -335,6 +335,31 @@
                         </w:r>
                     </w:p>
                 </w:tc>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcW w:w="2700" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
+                        </w:pPr>
+                        <w:r>
+                            <w:rPr>
+                                <w:b/>
+                                <w:bCs/>
+                            </w:rPr>
+                            <w:t>Example</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
             </w:tr>
             <%
             for(header in doc.requestHeaders){
@@ -452,6 +477,29 @@
                         </w:pPr>
                         <w:r>
                             <w:t>${header.since}</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcW w:w="2700" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <%if (headerLP.index % 2 == 0) {%>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                        <%}%>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
+                        </w:pPr>
+                        <w:r>
+                            <w:t>${header.value}</w:t>
                         </w:r>
                     </w:p>
                 </w:tc>
@@ -623,6 +671,31 @@
                         </w:r>
                     </w:p>
                 </w:tc>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcW w:w="2700" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
+                        </w:pPr>
+                        <w:r>
+                            <w:rPr>
+                                <w:b/>
+                                <w:bCs/>
+                            </w:rPr>
+                            <w:t>Example</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
             </w:tr>
             <%
             for(param in doc.pathParams){
@@ -740,6 +813,29 @@
                         </w:pPr>
                         <w:r>
                             <w:t>${param.version}</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcW w:w="2700" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <%if (paramLP.index % 2 == 0) {%>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                        <%}%>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
+                        </w:pPr>
+                        <w:r>
+                            <w:t>${param.value}</w:t>
                         </w:r>
                     </w:p>
                 </w:tc>
@@ -911,6 +1007,31 @@
                         </w:r>
                     </w:p>
                 </w:tc>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcW w:w="2700" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
+                        </w:pPr>
+                        <w:r>
+                            <w:rPr>
+                                <w:b/>
+                                <w:bCs/>
+                            </w:rPr>
+                            <w:t>Example</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
             </w:tr>
             <%
             for(param in doc.queryParams){
@@ -1028,6 +1149,29 @@
                         </w:pPr>
                         <w:r>
                             <w:t>${param.version}</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcW w:w="2700" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <%if (paramLP.index % 2 == 0) {%>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                        <%}%>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
+                        </w:pPr>
+                        <w:r>
+                            <w:t>${param.value}</w:t>
                         </w:r>
                     </w:p>
                 </w:tc>
@@ -1200,6 +1344,31 @@
                         </w:r>
                     </w:p>
                 </w:tc>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcW w:w="2700" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
+                        </w:pPr>
+                        <w:r>
+                            <w:rPr>
+                                <w:b/>
+                                <w:bCs/>
+                            </w:rPr>
+                            <w:t>Example</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
             </w:tr>
             <%
             for(param in doc.requestParams){
@@ -1317,6 +1486,29 @@
                         </w:pPr>
                         <w:r>
                             <w:t>${param.version}</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcW w:w="2700" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <%if (paramLP.index % 2 == 0) {%>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                        <%}%>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
+                        </w:pPr>
+                        <w:r>
+                            <w:t>${param.value}</w:t>
                         </w:r>
                     </w:p>
                 </w:tc>
@@ -1497,6 +1689,31 @@
                         </w:r>
                     </w:p>
                 </w:tc>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcW w:w="2700" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
+                        </w:pPr>
+                        <w:r>
+                            <w:rPr>
+                                <w:b/>
+                                <w:bCs/>
+                            </w:rPr>
+                            <w:t>Example</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
             </w:tr>
             <%
             for(param in doc.responseParams){
@@ -1588,6 +1805,29 @@
                         </w:pPr>
                         <w:r>
                             <w:t>${param.version}</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcW w:w="2700" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <%if (paramLP.index % 2 == 0) {%>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                        <%}%>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
+                        </w:pPr>
+                        <w:r>
+                            <w:t>${param.value}</w:t>
                         </w:r>
                     </w:p>
                 </w:tc>

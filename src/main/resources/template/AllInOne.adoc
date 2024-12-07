@@ -45,14 +45,18 @@ for(doc in api.list){
 
 *Content-Type:* `${doc.contentType}`
 
-<%if(isNotEmpty(doc.headers)){%>
+<%if(isNotEmpty(doc.requestHeaders)){%>
 *Request-headers:*
 
 [width="100%",options="header"]
 [stripes=even]
 |====================
-|Header | Type|Required|Description|Since
-${doc.headers}
+|Header | Type|Required|Description|Since|Example
+<%
+for(param in doc.requestHeaders){
+%>
+|${param.name}|${param.type}|${param.required}|${param.desc}|${param.since}|${param.value}
+<%}%>
 |====================
 <%}%>
 
@@ -62,11 +66,11 @@ ${doc.headers}
 [width="100%",options="header"]
 [stripes=even]
 |====================
-|Parameter | Type|Required|Description|Since
+|Parameter | Type|Required|Description|Since|Example
 <%
 for(param in doc.pathParams){
 %>
-|${param.field}|${param.type}|${param.required}|${param.desc}|${param.version}
+|${param.field}|${param.type}|${param.required}|${param.desc}|${param.version}|${param.value}
 <%}%>
 |====================
 <%}%>
@@ -77,11 +81,11 @@ for(param in doc.pathParams){
 [width="100%",options="header"]
 [stripes=even]
 |====================
-|Parameter | Type|Required|Description|Since
+|Parameter | Type|Required|Description|Since|Example
 <%
 for(param in doc.queryParams){
 %>
-|${param.field}|${param.type}|${param.required}|${param.desc}|${param.version}
+|${param.field}|${param.type}|${param.required}|${param.desc}|${param.version}|${param.value}
 <%}%>
 |====================
 <%}%>
@@ -92,11 +96,11 @@ for(param in doc.queryParams){
 [width="100%",options="header"]
 [stripes=even]
 |====================
-|Parameter | Type|Required|Description|Since
+|Parameter | Type|Required|Description|Since|Example
 <%
 for(param in doc.requestParams){
 %>
-|${param.field}|${param.type}|${param.required}|${param.desc}|${param.version}
+|${param.field}|${param.type}|${param.required}|${param.desc}|${param.version}|${param.value}
 <%}%>
 |====================
 <%}%>
@@ -113,11 +117,11 @@ ${doc.requestUsage}
 [width="100%",options="header"]
 [stripes=even]
 |====================
-|Field | Type|Description|Since
+|Field | Type|Description|Since|Example
 <%
 for(param in doc.responseParams){
 %>
-|${param.field}|${param.type}|${param.desc}|${param.version}
+|${param.field}|${param.type}|${param.desc}|${param.version}|${param.value}
 <%}%>
 |====================
 <%}%>
