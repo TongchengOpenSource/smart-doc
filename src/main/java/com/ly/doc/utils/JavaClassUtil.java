@@ -30,6 +30,7 @@ import com.ly.doc.constants.DocTags;
 import com.ly.doc.constants.DocValidatorAnnotationEnum;
 import com.ly.doc.constants.JSRAnnotationConstants;
 import com.ly.doc.constants.JavaTypeConstants;
+import com.ly.doc.constants.ParamTypeConstants;
 import com.ly.doc.model.ApiConfig;
 import com.ly.doc.model.ApiDataDictionary;
 import com.ly.doc.model.DocJavaField;
@@ -56,6 +57,7 @@ import com.thoughtworks.qdox.model.expression.Constant;
 import com.thoughtworks.qdox.model.expression.TypeRef;
 import com.thoughtworks.qdox.model.impl.DefaultJavaField;
 import com.thoughtworks.qdox.model.impl.DefaultJavaParameterizedType;
+import net.datafaker.BojackHorseman;
 import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Field;
@@ -351,11 +353,12 @@ public class JavaClassUtil {
 	 * @param javaClass The JavaClass object representing the enum class
 	 * @param builder A ProjectDocConfigBuilder object used to retrieve API configuration
 	 * and the class loader
+	 * @param jsonEnum Enum is json or not
 	 * @return Object The enum value, whose type depends on the specific enum definition
 	 * @throws RuntimeException If the enum constants do not exist
 	 */
-	public static Object getEnumValue(JavaClass javaClass, ProjectDocConfigBuilder builder) {
-		EnumInfoAndValues enumInfoAndValue = getEnumInfoAndValue(javaClass, builder);
+	public static Object getEnumValue(JavaClass javaClass, ProjectDocConfigBuilder builder, boolean jsonEnum) {
+		EnumInfoAndValues enumInfoAndValue = getEnumInfoAndValue(javaClass, builder, jsonEnum);
 		if (enumInfoAndValue == null) {
 			return null;
 		}
@@ -367,9 +370,8 @@ public class JavaClassUtil {
 	/**
 	 * Get the value of an enumConstant
 	 * <p>
-	 * This method retrieves the value of an enum based on its fields or methods. It
-	 * supports loading the enum class via reflection and determines the enum value based
-	 * on the presence of specific annotations such as {@code JsonValue}
+	 * First look for it using the @JsonValue annotation, and if you can't find it, look
+	 * for the default value of the enumeration field
 	 * @param javaClass The JavaClass object representing the enum class
 	 * @param builder A ProjectDocConfigBuilder object used to retrieve API configuration
 	 * and the class loader
@@ -380,6 +382,30 @@ public class JavaClassUtil {
 	public static Object getDefaultEnumValue(JavaClass javaClass, ProjectDocConfigBuilder builder,
 			JavaField enumConstant) {
 		// Try getting value from method with JsonValue annotation
+		Object enumValue = getEnumValueWithJsonValue(javaClass, builder, enumConstant);
+		if (enumValue != null) {
+			return enumValue;
+		}
+
+		// Default handling for enum values
+		return processDefaultEnumFields(enumConstant);
+	}
+
+	/**
+	 * Get the value with @JsonValue annotation
+	 * <p>
+	 * This method retrieves the value of an enum based on its fields or methods. It
+	 * supports loading the enum class via reflection and determines the enum value based
+	 * on the presence of specific annotations such as {@code JsonValue}
+	 * @param javaClass The JavaClass object representing the enum class
+	 * @param builder A ProjectDocConfigBuilder object used to retrieve API configuration
+	 * and the class loader
+	 * @param enumConstant The JavaField object representing the enum constant
+	 * @return Object The enum value, whose type depends on the specific enum definition
+	 * @throws RuntimeException If the enum constants do not exist
+	 */
+	private static Object getEnumValueWithJsonValue(JavaClass javaClass, ProjectDocConfigBuilder builder,
+			JavaField enumConstant) {
 		String methodName = findMethodWithJsonValue(javaClass);
 		if (Objects.nonNull(methodName)) {
 			Class<?> enumClass = loadEnumClass(javaClass, builder);
@@ -399,8 +425,7 @@ public class JavaClassUtil {
 			return null;
 		}
 
-		// Default handling for enum values
-		return processDefaultEnumFields(enumConstant);
+		return null;
 	}
 
 	/**
@@ -1399,10 +1424,12 @@ public class JavaClassUtil {
 	 * @param javaClass The Java class object representing the enum.
 	 * @param builder The project documentation configuration builder, used to access
 	 * project-specific documentation settings.
+	 * @param jsonEnum Whether it is an enum in JSON
 	 * @return An EnumInfoAndValues object containing both the enum information and its
 	 * values.
 	 */
-	public static EnumInfoAndValues getEnumInfoAndValue(JavaClass javaClass, ProjectDocConfigBuilder builder) {
+	public static EnumInfoAndValues getEnumInfoAndValue(JavaClass javaClass, ProjectDocConfigBuilder builder,
+			boolean jsonEnum) {
 		// Step 1: Retrieve EnumInfo (general enum info like name, description, etc.)
 		EnumInfo enumInfo = getEnumInfo(javaClass, builder);
 
@@ -1411,7 +1438,7 @@ public class JavaClassUtil {
 			return null;
 		}
 
-		return generateEnumInfoAndValues(enumInfo, builder);
+		return generateEnumInfoAndValues(enumInfo, javaClass, builder, jsonEnum);
 	}
 
 	/**
@@ -1451,7 +1478,7 @@ public class JavaClassUtil {
 			String enumComment = cons.getComment();
 			item.setName(name);
 			item.setValue(name);
-			item.setType("string");
+			item.setType(ParamTypeConstants.PARAM_TYPE_ENUM);
 			item.setDescription(enumComment);
 
 			Object defaultEnumValue = getDefaultEnumValue(enumClass, builder, cons);
@@ -1473,26 +1500,41 @@ public class JavaClassUtil {
 	 * Generate EnumInfoAndValues, and determine the enumNameExample configuration in
 	 * apiConfig
 	 * @param enumInfo the enum info
+	 * @param javaClass The Java class object representing the enum.
 	 * @param builder builder
+	 * @param jsonEnum Whether it is an enum in JSON
 	 * @return List<Item>
 	 * @author JasonKung22
 	 */
-	private static EnumInfoAndValues generateEnumInfoAndValues(EnumInfo enumInfo, ProjectDocConfigBuilder builder) {
+	private static EnumInfoAndValues generateEnumInfoAndValues(EnumInfo enumInfo, JavaClass javaClass,
+			ProjectDocConfigBuilder builder, boolean jsonEnum) {
 		ApiConfig apiConfig = builder.getApiConfig();
 		List<Item> items = enumInfo.getItems();
-		String enumValue;
-		List<String> enumValues;
-		String type;
-		if (apiConfig.isEnumNameExample()) {
+		String enumValue = null;
+		List<String> enumValues = null;
+		String type = null;
+
+		if (jsonEnum || apiConfig.isEnumConvertor()) {
+			List<JavaField> enumConstants = javaClass.getEnumConstants();
+			List<Object> enumValueList = enumConstants.stream()
+				.map(cons -> getEnumValueWithJsonValue(javaClass, builder, cons))
+				.filter(Objects::nonNull)
+				.collect(Collectors.toList());
+
+			if (CollectionUtil.isNotEmpty(enumValueList)) {
+				Object enumValueWithJsonValue = enumValueList.get(0);
+				type = DocClassUtil.processTypeNameForParams(enumValueWithJsonValue.getClass().getCanonicalName());
+				enumValue = String.valueOf(enumValueWithJsonValue);
+				enumValues = enumValueList.stream().map(String::valueOf).collect(Collectors.toList());
+			}
+		}
+
+		if (enumValue == null) {
 			enumValues = items.stream().map(Item::getName).collect(Collectors.toList());
 			enumValue = enumValues.get(0);
-			type = "string";
+			type = ParamTypeConstants.PARAM_TYPE_ENUM;
 		}
-		else {
-			enumValues = items.stream().map(Item::getValue).collect(Collectors.toList());
-			enumValue = enumValues.get(0);
-			type = items.get(0).getType();
-		}
+
 		return EnumInfoAndValues.builder()
 			.setEnumInfo(enumInfo)
 			.setEnumValues(enumValues)

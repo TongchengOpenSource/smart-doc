@@ -11,7 +11,7 @@
   "skipTransientField": true,
   "requestExample": true,
   "responseExample": true,
-  "enumNameExample": false,
+  "enumConvertor": false,
   "revisionLogs": [
     {
       "version": "1.0",

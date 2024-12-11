@@ -458,11 +458,14 @@ public class ApiConfig {
 	private boolean addDefaultHttpStatuses;
 
 	/**
-	 * Show enum name for example
+	 * Whether to enable the enumeration converter, The default value is false. If true,
+	 * the enumeration value is parsed as an enumeration example value in the
+	 * header/path/query request mode. If false, take the enumeration name as the
+	 * enumeration example value
 	 *
 	 * @since 3.1.0
 	 */
-	private boolean enumNameExample = Boolean.FALSE;
+	private boolean enumConvertor = Boolean.FALSE;
 
 	public static ApiConfig getInstance() {
 		return instance;
@@ -1145,12 +1148,12 @@ public class ApiConfig {
 		this.addDefaultHttpStatuses = addDefaultHttpStatuses;
 	}
 
-	public boolean isEnumNameExample() {
-		return enumNameExample;
+	public boolean isEnumConvertor() {
+		return enumConvertor;
 	}
 
-	public void setEnumNameExample(boolean enumNameExample) {
-		this.enumNameExample = enumNameExample;
+	public void setEnumConvertor(boolean enumConvertor) {
+		this.enumConvertor = enumConvertor;
 	}
 
 }
