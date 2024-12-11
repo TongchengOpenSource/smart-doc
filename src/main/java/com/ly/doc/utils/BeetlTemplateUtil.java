@@ -22,16 +22,19 @@ package com.ly.doc.utils;
 
 import com.ly.doc.constants.DocGlobalConstants;
 import com.power.common.util.FileUtil;
-import org.beetl.core.Configuration;
-import org.beetl.core.GroupTemplate;
-import org.beetl.core.Template;
-import org.beetl.core.resource.ClasspathResourceLoader;
-
 import java.io.File;
 import java.io.IOException;
+import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import org.beetl.core.Configuration;
+import org.beetl.core.GroupTemplate;
+import org.beetl.core.Resource;
+import org.beetl.core.Template;
+import org.beetl.core.engine.FastRuntimeEngine;
+import org.beetl.core.resource.ClasspathResourceLoader;
+import org.beetl.core.statement.Program;
 
 /**
  * Beetl template handle util
@@ -39,6 +42,8 @@ import java.util.Objects;
  * @author sunyu on 2016/12/6.
  */
 public class BeetlTemplateUtil {
+
+	private final static String HTML_SUFFIX = ".html";
 
 	/**
 	 * private constructor
@@ -58,6 +63,9 @@ public class BeetlTemplateUtil {
 			Configuration cfg = Configuration.defaultConfiguration();
 			cfg.add("/smart-doc-beetl.properties");
 			GroupTemplate gt = new GroupTemplate(resourceLoader, cfg);
+			if (templateName.endsWith(HTML_SUFFIX)) {
+				gt.setEngine(new HtmlCompressTemplateEngine());
+			}
 			return gt.getTemplate(templateName);
 		}
 		catch (IOException e) {
@@ -103,6 +111,17 @@ public class BeetlTemplateUtil {
 		catch (IOException e) {
 			throw new RuntimeException("Can't found Beetl template.");
 		}
+	}
+
+	public static class HtmlCompressTemplateEngine extends FastRuntimeEngine {
+
+		@Override
+		public Program createProgram(Resource rs, Reader reader, Map<Integer, String> textMap, String cr,
+				GroupTemplate gt) {
+			textMap.replaceAll((k, v) -> HtmlCompressorUtil.compress(textMap.get(k)));
+			return super.createProgram(rs, reader, textMap, cr, gt);
+		}
+
 	}
 
 }
