@@ -140,7 +140,8 @@ public interface IHeaderHandler {
 				apiReqHeader.setDesc(apiReqHeader.getDesc() + enumComment);
 				apiReqHeader.setType(ParamTypeConstants.PARAM_TYPE_ARRAY);
 
-				EnumInfoAndValues enumInfoAndValue = JavaClassUtil.getEnumInfoAndValue(gicJavaClass, builder);
+				EnumInfoAndValues enumInfoAndValue = JavaClassUtil.getEnumInfoAndValue(gicJavaClass, builder,
+						Boolean.FALSE);
 				if (Objects.nonNull(enumInfoAndValue)) {
 					String enumValue = StringUtil.removeDoubleQuotes(String.valueOf(enumInfoAndValue.getValue()));
 					apiReqHeader.setValue(enumValue + "," + enumValue).setEnumInfoAndValues(enumInfoAndValue);
@@ -173,7 +174,7 @@ public interface IHeaderHandler {
 			apiReqHeader.setDesc(apiReqHeader.getDesc() + enumComment);
 			apiReqHeader.setType(ParamTypeConstants.PARAM_TYPE_ENUM);
 
-			EnumInfoAndValues enumInfoAndValue = JavaClassUtil.getEnumInfoAndValue(javaClass, builder);
+			EnumInfoAndValues enumInfoAndValue = JavaClassUtil.getEnumInfoAndValue(javaClass, builder, Boolean.FALSE);
 			if (Objects.nonNull(enumInfoAndValue)) {
 				String enumValue = StringUtil.removeDoubleQuotes(String.valueOf(enumInfoAndValue.getValue()));
 				apiReqHeader.setValue(enumValue)
