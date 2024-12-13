@@ -125,3 +125,6 @@ height="200px"/>
 关注微信公众号，了解社区动态和更多技术分享
 
 <img src="https://gitee.com/smart-doc-team/smart-doc/raw/master/images/WeChat-Official-Account.png" style="width: 50%; height: 50%" />
+
+## Star History
+[![Star History Chart](https://api.star-history.com/svg?repos=TongchengOpenSource/smart-doc&type=Date)](https://star-history.com/#TongchengOpenSource/smart-doc&Date)
