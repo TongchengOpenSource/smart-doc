@@ -96,3 +96,6 @@ file for details.
 Email： opensource@ly.com
 
 Twitter：https://x.com/shalousun
+
+## Star History
+[![Star History Chart](https://api.star-history.com/svg?repos=TongchengOpenSource/smart-doc&type=Date)](https://star-history.com/#TongchengOpenSource/smart-doc&Date)
