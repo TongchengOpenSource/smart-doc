@@ -1033,6 +1033,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 			String strRequired = "false";
 			boolean required = false;
 			boolean isRequestPart = false;
+			boolean jsonRequest = false;
 			ApiParamEnum apiParamEnum = null;
 			if (paramAnnotations.isEmpty() && (Methods.GET.getValue().equals(docJavaMethod.getMethodType())
 					|| Methods.DELETE.getValue().equals(docJavaMethod.getMethodType()))) {
@@ -1096,6 +1097,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 							new HashMap<>(16), groupClasses, docJavaMethod.getJsonViewClasses(), builder);
 					requestBodyCounter++;
 					apiParamEnum = ApiParamEnum.BODY;
+					jsonRequest = true;
 				}
 				required = Boolean.parseBoolean(strRequired);
 			}
@@ -1168,7 +1170,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 						.setId(paramList.size() + 1)
 						.setType(ParamTypeConstants.PARAM_TYPE_ARRAY);
 					EnumInfoAndValues enumInfoAndValue = JavaClassUtil.getEnumInfoAndValue(gicJavaClass, builder,
-							Boolean.FALSE);
+							jsonRequest);
 					if (Objects.nonNull(enumInfoAndValue)) {
 						param.setValue(StringUtil.removeDoubleQuotes(String.valueOf(enumInfoAndValue.getValue())))
 							.setEnumInfoAndValues(enumInfoAndValue);
@@ -1276,8 +1278,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 					.setRequired(required)
 					.setVersion(DocGlobalConstants.DEFAULT_VERSION);
 
-				EnumInfoAndValues enumInfoAndValue = JavaClassUtil.getEnumInfoAndValue(javaClass, builder,
-						ApiParamEnum.BODY.equals(apiParamEnum));
+				EnumInfoAndValues enumInfoAndValue = JavaClassUtil.getEnumInfoAndValue(javaClass, builder, jsonRequest);
 				if (Objects.nonNull(enumInfoAndValue)) {
 					param.setValue(StringUtil.removeDoubleQuotes(String.valueOf(enumInfoAndValue.getValue())))
 						.setEnumInfoAndValues(enumInfoAndValue)
@@ -1302,12 +1303,12 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 				paramList.add(param);
 				paramList.addAll(ParamsBuildHelper.buildParams(typeName, DocGlobalConstants.PARAM_PREFIX, 1,
 						String.valueOf(required), Boolean.FALSE, new HashMap<>(16), builder, groupClasses,
-						docJavaMethod.getJsonViewClasses(), 1, ApiParamEnum.BODY.equals(apiParamEnum), null));
+						docJavaMethod.getJsonViewClasses(), 1, jsonRequest, null));
 			}
 			else {
 				List<ApiParam> apiParams = ParamsBuildHelper.buildParams(typeName, DocGlobalConstants.EMPTY, 0,
 						String.valueOf(required), Boolean.FALSE, new HashMap<>(16), builder, groupClasses,
-						docJavaMethod.getJsonViewClasses(), 0, ApiParamEnum.BODY.equals(apiParamEnum), null);
+						docJavaMethod.getJsonViewClasses(), 0, jsonRequest, null);
 
 				boolean hasFile = apiParams.stream()
 					.anyMatch(param -> ParamTypeConstants.PARAM_TYPE_FILE.equals(param.getType()));
