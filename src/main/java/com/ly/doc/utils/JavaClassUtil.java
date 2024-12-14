@@ -596,11 +596,23 @@ public class JavaClassUtil {
 
 		// Check if the value corresponds to a valid class name
 		if (!JavaClassValidateUtil.isClassName(value)) {
-			return null;
+			// Fixed #995: If the value is not a valid class name,
+			// attempt to resolve it by adding the current package name prefix.
+			value = javaField.getDeclaringClass().getPackageName() + DOT + value;
+			// Check again
+			if (!JavaClassValidateUtil.isClassName(value)) {
+				return null;
+			}
 		}
 
 		// Retrieve the JavaClass by name and check if it is an enum
 		JavaClass enumClass = builder.getClassByName(value);
+		if (Objects.isNull(enumClass)) {
+			// Fixed #995: If the class cannot be found, attempt to resolve the class name
+			// by adding the package prefix of the declaring class. This approach is used
+			// when the enum is defined in the same package as the declaring class.
+			enumClass = builder.getClassByName(javaField.getDeclaringClass().getPackageName() + DOT + value);
+		}
 		if (Objects.nonNull(enumClass) && enumClass.isEnum()) {
 			return enumClass;
 		}
