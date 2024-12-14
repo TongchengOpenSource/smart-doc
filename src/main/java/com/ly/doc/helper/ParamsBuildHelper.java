@@ -385,7 +385,7 @@ public class ParamsBuildHelper extends BaseHelper {
 				param.setType(processedType);
 				param.setExtensions(extensionParams);
 				// handle param
-				commonHandleParam(paramList, param, isRequired, comment.toString(), since, strRequired);
+				processApiParam(paramList, param, isRequired, comment.toString(), since, strRequired);
 
 				JavaClass enumClass = ParamUtil.handleSeeEnum(param, field, projectBuilder, isResp || jsonRequest,
 						tagsMap, fieldJsonFormatValue);
@@ -454,7 +454,7 @@ public class ParamsBuildHelper extends BaseHelper {
 					ParamUtil.handleSeeEnum(param, field, projectBuilder, isResp || jsonRequest, tagsMap,
 							fieldJsonFormatValue);
 					// hand Param
-					commonHandleParam(paramList, param, isRequired, comment.toString(), since, strRequired);
+					processApiParam(paramList, param, isRequired, comment.toString(), since, strRequired);
 				}
 				else if (JavaClassValidateUtil.isCollection(subTypeName)
 						|| JavaClassValidateUtil.isArray(subTypeName)) {
@@ -491,10 +491,10 @@ public class ParamsBuildHelper extends BaseHelper {
 						else {
 							param.setValue(fieldValue);
 						}
-						commonHandleParam(paramList, param, isRequired, comment + appendComment, since, strRequired);
+						processApiParam(paramList, param, isRequired, comment + appendComment, since, strRequired);
 					}
 					else {
-						commonHandleParam(paramList, param, isRequired, comment + appendComment, since, strRequired);
+						processApiParam(paramList, param, isRequired, comment + appendComment, since, strRequired);
 						fieldPid = Optional.ofNullable(atomicInteger).isPresent() ? param.getId()
 								: paramList.size() + pid;
 						if (!simpleName.equals(gName)) {
@@ -542,7 +542,7 @@ public class ParamsBuildHelper extends BaseHelper {
 						param.setType(ParamTypeConstants.PARAM_TYPE_MAP);
 						param.setValue(fieldValue);
 					}
-					commonHandleParam(paramList, param, isRequired, comment + appendComment, since, strRequired);
+					processApiParam(paramList, param, isRequired, comment + appendComment, since, strRequired);
 					fieldPid = Optional.ofNullable(atomicInteger).isPresent() ? param.getId() : paramList.size() + pid;
 					String valType = DocClassUtil.getMapKeyValueType(fieldGicName).length == 0 ? fieldGicName
 							: DocClassUtil.getMapKeyValueType(fieldGicName)[1];
@@ -581,10 +581,10 @@ public class ParamsBuildHelper extends BaseHelper {
 					if (StringUtil.isEmpty(param.getDesc())) {
 						param.setDesc(DocGlobalConstants.ANY_OBJECT_MSG);
 					}
-					commonHandleParam(paramList, param, isRequired, comment + appendComment, since, strRequired);
+					processApiParam(paramList, param, isRequired, comment + appendComment, since, strRequired);
 				}
 				else if (fieldGicName.length() == 1) {
-					commonHandleParam(paramList, param, isRequired, comment + appendComment, since, strRequired);
+					processApiParam(paramList, param, isRequired, comment + appendComment, since, strRequired);
 					fieldPid = Optional.ofNullable(atomicInteger).isPresent() ? param.getId() : paramList.size() + pid;
 					// handle java generic or object
 					if (!simpleName.equals(className)) {
@@ -643,7 +643,7 @@ public class ParamsBuildHelper extends BaseHelper {
 					paramList.add(param1);
 				}
 				else {
-					commonHandleParam(paramList, param, isRequired, comment + appendComment, since, strRequired);
+					processApiParam(paramList, param, isRequired, comment + appendComment, since, strRequired);
 					fieldGicName = DocUtil.formatFieldTypeGicName(genericMap, fieldGicName);
 					fieldPid = Optional.ofNullable(atomicInteger).isPresent() ? param.getId() : paramList.size() + pid;
 					paramList.addAll(buildParams(fieldGicName, preBuilder.toString(), nextLevel, isRequired, isResp,
@@ -793,7 +793,18 @@ public class ParamsBuildHelper extends BaseHelper {
 		return paramList;
 	}
 
-	private static void commonHandleParam(List<ApiParam> paramList, ApiParam param, String isRequired, String comment,
+	/**
+	 * Processes and sets properties for an API parameter and adds it to the provided
+	 * list.
+	 * @param paramList The list of API parameters to which the processed parameter will
+	 * be added.
+	 * @param param The API parameter to process and set properties for.
+	 * @param isRequired A string indicating if the parameter is required (can be empty).
+	 * @param comment The description or comment for the parameter.
+	 * @param since The version information for the parameter.
+	 * @param strRequired A boolean indicating whether the parameter is required.
+	 */
+	private static void processApiParam(List<ApiParam> paramList, ApiParam param, String isRequired, String comment,
 			String since, boolean strRequired) {
 		if (StringUtil.isEmpty(isRequired)) {
 			param.setDesc(comment).setVersion(since);

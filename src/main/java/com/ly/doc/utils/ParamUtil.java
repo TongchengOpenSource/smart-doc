@@ -97,16 +97,16 @@ public class ParamUtil {
 				.setEnumInfoAndValues(enumInfoAndValue)
 				.setType(enumInfoAndValue.getType());
 		}
-		// If the @JsonFormat annotation's shape attribute value is specified, use it as
-		// the parameter value
+		// If the @JsonFormat annotation's shape attribute value is specified,
+		// use it as the parameter value
 		if (StringUtil.isNotEmpty(jsonFormatValue)) {
 			param.setValue(jsonFormatValue);
 			param.setEnumValues(IntStream.rangeClosed(0, param.getEnumValues().size() - 1)
 				.mapToObj(Integer::toString)
 				.collect(Collectors.toList()));
 		}
-		// If the tagsMap contains a mock tag and the value is not empty, use the value of
-		// the mock tag as the parameter value
+		// If the tagsMap contains a mock tag and the value is not empty
+		// use the value of the mock tag as the parameter value
 		// Override old value
 		if (tagsMap.containsKey(DocTags.MOCK) && StringUtil.isNotEmpty(tagsMap.get(DocTags.MOCK))) {
 			param.setValue(tagsMap.get(DocTags.MOCK));
