@@ -57,7 +57,6 @@ import com.thoughtworks.qdox.model.expression.Constant;
 import com.thoughtworks.qdox.model.expression.TypeRef;
 import com.thoughtworks.qdox.model.impl.DefaultJavaField;
 import com.thoughtworks.qdox.model.impl.DefaultJavaParameterizedType;
-import net.datafaker.BojackHorseman;
 import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Field;
@@ -90,6 +89,11 @@ public class JavaClassUtil {
 	 * logger
 	 */
 	private static final Logger logger = Logger.getLogger(JavaClassUtil.class.getName());
+
+	/**
+	 * dot
+	 */
+	private static final String DOT = ".";
 
 	/**
 	 * private constructor
@@ -556,6 +560,9 @@ public class JavaClassUtil {
 	 * This method aims to obtain the enum type (JavaClass) associated with the provided
 	 * Java field object (JavaField). If the field does not associate with an enum type or
 	 * if there is no appropriate @see tag providing enum information, it returns null.
+	 * The splitting logic is implemented to handle the case where the @see tag might
+	 * contain additional description information after the class name (e.g., `@see
+	 * GenderEnum descriptionGender`).
 	 * @param javaField The Java field object to inspect
 	 * @param builder The builder used to retrieve project documentation configuration
 	 * @return The enum class object associated with the field, or null if not found
@@ -564,36 +571,174 @@ public class JavaClassUtil {
 		if (Objects.isNull(javaField)) {
 			return null;
 		}
+
+		// If the field type is already an enum, return it directly
 		JavaClass javaClass = javaField.getType();
 		if (javaClass.isEnum()) {
 			return javaClass;
 		}
 
+		// Process the @see tag if present
 		DocletTag see = javaField.getTagByName(DocTags.SEE);
 		if (Objects.isNull(see)) {
 			return null;
 		}
-		String value = see.getValue();
 
-		// not FullyQualifiedName
-		if (!StringUtils.contains(value, ".")) {
-			List<String> imports = javaField.getDeclaringClass().getSource().getImports();
-			String finalValue = value;
-			value = imports.stream()
-				.filter(i -> StringUtils.endsWith(i, finalValue))
-				.findFirst()
-				.orElse(StringUtils.EMPTY);
-		}
-
-		if (!JavaClassValidateUtil.isClassName(value)) {
+		// Extract the enum class name from @see tag
+		String value = extractEnumClassName(see.getValue());
+		if (value == null) {
 			return null;
 		}
 
+		// Resolve the class name
+		// (handles imports, nested classes, and fully qualified names)
+		value = resolveClassName(value, javaField.getDeclaringClass());
+
+		// Check if the value corresponds to a valid class name
+		if (!JavaClassValidateUtil.isClassName(value)) {
+			// Fixed #995: If the value is not a valid class name,
+			// attempt to resolve it by adding the current package name prefix.
+			value = javaField.getDeclaringClass().getPackageName() + DOT + value;
+			// Check again
+			if (!JavaClassValidateUtil.isClassName(value)) {
+				return null;
+			}
+		}
+
+		// Retrieve the JavaClass by name and check if it is an enum
 		JavaClass enumClass = builder.getClassByName(value);
-		if (enumClass.isEnum()) {
+		if (Objects.isNull(enumClass)) {
+			// Fixed #995: If the class cannot be found, attempt to resolve the class name
+			// by adding the package prefix of the declaring class. This approach is used
+			// when the enum is defined in the same package as the declaring class.
+			enumClass = builder.getClassByName(javaField.getDeclaringClass().getPackageName() + DOT + value);
+		}
+		if (Objects.nonNull(enumClass) && enumClass.isEnum()) {
 			return enumClass;
 		}
 		return null;
+	}
+
+	/**
+	 * Extracts the enum class name from the @see tag value. Handles cases where the @see
+	 * tag contains additional description info after the class name.<br>
+	 * e.g. {@code @see TestEnum test}
+	 * @param seeValue The value of the @see tag
+	 * @return The extracted enum class name or null if not found
+	 */
+	private static String extractEnumClassName(String seeValue) {
+		if (seeValue == null || seeValue.trim().isEmpty()) {
+			return null;
+		}
+		// Split the value to extract the class name (first part before any whitespace)
+		return seeValue.trim().split("\\s+")[0];
+	}
+
+	/**
+	 * Resolves the class name by checking imports and nested classes. Handles both fully
+	 * qualified class names and short class names (e.g., class names without package
+	 * information).
+	 * <p>
+	 * This method first checks if the given class name is fully qualified (i.e., contains
+	 * a dot). If it's not fully qualified, it will attempt to resolve it using imports
+	 * and nested classes. If the class name is fully qualified, it will check if it can
+	 * be resolved using imports or nested classes. The method handles cases where the
+	 * class name is not directly available or when it's a nested class.
+	 * @param value The class name to resolve. This can either be a fully qualified class
+	 * name (e.g., "com.example.MyClass") or a short class name (e.g., "MyClass").
+	 * @param declaringClass The declaring class that may contain nested classes or
+	 * imports that could be used to resolve the class name.
+	 * @return The resolved class name, which may be a fully qualified name or the
+	 * original value if it cannot be resolved. If a match is found in imports or nested
+	 * classes, the resolved class name will be returned; otherwise, the original value is
+	 * returned.
+	 */
+	private static String resolveClassName(String value, JavaClass declaringClass) {
+		List<String> imports = declaringClass.getSource().getImports();
+
+		// If it's not a fully qualified class name
+		// try resolving from imports or nested classes
+		if (!StringUtils.contains(value, DOT)) {
+			value = resolveFromImports(value, imports, declaringClass);
+		}
+		// Handle fully qualified names (with a dot) or inner classes
+		else {
+			value = resolveFullyQualifiedClass(value, declaringClass, imports);
+		}
+		return value;
+	}
+
+	/**
+	 * Resolves the class name from imports or nested classes for short class names.
+	 * <p>
+	 * This method looks for the class name in the list of imports of the declaring class.
+	 * If the class name is not found in the imports, it checks if the class is a nested
+	 * class of the declaring class. If a match is found, the full class name is returned;
+	 * otherwise, the original short class name is returned.
+	 * @param value The short class name (e.g., "MyClass") to resolve.
+	 * @param imports A list of import statements in the declaring class that may contain
+	 * the class name.
+	 * @param declaringClass The declaring class that may contain nested classes and
+	 * imports that could be used to resolve the class name.
+	 * @return The fully qualified class name if found in imports or as a nested class,
+	 * otherwise the original short class name.
+	 */
+	private static String resolveFromImports(String value, List<String> imports, JavaClass declaringClass) {
+		Optional<String> importClass = imports.stream().filter(i -> i.endsWith(value)).findFirst();
+
+		if (importClass.isPresent()) {
+			return importClass.get();
+		}
+
+		// Check for nested class if not found in imports
+		for (JavaClass nestedClass : declaringClass.getNestedClasses()) {
+			if (nestedClass.getFullyQualifiedName().endsWith(DOT + value)) {
+				return nestedClass.getFullyQualifiedName();
+			}
+		}
+
+		// Return original if no match found
+		return value;
+	}
+
+	/**
+	 * Resolves the class name for fully qualified class names or nested classes.
+	 * <p>
+	 * This method processes fully qualified class names (i.e., names with package
+	 * information) by checking if the class is present in the imports list of the
+	 * declaring class. If it is not found in the imports, it checks if the class is a
+	 * nested class of the declaring class. The method can also handle cases where the
+	 * class name contains inner class references (e.g., "OuterClass$InnerClass").
+	 * @param value The fully qualified class name to resolve (e.g., "com.example.MyClass"
+	 * or "OuterClass$InnerClass").
+	 * @param declaringClass The declaring class that may contain nested classes and
+	 * imports that could be used to resolve the class name.
+	 * @param imports A list of import statements in the declaring class that may contain
+	 * the class name.
+	 * @return The fully qualified class name if found in imports or as a nested class,
+	 * otherwise the original class name is returned.
+	 */
+	private static String resolveFullyQualifiedClass(String value, JavaClass declaringClass, List<String> imports) {
+		String[] parts = value.split("\\.", 2);
+		String classNamePart = parts[0];
+		String restPart = (parts.length > 1) ? parts[1] : "";
+
+		// Try to resolve the class from imports
+		Optional<String> importClass = imports.stream().filter(i -> i.endsWith(DOT + classNamePart)).findFirst();
+
+		if (importClass.isPresent()) {
+			return importClass.get() + (restPart.isEmpty() ? "" : DOT + restPart);
+		}
+
+		// If not found in imports, check if it's a nested class
+		for (JavaClass nestedClass : declaringClass.getNestedClasses()) {
+			if (nestedClass.getName().equals(classNamePart)) {
+				return declaringClass.getFullyQualifiedName() + DOT + value;
+			}
+		}
+
+		// Return original if no match found
+		return value;
 	}
 
 	/**
@@ -648,11 +793,11 @@ public class JavaClassUtil {
 	 * @return String
 	 */
 	public static String getClassSimpleName(String className) {
-		if (className.contains(".")) {
+		if (className.contains(DOT)) {
 			if (className.contains("<")) {
 				className = className.substring(0, className.indexOf("<"));
 			}
-			int index = className.lastIndexOf(".");
+			int index = className.lastIndexOf(DOT);
 			className = className.substring(index + 1);
 		}
 		if (className.contains("[")) {
@@ -818,7 +963,7 @@ public class JavaClassUtil {
 			}
 			if (Modifier.isFinal(field.getModifiers()) && Modifier.isStatic(field.getModifiers())) {
 				String name = field.getName();
-				constants.put(className + "." + name, String.valueOf(field.get(null)));
+				constants.put(className + DOT + name, String.valueOf(field.get(null)));
 			}
 		}
 		return constants;

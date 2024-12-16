@@ -64,6 +64,7 @@ public class RequestExampleUtil {
 	 * variables.
 	 * @param queryParamsMap A mapping of query parameters for describing URL query string
 	 * parameters.
+	 * @return The updated API request example with the example data set.
 	 */
 	public static ApiRequestExample setExampleBody(ApiMethodDoc apiMethodDoc, ApiRequestExample requestExample,
 			Map<String, String> pathParamsMap, Map<String, String> queryParamsMap) {
