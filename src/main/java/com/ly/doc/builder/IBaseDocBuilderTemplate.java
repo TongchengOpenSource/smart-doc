@@ -23,6 +23,7 @@ package com.ly.doc.builder;
 import com.ly.doc.constants.DocGlobalConstants;
 import com.ly.doc.constants.DocLanguage;
 import com.ly.doc.constants.FrameworkEnum;
+import com.ly.doc.constants.HighLightJsConstants;
 import com.ly.doc.constants.TemplateVariable;
 import com.ly.doc.factory.BuildTemplateFactory;
 import com.ly.doc.model.*;
@@ -268,8 +269,10 @@ public interface IBaseDocBuilderTemplate<T extends IDoc> {
 				config.getOutPath() + DocGlobalConstants.FILE_SEPARATOR + DocGlobalConstants.JQUERY);
 		IBaseDocBuilderTemplate.copyJarFile("js/" + DocGlobalConstants.HIGH_LIGHT_JS,
 				config.getOutPath() + DocGlobalConstants.FILE_SEPARATOR + DocGlobalConstants.HIGH_LIGHT_JS);
-		IBaseDocBuilderTemplate.copyJarFile("css/" + DocGlobalConstants.FONT_STYLE,
-				config.getOutPath() + DocGlobalConstants.FILE_SEPARATOR + DocGlobalConstants.FONT_STYLE);
+		if (HighLightJsConstants.HIGH_LIGHT_CSS_DEFAULT.equals(config.getHighlightStyleLink())) {
+			IBaseDocBuilderTemplate.copyJarFile("css/" + DocGlobalConstants.HIGH_LIGHT_STYLE,
+					config.getOutPath() + DocGlobalConstants.FILE_SEPARATOR + DocGlobalConstants.HIGH_LIGHT_STYLE);
+		}
 	}
 
 	/**
