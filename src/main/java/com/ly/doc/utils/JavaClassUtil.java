@@ -408,7 +408,7 @@ public class JavaClassUtil {
 	 * @return Object The enum value, whose type depends on the specific enum definition
 	 * @throws RuntimeException If the enum constants do not exist
 	 */
-	private static Object getEnumValueWithJsonValue(JavaClass javaClass, ProjectDocConfigBuilder builder,
+	public static Object getEnumValueWithJsonValue(JavaClass javaClass, ProjectDocConfigBuilder builder,
 			JavaField enumConstant) {
 		String methodName = findMethodWithJsonValue(javaClass);
 		if (Objects.nonNull(methodName)) {

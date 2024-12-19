@@ -1247,7 +1247,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 
 				paramList.addAll(ParamsBuildHelper.buildMapParam(gicNameArr, DocGlobalConstants.EMPTY, 0,
 						String.valueOf(required), Boolean.FALSE, new HashMap<>(16), builder, groupClasses,
-						docJavaMethod.getJsonViewClasses(), 0, Boolean.FALSE, 1, null));
+						docJavaMethod.getJsonViewClasses(), 0, jsonRequest, 1, null));
 
 				// is map without Gic
 				if (JavaClassValidateUtil.isMap(typeName)) {
