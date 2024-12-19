@@ -707,6 +707,12 @@ public class ParamsBuildHelper extends BaseHelper {
 										.orElse(DocGlobalConstants.DEFAULT_MAP_KEY_DESC))
 					.setVersion(DocGlobalConstants.DEFAULT_VERSION)
 					.setPid(null == keyParentId ? pid : keyParentId);
+
+				Object enumValueWithJsonValue = JavaClassUtil.getEnumValueWithJsonValue(mapKeyClass, projectBuilder,
+						enumConstant);
+				if (jsonRequest && enumValueWithJsonValue != null) {
+					apiParam.setField(pre + enumValueWithJsonValue);
+				}
 				apiParam.setId(apiParam.getPid() + paramList.size() + 1);
 				if (null == keyParentId) {
 					keyParentId = apiParam.getPid();
