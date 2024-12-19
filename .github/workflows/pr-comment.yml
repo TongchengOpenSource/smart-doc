@@ -18,16 +18,22 @@ jobs:
           repository: ${{ github.repository }}
           issue-number: ${{ github.event.number }}
           body: |
-            Thanks for your this PR.  :pray: 
-            Please check again for your PR changes whether contains any usage configuration change such as `Add new configuration`, `Change default value of configuration`.
-            If so, please add or update documents(markdown type) in `docs/` for repository [smart-doc-group/smart-doc-group.github.io](https://github.com/smart-doc-group/smart-doc-group.github.io/tree/master/docs)
+            Thanks for your PR. :pray: 
+            Please check again for your PR changes whether they contain any usage configuration change, such as `Add new configuration` or `Change default value of configuration`.
+            If so, please add or update documents (Markdown format) in the `docs/` directory of the repository [smart-doc-group/smart-doc-group.github.io](https://github.com/smart-doc-group/smart-doc-group.github.io/tree/master/docs).
             
             In addition, if you have added new features, please provide example code in the repository [smart-doc-group/smart-doc-example-cn](https://github.com/smart-doc-group/smart-doc-example-cn). This will help other users understand how to use the new features.
+            
+            **Code Style Reminder:**  
+            The code should use the Spring code style. Please format your code using the command `mvn spring-javaformat:apply`. You can also install the [Spring Java Format](https://github.com/spring-io/spring-javaformat) plugin for convenience.
             
             ---
             
             感谢您提交的PR。 :pray: 
-            请再次查看您的PR内容，确认是否包含任何使用方式 配置参数的变更，如：`新增配置参数`、`修改默认配置`等操作。
-            如果是，请确保在提交之前，在仓库[smart-doc-group/smart-doc-group.github.io](https://github.com/smart-doc-group/smart-doc-group.github.io/tree/master/docs)中的`docs/`目录下添加或更新文档（markdown格式）。
+            请再次查看您的PR内容，确认是否包含任何使用方式或配置参数的变更，如：`新增配置参数`、`修改默认配置`等操作。
+            如果是，请确保在提交之前，在仓库[smart-doc-group/smart-doc-group.github.io](https://github.com/smart-doc-group/smart-doc-group.github.io/tree/master/docs)中的`docs/`目录下添加或更新文档（Markdown格式）。
             
             另外，如果您添加了新功能，请在仓库[smart-doc-group/smart-doc-example-cn](https://github.com/smart-doc-group/smart-doc-example-cn)中提供示例代码。这将帮助其他用户了解如何使用新功能。
+            
+            **代码风格提示：**  
+            请使用 Spring 代码风格。您可以通过命令 `mvn spring-javaformat:apply` 格式化代码。为了方便操作，您还可以安装 [Spring Java Format](https://github.com/spring-io/spring-javaformat) 插件。
