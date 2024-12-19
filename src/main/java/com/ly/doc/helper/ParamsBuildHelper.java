@@ -687,7 +687,7 @@ public class ParamsBuildHelper extends BaseHelper {
 		String mapKeySimpleName = DocClassUtil.getSimpleName(globGicName[0]);
 		String valueSimpleName = DocClassUtil.getSimpleName(globGicName[1]);
 		// get map key class
-		JavaClass mapKeyClass = projectBuilder.getJavaProjectBuilder().getClassByName(mapKeySimpleName);
+		JavaClass mapKeyClass = projectBuilder.getClassByName(mapKeySimpleName);
 
 		boolean isShowJavaType = projectBuilder.getApiConfig().getShowJavaType();
 		String valueSimpleNameType = processFieldTypeName(isShowJavaType, valueSimpleName);
@@ -710,7 +710,7 @@ public class ParamsBuildHelper extends BaseHelper {
 
 				Object enumValueWithJsonValue = JavaClassUtil.getEnumValueWithJsonValue(mapKeyClass, projectBuilder,
 						enumConstant);
-				if (jsonRequest && enumValueWithJsonValue != null) {
+				if ((isResp || jsonRequest) && enumValueWithJsonValue != null) {
 					apiParam.setField(pre + enumValueWithJsonValue);
 				}
 				apiParam.setId(apiParam.getPid() + paramList.size() + 1);

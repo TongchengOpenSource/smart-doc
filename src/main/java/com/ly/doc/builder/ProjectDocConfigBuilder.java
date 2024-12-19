@@ -214,16 +214,19 @@ public class ProjectDocConfigBuilder {
 	 */
 	public JavaClass getClassByName(String simpleName) {
 		JavaClass cls = javaProjectBuilder.getClassByName(simpleName);
-		List<DocJavaField> fieldList = JavaClassUtil.getFields(cls, 0, new LinkedHashMap<>(), null);
-		// handle inner class
-		if (Objects.isNull(cls.getFields()) || fieldList.isEmpty()) {
-			cls = classFilesMap.get(simpleName);
-		}
-		else {
-			List<JavaClass> classList = cls.getNestedClasses();
-			for (JavaClass javaClass : classList) {
-				classFilesMap.put(javaClass.getFullyQualifiedName(), javaClass);
+
+		if (!cls.isEnum()) {
+			List<DocJavaField> fieldList = JavaClassUtil.getFields(cls, 0, new LinkedHashMap<>(), null);
+			// handle inner class
+			if (Objects.isNull(cls.getFields()) || fieldList.isEmpty()) {
+				cls = classFilesMap.get(simpleName);
+				return cls;
 			}
+		}
+
+		List<JavaClass> classList = cls.getNestedClasses();
+		for (JavaClass javaClass : classList) {
+			classFilesMap.put(javaClass.getFullyQualifiedName(), javaClass);
 		}
 		return cls;
 	}
