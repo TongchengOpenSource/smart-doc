@@ -22,12 +22,14 @@ package com.ly.doc.builder;
 
 import com.ly.doc.constants.DocGlobalConstants;
 import com.ly.doc.constants.TemplateVariable;
+import com.ly.doc.constants.TornaConstants;
 import com.ly.doc.factory.BuildTemplateFactory;
 import com.ly.doc.model.AbstractRpcApiDoc;
 import com.ly.doc.model.ApiConfig;
 import com.ly.doc.model.ApiDocDict;
 import com.ly.doc.model.ApiErrorCode;
 import com.ly.doc.model.rpc.RpcApiAllData;
+import com.ly.doc.model.rpc.RpcApiDoc;
 import com.ly.doc.template.IDocBuildTemplate;
 import com.ly.doc.utils.BeetlTemplateUtil;
 import com.ly.doc.utils.DocUtil;
@@ -104,7 +106,7 @@ public interface IRpcDocBuilderTemplate<T extends AbstractRpcApiDoc<?>> extends 
 	 * @param outPutFileName output file
 	 */
 	default void buildAllInOne(List<T> apiDocList, ApiConfig config, JavaProjectBuilder javaProjectBuilder,
-			String template, String outPutFileName) {
+							   String template, String outPutFileName) {
 		String outPath = config.getOutPath();
 		String rpcConfig = config.getRpcConsumerConfig();
 		String rpcConfigConfigContent = null;
@@ -122,6 +124,37 @@ public interface IRpcDocBuilderTemplate<T extends AbstractRpcApiDoc<?>> extends 
 	}
 
 	/**
+	 * Merge all api doc into one document.
+	 * @param apiDocList list data of Api doc
+	 * @param config api config
+	 * @param javaProjectBuilder JavaProjectBuilder
+	 * @param template template
+	 * @param outPutFileName output file
+	 */
+	default Template buildAllInOneWord(List<RpcApiDoc> apiDocList, ApiConfig config,
+									   JavaProjectBuilder javaProjectBuilder, String template, String outPutFileName) {
+		String outPath = config.getOutPath();
+		String rpcConfig = config.getRpcConsumerConfig();
+		String rpcConfigConfigContent = null;
+		if (Objects.nonNull(rpcConfig)) {
+			rpcConfigConfigContent = FileUtil.getFileContent(rpcConfig);
+		}
+		FileUtil.mkdirs(outPath);
+		Template tpl = BeetlTemplateUtil.getByName(template);
+		tpl.binding(TemplateVariable.API_DOC_LIST.getVariable(), apiDocList);
+		tpl.binding(TemplateVariable.DEPENDENCY_LIST.getVariable(), config.getRpcApiDependencies());
+		tpl.binding(TemplateVariable.RPC_CONSUMER_CONFIG.getVariable(), rpcConfigConfigContent);
+		// binding common variable
+		this.bindingCommonVariable(config, javaProjectBuilder, tpl, apiDocList.isEmpty());
+		this.setDirectoryLanguageVariable(config, tpl);
+		boolean onlyHasDefaultGroup = apiDocList.stream()
+				.allMatch(doc -> Objects.equals(TornaConstants.DEFAULT_GROUP_CODE, doc.getGroup()));
+
+		tpl.binding(TemplateVariable.API_DOC_LIST_ONLY_HAS_DEFAULT_GROUP.getVariable(), onlyHasDefaultGroup);
+		return tpl;
+	}
+
+	/**
 	 * Build search js.
 	 * @param apiDocList list data of Api doc
 	 * @param config api config
@@ -130,7 +163,7 @@ public interface IRpcDocBuilderTemplate<T extends AbstractRpcApiDoc<?>> extends 
 	 * @param outPutFileName output file
 	 */
 	default void buildSearchJs(List<T> apiDocList, ApiConfig config, JavaProjectBuilder javaProjectBuilder,
-			String template, String outPutFileName) {
+							   String template, String outPutFileName) {
 		List<ApiErrorCode> errorCodeList = DocUtil.errorCodeDictToList(config, javaProjectBuilder);
 		Template tpl = BeetlTemplateUtil.getByName(template);
 		// directory tree

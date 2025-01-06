@@ -310,6 +310,11 @@ public interface DocGlobalConstants {
 	String RPC_ALL_IN_ONE_ADOC_TPL = "dubbo/DubboAllInOne.adoc";
 
 	/**
+	 * rpc all in one word template.
+	 */
+	String RPC_ALL_IN_ONE_WORD_TPL = "dubbo/DubboAllInOneWordTemplate.xml";
+
+	/**
 	 * rpc all in one html template.
 	 */
 	String RPC_ALL_IN_ONE_HTML_TPL = "dubbo/DubboAllInOne.html";
@@ -608,6 +613,11 @@ public interface DocGlobalConstants {
 	 * asciidoc extension.
 	 */
 	String ASCIIDOC_EXTENSION = ".adoc";
+
+	/**
+	 * asciidoc extension.
+	 */
+	String WORD_DOC_EXTENSION = ".docx";
 
 	/**
 	 * default map key desc.

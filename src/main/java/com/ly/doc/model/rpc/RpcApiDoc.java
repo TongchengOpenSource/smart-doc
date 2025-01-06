@@ -23,17 +23,44 @@ package com.ly.doc.model.rpc;
 import com.ly.doc.model.AbstractRpcApiDoc;
 import com.ly.doc.model.RpcJavaMethod;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author yu 2020/5/16.
  */
 public class RpcApiDoc extends AbstractRpcApiDoc<RpcJavaMethod> {
 
 	private static final long serialVersionUID = -3116322721344529338L;
-
+	/**
+	 * tags
+	 *
+	 */
+	private String[] tags;
 	/**
 	 * link
 	 */
 	private String link;
+
+	/**
+	 * group
+	 */
+	private String group;
+
+	/**
+	 * class in package name
+	 */
+	private String packageName;
+
+	/**
+	 * if this is group, then is true
+	 */
+	private boolean isFolder;
+
+	/**
+	 * children
+	 */
+	private List<RpcApiDoc> childrenApiDocs = new ArrayList<>();
 
 	public String getLink() {
 		return desc.replace(" ", "_").toLowerCase();
@@ -41,6 +68,56 @@ public class RpcApiDoc extends AbstractRpcApiDoc<RpcJavaMethod> {
 
 	public void setLink(String link) {
 		this.link = link;
+	}
+
+	public String[] getTags() {
+		return tags;
+	}
+
+	public void setTags(String[] tags) {
+		this.tags = tags;
+	}
+	public String getGroup() {
+		return group;
+	}
+
+	public void setGroup(String group) {
+		this.group = group;
+	}
+
+	public String getPackageName() {
+		return packageName;
+	}
+
+	public void setPackageName(String packageName) {
+		this.packageName = packageName;
+	}
+
+	public boolean isFolder() {
+		return isFolder;
+	}
+
+	public void setFolder(boolean folder) {
+		isFolder = folder;
+	}
+
+	public List<RpcApiDoc> getChildrenApiDocs() {
+		return childrenApiDocs;
+	}
+
+	public void setChildrenApiDocs(List<RpcApiDoc> childrenApiDocs) {
+		this.childrenApiDocs = childrenApiDocs;
+	}
+
+	public static RpcApiDoc buildGroupApiDoc(String group) {
+		RpcApiDoc apiDoc = new RpcApiDoc();
+		apiDoc.setFolder(true);
+		apiDoc.setGroup(group);
+		apiDoc.setAlias(group);
+		apiDoc.setName(group);
+		apiDoc.setDesc(group);
+		apiDoc.setChildrenApiDocs(new ArrayList<>());
+		return apiDoc;
 	}
 
 }
