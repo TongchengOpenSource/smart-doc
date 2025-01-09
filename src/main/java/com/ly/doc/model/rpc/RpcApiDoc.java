@@ -32,11 +32,13 @@ import java.util.List;
 public class RpcApiDoc extends AbstractRpcApiDoc<RpcJavaMethod> {
 
 	private static final long serialVersionUID = -3116322721344529338L;
+
 	/**
 	 * tags
 	 *
 	 */
 	private String[] tags;
+
 	/**
 	 * link
 	 */
@@ -77,6 +79,7 @@ public class RpcApiDoc extends AbstractRpcApiDoc<RpcJavaMethod> {
 	public void setTags(String[] tags) {
 		this.tags = tags;
 	}
+
 	public String getGroup() {
 		return group;
 	}

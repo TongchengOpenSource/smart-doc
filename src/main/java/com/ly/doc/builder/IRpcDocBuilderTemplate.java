@@ -106,7 +106,7 @@ public interface IRpcDocBuilderTemplate<T extends AbstractRpcApiDoc<?>> extends 
 	 * @param outPutFileName output file
 	 */
 	default void buildAllInOne(List<T> apiDocList, ApiConfig config, JavaProjectBuilder javaProjectBuilder,
-							   String template, String outPutFileName) {
+			String template, String outPutFileName) {
 		String outPath = config.getOutPath();
 		String rpcConfig = config.getRpcConsumerConfig();
 		String rpcConfigConfigContent = null;
@@ -132,7 +132,7 @@ public interface IRpcDocBuilderTemplate<T extends AbstractRpcApiDoc<?>> extends 
 	 * @param outPutFileName output file
 	 */
 	default Template buildAllInOneWord(List<RpcApiDoc> apiDocList, ApiConfig config,
-									   JavaProjectBuilder javaProjectBuilder, String template, String outPutFileName) {
+			JavaProjectBuilder javaProjectBuilder, String template, String outPutFileName) {
 		String outPath = config.getOutPath();
 		String rpcConfig = config.getRpcConsumerConfig();
 		String rpcConfigConfigContent = null;
@@ -148,7 +148,7 @@ public interface IRpcDocBuilderTemplate<T extends AbstractRpcApiDoc<?>> extends 
 		this.bindingCommonVariable(config, javaProjectBuilder, tpl, apiDocList.isEmpty());
 		this.setDirectoryLanguageVariable(config, tpl);
 		boolean onlyHasDefaultGroup = apiDocList.stream()
-				.allMatch(doc -> Objects.equals(TornaConstants.DEFAULT_GROUP_CODE, doc.getGroup()));
+			.allMatch(doc -> Objects.equals(TornaConstants.DEFAULT_GROUP_CODE, doc.getGroup()));
 
 		tpl.binding(TemplateVariable.API_DOC_LIST_ONLY_HAS_DEFAULT_GROUP.getVariable(), onlyHasDefaultGroup);
 		return tpl;
@@ -163,7 +163,7 @@ public interface IRpcDocBuilderTemplate<T extends AbstractRpcApiDoc<?>> extends 
 	 * @param outPutFileName output file
 	 */
 	default void buildSearchJs(List<T> apiDocList, ApiConfig config, JavaProjectBuilder javaProjectBuilder,
-							   String template, String outPutFileName) {
+			String template, String outPutFileName) {
 		List<ApiErrorCode> errorCodeList = DocUtil.errorCodeDictToList(config, javaProjectBuilder);
 		Template tpl = BeetlTemplateUtil.getByName(template);
 		// directory tree

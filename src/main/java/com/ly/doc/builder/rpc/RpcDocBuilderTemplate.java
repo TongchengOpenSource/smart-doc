@@ -104,9 +104,9 @@ public class RpcDocBuilderTemplate implements IRpcDocBuilderTemplate<RpcApiDoc> 
 					continue;
 				}
 				List<RpcJavaMethod> methodDocs = doc.getList()
-						.stream()
-						.filter(l -> DocPathUtil.matches(l.getMethodDefinition(), group.getPaths(), null))
-						.collect(Collectors.toList());
+					.stream()
+					.filter(l -> DocPathUtil.matches(l.getMethodDefinition(), group.getPaths(), null))
+					.collect(Collectors.toList());
 				doc.setList(methodDocs);
 			}
 		}

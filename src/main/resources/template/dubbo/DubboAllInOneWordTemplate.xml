@@ -399,6 +399,26 @@
         <%}%>
 
         <!--    接口基本参数, url 作者  请求方式 等等    -->
+
+
+        <%if(isNotEmpty(api.author)){%>
+        <w:p>
+            <w:pPr>
+                <w:pStyle w:val="29"/>
+            </w:pPr>
+            <w:r>
+                <w:rPr>
+                    <w:b/>
+                    <w:bCs/>
+                </w:rPr>
+                <w:t>Author:</w:t>
+            </w:r>
+            <w:r>
+                <w:t xml:space="preserve"> ${wordXmlEscape(api.author)}</w:t>
+            </w:r>
+        </w:p>
+        <%}%>
+
         <!--        url-->
         <w:p>
             <w:pPr>
@@ -418,7 +438,7 @@
                 <w:fldChar w:fldCharType="begin"/>
             </w:r>
             <w:r>
-                <w:instrText xml:space="preserve"> HYPERLINK &quot;${doc.methodDefinition}&quot; \h </w:instrText>
+                <w:instrText xml:space="preserve"> HYPERLINK &quot;${wordXmlEscape(api.uri)}&quot; \h </w:instrText>
             </w:r>
             <w:r>
                 <w:fldChar w:fldCharType="separate"/>
@@ -427,7 +447,7 @@
                 <w:rPr>
                     <w:rStyle w:val="ab"/>
                 </w:rPr>
-                <w:t> ${doc.methodDefinition}</w:t>
+                <w:t> ${wordXmlEscape(api.uri)}</w:t>
             </w:r>
             <w:r>
                 <w:fldChar w:fldCharType="end"/>
@@ -435,7 +455,7 @@
         </w:p>
 
 
-        <%if(isNotEmpty(doc.author)){%>
+        <%if(isNotEmpty(doc.name)){%>
         <w:p>
             <w:pPr>
                 <w:pStyle w:val="29"/>
@@ -445,17 +465,17 @@
                     <w:b/>
                     <w:bCs/>
                 </w:rPr>
-                <w:t>Author:</w:t>
+                <w:t>Method:</w:t>
             </w:r>
             <w:r>
-                <w:t xml:space="preserve"> ${wordXmlEscape(doc.author)}</w:t>
+                <w:t xml:space="preserve"> ${wordXmlEscape(doc.name)}</w:t>
             </w:r>
         </w:p>
         <%}%>
 
 
 
-        <!--        描述-->
+        <!--        方法功能描述-->
         <w:p>
             <w:pPr>
                 <w:pStyle w:val="29"/>
