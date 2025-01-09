@@ -1,0 +1,1470 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:document xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas"
+            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+            xmlns:o="urn:schemas-microsoft-com:office:office"
+            xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"
+            xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math"
+            xmlns:v="urn:schemas-microsoft-com:vml"
+            xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing"
+            xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"
+            xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+            xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml"
+            xmlns:w10="urn:schemas-microsoft-com:office:word"
+            xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml"
+            xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup"
+            xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk"
+            xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml"
+            xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape"
+            xmlns:wpsCustomData="http://www.wps.cn/officeDocument/2013/wpsCustomData" mc:Ignorable="w14 w15 wp14">
+    <w:body>
+        <% if(isNotEmpty(projectName)){ %>
+        <w:p>
+            <w:pPr>
+                <w:pStyle w:val="1"/>
+            </w:pPr>
+            <w:r>
+                <w:t>${wordXmlEscape(projectName)}</w:t>
+            </w:r>
+        </w:p>
+        <%}%>
+
+
+        <%if(isNotEmpty(revisionLogList)){%>
+        <w:tbl>
+            <w:tblPr>
+                <w:tblStyle w:val="29"/>
+                <w:tblW w:w="0" w:type="auto"/>
+                <w:tblInd w:w="95" w:type="dxa"/>
+                <w:tblLayout w:type="autofit"/>
+                <w:tblCellMar>
+                    <w:top w:w="0" w:type="dxa"/>
+                    <w:left w:w="108" w:type="dxa"/>
+                    <w:bottom w:w="0" w:type="dxa"/>
+                    <w:right w:w="108" w:type="dxa"/>
+                </w:tblCellMar>
+            </w:tblPr>
+            <w:tblGrid>
+                <w:gridCol w:w="2175"/>
+                <w:gridCol w:w="2292"/>
+                <w:gridCol w:w="930"/>
+                <w:gridCol w:w="1066"/>
+                <w:gridCol w:w="2298"/>
+            </w:tblGrid>
+            <w:tr>
+                <w:tblPrEx>
+                    <w:tblCellMar>
+                        <w:top w:w="0" w:type="dxa"/>
+                        <w:left w:w="108" w:type="dxa"/>
+                        <w:bottom w:w="0" w:type="dxa"/>
+                        <w:right w:w="108" w:type="dxa"/>
+                    </w:tblCellMar>
+                </w:tblPrEx>
+                <w:trPr>
+                    <w:tblHeader/>
+                </w:trPr>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcW w:w="2175" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
+                        </w:pPr>
+                        <w:r>
+                            <w:rPr>
+                                <w:b/>
+                                <w:bCs/>
+                            </w:rPr>
+                            <w:t>Version</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
+                        </w:pPr>
+                        <w:r>
+                            <w:rPr>
+                                <w:b/>
+                                <w:bCs/>
+                            </w:rPr>
+                            <w:t>Update Time</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
+                        </w:pPr>
+                        <w:r>
+                            <w:rPr>
+                                <w:b/>
+                                <w:bCs/>
+                            </w:rPr>
+                            <w:t>Status</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
+                        </w:pPr>
+                        <w:r>
+                            <w:rPr>
+                                <w:b/>
+                                <w:bCs/>
+                            </w:rPr>
+                            <w:t>Author</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcW w:w="2298" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
+                        </w:pPr>
+                        <w:r>
+                            <w:rPr>
+                                <w:b/>
+                                <w:bCs/>
+                            </w:rPr>
+                            <w:t>Description</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
+            </w:tr>
+
+            <%
+            for(revisionLog in revisionLogList){
+            %>
+            <w:tr>
+                <w:tblPrEx>
+                    <w:tblCellMar>
+                        <w:top w:w="0" w:type="dxa"/>
+                        <w:left w:w="108" w:type="dxa"/>
+                        <w:bottom w:w="0" w:type="dxa"/>
+                        <w:right w:w="108" w:type="dxa"/>
+                    </w:tblCellMar>
+                </w:tblPrEx>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcW w:w="2175" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <%if (revisionLogLP.index % 2 == 0) {%>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                        <%}%>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
+                        </w:pPr>
+                        <w:r>
+                            <w:t>${revisionLog.version}</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <%if (revisionLogLP.index % 2 == 0) {%>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                        <%}%>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
+                        </w:pPr>
+                        <w:r>
+                            <w:t>${revisionLog.revisionTime}</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <%if (revisionLogLP.index % 2 == 0) {%>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                        <%}%>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
+                        </w:pPr>
+                        <w:r>
+                            <w:t>${revisionLog.status}</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <%if (revisionLogLP.index % 2 == 0) {%>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                        <%}%>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
+                        </w:pPr>
+                        <w:r>
+                            <w:t>${wordXmlEscape(revisionLog.author)}</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <w:tcW w:w="2298" w:type="dxa"/>
+                        <%if (revisionLogLP.index % 2 == 0) {%>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                        <%}%>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
+                        </w:pPr>
+                        <w:r>
+                            <w:t>${wordXmlEscape(revisionLog.remarks)}</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
+            </w:tr>
+            <%}%>
+        </w:tbl>
+        <%}%>
+
+
+        <%
+        for(apiGroup in apiDocList){
+        %>
+
+        <%
+        if(!apiDocListOnlyHasDefaultGroup) {%>
+        <w:p>
+            <w:pPr>
+                <w:pStyle w:val="2"/>
+                <w:bidi w:val="0"/>
+                <w:rPr>
+                    <w:rFonts w:hint="default" w:eastAsiaTheme="majorEastAsia"/>
+                    <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
+                </w:rPr>
+            </w:pPr>
+            <w:r>
+                <w:rPr>
+                    <w:rFonts w:hint="eastAsia"/>
+                    <w:lang w:eastAsia="zh-CN"/>
+                </w:rPr>
+                <w:t>${wordXmlEscape(apiGroup.group)}</w:t>
+            </w:r>
+            <w:bookmarkStart w:id="7" w:name="_GoBack"/>
+            <w:bookmarkEnd w:id="7"/>
+        </w:p>
+        <%}%>
+
+
+        <%
+        for(api in apiGroup.childrenApiDocs){
+        %>
+        <w:p>
+            <w:pPr>
+                <w:pStyle w:val="4"/>
+            </w:pPr>
+            <w:bookmarkStart w:id="1" w:name="${wordXmlEscape(api.desc)}"/>
+            <w:r>
+                <w:t>${wordXmlEscape(api.desc)}</w:t>
+            </w:r>
+            <w:bookmarkStart w:id="7" w:name="_GoBack"/>
+            <w:bookmarkEnd w:id="7"/>
+        </w:p>
+
+        <%
+        for(doc in api.list){
+        %>
+
+        <!--    接口标题    -->
+        <%if(doc.deprecated){%>
+        <w:p>
+            <w:pPr>
+                <w:pStyle w:val="5"/>
+                <w:rPr>
+                    <w:strike/>
+                    <w:dstrike w:val="0"/>
+                    <w:u w:val="none"/>
+                </w:rPr>
+            </w:pPr>
+            <w:bookmarkStart w:id="2" w:name="${wordXmlEscape(doc.desc)}"/>
+            <w:r>
+                <w:rPr>
+                    <w:strike/>
+                    <w:dstrike w:val="0"/>
+                    <w:u w:val="none"/>
+                </w:rPr>
+                <w:t>${wordXmlEscape(doc.desc)}</w:t>
+            </w:r>
+        </w:p>
+        <%}else{%>
+
+        <w:p>
+            <w:pPr>
+                <w:pStyle w:val="5"/>
+            </w:pPr>
+            <w:bookmarkStart w:id="2" w:name="${wordXmlEscape(doc.desc)}"/>
+            <w:r>
+                <w:t>${wordXmlEscape(doc.desc)}</w:t>
+            </w:r>
+        </w:p>
+
+        <%}%>
+
+        <!--    接口基本参数, url 作者  请求方式 等等    -->
+
+
+        <%if(isNotEmpty(api.author)){%>
+        <w:p>
+            <w:pPr>
+                <w:pStyle w:val="29"/>
+            </w:pPr>
+            <w:r>
+                <w:rPr>
+                    <w:b/>
+                    <w:bCs/>
+                </w:rPr>
+                <w:t>Author:</w:t>
+            </w:r>
+            <w:r>
+                <w:t xml:space="preserve"> ${wordXmlEscape(api.author)}</w:t>
+            </w:r>
+        </w:p>
+        <%}%>
+
+        <!--        url-->
+        <w:p>
+            <w:pPr>
+                <w:pStyle w:val="23"/>
+            </w:pPr>
+            <w:r>
+                <w:rPr>
+                    <w:b/>
+                    <w:bCs/>
+                </w:rPr>
+                <w:t>URL:</w:t>
+            </w:r>
+            <w:r>
+                <w:t xml:space="preserve"> </w:t>
+            </w:r>
+            <w:r>
+                <w:fldChar w:fldCharType="begin"/>
+            </w:r>
+            <w:r>
+                <w:instrText xml:space="preserve"> HYPERLINK &quot;${wordXmlEscape(api.uri)}&quot; \h </w:instrText>
+            </w:r>
+            <w:r>
+                <w:fldChar w:fldCharType="separate"/>
+            </w:r>
+            <w:r>
+                <w:rPr>
+                    <w:rStyle w:val="ab"/>
+                </w:rPr>
+                <w:t> ${wordXmlEscape(api.uri)}</w:t>
+            </w:r>
+            <w:r>
+                <w:fldChar w:fldCharType="end"/>
+            </w:r>
+        </w:p>
+
+
+        <%if(isNotEmpty(doc.name)){%>
+        <w:p>
+            <w:pPr>
+                <w:pStyle w:val="29"/>
+            </w:pPr>
+            <w:r>
+                <w:rPr>
+                    <w:b/>
+                    <w:bCs/>
+                </w:rPr>
+                <w:t>Method:</w:t>
+            </w:r>
+            <w:r>
+                <w:t xml:space="preserve"> ${wordXmlEscape(doc.name)}</w:t>
+            </w:r>
+        </w:p>
+        <%}%>
+
+
+
+        <!--        方法功能描述-->
+        <w:p>
+            <w:pPr>
+                <w:pStyle w:val="29"/>
+            </w:pPr>
+            <w:r>
+                <w:rPr>
+                    <w:b/>
+                    <w:bCs/>
+                </w:rPr>
+                <w:t>Description:</w:t>
+            </w:r>
+            <w:r>
+                <w:t xml:space="preserve"> ${wordXmlEscape(doc.detail)}</w:t>
+            </w:r>
+        </w:p>
+
+
+
+
+        <!--    body参数    -->
+        <%if(isNotEmpty(doc.requestParams)){%>
+        <w:p>
+            <w:pPr>
+                <w:pStyle w:val="29"/>
+            </w:pPr>
+            <w:r>
+                <w:rPr>
+                    <w:b/>
+                    <w:bCs/>
+                </w:rPr>
+                <w:t>Body-parameters:</w:t>
+            </w:r>
+        </w:p>
+        <w:tbl>
+            <w:tblPr>
+                <w:tblStyle w:val="29"/>
+                <w:tblW w:w="0" w:type="auto"/>
+                <w:tblInd w:w="105" w:type="dxa"/>
+                <w:tblLayout w:type="autofit"/>
+                <w:tblCellMar>
+                    <w:top w:w="0" w:type="dxa"/>
+                    <w:left w:w="108" w:type="dxa"/>
+                    <w:bottom w:w="0" w:type="dxa"/>
+                    <w:right w:w="108" w:type="dxa"/>
+                </w:tblCellMar>
+            </w:tblPr>
+            <w:tblGrid>
+                <w:gridCol w:w="1458"/>
+                <w:gridCol w:w="848"/>
+                <w:gridCol w:w="1212"/>
+                <w:gridCol w:w="2546"/>
+                <w:gridCol w:w="2687"/>
+            </w:tblGrid>
+            <w:tr>
+                <w:trPr>
+                    <w:tblHeader/>
+                </w:trPr>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcW w:w="1353" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
+                        </w:pPr>
+                        <w:r>
+                            <w:rPr>
+                                <w:b/>
+                                <w:bCs/>
+                            </w:rPr>
+                            <w:t>Parameter</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcW w:w="848" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
+                        </w:pPr>
+                        <w:r>
+                            <w:rPr>
+                                <w:b/>
+                                <w:bCs/>
+                            </w:rPr>
+                            <w:t>Type</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcW w:w="1210" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
+                        </w:pPr>
+                        <w:r>
+                            <w:rPr>
+                                <w:b/>
+                                <w:bCs/>
+                            </w:rPr>
+                            <w:t>Required</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcW w:w="2548" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
+                        </w:pPr>
+                        <w:r>
+                            <w:rPr>
+                                <w:b/>
+                                <w:bCs/>
+                            </w:rPr>
+                            <w:t>Description</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcW w:w="2691" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
+                        </w:pPr>
+                        <w:r>
+                            <w:rPr>
+                                <w:b/>
+                                <w:bCs/>
+                            </w:rPr>
+                            <w:t>Since</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcW w:w="2700" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
+                        </w:pPr>
+                        <w:r>
+                            <w:rPr>
+                                <w:b/>
+                                <w:bCs/>
+                            </w:rPr>
+                            <w:t>Example</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
+            </w:tr>
+            <%
+            for(param in doc.requestParams){
+            %>
+            <w:tr>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcW w:w="1353" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <%if (paramLP.index % 2 == 0) {%>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                        <%}%>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
+                        </w:pPr>
+                        <w:r>
+                            <w:t>${wordXmlEscape(param.field)}</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcW w:w="848" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <%if (paramLP.index % 2 == 0) {%>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                        <%}%>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
+                        </w:pPr>
+                        <w:r>
+                            <w:t>${param.type}</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcW w:w="1210" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <%if (paramLP.index % 2 == 0) {%>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                        <%}%>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
+                        </w:pPr>
+                        <w:r>
+                            <w:t>${param.required}</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcW w:w="2548" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <%if (paramLP.index % 2 == 0) {%>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                        <%}%>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
+                        </w:pPr>
+                        <w:r>
+                            <w:t>${wordXmlEscape(param.desc)}</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcW w:w="2691" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <%if (paramLP.index % 2 == 0) {%>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                        <%}%>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
+                        </w:pPr>
+                        <w:r>
+                            <w:t>${param.version}</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcW w:w="2700" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <%if (paramLP.index % 2 == 0) {%>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                        <%}%>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
+                        </w:pPr>
+                        <w:r>
+                            <w:t>${param.value}</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
+            </w:tr>
+            <%}%>
+        </w:tbl>
+        <%}%>
+
+
+
+        <!--    响应参数     -->
+        <%if(isNotEmpty(doc.responseParams)){%>
+        <w:p>
+            <w:pPr>
+                <w:pStyle w:val="23"/>
+            </w:pPr>
+            <w:r>
+                <w:rPr>
+                    <w:b/>
+                    <w:bCs/>
+                </w:rPr>
+                <w:t>Response-fields:</w:t>
+            </w:r>
+        </w:p>
+        <w:tbl>
+            <w:tblPr>
+                <w:tblStyle w:val="29"/>
+                <w:tblW w:w="0" w:type="auto"/>
+                <w:tblInd w:w="105" w:type="dxa"/>
+                <w:tblLayout w:type="autofit"/>
+                <w:tblCellMar>
+                    <w:top w:w="0" w:type="dxa"/>
+                    <w:left w:w="108" w:type="dxa"/>
+                    <w:bottom w:w="0" w:type="dxa"/>
+                    <w:right w:w="108" w:type="dxa"/>
+                </w:tblCellMar>
+            </w:tblPr>
+            <w:tblGrid>
+                <w:gridCol w:w="1163"/>
+                <w:gridCol w:w="785"/>
+                <w:gridCol w:w="1485"/>
+                <w:gridCol w:w="5310"/>
+            </w:tblGrid>
+            <w:tr>
+                <w:trPr>
+                    <w:tblHeader/>
+                </w:trPr>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
+                        </w:pPr>
+                        <w:r>
+                            <w:rPr>
+                                <w:b/>
+                                <w:bCs/>
+                            </w:rPr>
+                            <w:t>Field</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
+                        </w:pPr>
+                        <w:r>
+                            <w:rPr>
+                                <w:b/>
+                                <w:bCs/>
+                            </w:rPr>
+                            <w:t>Type</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
+                        </w:pPr>
+                        <w:r>
+                            <w:rPr>
+                                <w:b/>
+                                <w:bCs/>
+                            </w:rPr>
+                            <w:t>Description</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcW w:w="5310" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
+                        </w:pPr>
+                        <w:r>
+                            <w:rPr>
+                                <w:b/>
+                                <w:bCs/>
+                            </w:rPr>
+                            <w:t>Since</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcW w:w="2700" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
+                        </w:pPr>
+                        <w:r>
+                            <w:rPr>
+                                <w:b/>
+                                <w:bCs/>
+                            </w:rPr>
+                            <w:t>Example</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
+            </w:tr>
+            <%
+            for(param in doc.responseParams){
+            %>
+            <w:tr>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <%if (paramLP.index % 2 == 0) {%>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                        <%}%>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
+                        </w:pPr>
+                        <w:r>
+                            <w:t>${wordXmlEscape(param.field)}</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <%if (paramLP.index % 2 == 0) {%>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                        <%}%>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
+                        </w:pPr>
+                        <w:r>
+                            <w:t>${param.type}</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <%if (paramLP.index % 2 == 0) {%>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                        <%}%>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
+                        </w:pPr>
+                        <w:r>
+                            <w:t>${wordXmlEscape(param.desc)}</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcW w:w="5310" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <%if (paramLP.index % 2 == 0) {%>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                        <%}%>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
+                        </w:pPr>
+                        <w:r>
+                            <w:t>${param.version}</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcW w:w="2700" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <%if (paramLP.index % 2 == 0) {%>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                        <%}%>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
+                        </w:pPr>
+                        <w:r>
+                            <w:t>${param.value}</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
+            </w:tr>
+            <%}%>
+        </w:tbl>
+        <%}%>
+
+        <%}%>
+
+
+        <%}%>
+
+
+        <%}%>
+
+        <%if(isNotEmpty(errorCodeList)){
+        %>
+        <w:p>
+            <w:pPr>
+                <w:pStyle w:val="2"/>
+                <w:bidi w:val="0"/>
+                <w:rPr>
+                    <w:rFonts w:hint="default" w:eastAsiaTheme="majorEastAsia"/>
+                    <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
+                </w:rPr>
+            </w:pPr>
+            <w:r>
+                <w:rPr>
+                    <w:rFonts w:hint="eastAsia"/>
+                    <w:lang w:eastAsia="zh-CN"/>
+                </w:rPr>
+                <w:t>${wordXmlEscape(errorListTitle)}</w:t>
+            </w:r>
+            <w:bookmarkStart w:id="7" w:name="_GoBack"/>
+            <w:bookmarkEnd w:id="7"/>
+        </w:p>
+        <w:tbl>
+            <w:tblPr>
+                <w:tblStyle w:val="29"/>
+                <w:tblW w:w="0" w:type="auto"/>
+                <w:tblInd w:w="105" w:type="dxa"/>
+                <w:tblLayout w:type="autofit"/>
+                <w:tblCellMar>
+                    <w:top w:w="0" w:type="dxa"/>
+                    <w:left w:w="108" w:type="dxa"/>
+                    <w:bottom w:w="0" w:type="dxa"/>
+                    <w:right w:w="108" w:type="dxa"/>
+                </w:tblCellMar>
+            </w:tblPr>
+            <w:tblGrid>
+                <w:gridCol w:w="4400"/>
+                <w:gridCol w:w="4400"/>
+            </w:tblGrid>
+            <w:tr>
+                <w:trPr>
+                    <w:tblHeader/>
+                </w:trPr>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
+                        </w:pPr>
+                        <w:r>
+                            <w:rPr>
+                                <w:b/>
+                                <w:bCs/>
+                            </w:rPr>
+                            <w:t>Error code</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
+                        </w:pPr>
+                        <w:r>
+                            <w:rPr>
+                                <w:b/>
+                                <w:bCs/>
+                            </w:rPr>
+                            <w:t>Description</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
+            </w:tr>
+            <%
+            for(error in errorCodeList){
+            %>
+            <w:tr>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <%if (errorLP.index % 2 == 0) {%>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                        <%}%>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
+                        </w:pPr>
+                        <w:r>
+                            <w:t>${wordXmlEscape(error.value)}</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <%if (errorLP.index % 2 == 0) {%>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                        <%}%>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
+                        </w:pPr>
+                        <w:r>
+                            <w:t>${wordXmlEscape(error.desc)}</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
+            </w:tr>
+            <%}%>
+        </w:tbl>
+        <%}%>
+
+
+        <%if(isNotEmpty(dictList)){
+        %>
+        <w:p>
+            <w:pPr>
+                <w:pStyle w:val="2"/>
+                <w:bidi w:val="0"/>
+                <w:rPr>
+                    <w:rFonts w:hint="default" w:eastAsiaTheme="majorEastAsia"/>
+                    <w:lang w:val="en-US" w:eastAsia="zh-CN"/>
+                </w:rPr>
+            </w:pPr>
+            <w:r>
+                <w:rPr>
+                    <w:rFonts w:hint="eastAsia"/>
+                    <w:lang w:eastAsia="zh-CN"/>
+                </w:rPr>
+                <w:t>${wordXmlEscape(dictListTitle)}</w:t>
+            </w:r>
+            <w:bookmarkStart w:id="7" w:name="_GoBack"/>
+            <w:bookmarkEnd w:id="7"/>
+        </w:p>
+        <%
+        for(dict in dictList){
+        %>
+        <w:tbl>
+            <w:tblPr>
+                <w:tblStyle w:val="29"/>
+                <w:tblW w:w="0" w:type="auto"/>
+                <w:tblInd w:w="105" w:type="dxa"/>
+                <w:tblLayout w:type="autofit"/>
+                <w:tblCellMar>
+                    <w:top w:w="0" w:type="dxa"/>
+                    <w:left w:w="108" w:type="dxa"/>
+                    <w:bottom w:w="0" w:type="dxa"/>
+                    <w:right w:w="108" w:type="dxa"/>
+                </w:tblCellMar>
+            </w:tblPr>
+            <w:tblGrid>
+                <w:gridCol w:w="2900"/>
+                <w:gridCol w:w="2900"/>
+                <w:gridCol w:w="2900"/>
+            </w:tblGrid>
+            <w:tr>
+                <w:trPr>
+                    <w:tblHeader/>
+                </w:trPr>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
+                        </w:pPr>
+                        <w:r>
+                            <w:rPr>
+                                <w:b/>
+                                <w:bCs/>
+                            </w:rPr>
+                            <w:t>Code</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
+                        </w:pPr>
+                        <w:r>
+                            <w:rPr>
+                                <w:b/>
+                                <w:bCs/>
+                            </w:rPr>
+                            <w:t>Type</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
+                        </w:pPr>
+                        <w:r>
+                            <w:rPr>
+                                <w:b/>
+                                <w:bCs/>
+                            </w:rPr>
+                            <w:t>Description</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
+            </w:tr>
+            <%
+            for(dataDict in dict.dataDictList){
+            %>
+            <w:tr>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <%if (dataDictLP.index % 2 == 0) {%>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                        <%}%>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
+                        </w:pPr>
+                        <w:r>
+                            <w:t>${wordXmlEscape(dataDict.value)}</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <%if (dataDictLP.index % 2 == 0) {%>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                        <%}%>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
+                        </w:pPr>
+                        <w:r>
+                            <w:t>${dataDict.type}</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <%if (dataDictLP.index % 2 == 0) {%>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                        <%}%>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
+                        </w:pPr>
+                        <w:r>
+                            <w:t>${wordXmlEscape(dataDict.desc)}</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
+            </w:tr>
+            <%}%>
+        </w:tbl>
+        <%}%>
+        <%}%>
+
+
+        <w:sectPr>
+            <w:cols w:space="720" w:num="1"/>
+        </w:sectPr>
+    </w:body>
+</w:document>
