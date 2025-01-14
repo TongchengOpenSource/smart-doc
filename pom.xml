@@ -38,7 +38,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit.jupiter.version>5.11.4</junit.jupiter.version>
         <beetl.version>3.19.0.RELEASE</beetl.version>
-        <common-util.version>2.2.7</common-util.version>
+        <common-util.version>2.2.8</common-util.version>
         <qdox.version>2.0.3.5</qdox.version>
         <datafaker.version>1.4.0</datafaker.version>
         <gson.version>2.11.0</gson.version>
