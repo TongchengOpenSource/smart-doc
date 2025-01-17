@@ -130,6 +130,7 @@ public interface IRpcDocBuilderTemplate<T extends AbstractRpcApiDoc<?>> extends 
 	 * @param javaProjectBuilder JavaProjectBuilder
 	 * @param template template
 	 * @param outPutFileName output file
+	 * @return Template
 	 */
 	default Template buildAllInOneWord(List<RpcApiDoc> apiDocList, ApiConfig config,
 			JavaProjectBuilder javaProjectBuilder, String template, String outPutFileName) {

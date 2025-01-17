@@ -24,6 +24,7 @@ import com.ly.doc.constants.DocGlobalConstants;
 import com.ly.doc.helper.JavaProjectBuilderHelper;
 import com.ly.doc.model.ApiConfig;
 import com.ly.doc.model.rpc.RpcApiDoc;
+import com.ly.doc.utils.DocUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import org.beetl.core.Template;
 
@@ -100,49 +101,11 @@ public class RpcWordDocBuilder {
 					DocGlobalConstants.RPC_ALL_IN_ONE_WORD_TPL, docName);
 
 			String outPath = config.getOutPath();
-			copyAndReplaceDocx(tpl.render(), outPath + DocGlobalConstants.FILE_SEPARATOR + docName);
+			DocUtil.copyAndReplaceDocx(tpl.render(), outPath + DocGlobalConstants.FILE_SEPARATOR + docName,TEMPLATE_DOCX);
 		}
 
 	}
 
-	/**
-	 * replace docx content
-	 * @param content doc content
-	 * @param docxOutputPath docx output path
-	 * @throws Exception exception
-	 * @since 1.0.0
-	 */
-	public static void copyAndReplaceDocx(String content, String docxOutputPath) throws Exception {
-		InputStream resourceAsStream = RpcWordDocBuilder.class.getClassLoader().getResourceAsStream(TEMPLATE_DOCX);
-		Objects.requireNonNull(resourceAsStream, "dubbo word template docx is not found");
 
-		ZipInputStream zipInputStream = new ZipInputStream(resourceAsStream);
-		ZipOutputStream zipOutputStream = new ZipOutputStream(Files.newOutputStream(Paths.get(docxOutputPath)));
-		// Traverse the files in the compressed package
-		ZipEntry entry;
-		while ((entry = zipInputStream.getNextEntry()) != null) {
-			String entryName = entry.getName();
-			// copy fix the bug: invalid entry compressed size
-			zipOutputStream.putNextEntry(new ZipEntry(entryName));
-			if ("word/document.xml".equals(entryName)) {
-				byte[] bytes = content.getBytes(StandardCharsets.UTF_8);
-				zipOutputStream.write(bytes, 0, bytes.length);
-			}
-			else {
-				// copy
-				byte[] buffer = new byte[1024];
-				int len;
-				while ((len = zipInputStream.read(buffer)) > 0) {
-					zipOutputStream.write(buffer, 0, len);
-				}
-			}
-
-			zipOutputStream.closeEntry();
-			zipInputStream.closeEntry();
-		}
-
-		zipInputStream.close();
-		zipOutputStream.close();
-	}
 
 }
