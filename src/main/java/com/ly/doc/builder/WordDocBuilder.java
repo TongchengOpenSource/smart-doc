@@ -27,6 +27,7 @@ import com.ly.doc.model.ApiConfig;
 import com.ly.doc.model.ApiDoc;
 import com.ly.doc.model.ApiSchema;
 import com.ly.doc.template.IDocBuildTemplate;
+import com.ly.doc.utils.DocUtil;
 import com.power.common.util.DateTimeUtil;
 import com.power.common.util.FileUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
@@ -113,65 +114,27 @@ public class WordDocBuilder {
 			FileUtil.mkdirs(outPath);
 			Template tpl = builderTemplate.buildAllRenderDocTemplate(apiDocList, config, javaProjectBuilder,
 					DocGlobalConstants.ALL_IN_ONE_WORD_XML_TPL, null, null);
-			copyAndReplaceDocx(tpl.render(), outPath + DocGlobalConstants.FILE_SEPARATOR + docName);
+			DocUtil.copyAndReplaceDocx(tpl.render(), outPath + DocGlobalConstants.FILE_SEPARATOR + docName,TEMPLATE_DOCX);
 		}
 		else {
 			FileUtil.mkdir(config.getOutPath());
 			for (ApiDoc doc : apiDocList) {
 				Template template = builderTemplate.buildApiDocTemplate(doc, config, DocGlobalConstants.WORD_XML_TPL);
-				copyAndReplaceDocx(template.render(),
-						config.getOutPath() + DocGlobalConstants.FILE_SEPARATOR + doc.getName() + BUILD_DOCX);
+				DocUtil.copyAndReplaceDocx(template.render(),
+						config.getOutPath() + DocGlobalConstants.FILE_SEPARATOR + doc.getName() + BUILD_DOCX,TEMPLATE_DOCX);
 			}
 			Template errorCodeDocTemplate = builderTemplate.buildErrorCodeDocTemplate(config,
 					DocGlobalConstants.WORD_ERROR_XML_TPL, javaProjectBuilder);
-			copyAndReplaceDocx(errorCodeDocTemplate.render(),
-					config.getOutPath() + DocGlobalConstants.FILE_SEPARATOR + BUILD_ERROR_DOCX);
+			DocUtil.copyAndReplaceDocx(errorCodeDocTemplate.render(),
+					config.getOutPath() + DocGlobalConstants.FILE_SEPARATOR + BUILD_ERROR_DOCX,TEMPLATE_DOCX);
 
 			Template directoryDataDocTemplate = builderTemplate.buildDirectoryDataDocTemplate(config,
 					javaProjectBuilder, DocGlobalConstants.WORD_DICT_XML_TPL);
-			copyAndReplaceDocx(directoryDataDocTemplate.render(),
-					config.getOutPath() + DocGlobalConstants.FILE_SEPARATOR + BUILD_DICT_DOCX);
+			DocUtil.copyAndReplaceDocx(directoryDataDocTemplate.render(),
+					config.getOutPath() + DocGlobalConstants.FILE_SEPARATOR + BUILD_DICT_DOCX,TEMPLATE_DOCX);
 		}
 	}
 
-	/**
-	 * replace docx content
-	 * @param content doc content
-	 * @param docxOutputPath docx output path
-	 * @throws Exception exception
-	 * @since 1.0.0
-	 */
-	public static void copyAndReplaceDocx(String content, String docxOutputPath) throws Exception {
-		InputStream resourceAsStream = WordDocBuilder.class.getClassLoader().getResourceAsStream(TEMPLATE_DOCX);
-		Objects.requireNonNull(resourceAsStream, "word template docx is not found");
 
-		ZipInputStream zipInputStream = new ZipInputStream(resourceAsStream);
-		ZipOutputStream zipOutputStream = new ZipOutputStream(Files.newOutputStream(Paths.get(docxOutputPath)));
-		// Traverse the files in the compressed package
-		ZipEntry entry;
-		while ((entry = zipInputStream.getNextEntry()) != null) {
-			String entryName = entry.getName();
-			// copy fix the bug: invalid entry compressed size
-			zipOutputStream.putNextEntry(new ZipEntry(entryName));
-			if ("word/document.xml".equals(entryName)) {
-				byte[] bytes = content.getBytes(StandardCharsets.UTF_8);
-				zipOutputStream.write(bytes, 0, bytes.length);
-			}
-			else {
-				// copy
-				byte[] buffer = new byte[1024];
-				int len;
-				while ((len = zipInputStream.read(buffer)) > 0) {
-					zipOutputStream.write(buffer, 0, len);
-				}
-			}
-
-			zipOutputStream.closeEntry();
-			zipInputStream.closeEntry();
-		}
-
-		zipInputStream.close();
-		zipOutputStream.close();
-	}
 
 }
