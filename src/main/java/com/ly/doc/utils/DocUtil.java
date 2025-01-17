@@ -20,6 +20,7 @@
  */
 package com.ly.doc.utils;
 
+import com.ly.doc.builder.WordDocBuilder;
 import com.ly.doc.constants.DocAnnotationConstants;
 import com.ly.doc.constants.DocGlobalConstants;
 import com.ly.doc.constants.DocTags;
@@ -62,6 +63,10 @@ import net.datafaker.Faker;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -95,6 +100,9 @@ import java.util.UUID;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
 
 /**
  * Description: DocUtil
@@ -1808,6 +1816,47 @@ public class DocUtil {
 	 */
 	public static String getIndentByLevel(int level) {
 		return getStringBuilderByLevel(level).toString();
+	}
+
+	/**
+	 * replace docx content
+	 * @param content doc content
+	 * @param docxOutputPath docx output path
+	 * @throws Exception exception
+	 * @since 1.0.0
+	 */
+	public static void copyAndReplaceDocx(String content, String docxOutputPath, String TEMPLATE_DOCX)
+			throws Exception {
+		InputStream resourceAsStream = WordDocBuilder.class.getClassLoader().getResourceAsStream(TEMPLATE_DOCX);
+		Objects.requireNonNull(resourceAsStream, "dubbo word template docx is not found");
+
+		ZipInputStream zipInputStream = new ZipInputStream(resourceAsStream);
+		ZipOutputStream zipOutputStream = new ZipOutputStream(Files.newOutputStream(Paths.get(docxOutputPath)));
+		// Traverse the files in the compressed package
+		ZipEntry entry;
+		while ((entry = zipInputStream.getNextEntry()) != null) {
+			String entryName = entry.getName();
+			// copy fix the bug: invalid entry compressed size
+			zipOutputStream.putNextEntry(new ZipEntry(entryName));
+			if ("word/document.xml".equals(entryName)) {
+				byte[] bytes = content.getBytes(StandardCharsets.UTF_8);
+				zipOutputStream.write(bytes, 0, bytes.length);
+			}
+			else {
+				// copy
+				byte[] buffer = new byte[1024];
+				int len;
+				while ((len = zipInputStream.read(buffer)) > 0) {
+					zipOutputStream.write(buffer, 0, len);
+				}
+			}
+
+			zipOutputStream.closeEntry();
+			zipInputStream.closeEntry();
+		}
+
+		zipInputStream.close();
+		zipOutputStream.close();
 	}
 
 }
