@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2024 smart-doc
+ * Copyright (C) 2018-2025 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -227,15 +227,18 @@ public abstract class BaseHelper {
 	 * Get the custom field information for a given field.
 	 * @param projectBuilder the project builder
 	 * @param docField the doc of java field
-	 * @param customResponseField the custom response field
-	 * @param customRequestField the custom request field
 	 * @param isResp the response flag for the parameter
 	 * @param simpleName the simple name of the field
+	 * @param fieldName the name of the field
 	 * @return the custom field information {@link CustomFieldInfo}
-	 *
 	 */
 	protected static CustomFieldInfo getCustomFieldInfo(ProjectDocConfigBuilder projectBuilder, DocJavaField docField,
-			CustomField customResponseField, CustomField customRequestField, boolean isResp, String simpleName) {
+			boolean isResp, String simpleName, String fieldName) {
+		CustomField.Key key = CustomField.Key.create(docField.getDeclaringClassName(), fieldName);
+
+		CustomField customResponseField = CustomField.nameEquals(key, projectBuilder.getCustomRespFieldMap());
+		CustomField customRequestField = CustomField.nameEquals(key, projectBuilder.getCustomReqFieldMap());
+
 		CustomFieldInfo customFieldInfo = new CustomFieldInfo();
 
 		// ignore custom field, if true return quickly
@@ -243,6 +246,8 @@ public abstract class BaseHelper {
 			customFieldInfo.setIgnore(true);
 			return customFieldInfo;
 		}
+
+		customFieldInfo.setCustomResponseField(customResponseField).setCustomRequestField(customRequestField);
 
 		// cover response value
 		if (Objects.nonNull(customResponseField) && isResp && Objects.nonNull(customResponseField.getValue())

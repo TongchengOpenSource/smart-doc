@@ -31,15 +31,15 @@ jobs:
       - name: Update Version in pom.xml
         run: mvn versions:set -DnewVersion="${{ env.smart-doc-version }}" -DgenerateBackupPoms=false
 
-      - name: Build and Install Plugin
+      - name: Build and Install
         run: |
-          mvn install 2>&1 | tee logs/build.log
+          mvn install -DskipTests=true 2>&1 | tee logs/build.log
           if grep -E "\[ERROR\]" logs/build.log; then
             cat logs/build.log
             exit 1
           fi
 
-      - name: Upload Plugin Artifact
+      - name: Upload Artifact
         id: upload-artifact
         uses: actions/upload-artifact@v4
         with:
