@@ -129,8 +129,30 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>${maven-javadoc-plugin.version}</version>
+                <configuration>
+                    <!--
+                    Fail the build if any Javadoc warnings or errors occur.
+                    This ensures that all Javadoc issues are treated seriously.
+                    -->
+                    <failOnError>true</failOnError>
+                    <additionalOptions>
+                        <!--
+                        Enable strict validation of Javadoc content.
+                        The "all" option checks for syntax, references, and HTML issues.
+                        -->
+                        <additionalOption>-Xdoclint:all</additionalOption>
+                    </additionalOptions>
+                </configuration>
                 <executions>
                     <execution>
+                        <id>validate-javadoc</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>javadoc</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>package-javadoc-jar</id>
                         <phase>package</phase>
                         <goals>
                             <goal>jar</goal>

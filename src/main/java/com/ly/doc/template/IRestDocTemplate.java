@@ -1214,7 +1214,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 					paramList.add(param);
 				}
 				else {
-					if (requestBodyCounter > 0 || !ApiParamEnum.QUERY.equals(apiParamEnum)) {
+					if (requestBodyCounter > 0 || !isQueryParam) {
 						// for json
 						paramList.addAll(ParamsBuildHelper.buildParams(gicNameArr[0], DocGlobalConstants.EMPTY, 0,
 								String.valueOf(required), Boolean.FALSE, new HashMap<>(16), builder, groupClasses,
@@ -1305,6 +1305,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 						String.valueOf(required), Boolean.FALSE, new HashMap<>(16), builder, groupClasses,
 						docJavaMethod.getJsonViewClasses(), 1, jsonRequest, null));
 			}
+			// other types
 			else {
 				List<ApiParam> apiParams = ParamsBuildHelper.buildParams(typeName, DocGlobalConstants.EMPTY, 0,
 						String.valueOf(required), Boolean.FALSE, new HashMap<>(16), builder, groupClasses,
@@ -1313,7 +1314,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 				boolean hasFile = apiParams.stream()
 					.anyMatch(param -> ParamTypeConstants.PARAM_TYPE_FILE.equals(param.getType()));
 				// if it does not have file and query param, set query param true
-				if (!hasFile && ApiParamEnum.QUERY.equals(apiParamEnum)) {
+				if (!hasFile && isQueryParam) {
 					for (ApiParam apiParam : apiParams) {
 						apiParam.traverseAndConsume(ApiParam::setQueryParamTrue);
 					}
