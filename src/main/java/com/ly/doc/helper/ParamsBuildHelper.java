@@ -1,7 +1,7 @@
 /*
  * smart-doc https://github.com/smart-doc-group/smart-doc
  *
- * Copyright (C) 2018-2024 smart-doc
+ * Copyright (C) 2018-2025 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -32,7 +32,6 @@ import com.ly.doc.extension.json.PropertyNamingStrategies;
 import com.ly.doc.model.ApiConfig;
 import com.ly.doc.model.ApiDataDictionary;
 import com.ly.doc.model.ApiParam;
-import com.ly.doc.model.CustomField;
 import com.ly.doc.model.CustomFieldInfo;
 import com.ly.doc.model.DocJavaField;
 import com.ly.doc.model.FieldJsonAnnotationInfo;
@@ -271,13 +270,9 @@ public class ParamsBuildHelper extends BaseHelper {
 			}
 
 			boolean strRequired = false;
-			CustomField.Key key = CustomField.Key.create(docField.getDeclaringClassName(), fieldName);
 
-			CustomField customResponseField = CustomField.nameEquals(key, projectBuilder.getCustomRespFieldMap());
-			CustomField customRequestField = CustomField.nameEquals(key, projectBuilder.getCustomReqFieldMap());
-
-			CustomFieldInfo customFieldInfo = getCustomFieldInfo(projectBuilder, docField, customResponseField,
-					customRequestField, isResp, simpleName);
+			CustomFieldInfo customFieldInfo = getCustomFieldInfo(projectBuilder, docField, isResp, typeSimpleName,
+					fieldName);
 			// ignore custom field
 			if (Boolean.TRUE.equals(customFieldInfo.getIgnore())) {
 				continue;

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2024 smart-doc
+ * Copyright (C) 2018-2025 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -24,12 +24,33 @@ import com.ly.doc.builder.ProjectDocConfigBuilder;
 import com.ly.doc.constants.DocGlobalConstants;
 import com.ly.doc.constants.DocTags;
 import com.ly.doc.constants.JavaTypeConstants;
-import com.ly.doc.model.*;
-import com.ly.doc.utils.*;
+import com.ly.doc.model.ApiReturn;
+import com.ly.doc.model.CustomField;
+import com.ly.doc.model.CustomFieldInfo;
+import com.ly.doc.model.DocJavaField;
+import com.ly.doc.model.DocJavaMethod;
+import com.ly.doc.model.FieldJsonAnnotationInfo;
+import com.ly.doc.utils.DocClassUtil;
+import com.ly.doc.utils.DocUtil;
+import com.ly.doc.utils.JavaClassUtil;
+import com.ly.doc.utils.JavaClassValidateUtil;
+import com.ly.doc.utils.JavaFieldUtil;
+import com.ly.doc.utils.JsonUtil;
 import com.power.common.util.StringUtil;
-import com.thoughtworks.qdox.model.*;
+import com.thoughtworks.qdox.model.DocletTag;
+import com.thoughtworks.qdox.model.JavaAnnotation;
+import com.thoughtworks.qdox.model.JavaClass;
+import com.thoughtworks.qdox.model.JavaField;
+import com.thoughtworks.qdox.model.JavaMethod;
+import com.thoughtworks.qdox.model.JavaType;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 import static com.ly.doc.constants.DocTags.IGNORE_RESPONSE_BODY_ADVICE;
 
@@ -276,8 +297,6 @@ public class JsonBuildHelper extends BaseHelper {
 				if (Boolean.TRUE.equals(annotationInfo.getIgnore())) {
 					continue;
 				}
-				// the param type from @JsonFormat
-				String fieldJsonFormatType = annotationInfo.getFieldJsonFormatType();
 				// the param value from @JsonFormat
 				String fieldJsonFormatValue = annotationInfo.getFieldJsonFormatValue();
 				// has Annotation @JsonSerialize And using ToStringSerializer
@@ -288,12 +307,9 @@ public class JsonBuildHelper extends BaseHelper {
 
 				String typeSimpleName = docField.getTypeSimpleName();
 				String fieldGicName = docField.getTypeGenericCanonicalName();
-				CustomField.Key key = CustomField.Key.create(docField.getDeclaringClassName(), fieldName);
 
-				CustomField customResponseField = CustomField.nameEquals(key, projectBuilder.getCustomRespFieldMap());
-				CustomField customRequestField = CustomField.nameEquals(key, projectBuilder.getCustomReqFieldMap());
-				CustomFieldInfo customFieldInfo = getCustomFieldInfo(projectBuilder, docField, customResponseField,
-						customRequestField, isResp, typeSimpleName);
+				CustomFieldInfo customFieldInfo = getCustomFieldInfo(projectBuilder, docField, isResp, typeSimpleName,
+						fieldName);
 				// ignore custom field
 				if (Boolean.TRUE.equals(customFieldInfo.getIgnore())) {
 					continue;
@@ -322,6 +338,9 @@ public class JsonBuildHelper extends BaseHelper {
 									: valueByTypeAndFieldName;
 						}
 					}
+
+					CustomField customResponseField = customFieldInfo.getCustomResponseField();
+					CustomField customRequestField = customFieldInfo.getCustomRequestField();
 					if (Objects.nonNull(customRequestField) && !isResp
 							&& typeName.equals(customRequestField.getOwnerClassName())) {
 						JavaFieldUtil.buildCustomField(result, typeSimpleName, customRequestField);
