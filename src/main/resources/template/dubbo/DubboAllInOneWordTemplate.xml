@@ -878,6 +878,31 @@
                 </w:tc>
                 <w:tc>
                     <w:tcPr>
+                        <w:tcW w:w="1210" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
+                        </w:pPr>
+                        <w:r>
+                            <w:rPr>
+                                <w:b/>
+                                <w:bCs/>
+                            </w:rPr>
+                            <w:t>Required</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
+                <w:tc>
+                    <w:tcPr>
                         <w:tcBorders>
                             <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
                             <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
@@ -971,6 +996,30 @@
                         </w:pPr>
                         <w:r>
                             <w:t>${wordXmlEscape(param.type)}</w:t>
+                        </w:r>
+                    </w:p>
+                </w:tc>
+
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcW w:w="1210" w:type="dxa"/>
+                        <w:tcBorders>
+                            <w:top w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:left w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:bottom w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                            <w:right w:val="single" w:color="DFE2E5" w:sz="4" w:space="0"/>
+                        </w:tcBorders>
+                        <%if (paramLP.index % 2 == 0) {%>
+                        <w:shd w:val="clear" w:color="auto" w:fill="F8F8F8"/>
+                        <%}%>
+                    </w:tcPr>
+                    <w:p>
+                        <w:pPr>
+                            <w:pStyle w:val="24"/>
+                            <w:jc w:val="left"/>
+                        </w:pPr>
+                        <w:r>
+                            <w:t>${wordXmlEscape(param.required)}</w:t>
                         </w:r>
                     </w:p>
                 </w:tc>
