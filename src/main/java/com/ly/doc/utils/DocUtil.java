@@ -20,81 +20,34 @@
  */
 package com.ly.doc.utils;
 
-import com.ly.doc.constants.DocAnnotationConstants;
-import com.ly.doc.constants.DocGlobalConstants;
-import com.ly.doc.constants.DocTags;
-import com.ly.doc.constants.JAXRSAnnotations;
-import com.ly.doc.constants.JakartaJaxrsAnnotations;
-import com.ly.doc.constants.JavaTypeConstants;
-import com.ly.doc.constants.MediaType;
+import com.ly.doc.builder.WordDocBuilder;
+import com.ly.doc.constants.*;
 import com.ly.doc.extension.dict.DictionaryValuesResolver;
-import com.ly.doc.model.ApiConfig;
-import com.ly.doc.model.ApiDataDictionary;
-import com.ly.doc.model.ApiDocDict;
-import com.ly.doc.model.ApiErrorCode;
-import com.ly.doc.model.ApiErrorCodeDictionary;
-import com.ly.doc.model.ApiReqParam;
-import com.ly.doc.model.DataDict;
-import com.ly.doc.model.DocJavaField;
-import com.ly.doc.model.FormData;
-import com.ly.doc.model.SystemPlaceholders;
+import com.ly.doc.model.*;
 import com.ly.doc.model.request.RequestMapping;
 import com.mifmif.common.regex.Generex;
-import com.power.common.util.CollectionUtil;
-import com.power.common.util.DateTimeUtil;
-import com.power.common.util.EnumUtil;
-import com.power.common.util.IDCardUtil;
-import com.power.common.util.RandomUtil;
-import com.power.common.util.StringUtil;
+import com.power.common.util.*;
 import com.thoughtworks.qdox.JavaProjectBuilder;
-import com.thoughtworks.qdox.model.DocletTag;
-import com.thoughtworks.qdox.model.JavaAnnotation;
-import com.thoughtworks.qdox.model.JavaClass;
-import com.thoughtworks.qdox.model.JavaField;
-import com.thoughtworks.qdox.model.JavaMember;
-import com.thoughtworks.qdox.model.JavaMethod;
-import com.thoughtworks.qdox.model.expression.Add;
-import com.thoughtworks.qdox.model.expression.AnnotationValue;
-import com.thoughtworks.qdox.model.expression.Constant;
-import com.thoughtworks.qdox.model.expression.Expression;
-import com.thoughtworks.qdox.model.expression.FieldRef;
+import com.thoughtworks.qdox.model.*;
+import com.thoughtworks.qdox.model.expression.*;
 import net.datafaker.Faker;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.DecimalFormat;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.MonthDay;
-import java.time.OffsetDateTime;
-import java.time.Year;
-import java.time.YearMonth;
-import java.time.ZoneId;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.IdentityHashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-import java.util.Stack;
-import java.util.TimeZone;
-import java.util.UUID;
+import java.util.*;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
 
 /**
  * Description: DocUtil
@@ -1808,6 +1761,47 @@ public class DocUtil {
 	 */
 	public static String getIndentByLevel(int level) {
 		return getStringBuilderByLevel(level).toString();
+	}
+
+	/**
+	 * replace docx content
+	 * @param content doc content
+	 * @param docxOutputPath docx output path
+	 * @param templateDocx docx template
+	 * @throws Exception exception
+	 * @since 3.0.8
+	 */
+	public static void copyAndReplaceDocx(String content, String docxOutputPath, String templateDocx) throws Exception {
+		InputStream resourceAsStream = WordDocBuilder.class.getClassLoader().getResourceAsStream(templateDocx);
+		Objects.requireNonNull(resourceAsStream, "word template docx is not found");
+
+		ZipInputStream zipInputStream = new ZipInputStream(resourceAsStream);
+		ZipOutputStream zipOutputStream = new ZipOutputStream(Files.newOutputStream(Paths.get(docxOutputPath)));
+		// Traverse the files in the compressed package
+		ZipEntry entry;
+		while ((entry = zipInputStream.getNextEntry()) != null) {
+			String entryName = entry.getName();
+			// copy fix the bug: invalid entry compressed size
+			zipOutputStream.putNextEntry(new ZipEntry(entryName));
+			if ("word/document.xml".equals(entryName)) {
+				byte[] bytes = content.getBytes(StandardCharsets.UTF_8);
+				zipOutputStream.write(bytes, 0, bytes.length);
+			}
+			else {
+				// copy
+				byte[] buffer = new byte[1024];
+				int len;
+				while ((len = zipInputStream.read(buffer)) > 0) {
+					zipOutputStream.write(buffer, 0, len);
+				}
+			}
+
+			zipOutputStream.closeEntry();
+			zipInputStream.closeEntry();
+		}
+
+		zipInputStream.close();
+		zipOutputStream.close();
 	}
 
 }
