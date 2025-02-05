@@ -97,7 +97,7 @@ jobs:
 
       - name: Build and Install
         run: |
-          mvn -DskipTests=true install 2>&1 | tee logs/install-plugin.log
+          mvn install -DskipTests=true 2>&1 | tee logs/install-plugin.log
           if grep -E "\[ERROR\]" logs/install-plugin.log; then
             cat logs/install-plugin.log
             exit 1
