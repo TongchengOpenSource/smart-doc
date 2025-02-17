@@ -35,9 +35,13 @@ import com.thoughtworks.qdox.model.expression.AnnotationValue;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.StringJoiner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * JavaFieldUtil
@@ -52,6 +56,11 @@ public class JavaFieldUtil {
 	private JavaFieldUtil() {
 		throw new IllegalStateException("Utility class");
 	}
+
+	/**
+	 * Pattern to match placeholders in messages
+	 */
+	private static final Pattern PLACEHOLDER_PATTERN = Pattern.compile("\\{(.+?)\\}");
 
 	/**
 	 * public static final
@@ -141,47 +150,79 @@ public class JavaFieldUtil {
 	}
 
 	/**
-	 * getJsr303Comment
-	 * @param showValidation Show JSR validation information
-	 * @param classLoader ClassLoader
-	 * @param annotations annotations
-	 * @return Jsr comments
+	 * Get JSR 303 validation comments.
+	 * @param showValidation Whether to show JSR validation information
+	 * @param classLoader The ClassLoader used to resolve annotation values
+	 * @param annotations List of Java annotations to process
+	 * @return A string containing JSR validation comments
 	 */
 	public static String getJsrComment(boolean showValidation, ClassLoader classLoader,
 			List<JavaAnnotation> annotations) {
 		if (!showValidation) {
 			return DocGlobalConstants.EMPTY;
 		}
-		StringBuilder sb = new StringBuilder();
+		StringJoiner validationJoiner = new StringJoiner("; ");
 		for (JavaAnnotation annotation : annotations) {
-			Map<String, AnnotationValue> values = annotation.getPropertyMap();
-			String name = annotation.getType().getValue();
-			if (JSRAnnotationConstants.NOT_BLANK.equals(name) || JSRAnnotationConstants.NOT_EMPTY.equals(name)
-					|| JSRAnnotationConstants.NOT_NULL.equals(name) || JSRAnnotationConstants.NULL.equals(name)
-					|| JSRAnnotationConstants.VALIDATED.equals(name)) {
+			String annotationName = annotation.getType().getValue();
+			// Skip excluded annotations
+			if (DocValidatorAnnotationEnum.EXCLUDED_ANNOTATIONS.contains(annotationName)) {
 				continue;
 			}
-			if (DocValidatorAnnotationEnum.listValidatorAnnotations().contains(name)) {
-				sb.append(name).append("(");
-				int j = 0;
-				for (Map.Entry<String, AnnotationValue> m : values.entrySet()) {
-					j++;
-					String value = DocUtil.resolveAnnotationValue(classLoader, m.getValue());
-					sb.append(m.getKey()).append("=").append(StringUtil.removeDoubleQuotes(value));
-					if (j < values.size()) {
-						sb.append(", ");
-					}
-				}
-				sb.append("); ");
+
+			// Skip non-validator annotations
+			if (!DocValidatorAnnotationEnum.VALIDATOR_ANNOTATIONS.contains(annotationName)) {
+				continue;
 			}
+
+			StringJoiner paramJoiner = getParamJoiner(classLoader, annotation);
+
+			validationJoiner.add(annotationName + "(" + paramJoiner + ")");
+
 		}
-		if (sb.length() < 1) {
-			return DocGlobalConstants.EMPTY;
+		return validationJoiner.length() == 0 ? DocGlobalConstants.EMPTY : "\nValidation[" + validationJoiner + "]";
+	}
+
+	/**
+	 * Get the string joiner for the given annotation.
+	 * @param classLoader The ClassLoader used to resolve annotation values
+	 * @param annotation The Java annotation to process
+	 * @return A string joiner containing the resolved annotation properties
+	 */
+	private static StringJoiner getParamJoiner(ClassLoader classLoader, JavaAnnotation annotation) {
+		Map<String, AnnotationValue> properties = annotation.getPropertyMap();
+		Map<String, String> resolvedValues = new LinkedHashMap<>();
+		properties.forEach((key, value) -> resolvedValues.put(key,
+				StringUtil.removeDoubleQuotes(DocUtil.resolveAnnotationValue(classLoader, value))));
+
+		resolvedValues.computeIfPresent("message", (k, v) -> replacePlaceholders(v, resolvedValues));
+
+		StringJoiner paramJoiner = new StringJoiner(", ");
+		resolvedValues.forEach((key, val) -> paramJoiner.add(key + "=" + val));
+		return paramJoiner;
+	}
+
+	/**
+	 * Replace placeholders in the message with corresponding annotation property values.
+	 * @param message The original message content
+	 * @param resolvedValues A map of resolved annotation property values
+	 * @return The message with placeholders replaced
+	 */
+	private static String replacePlaceholders(String message, Map<String, String> resolvedValues) {
+		// Early exit if the message is null, empty, or does not contain any placeholders
+		if (message == null || !message.contains("{") || !message.contains("}")) {
+			return message;
 		}
-		if (sb.toString().contains(";")) {
-			sb.deleteCharAt(sb.lastIndexOf(";"));
+
+		Matcher matcher = PLACEHOLDER_PATTERN.matcher(message);
+		StringBuffer sb = new StringBuffer();
+		while (matcher.find()) {
+			String key = matcher.group(1);
+			String replacement = resolvedValues.getOrDefault(key, matcher.group());
+			matcher.appendReplacement(sb, Matcher.quoteReplacement(replacement));
 		}
-		return "\nValidation[" + sb + "]";
+		matcher.appendTail(sb);
+		return sb.toString();
+
 	}
 
 	/**

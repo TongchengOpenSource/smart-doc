@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2024 smart-doc
+ * Copyright (C) 2018-2025 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -20,8 +20,8 @@
  */
 package com.ly.doc.constants;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * spring validator annotations
@@ -164,12 +164,26 @@ public enum DocValidatorAnnotationEnum {
 		this.value = value;
 	}
 
-	public static List<String> listValidatorAnnotations() {
-		List<String> annotations = new ArrayList<>();
+	/**
+	 * validator annotations
+	 */
+	public static final Set<String> VALIDATOR_ANNOTATIONS = new HashSet<>();
+
+	/**
+	 * excluded annotations
+	 */
+	public static final Set<String> EXCLUDED_ANNOTATIONS = new HashSet<>();
+
+	static {
 		for (DocValidatorAnnotationEnum annotation : DocValidatorAnnotationEnum.values()) {
-			annotations.add(annotation.value);
+			VALIDATOR_ANNOTATIONS.add(annotation.value);
 		}
-		return annotations;
+
+		EXCLUDED_ANNOTATIONS.add(NOT_BLANK.value);
+		EXCLUDED_ANNOTATIONS.add(NOT_EMPTY.value);
+		EXCLUDED_ANNOTATIONS.add(NOT_NULL.value);
+		EXCLUDED_ANNOTATIONS.add(NULL.value);
+		EXCLUDED_ANNOTATIONS.add(VALIDATED.value);
 	}
 
 }

@@ -1,7 +1,7 @@
 /*
  * smart-doc
  *
- * Copyright (C) 2018-2024 smart-doc
+ * Copyright (C) 2018-2025 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -872,9 +872,8 @@ public class JavaClassUtil {
 			return new HashSet<>(0);
 		}
 		Set<String> javaClassList = new HashSet<>();
-		List<String> validates = DocValidatorAnnotationEnum.listValidatorAnnotations();
 		for (JavaAnnotation javaAnnotation : annotations) {
-			List<AnnotationValue> annotationValueList = getValidatedAnnotationValues(validates, javaAnnotation);
+			List<AnnotationValue> annotationValueList = getValidatedAnnotationValues(javaAnnotation);
 			addGroupClass(annotationValueList, javaClassList, builder);
 			// When using @Validated and group class is empty, add the Default group
 			// class;
@@ -899,8 +898,7 @@ public class JavaClassUtil {
 			return new HashSet<>(0);
 		}
 		Set<String> javaClassList = new HashSet<>();
-		List<String> validates = DocValidatorAnnotationEnum.listValidatorAnnotations();
-		List<AnnotationValue> annotationValueList = getValidatedAnnotationValues(validates, javaAnnotation);
+		List<AnnotationValue> annotationValueList = getValidatedAnnotationValues(javaAnnotation);
 		addGroupClass(annotationValueList, javaClassList);
 		String simpleAnnotationName = javaAnnotation.getType().getValue();
 		// add default group
@@ -1047,7 +1045,7 @@ public class JavaClassUtil {
 	 * annotation values. If the property name cannot be determined or the annotation does
 	 * not contain valid validation information, an empty list is returned.
 	 */
-	private static List<AnnotationValue> getValidatedAnnotationValues(List<String> validates,
+	private static List<AnnotationValue> getValidatedAnnotationValues(Set<String> validates,
 			JavaAnnotation javaAnnotation) {
 		String simpleName = javaAnnotation.getType().getValue();
 
@@ -1066,6 +1064,25 @@ public class JavaClassUtil {
 		}
 
 		return Collections.emptyList();
+	}
+
+	/**
+	 * Retrieves a list of validated annotation values.
+	 * <p>
+	 * This method processes and extracts validation-related information from a given
+	 * annotation object, based on the list of validation annotation names provided. It
+	 * first determines the annotation type, then identifies the property name to extract
+	 * based on the annotation type, and finally retrieves the corresponding annotation
+	 * values according to that property name.
+	 * </p>
+	 * @param javaAnnotation A JavaAnnotation object representing the annotation being
+	 * processed.
+	 * @return Returns a list of AnnotationValue objects containing valid validation
+	 * annotation values. If the property name cannot be determined or the annotation does
+	 * not contain valid validation information, an empty list is returned.
+	 */
+	private static List<AnnotationValue> getValidatedAnnotationValues(JavaAnnotation javaAnnotation) {
+		return getValidatedAnnotationValues(DocValidatorAnnotationEnum.VALIDATOR_ANNOTATIONS, javaAnnotation);
 	}
 
 	/**
