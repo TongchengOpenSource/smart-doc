@@ -1,7 +1,7 @@
 /*
  * smart-doc
  *
- * Copyright (C) 2018-2024 smart-doc
+ * Copyright (C) 2018-2025 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -118,10 +118,11 @@ public class JavaFieldUtil {
 
 	/**
 	 * get param max length
+	 * @param classLoader classLoader
 	 * @param annotations annotation
 	 * @return max length
 	 */
-	public static String getParamMaxLength(List<JavaAnnotation> annotations) {
+	public static String getParamMaxLength(ClassLoader classLoader, List<JavaAnnotation> annotations) {
 		String maxLength = "";
 		for (JavaAnnotation annotation : annotations) {
 			String simpleAnnotationName = annotation.getType().getValue();
@@ -133,7 +134,7 @@ public class JavaFieldUtil {
 				annotationValue = annotation.getProperty(JSRAnnotationPropConstants.MAX_PROP);
 			}
 			if (Objects.nonNull(annotationValue)) {
-				maxLength = annotationValue.toString();
+				maxLength = DocUtil.resolveAnnotationValue(classLoader, annotationValue);
 			}
 		}
 		return maxLength;

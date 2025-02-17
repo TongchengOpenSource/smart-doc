@@ -233,7 +233,7 @@ public class ParamsBuildHelper extends BaseHelper {
 				continue;
 			}
 
-			String maxLength = JavaFieldUtil.getParamMaxLength(field.getAnnotations());
+			String maxLength = JavaFieldUtil.getParamMaxLength(classLoader, field.getAnnotations());
 			StringBuilder comment = new StringBuilder();
 			comment.append(docField.getComment());
 
