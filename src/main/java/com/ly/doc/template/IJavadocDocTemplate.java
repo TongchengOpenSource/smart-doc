@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2024 smart-doc
+ * Copyright (C) 2018-2025 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -21,17 +21,37 @@
 package com.ly.doc.template;
 
 import com.ly.doc.builder.ProjectDocConfigBuilder;
-import com.ly.doc.constants.*;
+import com.ly.doc.constants.DocAnnotationConstants;
+import com.ly.doc.constants.DocGlobalConstants;
+import com.ly.doc.constants.DocTags;
+import com.ly.doc.constants.JavaTypeConstants;
+import com.ly.doc.constants.ParamTypeConstants;
 import com.ly.doc.helper.ParamsBuildHelper;
 import com.ly.doc.model.ApiConfig;
 import com.ly.doc.model.ApiParam;
 import com.ly.doc.model.DocJavaMethod;
 import com.ly.doc.model.JavadocJavaMethod;
-import com.ly.doc.utils.*;
+import com.ly.doc.utils.ApiParamTreeUtil;
+import com.ly.doc.utils.DocClassUtil;
+import com.ly.doc.utils.DocUtil;
+import com.ly.doc.utils.JavaClassUtil;
+import com.ly.doc.utils.JavaClassValidateUtil;
+import com.ly.doc.utils.JavaFieldUtil;
 import com.power.common.util.StringUtil;
-import com.thoughtworks.qdox.model.*;
+import com.thoughtworks.qdox.model.JavaAnnotation;
+import com.thoughtworks.qdox.model.JavaClass;
+import com.thoughtworks.qdox.model.JavaMethod;
+import com.thoughtworks.qdox.model.JavaParameter;
+import com.thoughtworks.qdox.model.JavaType;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -267,7 +287,7 @@ public interface IJavadocDocTemplate<T extends JavadocJavaMethod> extends IBaseD
 					.setType(JavaClassUtil.getClassSimpleName(typeName))
 					.setDesc(comment.toString())
 					.setRequired(required)
-					.setMaxLength(JavaFieldUtil.getParamMaxLength(parameter.getAnnotations()))
+					.setMaxLength(JavaFieldUtil.getParamMaxLength(classLoader, parameter.getAnnotations()))
 					.setValue(mockValue)
 					.setVersion(DocGlobalConstants.DEFAULT_VERSION);
 				paramList.add(param);
