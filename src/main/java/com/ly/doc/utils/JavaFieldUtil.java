@@ -150,6 +150,16 @@ public class JavaFieldUtil {
 	}
 
 	/**
+	 * get param max length
+	 * @param annotations annotation
+	 * @return max length
+	 */
+	public static String getParamMaxLength(List<JavaAnnotation> annotations) {
+		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+		return getParamMaxLength(classLoader, annotations);
+	}
+
+	/**
 	 * Get JSR 303 validation comments.
 	 * @param showValidation Whether to show JSR validation information
 	 * @param classLoader The ClassLoader used to resolve annotation values
