@@ -43,7 +43,7 @@
         <datafaker.version>1.4.0</datafaker.version>
         <gson.version>2.12.1</gson.version>
         <eclipse.jgit.version>5.13.3.202401111512-r</eclipse.jgit.version>
-        <slf4j-api.version>2.0.16</slf4j-api.version>
+        <slf4j-api.version>2.0.17</slf4j-api.version>
 
         <!-- plugin version -->
         <maven-compiler-plugin.version>3.14.0</maven-compiler-plugin.version>
