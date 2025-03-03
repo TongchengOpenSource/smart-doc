@@ -184,7 +184,7 @@ public class JavaFieldUtil {
 				continue;
 			}
 
-			StringJoiner paramJoiner = getParamJoiner(classLoader, annotation);
+			StringJoiner paramJoiner = getParamJoiner(annotationName, classLoader, annotation);
 
 			validationJoiner.add(annotationName + "(" + paramJoiner + ")");
 
@@ -194,20 +194,30 @@ public class JavaFieldUtil {
 
 	/**
 	 * Get the string joiner for the given annotation.
+	 * @param annotationName The annotation name
 	 * @param classLoader The ClassLoader used to resolve annotation values
 	 * @param annotation The Java annotation to process
 	 * @return A string joiner containing the resolved annotation properties
 	 */
-	private static StringJoiner getParamJoiner(ClassLoader classLoader, JavaAnnotation annotation) {
-		Map<String, AnnotationValue> properties = annotation.getPropertyMap();
-		Map<String, String> resolvedValues = new LinkedHashMap<>();
-		properties.forEach((key, value) -> resolvedValues.put(key,
-				StringUtil.removeDoubleQuotes(DocUtil.resolveAnnotationValue(classLoader, value))));
+	private static StringJoiner getParamJoiner(String annotationName, ClassLoader classLoader,
+			JavaAnnotation annotation) {
 
-		resolvedValues.computeIfPresent("message", (k, v) -> replacePlaceholders(v, resolvedValues));
+		// 1. Initialize with default values
+		Map<String, String> effectiveValues = new LinkedHashMap<>(
+				DocValidatorAnnotationEnum.getDefaults(annotationName));
 
+		// 2. Override with explicit values
+		annotation.getPropertyMap()
+			.forEach((key, value) -> effectiveValues.put(key,
+					StringUtil.removeDoubleQuotes(DocUtil.resolveAnnotationValue(classLoader, value))));
+
+		// 3. Process message placeholders
+		effectiveValues.computeIfPresent("message", (k, v) -> replacePlaceholders(v, effectiveValues));
+
+		// 4. Build parameter string
 		StringJoiner paramJoiner = new StringJoiner(", ");
-		resolvedValues.forEach((key, val) -> paramJoiner.add(key + "=" + val));
+		effectiveValues.forEach((key, val) -> paramJoiner.add(key + "=" + val));
+
 		return paramJoiner;
 	}
 

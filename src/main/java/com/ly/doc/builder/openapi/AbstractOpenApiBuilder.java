@@ -155,6 +155,9 @@ public abstract class AbstractOpenApiBuilder {
 				String[] paths = methodDoc.getPath().split(";");
 				for (String path : paths) {
 					path = path.trim();
+					if (StringUtil.isNotEmpty(apiConfig.getPathPrefix())) {
+						path = path.replace(apiConfig.getPathPrefix(), "");
+					}
 					Map<String, Object> request = this.buildPathUrls(apiConfig, methodDoc, methodDoc.getClazzDoc(),
 							apiSchema.getApiExceptionStatuses());
 					if (!pathMap.containsKey(path)) {
@@ -471,6 +474,7 @@ public abstract class AbstractOpenApiBuilder {
 				propertiesData.put(field, this.buildPropertiesData(param, component, isResp));
 			}
 			if (!propertiesData.isEmpty()) {
+				properties.put("type", "object");
 				properties.put("properties", propertiesData);
 			}
 			if (!CollectionUtil.isEmpty(requiredList)) {
