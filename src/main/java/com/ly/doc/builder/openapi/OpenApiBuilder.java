@@ -36,7 +36,6 @@ import com.thoughtworks.qdox.JavaProjectBuilder;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  *
@@ -51,6 +50,11 @@ public class OpenApiBuilder extends AbstractOpenApiBuilder {
 	 * Instance
 	 */
 	private static final OpenApiBuilder INSTANCE = new OpenApiBuilder();
+
+	/**
+	 * OperationId OrderNo Map
+	 */
+	private static final Map<String, Integer> OPERATIONID_ORDER_NO_MAP = new HashMap<>();
 
 	/**
 	 * private constructor
@@ -148,8 +152,19 @@ public class OpenApiBuilder extends AbstractOpenApiBuilder {
 		request.put("deprecated", apiMethodDoc.isDeprecated());
 		List<String> paths = OpenApiSchemaUtil.getPatternResult("[A-Za-z0-9_{}]*", apiMethodDoc.getPath());
 		paths.add(apiMethodDoc.getType());
-		String operationId = paths.stream().filter(StringUtils::isNotEmpty).collect(Collectors.joining("-"));
-		request.put("operationId", operationId);
+
+		// add operationId
+		String methodName = apiMethodDoc.getMethodName();
+		if (OPERATIONID_ORDER_NO_MAP.containsKey(methodName)) {
+			int order = OPERATIONID_ORDER_NO_MAP.get(methodName);
+			request.put("operationId", methodName + "_" + order);
+			OPERATIONID_ORDER_NO_MAP.put(methodName, order + 1);
+		}
+		else {
+			request.put("operationId", methodName);
+			OPERATIONID_ORDER_NO_MAP.put(methodName, 1);
+		}
+
 		// add extension attribution
 		if (apiMethodDoc.getExtensions() != null) {
 			apiMethodDoc.getExtensions().forEach((key, value) -> request.put("x-" + key, value));
