@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>smart-doc</artifactId>
     <packaging>jar</packaging>
-    <version>3.0.9</version>
+    <version>3.1.0</version>
 
     <name>smart-doc</name>
     <url>https://github.com/TongchengOpenSource/smart-doc.git</url>
@@ -36,12 +36,12 @@
     <properties>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <junit.jupiter.version>5.12.1</junit.jupiter.version>
+        <junit.jupiter.version>5.12.2</junit.jupiter.version>
         <beetl.version>3.19.1.RELEASE</beetl.version>
         <common-util.version>2.2.8</common-util.version>
         <qdox.version>2.0.3.5</qdox.version>
         <datafaker.version>1.4.0</datafaker.version>
-        <gson.version>2.12.1</gson.version>
+        <gson.version>2.13.1</gson.version>
         <eclipse.jgit.version>5.13.3.202401111512-r</eclipse.jgit.version>
         <slf4j-api.version>2.0.17</slf4j-api.version>
 
