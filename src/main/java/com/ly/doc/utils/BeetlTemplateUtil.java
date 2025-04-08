@@ -62,6 +62,7 @@ public class BeetlTemplateUtil {
 			ClasspathResourceLoader resourceLoader = new ClasspathResourceLoader("/template/");
 			Configuration cfg = Configuration.defaultConfiguration();
 			cfg.add("/smart-doc-beetl.properties");
+			Thread.currentThread().setContextClassLoader(GroupTemplate.class.getClassLoader());
 			GroupTemplate gt = new GroupTemplate(resourceLoader, cfg);
 			if (templateName.endsWith(HTML_SUFFIX)) {
 				gt.setEngine(new HtmlCompressTemplateEngine());
