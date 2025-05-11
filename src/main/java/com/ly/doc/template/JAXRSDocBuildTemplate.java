@@ -217,7 +217,8 @@ public class JAXRSDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IWebSoc
 			methodOrder++;
 			apiMethodDoc.setName(method.getName());
 			apiMethodDoc.setOrder(methodOrder);
-			apiMethodDoc.setDesc(docJavaMethod.getDesc());
+			apiMethodDoc.setDesc(StringUtil.isEmpty(docJavaMethod.getDesc()) ? docJavaMethod.getClass().getName() :
+					docJavaMethod.getDesc());
 			String methodUid = DocUtil.generateId(clzName + method.getName() + methodOrder);
 			apiMethodDoc.setMethodId(methodUid);
 			apiMethodDoc.setAuthor(docJavaMethod.getAuthor());
