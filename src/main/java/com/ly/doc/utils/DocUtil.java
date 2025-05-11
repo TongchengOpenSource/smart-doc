@@ -1232,7 +1232,7 @@ public class DocUtil {
 					apiDocDict.setDescription(DocUtil.getEscapeAndCleanComment(
 							Optional.ofNullable(apiNoteTag).map(DocletTag::getValue).orElse(StringUtil.EMPTY)));
 					if (apiDataDictionary.getTitle() == null) {
-						apiDocDict.setTitle(javaClass.getComment()));
+						apiDocDict.setTitle(javaClass.getComment());
 					}
 					List<DataDict> enumDictionaryList = EnumUtil.getEnumInformation(clazz,
 							apiDataDictionary.getCodeField(), apiDataDictionary.getDescField());
