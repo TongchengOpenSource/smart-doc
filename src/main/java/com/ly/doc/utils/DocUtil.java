@@ -1208,8 +1208,8 @@ public class DocUtil {
 						DocletTag apiNoteTag = javaClass.getTagByName(DocTags.API_NOTE);
 						ApiDocDict apiDocDict = new ApiDocDict();
 						apiDocDict.setOrder(order++);
-						String title = StringUtils.isBlank(javaClass.getComment()) ?
-								javaClass.getName() : javaClass.getComment();
+						String title = StringUtils.isBlank(javaClass.getComment()) ? javaClass.getName()
+								: javaClass.getComment();
 						apiDocDict.setTitle(title);
 						apiDocDict.setDescription(DocUtil.getEscapeAndCleanComment(
 								Optional.ofNullable(apiNoteTag).map(DocletTag::getValue).orElse(StringUtil.EMPTY)));
