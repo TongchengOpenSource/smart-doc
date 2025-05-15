@@ -1208,7 +1208,9 @@ public class DocUtil {
 						DocletTag apiNoteTag = javaClass.getTagByName(DocTags.API_NOTE);
 						ApiDocDict apiDocDict = new ApiDocDict();
 						apiDocDict.setOrder(order++);
-						apiDocDict.setTitle(javaClass.getComment());
+						String title = StringUtils.isBlank(javaClass.getComment()) ? javaClass.getName()
+								: javaClass.getComment();
+						apiDocDict.setTitle(title);
 						apiDocDict.setDescription(DocUtil.getEscapeAndCleanComment(
 								Optional.ofNullable(apiNoteTag).map(DocletTag::getValue).orElse(StringUtil.EMPTY)));
 						List<DataDict> enumDictionaryList = EnumUtil.getEnumInformation(enumClass,

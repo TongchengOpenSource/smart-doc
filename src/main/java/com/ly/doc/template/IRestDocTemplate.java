@@ -284,7 +284,7 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 			apiDoc.setAlias(name);
 		}
 		String desc = DocUtil.getEscapeAndCleanComment(cls.getComment());
-		apiDoc.setDesc(desc);
+		apiDoc.setDesc(StringUtil.isEmpty(desc) ? controllerName : desc);
 		apiDoc.setList(apiMethodDocs);
 		apiDocList.add(apiDoc);
 
@@ -821,6 +821,9 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 			String common = method.getComment();
 			if (StringUtil.isEmpty(common)) {
 				common = JavaClassUtil.getSameSignatureMethodCommonFromInterface(cls, method);
+			}
+			if (StringUtil.isEmpty(common)) {
+				common = apiMethodDoc.getName();
 			}
 			apiMethodDoc.setDesc(common);
 			apiMethodDoc.setAuthor(docJavaMethod.getAuthor());

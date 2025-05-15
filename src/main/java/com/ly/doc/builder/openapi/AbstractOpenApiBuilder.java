@@ -155,6 +155,9 @@ public abstract class AbstractOpenApiBuilder {
 				String[] paths = methodDoc.getPath().split(";");
 				for (String path : paths) {
 					path = path.trim();
+					if (StringUtil.isNotEmpty(apiConfig.getPathPrefix())) {
+						path = path.replace(apiConfig.getPathPrefix(), "");
+					}
 					Map<String, Object> request = this.buildPathUrls(apiConfig, methodDoc, methodDoc.getClazzDoc(),
 							apiSchema.getApiExceptionStatuses());
 					if (!pathMap.containsKey(path)) {
