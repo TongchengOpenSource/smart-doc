@@ -471,6 +471,7 @@ public abstract class AbstractOpenApiBuilder {
 				propertiesData.put(field, this.buildPropertiesData(param, component, isResp));
 			}
 			if (!propertiesData.isEmpty()) {
+				properties.put("type", "object");
 				properties.put("properties", propertiesData);
 			}
 			if (!CollectionUtil.isEmpty(requiredList)) {
