@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2024 smart-doc
+ * Copyright (C) 2018-2025 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,10 +18,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package com.ly.doc.model;
 
 import com.ly.doc.constants.ComponentTypeEnum;
 import com.ly.doc.constants.DocLanguage;
+import com.ly.doc.constants.OpenApiTagNameTypeEnum;
 import com.ly.doc.handler.ICustomJavaMethodHandler;
 import com.ly.doc.model.jmeter.JMeter;
 import com.ly.doc.model.rpc.RpcApiDependency;
@@ -411,6 +413,33 @@ public class ApiConfig {
 	 * @see ComponentTypeEnum
 	 */
 	private ComponentTypeEnum componentType = ComponentTypeEnum.RANDOM;
+
+	/**
+	 * Strategy for determining the source of OpenAPI tag names.
+	 * <p>
+	 * This field specifies how the tag names in the generated OpenAPI document are
+	 * derived. Supported strategies include:
+	 * </p>
+	 *
+	 * <ul>
+	 * <li>{@link OpenApiTagNameTypeEnum#CLASS_NAME}: Use the controller's simple class
+	 * name (e.g., "UserController")</li>
+	 * <li>{@link OpenApiTagNameTypeEnum#DESCRIPTION}: Use the controller's description
+	 * (e.g., from {@link ApiDoc#getDesc()})</li>
+	 * <li>{@link OpenApiTagNameTypeEnum#PACKAGE_NAME}: Use the controller's full package
+	 * name (e.g., "com.example.controller")</li>
+	 * </ul>
+	 *
+	 * <p>
+	 * This setting affects how API operations are grouped in the OpenAPI documentation.
+	 * Choose the strategy that best aligns with your API organization needs.
+	 * </p>
+	 *
+	 * @see OpenApiTagNameTypeEnum
+	 * @see ApiDoc#getDesc() for description source details
+	 * @since 3.1.1
+	 */
+	private OpenApiTagNameTypeEnum openApiTagNameType = OpenApiTagNameTypeEnum.CLASS_NAME;
 
 	/**
 	 * whether to build the doc incrementally
@@ -1154,6 +1183,15 @@ public class ApiConfig {
 
 	public void setEnumConvertor(boolean enumConvertor) {
 		this.enumConvertor = enumConvertor;
+	}
+
+	public OpenApiTagNameTypeEnum getOpenApiTagNameType() {
+		return openApiTagNameType;
+	}
+
+	public ApiConfig setOpenApiTagNameType(OpenApiTagNameTypeEnum openApiTagNameType) {
+		this.openApiTagNameType = openApiTagNameType;
+		return this;
 	}
 
 }
