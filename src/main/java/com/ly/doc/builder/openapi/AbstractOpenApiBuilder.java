@@ -1,7 +1,7 @@
 /*
  * smart-doc
  *
- * Copyright (C) 2018-2024 smart-doc
+ * Copyright (C) 2018-2025 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -25,9 +25,21 @@ package com.ly.doc.builder.openapi;
 
 import com.ly.doc.builder.DocBuilderTemplate;
 import com.ly.doc.builder.ProjectDocConfigBuilder;
-import com.ly.doc.constants.*;
+import com.ly.doc.constants.ComponentTypeEnum;
+import com.ly.doc.constants.DocGlobalConstants;
+import com.ly.doc.constants.MediaType;
+import com.ly.doc.constants.Methods;
+import com.ly.doc.constants.ParamTypeConstants;
 import com.ly.doc.factory.BuildTemplateFactory;
-import com.ly.doc.model.*;
+import com.ly.doc.model.ApiConfig;
+import com.ly.doc.model.ApiDoc;
+import com.ly.doc.model.ApiExceptionStatus;
+import com.ly.doc.model.ApiMethodDoc;
+import com.ly.doc.model.ApiParam;
+import com.ly.doc.model.ApiReqParam;
+import com.ly.doc.model.ApiSchema;
+import com.ly.doc.model.DocMapping;
+import com.ly.doc.model.TagDoc;
 import com.ly.doc.model.openapi.OpenApiTag;
 import com.ly.doc.template.IDocBuildTemplate;
 import com.ly.doc.utils.DocUtil;
@@ -36,7 +48,13 @@ import com.power.common.util.CollectionUtil;
 import com.power.common.util.StringUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.ly.doc.constants.DocGlobalConstants.OPENAPI_2_COMPONENT_KRY;
@@ -171,12 +189,11 @@ public abstract class AbstractOpenApiBuilder {
 			}
 		}
 		for (Map.Entry<String, TagDoc> docEntry : DocMapping.TAG_DOC.entrySet()) {
-			String tag = docEntry.getKey();
 			tags.addAll(docEntry.getValue()
 				.getClazzDocs()
 				.stream()
 				// optimize tag content for compatible to swagger
-				.map(doc -> OpenApiTag.of(doc.getName(), doc.getDesc()))
+				.map(doc -> OpenApiTag.of(apiConfig.getOpenApiTagNameType(), doc))
 				.collect(Collectors.toSet()));
 		}
 		return pathMap;
