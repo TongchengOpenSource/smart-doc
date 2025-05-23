@@ -248,7 +248,7 @@ public class SwaggerBuilder extends AbstractOpenApiBuilder {
 					parameters.put("type", DocUtil.javaTypeToOpenApiTypeConvert(header.getType()));
 					parameters.put("description", header.getDesc());
 					parameters.put("required", header.isRequired());
-					parameters.put("example", header.getValue());
+					parameters.put("example", getExampleValueBasedOnTypeForApiReqParam(header));
 					parameters.put("schema", buildParametersSchema(header));
 					parameters.put("in", "header");
 					parametersList.add(parameters);
