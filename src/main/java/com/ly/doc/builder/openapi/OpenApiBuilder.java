@@ -26,7 +26,14 @@ import com.ly.doc.constants.DocGlobalConstants;
 import com.ly.doc.constants.Methods;
 import com.ly.doc.constants.ParamTypeConstants;
 import com.ly.doc.helper.JavaProjectBuilderHelper;
-import com.ly.doc.model.*;
+import com.ly.doc.model.ApiConfig;
+import com.ly.doc.model.ApiDoc;
+import com.ly.doc.model.ApiExceptionStatus;
+import com.ly.doc.model.ApiMethodDoc;
+import com.ly.doc.model.ApiParam;
+import com.ly.doc.model.ApiReqParam;
+import com.ly.doc.model.ApiSchema;
+import com.ly.doc.model.TagDoc;
 import com.ly.doc.model.openapi.OpenApiTag;
 import com.ly.doc.utils.JsonUtil;
 import com.ly.doc.utils.OpenApiSchemaUtil;
@@ -35,7 +42,14 @@ import com.power.common.util.FileUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 /**
  *
@@ -236,7 +250,7 @@ public class OpenApiBuilder extends AbstractOpenApiBuilder {
 				parameters.put("name", header.getName());
 				parameters.put("required", header.isRequired());
 				parameters.put("description", header.getDesc());
-				parameters.put("example", header.getValue());
+				parameters.put("example", getExampleValueBasedOnTypeForApiReqParam(header));
 				parameters.put("schema", buildParametersSchema(header));
 				parameters.put("in", "header");
 				parametersList.add(parameters);
@@ -251,7 +265,7 @@ public class OpenApiBuilder extends AbstractOpenApiBuilder {
 		parameters = new HashMap<>(20);
 		// add mock value for parameters
 		if (StringUtils.isNotEmpty(apiParam.getValue())) {
-			parameters.put("example", apiParam.getValue());
+			parameters.put("example", getExampleValueBasedOnTypeForApiParam(apiParam));
 		}
 		if (!hasItems) {
 			parameters.put("name", apiParam.getField());

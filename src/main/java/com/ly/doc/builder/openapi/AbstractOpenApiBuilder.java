@@ -48,6 +48,8 @@ import com.power.common.util.CollectionUtil;
 import com.power.common.util.StringUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -55,6 +57,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import static com.ly.doc.constants.DocGlobalConstants.OPENAPI_2_COMPONENT_KRY;
@@ -67,6 +70,11 @@ import static com.ly.doc.constants.DocGlobalConstants.OPENAPI_3_COMPONENT_KRY;
  * @since 2.6.2
  */
 public abstract class AbstractOpenApiBuilder {
+
+	/**
+	 * Logger for the class.
+	 */
+	private static final Logger logger = Logger.getLogger(AbstractOpenApiBuilder.class.getName());
 
 	/**
 	 * Component key
@@ -518,7 +526,7 @@ public abstract class AbstractOpenApiBuilder {
 		// array object file map
 		propertiesData.put("description", apiParam.getDesc());
 		if (StringUtil.isNotEmpty(apiParam.getValue())) {
-			propertiesData.put("example", apiParam.getValue());
+			propertiesData.put("example", this.getExampleValueBasedOnTypeForApiParam(apiParam));
 		}
 
 		if (!"object".equals(openApiType)) {
@@ -636,6 +644,66 @@ public abstract class AbstractOpenApiBuilder {
 				config.getClassLoader());
 		Objects.requireNonNull(docBuildTemplate, "doc build template is null");
 		return docBuildTemplate.getApiData(configBuilder);
+	}
+
+	/**
+	 * Get example value based on type for ApiParam
+	 * @param apiParam ApiParam
+	 * @return example value
+	 */
+	protected Object getExampleValueBasedOnTypeForApiParam(ApiParam apiParam) {
+		return getValueByType(apiParam.getValue(), apiParam.getType());
+	}
+
+	/**
+	 * Get example value based on type for ApiReqParam
+	 * @param apiReqParam ApiReqParam
+	 * @return example value
+	 */
+	protected Object getExampleValueBasedOnTypeForApiReqParam(ApiReqParam apiReqParam) {
+		return getValueByType(apiReqParam.getValue(), apiReqParam.getType());
+	}
+
+	private Object getValueByType(String originalValue, String type) {
+		if (StringUtil.isEmpty(originalValue) || StringUtil.isEmpty(type)) {
+			return originalValue;
+		}
+		try {
+			String openApiType = DocUtil.javaTypeToOpenApiTypeConvert(type);
+			if ("boolean".equals(openApiType)) {
+				return Boolean.parseBoolean(originalValue);
+			}
+			else if ("integer".equals(openApiType)) {
+				return Integer.parseInt(originalValue);
+			}
+			else if ("number".equals(openApiType)) {
+				String javaTypeName = type.toLowerCase();
+				switch (javaTypeName) {
+					case "long":
+					case "java.lang.long":
+					case "int64":
+						return Long.parseLong(originalValue);
+					case "double":
+					case "java.lang.double":
+						return Double.parseDouble(originalValue);
+					case "float":
+					case "java.lang.float":
+						return Float.parseFloat(originalValue);
+					case "java.math.biginteger":
+						return new BigInteger(originalValue);
+					case "java.math.bigdecimal":
+						return new BigDecimal(originalValue);
+				}
+				return originalValue;
+			}
+			return originalValue;
+		}
+		catch (Exception e) {
+			// if there is an exception, return the original value
+			logger
+				.warning("Error parsing value: " + originalValue + " for type: " + type + ", error: " + e.getMessage());
+			return originalValue;
+		}
 	}
 
 }
