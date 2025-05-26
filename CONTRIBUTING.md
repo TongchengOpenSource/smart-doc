@@ -9,6 +9,10 @@ Before submitting a Pull Request (PR), please ensure:
 - 🌍 **English comments**: Use English for code comments to support international collaboration.
 - ✅ **Code quality**: Follow the [Spring Java Format](https://github.com/spring-io/java-format) style and add unit tests.
 - 📄 **Update documentation**: Reflect your changes in relevant documentation [`smart-doc-group.github.io`](https://github.com/smart-doc-group/smart-doc-group.github.io/tree/master/docs). if needed.
+- 📝 **Commit message guidelines**: All commits must follow the [Angular Commit Convention](https://github.com/angular/angular/blob/main/CONTRIBUTING.md#commit).
+	- Use appropriate types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`, etc.
+	- Keep subject and body concise, avoiding vague terms like "update code".
+	- Reference related issues (e.g., `Closes #1234`) in the footer when applicable.
 
 ## Documentation and Examples
 If your contribution involves:

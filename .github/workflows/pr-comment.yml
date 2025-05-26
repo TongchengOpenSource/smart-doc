@@ -18,6 +18,18 @@ jobs:
           repository: ${{ github.repository }}
           issue-number: ${{ github.event.number }}
           body: |
+            @${{ github.event.pull_request.user.login }}
+            
+            🔍 **Before proceeding, please review the contribution guidelines**  
+            - [📖 Contribution Guide](https://github.com/smart-doc-group/smart-doc/blob/master/CONTRIBUTING.md)
+            
+            This includes requirements for:  
+            - ✅ Commit message format (Angular Convention. `feat`, `fix`, etc.)  
+            - 🧹 Code style (execute `mvn spring-javaformat:apply`)   
+            - 📄 Documentation updates (if config changes)   
+            - 💡 Example code submission (for new features)
+            
+            
             Thanks for your PR. :pray: 
             Please check again for your PR changes whether they contain any usage configuration change, such as `Add new configuration` or `Change default value of configuration`.
             If so, please add or update documents (Markdown format) in the `docs/` directory of the repository [smart-doc-group/smart-doc-group.github.io](https://github.com/smart-doc-group/smart-doc-group.github.io/tree/master/docs).
@@ -28,6 +40,16 @@ jobs:
             The code should use the Spring code style. Please format your code using the command `mvn spring-javaformat:apply`. You can also install the [Spring Java Format](https://github.com/spring-io/spring-javaformat) plugin for convenience.
             
             ---
+            
+            
+            🔍 **提交前请务必完成以下检查**  
+            - [📘 贡献指南](https://github.com/smart-doc-group/smart-doc/blob/master/CONTRIBUTING_CN.md)
+            
+            需特别注意：  
+            - ✅ 提交信息格式 (`feat`, `fix` 等类型)  
+            - 🧹 代码风格（执行 `mvn spring-javaformat:apply`）  
+            - 📄 文档更新（配置变更需同步更新 docs）  
+            - 💡 示例代码（新功能需提供示例）  
             
             感谢您提交的PR。 :pray: 
             请再次查看您的PR内容，确认是否包含任何使用方式或配置参数的变更，如：`新增配置参数`、`修改默认配置`等操作。
