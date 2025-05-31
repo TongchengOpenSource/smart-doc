@@ -467,6 +467,13 @@ public class ApiConfig {
 	 */
 	private boolean enumConvertor = Boolean.FALSE;
 
+	/**
+	 * allow self reference recursion
+	 *
+	 * @since 3.1.0
+	 */
+	private boolean allowSelfReference = Boolean.FALSE;
+
 	public static ApiConfig getInstance() {
 		return instance;
 	}
@@ -1154,6 +1161,14 @@ public class ApiConfig {
 
 	public void setEnumConvertor(boolean enumConvertor) {
 		this.enumConvertor = enumConvertor;
+	}
+
+	public boolean isAllowSelfReference() {
+		return allowSelfReference;
+	}
+
+	public void setAllowSelfReference(boolean allowSelfReference) {
+		this.allowSelfReference = allowSelfReference;
 	}
 
 }
