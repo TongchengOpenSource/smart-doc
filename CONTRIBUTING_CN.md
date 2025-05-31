@@ -9,6 +9,10 @@
 - 🌍 **英文注释**：代码注释使用英文，支持国际化协作。
 - ✅ **代码质量**：遵循 [Spring Java Format](https://github.com/spring-io/java-format) 风格，添加单元测试。
 - 📄 **文档同步更新**：若涉及功能变更，请同步更新 [`smart-doc-group.github.io`](https://github.com/smart-doc-group/smart-doc-group.github.io/tree/master/docs) 文档。
+- 📝 **提交信息规范**：所有提交需严格遵循 [Angular 提交规范](https://github.com/angular/angular/blob/main/CONTRIBUTING.md#commit)。
+	- 使用标准类型：`feat`（新功能）、`fix`（修复）、`docs`（文档）、`style`（格式调整）、`refactor`（重构）、`test`（测试）、`chore`（构建/依赖管理）等。
+	- 主题与正文需简洁明确，避免“更新代码”等模糊描述。
+	- 若关联 Issue，需在页脚注明（如 `Closes #1234`）。
 
 ## 文档与示例要求
 若贡献包含以下内容：

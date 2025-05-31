@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2024 smart-doc
+ * Copyright (C) 2018-2025 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -20,6 +20,9 @@
  */
 
 package com.ly.doc.model.openapi;
+
+import com.ly.doc.constants.OpenApiTagNameTypeEnum;
+import com.ly.doc.model.ApiDoc;
 
 import java.util.Objects;
 
@@ -49,8 +52,31 @@ public class OpenApiTag {
 		this.description = description;
 	}
 
+	/**
+	 * create open api tag
+	 * @param name tag name
+	 * @param description tag description
+	 * @return OpenApiTag
+	 */
 	public static OpenApiTag of(String name, String description) {
 		return new OpenApiTag(name, description);
+	}
+
+	/**
+	 * create open api tag
+	 * @param openApiTagNameType open api tag name type
+	 * @param apiDoc api doc
+	 * @return OpenApiTag
+	 */
+	public static OpenApiTag of(OpenApiTagNameTypeEnum openApiTagNameType, ApiDoc apiDoc) {
+		switch (openApiTagNameType) {
+			case DESCRIPTION:
+				return new OpenApiTag(apiDoc.getDesc(), apiDoc.getDesc());
+			case PACKAGE_NAME:
+				return new OpenApiTag(apiDoc.getPackageName(), apiDoc.getDesc());
+			default:
+				return of(apiDoc.getName(), apiDoc.getDesc());
+		}
 	}
 
 	public String getName() {

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2024 smart-doc
+ * Copyright (C) 2018-2025 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,18 +18,25 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package com.ly.doc.model;
 
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.*;
+import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
+ * Doc tag mapping
+ *
  * @author CKM Relational Mapping 2023/03/20 10:13:00
  */
 public class DocMapping {
 
+	/**
+	 * key:tag value:ApiDoc
+	 */
 	public static Map<String, TagDoc> TAG_DOC = new ConcurrentHashMap<>(64);
 
 	public static void tagDocPut(String tag, ApiDoc apiDoc, ApiMethodDoc methodDoc) {

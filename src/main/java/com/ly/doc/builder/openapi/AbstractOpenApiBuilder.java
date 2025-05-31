@@ -1,7 +1,7 @@
 /*
  * smart-doc
  *
- * Copyright (C) 2018-2024 smart-doc
+ * Copyright (C) 2018-2025 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -25,9 +25,21 @@ package com.ly.doc.builder.openapi;
 
 import com.ly.doc.builder.DocBuilderTemplate;
 import com.ly.doc.builder.ProjectDocConfigBuilder;
-import com.ly.doc.constants.*;
+import com.ly.doc.constants.ComponentTypeEnum;
+import com.ly.doc.constants.DocGlobalConstants;
+import com.ly.doc.constants.MediaType;
+import com.ly.doc.constants.Methods;
+import com.ly.doc.constants.ParamTypeConstants;
 import com.ly.doc.factory.BuildTemplateFactory;
-import com.ly.doc.model.*;
+import com.ly.doc.model.ApiConfig;
+import com.ly.doc.model.ApiDoc;
+import com.ly.doc.model.ApiExceptionStatus;
+import com.ly.doc.model.ApiMethodDoc;
+import com.ly.doc.model.ApiParam;
+import com.ly.doc.model.ApiReqParam;
+import com.ly.doc.model.ApiSchema;
+import com.ly.doc.model.DocMapping;
+import com.ly.doc.model.TagDoc;
 import com.ly.doc.model.openapi.OpenApiTag;
 import com.ly.doc.template.IDocBuildTemplate;
 import com.ly.doc.utils.DocUtil;
@@ -36,7 +48,16 @@ import com.power.common.util.CollectionUtil;
 import com.power.common.util.StringUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 
-import java.util.*;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import static com.ly.doc.constants.DocGlobalConstants.OPENAPI_2_COMPONENT_KRY;
@@ -49,6 +70,11 @@ import static com.ly.doc.constants.DocGlobalConstants.OPENAPI_3_COMPONENT_KRY;
  * @since 2.6.2
  */
 public abstract class AbstractOpenApiBuilder {
+
+	/**
+	 * Logger for the class.
+	 */
+	private static final Logger logger = Logger.getLogger(AbstractOpenApiBuilder.class.getName());
 
 	/**
 	 * Component key
@@ -155,6 +181,9 @@ public abstract class AbstractOpenApiBuilder {
 				String[] paths = methodDoc.getPath().split(";");
 				for (String path : paths) {
 					path = path.trim();
+					if (StringUtil.isNotEmpty(apiConfig.getPathPrefix())) {
+						path = path.replace(apiConfig.getPathPrefix(), "");
+					}
 					Map<String, Object> request = this.buildPathUrls(apiConfig, methodDoc, methodDoc.getClazzDoc(),
 							apiSchema.getApiExceptionStatuses());
 					if (!pathMap.containsKey(path)) {
@@ -168,12 +197,11 @@ public abstract class AbstractOpenApiBuilder {
 			}
 		}
 		for (Map.Entry<String, TagDoc> docEntry : DocMapping.TAG_DOC.entrySet()) {
-			String tag = docEntry.getKey();
 			tags.addAll(docEntry.getValue()
 				.getClazzDocs()
 				.stream()
 				// optimize tag content for compatible to swagger
-				.map(doc -> OpenApiTag.of(doc.getName(), doc.getDesc()))
+				.map(doc -> OpenApiTag.of(apiConfig.getOpenApiTagNameType(), doc))
 				.collect(Collectors.toSet()));
 		}
 		return pathMap;
@@ -498,7 +526,7 @@ public abstract class AbstractOpenApiBuilder {
 		// array object file map
 		propertiesData.put("description", apiParam.getDesc());
 		if (StringUtil.isNotEmpty(apiParam.getValue())) {
-			propertiesData.put("example", apiParam.getValue());
+			propertiesData.put("example", this.getExampleValueBasedOnTypeForApiParam(apiParam));
 		}
 
 		if (!"object".equals(openApiType)) {
@@ -616,6 +644,66 @@ public abstract class AbstractOpenApiBuilder {
 				config.getClassLoader());
 		Objects.requireNonNull(docBuildTemplate, "doc build template is null");
 		return docBuildTemplate.getApiData(configBuilder);
+	}
+
+	/**
+	 * Get example value based on type for ApiParam
+	 * @param apiParam ApiParam
+	 * @return example value
+	 */
+	protected Object getExampleValueBasedOnTypeForApiParam(ApiParam apiParam) {
+		return getValueByType(apiParam.getValue(), apiParam.getType());
+	}
+
+	/**
+	 * Get example value based on type for ApiReqParam
+	 * @param apiReqParam ApiReqParam
+	 * @return example value
+	 */
+	protected Object getExampleValueBasedOnTypeForApiReqParam(ApiReqParam apiReqParam) {
+		return getValueByType(apiReqParam.getValue(), apiReqParam.getType());
+	}
+
+	private Object getValueByType(String originalValue, String type) {
+		if (StringUtil.isEmpty(originalValue) || StringUtil.isEmpty(type)) {
+			return originalValue;
+		}
+		try {
+			String openApiType = DocUtil.javaTypeToOpenApiTypeConvert(type);
+			if ("boolean".equals(openApiType)) {
+				return Boolean.parseBoolean(originalValue);
+			}
+			else if ("integer".equals(openApiType)) {
+				return Integer.parseInt(originalValue);
+			}
+			else if ("number".equals(openApiType)) {
+				String javaTypeName = type.toLowerCase();
+				switch (javaTypeName) {
+					case "long":
+					case "java.lang.long":
+					case "int64":
+						return Long.parseLong(originalValue);
+					case "double":
+					case "java.lang.double":
+						return Double.parseDouble(originalValue);
+					case "float":
+					case "java.lang.float":
+						return Float.parseFloat(originalValue);
+					case "java.math.biginteger":
+						return new BigInteger(originalValue);
+					case "java.math.bigdecimal":
+						return new BigDecimal(originalValue);
+				}
+				return originalValue;
+			}
+			return originalValue;
+		}
+		catch (Exception e) {
+			// if there is an exception, return the original value
+			logger
+				.warning("Error parsing value: " + originalValue + " for type: " + type + ", error: " + e.getMessage());
+			return originalValue;
+		}
 	}
 
 }
