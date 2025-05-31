@@ -1198,8 +1198,8 @@ public class ApiConfig {
 
 	public void setAllowSelfReference(boolean allowSelfReference) {
 		this.allowSelfReference = allowSelfReference;
-  }
-    
+	}
+
 	public OpenApiTagNameTypeEnum getOpenApiTagNameType() {
 		return openApiTagNameType;
 	}
