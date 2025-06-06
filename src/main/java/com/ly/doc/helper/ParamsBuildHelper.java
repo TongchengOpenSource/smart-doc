@@ -527,7 +527,19 @@ public class ParamsBuildHelper extends BaseHelper {
 							}
 						}
 						else {
-							param.setSelfReferenceLoop(true);
+							// Check configuration for self-reference in collections
+							if (projectBuilder.getApiConfig().isAllowSelfReference()) {
+								// Allow limited recursion when enabled
+								if (level < 2) {
+									paramList.addAll(buildParams(gName, preBuilder.toString(), nextLevel, isRequired,
+											isResp, registryClasses, projectBuilder, groupClasses,
+											methodJsonViewClasses, fieldPid, jsonRequest, atomicInteger));
+								}
+							}
+							else {
+								// Original behavior: set self reference loop
+								param.setSelfReferenceLoop(true);
+							}
 						}
 					}
 
@@ -624,18 +636,32 @@ public class ParamsBuildHelper extends BaseHelper {
 					}
 				}
 				else if (simpleName.equals(subTypeName)) {
-					// reference self
-					ApiParam param1 = ApiParam.of()
-						.setField(pre + fieldName)
-						.setPid(pid)
-						.setId(atomicOrDefault(atomicInteger, paramList.size() + pid + 1))
-						.setClassName(subTypeName)
-						.setMaxLength(maxLength)
-						.setType(ParamTypeConstants.PARAM_TYPE_OBJECT)
-						.setDesc(comment.append(" $ref... self").toString())
-						.setVersion(DocGlobalConstants.DEFAULT_VERSION)
-						.setExtensions(extensionParams);
-					paramList.add(param1);
+					// reference self - check configuration
+					if (projectBuilder.getApiConfig().isAllowSelfReference()) {
+						// Allow limited recursion when enabled
+						processApiParam(paramList, param, isRequired, comment + appendComment, since, strRequired);
+						fieldPid = Optional.ofNullable(atomicInteger).isPresent() ? param.getId()
+								: paramList.size() + pid;
+						if (level < 2) {
+							paramList.addAll(buildParams(fieldGicName, preBuilder.toString(), nextLevel, isRequired,
+									isResp, registryClasses, projectBuilder, groupClasses, methodJsonViewClasses,
+									fieldPid, jsonRequest, atomicInteger));
+						}
+					}
+					else {
+						// Original behavior: create reference parameter
+						ApiParam param1 = ApiParam.of()
+							.setField(pre + fieldName)
+							.setPid(pid)
+							.setId(atomicOrDefault(atomicInteger, paramList.size() + pid + 1))
+							.setClassName(subTypeName)
+							.setMaxLength(maxLength)
+							.setType(ParamTypeConstants.PARAM_TYPE_OBJECT)
+							.setDesc(comment.append(" $ref... self").toString())
+							.setVersion(DocGlobalConstants.DEFAULT_VERSION)
+							.setExtensions(extensionParams);
+						paramList.add(param1);
+					}
 				}
 				else {
 					processApiParam(paramList, param, isRequired, comment + appendComment, since, strRequired);
