@@ -356,6 +356,13 @@ public interface IJavadocDocTemplate<T extends JavadocJavaMethod> extends IBaseD
 			if (Objects.nonNull(method.getTagByName(IGNORE))) {
 				continue;
 			}
+
+			// skip method
+			boolean skipMethod = this.skipMethod(cls, method, apiConfig, projectBuilder);
+			if (skipMethod) {
+				continue;
+			}
+
 			if (StringUtil.isEmpty(method.getComment()) && apiConfig.isStrict()) {
 				throw new RuntimeException(
 						"Unable to find comment for method " + method.getName() + " in " + cls.getCanonicalName());
@@ -394,7 +401,7 @@ public interface IJavadocDocTemplate<T extends JavadocJavaMethod> extends IBaseD
 				Function.identity(), this::mergeJavadocMethods, LinkedHashMap::new));
 
 		int methodOrder = 0;
-		List<T> javadocJavaMethods = new ArrayList<>(methodMap.values().size());
+		List<T> javadocJavaMethods = new ArrayList<>(methodMap.size());
 		for (T method : methodMap.values()) {
 			methodOrder++;
 			method.setOrder(methodOrder);
@@ -441,6 +448,23 @@ public interface IJavadocDocTemplate<T extends JavadocJavaMethod> extends IBaseD
 			existing.setVersion(replacement.getVersion());
 		}
 		return existing;
+	}
+
+	/**
+	 * Determines whether a method should be included in the documentation based on
+	 * certain criteria.
+	 * @param cls The Java class containing the method.
+	 * @param method The Java method to check.
+	 * @param apiConfig The API configuration object, containing rules for documentation
+	 * generation.
+	 * @param projectBuilder The project documentation configuration builder, used to
+	 * construct project-level documentation configurations.
+	 * @return true if the method should be included in the documentation, false
+	 * otherwise.
+	 */
+	default boolean skipMethod(final JavaClass cls, final JavaMethod method, ApiConfig apiConfig,
+			ProjectDocConfigBuilder projectBuilder) {
+		return false;
 	}
 
 }
