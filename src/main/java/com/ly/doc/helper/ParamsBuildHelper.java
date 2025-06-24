@@ -290,7 +290,7 @@ public class ParamsBuildHelper extends BaseHelper {
 			String fieldJsonFormatValue = annotationInfo.getFieldJsonFormatValue();
 			// has Annotation @JsonSerialize And using ToStringSerializer
 			boolean toStringSerializer = Boolean.TRUE.equals(annotationInfo.getToStringSerializer());
-			if (Objects.nonNull(annotationInfo.getFieldName())) {
+			if (StringUtil.isNotEmpty(annotationInfo.getFieldName())) {
 				fieldName = annotationInfo.getFieldName();
 			}
 			if (Objects.nonNull(annotationInfo.getStrRequired())) {
