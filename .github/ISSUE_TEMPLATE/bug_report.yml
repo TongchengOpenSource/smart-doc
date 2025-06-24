@@ -26,7 +26,8 @@ body:
         请确保遵循以下指南。不符合这些指南或缺乏足够信息的问题可能会被关闭。
   
         这个表单仅用于提交 bug 报告。如果您有使用问题或不确定这是否真的一个 bug，请确保：
-  
+        
+        - 请采用英文填写，包括issue标题，不符合要求会被关闭和清理。
         - 阅读 [文档](https://smart-doc-group.github.io/)
         - 在 [GitHub Discussions](https://github.com/TongchengOpenSource/smart-doc/discussions) 上询问
         - 如果您使用的版本不是最新版本，请升级到最新版本后再试！
@@ -82,7 +83,7 @@ body:
   - type: textarea
     id: bug-description
     attributes:
-      label: Describe the bug (Bug描述，社区已开启国际化推广，请用文心一言、讯飞星火等辅助翻译成英文，减少社区开发者的工作)
+      label: Describe the bug (Bug描述，社区已开启国际化推广，请用千问、星火等免费大模型工具辅助翻译成英文，减少社区开发者的工作)
       description: A clear and concise description of what the bug is. If you intend to submit a PR for this issue, tell us in the description. Thanks!
     validations:
       required: true
@@ -90,7 +91,7 @@ body:
   - type: textarea
     id: expected-behavior
     attributes:
-      label: Expected Behavior (您期望的结果，社区已开启国际化推广，请用文心一言、讯飞星火等辅助翻译成英文，减少社区开发者的工作)
+      label: Expected Behavior (您期望的结果，社区已开启国际化推广，请用千问、星火等免费大模型工具辅助翻译成英文，减少社区开发者的工作)
       description: If you're describing a bug, tell us what should happen.If you're suggesting a change/improvement, tell us how it should work
     validations:
       required: true
