@@ -545,10 +545,14 @@ public class JsonBuildHelper extends BaseHelper {
 		}
 		JavaClass mapKeyClass = builder.getJavaProjectBuilder().getClassByName(getKeyValType[0]);
 		boolean mapKeyIsEnum = mapKeyClass.isEnum();
-		if ((!JavaTypeConstants.JAVA_STRING_FULLY.equals(getKeyValType[0]) || !mapKeyIsEnum
-				|| mapKeyClass.getEnumConstants().isEmpty()) && builder.getApiConfig().isStrict()) {
-			throw new RuntimeException(
-					"Map's key can only use String or Enum for json,but you use " + getKeyValType[0]);
+		String keyType = getKeyValType[0];
+
+		if (builder.getApiConfig().isStrict()) {
+			boolean isStringKey = JavaTypeConstants.JAVA_STRING_FULLY.equals(keyType);
+			boolean isValidEnumKey = mapKeyIsEnum && !mapKeyClass.getEnumConstants().isEmpty();
+			if (!isStringKey && !isValidEnumKey) {
+				throw new RuntimeException("Map's key can only use String or Enum for JSON, but you used: " + keyType);
+			}
 		}
 		String gicName = getKeyValType[1];
 		// when map key is enum
