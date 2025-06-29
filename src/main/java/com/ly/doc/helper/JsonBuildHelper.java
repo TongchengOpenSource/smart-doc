@@ -287,8 +287,6 @@ public class JsonBuildHelper extends BaseHelper {
 
 				// get tags value from the field
 				Map<String, String> tagsMap = DocUtil.getFieldTagsValue(field, docField);
-				// get annotations on the field
-				List<JavaAnnotation> annotations = docField.getAnnotations();
 
 				// field json annotation
 				FieldJsonAnnotationInfo annotationInfo = getFieldJsonAnnotationInfo(projectBuilder, docField, isResp,
@@ -301,7 +299,7 @@ public class JsonBuildHelper extends BaseHelper {
 				String fieldJsonFormatValue = annotationInfo.getFieldJsonFormatValue();
 				// has Annotation @JsonSerialize And using ToStringSerializer
 				boolean toStringSerializer = Boolean.TRUE.equals(annotationInfo.getToStringSerializer());
-				if (Objects.nonNull(annotationInfo.getFieldName())) {
+				if (StringUtil.isNotEmpty(annotationInfo.getFieldName())) {
 					fieldName = annotationInfo.getFieldName();
 				}
 
