@@ -121,11 +121,13 @@ public class TornaBuilder {
 				api.setItems(TornaUtil.buildApis(a.getList(), TornaUtil.setDebugEnv(apiConfig, tornaApi)));
 				api.setIsFolder(TornaConstants.YES);
 				api.setAuthor(a.getAuthor());
+				api.setDescription(a.getDetail());
 				api.setOrderIndex(a.getOrder());
 				apisList.add(api);
 			}
 			api = new Apis();
 			api.setName(StringUtils.isBlank(groupApi.getDesc()) ? groupApi.getName() : groupApi.getDesc());
+			api.setDescription(groupApi.getDetail());
 			api.setAuthor(tornaApi.getAuthor());
 			api.setOrderIndex(groupApi.getOrder());
 			api.setIsFolder(TornaConstants.YES);
