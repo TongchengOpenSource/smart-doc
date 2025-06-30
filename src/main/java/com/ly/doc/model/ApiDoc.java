@@ -109,6 +109,11 @@ public class ApiDoc implements IDoc, Comparable<ApiDoc> {
 	 */
 	private List<ApiDoc> childrenApiDocs = new ArrayList<>();
 
+	/**
+	 * detailed introduction of the api
+	 */
+	private String detail;
+
 	public static ApiDoc buildTagApiDoc(ApiDoc source, String tag, ApiMethodDoc methodDoc) {
 		ApiDoc apiDoc = new ApiDoc();
 		apiDoc.setAlias(source.getAlias());
@@ -239,6 +244,14 @@ public class ApiDoc implements IDoc, Comparable<ApiDoc> {
 
 	public Set<TagDoc> getTagRefs() {
 		return tagRefs;
+	}
+
+	public String getDetail() {
+		return detail;
+	}
+
+	public void setDetail(String detail) {
+		this.detail = detail;
 	}
 
 	@Override

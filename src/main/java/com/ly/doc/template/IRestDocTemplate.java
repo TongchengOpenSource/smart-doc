@@ -284,7 +284,12 @@ public interface IRestDocTemplate extends IBaseDocBuildTemplate {
 			apiDoc.setAlias(name);
 		}
 		String desc = DocUtil.getEscapeAndCleanComment(cls.getComment());
+		String detail = JavaClassUtil.getClassTagsValue(cls, DocTags.API_NOTE, Boolean.TRUE);
+		if (StringUtil.isEmpty(detail)) {
+			detail = desc;
+		}
 		apiDoc.setDesc(StringUtil.isEmpty(desc) ? controllerName : desc);
+		apiDoc.setDetail(detail);
 		apiDoc.setList(apiMethodDocs);
 		apiDocList.add(apiDoc);
 
