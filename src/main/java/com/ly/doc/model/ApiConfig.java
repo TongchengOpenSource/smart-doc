@@ -1201,6 +1201,9 @@ public class ApiConfig {
 	}
 
 	public OpenApiTagNameTypeEnum getOpenApiTagNameType() {
+		if (Objects.isNull(openApiTagNameType)) {
+			return OpenApiTagNameTypeEnum.CLASS_NAME;
+		}
 		return openApiTagNameType;
 	}
 

@@ -69,6 +69,9 @@ public class OpenApiTag {
 	 * @return OpenApiTag
 	 */
 	public static OpenApiTag of(OpenApiTagNameTypeEnum openApiTagNameType, ApiDoc apiDoc) {
+		if (Objects.isNull(openApiTagNameType)) {
+			return of(apiDoc.getName(), apiDoc.getDesc());
+		}
 		switch (openApiTagNameType) {
 			case DESCRIPTION:
 				return new OpenApiTag(apiDoc.getDesc(), apiDoc.getDesc());
