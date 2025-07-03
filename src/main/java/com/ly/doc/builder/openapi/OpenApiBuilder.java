@@ -24,6 +24,7 @@ package com.ly.doc.builder.openapi;
 
 import com.ly.doc.constants.DocGlobalConstants;
 import com.ly.doc.constants.Methods;
+import com.ly.doc.constants.OpenApiTagNameTypeEnum;
 import com.ly.doc.constants.ParamTypeConstants;
 import com.ly.doc.helper.JavaProjectBuilderHelper;
 import com.ly.doc.model.ApiConfig;
@@ -159,7 +160,17 @@ public class OpenApiBuilder extends AbstractOpenApiBuilder {
 		// } else {
 		// request.put("tags", new String[]{tag});
 		// }
-		request.put("tags", apiMethodDoc.getTagRefs().stream().map(TagDoc::getTag).toArray());
+		OpenApiTagNameTypeEnum openApiTagNameType = apiConfig.getOpenApiTagNameType();
+		switch (openApiTagNameType) {
+			case DESCRIPTION:
+				request.put("tags", new String[] { apiDoc.getDesc() });
+				break;
+			case PACKAGE_NAME:
+				request.put("tags", new String[] { apiDoc.getPackageName() });
+				break;
+			default:
+				request.put("tags", apiMethodDoc.getTagRefs().stream().map(TagDoc::getTag).toArray());
+		}
 		request.put("requestBody", this.buildRequestBody(apiConfig, apiMethodDoc));
 		request.put("parameters", this.buildParameters(apiMethodDoc));
 		request.put("responses", this.buildResponses(apiConfig, apiMethodDoc, apiExceptionStatuses));
