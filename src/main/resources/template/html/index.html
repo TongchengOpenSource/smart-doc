@@ -276,7 +276,10 @@
             }
         };
         new Accordion($('#accordion'), false);
-        hljs.highlightAll()
+        hljs.addPlugin(new CopyButtonPlugin({
+			autohide: false
+		}));
+		hljs.highlightAll();
     });
 </script>
 </body>
