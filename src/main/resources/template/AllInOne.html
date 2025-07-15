@@ -413,6 +413,9 @@
     }
   };
   new Accordion($("#accordion"), false);
+  hljs.addPlugin(new CopyButtonPlugin({
+	autohide: false
+  }));
   hljs.highlightAll();
   $(window).scroll(function () {
     if ($(window).scrollTop() > 100) {

@@ -16,6 +16,9 @@ $(function () {
         }
     };
     new Accordion($('#accordion'), false);
+    hljs.addPlugin(new CopyButtonPlugin({
+        autohide: false
+    }));
     hljs.highlightAll();
 });
 
