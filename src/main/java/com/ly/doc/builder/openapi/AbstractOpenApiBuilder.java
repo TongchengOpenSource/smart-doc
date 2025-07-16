@@ -169,7 +169,8 @@ public abstract class AbstractOpenApiBuilder {
 	 * @return Map of paths
 	 */
 	@SuppressWarnings("unchecked")
-	public Map<String, Object> buildPaths(ApiConfig apiConfig, ApiSchema<ApiDoc> apiSchema, Set<OpenApiTag> tags) {
+	public Map<String, Object> buildPaths(ApiConfig apiConfig, ApiSchema<ApiDoc> apiSchema, Set<OpenApiTag> tags,
+			boolean isSwagger) {
 		Map<String, Object> pathMap = new LinkedHashMap<>(500);
 
 		List<ApiDoc> apiDocs = apiSchema.getApiDatas();
@@ -181,7 +182,7 @@ public abstract class AbstractOpenApiBuilder {
 				String[] paths = methodDoc.getPath().split(";");
 				for (String path : paths) {
 					path = path.trim();
-					if (StringUtil.isNotEmpty(apiConfig.getPathPrefix())) {
+					if (StringUtil.isNotEmpty(apiConfig.getPathPrefix()) && isSwagger) {
 						path = path.replace(apiConfig.getPathPrefix(), "");
 					}
 					Map<String, Object> request = this.buildPathUrls(apiConfig, methodDoc, methodDoc.getClazzDoc(),

@@ -110,7 +110,7 @@ public class OpenApiBuilder extends AbstractOpenApiBuilder {
 		json.put("servers", buildServers(config));
 		Set<OpenApiTag> tags = new HashSet<>();
 		json.put("tags", tags);
-		json.put("paths", this.buildPaths(config, apiSchema, tags));
+		json.put("paths", this.buildPaths(config, apiSchema, tags, false));
 		json.put("components", this.buildComponentsSchema(apiSchema));
 
 		String filePath = config.getOutPath();
