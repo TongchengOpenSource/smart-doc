@@ -109,7 +109,7 @@ public class SwaggerBuilder extends AbstractOpenApiBuilder {
 				: DocGlobalConstants.PATH_DELIMITER);
 		Set<OpenApiTag> tags = new HashSet<>();
 		json.put("tags", tags);
-		json.put("paths", buildPaths(config, apiSchema, tags));
+		json.put("paths", buildPaths(config, apiSchema, tags, true));
 		json.put("definitions", buildComponentsSchema(apiSchema));
 
 		String filePath = config.getOutPath();
