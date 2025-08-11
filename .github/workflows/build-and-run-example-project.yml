@@ -78,7 +78,7 @@ jobs:
         run: mkdir -p logs
 
       - name: Download Artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: smart-doc-maven-jar
           path: ./artifacts
@@ -145,7 +145,7 @@ jobs:
         run: mkdir -p logs
 
       - name: Download Artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: smart-doc-maven-plugin-jar
           path: ./artifacts
@@ -275,7 +275,7 @@ jobs:
         shell: bash
 
       - name: Download Artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: smart-doc-maven-plugin-jar
           path: ./artifacts
