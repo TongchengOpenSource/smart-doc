@@ -27,7 +27,7 @@ body:
   
         这个表单仅用于提交 bug 报告。如果您有使用问题或不确定这是否真的一个 bug，请确保：
         
-        - 请采用英文填写，包括issue标题，不符合要求会被关闭和清理。
+        - 请采用<mark style="background-color: yellow;">英文</mark>填写，包括issue标题，不符合要求会被关闭和清理。
         - 阅读 [文档](https://smart-doc-group.github.io/)
         - 在 [GitHub Discussions](https://github.com/TongchengOpenSource/smart-doc/discussions) 上询问
         - 如果您使用的版本不是最新版本，请升级到最新版本后再试！
