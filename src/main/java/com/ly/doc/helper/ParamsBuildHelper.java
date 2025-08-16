@@ -217,7 +217,7 @@ public class ParamsBuildHelper extends BaseHelper {
 		// ignore
 		if (Objects.nonNull(cls)) {
 			List<JavaAnnotation> clsAnnotation = cls.getAnnotations();
-			fieldNameConvert = PropertyNameHelper.translate(clsAnnotation);
+			fieldNameConvert = PropertyNameHelper.translate(projectBuilder, clsAnnotation);
 		}
 
 		String[] globGicName = DocClassUtil.getSimpleGicName(className);
