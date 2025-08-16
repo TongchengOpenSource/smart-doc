@@ -21,6 +21,7 @@
 package com.ly.doc.handler;
 
 import com.ly.doc.builder.ProjectDocConfigBuilder;
+import com.ly.doc.constants.DocAnnotationConstants;
 import com.ly.doc.constants.DocGlobalConstants;
 import com.ly.doc.constants.JAXRSAnnotations;
 import com.ly.doc.constants.JakartaJaxrsAnnotations;
@@ -93,7 +94,7 @@ public class JaxrsPathHandler {
 			// method level annotation will override class level annotation
 			if (annotationName.equals(JakartaJaxrsAnnotations.JAX_CONSUMES_FULLY)
 					|| annotationName.equals(JAXRSAnnotations.JAX_CONSUMES_FULLY)) {
-				Object value = annotation.getNamedParameter("value");
+				Object value = annotation.getNamedParameter(DocAnnotationConstants.VALUE_PROP);
 				if (Objects.nonNull(value)) {
 					mediaType = MediaType.valueOf(value.toString());
 				}

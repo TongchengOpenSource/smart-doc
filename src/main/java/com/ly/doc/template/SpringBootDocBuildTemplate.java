@@ -21,11 +21,33 @@
 package com.ly.doc.template;
 
 import com.ly.doc.builder.ProjectDocConfigBuilder;
-import com.ly.doc.constants.*;
+import com.ly.doc.constants.DocAnnotationConstants;
+import com.ly.doc.constants.DocGlobalConstants;
+import com.ly.doc.constants.DocTags;
+import com.ly.doc.constants.FrameworkEnum;
+import com.ly.doc.constants.Methods;
+import com.ly.doc.constants.SpringMvcAnnotations;
+import com.ly.doc.constants.SpringMvcRequestAnnotationsEnum;
 import com.ly.doc.handler.SpringMVCRequestHeaderHandler;
 import com.ly.doc.handler.SpringMVCRequestMappingHandler;
-import com.ly.doc.model.*;
-import com.ly.doc.model.annotation.*;
+import com.ly.doc.model.ApiConfig;
+import com.ly.doc.model.ApiDoc;
+import com.ly.doc.model.ApiExceptionStatus;
+import com.ly.doc.model.ApiParam;
+import com.ly.doc.model.ApiReqParam;
+import com.ly.doc.model.ApiSchema;
+import com.ly.doc.model.ExceptionAdviceMethod;
+import com.ly.doc.model.WebSocketDoc;
+import com.ly.doc.model.annotation.EntryAnnotation;
+import com.ly.doc.model.annotation.ExceptionAdviceAnnotation;
+import com.ly.doc.model.annotation.FrameworkAnnotations;
+import com.ly.doc.model.annotation.HeaderAnnotation;
+import com.ly.doc.model.annotation.MappingAnnotation;
+import com.ly.doc.model.annotation.PathVariableAnnotation;
+import com.ly.doc.model.annotation.RequestBodyAnnotation;
+import com.ly.doc.model.annotation.RequestParamAnnotation;
+import com.ly.doc.model.annotation.RequestPartAnnotation;
+import com.ly.doc.model.annotation.ServerEndpointAnnotation;
 import com.ly.doc.model.request.RequestMapping;
 import com.ly.doc.utils.JavaClassValidateUtil;
 import com.power.common.util.DateTimeUtil;
@@ -35,7 +57,13 @@ import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaMethod;
 
 import java.time.ZonedDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -270,7 +298,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IW
 				isExceptionHandlerMethod = true;
 			}
 			if (SpringMvcAnnotations.RESPONSE_STATUS.equals(annotationName)) {
-				Object consumes = annotation.getNamedParameter("value");
+				Object consumes = annotation.getNamedParameter(DocAnnotationConstants.VALUE_PROP);
 				if (Objects.nonNull(consumes)) {
 					status = consumes.toString();
 				}
