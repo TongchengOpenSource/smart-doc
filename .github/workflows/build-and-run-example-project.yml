@@ -17,7 +17,7 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up JDK 8
         uses: actions/setup-java@v4
@@ -63,7 +63,7 @@ jobs:
 
     steps:
       - name: Checkout Maven Plugin Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: TongchengOpenSource/smart-doc-maven-plugin
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -130,7 +130,7 @@ jobs:
 
     steps:
       - name: Checkout Example Project
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: smart-doc-group/smart-doc-example-cn
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -259,7 +259,7 @@ jobs:
 
     steps:
       - name: Checkout Example Project
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: smart-doc-group/smart-doc-example-cn
           token: ${{ secrets.GITHUB_TOKEN }}
