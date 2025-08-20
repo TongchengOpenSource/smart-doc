@@ -125,16 +125,22 @@
                 </executions>
             </plugin>
             <!-- JavaDoc -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>${maven-javadoc-plugin.version}</version>
-                <configuration>
-                    <!--
-                    Fail the build if any Javadoc warnings or errors occur.
-                    This ensures that all Javadoc issues are treated seriously.
-                    -->
-                    <failOnError>true</failOnError>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>${maven-javadoc-plugin.version}</version>
+				<configuration>
+					<!--
+					  Fail the build immediately if any Javadoc error is encountered.
+					  Ensures critical issues like syntax errors or broken HTML are not ignored.
+					-->
+					<failOnError>true</failOnError>
+					<!--
+					  Fail the build if any Javadoc warning occurs (e.g., missing @param, @return).
+					  Combined with -Xdoclint:all, this enforces strict documentation discipline.
+					  Note: Requires maven-javadoc-plugin version 3.0.0 or higher.
+					-->
+					<failOnWarnings>true</failOnWarnings>
                     <additionalOptions>
                         <!--
                         Enable strict validation of Javadoc content.

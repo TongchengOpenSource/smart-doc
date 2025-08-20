@@ -166,6 +166,7 @@ public abstract class AbstractOpenApiBuilder {
 	 * @param apiConfig Configuration of smart-doc
 	 * @param apiSchema Project API schema
 	 * @param tags tags
+	 * @param isSwagger is swagger
 	 * @return Map of paths
 	 */
 	@SuppressWarnings("unchecked")
@@ -490,7 +491,8 @@ public abstract class AbstractOpenApiBuilder {
 				if (param.isRequired()) {
 					requiredList.add(param.getField());
 				}
-				if (param.getType().equals("map") && StringUtil.isEmpty(param.getClassName())) {
+				if (ParamTypeConstants.PARAM_TYPE_MAP.equals(param.getType())
+						&& StringUtil.isEmpty(param.getClassName())) {
 					continue;
 				}
 				if (param.isQueryParam() || param.isPathParam()) {
@@ -665,37 +667,42 @@ public abstract class AbstractOpenApiBuilder {
 		return getValueByType(apiReqParam.getValue(), apiReqParam.getType());
 	}
 
+	/**
+	 * Get value by type
+	 * @param originalValue original value
+	 * @param type type
+	 * @return value
+	 */
 	private Object getValueByType(String originalValue, String type) {
 		if (StringUtil.isEmpty(originalValue) || StringUtil.isEmpty(type)) {
 			return originalValue;
 		}
 		try {
 			String openApiType = DocUtil.javaTypeToOpenApiTypeConvert(type);
-			if ("boolean".equals(openApiType)) {
-				return Boolean.parseBoolean(originalValue);
-			}
-			else if ("integer".equals(openApiType)) {
-				return Integer.parseInt(originalValue);
-			}
-			else if ("number".equals(openApiType)) {
-				String javaTypeName = type.toLowerCase();
-				switch (javaTypeName) {
-					case "long":
-					case "java.lang.long":
-					case "int64":
-						return Long.parseLong(originalValue);
-					case "double":
-					case "java.lang.double":
-						return Double.parseDouble(originalValue);
-					case "float":
-					case "java.lang.float":
-						return Float.parseFloat(originalValue);
-					case "java.math.biginteger":
-						return new BigInteger(originalValue);
-					case "java.math.bigdecimal":
-						return new BigDecimal(originalValue);
-				}
-				return originalValue;
+			switch (openApiType) {
+				case "boolean":
+					return Boolean.parseBoolean(originalValue);
+				case "integer":
+					return Integer.parseInt(originalValue);
+				case "number":
+					String javaTypeName = type.toLowerCase();
+					switch (javaTypeName) {
+						case "long":
+						case "java.lang.long":
+						case "int64":
+							return Long.parseLong(originalValue);
+						case "double":
+						case "java.lang.double":
+							return Double.parseDouble(originalValue);
+						case "float":
+						case "java.lang.float":
+							return Float.parseFloat(originalValue);
+						case "java.math.biginteger":
+							return new BigInteger(originalValue);
+						case "java.math.bigdecimal":
+							return new BigDecimal(originalValue);
+					}
+					return originalValue;
 			}
 			return originalValue;
 		}
