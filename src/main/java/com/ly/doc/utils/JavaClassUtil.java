@@ -1693,7 +1693,9 @@ public class JavaClassUtil {
 
 		if (enumValue == null) {
 			enumValues = items.stream().map(Item::getName).collect(Collectors.toList());
-			enumValue = enumValues.get(0);
+			if (CollectionUtil.isNotEmpty(enumValues)) {
+				enumValue = enumValues.get(0);
+			}
 			type = ParamTypeConstants.PARAM_TYPE_ENUM;
 		}
 
