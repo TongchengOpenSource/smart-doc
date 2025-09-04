@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2024 smart-doc
+ * Copyright (C) 2018-2025 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -214,5 +214,57 @@ public interface DocAnnotationConstants {
 	 * {@code jakarta.websocket.server.PathParam}
 	 */
 	String PATH_PARAM = "PathParam";
+
+	/**
+	 * The name of the 'consumes' attribute in Spring MVC request mapping annotations,
+	 * used to specify the media types that the annotated handler method can consume.
+	 * <p>
+	 * Corresponds to
+	 * {@code org.springframework.web.bind.annotation.RequestMapping#consumes()}
+	 * </p>
+	 */
+	String CONSUMES = "consumes";
+
+	/**
+	 * The name of the 'produces' attribute in Spring MVC request mapping annotations,
+	 * used to specify the media types that the annotated handler method can produce.
+	 * <p>
+	 * Corresponds to
+	 * {@code org.springframework.web.bind.annotation.RequestMapping#produces()}
+	 * </p>
+	 */
+	String PRODUCES = "produces";
+
+	/**
+	 * The name of the 'method' attribute in Spring MVC request mapping annotations, used
+	 * to specify the HTTP request methods that the annotated handler method supports.
+	 * <p>
+	 * Corresponds to
+	 * {@code org.springframework.web.bind.annotation.RequestMapping#method()}
+	 * </p>
+	 */
+	String METHOD = "method";
+
+	/**
+	 * The name of the 'params' attribute in Spring MVC request mapping annotations, used
+	 * to specify HTTP request parameters that must be present for the mapping to be
+	 * matched.
+	 * <p>
+	 * Corresponds to
+	 * {@code org.springframework.web.bind.annotation.RequestMapping#params()}
+	 * </p>
+	 */
+	String PARAMS = "params";
+
+	/**
+	 * Common property names used to define request mapping paths. Typically used in
+	 * annotations like {@code @RequestMapping}, {@code @GetMapping}, etc. Corresponds to
+	 * 'value' and 'path' attributes which are synonyms in Spring MVC.
+	 *
+	 * <p>
+	 * Used to configure URL mapping paths for handler methods.
+	 * </p>
+	 */
+	String[] PATH_MAPPING_PROPS = { VALUE_PROP, PATH_PROP };
 
 }
