@@ -49,7 +49,7 @@ public class SpringMVCRequestHeaderHandler implements IHeaderHandler {
 	@Override
 	public HeaderAnnotation getHeaderAnnotation() {
 		return HeaderAnnotation.builder()
-			.setAnnotationName(SpringMvcAnnotations.REQUEST_HERDER)
+			.setAnnotationName(SpringMvcAnnotations.REQUEST_HEADER)
 			.setValueProp(DocAnnotationConstants.VALUE_PROP)
 			.setDefaultValueProp(DocAnnotationConstants.DEFAULT_VALUE_PROP)
 			.setRequiredProp(DocAnnotationConstants.REQUIRED_PROP);

@@ -1,7 +1,5 @@
 /*
- * smart-doc
- *
- * Copyright (C) 2018-2024 smart-doc
+ * Copyright (C) 2018-2025 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -20,9 +18,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package com.ly.doc.utils;
 
-import com.ly.doc.constants.*;
+import com.ly.doc.constants.DocAnnotationConstants;
+import com.ly.doc.constants.JSRAnnotationConstants;
+import com.ly.doc.constants.JavaTypeConstants;
+import com.ly.doc.constants.SolonAnnotations;
+import com.ly.doc.constants.SpringMvcAnnotations;
 import com.power.common.util.CollectionUtil;
 import com.power.common.util.StringUtil;
 import com.power.common.util.ValidateUtil;
@@ -227,7 +230,7 @@ public class JavaClassValidateUtil {
 	 * @return boolean
 	 */
 	public static boolean isIgnoreTag(String tagName) {
-		return tagName.equals("ignore");
+		return "ignore".equals(tagName);
 	}
 
 	/**
@@ -355,7 +358,7 @@ public class JavaClassValidateUtil {
 		switch (annotation) {
 			case SpringMvcAnnotations.SESSION_ATTRIBUTE:
 			case SpringMvcAnnotations.REQUEST_ATTRIBUTE:
-			case SpringMvcAnnotations.REQUEST_HERDER:
+			case SpringMvcAnnotations.REQUEST_HEADER:
 				return true;
 			default:
 				return false;

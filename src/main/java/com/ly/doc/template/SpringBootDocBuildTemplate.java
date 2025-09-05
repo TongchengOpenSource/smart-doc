@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2024 smart-doc
+ * Copyright (C) 2018-2025 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -108,15 +108,17 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IW
 	@Override
 	public FrameworkAnnotations registeredAnnotations() {
 		FrameworkAnnotations annotations = FrameworkAnnotations.builder();
+
+		// Header annotation
 		HeaderAnnotation headerAnnotation = HeaderAnnotation.builder()
-			.setAnnotationName(SpringMvcAnnotations.REQUEST_HERDER)
+			.setAnnotationName(SpringMvcAnnotations.REQUEST_HEADER)
 			.setValueProp(DocAnnotationConstants.VALUE_PROP)
 			.setDefaultValueProp(DocAnnotationConstants.DEFAULT_VALUE_PROP)
 			.setRequiredProp(DocAnnotationConstants.REQUIRED_PROP);
 		// add header annotation
 		annotations.setHeaderAnnotation(headerAnnotation);
 
-		// add entry annotation
+		// Entry annotations (Controller, RestController)
 		Map<String, EntryAnnotation> entryAnnotations = new HashMap<>(16);
 		EntryAnnotation controllerAnnotation = EntryAnnotation.builder()
 			.setAnnotationName(SpringMvcAnnotations.CONTROLLER)
@@ -128,108 +130,43 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IW
 		entryAnnotations.put(restController.getAnnotationName(), restController);
 		annotations.setEntryAnnotations(entryAnnotations);
 
-		// add request body annotation
+		// RequestBody annotation
 		RequestBodyAnnotation bodyAnnotation = RequestBodyAnnotation.builder()
 			.setAnnotationName(SpringMvcAnnotations.REQUEST_BODY)
 			.setAnnotationFullyName(SpringMvcAnnotations.REQUEST_BODY_FULLY);
 		annotations.setRequestBodyAnnotation(bodyAnnotation);
 
-		// request param annotation
-		RequestParamAnnotation requestAnnotation = RequestParamAnnotation.builder()
+		// RequestParam annotation
+		RequestParamAnnotation requestParamAnnotation = RequestParamAnnotation.builder()
 			.setAnnotationName(SpringMvcAnnotations.REQUEST_PARAM)
 			.setDefaultValueProp(DocAnnotationConstants.DEFAULT_VALUE_PROP)
 			.setRequiredProp(DocAnnotationConstants.REQUIRED_PROP);
-		annotations.setRequestParamAnnotation(requestAnnotation);
+		annotations.setRequestParamAnnotation(requestParamAnnotation);
 
-		// request part annotation
+		// RequestPart annotation
 		RequestPartAnnotation requestPartAnnotation = RequestPartAnnotation.builder()
 			.setAnnotationName(SpringMvcAnnotations.REQUEST_PART)
 			.setDefaultValueProp(DocAnnotationConstants.DEFAULT_VALUE_PROP)
 			.setRequiredProp(DocAnnotationConstants.REQUIRED_PROP);
 		annotations.setRequestPartAnnotation(requestPartAnnotation);
 
-		// add path variable annotation
+		// PathVariable annotation
 		PathVariableAnnotation pathVariableAnnotation = PathVariableAnnotation.builder()
 			.setAnnotationName(SpringMvcAnnotations.PATH_VARIABLE)
 			.setDefaultValueProp(DocAnnotationConstants.DEFAULT_VALUE_PROP)
 			.setRequiredProp(DocAnnotationConstants.REQUIRED_PROP);
 		annotations.setPathVariableAnnotation(pathVariableAnnotation);
 
-		// add websocket server endpoint annotation
+		// ServerEndpoint annotation (WebSocket)
 		ServerEndpointAnnotation serverEndpointAnnotation = ServerEndpointAnnotation.builder()
 			.setAnnotationName(SpringMvcAnnotations.SERVER_ENDPOINT);
 		annotations.setServerEndpointAnnotation(serverEndpointAnnotation);
 
 		// add mapping annotations
-		Map<String, MappingAnnotation> mappingAnnotations = new HashMap<>(16);
-
-		MappingAnnotation requestMappingAnnotation = MappingAnnotation.builder()
-			.setAnnotationName(SpringMvcAnnotations.REQUEST_MAPPING)
-			.setConsumesProp("consumes")
-			.setProducesProp("produces")
-			.setMethodProp("method")
-			.setParamsProp("params")
-			.setScope("class", "method")
-			.setPathProps(DocAnnotationConstants.VALUE_PROP, DocAnnotationConstants.PATH_PROP);
-		mappingAnnotations.put(requestMappingAnnotation.getAnnotationName(), requestMappingAnnotation);
-
-		MappingAnnotation postMappingAnnotation = MappingAnnotation.builder()
-			.setAnnotationName(SpringMvcAnnotations.POST_MAPPING)
-			.setConsumesProp("consumes")
-			.setProducesProp("produces")
-			.setMethodProp("method")
-			.setParamsProp("params")
-			.setMethodType(Methods.POST.getValue())
-			.setPathProps(DocAnnotationConstants.VALUE_PROP, DocAnnotationConstants.PATH_PROP);
-		mappingAnnotations.put(postMappingAnnotation.getAnnotationName(), postMappingAnnotation);
-
-		MappingAnnotation getMappingAnnotation = MappingAnnotation.builder()
-			.setAnnotationName(SpringMvcAnnotations.GET_MAPPING)
-			.setConsumesProp("consumes")
-			.setProducesProp("produces")
-			.setMethodProp("method")
-			.setParamsProp("params")
-			.setMethodType(Methods.GET.getValue())
-			.setPathProps(DocAnnotationConstants.VALUE_PROP, DocAnnotationConstants.PATH_PROP);
-		mappingAnnotations.put(getMappingAnnotation.getAnnotationName(), getMappingAnnotation);
-
-		MappingAnnotation putMappingAnnotation = MappingAnnotation.builder()
-			.setAnnotationName(SpringMvcAnnotations.PUT_MAPPING)
-			.setConsumesProp("consumes")
-			.setProducesProp("produces")
-			.setParamsProp("params")
-			.setMethodProp("method")
-			.setMethodType(Methods.PUT.getValue())
-			.setPathProps(DocAnnotationConstants.VALUE_PROP, DocAnnotationConstants.PATH_PROP);
-		mappingAnnotations.put(putMappingAnnotation.getAnnotationName(), putMappingAnnotation);
-
-		MappingAnnotation patchMappingAnnotation = MappingAnnotation.builder()
-			.setAnnotationName(SpringMvcAnnotations.PATCH_MAPPING)
-			.setConsumesProp("consumes")
-			.setProducesProp("produces")
-			.setMethodProp("method")
-			.setParamsProp("params")
-			.setMethodType(Methods.PATCH.getValue())
-			.setPathProps(DocAnnotationConstants.VALUE_PROP, DocAnnotationConstants.PATH_PROP);
-		mappingAnnotations.put(patchMappingAnnotation.getAnnotationName(), patchMappingAnnotation);
-
-		MappingAnnotation deleteMappingAnnotation = MappingAnnotation.builder()
-			.setAnnotationName(SpringMvcAnnotations.DELETE_MAPPING)
-			.setConsumesProp("consumes")
-			.setProducesProp("produces")
-			.setMethodProp("method")
-			.setParamsProp("params")
-			.setMethodType(Methods.DELETE.getValue())
-			.setPathProps(DocAnnotationConstants.VALUE_PROP, DocAnnotationConstants.PATH_PROP);
-		mappingAnnotations.put(deleteMappingAnnotation.getAnnotationName(), deleteMappingAnnotation);
-
-		MappingAnnotation feignClientAnnotation = MappingAnnotation.builder()
-			.setAnnotationName(DocGlobalConstants.FEIGN_CLIENT)
-			.setAnnotationFullyName(DocGlobalConstants.FEIGN_CLIENT_FULLY);
-		mappingAnnotations.put(feignClientAnnotation.getAnnotationName(), feignClientAnnotation);
+		Map<String, MappingAnnotation> mappingAnnotations = buildSpringMappingAnnotations();
 		annotations.setMappingAnnotations(mappingAnnotations);
 
-		// Add Exception advice
+		// Exception advice annotations
 		Map<String, ExceptionAdviceAnnotation> exceptionAdviceAnnotations = new HashMap<>(16);
 
 		ExceptionAdviceAnnotation controllerAdviceAnnotation = ExceptionAdviceAnnotation.builder()
@@ -430,6 +367,91 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IW
 					+ "  \"error\": \"Unsupported Media Type\",\n" + "  \"path\": \"/api/v1/xx\"\n" + "} ")
 			.setExceptionResponseParams(Arrays.asList(errorParam, pathParam, timestampParam, status415Param)));
 		return exceptionStatusList;
+	}
+
+	/**
+	 * Builds and returns all Spring MVC request mapping annotations
+	 * including @RequestMapping, @GetMapping, @PostMapping, etc., with consistent
+	 * attribute configurations.
+	 * @return a map of annotation name to {@link MappingAnnotation}
+	 */
+	private Map<String, MappingAnnotation> buildSpringMappingAnnotations() {
+		Map<String, MappingAnnotation> mappingAnnotations = new HashMap<>(16);
+
+		// Common properties
+		String consumes = DocAnnotationConstants.CONSUMES;
+		String produces = DocAnnotationConstants.PRODUCES;
+		String method = DocAnnotationConstants.METHOD;
+		String params = DocAnnotationConstants.PARAMS;
+		String[] pathProps = DocAnnotationConstants.PATH_MAPPING_PROPS;
+
+		// @RequestMapping
+		MappingAnnotation requestMapping = MappingAnnotation.builder()
+			.setAnnotationName(SpringMvcAnnotations.REQUEST_MAPPING)
+			.setConsumesProp(consumes)
+			.setProducesProp(produces)
+			.setMethodProp(method)
+			.setParamsProp(params)
+			.setScope("class", "method")
+			.setPathProps(pathProps);
+		mappingAnnotations.put(requestMapping.getAnnotationName(), requestMapping);
+
+		// @PostMapping
+		MappingAnnotation postMapping = this.createMapping(SpringMvcAnnotations.POST_MAPPING, Methods.POST.getValue(),
+				pathProps, consumes, produces, method, params);
+		mappingAnnotations.put(postMapping.getAnnotationName(), postMapping);
+
+		// @GetMapping
+		MappingAnnotation getMapping = this.createMapping(SpringMvcAnnotations.GET_MAPPING, Methods.GET.getValue(),
+				pathProps, consumes, produces, method, params);
+		mappingAnnotations.put(getMapping.getAnnotationName(), getMapping);
+
+		// @PutMapping
+		MappingAnnotation putMapping = this.createMapping(SpringMvcAnnotations.PUT_MAPPING, Methods.PUT.getValue(),
+				pathProps, consumes, produces, method, params);
+		mappingAnnotations.put(putMapping.getAnnotationName(), putMapping);
+
+		// @PatchMapping
+		MappingAnnotation patchMapping = this.createMapping(SpringMvcAnnotations.PATCH_MAPPING,
+				Methods.PATCH.getValue(), pathProps, consumes, produces, method, params);
+		mappingAnnotations.put(patchMapping.getAnnotationName(), patchMapping);
+
+		// @DeleteMapping
+		MappingAnnotation deleteMapping = this.createMapping(SpringMvcAnnotations.DELETE_MAPPING,
+				Methods.DELETE.getValue(), pathProps, consumes, produces, method, params);
+		mappingAnnotations.put(deleteMapping.getAnnotationName(), deleteMapping);
+
+		// @FeignClient
+		MappingAnnotation feignClient = MappingAnnotation.builder()
+			.setAnnotationName(DocGlobalConstants.FEIGN_CLIENT)
+			.setAnnotationFullyName(DocGlobalConstants.FEIGN_CLIENT_FULLY)
+			.setPathProps(DocAnnotationConstants.PATH_PROP);
+		mappingAnnotations.put(feignClient.getAnnotationName(), feignClient);
+
+		return mappingAnnotations;
+	}
+
+	/**
+	 * Helper method to create common HTTP method-based mappings
+	 * (e.g., @GetMapping, @PostMapping).
+	 * @param annotationName the annotation name
+	 * @param methodType the method type
+	 * @param pathProps the path properties
+	 * @param consumes the consumes property
+	 * @param produces the produces property
+	 * @param method the HTTP method
+	 * @param params the params property
+	 */
+	private MappingAnnotation createMapping(String annotationName, String methodType, String[] pathProps,
+			String consumes, String produces, String method, String params) {
+		return MappingAnnotation.builder()
+			.setAnnotationName(annotationName)
+			.setConsumesProp(consumes)
+			.setProducesProp(produces)
+			.setMethodProp(method)
+			.setParamsProp(params)
+			.setMethodType(methodType)
+			.setPathProps(pathProps);
 	}
 
 }
