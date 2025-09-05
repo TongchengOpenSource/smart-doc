@@ -87,7 +87,7 @@ public class ProtoInfo implements Serializable {
 		String os = System.getProperty("os.name").toLowerCase();
 		String arch = System.getProperty("os.arch").toLowerCase();
 
-		log.info("The [os.name] is:" + os + ";[os.arch] is: " + arch);
+		log.info("The [os.name] is: " + os + " ; [os.arch] is: " + arch);
 
 		this.setTargetJsonDirectoryPath(targetJsonPath);
 		this.setJsonName("combined.json");

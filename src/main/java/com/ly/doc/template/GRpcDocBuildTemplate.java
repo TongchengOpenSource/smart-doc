@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2024 smart-doc
+ * Copyright (C) 2018-2025 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -34,18 +34,35 @@ import com.ly.doc.model.annotation.FrameworkAnnotations;
 import com.ly.doc.model.grpc.GrpcApiDoc;
 import com.ly.doc.model.grpc.GrpcJavaMethod;
 import com.ly.doc.model.grpc.ProtoInfo;
-import com.ly.doc.model.grpc.proto.*;
+import com.ly.doc.model.grpc.proto.EnumDefinition;
+import com.ly.doc.model.grpc.proto.EnumValue;
+import com.ly.doc.model.grpc.proto.Message;
+import com.ly.doc.model.grpc.proto.MessageField;
+import com.ly.doc.model.grpc.proto.ProtoJson;
+import com.ly.doc.model.grpc.proto.Service;
+import com.ly.doc.model.grpc.proto.ServiceMethod;
 import com.ly.doc.utils.DocUtil;
 import com.power.common.util.FileUtil;
+import com.power.common.util.StringUtil;
 import com.thoughtworks.qdox.model.JavaClass;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.PosixFilePermissions;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -315,6 +332,9 @@ public class GRpcDocBuildTemplate implements IDocBuildTemplate<GrpcApiDoc>, IJav
 	 */
 	public void executeProtocCommands(Set<String> protoFiles, ProtoInfo protoInfo) {
 		List<String> command = this.buildProtocCommand(protoFiles, protoInfo);
+		if (command.isEmpty()) {
+			return;
+		}
 		this.executeCommand(command, protoInfo);
 	}
 
@@ -344,7 +364,8 @@ public class GRpcDocBuildTemplate implements IDocBuildTemplate<GrpcApiDoc>, IJav
 		try {
 			Process process = processBuilder.start();
 
-			StreamGobbler outputGobbler = new StreamGobbler(process.getInputStream(), log::warning);
+			StreamGobbler outputGobbler = new StreamGobbler(process.getInputStream(),
+					line -> log.warning("[protoc] " + line));
 			Thread outputThread = new Thread(outputGobbler);
 			outputThread.start();
 
@@ -354,7 +375,7 @@ public class GRpcDocBuildTemplate implements IDocBuildTemplate<GrpcApiDoc>, IJav
 			outputThread.join();
 
 			if (exitCode != 0) {
-				log.warning("Error executing command for files");
+				log.warning("protoc command failed with exit code: " + exitCode);
 			}
 		}
 		catch (IOException | InterruptedException e) {
@@ -370,24 +391,71 @@ public class GRpcDocBuildTemplate implements IDocBuildTemplate<GrpcApiDoc>, IJav
 	 */
 	private List<String> buildProtocCommand(Set<String> protoFiles, ProtoInfo protoInfo) {
 		List<String> command = new ArrayList<>();
-		command.add(protoInfo.getProtocPath());
-		command.add("--proto_path=" + String.join(";", this.getUniqueParentDirectories(protoFiles)));
-		command.add("--doc_out=" + protoInfo.getTargetJsonDirectoryPath());
+
+		// Add the protoc executable (using absolute path)
+		command.add(Paths.get(protoInfo.getProtocPath()).toAbsolutePath().toString());
+
+		// Find the common root directory for all .proto files
+		String commonRootPath = this.findCommonRootDirectory(protoFiles);
+		if (StringUtil.isEmpty(commonRootPath)) {
+			log.warning("No common root directory found for proto files.");
+			return Collections.emptyList();
+		}
+
+		// Set --proto_path to the common root directory
+		command.add("--proto_path=" + commonRootPath);
+
+		// Set output options
+		command.add("--doc_out=" + Paths.get(protoInfo.getTargetJsonDirectoryPath()).toAbsolutePath());
 		command.add("--doc_opt=json," + protoInfo.getJsonName());
-		command.addAll(protoFiles);
-		command.add("--plugin=protoc-gen-doc=" + protoInfo.getProtocGenDocPath());
+
+		// Set the plugin path (using absolute path)
+		command.add("--plugin=protoc-gen-doc=" + Paths.get(protoInfo.getProtocGenDocPath()).toAbsolutePath());
+
+		// Add the absolute paths of the .proto files
+		for (String filePath : protoFiles) {
+			Path file = Paths.get(filePath).toAbsolutePath().normalize();
+			command.add(file.toString());
+		}
+
 		return command;
 	}
 
 	/**
-	 * Get the unique parent directories of the given set of files.
-	 * @param files The set of files.
-	 * @return The set of unique parent directories.
+	 * Find the deepest common ancestor directory for the given set of files.
+	 * @param files The set of .proto file paths.
+	 * @return The common root directory path, or null if the set is empty.
 	 */
-	private Set<String> getUniqueParentDirectories(Set<String> files) {
-		Set<String> directories = new HashSet<>();
-		files.forEach(file -> directories.add(new File(file).getParent()));
-		return directories;
+	private String findCommonRootDirectory(Set<String> files) {
+		if (files.isEmpty()) {
+			return null;
+		}
+
+		// Convert all paths to Path objects
+		List<Path> filePaths = files.stream()
+			.map(Paths::get)
+			.map(Path::toAbsolutePath)
+			.map(Path::normalize)
+			.collect(Collectors.toList());
+
+		// Use the first path as the initial common root
+		Path commonRoot = filePaths.get(0);
+
+		// Compare with all other paths, gradually shorten commonRoot until it is a prefix
+		// of all paths
+		for (Path path : filePaths) {
+			while (!path.startsWith(commonRoot)) {
+				commonRoot = commonRoot.getParent();
+				if (commonRoot == null) {
+					// If we've gone up to null, there's no common parent, return the root
+					// of the path
+					commonRoot = path.getRoot();
+					break;
+				}
+			}
+		}
+
+		return commonRoot.toString();
 	}
 
 	/**
