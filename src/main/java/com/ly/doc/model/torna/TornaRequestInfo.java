@@ -22,6 +22,7 @@ package com.ly.doc.model.torna;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 
 import com.ly.doc.constants.TornaConstants;
@@ -92,25 +93,47 @@ public class TornaRequestInfo {
 		return this;
 	}
 
+	/**
+	 * Builds a full log string including both request and response data.
+	 * @return Formatted log string with request and response details
+	 */
 	public String buildInfo() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("---------------------------PUSH START---------------------------\n")
+		return buildLogContent(true, "=============== REQUEST & RESPONSE LOG END ===============");
+	}
+
+	/**
+	 * Builds a log string containing only request data (no response).
+	 * @return Formatted log string with request details only
+	 */
+	public String buildRequestInfo() {
+		return buildLogContent(false, "==================== REQUEST LOG END ====================");
+	}
+
+	/**
+	 * Shared method to construct log content dynamically.
+	 * @param includeResponse Whether to include response data
+	 * @param closingMarker Custom closing boundary marker
+	 */
+	private String buildLogContent(boolean includeResponse, String closingMarker) {
+		StringBuilder sb = new StringBuilder().append("==================== PUSH LOG START ====================\n")
 			.append("API: ")
 			.append(category)
 			.append("\n")
 			.append("Request Param: \n")
 			.append(TornaConstants.GSON.toJson(requestInfo))
-			.append("\n")
-			.append("Response: \n")
-			.append(TornaConstants.GSON.fromJson(responseInfo, HashMap.class))
-			.append("\n")
-			.append("---------------------------PUSH END---------------------------\n");
+			.append("\n");
+
+		if (includeResponse) {
+			sb.append("Response: \n").append(TornaConstants.GSON.fromJson(responseInfo, HashMap.class)).append("\n");
+		}
+
+		sb.append(closingMarker).append("\n"); // Custom closing marker
+
 		try {
-			return URLDecoder.decode(sb.toString(), "utf-8");
+			return URLDecoder.decode(sb.toString(), StandardCharsets.UTF_8.name());
 		}
 		catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-			return "";
+			return ""; // In production, log this error (e.g., via SLF4J)
 		}
 	}
 

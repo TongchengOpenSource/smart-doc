@@ -126,6 +126,7 @@ public class TornaUtil {
 	private static void pushToTornaAll(TornaApi tornaApi, ApiConfig apiConfig, JavaProjectBuilder builder) {
 		// Build push document information
 		Map<String, String> requestJson = TornaConstants.buildParams(PUSH, new Gson().toJson(tornaApi), apiConfig);
+		TornaUtil.printDebugInfo(apiConfig, null, requestJson, PUSH, true);
 		// Push dictionary information
 		Map<String, Object> dicMap = new HashMap<>(2);
 		List<TornaDic> docDicts = TornaUtil.buildTornaDic(DocUtil.buildDictionary(apiConfig, builder));
@@ -190,23 +191,45 @@ public class TornaUtil {
 	 */
 	public static void printDebugInfo(ApiConfig apiConfig, String responseMsg, Map<String, String> requestJson,
 			String category) {
+		printDebugInfo(apiConfig, responseMsg, requestJson, category, false);
+	}
+
+	/**
+	 * Prints debug information with mode support.
+	 * @param apiConfig The API configuration object containing OpenUrl, appToken, etc.
+	 * @param responseMsg The response message, null for pre-request mode.
+	 * @param requestJson The request JSON object in key-value pairs.
+	 * @param category The category of the request or response for classifying debug
+	 * information.
+	 * @param isPreRequest true for pre-request mode, false for post-request mode.
+	 */
+	public static void printDebugInfo(ApiConfig apiConfig, String responseMsg, Map<String, String> requestJson,
+			String category, boolean isPreRequest) {
 		if (apiConfig.isTornaDebug()) {
 			String sb = "Configuration information : \n" + "OpenUrl: " + apiConfig.getOpenUrl() + "\n" + "appToken: "
 					+ apiConfig.getAppToken() + "\n";
 			System.out.println(sb);
-			try {
-				JsonElement element = JsonParser.parseString(responseMsg);
+			if (isPreRequest) {
 				TornaRequestInfo info = new TornaRequestInfo().of()
 					.setCategory(category)
-					.setCode(element.getAsJsonObject().get(TornaConstants.CODE).getAsString())
-					.setMessage(element.getAsJsonObject().get(TornaConstants.MESSAGE).getAsString())
 					.setRequestInfo(requestJson)
 					.setResponseInfo(responseMsg);
-				System.out.println(info.buildInfo());
+				System.out.println(info.buildRequestInfo());
 			}
-			catch (Exception e) {
-				// Ex : Nginx Error,Tomcat Error
-				System.out.println("Response Error : \n" + responseMsg);
+			else {
+				try {
+					JsonElement element = JsonParser.parseString(responseMsg);
+					TornaRequestInfo info = new TornaRequestInfo().of()
+						.setCategory(category)
+						.setCode(element.getAsJsonObject().get(TornaConstants.CODE).getAsString())
+						.setMessage(element.getAsJsonObject().get(TornaConstants.MESSAGE).getAsString())
+						.setRequestInfo(requestJson)
+						.setResponseInfo(responseMsg);
+					System.out.println(info.buildInfo());
+				}
+				catch (Exception e) {
+					System.out.println("Response Error : \n" + responseMsg);
+				}
 			}
 		}
 	}
