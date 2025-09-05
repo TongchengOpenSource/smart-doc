@@ -392,7 +392,7 @@ public class JavaClassUtil {
 		}
 
 		// Default handling for enum values
-		return processDefaultEnumFields(enumConstant);
+		return processDefaultEnumFields(enumConstant, builder);
 	}
 
 	/**
@@ -501,7 +501,12 @@ public class JavaClassUtil {
 	 * @param javaField The JavaField object representing the enum constant
 	 * @return The value based on the enum field processing logic
 	 */
-	private static Object processDefaultEnumFields(JavaField javaField) {
+	private static Object processDefaultEnumFields(JavaField javaField, ProjectDocConfigBuilder builder) {
+		ApiConfig apiConfig = builder.getApiConfig();
+		if (!apiConfig.isEnumConvertor()) {
+			return javaField.getName();
+		}
+
 		String initializationExpression = javaField.getInitializationExpression();
 
 		if (StringUtils.isBlank(initializationExpression)) {
