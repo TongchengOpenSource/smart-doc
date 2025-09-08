@@ -165,6 +165,11 @@ public class Apis implements Serializable {
 	 */
 	private String version;
 
+	/**
+	 * dubboMethod, such as:com.xx.User com.xxx.UserService.findById(java.lang.Long id)
+	 */
+	private String dubboMethod;
+
 	public String getVersion() {
 		return version;
 	}
@@ -357,6 +362,14 @@ public class Apis implements Serializable {
 
 	public void setDeprecated(String deprecated) {
 		this.deprecated = deprecated;
+	}
+
+	public String getDubboMethod() {
+		return dubboMethod;
+	}
+
+	public void setDubboMethod(String dubboMethod) {
+		this.dubboMethod = dubboMethod;
 	}
 
 }

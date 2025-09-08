@@ -304,6 +304,7 @@ public class TornaUtil {
 			methodApi.setResponseParams(buildParams(apiMethodDoc.getResponseParams()));
 			methodApi.setOrderIndex(apiMethodDoc.getOrder());
 			methodApi.setDeprecated(apiMethodDoc.isDeprecated() ? DocAnnotationConstants.DEPRECATED : null);
+			methodApi.setDubboMethod(apiMethodDoc.getJavaMethod().getDeclarationSignature(false));
 			// Json
 			if (CollectionUtil.isNotEmpty(apiMethodDoc.getRequestParams())) {
 				methodApi.setRequestParams(buildParams(apiMethodDoc.getRequestParams()));
