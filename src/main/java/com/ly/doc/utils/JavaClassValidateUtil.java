@@ -149,7 +149,12 @@ public class JavaClassValidateUtil {
 	 * @return boolean
 	 */
 	public static boolean isJdkClass(String type) {
-		return type.startsWith("java") || type.startsWith("javax") || type.startsWith("com.sum");
+		return type.startsWith("java.")
+				|| type.startsWith("javax.")
+				|| type.startsWith("jdk.")
+				|| type.startsWith("sun.")
+				|| type.startsWith("com.oracle.")
+				|| type.startsWith("com.sun.");
 	}
 
 	/**
