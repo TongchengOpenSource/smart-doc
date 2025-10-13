@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2024 smart-doc
+ * Copyright (C) 2018-2025 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,6 +18,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package com.ly.doc.utils;
 
 import com.ly.doc.builder.WordDocBuilder;
@@ -745,12 +746,27 @@ public class DocUtil {
 			if (DocTags.PARAM.equals(tagName) || DocTags.EXTENSION.equals(tagName)) {
 				String pName = value;
 				String pValue = DocGlobalConstants.NO_COMMENTS_FOUND;
-				int idx = value.indexOf(" ");
-				// existed \n
-				if (idx > -1) {
-					pName = value.substring(0, idx);
-					pValue = value.substring(idx + 1);
+
+				// Fixed #1129
+				// Split the value by the first sequence of whitespace
+				// (space,newline,tab, etc.) only into two parts.
+				String[] parts = value.trim().split("\\s+", 2);
+				// Successfully split into parameter name and description
+				if (parts.length == 2) {
+					// Parameter name
+					pName = parts[0];
+					// Description, preserving internal newlines and formatting
+					pValue = parts[1];
 				}
+				// Only one part found, likely just the parameter name
+				// without a description, OR an empty/whitespace-only value after trim
+				else if (parts.length == 1) {
+					// Covers both "paramName" and "" cases
+					// pValue remains DocGlobalConstants.NO_COMMENTS_FOUND
+					// Set pName based on whether the single part is empty
+					pName = parts[0];
+				}
+
 				if ("|".equals(StringUtil.trim(pValue)) && StringUtil.isNotEmpty(className)) {
 					throw new RuntimeException(tagValErrorMsg);
 				}
