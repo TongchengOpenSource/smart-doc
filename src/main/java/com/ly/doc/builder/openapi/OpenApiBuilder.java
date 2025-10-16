@@ -25,6 +25,7 @@ package com.ly.doc.builder.openapi;
 import com.ly.doc.constants.DocGlobalConstants;
 import com.ly.doc.constants.Methods;
 import com.ly.doc.constants.OpenApiTagNameTypeEnum;
+import com.ly.doc.constants.OperationIdStrategyEnum;
 import com.ly.doc.constants.ParamTypeConstants;
 import com.ly.doc.helper.JavaProjectBuilderHelper;
 import com.ly.doc.model.ApiConfig;
@@ -178,17 +179,36 @@ public class OpenApiBuilder extends AbstractOpenApiBuilder {
 		List<String> paths = OpenApiSchemaUtil.getPatternResult("[A-Za-z0-9_{}]*", apiMethodDoc.getPath());
 		paths.add(apiMethodDoc.getType());
 
-		// add operationId
-		String methodName = apiMethodDoc.getMethodName();
-		if (OPERATIONID_ORDER_NO_MAP.containsKey(methodName)) {
-			int order = OPERATIONID_ORDER_NO_MAP.get(methodName);
-			request.put("operationId", methodName + "_" + order);
-			OPERATIONID_ORDER_NO_MAP.put(methodName, order + 1);
+		// add operationId based on configured strategy
+		OperationIdStrategyEnum strategy = apiConfig.getOperationIdStrategy();
+		String operationId;
+		switch (strategy) {
+			case METHOD_ID:
+				// Use methodId (MD5 hash)
+				operationId = apiMethodDoc.getMethodId();
+				break;
+			case PATH_METHOD_HTTP:
+				// Use path + method name + HTTP method type
+				List<String> pathSegments = OpenApiSchemaUtil.getPatternResult("[A-Za-z0-9_]*", apiMethodDoc.getPath());
+				operationId = String.join("-", pathSegments) + "-" + apiMethodDoc.getMethodName() + "-"
+						+ apiMethodDoc.getType();
+				break;
+			case METHOD_NAME:
+			default:
+				// Use method name only (with duplicate handling)
+				String methodName = apiMethodDoc.getMethodName();
+				if (OPERATIONID_ORDER_NO_MAP.containsKey(methodName)) {
+					int order = OPERATIONID_ORDER_NO_MAP.get(methodName);
+					operationId = methodName + "_" + order;
+					OPERATIONID_ORDER_NO_MAP.put(methodName, order + 1);
+				}
+				else {
+					operationId = methodName;
+					OPERATIONID_ORDER_NO_MAP.put(methodName, 1);
+				}
+				break;
 		}
-		else {
-			request.put("operationId", methodName);
-			OPERATIONID_ORDER_NO_MAP.put(methodName, 1);
-		}
+		request.put("operationId", operationId);
 
 		// add extension attribution
 		if (apiMethodDoc.getExtensions() != null) {
