@@ -163,7 +163,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IW
 		annotations.setServerEndpointAnnotation(serverEndpointAnnotation);
 
 		// add mapping annotations
-		Map<String, MappingAnnotation> mappingAnnotations = buildSpringMappingAnnotations();
+		Map<String, MappingAnnotation> mappingAnnotations = this.buildSpringMappingAnnotations();
 		annotations.setMappingAnnotations(mappingAnnotations);
 
 		// Exception advice annotations

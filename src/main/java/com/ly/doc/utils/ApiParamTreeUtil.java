@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2024 smart-doc
+ * Copyright (C) 2018-2025 smart-doc
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -129,8 +129,7 @@ public class ApiParamTreeUtil {
 				param.setId(pathParams.size() + 1);
 				pathParams.add(param);
 			}
-			else if (param.isQueryParam() || Methods.GET.getValue().equals(methodType)
-					|| Methods.DELETE.getValue().equals(methodType)) {
+			else if (param.isQueryParam() || Methods.GET.getValue().equals(methodType)) {
 				if (queryReqParamMap.containsKey(param.getField())) {
 					param.setConfigParam(true).setValue(queryReqParamMap.get(param.getField()).getValue());
 				}
