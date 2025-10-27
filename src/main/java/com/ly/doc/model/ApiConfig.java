@@ -24,6 +24,7 @@ package com.ly.doc.model;
 import com.ly.doc.constants.ComponentTypeEnum;
 import com.ly.doc.constants.DocLanguage;
 import com.ly.doc.constants.OpenApiTagNameTypeEnum;
+import com.ly.doc.constants.OperationIdStrategyEnum;
 import com.ly.doc.handler.ICustomJavaMethodHandler;
 import com.ly.doc.model.jmeter.JMeter;
 import com.ly.doc.model.rpc.RpcApiDependency;
@@ -502,6 +503,31 @@ public class ApiConfig {
 	 * @since 3.1.0
 	 */
 	private boolean allowSelfReference = Boolean.FALSE;
+
+	/**
+	 * Strategy for generating OpenAPI operationId.
+	 * <p>
+	 * This field specifies how the operationId in the generated OpenAPI document is
+	 * determined. Supported strategies include:
+	 * </p>
+	 *
+	 * <ul>
+	 * <li>{@link OperationIdStrategyEnum#METHOD_NAME}: Use the method name only
+	 * (with numeric suffix for duplicates)</li>
+	 * <li>{@link OperationIdStrategyEnum#METHOD_ID}: Use the methodId (MD5 hash)</li>
+	 * <li>{@link OperationIdStrategyEnum#PATH_METHOD_HTTP}: Use path + method name +
+	 * HTTP method type</li>
+	 * </ul>
+	 *
+	 * <p>
+	 * This setting affects how API operations are identified in the OpenAPI documentation.
+	 * Choose the strategy that best aligns with your API naming conventions.
+	 * </p>
+	 *
+	 * @see OperationIdStrategyEnum
+	 * @since 3.1.2
+	 */
+	private OperationIdStrategyEnum operationIdStrategy = OperationIdStrategyEnum.METHOD_NAME;
 
 	public static ApiConfig getInstance() {
 		return instance;
@@ -1209,6 +1235,18 @@ public class ApiConfig {
 
 	public ApiConfig setOpenApiTagNameType(OpenApiTagNameTypeEnum openApiTagNameType) {
 		this.openApiTagNameType = openApiTagNameType;
+		return this;
+	}
+
+	public OperationIdStrategyEnum getOperationIdStrategy() {
+		if (Objects.isNull(operationIdStrategy)) {
+			return OperationIdStrategyEnum.METHOD_NAME;
+		}
+		return operationIdStrategy;
+	}
+
+	public ApiConfig setOperationIdStrategy(OperationIdStrategyEnum operationIdStrategy) {
+		this.operationIdStrategy = operationIdStrategy;
 		return this;
 	}
 
