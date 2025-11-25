@@ -174,6 +174,13 @@ public class SolonDocBuildTemplate implements IDocBuildTemplate<ApiDoc>, IWebSoc
 			.setRequiredProp(DocAnnotationConstants.REQUIRED_PROP);
 		annotations.setRequestParamAnnotation(requestAnnotation);
 
+		// request part annotation
+		RequestPartAnnotation requestPartAnnotation = RequestPartAnnotation.builder()
+			.setAnnotationName("")
+			.setDefaultValueProp(DocAnnotationConstants.DEFAULT_VALUE_PROP)
+			.setRequiredProp(DocAnnotationConstants.REQUIRED_PROP);
+		annotations.setRequestPartAnnotation(requestPartAnnotation);
+
 		// add path variable annotation
 		PathVariableAnnotation pathVariableAnnotation = PathVariableAnnotation.builder()
 			.setAnnotationName(SolonAnnotations.PATH_VAR)
